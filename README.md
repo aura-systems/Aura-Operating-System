@@ -1,7 +1,7 @@
 ![alt tag](https://img15.hostingpics.net/pics/687657AlveBanner.png)
 
 # Alve Operating System
-A Cosmos based Operating System developped in C# made by Alexy DA CRUZ (GeomTech) and Valentin Charbonnier (valentinbreiz).
+A Cosmos based Operating System developped in C# made by Geomtech and Valentin Charbonnier (valentinbreiz).
 
 ## How to compile Alve ?
 Download and install [this repository](https://github.com/Alve-OS/Cosmos/tree/Bugfixes). Then run Alve OS.sln, and select "build" from Visual Studio 2017.
