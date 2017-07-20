@@ -2,6 +2,7 @@
 * PROJECT:          Alve Operating System Development
 * CONTENT:          Kernel
 * PROGRAMMERS:      Valentin Charbonnier <valentinbreiz@gmail.com>
+*                   Alexy DA CRUZ <dacruzalexy@gmail.com>
 */
 
 #region using;

@@ -3,11 +3,6 @@
 * CONTENT:          Kernel
 * PROGRAMMERS:      Alexy DA CRUZ <dacruzalexy@gmail.com>
 */
-#region using
-using System;
-using System.Collections.Generic;
-using System.Text;
-#endregion
 
 namespace Alve_OS.System
 {

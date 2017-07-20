@@ -34,10 +34,13 @@
     <Compile Remove="*" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include=".\Alve OS.csproj">
-      <Name>Alve OS</Name>
+    <ProjectReference Include=".\Alve_OS.csproj">
+      <Name>Alve_OS</Name>
       <Project>{dd67a21e-24aa-45a8-9886-4bb88f63680a}</Project>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="System\" />
   </ItemGroup>
   <Import Project="$(AppData)\Cosmos User Kit\Build\VSIP\Cosmos.targets" />
 </Project>
