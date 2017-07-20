@@ -5,7 +5,7 @@
   <PropertyGroup>
     <BinFormat>elf</BinFormat>
     <Profile>VMware</Profile>
-    <DebugEnabled>True</DebugEnabled>
+    <DebugEnabled>False</DebugEnabled>
     <DebugMode>Source</DebugMode>
     <TraceMode>User</TraceMode>
     <EnableGDB>False</EnableGDB>
@@ -20,7 +20,7 @@
     <VMware_Description>Use VMware Player or Workstation to deploy and debug.</VMware_Description>
     <VMware_Deployment>ISO</VMware_Deployment>
     <VMware_Launch>VMware</VMware_Launch>
-    <VMware_DebugEnabled>True</VMware_DebugEnabled>
+    <VMware_DebugEnabled>False</VMware_DebugEnabled>
     <VMware_DebugMode>Source</VMware_DebugMode>
     <VMware_VisualStudioDebugPort>Pipe: Cosmos\Serial</VMware_VisualStudioDebugPort>
     <VMware_PxeInterface>192.168.68.1</VMware_PxeInterface>

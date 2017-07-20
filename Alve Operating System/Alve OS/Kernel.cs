@@ -22,6 +22,7 @@ namespace Alve_OS
 
         bool running;
         string version = "0.1";
+        string revision = "20072017-1736";
         string current_directory = @"0:\";
         public CosmosVFS FS { get; private set; }
 
@@ -42,6 +43,7 @@ namespace Alve_OS
             Console.WriteLine("[OK]");
             Console.ForegroundColor = ConsoleColor.White;
             #endregion
+
             #region FileSystem Scan
             Console.WriteLine("Scanning FileSystem...");
             Sys.FileSystem.VFS.VFSManager.RegisterVFS(FS);
@@ -56,6 +58,8 @@ namespace Alve_OS
             Console.WriteLine("Kernel has started successfully!");
             Console.ForegroundColor = ConsoleColor.White;
             Console.WriteLine("Welcome to Alve Operating System v" + version + " !");
+            Console.WriteLine("Made by Valentin CHARBONNIER (valentinbreiz) and Alexy DA CRUZ (GeomTech).");
+            Console.WriteLine();
         }
 
         #endregion
@@ -105,7 +109,16 @@ namespace Alve_OS
                 Console.WriteLine("- shutdown (to do a ACPI Shutdown)");
                 Console.WriteLine("- reboot (to do a CPU Reboot)");
                 Console.WriteLine("- clear (to clear the console)");
-                Console.WriteLine("- echo text (to echo text)");
+                Console.WriteLine("- cd .. (to navigate to the parent folder)");
+                Console.WriteLine("- cd (to navigate to a folder)");
+                Console.WriteLine("- dir (to list directories and files)");
+                Console.WriteLine("- mkdir (to create a directory");
+                Console.WriteLine("- rmdir (to remove a directory)");
+                Console.WriteLine("- mkfil (to create a file)");
+                Console.WriteLine("- rmfil (to remove a file)");
+                Console.WriteLine("- vol (to list volumes)");
+                Console.WriteLine("- echo (to echo text)");
+                Console.WriteLine("- systeminfo (to display system informations)");
             }
             else if (cmd.Equals("cd .."))
             {
@@ -201,6 +214,12 @@ namespace Alve_OS
                 {
                     Console.WriteLine(vol.mName + "\t" + vol.mSize + "\t" + vol.mParent);
                 }
+            }
+            else if (cmd.Equals("systeminfo"))
+            {
+                Console.WriteLine("Operating system name:     Alve");
+                Console.WriteLine("Operating system version:  " + version);
+                Console.WriteLine("Operating system revision: " + revision);
             }
             else
             {
