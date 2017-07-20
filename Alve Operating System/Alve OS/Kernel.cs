@@ -7,6 +7,7 @@
 #region using;
 
 using System;
+using Cosmos.System.FileSystem;
 using Sys = Cosmos.System;
 
 #endregion
@@ -20,6 +21,8 @@ namespace Alve_OS
 
         bool running;
         string version = "0.1";
+        string current_directory = @"C:\";
+        public CosmosVFS FS { get; private set; }
 
         #endregion
 
@@ -29,6 +32,10 @@ namespace Alve_OS
         {
             Console.Clear();
             running = true;
+
+            FS = new CosmosVFS();
+            FS.Initialize();
+
             Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine("Kernel has started successfully!");
             Console.ForegroundColor = ConsoleColor.White;
