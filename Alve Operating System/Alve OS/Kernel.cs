@@ -22,7 +22,7 @@ namespace Alve_OS
 
         bool running;
         string version = "0.1";
-        string current_directory = @"C:\";
+        string current_directory = @"0:\";
         public CosmosVFS FS { get; private set; }
 
         #endregion
@@ -64,7 +64,7 @@ namespace Alve_OS
 
         protected override void Run()
         {
-            Console.Write("alve> ");
+            Console.Write(current_directory + "> ");
             var cmd = Console.ReadLine();
             Interpret(cmd);
             Console.WriteLine();
@@ -107,6 +107,18 @@ namespace Alve_OS
                 Console.WriteLine("- clear (to clear the console)");
                 Console.WriteLine("- echo text (to echo text)");
             }
+            else if (cmd.Equals("cd .."))
+            {
+                Directory.SetCurrentDirectory(current_directory);
+                var dir = FS.GetDirectory(current_directory);
+                if (current_directory == @"0:\")
+                {
+                }
+                else
+                {
+                    current_directory = dir.mParent.mFullPath;
+                }
+            }
             else if (cmd.StartsWith("cd "))
             {
                 string dir = cmd.Remove(0, 3);
@@ -120,30 +132,75 @@ namespace Alve_OS
                     Console.WriteLine("This directory doesn't exist!");
                 }
             }
-            else if (cmd.Equals("cd .."))
-            {
-                Directory.SetCurrentDirectory(current_directory);
-                var dir = FS.GetDirectory(current_directory);
-                if (current_directory == @"C:\")
-                {
-                }
-                else
-                {
-                    current_directory = dir.mParent.mFullPath;
-                }
-            }
             else if (cmd.Equals("dir"))
             {
-                Console.WriteLine("Type\t     Name");
+                Console.WriteLine("Type\t Name");
                 foreach (var dir in Directory.GetDirectories(current_directory))
                 {
                     Console.WriteLine("<DIR>\t" + dir);
                 }
                 foreach (var dir in Directory.GetFiles(current_directory))
                 {
-                    Console.WriteLine("<File>\t" + dir);
+                    Console.WriteLine("     \t" + dir);
                 }
 
+            }
+            else if (cmd.StartsWith("mkdir "))
+            {
+                string dir = cmd.Remove(0, 6);
+                if (!Directory.Exists(current_directory + dir))
+                {
+                    FS.CreateDirectory(current_directory + dir);
+                }
+                else if (Directory.Exists(current_directory + dir))
+                {
+                    FS.CreateDirectory(current_directory + dir + "-1");
+                }
+            }
+            else if (cmd.StartsWith("rmdir "))
+            {
+                string dir = cmd.Remove(0, 6);
+                if (Directory.Exists(current_directory + dir))
+                {
+                    Directory.Delete(current_directory + dir, true);
+                }
+                else
+                {
+                    Console.WriteLine(dir + " does not exist!");
+                }
+            }
+            else if (cmd.StartsWith("rmfil "))
+            {
+                string file = cmd.Remove(0, 6);
+                if (File.Exists(current_directory + file))
+                {
+                    File.Delete(current_directory + file);
+                }
+                else
+                {
+                    Console.WriteLine(file + " does not exist!");
+                }
+            }
+            else if (cmd.StartsWith("mkfil "))
+            {
+                string file = cmd.Remove(0, 6);
+                if (!File.Exists(current_directory + file))
+                {
+                    File.Create(current_directory + file); 
+                }
+                else
+                {
+                    Console.WriteLine(file + " already exists!");
+                }
+            }
+            else if (cmd.Equals("vol"))
+            {
+                var vols = FS.GetVolumes();
+                Console.WriteLine("Name\tSize\tParent");
+                foreach (var vol in vols)
+                {
+                    Console.WriteLine(vol.mName + "\t" + vol.mSize + "\t" + vol.mParent);
+                }
             }
             else
             {
