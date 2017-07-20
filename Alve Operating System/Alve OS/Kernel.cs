@@ -86,14 +86,14 @@ namespace Alve_OS
         {
             if (cmd.Equals("shutdown"))
             {
-                Variables.running = false;
+                running = false;
                 Console.Clear();
                 Console.WriteLine("Shutting Down...");
                 Sys.Power.Shutdown();
             }
             else if (cmd.Equals("reboot"))
             {
-                Variables.running = false;
+                running = false;
                 Console.Clear();
                 Console.WriteLine("Restarting...");
                 Sys.Power.Reboot();
