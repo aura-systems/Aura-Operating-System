@@ -9,7 +9,9 @@
 using System;
 using Cosmos.System.FileSystem;
 using Sys = Cosmos.System;
+using Alve_OS.System;
 using System.IO;
+
 
 #endregion
 
@@ -32,6 +34,7 @@ namespace Alve_OS
 
         protected override void BeforeRun()
         {
+
             
             running = true;
 
@@ -82,14 +85,14 @@ namespace Alve_OS
         {
             if (cmd.Equals("shutdown"))
             {
-                running = false;
+                Variables.running = false;
                 Console.Clear();
                 Console.WriteLine("Shutting Down...");
                 Sys.Power.Shutdown();
             }
             else if (cmd.Equals("reboot"))
             {
-                running = false;
+                Variables.running = false;
                 Console.Clear();
                 Console.WriteLine("Restarting...");
                 Sys.Power.Reboot();
