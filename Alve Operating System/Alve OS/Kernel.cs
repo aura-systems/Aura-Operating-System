@@ -8,6 +8,7 @@
 
 using System;
 using Sys = Cosmos.System;
+using Alve_OS.System;
 
 #endregion
 
@@ -15,24 +16,18 @@ namespace Alve_OS
 {
     public class Kernel: Sys.Kernel
     {
-
-        #region Global variables
-
-        bool running;
-        string version = "0.1";
-
-        #endregion
+       
 
         #region Before Run
 
         protected override void BeforeRun()
         {
             Console.Clear();
-            running = true;
+            Variables.running = true;
             Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine("Kernel has started successfully!");
             Console.ForegroundColor = ConsoleColor.White;
-            Console.WriteLine("Welcome to Alve Operating System v" + version + " !");
+            Console.WriteLine("Welcome to Alve Operating System v" + Variables.version + " !");
         }
 
         #endregion
@@ -55,14 +50,14 @@ namespace Alve_OS
         {
             if (cmd.Equals("shutdown"))
             {
-                running = false;
+                Variables.running = false;
                 Console.Clear();
                 Console.WriteLine("Shutting Down...");
                 Sys.Power.Shutdown();
             }
             else if (cmd.Equals("reboot"))
             {
-                running = false;
+                Variables.running = false;
                 Console.Clear();
                 Console.WriteLine("Restarting...");
                 Sys.Power.Reboot();
