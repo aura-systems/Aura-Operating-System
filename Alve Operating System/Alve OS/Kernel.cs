@@ -25,7 +25,7 @@ namespace Alve_OS
 
         public static bool running;
         public static string version = "0.1";
-        public static string revision = "20072017-1736";
+        public static string revision = "20072017-2053";
         public static string current_directory = @"0:\";
         public static CosmosVFS FS { get; private set; }
 
@@ -35,7 +35,6 @@ namespace Alve_OS
 
         protected override void BeforeRun()
         {
-
             
             running = true;
 
@@ -61,9 +60,11 @@ namespace Alve_OS
             Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine("Kernel has started successfully!");
             Console.ForegroundColor = ConsoleColor.White;
+
             Console.WriteLine("Welcome to Alve Operating System v" + version + " !");
             Console.WriteLine("Made by Valentin CHARBONNIER (valentinbreiz) and Alexy DA CRUZ (GeomTech).");
             Console.WriteLine();
+
         }
 
         #endregion
@@ -72,10 +73,50 @@ namespace Alve_OS
 
         protected override void Run()
         {
-            Console.Write(current_directory + "> ");
-            var cmd = Console.ReadLine();
-            Shell.Interpreter.Interpret(cmd);
-            Console.WriteLine();
+            running = false;
+
+            if (!Directory.Exists(Kernel.current_directory + "System"))
+            {
+                Installation.Setup();
+            }
+            else
+            {
+
+                Console.WriteLine("Login");
+                Console.Write("Name: ");
+                string name = Console.ReadLine();
+                Console.Write("Pass: ");
+                string pass = Console.ReadLine();
+                string filename = File.ReadAllText("0:\\System\\user");
+                string filepass = File.ReadAllText("0:\\System\\pass");
+
+                if (name.Equals(filename) && pass.Equals(filepass))
+                {
+                    Console.Clear();
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    Console.WriteLine("Welcome " + name + "!");
+                    Console.ForegroundColor = ConsoleColor.White;
+                    Console.WriteLine();
+                    running = true;
+                    goto main;
+                }
+                if (name.Equals("root") && pass.Equals(""))
+                {
+                    running = true;
+                    goto main;
+                }
+            }
+
+            main:
+            {
+                while (running == true)
+                {
+                    Console.Write(current_directory + "> ");
+                    var cmd = Console.ReadLine();
+                    Shell.Interpreter.Interpret(cmd);
+                    Console.WriteLine();
+                }
+            }
         }
 
         #endregion
