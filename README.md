@@ -37,3 +37,48 @@ Help (to show availables commands)
 ```
 help
 ```
+
+Cd .. (to navigate to the parent folder)
+```
+cd ..
+```
+
+Cd (to navigate to a folder)
+```
+cd
+```
+
+Dir (to list directories and files)
+```
+dir
+```
+
+Mkdir (to create a directory)
+```
+mkdir
+```
+
+Rmdir (to remove a directory)
+```
+rmdir
+```
+
+Mkfil (to create a file)
+```
+mkfil
+```
+
+Rmfil (to remove a file)
+```
+rmfil
+```
+
+Vol (to list volumes)
+```
+vol
+```
+
+Systeminfo (to display system informations)
+```
+systeminfo
+```
