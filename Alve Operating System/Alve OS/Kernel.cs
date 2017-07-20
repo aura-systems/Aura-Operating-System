@@ -9,6 +9,7 @@
 using System;
 using Cosmos.System.FileSystem;
 using Sys = Cosmos.System;
+using System.IO;
 
 #endregion
 
@@ -30,11 +31,26 @@ namespace Alve_OS
 
         protected override void BeforeRun()
         {
-            Console.Clear();
+            
             running = true;
 
+            #region FileSystem Init
+            Console.WriteLine("Initializing FileSystem...");
             FS = new CosmosVFS();
             FS.Initialize();
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine("[OK]");
+            Console.ForegroundColor = ConsoleColor.White;
+            #endregion
+            #region FileSystem Scan
+            Console.WriteLine("Scanning FileSystem...");
+            Sys.FileSystem.VFS.VFSManager.RegisterVFS(FS);
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine("[OK]");
+            Console.ForegroundColor = ConsoleColor.White;
+            #endregion
+
+            Console.Clear();
 
             Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine("Kernel has started successfully!");
@@ -90,6 +106,44 @@ namespace Alve_OS
                 Console.WriteLine("- reboot (to do a CPU Reboot)");
                 Console.WriteLine("- clear (to clear the console)");
                 Console.WriteLine("- echo text (to echo text)");
+            }
+            else if (cmd.StartsWith("cd "))
+            {
+                string dir = cmd.Remove(0, 3);
+                if (Directory.Exists(current_directory + dir))
+                {
+                    Directory.SetCurrentDirectory(current_directory);
+                    current_directory = current_directory + dir + @"\";
+                }
+                else
+                {
+                    Console.WriteLine("This directory doesn't exist!");
+                }
+            }
+            else if (cmd.Equals("cd .."))
+            {
+                Directory.SetCurrentDirectory(current_directory);
+                var dir = FS.GetDirectory(current_directory);
+                if (current_directory == @"C:\")
+                {
+                }
+                else
+                {
+                    current_directory = dir.mParent.mFullPath;
+                }
+            }
+            else if (cmd.Equals("dir"))
+            {
+                Console.WriteLine("Type\t     Name");
+                foreach (var dir in Directory.GetDirectories(current_directory))
+                {
+                    Console.WriteLine("<DIR>\t" + dir);
+                }
+                foreach (var dir in Directory.GetFiles(current_directory))
+                {
+                    Console.WriteLine("<File>\t" + dir);
+                }
+
             }
             else
             {
