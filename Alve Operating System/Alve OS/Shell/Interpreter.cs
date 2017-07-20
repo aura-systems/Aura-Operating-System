@@ -2,6 +2,7 @@
 * PROJECT:          Alve Operating System Development
 * CONTENT:          Translation system
 * PROGRAMMERS:      Alexy DA CRUZ <dacruzalexy@gmail.com>
+*                   Valentin Charbonnier <valentinbreiz@gmail.com>
 */
 
 using System;
