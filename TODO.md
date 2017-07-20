@@ -1,3 +1,3 @@
-#TO DO
-- A lot of thing...
-- :mushroom:
+# TO DO
+* A lot of thing...
+* :mushroom:
