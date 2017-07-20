@@ -19,6 +19,7 @@ namespace Alve_OS
         #region Global variables
 
         bool running;
+        string version = "0.1";
 
         #endregion
 
@@ -31,7 +32,7 @@ namespace Alve_OS
             Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine("Kernel has started successfully!");
             Console.ForegroundColor = ConsoleColor.White;
-            Console.WriteLine("Welcome to Alve Operating System!");
+            Console.WriteLine("Welcome to Alve Operating System v" + version + " !");
         }
 
         #endregion
