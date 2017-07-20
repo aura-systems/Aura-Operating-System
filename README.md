@@ -1,5 +1,3 @@
-![alt tag](https://img15.hostingpics.net/pics/687657AlveBanner.png)
-
 # Alve Operating System
 A Cosmos based Operating System developped in C# made by Alexy DA CRUZ (GeomTech) and Valentin Charbonnier (valentinbreiz).
 
