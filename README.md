@@ -8,11 +8,33 @@ Please read the [TODO](https://github.com/Alve-OS/Alve-Operating-System/blob/mas
 Download and install [this repository](https://github.com/Alve-OS/Cosmos/tree/Bugfixes).
 
 ## Current features
-* Nothing
+* Restart
+* Shutdown
+* Basic command interpreter
 
 ## Commands
 
-Lorem Ipsum :
+Shutdown (to do an ACPI Shutdown) :
 ```
-none
+shutdown
+```
+
+Reboot (to do a CPU Reboot) :
+```
+reboot
+```
+
+Clear (to clear the console)
+```
+clear
+```
+
+Echo (to echo some text)
+```
+echo text
+```
+
+Help (to show availables commands)
+```
+help
 ```
