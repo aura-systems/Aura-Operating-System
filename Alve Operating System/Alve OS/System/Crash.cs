@@ -1,6 +1,6 @@
 ﻿/*
 * PROJECT:          Alve Operating System Development
-* CONTENT:          Kernel
+* CONTENT:          Crash screen
 * PROGRAMMERS:      Valentin Charbonnier <valentinbreiz@gmail.com>
 */
 
