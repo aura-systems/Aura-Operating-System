@@ -17,20 +17,20 @@ namespace Alve_OS.System.Translation
             {
                 case "fr_FR":
                     Console.WriteLine("Commandes disponible:");
-                    Console.WriteLine("- shutdown (Arret ACPI)");
-                    Console.WriteLine("- reboot (Redemarrage CPU)");
+                    Console.WriteLine("- shutdown (Arr" + ASCII.ê + "t ACPI)");
+                    Console.WriteLine("- reboot (Red" + ASCII.é + "marrage CPU)");
                     Console.WriteLine("- clear (Efface la console)");
                     Console.WriteLine("- cd .. (Pour naviguer dans l'arborescence)");
-                    Console.WriteLine("- cd (Pour aller a un dossier)");
+                    Console.WriteLine("- cd (Pour aller à un dossier)");
                     Console.WriteLine("- dir (Liste les fichiers et dossiers)");
-                    Console.WriteLine("- mkdir (Pour créer un dossier)");
+                    Console.WriteLine("- mkdir (Pour cr" + ASCII.é + "er un dossier)");
                     Console.WriteLine("- rmdir (Pour supprimer un dossier)");
-                    Console.WriteLine("- mkfil (Pour creer un fichier)");
+                    Console.WriteLine("- mkfil (Pour cr" + ASCII.é + "er un fichier)");
                     Console.WriteLine("- rmfil (Pour supprimer un fichier)");
                     Console.WriteLine("- vol (Liste les volumes FAT)");
                     Console.WriteLine("- echo (Affiche un echo)");
                     Console.WriteLine("- systeminfo (Affiche des informations systeme)");
-                    Console.WriteLine("- langset (Changer le language systeme)");
+                    Console.WriteLine("- langset (Changer le langage syst" + ASCII.è + "me)");
                     break;
 
                 case "en_US":

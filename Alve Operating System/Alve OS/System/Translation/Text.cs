@@ -35,10 +35,10 @@ namespace Alve_OS.System.Translation
                             Console.WriteLine("Initialisation clavier FR...");
                             break;
                         case "restart": 
-                            Console.WriteLine("Redemarrage en cours..."); 
+                            Console.WriteLine("Red" + ASCII.é + "marrage en cours..."); 
                             break;
                         case "directorydoesntexist":
-                            Console.WriteLine("Ce repertoire n'existe pas !");
+                            Console.WriteLine("Ce r" + ASCII.é + "pertoire n'" + ASCII.é + "xiste pas !");
                             break;
                         case "typename":
                             Console.WriteLine("Type\t Nom");
@@ -53,13 +53,13 @@ namespace Alve_OS.System.Translation
                             Console.WriteLine("Nom\tTaille\tParent");
                             break;
                         case "OSName":
-                            Console.WriteLine("Nom du systeme d'exploitation: Alve");
+                            Console.WriteLine("Nom du syst" + ASCII.è + "me d'exploitation: Alve");
                             break;
                         case "OSVersion":
-                            Console.WriteLine("Version du systeme:            " + Kernel.version);
+                            Console.WriteLine("Version du syst" + ASCII.è + "me:            " + Kernel.version);
                             break;
                         case "OSRevision":
-                            Console.WriteLine("Revision du systeme:           " + Kernel.revision);
+                            Console.WriteLine("R" + ASCII.é + "vision du syst" + ASCII.è + "me:           " + Kernel.revision);
                             break;
                         case "UnknownCommand":
                             Console.WriteLine("Commande inconnue.");
