@@ -35,10 +35,10 @@ namespace Alve_OS.System.Translation
                             Console.WriteLine("Initialisation clavier FR...");
                             break;
                         case "restart": 
-                            Console.WriteLine("Redémarrage en cours..."); 
+                            Console.WriteLine("Redemarrage en cours..."); 
                             break;
                         case "directorydoesntexist":
-                            Console.WriteLine("Ce répertoire n'existe pas !");
+                            Console.WriteLine("Ce repertoire n'existe pas !");
                             break;
                         case "typename":
                             Console.WriteLine("Type\t Nom");
@@ -47,19 +47,19 @@ namespace Alve_OS.System.Translation
                             Console.WriteLine(arg + " n'existe pas !");
                             break;
                         case "alreadyexist":
-                            Console.WriteLine(arg + " existe déjà !");
+                            Console.WriteLine(arg + " existe deja !");
                             break;
                         case "NameSizeParent":
                             Console.WriteLine("Nom\tTaille\tParent");
                             break;
                         case "OSName":
-                            Console.Write("Nom du système d'exploitation:     Alve");
+                            Console.WriteLine("Nom du systeme d'exploitation: Alve");
                             break;
                         case "OSVersion":
-                            Console.Write("Version du système:                " + Kernel.version);
+                            Console.WriteLine("Version du systeme:            " + Kernel.version);
                             break;
                         case "OSRevision":
-                            Console.Write("Révision du système:               " + Kernel.revision);
+                            Console.WriteLine("Revision du systeme:           " + Kernel.revision);
                             break;
                         case "UnknownCommand":
                             Console.WriteLine("Commande inconnue.");
