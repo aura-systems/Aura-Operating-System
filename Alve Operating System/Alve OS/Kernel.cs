@@ -67,7 +67,6 @@ namespace Alve_OS
             Console.ForegroundColor = ConsoleColor.White;
             Console.WriteLine("Welcome to Alve Operating System v" + version + " !");
             Console.WriteLine("Made by Valentin CHARBONNIER (valentinbreiz) and Alexy DA CRUZ (GeomTech).");
-            Console.WriteLine("This is a temporary startup message, so no translate is available.");
             Console.WriteLine();
         }
 
@@ -84,7 +83,6 @@ namespace Alve_OS
         }
 
         #endregion
-
 
     }
 }

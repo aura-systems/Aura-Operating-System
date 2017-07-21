@@ -151,6 +151,5 @@ namespace Alve_OS.Shell
                 Console.ForegroundColor = ConsoleColor.White;
             }
         }
-
     }
 }

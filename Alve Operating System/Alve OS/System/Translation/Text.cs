@@ -108,10 +108,8 @@ namespace Alve_OS.System.Translation
                             Console.WriteLine("Unknown command.");
                             break;
                     }
-
                     break;
             }
         }
-
     }
 }

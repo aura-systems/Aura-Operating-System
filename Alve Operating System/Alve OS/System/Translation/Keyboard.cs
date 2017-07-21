@@ -5,8 +5,6 @@
 */
 
 using System;
-using System.Collections.Generic;
-using System.Text;
 using Sys = Cosmos.System;
 
 namespace Alve_OS.System.Translation
@@ -33,10 +31,7 @@ namespace Alve_OS.System.Translation
             catch
             {
                 Console.WriteLine("[ERROR]");
-            }
-
-            
+            }  
         }
-
     }
 }

@@ -5,8 +5,6 @@
 */
 
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Alve_OS.System.Translation
 {
@@ -20,7 +18,7 @@ namespace Alve_OS.System.Translation
                 case "fr_FR":
                     Console.WriteLine("Commandes disponible:");
                     Console.WriteLine("- shutdown (Arrêt ACPI)");
-                    Console.WriteLine("- reboot (Redémarrage)");
+                    Console.WriteLine("- reboot (Redémarrage CPU)");
                     Console.WriteLine("- clear (Efface la console)");
                     Console.WriteLine("- cd .. (Pour naviguer dans l'arborescence)");
                     Console.WriteLine("- cd (Pour aller à un dossier)");
