@@ -39,9 +39,12 @@ namespace Alve_OS
         {
             #region Language
             Lang.Keyboard.Init();
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine("[OK]");
+            Console.ForegroundColor = ConsoleColor.White;
             #endregion
 
-            running = true;
+
 
             #region FileSystem Init
             Console.WriteLine("Initializing FileSystem...");
@@ -68,6 +71,7 @@ namespace Alve_OS
             Console.WriteLine("Welcome to Alve Operating System v" + version + " !");
             Console.WriteLine("Made by Valentin CHARBONNIER (valentinbreiz) and Alexy DA CRUZ (GeomTech).");
             Console.WriteLine();
+            running = true;
         }
 
         #endregion
