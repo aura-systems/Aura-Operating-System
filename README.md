@@ -85,3 +85,8 @@ Systeminfo (to display system informations)
 ```
 systeminfo
 ```
+
+Langset (to change system language, for now en_US and fr_FR)
+```
+langset
+```
