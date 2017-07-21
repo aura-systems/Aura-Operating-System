@@ -28,7 +28,7 @@ namespace Alve_OS
         public static string version = "0.1";
         public static string revision = "20072017-2144";
         public static string current_directory = @"0:\";
-        public static string langSelected = "fr_FR";
+        public static string langSelected = "en_US";
         public static CosmosVFS FS { get; private set; }
 
         #endregion

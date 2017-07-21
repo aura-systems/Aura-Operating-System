@@ -17,19 +17,20 @@ namespace Alve_OS.System.Translation
             {
                 case "fr_FR":
                     Console.WriteLine("Commandes disponible:");
-                    Console.WriteLine("- shutdown (Arrêt ACPI)");
-                    Console.WriteLine("- reboot (Redémarrage CPU)");
+                    Console.WriteLine("- shutdown (Arret ACPI)");
+                    Console.WriteLine("- reboot (Redemarrage CPU)");
                     Console.WriteLine("- clear (Efface la console)");
                     Console.WriteLine("- cd .. (Pour naviguer dans l'arborescence)");
-                    Console.WriteLine("- cd (Pour aller à un dossier)");
+                    Console.WriteLine("- cd (Pour aller a un dossier)");
                     Console.WriteLine("- dir (Liste les fichiers et dossiers)");
                     Console.WriteLine("- mkdir (Pour créer un dossier)");
                     Console.WriteLine("- rmdir (Pour supprimer un dossier)");
-                    Console.WriteLine("- mkfil (Pour créer un fichier)");
+                    Console.WriteLine("- mkfil (Pour creer un fichier)");
                     Console.WriteLine("- rmfil (Pour supprimer un fichier)");
-                    Console.WriteLine("- vol (Liste les volumes formatés en FAT)");
+                    Console.WriteLine("- vol (Liste les volumes FAT)");
                     Console.WriteLine("- echo (Affiche un echo)");
-                    Console.WriteLine("- systeminfo (Affiche des informations système)");
+                    Console.WriteLine("- systeminfo (Affiche des informations systeme)");
+                    Console.WriteLine("- langset (Changer le language systeme)");
                     break;
 
                 case "en_US":
@@ -47,6 +48,7 @@ namespace Alve_OS.System.Translation
                     Console.WriteLine("- vol (to list volumes)");
                     Console.WriteLine("- echo (to echo text)");
                     Console.WriteLine("- systeminfo (to display system informations)");
+                    Console.WriteLine("- langset (to change system language)");
                     break;
             }
         }

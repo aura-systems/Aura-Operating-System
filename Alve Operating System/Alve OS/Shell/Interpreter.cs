@@ -144,6 +144,29 @@ namespace Alve_OS.Shell
                 L.Text.Display("OSVersion");
                 L.Text.Display("OSRevision");
             }
+            else if (cmd.Equals("langset"))
+            {
+                L.Text.Display("availablelanguage");
+            }
+            else if (cmd.StartsWith("langset "))
+            {
+                cmd = cmd.Remove(0, 8);
+                if (cmd.Equals("en_US"))
+                {
+                    Kernel.langSelected = "en_US";
+                    L.Keyboard.Init();
+                }
+                else if (cmd.Equals("fr_FR"))
+                {
+                    Kernel.langSelected = "fr_FR";
+                    L.Keyboard.Init();
+                }
+                else
+                {
+                    L.Text.Display("unknownlanguage");
+                    L.Text.Display("availablelanguage");
+                }
+            }
             else
             {
                 Console.ForegroundColor = ConsoleColor.DarkRed;

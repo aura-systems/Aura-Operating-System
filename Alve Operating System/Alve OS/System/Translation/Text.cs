@@ -64,6 +64,12 @@ namespace Alve_OS.System.Translation
                         case "UnknownCommand":
                             Console.WriteLine("Commande inconnue.");
                             break;
+                        case "unknownlanguage":
+                            Console.WriteLine("Langue inconnue.");
+                            break;
+                        case "availablelanguage":
+                            Console.WriteLine("Langues disponibles: en_US fr_FR");
+                            break;
                     }
                     break;
 
@@ -106,6 +112,12 @@ namespace Alve_OS.System.Translation
                             break;
                         case "UnknownCommand":
                             Console.WriteLine("Unknown command.");
+                            break;
+                        case "unknownlanguage":
+                            Console.WriteLine("Unknown language.");
+                            break;
+                        case "availablelanguage":
+                            Console.WriteLine("Available languages: en_US fr_FR");
                             break;
                     }
                     break;
