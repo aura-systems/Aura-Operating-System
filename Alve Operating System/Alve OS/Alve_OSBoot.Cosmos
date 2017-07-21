@@ -42,7 +42,7 @@
   <ItemGroup>
     <Folder Include="Shell\" />
     <Folder Include="System\" />
-    <Folder Include="System\Translate\" />
+    <Folder Include="System\Translation\" />
   </ItemGroup>
   <Import Project="$(AppData)\Cosmos User Kit\Build\VSIP\Cosmos.targets" />
 </Project>

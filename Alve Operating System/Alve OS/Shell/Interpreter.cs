@@ -1,6 +1,14 @@
-﻿using System;
+﻿/*
+* PROJECT:          Alve Operating System Development
+* CONTENT:          Translation system
+* PROGRAMMERS:      Alexy DA CRUZ <dacruzalexy@gmail.com>
+*                   Valentin Charbonnier <valentinbreiz@gmail.com>
+*/
+
+using System;
 using System.IO;
 using Sys = Cosmos.System;
+using L = Alve_OS.System.Translation;
 
 namespace Alve_OS.Shell
 {
@@ -12,14 +20,14 @@ namespace Alve_OS.Shell
             {
                 Kernel.running = false;
                 Console.Clear();
-                Console.WriteLine("Shutting Down...");
+                L.Text.Display("shutdown");
                 Sys.Power.Shutdown();
             }
             else if (cmd.Equals("reboot"))
             {
                 Kernel.running = false;
                 Console.Clear();
-                Console.WriteLine("Restarting...");
+                L.Text.Display("restart");
                 Sys.Power.Reboot();
             }
             else if (cmd.Equals("clear"))
@@ -33,20 +41,7 @@ namespace Alve_OS.Shell
             }
             else if (cmd.Equals("help"))
             {
-                Console.WriteLine("Available commands:");
-                Console.WriteLine("- shutdown (to do a ACPI Shutdown)");
-                Console.WriteLine("- reboot (to do a CPU Reboot)");
-                Console.WriteLine("- clear (to clear the console)");
-                Console.WriteLine("- cd .. (to navigate to the parent folder)");
-                Console.WriteLine("- cd (to navigate to a folder)");
-                Console.WriteLine("- dir (to list directories and files)");
-                Console.WriteLine("- mkdir (to create a directory");
-                Console.WriteLine("- rmdir (to remove a directory)");
-                Console.WriteLine("- mkfil (to create a file)");
-                Console.WriteLine("- rmfil (to remove a file)");
-                Console.WriteLine("- vol (to list volumes)");
-                Console.WriteLine("- echo (to echo text)");
-                Console.WriteLine("- systeminfo (to display system informations)");
+                L.Help.Display();
             }
             else if (cmd.Equals("cd .."))
             {
@@ -70,12 +65,12 @@ namespace Alve_OS.Shell
                 }
                 else
                 {
-                    Console.WriteLine("This directory doesn't exist!");
+                    L.Text.Display("directorydoesntexist");
                 }
             }
             else if (cmd.Equals("dir"))
             {
-                Console.WriteLine("Type\t Name");
+                L.Text.Display("typename");
                 foreach (var dir in Directory.GetDirectories(Kernel.current_directory))
                 {
                     Console.WriteLine("<DIR>\t" + dir);
@@ -107,7 +102,7 @@ namespace Alve_OS.Shell
                 }
                 else
                 {
-                    Console.WriteLine(dir + " does not exist!");
+                    L.Text.Display("doesnotexist");
                 }
             }
             else if (cmd.StartsWith("rmfil "))
@@ -119,7 +114,7 @@ namespace Alve_OS.Shell
                 }
                 else
                 {
-                    Console.WriteLine(file + " does not exist!");
+                    L.Text.Display("doesnotexist");
                 }
             }
             else if (cmd.StartsWith("mkfil "))
@@ -131,13 +126,13 @@ namespace Alve_OS.Shell
                 }
                 else
                 {
-                    Console.WriteLine(file + " already exists!");
+                    L.Text.Display("alreadyexist");
                 }
             }
             else if (cmd.Equals("vol"))
             {
                 var vols = Kernel.FS.GetVolumes();
-                Console.WriteLine("Name\tSize\tParent");
+                L.Text.Display("NameSizeParent");
                 foreach (var vol in vols)
                 {
                     Console.WriteLine(vol.mName + "\t" + vol.mSize + "\t" + vol.mParent);
@@ -145,14 +140,14 @@ namespace Alve_OS.Shell
             }
             else if (cmd.Equals("systeminfo"))
             {
-                Console.WriteLine("Operating system name:     Alve");
-                Console.WriteLine("Operating system version:  " + Kernel.version);
-                Console.WriteLine("Operating system revision: " + Kernel.revision);
+                L.Text.Display("OSName");
+                L.Text.Display("OSVersion");
+                L.Text.Display("OSRevision");
             }
             else
             {
                 Console.ForegroundColor = ConsoleColor.DarkRed;
-                Console.WriteLine("Unknown command.");
+                L.Text.Display("UnknownCommand");
                 Console.ForegroundColor = ConsoleColor.White;
             }
         }

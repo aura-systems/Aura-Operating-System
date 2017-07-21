@@ -10,6 +10,7 @@
 using System;
 using Cosmos.System.FileSystem;
 using Sys = Cosmos.System;
+using Lang = Alve_OS.System.Translation;
 using Alve_OS.System;
 using System.IO;
 
@@ -25,8 +26,9 @@ namespace Alve_OS
 
         public static bool running;
         public static string version = "0.1";
-        public static string revision = "20072017-2053";
+        public static string revision = "20072017-2144";
         public static string current_directory = @"0:\";
+        public static string langSelected = "fr_FR";
         public static CosmosVFS FS { get; private set; }
 
         #endregion
@@ -35,7 +37,10 @@ namespace Alve_OS
 
         protected override void BeforeRun()
         {
-            
+            #region Language
+            Lang.Keyboard.Init();
+            #endregion
+              
             running = true;
 
             #region FileSystem Init
@@ -63,6 +68,7 @@ namespace Alve_OS
 
             Console.WriteLine("Welcome to Alve Operating System v" + version + " !");
             Console.WriteLine("Made by Valentin CHARBONNIER (valentinbreiz) and Alexy DA CRUZ (GeomTech).");
+            Console.WriteLine("This is a temporary startup message, so no translate is available.");
             Console.WriteLine();
 
         }
