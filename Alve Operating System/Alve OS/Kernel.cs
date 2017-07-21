@@ -80,10 +80,19 @@ namespace Alve_OS
 
         protected override void Run()
         {
-            Console.Write(current_directory + "> ");
-            var cmd = Console.ReadLine();
-            Shell.Interpreter.Interpret(cmd);
-            Console.WriteLine();
+            try
+            {
+                Console.Write(current_directory + "> ");
+                var cmd = Console.ReadLine();
+                Shell.Interpreter.Interpret(cmd);
+                Console.WriteLine();
+            }
+            catch (Exception ex)
+            {
+                running = false;
+                Crash.StopKernel(ex);
+            }
+            
         }
 
         #endregion
