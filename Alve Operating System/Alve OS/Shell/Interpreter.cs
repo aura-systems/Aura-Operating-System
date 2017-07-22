@@ -1,6 +1,6 @@
 ﻿/*
 * PROJECT:          Alve Operating System Development
-* CONTENT:          Translation system
+* CONTENT:          Interpreter
 * PROGRAMMERS:      Alexy DA CRUZ <dacruzalexy@gmail.com>
 *                   Valentin Charbonnier <valentinbreiz@gmail.com>
 */
@@ -165,6 +165,54 @@ namespace Alve_OS.Shell
                 {
                     L.Text.Display("unknownlanguage");
                     L.Text.Display("availablelanguage");
+                }
+            }
+            else if (cmd.Equals("ver"))
+            {
+                Console.WriteLine("Alve [version " + Kernel.version + "-" + Kernel.revision + "]");
+            }
+            else if (cmd.Equals("color"))
+            {
+                L.Color.Display();
+            }
+            else if (cmd.StartsWith("color "))
+            {
+                string color = cmd.Remove(0, 6);
+                if (color.Equals("0"))
+                {
+                    Console.ForegroundColor = ConsoleColor.Black;
+                }
+                else if (color.Equals("1"))
+                {
+                    Console.ForegroundColor = ConsoleColor.Blue;
+                }
+                else if (color.Equals("2"))
+                {
+                    Console.ForegroundColor = ConsoleColor.Green;
+                }
+                else if (color.Equals("3"))
+                {
+                    Console.ForegroundColor = ConsoleColor.DarkBlue;
+                }
+                else if (color.Equals("4"))
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                }
+                else if (color.Equals("5"))
+                {
+                    Console.ForegroundColor = ConsoleColor.Magenta;
+                }
+                else if (color.Equals("6"))
+                {
+                    Console.ForegroundColor = ConsoleColor.Yellow;
+                }
+                else if (color.Equals("7"))
+                {
+                    Console.ForegroundColor = ConsoleColor.White;
+                }
+                else
+                {
+                    L.Text.Display("unknowncolor");
                 }
             }
             else
