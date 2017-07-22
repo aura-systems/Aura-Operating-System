@@ -7,4 +7,5 @@
 
 # TO DO (Low priority)
 * Multitasking;
-* Network.
+* Network;
+* User permissions.
