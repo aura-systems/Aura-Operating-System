@@ -1,6 +1,6 @@
 ﻿/*
 * PROJECT:          Alve Operating System Development
-* CONTENT:          Translation system
+* CONTENT:          Keyboard initialization
 * PROGRAMMERS:      Alexy DA CRUZ <dacruzalexy@gmail.com>
 */
 

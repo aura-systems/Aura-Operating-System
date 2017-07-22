@@ -26,7 +26,7 @@ namespace Alve_OS
 
         public static bool running;
         public static string version = "0.1";
-        public static string revision = "21072017-1445";
+        public static string revision = "220720171325";
         public static string current_directory = @"0:\";
         public static string langSelected = "en_US";
         public static CosmosVFS FS { get; private set; }
@@ -43,8 +43,6 @@ namespace Alve_OS
             Console.WriteLine("[OK]");
             Console.ForegroundColor = ConsoleColor.White;
             #endregion
-
-
 
             #region FileSystem Init
             Console.WriteLine("Initializing FileSystem...");

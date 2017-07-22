@@ -1,7 +1,8 @@
 ﻿/*
 * PROJECT:          Alve Operating System Development
-* CONTENT:          Translation system
+* CONTENT:          Help infos
 * PROGRAMMERS:      Alexy DA CRUZ <dacruzalexy@gmail.com>
+*                   Valentin Charbonnier <valentinbreiz@gmail.com>
 */
 
 using System;
@@ -31,6 +32,8 @@ namespace Alve_OS.System.Translation
                     Console.WriteLine("- echo (Affiche un echo)");
                     Console.WriteLine("- systeminfo (Affiche des informations systeme)");
                     Console.WriteLine("- langset (Changer le langage syst" + ASCII.è + "me)");
+                    Console.WriteLine("- ver (Pour afficher la version syst" + ASCII.è + "me)");
+                    Console.WriteLine("- color (Permet de changer la couleur de premier plan)");
                     break;
 
                 case "en_US":
@@ -49,6 +52,8 @@ namespace Alve_OS.System.Translation
                     Console.WriteLine("- echo (to echo text)");
                     Console.WriteLine("- systeminfo (to display system informations)");
                     Console.WriteLine("- langset (to change system language)");
+                    Console.WriteLine("- ver (to display system version)");
+                    Console.WriteLine("- ver (change foreground colour)");
                     break;
             }
         }

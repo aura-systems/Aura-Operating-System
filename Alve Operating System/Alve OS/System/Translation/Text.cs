@@ -70,6 +70,9 @@ namespace Alve_OS.System.Translation
                         case "availablelanguage":
                             Console.WriteLine("Langues disponibles: en_US fr_FR");
                             break;
+                        case "unknowncolor":
+                            Console.WriteLine("Couleur inconnue.");
+                            break;
                     }
                     break;
 
@@ -118,6 +121,9 @@ namespace Alve_OS.System.Translation
                             break;
                         case "availablelanguage":
                             Console.WriteLine("Available languages: en_US fr_FR");
+                            break;
+                        case "unknowncolor":
+                            Console.WriteLine("Unknown colour.");
                             break;
                     }
                     break;
