@@ -10,9 +10,13 @@ Download and install [this repository](https://github.com/Alve-OS/Cosmos/tree/Bu
 ## Current features
 Please read the [TODO](https://github.com/Alve-OS/Alve-Operating-System/blob/master/TODO.md) file to know what will be added soon.
 
-* Restart
-* Shutdown
-* Basic command interpreter
+* Restart.
+* Shutdown.
+* Basic command interpreter.
+* Virtual FileSystem.
+* Multilanguage support.
+* Exception with screen of death.
+* "ASCII support"
 
 ## Commands
 
