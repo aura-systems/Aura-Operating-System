@@ -8,9 +8,9 @@ namespace Alve_OS.System.Translation
 {
     class ASCII
     {
-        public static string é = ("" + (char)130);
-        public static string ê = ("" + (char)136);
-        public static string è = ("" + (char)138);
-        public static string à = ("" + (char)133);
+        public static string eaigu = ("" + (char)130);
+        public static string ecircon = ("" + (char)136);
+        public static string egrave = ("" + (char)138);
+        public static string agrave = ("" + (char)133);
     }
 }

@@ -18,21 +18,21 @@ namespace Alve_OS.System.Translation
             {
                 case "fr_FR":
                     Console.WriteLine("Commandes disponible:");
-                    Console.WriteLine("- shutdown (Arr" + ASCII.ê + "t ACPI)");
-                    Console.WriteLine("- reboot (Red" + ASCII.é + "marrage CPU)");
+                    Console.WriteLine("- shutdown (Arr" + ASCII.ecircon + "t ACPI)");
+                    Console.WriteLine("- reboot (Red" + ASCII.eaigu + "marrage CPU)");
                     Console.WriteLine("- clear (Efface la console)");
                     Console.WriteLine("- cd .. (Pour naviguer dans l'arborescence)");
                     Console.WriteLine("- cd (Pour aller à un dossier)");
                     Console.WriteLine("- dir (Liste les fichiers et dossiers)");
-                    Console.WriteLine("- mkdir (Pour cr" + ASCII.é + "er un dossier)");
+                    Console.WriteLine("- mkdir (Pour cr" + ASCII.eaigu + "er un dossier)");
                     Console.WriteLine("- rmdir (Pour supprimer un dossier)");
-                    Console.WriteLine("- mkfil (Pour cr" + ASCII.é + "er un fichier)");
+                    Console.WriteLine("- mkfil (Pour cr" + ASCII.eaigu + "er un fichier)");
                     Console.WriteLine("- rmfil (Pour supprimer un fichier)");
                     Console.WriteLine("- vol (Liste les volumes FAT)");
                     Console.WriteLine("- echo (Affiche un echo)");
                     Console.WriteLine("- systeminfo (Affiche des informations systeme)");
-                    Console.WriteLine("- langset (Changer le langage syst" + ASCII.è + "me)");
-                    Console.WriteLine("- ver (Pour afficher la version syst" + ASCII.è + "me)");
+                    Console.WriteLine("- langset (Changer le langage syst" + ASCII.egrave + "me)");
+                    Console.WriteLine("- ver (Pour afficher la version syst" + ASCII.egrave + "me)");
                     Console.WriteLine("- color (Permet de changer la couleur de premier plan)");
                     break;
 
@@ -53,7 +53,7 @@ namespace Alve_OS.System.Translation
                     Console.WriteLine("- systeminfo (to display system informations)");
                     Console.WriteLine("- langset (to change system language)");
                     Console.WriteLine("- ver (to display system version)");
-                    Console.WriteLine("- ver (change foreground colour)");
+                    Console.WriteLine("- color (change foreground colour)");
                     break;
             }
         }
