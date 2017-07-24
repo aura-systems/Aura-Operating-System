@@ -11,7 +11,6 @@ namespace Alve_OS.System.Translation
 {
     class Help
     {
-
         public static void Display()
         {
             switch (Kernel.langSelected)
@@ -22,7 +21,7 @@ namespace Alve_OS.System.Translation
                     Console.WriteLine("- reboot (Red" + ASCII.eaigu + "marrage CPU)");
                     Console.WriteLine("- clear (Efface la console)");
                     Console.WriteLine("- cd .. (Pour naviguer dans l'arborescence)");
-                    Console.WriteLine("- cd (Pour aller à un dossier)");
+                    Console.WriteLine("- cd (Pour aller " + ASCII.agrave + " un dossier)");
                     Console.WriteLine("- dir (Liste les fichiers et dossiers)");
                     Console.WriteLine("- mkdir (Pour cr" + ASCII.eaigu + "er un dossier)");
                     Console.WriteLine("- rmdir (Pour supprimer un dossier)");
@@ -57,6 +56,5 @@ namespace Alve_OS.System.Translation
                     break;
             }
         }
-
     }
 }
