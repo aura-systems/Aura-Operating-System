@@ -15,11 +15,11 @@ namespace Alve_OS.System.Translation
             switch (Kernel.langSelected)
             {
                 case "fr_FR":
-                    Console.WriteLine("Change les couleurs par d" + ASCII.eaigu + "faut du premier plan de la console.");
+                    Console.WriteLine("Change les couleurs par défaut du premier plan de la console.");
                     Console.WriteLine("0 = Noir");
                     Console.WriteLine("1 = Bleu");
                     Console.WriteLine("2 = Vert");
-                    Console.WriteLine("3 = Bleu fonc" + ASCII.eaigu);
+                    Console.WriteLine("3 = Bleu foncé");
                     Console.WriteLine("4 = Rouge");
                     Console.WriteLine("5 = Violet");
                     Console.WriteLine("6 = Jaune");
