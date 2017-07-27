@@ -73,6 +73,12 @@ namespace Alve_OS.System.Translation
                         case "unknowncolor":
                             Console.WriteLine("Couleur inconnue.");
                             break;
+                        case "logged":
+                            Console.WriteLine("Vous êtes connecté en tant que " + arg + ".");
+                            break;
+                        case "unknownuser":
+                            Console.WriteLine("Utilisateur inconnu.");
+                            break;
                     }
                     break;
 
@@ -124,6 +130,12 @@ namespace Alve_OS.System.Translation
                             break;
                         case "unknowncolor":
                             Console.WriteLine("Unknown colour.");
+                            break;
+                        case "logged":
+                            Console.WriteLine("You are logged in " + arg + ".");
+                            break;
+                        case "unknownuser":
+                            Console.WriteLine("Unknown user.");
                             break;
                     }
                     break;

@@ -13,6 +13,7 @@ using Sys = Cosmos.System;
 using Lang = Alve_OS.System.Translation;
 using Alve_OS.System;
 using System.IO;
+using Alve_OS.System.Users;
 
 
 #endregion
@@ -26,10 +27,13 @@ namespace Alve_OS
 
         public static bool running;
         public static string version = "0.1";
-        public static string revision = "240720171251";
+        public static string revision = "270720172145";
         public static string current_directory = @"0:\";
         public static string langSelected = "en_US";
         public static CosmosVFS FS { get; private set; }
+        public static string userLogged;
+        public static string userLevelLogged;
+        public static bool Logged = false;
 
         #endregion
 
@@ -37,6 +41,8 @@ namespace Alve_OS
 
         protected override void BeforeRun()
         {
+            Setup.MakingUsers();
+
             #region Language
             Lang.Keyboard.Init();
             Console.ForegroundColor = ConsoleColor.Green;
@@ -63,12 +69,8 @@ namespace Alve_OS
 
             Console.Clear();
 
-            Console.ForegroundColor = ConsoleColor.Green;
-            Console.WriteLine("Kernel has started successfully!");
-            Console.ForegroundColor = ConsoleColor.White;
-            Console.WriteLine("Welcome to Alve Operating System v" + version + " !");
-            Console.WriteLine("Made by Valentin CHARBONNIER (valentinbreiz) and Alexy DA CRUZ (GeomTech).");
-            Console.WriteLine();
+            WelcomeMessage.Display();
+
             running = true;
         }
 
@@ -80,10 +82,21 @@ namespace Alve_OS
         {
             try
             {
-                Console.Write(current_directory + "> ");
-                var cmd = Console.ReadLine();
-                Shell.Interpreter.Interpret(cmd);
-                Console.WriteLine();
+                switch (Logged)
+                {
+                    case false:
+
+                        break;
+
+                    case true:
+                        //LOGGED
+                        Console.Write(UserLevel.TypeUser() + userLogged + "~ " + current_directory + "> ");
+                        var cmd = Console.ReadLine();
+                        Shell.Interpreter.Interpret(cmd);
+                        Console.WriteLine();
+
+                        break;
+                }
             }
             catch (Exception ex)
             {
