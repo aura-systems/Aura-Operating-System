@@ -26,7 +26,8 @@ namespace Alve_OS.System
                         string RootPassword = File.ReadAllText(@"0:\Users\root.usr");
                         if (RootPassword == "root")
                         {
-                            Console.WriteLine(" Le mot de passe par défaut pour le compte root est 'root'");
+                            Console.WriteLine(" ");
+                            Console.WriteLine("   * Le mot de passe par défaut pour le compte root est 'root'");
                         }
                     }
                     Console.WriteLine(" ");
@@ -45,7 +46,8 @@ namespace Alve_OS.System
                         string RootPassword = File.ReadAllText("0:\\Users\\root.usr");
                         if (RootPassword == "root")
                         {
-                            Console.WriteLine(" Default password for root is 'root'");
+                            Console.WriteLine(" ");
+                            Console.WriteLine("   * Default password for root is 'root'");
                         }
                     }
                     Console.WriteLine(" ");

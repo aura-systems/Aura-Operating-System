@@ -13,10 +13,14 @@ namespace Alve_OS.System
         /// <summary>
         /// Vérifie que l'installation d'Alve est complète
         /// </summary>
-        public void SetupVerifyCompleted()
+        public static void SetupVerifyCompleted()
         {
-            //TO-DO
-            throw new NotImplementedException();
+            if (!File.Exists(@"0:\System\setup"))
+            {
+                MakingUsers();
+                SetupUsers();
+            }
+            
         }
 
 
@@ -59,8 +63,8 @@ namespace Alve_OS.System
                         {
                             if (File.Exists(@"0:\Users\root.usr"))
                             {
-                                string text = "root|admin";
-                                File.WriteAllText(@"0:\Users\root.usr", text);
+                                string text = "root";
+                                File.WriteAllText(@"0:\Users\root.usr", text + "|admin");
                             }
                         }
                         catch
@@ -80,18 +84,72 @@ namespace Alve_OS.System
 
                 ///////////////////////////////////////////////////////////
 
-                //TODO Ask user creation
+                
             }
             catch
             {
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine("[ERROR] KERNEL USERS MAKING > MakingUsers()");
                 Console.ForegroundColor = ConsoleColor.White;
-                //Crash.StopKernel("Users crash");
             }
 
 
             
+        }
+
+        public static void SetupUsers()
+        {
+            try
+            {
+                if (Directory.Exists(@"0:\Users"))
+                {
+                    Console.Clear();
+
+                    Console.WriteLine();
+                    Console.WriteLine("Choose a user name for your Alve Account:");
+                    Console.WriteLine();
+                    Console.Write("> ");
+                    var username = Console.ReadLine();
+
+                    if (File.Exists(@"0:\Users\" + username + ".usr"))
+                    {
+                        Console.WriteLine("This user exist already!");
+                    }
+                    else
+                    {
+                        Console.WriteLine();
+                        Console.WriteLine("Choose a password for " + username);
+                        Console.WriteLine();
+                        Console.Write("> ");
+                        var password = Console.ReadLine();
+                        Console.WriteLine();
+
+                        File.Create(@"0:\Users\" + username + ".usr");
+
+                        if (File.Exists(@"0:\Users\" + username + ".usr"))
+                        {
+                            File.WriteAllText(@"0:\Users\" + username + ".usr", password + "|standard");
+
+                            Console.WriteLine("Next step ! User created !");
+
+                            if (Directory.Exists(@"0:\System"))
+                            {
+                                File.Create(@"0:\System\setup");
+                            }
+                        }
+                        else
+                        {
+                            //error
+                        }
+                    }                  
+
+                    
+                }
+            }
+            catch
+            {
+
+            }
         }
 
     }

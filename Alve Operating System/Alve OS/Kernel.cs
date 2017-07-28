@@ -41,8 +41,6 @@ namespace Alve_OS
 
         protected override void BeforeRun()
         {
-            Setup.MakingUsers();
-
             #region Language
             Lang.Keyboard.Init();
             Console.ForegroundColor = ConsoleColor.Green;
@@ -67,6 +65,8 @@ namespace Alve_OS
             Console.ForegroundColor = ConsoleColor.White;
             #endregion
 
+            Setup.SetupVerifyCompleted();
+
             Console.Clear();
 
             WelcomeMessage.Display();
@@ -82,21 +82,19 @@ namespace Alve_OS
         {
             try
             {
-                switch (Logged)
+                if (Logged) //si loggé
                 {
-                    case false:
-
-                        break;
-
-                    case true:
-                        //LOGGED
-                        Console.Write(UserLevel.TypeUser() + userLogged + "~ " + current_directory + "> ");
-                        var cmd = Console.ReadLine();
-                        Shell.Interpreter.Interpret(cmd);
-                        Console.WriteLine();
-
-                        break;
+                    //LOGGED
+                    Console.Write(UserLevel.TypeUser() + userLogged + "~ " + current_directory + "> ");
+                    var cmd = Console.ReadLine();
+                    Shell.Interpreter.Interpret(cmd);
+                    Console.WriteLine();
+                } else
+                {
+                    Login.Init();
                 }
+
+             
             }
             catch (Exception ex)
             {

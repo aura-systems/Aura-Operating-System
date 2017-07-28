@@ -14,51 +14,89 @@ namespace Alve_OS.System.Users
 {
     class Users
     {
-        public void Login(string user, string password)
+        public void Login()
         {
-            if(user == "root")
+            switch (Kernel.langSelected)
             {
-                if (File.Exists(@"0:\Users\root.usr"))
-                {
-                    string RootPassword = File.ReadAllText(@"0:\Users\root.usr");
+                case "fr_FR":
+                    Console.Write("Utilisateur > ");
+                    var user = Console.ReadLine();
+                    Console.WriteLine();
 
-                    if (password == RootPassword)
+                    if (File.Exists(@"0:\Users\" + user + ".usr"))
                     {
-                        //LOGGED
-                        Kernel.userLogged = "root";
-                        Kernel.userLevelLogged = UserLevel.Administrator();
-                        Console.Clear();
-                        WelcomeMessage.Display();
-                        Kernel.Logged = true;
+                        Console.Write("Mot de passe > ");
+                        var psw = Console.ReadLine();
+                        Console.WriteLine();
+
+                        string UserFile = File.ReadAllText(@"0:\Users\" + user + ".usr");
+
+                        Char delimiter = '|';
+                        string[] UserFileContent = UserFile.Split(delimiter);
+
+                        if (psw == UserFileContent[0])
+                        {
+                            //LOGGED
+                            Kernel.userLogged = user;
+                            UserLevel.LevelReader(UserFileContent[1]);
+                            if(user == "root")
+                            {
+                                Kernel.userLevelLogged = UserLevel.Administrator();
+                            }
+                            Console.Clear();
+                            WelcomeMessage.Display();
+                            Text.Display("logged", user);
+                            Console.WriteLine("");
+                            Kernel.Logged = true;
+                        }
                     }
-                }
-                
-            }
-            else //Not root, so it's a user created after/during installation
-            {
-                if (File.Exists(@"0:\Users\" + user + ".usr"))
-                {
-                    string UserFile = File.ReadAllText(@"0:\Users\" + user + ".usr");
-
-                    Char delimiter = '|';
-                    String[] UserFileContent = UserFile.Split(delimiter);
-
-                    if (password == UserFileContent[0])
+                    else
                     {
-                        //LOGGED
-                        Kernel.userLogged = user;
-                        UserLevel.LevelReader(UserFileContent[1]);
-                        Console.Clear();
-                        WelcomeMessage.Display();
-                        Text.Display("logged", user);
-                        Console.WriteLine("");
-                        Kernel.Logged = true;
+                        Text.Display("unknownuser");
                     }
-                }
-                else
-                {
-                    Text.Display("unknownuser");
-                }
+
+                    break;
+
+                case "en_US":
+                    Console.Write("Login > ");
+                    var user2 = Console.ReadLine();
+                    Console.WriteLine();
+
+                    if (File.Exists(@"0:\Users\" + user2 + ".usr"))
+                    {
+                        Console.Write("Mot de passe > ");
+                        var psw = Console.ReadLine();
+                        Console.WriteLine();
+
+                        string UserFile = File.ReadAllText(@"0:\Users\" + user2 + ".usr");
+
+                        Char delimiter = '|';
+                        string[] UserFileContent = UserFile.Split(delimiter);
+
+                        if (psw == UserFileContent[0])
+                        {
+                            //LOGGED
+                            Kernel.userLogged = user2;
+                            UserLevel.LevelReader(UserFileContent[1]);
+                            if (user2 == "root")
+                            {
+                                Kernel.userLevelLogged = UserLevel.Administrator();
+                            }
+                            Console.Clear();
+                            WelcomeMessage.Display();
+                            Text.Display("logged", user2);
+                            Console.WriteLine("");
+                            Kernel.Logged = true;
+                        }
+                    }
+                    else
+                    {
+                        Text.Display("unknownuser");
+                    }
+
+                    break;
+
+
             }
         }
     }
