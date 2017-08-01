@@ -73,6 +73,12 @@ namespace Alve_OS.System.Translation
                         case "unknowncolor":
                             Console.WriteLine("Couleur inconnue.");
                             break;
+                        case "mkfil":
+                            Console.WriteLine("Entrez le nom du fichier (mkfil fichier.txt).");
+                            break;
+                        case "doesnotexit":
+                            Console.WriteLine("Ce fichier n'existe pas.");
+                            break;
                     }
                     break;
 
@@ -124,6 +130,12 @@ namespace Alve_OS.System.Translation
                             break;
                         case "unknowncolor":
                             Console.WriteLine("Unknown colour.");
+                            break;
+                        case "mkfil":
+                            Console.WriteLine("Enter the file name (mkfil file.txt).");
+                            break;
+                        case "doesnotexit":
+                            Console.WriteLine("This file does not exist.");
                             break;
                     }
                     break;
