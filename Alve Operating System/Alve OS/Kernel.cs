@@ -23,6 +23,8 @@ namespace Alve_OS
     public class Kernel: Sys.Kernel
     {
 
+        Setup setup = new Setup();
+
         #region Global variables
 
         public static bool running;
@@ -65,7 +67,7 @@ namespace Alve_OS
             Console.ForegroundColor = ConsoleColor.White;
             #endregion
 
-            Setup.SetupVerifyCompleted();
+            setup.SetupVerifyCompleted();
 
             Console.Clear();
 
@@ -82,6 +84,7 @@ namespace Alve_OS
         {
             try
             {
+
                 if (Logged) //si loggé
                 {
                     //LOGGED

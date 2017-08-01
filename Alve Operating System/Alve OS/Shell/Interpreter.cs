@@ -146,17 +146,17 @@ namespace Alve_OS.Shell
             }
             else if (cmd.Equals("langset"))
             {
-                L.Text.Display("availablelanguage");
+                L.Text.Display("availablelanguage");               
             }
             else if (cmd.StartsWith("langset "))
             {
                 cmd = cmd.Remove(0, 8);
-                if (cmd.Equals("en_US"))
+                if ((cmd.Equals("en_US")) || cmd.Equals("en-US"))
                 {
                     Kernel.langSelected = "en_US";
                     L.Keyboard.Init();
                 }
-                else if (cmd.Equals("fr_FR"))
+                else if ((cmd.Equals("fr_FR")) || cmd.Equals("fr-FR"))
                 {
                     Kernel.langSelected = "fr_FR";
                     L.Keyboard.Init();

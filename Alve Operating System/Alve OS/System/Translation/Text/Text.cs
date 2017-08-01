@@ -79,6 +79,18 @@ namespace Alve_OS.System.Translation
                         case "unknownuser":
                             Console.WriteLine("Utilisateur inconnu.");
                             break;
+                        case "languageask":
+                            Console.WriteLine("Choisissez votre langue:");
+                            break;
+                        case "chooseyourusername":
+                            Console.WriteLine("Choisissez votre nom d'utilisateur pour votre compte Alve:");
+                            break;
+                        case "alreadyuser":
+                            Console.WriteLine("Cet utilisateur existe déjà !");
+                            break;
+                        case "passuser":
+                            Console.WriteLine("Choisissez un mot de passe pour " + arg);
+                            break;
                     }
                     break;
 
@@ -86,6 +98,7 @@ namespace Alve_OS.System.Translation
 
                     switch (ToTranslate)
                     {
+
                         case "shutdown":
                             Console.WriteLine("Shutting Down...");
                             break;
@@ -136,6 +149,18 @@ namespace Alve_OS.System.Translation
                             break;
                         case "unknownuser":
                             Console.WriteLine("Unknown user.");
+                            break;
+                        case "languageask":
+                            Console.WriteLine("Choose your language:");
+                            break;
+                        case "chooseyourusername":
+                            Console.WriteLine("Choose a user name for your Alve Account:");
+                            break;
+                        case "alreadyuser":
+                            Console.WriteLine("This user exist already!");
+                            break;
+                        case "passuser":
+                            Console.WriteLine("Choose a password for " + arg);
                             break;
                     }
                     break;

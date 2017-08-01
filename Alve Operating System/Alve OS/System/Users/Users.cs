@@ -23,13 +23,13 @@ namespace Alve_OS.System.Users
                     var user = Console.ReadLine();
                     Console.WriteLine();
 
-                    if (File.Exists(@"0:\Users\" + user + ".usr"))
+                    if (File.Exists(@"0:\System\Users\" + user + ".usr"))
                     {
                         Console.Write("Mot de passe > ");
                         var psw = Console.ReadLine();
                         Console.WriteLine();
 
-                        string UserFile = File.ReadAllText(@"0:\Users\" + user + ".usr");
+                        string UserFile = File.ReadAllText(@"0:\System\Users\" + user + ".usr");
 
                         Char delimiter = '|';
                         string[] UserFileContent = UserFile.Split(delimiter);
@@ -62,13 +62,13 @@ namespace Alve_OS.System.Users
                     var user2 = Console.ReadLine();
                     Console.WriteLine();
 
-                    if (File.Exists(@"0:\Users\" + user2 + ".usr"))
+                    if (File.Exists(@"0:\System\Users\" + user2 + ".usr"))
                     {
                         Console.Write("Mot de passe > ");
                         var psw = Console.ReadLine();
                         Console.WriteLine();
 
-                        string UserFile = File.ReadAllText(@"0:\Users\" + user2 + ".usr");
+                        string UserFile = File.ReadAllText(@"0:\System\Users\" + user2 + ".usr");
 
                         Char delimiter = '|';
                         string[] UserFileContent = UserFile.Split(delimiter);
