@@ -91,6 +91,9 @@ namespace Alve_OS.System.Translation
                         case "passuser":
                             Console.WriteLine("Choisissez un mot de passe pour " + arg);
                             break;
+                        case "setupcmd":
+                            Console.WriteLine("Voulez vous réellement réinitialiser votre ordinateur ? Tous les fichiers vont être effacés. [o/n]");
+                            break;
                     }
                     break;
 
@@ -161,6 +164,9 @@ namespace Alve_OS.System.Translation
                             break;
                         case "passuser":
                             Console.WriteLine("Choose a password for " + arg);
+                            break;
+                        case "setupcmd":
+                            Console.WriteLine("Do you really want to reinitialize the computer ? All files will be erased. [o/n]");
                             break;
                     }
                     break;

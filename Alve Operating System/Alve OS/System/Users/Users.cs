@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using Alve_OS.System.Translation;
+using Alve_OS.System.Security;
 
 namespace Alve_OS.System.Users
 {
@@ -27,6 +28,7 @@ namespace Alve_OS.System.Users
                     {
                         Console.Write("Mot de passe > ");
                         var psw = Console.ReadLine();
+                        string md5psw = MD5.hash(psw);
                         Console.WriteLine();
 
                         string UserFile = File.ReadAllText(@"0:\System\Users\" + user + ".usr");
@@ -34,7 +36,7 @@ namespace Alve_OS.System.Users
                         Char delimiter = '|';
                         string[] UserFileContent = UserFile.Split(delimiter);
 
-                        if (psw == UserFileContent[0])
+                        if (md5psw == UserFileContent[0])
                         {
                             //LOGGED
                             Kernel.userLogged = user;
@@ -66,6 +68,7 @@ namespace Alve_OS.System.Users
                     {
                         Console.Write("Mot de passe > ");
                         var psw = Console.ReadLine();
+                        string md5psw = MD5.hash(psw);
                         Console.WriteLine();
 
                         string UserFile = File.ReadAllText(@"0:\System\Users\" + user2 + ".usr");
@@ -73,7 +76,7 @@ namespace Alve_OS.System.Users
                         Char delimiter = '|';
                         string[] UserFileContent = UserFile.Split(delimiter);
 
-                        if (psw == UserFileContent[0])
+                        if (md5psw == UserFileContent[0])
                         {
                             //LOGGED
                             Kernel.userLogged = user2;

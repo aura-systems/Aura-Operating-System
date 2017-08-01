@@ -5,6 +5,7 @@ using Alve_OS.System.Users;
 using System.IO;
 using Sys = Cosmos.System;
 using L = Alve_OS.System.Translation;
+using Alve_OS.System.Security;
 
 namespace Alve_OS.System
 {
@@ -87,7 +88,7 @@ namespace Alve_OS.System
 
 
         /// <summary>
-        /// Méthode appelé pour créer 'root' et proposer la création d'un utilisateur de base.
+        /// Méthode appelé pour créer 'root'.
         /// </summary>
         private void Step2()
         {
@@ -102,7 +103,8 @@ namespace Alve_OS.System
                         if (File.Exists(@"0:\System\Users\root.usr"))
                         {
                             string text = "root";
-                            File.WriteAllText(@"0:\System\Users\root.usr", text + "|admin");
+                            string md5psw = MD5.hash(text);
+                            File.WriteAllText(@"0:\System\Users\root.usr", md5psw + "|admin");
 
                             Step3();
                         }
@@ -173,11 +175,14 @@ namespace Alve_OS.System
             }
             else
             {
-                L.Text.Display("unknownlanguage");
-                L.Text.Display("availablelanguage");
+                Step3();
             }
         }
 
+
+        /// <summary>
+        /// Méthode permettant la création d'un compte utilisateur.
+        /// </summary>
         private void Step4()
         {
             try
@@ -187,45 +192,7 @@ namespace Alve_OS.System
 
                 Console.WriteLine();
                 L.Text.Display("chooseyourusername");
-                Console.WriteLine();
-                Console.Write("> ");
-                var username = Console.ReadLine();
-
-                if (File.Exists(@"0:\Users\" + username + ".usr"))
-                {
-                    L.Text.Display("alreadyuser");
-
-                }
-                else
-                {
-                    Console.WriteLine();
-                    L.Text.Display("alreadyuser", username);
-                    Console.WriteLine();
-                    Console.Write("> ");
-
-                    Console.ForegroundColor = ConsoleColor.Black;
-                    var password = Console.ReadLine();
-                    Console.ForegroundColor = ConsoleColor.White;
-
-                    Console.WriteLine();
-
-                    File.Create(@"0:\System\Users\" + username + ".usr");
-                    Directory.CreateDirectory(@"0:\Users\" + username);
-
-                    if (File.Exists(@"0:\System\Users\" + username + ".usr"))
-                    {
-                        File.WriteAllText(@"0:\System\Users\" + username + ".usr", password + "|standard");
-                        
-                        if (Directory.Exists(@"0:\System\System"))
-                        {
-                            Step5();
-                        }
-                    }
-                    else
-                    {
-                        ErrorDuringSetup("Creating user");
-                    }
-                }
+                AskUser();
 
             }
             catch
@@ -238,6 +205,51 @@ namespace Alve_OS.System
         {
             File.Create(@"0:\System\setup");
             Console.Clear();
+        }
+
+        private void AskUser()
+        {
+            Console.WriteLine();
+            Console.Write("Utilisateur > ");
+            var username = Console.ReadLine();
+
+            if (File.Exists(@"0:\System\Users\" + username + ".usr"))
+            {
+                L.Text.Display("alreadyuser");
+                AskUser();
+                
+            }
+            else
+            {
+                Console.WriteLine();
+                L.Text.Display("passuser", username);
+                Console.WriteLine();
+                Console.Write("Password > ");
+
+                Console.ForegroundColor = ConsoleColor.Black;
+                var clearpassword = Console.ReadLine();
+                string password = MD5.hash(clearpassword);
+                Console.ForegroundColor = ConsoleColor.White;
+
+                Console.WriteLine();
+
+                File.Create(@"0:\System\Users\" + username + ".usr");
+                Directory.CreateDirectory(@"0:\Users\" + username);
+
+                if (File.Exists(@"0:\System\Users\" + username + ".usr"))
+                {
+                    File.WriteAllText(@"0:\System\Users\" + username + ".usr", password + "|standard");
+
+                    if (Directory.Exists(@"0:\System\System"))
+                    {
+                        Step5();
+                    }
+                }
+                else
+                {
+                    ErrorDuringSetup("Creating user");
+                }
+            }
         }
 
     }

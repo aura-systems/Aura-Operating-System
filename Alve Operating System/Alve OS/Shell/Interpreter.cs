@@ -9,6 +9,7 @@ using System;
 using System.IO;
 using Sys = Cosmos.System;
 using L = Alve_OS.System.Translation;
+using Alve_OS.System;
 
 namespace Alve_OS.Shell
 {
@@ -170,6 +171,15 @@ namespace Alve_OS.Shell
             else if (cmd.Equals("ver"))
             {
                 Console.WriteLine("Alve [version " + Kernel.version + "-" + Kernel.revision + "]");
+            }
+            else if (cmd.Equals("setup"))
+            {
+                L.Text.Display("setupcmd");
+                string setup = Console.ReadLine();
+                if (setup == "o")
+                {
+                    SetupInit.Init();
+                }
             }
             else if (cmd.Equals("color"))
             {
