@@ -49,6 +49,9 @@ namespace Alve_OS.System
             Step1();
         }
 
+        /// <summary>
+        /// Créations des dossiers requis.
+        /// </summary>
         private void Step1()
         {
             //creating folders
@@ -201,16 +204,23 @@ namespace Alve_OS.System
             }
         }
 
+
+        /// <summary>
+        /// Méthode permettant de valider l'installation.
+        /// </summary>
         private void Step5()
         {
             File.Create(@"0:\System\setup");
             Console.Clear();
         }
 
+        /// <summary>
+        /// Méthode permettant de créer un compte utilisateur
+        /// </summary>
         private void AskUser()
         {
             Console.WriteLine();
-            Console.Write("Utilisateur > ");
+            L.Text.Display("user");
             var username = Console.ReadLine();
 
             if (File.Exists(@"0:\System\Users\" + username + ".usr"))
@@ -221,34 +231,55 @@ namespace Alve_OS.System
             }
             else
             {
-                Console.WriteLine();
-                L.Text.Display("passuser", username);
-                Console.WriteLine();
-                Console.Write("Password > ");
-
-                Console.ForegroundColor = ConsoleColor.Black;
-                var clearpassword = Console.ReadLine();
-                string password = MD5.hash(clearpassword);
-                Console.ForegroundColor = ConsoleColor.White;
-
-                Console.WriteLine();
-
-                File.Create(@"0:\System\Users\" + username + ".usr");
-                Directory.CreateDirectory(@"0:\Users\" + username);
-
-                if (File.Exists(@"0:\System\Users\" + username + ".usr"))
+                if((username.Length >= 4) && (username.Length <= 20))
                 {
-                    File.WriteAllText(@"0:\System\Users\" + username + ".usr", password + "|standard");
+                    Console.WriteLine();
+                    L.Text.Display("passuser", username);
 
-                    if (Directory.Exists(@"0:\System\System"))
+                    psw:
+
+                    Console.WriteLine();
+                    L.Text.Display("passwd");
+                    Console.WriteLine();
+
+                    Console.ForegroundColor = ConsoleColor.Black;
+                    var clearpassword = Console.ReadLine();
+                    Console.ForegroundColor = ConsoleColor.White;
+                    if ((clearpassword.Length >= 6) && (clearpassword.Length <= 40))
                     {
-                        Step5();
+                        string password = MD5.hash(clearpassword);
+                        Console.ForegroundColor = ConsoleColor.White;
+
+                        Console.WriteLine();
+
+                        File.Create(@"0:\System\Users\" + username + ".usr");
+                        Directory.CreateDirectory(@"0:\Users\" + username);
+
+                        if (File.Exists(@"0:\System\Users\" + username + ".usr"))
+                        {
+                            File.WriteAllText(@"0:\System\Users\" + username + ".usr", password + "|standard");
+
+                            if (Directory.Exists(@"0:\System\System"))
+                            {
+                                Step5();
+                            }
+                        }
+                        else
+                        {
+                            ErrorDuringSetup("Creating user");
+                        }
+                    }
+                    else
+                    {
+                        L.Text.Display("pswcharmin");
+                        goto psw;
                     }
                 }
                 else
                 {
-                    ErrorDuringSetup("Creating user");
-                }
+                    L.Text.Display("charmin");
+                    AskUser();
+                }             
             }
         }
 

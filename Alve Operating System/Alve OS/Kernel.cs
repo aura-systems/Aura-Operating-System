@@ -43,12 +43,6 @@ namespace Alve_OS
 
         protected override void BeforeRun()
         {
-            #region Language
-            Lang.Keyboard.Init();
-            Console.ForegroundColor = ConsoleColor.Green;
-            Console.WriteLine("[OK]");
-            Console.ForegroundColor = ConsoleColor.White;
-            #endregion
 
             #region FileSystem Init
             Console.WriteLine("Initializing FileSystem...");
@@ -68,6 +62,15 @@ namespace Alve_OS
             #endregion
 
             setup.SetupVerifyCompleted();
+
+            Kernel.langSelected = File.ReadAllText(@"0:\System\lang");
+
+            #region Language
+            Lang.Keyboard.Init();
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine("[OK]");
+            Console.ForegroundColor = ConsoleColor.White;
+            #endregion
 
             Console.Clear();
 

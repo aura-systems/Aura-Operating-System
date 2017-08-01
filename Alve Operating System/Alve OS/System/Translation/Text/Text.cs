@@ -94,6 +94,18 @@ namespace Alve_OS.System.Translation
                         case "setupcmd":
                             Console.WriteLine("Voulez vous réellement réinitialiser votre ordinateur ? Tous les fichiers vont être effacés. [o/n]");
                             break;
+                        case "user":
+                            Console.Write("Utilisateur > ");
+                            break;
+                        case "passwd":
+                            Console.Write("Mot de passe > ");
+                            break;
+                        case "charmin":
+                            Console.Write("Le nom d'utilisateur doit être constitué de caractères alphanumériques et doit être entre 4 à 20 caractères.");
+                            break;
+                        case "pswcharmin":
+                            Console.Write("Le mot de passe doit être constitué de caractères alphanumériques et doit être entre 6 à 40 caractères.");
+                            break;
                     }
                     break;
 
@@ -167,6 +179,18 @@ namespace Alve_OS.System.Translation
                             break;
                         case "setupcmd":
                             Console.WriteLine("Do you really want to reinitialize the computer ? All files will be erased. [o/n]");
+                            break;
+                        case "user":
+                            Console.Write("Login > ");
+                            break;
+                        case "passwd":
+                            Console.Write("Password > ");
+                            break;
+                        case "charmin":
+                            Console.Write("Username length should be 4-20 characters and contain alphanumeric text.");
+                            break;
+                        case "pswcharmin":
+                            Console.Write("Password length should be 6-40 characters and contain alphanumeric text.");
                             break;
                     }
                     break;
