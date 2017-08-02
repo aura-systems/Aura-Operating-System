@@ -5,6 +5,7 @@
 */
 
 using System;
+using Alve_OS.System.Computer;
 
 namespace Alve_OS.System.Translation
 {
@@ -121,6 +122,9 @@ namespace Alve_OS.System.Translation
                         case "doesnotexit":
                             Console.WriteLine("Ce fichier n'existe pas.");
                             break;
+                        case "computername":
+                            Console.WriteLine("Nom de l'ordinateur: " + arg);
+                            break;
                     }
                     break;
 
@@ -218,6 +222,9 @@ namespace Alve_OS.System.Translation
                             break;
                         case "doesnotexit":
                             Console.WriteLine("This file does not exist.");
+                            break;
+                        case "computername":
+                            Console.WriteLine("Computer name: " + arg);
                             break;
                     }
                     break;

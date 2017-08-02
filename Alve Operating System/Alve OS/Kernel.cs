@@ -14,6 +14,7 @@ using Lang = Alve_OS.System.Translation;
 using Alve_OS.System;
 using System.IO;
 using Alve_OS.System.Users;
+using Alve_OS.System.Computer;
 
 
 #endregion
@@ -28,15 +29,14 @@ namespace Alve_OS
         #region Global variables
 
         public static bool running;
-        public static string version = "0.1";
-        public static string revision = "270720172145";
+        public static string version = "0.2";
+        public static string revision = "020820171655";
         public static string current_directory = @"0:\";
         public static string langSelected = "en_US";
         public static CosmosVFS FS { get; private set; }
         public static string userLogged;
         public static string userLevelLogged;
         public static bool Logged = false;
-        public static string computerName = "Alve-PC";
 
         #endregion
 
