@@ -11,6 +11,7 @@ using Sys = Cosmos.System;
 using L = Alve_OS.System.Translation;
 using Alve_OS.System;
 using Alve_OS.System.Users;
+using Alve_OS.System.Computer;
 
 namespace Alve_OS.Shell
 {
@@ -165,6 +166,7 @@ namespace Alve_OS.Shell
                 L.Text.Display("OSName");
                 L.Text.Display("OSVersion");
                 L.Text.Display("OSRevision");
+                L.Text.Display("computername", Info.getComputerName());
             }
             else if (cmd.Equals("langset"))
             {
