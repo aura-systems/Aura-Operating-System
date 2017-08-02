@@ -114,6 +114,7 @@ namespace Alve_OS.System.Translation
                             break;
                         case "groupsavailable":
                             Console.Write("Groupes disponibles: 'admin'; 'standard'");
+                            break;
                         case "mkfil":
                             Console.WriteLine("Entrez le nom du fichier (mkfil fichier.txt).");
                             break;
@@ -211,6 +212,7 @@ namespace Alve_OS.System.Translation
                             break;
                         case "whattypeuser":
                             Console.Write("What will be the user level ?");
+                            break;
                         case "mkfil":
                             Console.WriteLine("Enter the file name (mkfil file.txt).");
                             break;

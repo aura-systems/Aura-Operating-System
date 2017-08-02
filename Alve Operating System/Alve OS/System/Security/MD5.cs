@@ -29,8 +29,6 @@ THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Alve_OS.System.Security
 {
@@ -85,9 +83,6 @@ namespace Alve_OS.System.Security
         /// </summary>
         internal static byte[] m_byteInput;
 
-
-
-        /********************************************************************/
         /***********************PROPERTIES ***********************/
         /// <summary>
         ///gets or sets as string
@@ -107,14 +102,10 @@ namespace Alve_OS.System.Security
             }
             set
             {
-
-
                 m_byteInput = new byte[value.Length];
                 for (int i = 0; i < value.Length; i++)
                     m_byteInput[i] = (byte)value[i];
                 dgFingerPrint = CalculateMD5Value();
-
-
             }
         }
 
@@ -132,12 +123,10 @@ namespace Alve_OS.System.Security
             }
             set
             {
-
                 m_byteInput = new byte[value.Length];
                 for (int i = 0; i < value.Length; i++)
                     m_byteInput[i] = value[i];
                 dgFingerPrint = CalculateMD5Value();
-
             }
         }
 
@@ -150,10 +139,7 @@ namespace Alve_OS.System.Security
             }
         }
 
-
-        /******************************************************************************/
         /*********************METHODS**************************/
-
         /// <summary>
         /// calculat md5 signature of the string in Input
         /// </summary>
@@ -182,8 +168,6 @@ namespace Alve_OS.System.Security
          * TRANSFORMATIONS :  FF , GG , HH , II  acc to RFC 1321
          * where each Each letter represnets the aux function used
          *********************************************************/
-
-
 
         /// <summary>
         /// perform transformatio using f(((b&c) | (~(b)&d))
@@ -216,8 +200,6 @@ namespace Alve_OS.System.Security
         {
             a = b + MD5Helper.RotateLeft((a + (c ^ (b | ~d)) + X[k] + T[i - 1]), s);
         }
-
-
 
         /// <summary>
         /// Perform All the transformation on the data
@@ -278,13 +260,10 @@ namespace Alve_OS.System.Security
             TransI(ref A, B, C, D, 8, 6, 57); TransI(ref D, A, B, C, 15, 10, 58); TransI(ref C, D, A, B, 6, 15, 59); TransI(ref B, C, D, A, 13, 21, 60);
             TransI(ref A, B, C, D, 4, 6, 61); TransI(ref D, A, B, C, 11, 10, 62); TransI(ref C, D, A, B, 2, 15, 63); TransI(ref B, C, D, A, 9, 21, 64);
 
-
             A = A + AA;
             B = B + BB;
             C = C + CC;
             D = D + DD;
-
-
         }
 
 
@@ -301,7 +280,6 @@ namespace Alve_OS.System.Security
             uint sizeMsgBuff;	//buffer size in multiple of bytes
             int temp = (448 - ((m_byteInput.Length * 8) % 512)); //temporary 
 
-
             pad = (uint)((temp + 512) % 512);		//getting no of bits to  be pad
             if (pad == 0)				///pad is in bits
                 pad = 512;			//at least 1 or max 512 can be added
@@ -310,9 +288,6 @@ namespace Alve_OS.System.Security
             sizeMsg = (ulong)m_byteInput.Length * 8;
             bMsg = new byte[sizeMsgBuff];	///no need to pad with 0 coz new bytes 
             // are already initialize to 0 :)
-
-
-
 
             ////copying string to buffer 
             for (int i = 0; i < m_byteInput.Length; i++)
@@ -335,7 +310,6 @@ namespace Alve_OS.System.Security
         /// <param name="block">no of block to copy starting from 0</param>
         internal static void CopyBlock(byte[] bMsg, uint block)
         {
-
             block = block << 6;
             for (uint j = 0; j < 61; j += 4)
             {
@@ -343,7 +317,6 @@ namespace Alve_OS.System.Security
                         (((uint)bMsg[block + (j + 2)]) << 16) |
                         (((uint)bMsg[block + (j + 1)]) << 8) |
                         (((uint)bMsg[block + (j)]));
-
             }
         }
     }
@@ -370,7 +343,6 @@ namespace Alve_OS.System.Security
                 ToHexString(MD5Helper.ReverseByte(C), 32) +
                 ToHexString(MD5Helper.ReverseByte(D), 32);
             return st;
-
         }
         internal string ToHexString(uint aNumber, byte aBits)
         {
@@ -433,29 +405,22 @@ namespace Alve_OS.System.Security
                         xDigitString = "F";
                         goto default;
                     default:
-                        if (xDigitString == null)
-                        {
-                            
-                        }
+                        if (xDigitString == null) { }
                         overall += xDigitString;
                         break;
                 }
             }
             return overall;
         }
-
     }
     internal class MD5Helper
     {
-
         internal MD5Helper() { }
-
 
         public static uint RotateLeft(uint uiNumber, ushort shift)
         {
             return ((uiNumber >> 32 - shift) | (uiNumber << shift));
         }
-
 
         public static uint ReverseByte(uint uiNumber)
         {
@@ -465,6 +430,4 @@ namespace Alve_OS.System.Security
                     ((uiNumber & 0x0000ff00) << 8));
         }
     }
-
-
 }

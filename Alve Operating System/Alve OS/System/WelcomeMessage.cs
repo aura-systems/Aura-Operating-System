@@ -24,11 +24,9 @@ namespace Alve_OS.System
             {
                 case "fr_FR":
 
-                    Console.WriteLine(" ");
-                    Console.WriteLine(" Bienvenue sur Alve " + Kernel.version + " (" + Kernel.revision + ")");
-                    Console.WriteLine(" ");
+                    Console.WriteLine("Bienvenue sur Alve Operating System v" + Kernel.version + " !");
                     Console.ForegroundColor = ConsoleColor.Green;
-                    Console.WriteLine("   * Documentation: https://github.com/Alve-OS/Alve-Operating-System/wiki");
+                    Console.WriteLine("* Documentation: github.com/Alve-OS/Alve-Operating-System/wiki");
                     Console.ForegroundColor = ConsoleColor.White;
                     if (File.Exists(@"0:\Users\root.usr"))
                     {
@@ -37,22 +35,19 @@ namespace Alve_OS.System
                         {
                             Console.WriteLine(" ");
                             Console.ForegroundColor = ConsoleColor.Blue;
-                            Console.WriteLine("   * Le mot de passe par défaut pour le compte root est 'root'");
+                            Console.WriteLine("* Le mot de passe par défaut pour le compte root est 'root'");
                             Console.ForegroundColor = ConsoleColor.White;
                         }
                     }
-                    Console.WriteLine(" ");
-                    Console.WriteLine(" Créé par Valentin CHARBONNIER (valentinbreiz) et Alexy DA CRUZ (GeomTech).");
+                    Console.WriteLine("Créé par Valentin CHARBONNIER (valentinbreiz) et Alexy DA CRUZ (GeomTech).");
                     Console.WriteLine(" ");
                     break;
-
+                     
                 case "en_US":
 
-                    Console.WriteLine(" ");
-                    Console.WriteLine(" Welcome to Alve " + Kernel.version + " (" + Kernel.revision + ")");
-                    Console.WriteLine(" ");
+                    Console.WriteLine("Welcome to Alve Operating System v" + Kernel.version + " !");
                     Console.ForegroundColor = ConsoleColor.Green;
-                    Console.WriteLine("   * Documentation: http://alveos.geomtech.fr/docs");
+                    Console.WriteLine("* Documentation: github.com/Alve-OS/Alve-Operating-System/wiki");
                     Console.ForegroundColor = ConsoleColor.White;
                     if (File.Exists("0:\\Users\\root.usr"))
                     {
@@ -65,14 +60,10 @@ namespace Alve_OS.System
                             Console.ForegroundColor = ConsoleColor.White;
                         }
                     }
+                    Console.WriteLine("Made by Valentin CHARBONNIER (valentinbreiz) and Alexy DA CRUZ (GeomTech).");
                     Console.WriteLine(" ");
-                    Console.WriteLine(" Made by Valentin CHARBONNIER (valentinbreiz) and Alexy DA CRUZ (GeomTech).");
-                    Console.WriteLine(" ");
-
                     break;
             }
-
-
         }
     }
 }
