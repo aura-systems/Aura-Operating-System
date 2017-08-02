@@ -117,16 +117,34 @@ namespace Alve_OS.Shell
                     L.Text.Display("doesnotexist");
                 }
             }
+            else if (cmd.Equals("mkfil"))
+            {
+                L.Text.Display("mkfil");
+            }
             else if (cmd.StartsWith("mkfil "))
             {
                 string file = cmd.Remove(0, 6);
                 if (!File.Exists(Kernel.current_directory + file))
                 {
-                    File.Create(Kernel.current_directory + file);
+                    Apps.User.Editor application = new Apps.User.Editor();
+                    application.Start(file, Kernel.current_directory);
                 }
                 else
                 {
                     L.Text.Display("alreadyexist");
+                }
+            }
+            else if (cmd.StartsWith("prfil "))
+            {
+                string file = cmd.Remove(0, 6);
+                if (File.Exists(Kernel.current_directory + file))
+                {
+                    Apps.User.Editor application = new Apps.User.Editor();
+                    application.Start(file, Kernel.current_directory);
+                }
+                else
+                {
+                    L.Text.Display("doesnotexit");
                 }
             }
             else if (cmd.Equals("vol"))

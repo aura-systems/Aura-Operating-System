@@ -54,6 +54,8 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Apps\" />
+    <Folder Include="Apps\User\" />
     <Folder Include="Shell\" />
     <Folder Include="System\" />
     <Folder Include="System\Translation\" />
