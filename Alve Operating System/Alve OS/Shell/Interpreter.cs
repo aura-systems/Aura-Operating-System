@@ -139,7 +139,8 @@ namespace Alve_OS.Shell
                 string file = cmd.Remove(0, 6);
                 if (File.Exists(Kernel.current_directory + file))
                 {
-                    Console.WriteLine(File.ReadAllText(Kernel.current_directory + file));
+                    Apps.User.Editor application = new Apps.User.Editor();
+                    application.Start(file, Kernel.current_directory);
                 }
                 else
                 {

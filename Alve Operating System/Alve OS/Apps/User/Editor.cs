@@ -13,7 +13,7 @@ namespace Alve_OS.Apps.User
 {
     class Editor
     {
-        public static string prgm_version = "0.02";
+        public static string prgm_version = "0.11";
         char[] line = new char[80]; int pointer = 0;
         List<string> lines = new List<string>();
         string[] final;
@@ -23,15 +23,105 @@ namespace Alve_OS.Apps.User
             Console.Clear();
             Console.BackgroundColor = ConsoleColor.Gray;
             Console.ForegroundColor = ConsoleColor.Black;
-            Console.WriteLine("Liquid Editor v" + prgm_version + " par TheCool1James                                           ");
+            Console.WriteLine("Liquid Editor v" + prgm_version + " by TheCool1James & valentinbreiz                            ");
             Console.ForegroundColor = ConsoleColor.White;
             Console.BackgroundColor = ConsoleColor.Black;
             Console.Write("File name : ");
             string filename = Console.ReadLine();
             Start(filename, currentdirectory);
         }
+
         internal void Start(string filename, string currentdirectory)
         {
+            if (File.Exists(currentdirectory + filename))
+            {
+                Console.Clear();
+                drawTopBar();
+                Console.SetCursorPosition(0, 1);
+                ConsoleKeyInfo c; cleanArray(line);
+
+                List<string> text = new List<string>();
+                text.Add(File.ReadAllText(currentdirectory + filename));
+                
+
+                string file = "";
+
+                foreach (string value in text)
+                {
+                    file = file + value;
+                }
+
+                Console.Write(file);
+
+                while ((c = Console.ReadKey(true)) != null)
+                {
+                    drawTopBar();
+                    char ch = c.KeyChar;
+                    if (c.Key == ConsoleKey.Escape)
+                        break;
+
+                    else if (c.Key == ConsoleKey.F1)
+                    {
+                        Console.Clear();
+                        Console.BackgroundColor = ConsoleColor.Gray;
+                        Console.ForegroundColor = ConsoleColor.Black;
+                        Console.WriteLine("Liquid Editor v" + prgm_version + " by TheCool1James & valentinbreiz                            ");
+                        Console.ForegroundColor = ConsoleColor.White;
+                        Console.BackgroundColor = ConsoleColor.Black;
+
+                        lines.Add(new string(line).TrimEnd());
+
+                        final = lines.ToArray();
+                        string foo = concatString(final);
+                        File.Create(currentdirectory + filename);
+                        File.WriteAllText(currentdirectory + filename, file + foo);
+                        Console.ForegroundColor = ConsoleColor.Green;
+                        Console.WriteLine("'" + filename + "' has been saved in '" + currentdirectory + "' !");
+                        Console.ForegroundColor = ConsoleColor.White;
+
+                        Console.ReadKey();
+                        break;
+                    }
+
+                    else if (c.Key == ConsoleKey.F2)
+                    {
+                        filepath(Kernel.current_directory);
+                        break;
+                    }
+
+                    switch (c.Key)
+                    {
+                        case ConsoleKey.Home: break;
+                        case ConsoleKey.PageUp: break;
+                        case ConsoleKey.PageDown: break;
+                        case ConsoleKey.End: break;
+                        case ConsoleKey.UpArrow:
+                            if (Console.CursorTop > 1)
+                            {
+                                Console.CursorTop = Console.CursorTop - 1;
+                            }
+                            break;
+                        case ConsoleKey.DownArrow:
+                            if (Console.CursorTop < 23)
+                            {
+                                Console.CursorTop = Console.CursorTop + 1;
+                            }
+                            break;
+                        case ConsoleKey.LeftArrow: if (pointer > 0) { pointer--; Console.CursorLeft--; } break;
+                        case ConsoleKey.RightArrow: if (pointer < 80) { pointer++; Console.CursorLeft++; if (line[pointer] == 0) line[pointer] = ' '; } break;
+                        case ConsoleKey.Backspace: deleteChar(); break;
+                        case ConsoleKey.Delete: deleteChar(); break;
+                        case ConsoleKey.Enter:
+                            lines.Add(new string(line).TrimEnd()); cleanArray(line); Console.CursorLeft = 0; Console.CursorTop++; pointer = 0;
+                            break;
+                        default: line[pointer] = ch; pointer++; Console.Write(ch); break;
+                    }
+                }
+                Console.Clear();
+
+            }
+            else
+            {
             Console.Clear();
             drawTopBar();
             Console.SetCursorPosition(0, 1);
@@ -47,7 +137,7 @@ namespace Alve_OS.Apps.User
                     Console.Clear();
                     Console.BackgroundColor = ConsoleColor.Gray;
                     Console.ForegroundColor = ConsoleColor.Black;
-                    Console.WriteLine("Liquid Editor v" + prgm_version + " par TheCool1James                                           ");
+                    Console.WriteLine("Liquid Editor v" + prgm_version + " by TheCool1James & valentinbreiz                            ");
                     Console.ForegroundColor = ConsoleColor.White;
                     Console.BackgroundColor = ConsoleColor.Black;
 
@@ -64,8 +154,12 @@ namespace Alve_OS.Apps.User
                     Console.ReadKey();
                     break;
                 }
-
-                switch (c.Key)
+                else if (c.Key == ConsoleKey.F2)
+                {
+                    filepath(Kernel.current_directory);
+                    break;
+                }
+                    switch (c.Key)
                 {
                     case ConsoleKey.Home: break;
                     case ConsoleKey.PageUp: break;
@@ -94,6 +188,7 @@ namespace Alve_OS.Apps.User
                 }
             }
             Console.Clear();
+            }
         }
 
         private string concatString(string[] s)
@@ -125,9 +220,9 @@ namespace Alve_OS.Apps.User
             Console.SetCursorPosition(0, 0);
             Console.BackgroundColor = ConsoleColor.Gray;
             Console.ForegroundColor = ConsoleColor.Black;
-            Console.Write("Liquid Editor v" + prgm_version + "                                          ");
+            Console.Write("Liquid Editor v" + prgm_version + "                                 ");
             Console.ForegroundColor = ConsoleColor.Blue;
-            Console.Write("[F1]Save  [ESC]Exit\n");
+            Console.Write("[F1]Save  [F2]New  [ESC]Exit\n");
             Console.ForegroundColor = ConsoleColor.White;
             Console.BackgroundColor = ConsoleColor.Black;
             Console.SetCursorPosition(x, y);
