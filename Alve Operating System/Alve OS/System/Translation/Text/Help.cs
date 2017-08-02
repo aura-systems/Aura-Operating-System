@@ -27,6 +27,7 @@ namespace Alve_OS.System.Translation
                     Console.WriteLine("- rmdir (Pour supprimer un dossier)");
                     Console.WriteLine("- mkfil (Pour créer un fichier)");
                     Console.WriteLine("- rmfil (Pour supprimer un fichier)");
+                    Console.WriteLine("- prfil (Pour éditer un fichier)");
                     Console.WriteLine("- vol (Liste les volumes FAT)");
                     Console.WriteLine("- echo (Affiche un echo)");
                     Console.WriteLine("- systeminfo (Affiche des informations systeme)");
@@ -49,6 +50,7 @@ namespace Alve_OS.System.Translation
                     Console.WriteLine("- rmdir (to remove a directory)");
                     Console.WriteLine("- mkfil (to create a file)");
                     Console.WriteLine("- rmfil (to remove a file)");
+                    Console.WriteLine("- prfil (to edit a file)");
                     Console.WriteLine("- vol (to list volumes)");
                     Console.WriteLine("- echo (to echo text)");
                     Console.WriteLine("- systeminfo (to display system informations)");

@@ -114,6 +114,11 @@ namespace Alve_OS.System.Translation
                             break;
                         case "groupsavailable":
                             Console.Write("Groupes disponibles: 'admin'; 'standard'");
+                        case "mkfil":
+                            Console.WriteLine("Entrez le nom du fichier (mkfil fichier.txt).");
+                            break;
+                        case "doesnotexit":
+                            Console.WriteLine("Ce fichier n'existe pas.");
                             break;
                     }
                     break;
@@ -206,6 +211,11 @@ namespace Alve_OS.System.Translation
                             break;
                         case "whattypeuser":
                             Console.Write("What will be the user level ?");
+                        case "mkfil":
+                            Console.WriteLine("Enter the file name (mkfil file.txt).");
+                            break;
+                        case "doesnotexit":
+                            Console.WriteLine("This file does not exist.");
                             break;
                     }
                     break;
