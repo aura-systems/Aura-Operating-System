@@ -10,6 +10,7 @@ using System.IO;
 using Sys = Cosmos.System;
 using L = Alve_OS.System.Translation;
 using Alve_OS.System;
+using Alve_OS.System.Users;
 
 namespace Alve_OS.Shell
 {
@@ -42,7 +43,7 @@ namespace Alve_OS.Shell
             }
             else if (cmd.Equals("help"))
             {
-                L.Help.Display();
+                L.Help.HelpD();
             }
             else if (cmd.Equals("cd .."))
             {
@@ -72,13 +73,15 @@ namespace Alve_OS.Shell
             else if (cmd.Equals("dir"))
             {
                 L.Text.Display("typename");
-                foreach (var dir in Directory.GetDirectories(Kernel.current_directory))
+                foreach (string dir in Directory.GetDirectories(Kernel.current_directory))
                 {
                     Console.WriteLine("<DIR>\t" + dir);
                 }
-                foreach (var dir in Directory.GetFiles(Kernel.current_directory))
+                foreach (string dir in Directory.GetFiles(Kernel.current_directory))
                 {
-                    Console.WriteLine("     \t" + dir);
+                    Char formatDot = '.';
+                    string[] ext = dir.Split(formatDot);
+                    Console.WriteLine("<" + ext[ext.Length - 1] + ">\t" + dir);
                 }
 
             }
@@ -147,7 +150,7 @@ namespace Alve_OS.Shell
             }
             else if (cmd.Equals("langset"))
             {
-                L.Text.Display("availablelanguage");               
+                L.Text.Display("availablelanguage");
             }
             else if (cmd.StartsWith("langset "))
             {
@@ -179,6 +182,31 @@ namespace Alve_OS.Shell
                 if (setup == "o")
                 {
                     SetupInit.Init();
+                }
+            }
+            else if (cmd.Equals("logout"))
+            {
+                Kernel.Logged = false;
+                Kernel.userLevelLogged = "";
+                Kernel.userLogged = "";
+                Console.Clear();
+                WelcomeMessage.Display();
+            }
+            else if (cmd.Equals("settings"))
+            {
+                L.Help.Settings();
+            }
+            else if (cmd.StartsWith("settings "))
+            {
+                string argsettings = cmd.Remove(0, 9);
+                if (argsettings.Equals("adduser"))
+                {
+                    //method user
+                    string argsuser = argsettings.Remove(0, 5);
+                    Users users = new Users();
+
+                    users.Create(argsuser);
+
                 }
             }
             else if (cmd.Equals("color"))

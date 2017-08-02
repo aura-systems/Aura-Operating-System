@@ -36,6 +36,7 @@ namespace Alve_OS
         public static string userLogged;
         public static string userLevelLogged;
         public static bool Logged = false;
+        public static string computerName = "Alve-PC";
 
         #endregion
 

@@ -106,6 +106,15 @@ namespace Alve_OS.System.Translation
                         case "pswcharmin":
                             Console.Write("Le mot de passe doit être constitué de caractères alphanumériques et doit être entre 6 à 40 caractères.");
                             break;
+                        case "errorwhileusercreating":
+                            Console.Write("Une erreur s'est produite lors de la création du compte utilisateur.");
+                            break;
+                        case "whattypeuser":
+                            Console.Write("Quel est le niveau de l'utilisateur ?");
+                            break;
+                        case "groupsavailable":
+                            Console.Write("Groupes disponibles: 'admin'; 'standard'");
+                            break;
                     }
                     break;
 
@@ -191,6 +200,12 @@ namespace Alve_OS.System.Translation
                             break;
                         case "pswcharmin":
                             Console.Write("Password length should be 6-40 characters and contain alphanumeric text.");
+                            break;
+                        case "errorwhileusercreating":
+                            Console.Write("An error occurred while creating the user account.");
+                            break;
+                        case "whattypeuser":
+                            Console.Write("What will be the user level ?");
                             break;
                     }
                     break;

@@ -259,7 +259,7 @@ namespace Alve_OS.System
                         {
                             File.WriteAllText(@"0:\System\Users\" + username + ".usr", password + "|standard");
 
-                            if (Directory.Exists(@"0:\System\System"))
+                            if (Directory.Exists(@"0:\System"))
                             {
                                 Step5();
                             }
