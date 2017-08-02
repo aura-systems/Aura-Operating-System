@@ -58,8 +58,10 @@
     <Folder Include="Apps\User\" />
     <Folder Include="Shell\" />
     <Folder Include="System\" />
+    <Folder Include="System\Security\" />
     <Folder Include="System\Translation\" />
     <Folder Include="System\Translation\Text\" />
+    <Folder Include="System\Users\" />
   </ItemGroup>
   <Import Project="$(AppData)\Cosmos User Kit\Build\VSIP\Cosmos.targets" />
 </Project>

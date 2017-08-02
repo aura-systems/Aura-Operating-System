@@ -9,6 +9,8 @@ using System;
 using System.IO;
 using Sys = Cosmos.System;
 using L = Alve_OS.System.Translation;
+using Alve_OS.System;
+using Alve_OS.System.Users;
 
 namespace Alve_OS.Shell
 {
@@ -41,7 +43,7 @@ namespace Alve_OS.Shell
             }
             else if (cmd.Equals("help"))
             {
-                L.Help.Display();
+                L.Help.HelpD();
             }
             else if (cmd.Equals("cd .."))
             {
@@ -71,13 +73,15 @@ namespace Alve_OS.Shell
             else if (cmd.Equals("dir"))
             {
                 L.Text.Display("typename");
-                foreach (var dir in Directory.GetDirectories(Kernel.current_directory))
+                foreach (string dir in Directory.GetDirectories(Kernel.current_directory))
                 {
                     Console.WriteLine("<DIR>\t" + dir);
                 }
-                foreach (var dir in Directory.GetFiles(Kernel.current_directory))
+                foreach (string dir in Directory.GetFiles(Kernel.current_directory))
                 {
-                    Console.WriteLine("     \t" + dir);
+                    Char formatDot = '.';
+                    string[] ext = dir.Split(formatDot);
+                    Console.WriteLine("<" + ext[ext.Length - 1] + ">\t" + dir);
                 }
 
             }
@@ -169,12 +173,12 @@ namespace Alve_OS.Shell
             else if (cmd.StartsWith("langset "))
             {
                 cmd = cmd.Remove(0, 8);
-                if (cmd.Equals("en_US"))
+                if ((cmd.Equals("en_US")) || cmd.Equals("en-US"))
                 {
                     Kernel.langSelected = "en_US";
                     L.Keyboard.Init();
                 }
-                else if (cmd.Equals("fr_FR"))
+                else if ((cmd.Equals("fr_FR")) || cmd.Equals("fr-FR"))
                 {
                     Kernel.langSelected = "fr_FR";
                     L.Keyboard.Init();
@@ -188,6 +192,40 @@ namespace Alve_OS.Shell
             else if (cmd.Equals("ver"))
             {
                 Console.WriteLine("Alve [version " + Kernel.version + "-" + Kernel.revision + "]");
+            }
+            else if (cmd.Equals("setup"))
+            {
+                L.Text.Display("setupcmd");
+                string setup = Console.ReadLine();
+                if (setup == "o")
+                {
+                    SetupInit.Init();
+                }
+            }
+            else if (cmd.Equals("logout"))
+            {
+                Kernel.Logged = false;
+                Kernel.userLevelLogged = "";
+                Kernel.userLogged = "";
+                Console.Clear();
+                WelcomeMessage.Display();
+            }
+            else if (cmd.Equals("settings"))
+            {
+                L.Help.Settings();
+            }
+            else if (cmd.StartsWith("settings "))
+            {
+                string argsettings = cmd.Remove(0, 9);
+                if (argsettings.Equals("adduser"))
+                {
+                    //method user
+                    string argsuser = argsettings.Remove(0, 5);
+                    Users users = new Users();
+
+                    users.Create(argsuser);
+
+                }
             }
             else if (cmd.Equals("color"))
             {

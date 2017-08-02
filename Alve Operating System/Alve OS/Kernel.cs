@@ -13,6 +13,7 @@ using Sys = Cosmos.System;
 using Lang = Alve_OS.System.Translation;
 using Alve_OS.System;
 using System.IO;
+using Alve_OS.System.Users;
 
 
 #endregion
@@ -22,14 +23,20 @@ namespace Alve_OS
     public class Kernel: Sys.Kernel
     {
 
+        Setup setup = new Setup();
+
         #region Global variables
 
         public static bool running;
         public static string version = "0.1";
-        public static string revision = "240720171251";
+        public static string revision = "270720172145";
         public static string current_directory = @"0:\";
         public static string langSelected = "en_US";
         public static CosmosVFS FS { get; private set; }
+        public static string userLogged;
+        public static string userLevelLogged;
+        public static bool Logged = false;
+        public static string computerName = "Alve-PC";
 
         #endregion
 
@@ -37,12 +44,6 @@ namespace Alve_OS
 
         protected override void BeforeRun()
         {
-            #region Language
-            Lang.Keyboard.Init();
-            Console.ForegroundColor = ConsoleColor.Green;
-            Console.WriteLine("[OK]");
-            Console.ForegroundColor = ConsoleColor.White;
-            #endregion
 
             #region FileSystem Init
             Console.WriteLine("Initializing FileSystem...");
@@ -61,14 +62,21 @@ namespace Alve_OS
             Console.ForegroundColor = ConsoleColor.White;
             #endregion
 
+            setup.SetupVerifyCompleted();
+
+            Kernel.langSelected = File.ReadAllText(@"0:\System\lang");
+
+            #region Language
+            Lang.Keyboard.Init();
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine("[OK]");
+            Console.ForegroundColor = ConsoleColor.White;
+            #endregion
+
             Console.Clear();
 
-            Console.ForegroundColor = ConsoleColor.Green;
-            Console.WriteLine("Kernel has started successfully!");
-            Console.ForegroundColor = ConsoleColor.White;
-            Console.WriteLine("Welcome to Alve Operating System v" + version + " !");
-            Console.WriteLine("Made by Valentin CHARBONNIER (valentinbreiz) and Alexy DA CRUZ (GeomTech).");
-            Console.WriteLine();
+            WelcomeMessage.Display();
+
             running = true;
         }
 
@@ -80,10 +88,20 @@ namespace Alve_OS
         {
             try
             {
-                Console.Write(current_directory + "> ");
-                var cmd = Console.ReadLine();
-                Shell.Interpreter.Interpret(cmd);
-                Console.WriteLine();
+
+                if (Logged) //si loggé
+                {
+                    //LOGGED
+                    Console.Write(UserLevel.TypeUser() + userLogged + "~ " + current_directory + "> ");
+                    var cmd = Console.ReadLine();
+                    Shell.Interpreter.Interpret(cmd);
+                    Console.WriteLine();
+                } else
+                {
+                    Login.Init();
+                }
+
+             
             }
             catch (Exception ex)
             {

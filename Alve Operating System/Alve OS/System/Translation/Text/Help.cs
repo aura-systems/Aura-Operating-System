@@ -11,7 +11,7 @@ namespace Alve_OS.System.Translation
 {
     class Help
     {
-        public static void Display()
+        public static void HelpD()
         {
             switch (Kernel.langSelected)
             {
@@ -34,6 +34,8 @@ namespace Alve_OS.System.Translation
                     Console.WriteLine("- langset (Changer le langage système)");
                     Console.WriteLine("- ver (Pour afficher la version système)");
                     Console.WriteLine("- color (Permet de changer la couleur de premier plan)");
+                    Console.WriteLine("- settings {args} (Permet d'accéder aux paramètres)");
+                    Console.WriteLine("- logout (Permet de se déconnecter)");
                     break;
 
                 case "en_US":
@@ -55,6 +57,24 @@ namespace Alve_OS.System.Translation
                     Console.WriteLine("- langset (to change system language)");
                     Console.WriteLine("- ver (to display system version)");
                     Console.WriteLine("- color (change foreground colour)");
+                    Console.WriteLine("- settings {args} (Access to settings)");
+                    Console.WriteLine("- logout (To disconnect)");
+                    break;
+            }
+        }
+
+        public static void Settings()
+        {
+            switch (Kernel.langSelected)
+            {
+                case "fr_FR":
+                    Console.WriteLine("Commandes disponible:");
+                    Console.WriteLine("- adduser (Gestion des utilisateurs)");
+                    break;
+
+                case "en_US":
+                    Console.WriteLine("Available commands:");
+                    Console.WriteLine("- adduser (Users manager)");
                     break;
             }
         }
