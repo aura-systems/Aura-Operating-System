@@ -42,7 +42,6 @@ namespace Alve_OS.Apps.User
 
                 List<string> text = new List<string>();
                 text.Add(File.ReadAllText(currentdirectory + filename));
-                
 
                 string file = "";
 
@@ -102,7 +101,7 @@ namespace Alve_OS.Apps.User
                             }
                             break;
                         case ConsoleKey.DownArrow:
-                            if (Console.CursorTop < 23)
+                            if (Console.CursorTop < 24)
                             {
                                 Console.CursorTop = Console.CursorTop + 1;
                             }
