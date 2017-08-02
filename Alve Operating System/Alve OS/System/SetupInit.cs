@@ -1,4 +1,10 @@
-﻿using System;
+﻿/*
+* PROJECT:          Alve Operating System Development
+* CONTENT:          OS Reinitialization
+* PROGRAMMERS:      Alexy DA CRUZ <dacruzalexy@gmail.com>
+*/
+
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;

@@ -1,4 +1,10 @@
-﻿using System;
+﻿/*
+* PROJECT:          Alve Operating System Development
+* CONTENT:          Welcome Message
+* PROGRAMMERS:      Alexy DA CRUZ <dacruzalexy@gmail.com>
+*/
+
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
@@ -36,7 +42,7 @@ namespace Alve_OS.System
                         }
                     }
                     Console.WriteLine(" ");
-                    Console.WriteLine(" Créer par Valentin CHARBONNIER (valentinbreiz) et Alexy DA CRUZ (GeomTech).");
+                    Console.WriteLine(" Créé par Valentin CHARBONNIER (valentinbreiz) et Alexy DA CRUZ (GeomTech).");
                     Console.WriteLine(" ");
                     break;
 

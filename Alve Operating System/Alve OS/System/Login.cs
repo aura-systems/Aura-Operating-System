@@ -1,4 +1,10 @@
-﻿using System;
+﻿/*
+* PROJECT:          Alve Operating System Development
+* CONTENT:          Login Class
+* PROGRAMMERS:      Alexy DA CRUZ <dacruzalexy@gmail.com>
+*/
+
+using System;
 using System.Collections.Generic;
 using System.Text;
 using usr = Alve_OS.System.Users;
