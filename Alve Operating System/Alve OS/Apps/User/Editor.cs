@@ -8,6 +8,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using Alve_OS.System.Translation;
 
 namespace Alve_OS.Apps.User
 {
@@ -23,10 +24,10 @@ namespace Alve_OS.Apps.User
             Console.Clear();
             Console.BackgroundColor = ConsoleColor.Gray;
             Console.ForegroundColor = ConsoleColor.Black;
-            Console.WriteLine("Liquid Editor v" + prgm_version + " by TheCool1James & valentinbreiz                            ");
+            Text.Display("liquideditor", prgm_version);
             Console.ForegroundColor = ConsoleColor.White;
             Console.BackgroundColor = ConsoleColor.Black;
-            Console.Write("File name : ");
+            Text.Display("filename");
             string filename = Console.ReadLine();
             Start(filename, currentdirectory);
         }
@@ -64,7 +65,7 @@ namespace Alve_OS.Apps.User
                         Console.Clear();
                         Console.BackgroundColor = ConsoleColor.Gray;
                         Console.ForegroundColor = ConsoleColor.Black;
-                        Console.WriteLine("Liquid Editor v" + prgm_version + " by TheCool1James & valentinbreiz                            ");
+                        Text.Display("liquideditor", prgm_version);
                         Console.ForegroundColor = ConsoleColor.White;
                         Console.BackgroundColor = ConsoleColor.Black;
 
@@ -75,7 +76,7 @@ namespace Alve_OS.Apps.User
                         File.Create(currentdirectory + filename);
                         File.WriteAllText(currentdirectory + filename, file + foo);
                         Console.ForegroundColor = ConsoleColor.Green;
-                        Console.WriteLine("'" + filename + "' has been saved in '" + currentdirectory + "' !");
+                        Text.Display("saved", filename, currentdirectory);
                         Console.ForegroundColor = ConsoleColor.White;
 
                         Console.ReadKey();
@@ -136,7 +137,7 @@ namespace Alve_OS.Apps.User
                     Console.Clear();
                     Console.BackgroundColor = ConsoleColor.Gray;
                     Console.ForegroundColor = ConsoleColor.Black;
-                    Console.WriteLine("Liquid Editor v" + prgm_version + " by TheCool1James & valentinbreiz                            ");
+                    Text.Display("liquideditor", prgm_version);
                     Console.ForegroundColor = ConsoleColor.White;
                     Console.BackgroundColor = ConsoleColor.Black;
 
@@ -147,7 +148,7 @@ namespace Alve_OS.Apps.User
                     File.Create(currentdirectory + filename);
                     File.WriteAllText(currentdirectory + filename, foo); 
                     Console.ForegroundColor = ConsoleColor.Green;
-                    Console.WriteLine("'" + filename + "' has been saved in '" + currentdirectory + "' !");
+                    Text.Display("saved", filename, currentdirectory);
                     Console.ForegroundColor = ConsoleColor.White;
 
                     Console.ReadKey();
@@ -221,7 +222,7 @@ namespace Alve_OS.Apps.User
             Console.ForegroundColor = ConsoleColor.Black;
             Console.Write("Liquid Editor v" + prgm_version + "                                 ");
             Console.ForegroundColor = ConsoleColor.Blue;
-            Console.Write("[F1]Save  [F2]New  [ESC]Exit\n");
+            Text.Display("menuliquideditor");
             Console.ForegroundColor = ConsoleColor.White;
             Console.BackgroundColor = ConsoleColor.Black;
             Console.SetCursorPosition(x, y);
@@ -240,14 +241,14 @@ namespace Alve_OS.Apps.User
         private void listCheck()
         {
             foreach (var s in lines)
-                Console.WriteLine(" List: " + s + "\n");
+                Text.Display("list", s);
         }
 
         private string[] arrayCheck(string[] s)
         {
             foreach (var ss in s)
             {
-                Console.WriteLine(" Line: " + ss + "\n");
+                Text.Display("line", ss);
             }
             return s;
         }
