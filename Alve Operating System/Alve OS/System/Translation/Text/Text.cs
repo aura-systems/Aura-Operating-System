@@ -62,6 +62,9 @@ namespace Alve_OS.System.Translation
                         case "OSRevision":
                             Console.WriteLine("Révision du système:           " + Kernel.revision);
                             break;
+                        case "AmountRAM":
+                            Console.WriteLine("Montant de la RAM:             " + Alve_OS_System.Power.getRam() + " MB");
+                            break;
                         case "UnknownCommand":
                             Console.WriteLine("Commande inconnue.");
                             break;
@@ -165,6 +168,9 @@ namespace Alve_OS.System.Translation
                             break;
                         case "OSRevision":
                             Console.WriteLine("Operating system revision: " + Kernel.revision);
+                            break;
+                        case "AmountRAM":
+                            Console.WriteLine("Amount of RAM:             " + Alve_OS_System.Power.getRam() + " MB");
                             break;
                         case "UnknownCommand":
                             Console.WriteLine("Unknown command.");

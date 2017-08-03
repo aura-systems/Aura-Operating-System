@@ -63,5 +63,31 @@
     <Folder Include="System\Translation\Text\" />
     <Folder Include="System\Users\" />
   </ItemGroup>
+  <ItemGroup>
+    <Reference Include="Cosmos.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=5ae71220097cb983">
+      <Name>Cosmos.Common</Name>
+      <AssemblyName>Cosmos.Common.dll</AssemblyName>
+      <HintPath>..\..\..\..\..\AppData\Roaming\Cosmos User Kit\Kernel\Cosmos.Common.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Cosmos.Core, Version=1.0.0.0, Culture=neutral, PublicKeyToken=5ae71220097cb983">
+      <Name>Cosmos.Core</Name>
+      <AssemblyName>Cosmos.Core.dll</AssemblyName>
+      <HintPath>..\..\..\..\..\AppData\Roaming\Cosmos User Kit\Kernel\Cosmos.Core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Cosmos.HAL, Version=1.0.0.0, Culture=neutral, PublicKeyToken=5ae71220097cb983">
+      <Name>Cosmos.HAL</Name>
+      <AssemblyName>Cosmos.HAL.dll</AssemblyName>
+      <HintPath>..\..\..\..\..\AppData\Roaming\Cosmos User Kit\Kernel\Cosmos.HAL.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Cosmos.System, Version=1.0.0.0, Culture=neutral, PublicKeyToken=5ae71220097cb983">
+      <Name>Cosmos.System</Name>
+      <AssemblyName>Cosmos.System.dll</AssemblyName>
+      <HintPath>..\..\..\..\..\AppData\Roaming\Cosmos User Kit\Kernel\Cosmos.System.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+  </ItemGroup>
   <Import Project="$(AppData)\Cosmos User Kit\Build\VSIP\Cosmos.targets" />
 </Project>

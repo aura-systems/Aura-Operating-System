@@ -2,11 +2,11 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard1.5</TargetFramework>
-    <ProjectGuid>{dd67a21e-24aa-45a8-9886-4bb88f63680a}</ProjectGuid>
+    <ProjectGuid>{33f131d7-1b93-41b0-8315-04c9d5039073}</ProjectGuid>
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Alve_OSBoot.Cosmos" />
+    <None Remove="Alve_OS_SystemBoot.Cosmos" />
   </ItemGroup>
   
   <ItemGroup>
@@ -15,11 +15,7 @@
   </ItemGroup>
   
   <ItemGroup>
-    <Folder Include="Apps\System\" />
-  </ItemGroup>
-  
-  <ItemGroup>
-    <ProjectReference Include="..\Alve_OS_System\Alve_OS_System.csproj" />
+    <ProjectReference Include="..\Alve_OS_HAL\Alve_OS_HAL.csproj" />
   </ItemGroup>
 
 </Project>

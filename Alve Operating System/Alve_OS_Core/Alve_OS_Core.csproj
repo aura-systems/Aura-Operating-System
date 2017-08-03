@@ -2,24 +2,16 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard1.5</TargetFramework>
-    <ProjectGuid>{dd67a21e-24aa-45a8-9886-4bb88f63680a}</ProjectGuid>
+    <ProjectGuid>{2c360f7c-dafb-4181-a022-80a4d8ef3e75}</ProjectGuid>
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Alve_OSBoot.Cosmos" />
+    <None Remove="Alve_OS_CoreBoot.Cosmos" />
   </ItemGroup>
   
   <ItemGroup>
     <PackageReference Include="Cosmos.Debug.Kernel" Version="1.0.0-*" />
     <PackageReference Include="Cosmos.System2" Version="1.0.0-*" />
-  </ItemGroup>
-  
-  <ItemGroup>
-    <Folder Include="Apps\System\" />
-  </ItemGroup>
-  
-  <ItemGroup>
-    <ProjectReference Include="..\Alve_OS_System\Alve_OS_System.csproj" />
   </ItemGroup>
 
 </Project>

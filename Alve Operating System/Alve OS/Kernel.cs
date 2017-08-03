@@ -15,7 +15,6 @@ using Alve_OS.System;
 using System.IO;
 using Alve_OS.System.Users;
 
-
 #endregion
 
 namespace Alve_OS
@@ -87,10 +86,8 @@ namespace Alve_OS
         {
             try
             {
-
-                if (Logged) //si loggé
+                if (Logged) //If logged
                 {
-                    //LOGGED
                     Console.Write(UserLevel.TypeUser() + userLogged + "~ " + current_directory + "> ");
                     var cmd = Console.ReadLine();
                     Shell.Interpreter.Interpret(cmd);
@@ -99,15 +96,12 @@ namespace Alve_OS
                 {
                     Login.Init();
                 }
-
-             
             }
             catch (Exception ex)
             {
                 running = false;
                 Crash.StopKernel(ex);
             }
-            
         }
 
         #endregion
