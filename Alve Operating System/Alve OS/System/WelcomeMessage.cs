@@ -2,12 +2,11 @@
 * PROJECT:          Alve Operating System Development
 * CONTENT:          Welcome Message
 * PROGRAMMERS:      Alexy DA CRUZ <dacruzalexy@gmail.com>
+*                   Valentin Charbonnier <valentinbreiz@gmail.com>
 */
 
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Text;
 using Alve_OS.System.Security;
 
 namespace Alve_OS.System
@@ -23,10 +22,9 @@ namespace Alve_OS.System
             switch (Kernel.langSelected)
             {
                 case "fr_FR":
-
-                    Console.WriteLine("Bienvenue sur Alve Operating System v" + Kernel.version + " !");
+                    Logo.Print();
                     Console.ForegroundColor = ConsoleColor.Green;
-                    Console.WriteLine("* Documentation: github.com/Alve-OS/Alve-Operating-System/wiki");
+                    Console.WriteLine(" * Documentation: github.com/Alve-OS/Alve-Operating-System/wiki");
                     Console.ForegroundColor = ConsoleColor.White;
                     if (File.Exists(@"0:\Users\root.usr"))
                     {
@@ -39,15 +37,13 @@ namespace Alve_OS.System
                             Console.ForegroundColor = ConsoleColor.White;
                         }
                     }
-                    Console.WriteLine("Créé par Valentin CHARBONNIER (valentinbreiz) et Alexy DA CRUZ (GeomTech).");
                     Console.WriteLine(" ");
                     break;
                      
                 case "en_US":
-
-                    Console.WriteLine("Welcome to Alve Operating System v" + Kernel.version + " !");
+                    Logo.Print();
                     Console.ForegroundColor = ConsoleColor.Green;
-                    Console.WriteLine("* Documentation: github.com/Alve-OS/Alve-Operating-System/wiki");
+                    Console.WriteLine(" * Documentation: github.com/Alve-OS/Alve-Operating-System/wiki");
                     Console.ForegroundColor = ConsoleColor.White;
                     if (File.Exists("0:\\Users\\root.usr"))
                     {
@@ -60,7 +56,6 @@ namespace Alve_OS.System
                             Console.ForegroundColor = ConsoleColor.White;
                         }
                     }
-                    Console.WriteLine("Made by Valentin CHARBONNIER (valentinbreiz) and Alexy DA CRUZ (GeomTech).");
                     Console.WriteLine(" ");
                     break;
             }

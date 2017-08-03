@@ -2,14 +2,11 @@
 * PROJECT:          Alve Operating System Development
 * CONTENT:          Setup
 * PROGRAMMERS:      Alexy DA CRUZ <dacruzalexy@gmail.com>
+*                   Valentin Charbonnier <valentinbreiz@gmail.com>
 */
 
 using System;
-using System.Collections.Generic;
-using System.Text;
-using Alve_OS.System.Users;
 using System.IO;
-using Sys = Cosmos.System;
 using L = Alve_OS.System.Translation;
 using Alve_OS.System.Security;
 
@@ -23,11 +20,14 @@ namespace Alve_OS.System
         /// </summary>
         public void SetupVerifyCompleted()
         {
-            if (!File.Exists(@"0:\System\setup"))
+            try
             {
-                StartSetup();
+                if (!File.Exists(@"0:\System\setup"))
+                {
+                    StartSetup();
+                }
             }
-
+            catch { }
         }
 
 
@@ -139,7 +139,7 @@ namespace Alve_OS.System
         private void Step3()
         {
             Console.Clear();
-            Console.WriteLine();
+            Logo.Print();
             L.Text.Display("languageask");
             Console.WriteLine();
             L.Text.Display("availablelanguage");
@@ -196,13 +196,10 @@ namespace Alve_OS.System
         {
             try
             {
-
                 Console.Clear();
-
-                Console.WriteLine();
+                Logo.Print();
                 L.Text.Display("chooseyourusername");
                 AskUser();
-
             }
             catch
             {
@@ -232,29 +229,24 @@ namespace Alve_OS.System
             if (File.Exists(@"0:\System\Users\" + username + ".usr"))
             {
                 L.Text.Display("alreadyuser");
-                AskUser();
-                
+                Console.ReadKey();
+                Step4();
             }
             else
             {
                 if((username.Length >= 4) && (username.Length <= 20))
                 {
+
                     Console.WriteLine();
                     L.Text.Display("passuser", username);
-
-                    psw:
-
+                    
                     Console.WriteLine();
                     L.Text.Display("passwd");
-                    Console.WriteLine();
+                    string clearpassword = Console.ReadLine();
 
-                    Console.ForegroundColor = ConsoleColor.Black;
-                    var clearpassword = Console.ReadLine();
-                    Console.ForegroundColor = ConsoleColor.White;
                     if ((clearpassword.Length >= 6) && (clearpassword.Length <= 40))
                     {
                         string password = MD5.hash(clearpassword);
-                        Console.ForegroundColor = ConsoleColor.White;
 
                         Console.WriteLine();
 
@@ -278,13 +270,15 @@ namespace Alve_OS.System
                     else
                     {
                         L.Text.Display("pswcharmin");
-                        goto psw;
+                        Console.ReadKey();
+                        Step4();
                     }
                 }
                 else
                 {
                     L.Text.Display("charmin");
-                    AskUser();
+                    Console.ReadKey();
+                    Step4();
                 }             
             }
         }

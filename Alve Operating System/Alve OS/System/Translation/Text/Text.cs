@@ -2,6 +2,7 @@
 * PROJECT:          Alve Operating System Development
 * CONTENT:          Translation system
 * PROGRAMMERS:      Alexy DA CRUZ <dacruzalexy@gmail.com>
+*                   Valentin Charbonnier <valentinbreiz@gmail.com>
 */
 
 using System;
@@ -121,6 +122,9 @@ namespace Alve_OS.System.Translation
                         case "doesnotexit":
                             Console.WriteLine("Ce fichier n'existe pas.");
                             break;
+                        case "wrongpassword":
+                            Console.WriteLine("Mauvais mot de passe.");
+                            break;
                     }
                     break;
 
@@ -218,6 +222,9 @@ namespace Alve_OS.System.Translation
                             break;
                         case "doesnotexit":
                             Console.WriteLine("This file does not exist.");
+                            break;
+                        case "wrongpassword":
+                            Console.WriteLine("Wrong Password.");
                             break;
                     }
                     break;

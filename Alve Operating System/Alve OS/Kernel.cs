@@ -64,7 +64,7 @@ namespace Alve_OS
 
             setup.SetupVerifyCompleted();
 
-            Kernel.langSelected = File.ReadAllText(@"0:\System\lang");
+            langSelected = File.ReadAllText(@"0:\System\lang");
 
             #region Language
             Lang.Keyboard.Init();

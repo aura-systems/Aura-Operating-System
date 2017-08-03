@@ -5,9 +5,7 @@
 */
 
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Text;
 using Alve_OS.System.Translation;
 using Alve_OS.System.Security;
 
@@ -17,6 +15,10 @@ namespace Alve_OS.System.Users
     {
         public void Login()
         {
+
+            Console.Clear();
+            WelcomeMessage.Display();
+
             switch (Kernel.langSelected)
             {
                 case "fr_FR":
@@ -51,10 +53,18 @@ namespace Alve_OS.System.Users
                             Console.WriteLine("");
                             Kernel.Logged = true;
                         }
+                        else
+                        {
+                            Text.Display("wrongpassword");
+                            Console.ReadKey();
+                            Login();
+                        }
                     }
                     else
                     {
                         Text.Display("unknownuser");
+                        Console.ReadKey();
+                        Login();
                     }
 
                     break;
@@ -91,15 +101,20 @@ namespace Alve_OS.System.Users
                             Console.WriteLine("");
                             Kernel.Logged = true;
                         }
+                        else
+                        {
+                            Text.Display("wrongpassword");
+                            Console.ReadKey();
+                            Login();
+                        }
                     }
                     else
                     {
                         Text.Display("unknownuser");
+                        Console.ReadKey();
+                        Login();
                     }
-
                     break;
-
-
             }
         }
 
