@@ -21,8 +21,6 @@ Setup:
 
 ![Alve Operating System](https://image.noelshack.com/fichiers/2017/31/4/1501722160-alve1.png)
 
-![Alve Operating System](https://image.noelshack.com/fichiers/2017/31/4/1501722160-alve2.png)
-
 Login:
 
 ![Alve Operating System](https://image.noelshack.com/fichiers/2017/31/4/1501722160-alve3.png)
@@ -30,6 +28,8 @@ Login:
 Shell:
 
 ![Alve Operating System](https://image.noelshack.com/fichiers/2017/31/4/1501722160-alve4.png)
+
+![Alve Operating System](https://image.noelshack.com/fichiers/2017/31/4/1501777813-alve5.png)
 
 ## How to compile Alve ?
 Download and install [this repository](https://github.com/Alve-OS/Cosmos/tree/FilesystemFixes). Then run Alve OS.sln, and select "build" from Visual Studio 2017.
