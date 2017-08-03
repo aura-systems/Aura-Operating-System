@@ -16,12 +16,9 @@ Please read the [TODO](https://github.com/Alve-OS/Alve-Operating-System/blob/mas
 * Virtual FileSystem.
 * Multilanguage support.
 * Exception with screen of death.
-<<<<<<< HEAD
 * ASCII support.
 * Multi users.
 * Secured Users With MD5 Encryption.
-=======
->>>>>>> refs/remotes/origin/master
 
 ## Commands
 
