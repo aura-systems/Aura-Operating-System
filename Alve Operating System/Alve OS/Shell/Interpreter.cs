@@ -165,6 +165,7 @@ namespace Alve_OS.Shell
                 L.Text.Display("OSName");
                 L.Text.Display("OSVersion");
                 L.Text.Display("OSRevision");
+                L.Text.Display("AmountRAM");
             }
             else if (cmd.Equals("langset"))
             {
@@ -270,6 +271,10 @@ namespace Alve_OS.Shell
                 {
                     L.Text.Display("unknowncolor");
                 }
+            }
+            else if (cmd.Equals("crash"))
+            {
+                throw new Exception("Crash test");
             }
             else
             {

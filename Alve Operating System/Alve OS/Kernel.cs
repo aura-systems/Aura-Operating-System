@@ -61,12 +61,12 @@ namespace Alve_OS
             Console.ForegroundColor = ConsoleColor.White;
             #endregion
 
-            setup.SetupVerifyCompleted();
+            //setup.SetupVerifyCompleted();
 
-            langSelected = File.ReadAllText(@"0:\System\lang");
+            //langSelected = File.ReadAllText(@"0:\System\lang");
 
             #region Language
-            Lang.Keyboard.Init();
+            //Lang.Keyboard.Init();
             Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine("[OK]");
             Console.ForegroundColor = ConsoleColor.White;
@@ -74,7 +74,7 @@ namespace Alve_OS
 
             Console.Clear();
 
-            WelcomeMessage.Display();
+            //WelcomeMessage.Display();
 
             running = true;
         }
@@ -88,17 +88,17 @@ namespace Alve_OS
             try
             {
 
-                if (Logged) //si loggé
-                {
+                //if (Logged) //si loggé
+                //{
                     //LOGGED
                     Console.Write(UserLevel.TypeUser() + userLogged + "~ " + current_directory + "> ");
                     var cmd = Console.ReadLine();
                     Shell.Interpreter.Interpret(cmd);
                     Console.WriteLine();
-                } else
-                {
-                    Login.Init();
-                }
+                //} else
+                //{
+                //    Login.Init();
+                //}
 
              
             }
