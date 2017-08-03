@@ -2,8 +2,20 @@
 A Cosmos based Operating System developped in C# made by Alexy DA CRUZ (GeomTech) and Valentin Charbonnier (valentinbreiz).
 
 ## Screenshots
+
 Setup:
-![Alve Operating System](https://image.noelshack.com/fichiers/2017/29/4/1500569255-alve.png)
+
+![Alve Operating System](https://image.noelshack.com/fichiers/2017/31/4/1501722160-alve1.png)
+
+![Alve Operating System](https://image.noelshack.com/fichiers/2017/31/4/1501722160-alve2.png)
+
+Login:
+
+![Alve Operating System](https://image.noelshack.com/fichiers/2017/31/4/1501722160-alve3.png)
+
+Shell:
+
+![Alve Operating System](https://image.noelshack.com/fichiers/2017/31/4/1501722160-alve4.png)
 
 ## How to compile Alve ?
 Download and install [this repository](https://github.com/Alve-OS/Cosmos/tree/Bugfixes). Then run Alve OS.sln, and select "build" from Visual Studio 2017.
