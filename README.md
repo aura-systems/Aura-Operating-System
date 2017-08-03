@@ -68,7 +68,7 @@ cd ..
 
 Cd (to navigate to a folder)
 ```
-cd
+cd directory
 ```
 
 Dir (to list directories and files)
@@ -78,22 +78,27 @@ dir
 
 Mkdir (to create a directory)
 ```
-mkdir
+mkdir directory
 ```
 
 Rmdir (to remove a directory)
 ```
-rmdir
+rmdir directory
 ```
 
-Mkfil (to create a file)
+Mkfil (to create a file and edit it in Liquid Editor)
 ```
-mkfil
+mkfil file.txt
+```
+
+Prfil (to edit a file in Liquid Editor)
+```
+prfil file.txt
 ```
 
 Rmfil (to remove a file)
 ```
-rmfil
+rmfil file.txt
 ```
 
 Vol (to list volumes)
