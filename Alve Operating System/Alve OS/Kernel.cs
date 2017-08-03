@@ -23,13 +23,12 @@ namespace Alve_OS
     public class Kernel: Sys.Kernel
     {
 
-        Setup setup = new Setup();
-
         #region Global variables
 
+        Setup setup = new Setup();
         public static bool running;
         public static string version = "0.1";
-        public static string revision = "270720172145";
+        public static string revision = "030820171425";
         public static string current_directory = @"0:\";
         public static string langSelected = "en_US";
         public static CosmosVFS FS { get; private set; }
