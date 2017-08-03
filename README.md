@@ -13,6 +13,7 @@ Please read the [TODO](https://github.com/Alve-OS/Alve-Operating-System/blob/mas
 * Extended ASCII support.
 * Multi users.
 * Secured Users With MD5 Encryption.
+* Text Editor (Liquid Editor)
 
 ## Screenshots
 
@@ -108,4 +109,14 @@ systeminfo
 Langset (to change system language, for now en_US and fr_FR)
 ```
 langset
+```
+
+Ver (to display system version and revision)
+```
+ver
+```
+
+Color (to change console foreground color)
+```
+color 1 (choose an ID)
 ```
