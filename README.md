@@ -1,12 +1,6 @@
 # Alve Operating System
 A Cosmos based Operating System developped in C# made by Alexy DA CRUZ (GeomTech) and Valentin Charbonnier (valentinbreiz).
 
-## Screenshots
-![Alve Operating System](https://image.noelshack.com/fichiers/2017/29/4/1500569255-alve.png)
-
-## How to compile Alve ?
-Download and install [this repository](https://github.com/Alve-OS/Cosmos/tree/Bugfixes). Then run Alve OS.sln, and select "build" from Visual Studio 2017.
-
 ## Current features
 Please read the [TODO](https://github.com/Alve-OS/Alve-Operating-System/blob/master/TODO.md) file to know what will be added soon.
 
@@ -16,9 +10,29 @@ Please read the [TODO](https://github.com/Alve-OS/Alve-Operating-System/blob/mas
 * Virtual FileSystem.
 * Multilanguage support.
 * Exception with screen of death.
-* ASCII support.
+* Extended ASCII support.
 * Multi users.
 * Secured Users With MD5 Encryption.
+* Text Editor (Liquid Editor)
+
+## Screenshots
+
+Setup:
+
+![Alve Operating System](https://image.noelshack.com/fichiers/2017/31/4/1501722160-alve1.png)
+
+![Alve Operating System](https://image.noelshack.com/fichiers/2017/31/4/1501722160-alve2.png)
+
+Login:
+
+![Alve Operating System](https://image.noelshack.com/fichiers/2017/31/4/1501722160-alve3.png)
+
+Shell:
+
+![Alve Operating System](https://image.noelshack.com/fichiers/2017/31/4/1501722160-alve4.png)
+
+## How to compile Alve ?
+Download and install [this repository](https://github.com/Alve-OS/Cosmos/tree/Bugfixes). Then run Alve OS.sln, and select "build" from Visual Studio 2017.
 
 ## Commands
 
@@ -54,7 +68,7 @@ cd ..
 
 Cd (to navigate to a folder)
 ```
-cd
+cd directory
 ```
 
 Dir (to list directories and files)
@@ -64,22 +78,27 @@ dir
 
 Mkdir (to create a directory)
 ```
-mkdir
+mkdir directory
 ```
 
 Rmdir (to remove a directory)
 ```
-rmdir
+rmdir directory
 ```
 
-Mkfil (to create a file)
+Mkfil (to create a file and edit it in Liquid Editor)
 ```
-mkfil
+mkfil file.txt
+```
+
+Prfil (to edit a file in Liquid Editor)
+```
+prfil file.txt
 ```
 
 Rmfil (to remove a file)
 ```
-rmfil
+rmfil file.txt
 ```
 
 Vol (to list volumes)
@@ -95,4 +114,14 @@ systeminfo
 Langset (to change system language, for now en_US and fr_FR)
 ```
 langset
+```
+
+Ver (to display system version and revision)
+```
+ver
+```
+
+Color (to change console foreground color)
+```
+color 1 (choose an ID)
 ```

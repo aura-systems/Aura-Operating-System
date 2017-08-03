@@ -1,9 +1,8 @@
 # TO DO (High priority)
-* Multi users;
-* User permissions;
-* User security (MD5 or SHA_1 encryption);
 * Lock screen.
+* Interpreter (Batch like)
 
 # TO DO (Low priority)
+* Object Loader
 * Multitasking;
 * Network;
