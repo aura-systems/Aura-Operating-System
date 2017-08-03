@@ -25,9 +25,10 @@ namespace Alve_OS.System
             {
                 case "fr_FR":
 
-                    Console.WriteLine(" Bienvenue sur Alve Operating System (v" + Kernel.version + " - @" + Info.getComputerName() + ")");
+                    Console.WriteLine(" Bienvenue sur Alve " + Kernel.version + " (" + Info.getComputerName() + ")");
                     Console.ForegroundColor = ConsoleColor.Green;
-                    Console.WriteLine(" * Documentation: github.com/Alve-OS/Alve-Operating-System/wiki");
+                    Console.WriteLine(" * Documentation:    http://alve.geomtech.fr/docs");
+                    Console.WriteLine(Info.getAmountOfRAM());
                     Console.ForegroundColor = ConsoleColor.White;
                     if (File.Exists(@"0:\Users\root.usr"))
                     {
@@ -46,9 +47,9 @@ namespace Alve_OS.System
                      
                 case "en_US":
 
-                    Console.WriteLine(" Welcome to Alve Operating System (v" + Kernel.version + " - @" + Info.getComputerName() + ")");
+                    Console.WriteLine(" Welcome to Alve " + Kernel.version + " (" + Info.getComputerName() + ")");
                     Console.ForegroundColor = ConsoleColor.Green;
-                    Console.WriteLine(" * Documentation: github.com/Alve-OS/Alve-Operating-System/wiki");
+                    Console.WriteLine(" * Documentation:    http://alve.geomtech.fr/docs");
                     Console.ForegroundColor = ConsoleColor.White;
                     if (File.Exists("0:\\Users\\root.usr"))
                     {
