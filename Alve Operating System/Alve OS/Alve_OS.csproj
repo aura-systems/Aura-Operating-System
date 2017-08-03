@@ -17,9 +17,5 @@
   <ItemGroup>
     <Folder Include="Apps\System\" />
   </ItemGroup>
-  
-  <ItemGroup>
-    <ProjectReference Include="..\Alve_OS_System\Alve_OS_System.csproj" />
-  </ItemGroup>
 
 </Project>
