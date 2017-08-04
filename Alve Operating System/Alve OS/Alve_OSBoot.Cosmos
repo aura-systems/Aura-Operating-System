@@ -59,6 +59,7 @@
     <Folder Include="Shell\" />
     <Folder Include="System\" />
     <Folder Include="System\Security\" />
+    <Folder Include="System\Security\Rijndael\" />
     <Folder Include="System\Translation\" />
     <Folder Include="System\Translation\Text\" />
     <Folder Include="System\Users\" />

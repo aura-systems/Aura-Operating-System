@@ -16,6 +16,7 @@
   
   <ItemGroup>
     <Folder Include="Apps\System\" />
+    <Folder Include="System\Security\Rijndael\" />
   </ItemGroup>
 
 </Project>

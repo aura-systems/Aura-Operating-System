@@ -11,6 +11,7 @@ using Sys = Cosmos.System;
 using L = Alve_OS.System.Translation;
 using Alve_OS.System;
 using Alve_OS.System.Users;
+using Rijndael256;
 
 namespace Alve_OS.Shell
 {
@@ -276,6 +277,21 @@ namespace Alve_OS.Shell
             {
                 throw new Exception("Crash test");
             }
+
+            else if (cmd.StartsWith("encrypt "))
+            {
+                string text = cmd.Remove(0, 8);
+                string ciphertext = Rijndael.Encrypt(text, "123456", KeySize.Aes256);
+                Console.WriteLine(ciphertext);
+            }
+
+            else if (cmd.StartsWith("decrypt "))
+            {
+                string text = cmd.Remove(0, 8);
+                string plaintext = Rijndael.Decrypt(text, "123456", KeySize.Aes256);
+                Console.WriteLine(plaintext);
+            }
+
             else
             {
                 Console.ForegroundColor = ConsoleColor.DarkRed;
