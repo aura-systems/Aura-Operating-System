@@ -10,7 +10,15 @@ namespace Alve_OS.System.Computer
 
         public static string getComputerName()
         {
-            return File.ReadAllText(@"0:\System\computer.nam");
+            try
+            {
+                return File.ReadAllText(@"0:\System\computer.nam");
+            }
+            catch
+            {
+                AskComputerName();
+                return "Alve-PC";
+            }
         }
 
         public static void setComputerName(string name)

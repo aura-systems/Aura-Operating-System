@@ -221,10 +221,17 @@ namespace Alve_OS.Shell
                 if (argsettings.Equals("adduser"))
                 {
                     //method user
-                    string argsuser = argsettings.Remove(0, 5);
+                    string argsuser = argsettings.Remove(0, 7);
                     Users users = new Users();
 
                     users.Create(argsuser);
+
+                }
+                else if (argsettings.Equals("setcomputername"))
+                {
+                    //method computername
+                    string argspcname = argsettings.Remove(0, 15);
+                    System.Computer.Info.AskComputerName();
 
                 }
             }
