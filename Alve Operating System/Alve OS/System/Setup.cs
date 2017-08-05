@@ -9,6 +9,7 @@ using System;
 using System.IO;
 using L = Alve_OS.System.Translation;
 using Alve_OS.System.Security;
+using Alve_OS.System.Computer;
 
 namespace Alve_OS.System
 {
@@ -83,6 +84,8 @@ namespace Alve_OS.System
                 {
                     Directory.CreateDirectory(@"0:\Users\root");
                 }
+
+                Info.setComputerName("Alve-PC");
 
                 if ((Directory.Exists(@"0:\System")) && (Directory.Exists(@"0:\System\Users")) && (Directory.Exists(@"0:\Users")) && (Directory.Exists(@"0:\Users\root")))
                 {
@@ -209,9 +212,50 @@ namespace Alve_OS.System
 
 
         /// <summary>
-        /// Méthode permettant de valider l'installation.
+        /// Demande du nom pour l'ordinateur
         /// </summary>
         private void Step5()
+        {
+            try
+            {
+                Console.Clear();
+                Logo.Print();
+                AskComputerName();
+            }
+            catch
+            {
+                ErrorDuringSetup("Computer Name");
+            }
+        }
+
+        private void AskComputerName()
+        {
+            Console.WriteLine();
+            L.Text.Display("askcomputername");
+            Console.WriteLine();
+            L.Text.Display("computernamename");
+            var computername = Console.ReadLine();
+
+            if ((computername.Length >= 1) && (computername.Length <= 15)) //15 char max for NETBIOS name resolution (dns)
+            {
+                Info.setComputerName(computername);
+                Step6();
+            }
+            else
+            {
+                L.Text.Display("computernameincorrect");
+                Console.WriteLine();
+                AskComputerName();
+            }
+
+
+        }
+
+
+        /// <summary>
+        /// Méthode permettant de valider l'installation.
+        /// </summary>
+        private void Step6()
         {
             File.Create(@"0:\System\setup");
             Console.Clear();

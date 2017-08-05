@@ -128,6 +128,19 @@ namespace Alve_OS.System.Translation
                         case "wrongpassword":
                             Console.WriteLine("Mauvais mot de passe.");
                             break;
+                        case "askcomputername":
+                            Console.WriteLine("Choisissez le nom pour votre ordinateur :");
+                            break;
+                        case "computernameincorrect":
+                            Console.WriteLine("Le nom de l'ordinateur est incorrect, il doit être composé au maximum de 15 caractères.");
+                            break;
+                        case "computernamename":
+                            Console.Write("Nom de l'ordinateur > ");
+                            break;
+                        case "computernamesuccess":
+                            Console.Write("Le nouveau nom de l'ordinateur a été appliqué !");
+                            break;
+
                     }
                     break;
 
@@ -231,6 +244,18 @@ namespace Alve_OS.System.Translation
                             break;
                         case "wrongpassword":
                             Console.WriteLine("Wrong Password.");
+                            break;
+                        case "askcomputername":
+                            Console.WriteLine("Choose your computer name :");
+                            break;
+                        case "computernameincorrect":
+                            Console.WriteLine("The computer name is incorrect, computer name length should be 1-20 characters.");
+                            break;
+                        case "computernamename":
+                            Console.Write("Computer name > ");
+                            break;
+                        case "computernamesuccess":
+                            Console.Write("The new computer name has been applied!");
                             break;
                     }
                     break;

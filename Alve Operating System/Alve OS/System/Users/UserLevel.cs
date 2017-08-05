@@ -32,7 +32,7 @@ namespace Alve_OS.System.Users
             }
             else
             {
-                return "@";
+                return "$";
             }
         }
 
