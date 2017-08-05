@@ -30,23 +30,6 @@ namespace Alve_OS.System
             catch { }
         }
 
-
-        /// <summary>
-        /// Void appelé lors d'une erreur lors de l'installation
-        /// </summary>
-        public void ErrorDuringSetup(string error = "Setup Error")
-        {
-            Console.Clear();
-            Console.WriteLine();
-            Console.WriteLine();
-            Console.WriteLine("  Error during installation");
-            Console.WriteLine();
-            Console.WriteLine();
-            Console.WriteLine("  Error: " + error);
-            Console.WriteLine();
-        }
-
-
         /// <summary>
         /// Démarre l'installation
         /// </summary>
@@ -60,8 +43,6 @@ namespace Alve_OS.System
         /// </summary>
         private void Step1()
         {
-            //creating folders
-
             try
             {
                 if (!Directory.Exists(@"0:\System"))
@@ -91,7 +72,7 @@ namespace Alve_OS.System
             }
             catch
             {
-                ErrorDuringSetup("Creating system folders");
+                Menu.DispErrorDialog("Erreur pendant la création des fichiers systèmes!");
             }
         }
 
@@ -106,29 +87,18 @@ namespace Alve_OS.System
                 if (!File.Exists(@"0:\System\Users\root.usr"))
                 {
                     File.Create(@"0:\System\Users\root.usr");
-
-                    try
+                    if (File.Exists(@"0:\System\Users\root.usr"))
                     {
-                        if (File.Exists(@"0:\System\Users\root.usr"))
-                        {
-                            string text = "root";
-                            string md5psw = MD5.hash(text);
-                            File.WriteAllText(@"0:\System\Users\root.usr", md5psw + "|admin");
-
-                            Step3();
-                        }
-                    }
-                    catch
-                    {
-                        Console.ForegroundColor = ConsoleColor.Red;
-                        Console.WriteLine("[ERROR] Root writing file");
-                        Console.ForegroundColor = ConsoleColor.White;
+                        string text = "root";
+                        string md5psw = MD5.hash(text);
+                        File.WriteAllText(@"0:\System\Users\root.usr", md5psw + "|admin");
+                        Step3();
                     }
                 }
             }
             catch
             {
-                ErrorDuringSetup("Creating root");
+                Menu.DispErrorDialog("Erreur pendant la création de root!");
             }
         }
 
@@ -138,17 +108,7 @@ namespace Alve_OS.System
         /// </summary>
         private void Step3()
         {
-            Console.Clear();
-            //Logo.Print();
-            //L.Text.Display("languageask");
-            //Console.WriteLine();
-            //L.Text.Display("availablelanguage");
-            //Console.WriteLine();
-            //Console.Write("> ");
-            //var cmd = Console.ReadLine();
-
             string language = Menu.DispLanguageDialog();
-
             if ((language.Equals("en_US")) || language.Equals("en-US"))
             {
                 Kernel.langSelected = "en_US";
@@ -162,7 +122,7 @@ namespace Alve_OS.System
                 }
                 else
                 {
-                    ErrorDuringSetup("Lang Register");
+                    Menu.DispErrorDialog("The language configuration already exists!");
                 }
 
                 Step4();
@@ -180,7 +140,7 @@ namespace Alve_OS.System
                 }
                 else
                 {
-                    ErrorDuringSetup("Lang Register");
+                    Menu.DispErrorDialog("La configuration des langue existe déjà!");
                 }
 
                 Step4();
@@ -200,12 +160,8 @@ namespace Alve_OS.System
             try
             {
                 Console.Clear();
-                //Logo.Print();
-               // L.Text.Display("chooseyourusername");
+
                 string text = Menu.DispLoginForm("Création d'un compte Alve.");
-                //Console.WriteLine();
-                //L.Text.Display("user");
-                //var username = Console.ReadLine();
 
                 int middle = text.IndexOf("//////");
                 string user = text.Remove(middle, text.Length - middle);
@@ -214,8 +170,7 @@ namespace Alve_OS.System
                 if (File.Exists(@"0:\System\Users\" + user + ".usr"))
                 {
                     Menu.DispErrorDialog("Cet utilisateur existe déjà !");
-                    //L.Text.Display("alreadyuser");
-                    //Console.ReadKey();
+
                     Step4();
                 }
                 else
@@ -226,8 +181,6 @@ namespace Alve_OS.System
                         if ((pass.Length >= 6) && (pass.Length <= 40))
                         {
                             string password = MD5.hash(pass);
-
-                            Console.WriteLine();
 
                             File.Create(@"0:\System\Users\" + user + ".usr");
                             Directory.CreateDirectory(@"0:\Users\" + user);
@@ -243,28 +196,27 @@ namespace Alve_OS.System
                             }
                             else
                             {
-                                ErrorDuringSetup("Creating user");
+                                Menu.DispErrorDialog("Erreur pendant la création de l'utilisateur!");
                             }
                         }
                         else
                         {
-                            Menu.DispErrorDialog("Ce mot de passe est trop court !");
+                            Menu.DispErrorDialog("Ce mot de passe est trop court!");
                             Step4();
                         }
                     }
                     else
                     {
-                        Menu.DispErrorDialog("Ce pseudo est trop court !");
+                        Menu.DispErrorDialog("Ce pseudo est trop court!");
                         Step4();
                     }
                 }
             }
             catch
             {
-                ErrorDuringSetup("Creating user");
+                Menu.DispErrorDialog("Erreur pendant la création de l'utilisateur!");
             }
         }
-
 
         /// <summary>
         /// Méthode permettant de valider l'installation.

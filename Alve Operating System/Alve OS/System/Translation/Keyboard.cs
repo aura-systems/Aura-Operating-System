@@ -19,12 +19,10 @@ namespace Alve_OS.System.Translation
                 {
                     case "fr_FR":
                         Sys.KeyboardManager.SetKeyLayout(new Sys.ScanMaps.FR_Standard());
-                        Text.Display("keyboard");
                         break;
 
                     case "en_US":
                         Sys.KeyboardManager.SetKeyLayout(new Sys.ScanMaps.US_Standard());
-                        Text.Display("keyboard");
                         break;
                 }
             }

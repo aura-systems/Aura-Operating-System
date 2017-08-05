@@ -16,9 +16,6 @@ namespace Alve_OS.System.Users
         public void Login()
         {
 
-            //Console.Clear();
-            //WelcomeMessage.Display();
-
             switch (Kernel.langSelected)
             {
                 case "fr_FR":
@@ -27,10 +24,6 @@ namespace Alve_OS.System.Users
                     int middle = text.IndexOf("//////");
                     string user = text.Remove(middle, text.Length - middle);
                     string pass = text.Remove(0, middle + 6);
-
-                    //Console.Write("Utilisateur > ");
-                    //var user = Console.ReadLine();
-                    //Console.WriteLine();
 
                     if (File.Exists(@"0:\System\Users\" + user + ".usr"))
                     {
@@ -58,7 +51,6 @@ namespace Alve_OS.System.Users
                         }
                         else
                         {
-                            //Text.Display("wrongpassword");
                             Menu.DispErrorDialog("Mot de passe ou utilisateur incorrect!");
                             Login();
                         }
@@ -72,15 +64,16 @@ namespace Alve_OS.System.Users
                     break;
 
                 case "en_US":
-                    Console.Write("Login > ");
-                    var user2 = Console.ReadLine();
-                    Console.WriteLine();
+
+                    string text2 = Menu.DispLoginForm("Login to Alve.");
+                    int middle2 = text2.IndexOf("//////");
+                    string user2 = text2.Remove(middle2, text2.Length - middle2);
+                    string pass2 = text2.Remove(0, middle2 + 6);
 
                     if (File.Exists(@"0:\System\Users\" + user2 + ".usr"))
                     {
-                        Console.Write("Mot de passe > ");
-                        var psw = Console.ReadLine();
-                        string md5psw = MD5.hash(psw);
+    
+                        string md5psw = MD5.hash(pass2);
                         Console.WriteLine();
 
                         string UserFile = File.ReadAllText(@"0:\System\Users\" + user2 + ".usr");
@@ -105,15 +98,13 @@ namespace Alve_OS.System.Users
                         }
                         else
                         {
-                            Text.Display("wrongpassword");
-                            Console.ReadKey();
+                            Menu.DispErrorDialog("Wrong password!");
                             Login();
                         }
                     }
                     else
                     {
-                        Text.Display("unknownuser");
-                        Console.ReadKey();
+                        Menu.DispErrorDialog("Wrong username!");
                         Login();
                     }
                     break;
