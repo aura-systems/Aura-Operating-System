@@ -16,22 +16,25 @@ namespace Alve_OS.System.Users
         public void Login()
         {
 
-            Console.Clear();
-            WelcomeMessage.Display();
+            //Console.Clear();
+            //WelcomeMessage.Display();
 
             switch (Kernel.langSelected)
             {
                 case "fr_FR":
-                    Console.Write("Utilisateur > ");
-                    var user = Console.ReadLine();
-                    Console.WriteLine();
+
+                    string text = Menu.DispLoginForm("Connexion à un compte Alve.");
+                    int middle = text.IndexOf("//////");
+                    string user = text.Remove(middle, text.Length - middle);
+                    string pass = text.Remove(0, middle + 6);
+
+                    //Console.Write("Utilisateur > ");
+                    //var user = Console.ReadLine();
+                    //Console.WriteLine();
 
                     if (File.Exists(@"0:\System\Users\" + user + ".usr"))
                     {
-                        Console.Write("Mot de passe > ");
-                        var psw = Console.ReadLine();
-                        string md5psw = MD5.hash(psw);
-                        Console.WriteLine();
+                        string md5psw = MD5.hash(pass);
 
                         string UserFile = File.ReadAllText(@"0:\System\Users\" + user + ".usr");
 
@@ -55,15 +58,14 @@ namespace Alve_OS.System.Users
                         }
                         else
                         {
-                            Text.Display("wrongpassword");
-                            Console.ReadKey();
+                            //Text.Display("wrongpassword");
+                            Menu.DispErrorDialog("Mot de passe ou utilisateur incorrect!");
                             Login();
                         }
                     }
                     else
                     {
-                        Text.Display("unknownuser");
-                        Console.ReadKey();
+                        Menu.DispErrorDialog("L'utilisateur n'existe pas!");
                         Login();
                     }
 

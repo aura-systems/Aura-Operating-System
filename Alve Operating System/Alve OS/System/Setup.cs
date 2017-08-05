@@ -134,19 +134,22 @@ namespace Alve_OS.System
 
 
         /// <summary>
-        /// Demande de la disposition du clavier
+        /// Demande la langue
         /// </summary>
         private void Step3()
         {
             Console.Clear();
-            Logo.Print();
-            L.Text.Display("languageask");
-            Console.WriteLine();
-            L.Text.Display("availablelanguage");
-            Console.WriteLine();
-            Console.Write("> ");
-            var cmd = Console.ReadLine();
-            if ((cmd.Equals("en_US")) || cmd.Equals("en-US"))
+            //Logo.Print();
+            //L.Text.Display("languageask");
+            //Console.WriteLine();
+            //L.Text.Display("availablelanguage");
+            //Console.WriteLine();
+            //Console.Write("> ");
+            //var cmd = Console.ReadLine();
+
+            string language = Menu.DispLanguageDialog();
+
+            if ((language.Equals("en_US")) || language.Equals("en-US"))
             {
                 Kernel.langSelected = "en_US";
                 L.Keyboard.Init();
@@ -164,7 +167,7 @@ namespace Alve_OS.System
 
                 Step4();
             }
-            else if ((cmd.Equals("fr_FR")) || cmd.Equals("fr-FR"))
+            else if ((language.Equals("fr_FR")) || language.Equals("fr-FR"))
             {
                 Kernel.langSelected = "fr_FR";
                 L.Keyboard.Init();
@@ -197,9 +200,64 @@ namespace Alve_OS.System
             try
             {
                 Console.Clear();
-                Logo.Print();
-                L.Text.Display("chooseyourusername");
-                AskUser();
+                //Logo.Print();
+               // L.Text.Display("chooseyourusername");
+                string text = Menu.DispLoginForm("Création d'un compte Alve.");
+                //Console.WriteLine();
+                //L.Text.Display("user");
+                //var username = Console.ReadLine();
+
+                int middle = text.IndexOf("//////");
+                string user = text.Remove(middle, text.Length - middle);
+                string pass = text.Remove(0, middle + 6);
+
+                if (File.Exists(@"0:\System\Users\" + user + ".usr"))
+                {
+                    Menu.DispErrorDialog("Cet utilisateur existe déjà !");
+                    //L.Text.Display("alreadyuser");
+                    //Console.ReadKey();
+                    Step4();
+                }
+                else
+                {
+                    if ((user.Length >= 4) && (user.Length <= 20))
+                    {
+
+                        if ((pass.Length >= 6) && (pass.Length <= 40))
+                        {
+                            string password = MD5.hash(pass);
+
+                            Console.WriteLine();
+
+                            File.Create(@"0:\System\Users\" + user + ".usr");
+                            Directory.CreateDirectory(@"0:\Users\" + user);
+
+                            if (File.Exists(@"0:\System\Users\" + user + ".usr"))
+                            {
+                                File.WriteAllText(@"0:\System\Users\" + user + ".usr", password + "|standard");
+
+                                if (Directory.Exists(@"0:\System"))
+                                {
+                                    Step5();
+                                }
+                            }
+                            else
+                            {
+                                ErrorDuringSetup("Creating user");
+                            }
+                        }
+                        else
+                        {
+                            Menu.DispErrorDialog("Ce mot de passe est trop court !");
+                            Step4();
+                        }
+                    }
+                    else
+                    {
+                        Menu.DispErrorDialog("Ce pseudo est trop court !");
+                        Step4();
+                    }
+                }
             }
             catch
             {
@@ -216,72 +274,5 @@ namespace Alve_OS.System
             File.Create(@"0:\System\setup");
             Console.Clear();
         }
-
-        /// <summary>
-        /// Méthode permettant de créer un compte utilisateur
-        /// </summary>
-        private void AskUser()
-        {
-            Console.WriteLine();
-            L.Text.Display("user");
-            var username = Console.ReadLine();
-
-            if (File.Exists(@"0:\System\Users\" + username + ".usr"))
-            {
-                L.Text.Display("alreadyuser");
-                Console.ReadKey();
-                Step4();
-            }
-            else
-            {
-                if((username.Length >= 4) && (username.Length <= 20))
-                {
-
-                    Console.WriteLine();
-                    L.Text.Display("passuser", username);
-                    
-                    Console.WriteLine();
-                    L.Text.Display("passwd");
-                    string clearpassword = Console.ReadLine();
-
-                    if ((clearpassword.Length >= 6) && (clearpassword.Length <= 40))
-                    {
-                        string password = MD5.hash(clearpassword);
-
-                        Console.WriteLine();
-
-                        File.Create(@"0:\System\Users\" + username + ".usr");
-                        Directory.CreateDirectory(@"0:\Users\" + username);
-
-                        if (File.Exists(@"0:\System\Users\" + username + ".usr"))
-                        {
-                            File.WriteAllText(@"0:\System\Users\" + username + ".usr", password + "|standard");
-
-                            if (Directory.Exists(@"0:\System"))
-                            {
-                                Step5();
-                            }
-                        }
-                        else
-                        {
-                            ErrorDuringSetup("Creating user");
-                        }
-                    }
-                    else
-                    {
-                        L.Text.Display("pswcharmin");
-                        Console.ReadKey();
-                        Step4();
-                    }
-                }
-                else
-                {
-                    L.Text.Display("charmin");
-                    Console.ReadKey();
-                    Step4();
-                }             
-            }
-        }
-
     }
 }

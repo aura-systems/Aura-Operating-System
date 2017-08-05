@@ -5,13 +5,10 @@
 */
 
 using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Text;
 
 namespace Alve_OS.System
 {
-    class SetupInit
+    class Reset
     {
         /// <summary>
         /// Réinitialise le système

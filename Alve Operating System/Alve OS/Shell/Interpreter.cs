@@ -200,7 +200,7 @@ namespace Alve_OS.Shell
                 string setup = Console.ReadLine();
                 if (setup == "o")
                 {
-                    SetupInit.Init();
+                    Reset.Init();
                 }
             }
             else if (cmd.Equals("logout"))
@@ -275,6 +275,14 @@ namespace Alve_OS.Shell
             else if (cmd.Equals("crash"))
             {
                 throw new Exception("Crash test");
+            }
+            else if (cmd.Equals("menu"))
+            {
+                string text = Menu.DispLoginForm("Please enter a login and a password.");
+                int middle = text.IndexOf("//////");
+                string name = text.Remove(middle, text.Length - middle);
+                string pass = text.Remove(0, middle + 6);
+
             }
             else
             {
