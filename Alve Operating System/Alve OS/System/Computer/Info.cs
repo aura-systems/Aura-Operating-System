@@ -18,11 +18,12 @@ namespace Alve_OS.System.Computer
         /// <returns></returns>
         public static string getComputerName()
         {
-            try
+            if (File.Exists(@"0:\System\computer.nam"))
             {
-                return File.ReadAllText(@"0:\System\computer.nam");
+                Kernel.ComputerName = File.ReadAllText(@"0:\System\computer.nam");
+                return Kernel.ComputerName;
             }
-            catch
+            else
             {
                 setComputerName("Alve-PC");
                 return "Alve-PC";
@@ -37,6 +38,8 @@ namespace Alve_OS.System.Computer
         {
             if (File.Exists(@"0:\System\computer.nam"))
             {
+                File.Delete(@"0:\System\computer.nam");
+                File.Create(@"0:\System\computer.nam");
                 File.WriteAllText(@"0:\System\computer.nam", name);
             }
             else
