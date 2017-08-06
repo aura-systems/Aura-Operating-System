@@ -14,6 +14,7 @@ using Lang = Alve_OS.System.Translation;
 using Alve_OS.System;
 using System.IO;
 using Alve_OS.System.Users;
+using Alve_OS.System.Computer;
 
 #endregion
 
@@ -34,7 +35,7 @@ namespace Alve_OS
         public static string userLogged;
         public static string userLevelLogged;
         public static bool Logged = false;
-        public static string computerName = "Alve-PC";
+        public static string ComputerName = "Alve-PC";
 
         #endregion
 
@@ -62,7 +63,7 @@ namespace Alve_OS
 
             setup.SetupVerifyCompleted();
 
-            langSelected = File.ReadAllText(@"0:\System\lang");
+            langSelected = File.ReadAllText(@"0:\System\lang.set");
 
             #region Language
             Lang.Keyboard.Init();
@@ -71,7 +72,11 @@ namespace Alve_OS
             Console.ForegroundColor = ConsoleColor.White;
             #endregion
 
+            Info.getComputerName();
+
             Console.Clear();
+
+            Color.GetBackgroundColor();
 
             WelcomeMessage.Display();
 
@@ -88,7 +93,7 @@ namespace Alve_OS
             {
                 if (Logged) //If logged
                 {
-                    Console.Write(UserLevel.TypeUser() + userLogged + "~ " + current_directory + "> ");
+                    BeforeCommand();
                     var cmd = Console.ReadLine();
                     Shell.Interpreter.Interpret(cmd);
                     Console.WriteLine();
@@ -105,6 +110,55 @@ namespace Alve_OS
         }
 
         #endregion
+
+        private void BeforeCommand()
+        {
+            if (current_directory == @"0:\")
+            {
+                Console.ForegroundColor = ConsoleColor.Blue;
+                Console.Write(UserLevel.TypeUser());
+
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.Write(userLogged);
+
+                Console.ForegroundColor = ConsoleColor.DarkGray;
+                Console.Write("@");
+
+                Console.ForegroundColor = ConsoleColor.Blue;
+                Console.Write(Kernel.ComputerName);
+
+                Console.ForegroundColor = ConsoleColor.Gray;
+                Console.Write("> ");
+
+                Color.GetTextColor();
+            }
+            else
+            {
+                Console.ForegroundColor = ConsoleColor.Blue;
+                Console.Write(UserLevel.TypeUser());
+
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.Write(userLogged);
+
+                Console.ForegroundColor = ConsoleColor.DarkGray;
+                Console.Write("@");
+
+                Console.ForegroundColor = ConsoleColor.Blue;
+                Console.Write(Kernel.ComputerName);
+
+                Console.ForegroundColor = ConsoleColor.Gray;
+                Console.Write("> ");
+
+                Console.ForegroundColor = ConsoleColor.DarkGray;
+                Console.Write(current_directory + "~ ");
+
+                Color.GetTextColor();
+            }
+            
+
+        }
+
+        
 
     }
 }

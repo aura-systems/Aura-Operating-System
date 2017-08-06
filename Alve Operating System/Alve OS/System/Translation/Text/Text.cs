@@ -41,9 +41,6 @@ namespace Alve_OS.System.Translation
                         case "directorydoesntexist":
                             Console.WriteLine("Ce répertoire n'éxiste pas !");
                             break;
-                        case "typename":
-                            Console.WriteLine("Type\t Nom");
-                            break;
                         case "doesnotexist":
                             Console.WriteLine(arg + " n'existe pas !");
                             break;
@@ -128,6 +125,25 @@ namespace Alve_OS.System.Translation
                         case "wrongpassword":
                             Console.WriteLine("Mauvais mot de passe.");
                             break;
+                        case "askcomputername":
+                            Console.WriteLine("Choisissez le nom pour votre ordinateur :");
+                            break;
+                        case "computernameincorrect":
+                            Console.WriteLine("Le nom de l'ordinateur est incorrect, il doit être composé au maximum de 15 caractères.");
+                            break;
+                        case "computernamename":
+                            Console.Write("Nom de l'ordinateur > ");
+                            break;
+                        case "computernamesuccess":
+                            Console.Write("Le nouveau nom de l'ordinateur a été appliqué ! \n\nRedémarrez l'ordinateur pour que le changement prenne effet.");
+                            break;
+                        case "tips":
+                            Console.WriteLine(" * Conseil(s) :");
+                            break;
+                        case "foldercontent":
+                            Console.WriteLine("Contenu du dossier '" + arg + "':");
+                            break;
+
                     }
                     break;
 
@@ -147,9 +163,6 @@ namespace Alve_OS.System.Translation
                             break;
                         case "directorydoesntexist":
                             Console.WriteLine("This directory doesn't exist!");
-                            break;
-                        case "typename":
-                            Console.WriteLine("Type\t Name");
                             break;
                         case "doesnotexist":
                             Console.WriteLine(arg + " does not exist!");
@@ -231,6 +244,24 @@ namespace Alve_OS.System.Translation
                             break;
                         case "wrongpassword":
                             Console.WriteLine("Wrong Password.");
+                            break;
+                        case "askcomputername":
+                            Console.WriteLine("Choose your computer name :");
+                            break;
+                        case "computernameincorrect":
+                            Console.WriteLine("The computer name is incorrect, computer name length should be 1-20 characters.");
+                            break;
+                        case "computernamename":
+                            Console.Write("Computer name > ");
+                            break;
+                        case "computernamesuccess":
+                            Console.Write("The new computer name has been applied! \n\nReboot the computer for the changing name take effect.");
+                            break;
+                        case "tips":
+                            Console.WriteLine(" * Tips :");
+                            break;
+                        case "foldercontent":
+                            Console.WriteLine("Folder's content of '" + arg + "':");
                             break;
                     }
                     break;

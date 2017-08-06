@@ -9,6 +9,7 @@ using System;
 using System.IO;
 using L = Alve_OS.System.Translation;
 using Alve_OS.System.Security;
+using Alve_OS.System.Computer;
 
 namespace Alve_OS.System
 {
@@ -22,7 +23,7 @@ namespace Alve_OS.System
         {
             try
             {
-                if (!File.Exists(@"0:\System\setup"))
+                if (!File.Exists(@"0:\System\setup.set"))
                 {
                     StartSetup();
                 }
@@ -83,6 +84,14 @@ namespace Alve_OS.System
                 {
                     Directory.CreateDirectory(@"0:\Users\root");
                 }
+
+                if (!File.Exists(@"0:\System\color.set"))
+                {
+                    File.Create(@"0:\System\color.set");
+                    File.WriteAllText(@"0:\System\color.set", "7");
+                }
+
+                Info.setComputerName("Alve-PC");
 
                 if ((Directory.Exists(@"0:\System")) && (Directory.Exists(@"0:\System\Users")) && (Directory.Exists(@"0:\Users")) && (Directory.Exists(@"0:\Users\root")))
                 {
@@ -151,11 +160,11 @@ namespace Alve_OS.System
                 Kernel.langSelected = "en_US";
                 L.Keyboard.Init();
 
-                File.Create(@"0:\System\lang");
+                File.Create(@"0:\System\lang.set");
 
-                if (File.Exists(@"0:\System\lang"))
+                if (File.Exists(@"0:\System\lang.set"))
                 {
-                    File.WriteAllText(@"0:\System\lang", Kernel.langSelected);
+                    File.WriteAllText(@"0:\System\lang.set", Kernel.langSelected);
                 }
                 else
                 {
@@ -169,11 +178,11 @@ namespace Alve_OS.System
                 Kernel.langSelected = "fr_FR";
                 L.Keyboard.Init();
 
-                File.Create(@"0:\System\lang");
+                File.Create(@"0:\System\lang.set");
 
-                if (File.Exists(@"0:\System\lang"))
+                if (File.Exists(@"0:\System\lang.set"))
                 {
-                    File.WriteAllText(@"0:\System\lang", Kernel.langSelected);
+                    File.WriteAllText(@"0:\System\lang.set", Kernel.langSelected);
                 }
                 else
                 {
@@ -209,11 +218,52 @@ namespace Alve_OS.System
 
 
         /// <summary>
-        /// Méthode permettant de valider l'installation.
+        /// Demande du nom pour l'ordinateur
         /// </summary>
         private void Step5()
         {
-            File.Create(@"0:\System\setup");
+            try
+            {
+                Console.Clear();
+                Logo.Print();
+                AskComputerName();
+            }
+            catch
+            {
+                ErrorDuringSetup("Computer Name");
+            }
+        }
+
+        private void AskComputerName()
+        {
+            Console.WriteLine();
+            L.Text.Display("askcomputername");
+            Console.WriteLine();
+            L.Text.Display("computernamename");
+            var computername = Console.ReadLine();
+
+            if ((computername.Length >= 1) && (computername.Length <= 15)) //15 char max for NETBIOS name resolution (dns)
+            {
+                Info.setComputerName(computername);
+                Step6();
+            }
+            else
+            {
+                L.Text.Display("computernameincorrect");
+                Console.WriteLine();
+                AskComputerName();
+            }
+
+
+        }
+
+
+        /// <summary>
+        /// Méthode permettant de valider l'installation.
+        /// </summary>
+        private void Step6()
+        {
+            File.Create(@"0:\System\setup.set");
             Console.Clear();
         }
 

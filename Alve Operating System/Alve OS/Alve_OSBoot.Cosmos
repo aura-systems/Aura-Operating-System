@@ -58,6 +58,7 @@
     <Folder Include="Apps\User\" />
     <Folder Include="Shell\" />
     <Folder Include="System\" />
+    <Folder Include="System\Computer\" />
     <Folder Include="System\Security\" />
     <Folder Include="System\Translation\" />
     <Folder Include="System\Translation\Text\" />
