@@ -13,17 +13,28 @@ namespace Alve_OS.System.Users
 {
     class UserLevel
     {
-
+        /// <summary>
+        /// Administrateur
+        /// </summary>
+        /// <returns></returns>
         public static string Administrator()
         {
             return "admin";
         }
 
+        /// <summary>
+        /// Standard
+        /// </summary>
+        /// <returns>standard</returns>
         public static string StandardUser()
         {
             return "standard";
         }
 
+        /// <summary>
+        /// Type d'utilisateur
+        /// </summary>
+        /// <returns>Le caractère correspondant au type d'utilisateur</returns>
         public static string TypeUser()
         {
             if(Kernel.userLevelLogged == Administrator())
