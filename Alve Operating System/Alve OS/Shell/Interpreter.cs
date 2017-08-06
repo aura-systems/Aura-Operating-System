@@ -73,7 +73,6 @@ namespace Alve_OS.Shell
             }
             else if ((cmd.Equals("dir")) || (cmd.Equals("ls")))
             {
-                L.Text.Display("foldercontent");
                 foreach (string dir in Directory.GetDirectories(Kernel.current_directory))
                 {
                     Color.DisplayTextColor("6");
@@ -98,6 +97,68 @@ namespace Alve_OS.Shell
                     
                 }
 
+            }
+            else if ((cmd.StartsWith("dir ")) || (cmd.StartsWith("ls ")))
+            {
+                string cmddir;
+                if (cmd.StartsWith("dir "))
+                {
+                    cmddir = cmd.Remove(0, 4);
+
+                    foreach (string dir in Directory.GetDirectories(cmddir))
+                    {
+                        Color.DisplayTextColor("6");
+                        Console.Write(dir + "\t");
+                    }
+                    foreach (string file in Directory.GetFiles(cmddir))
+                    {
+                        Char formatDot = '.';
+                        string[] ext = file.Split(formatDot);
+                        string lastext = ext[ext.Length - 1];
+
+                        if ((lastext == "set") || (lastext == "nam") || (lastext == "usr"))
+                        {
+                            Color.DisplayTextColor("4");
+                            Console.Write(file + "\t");
+                        }
+                        else
+                        {
+                            Color.DisplayTextColor("1");
+                            Console.Write(file + "\t");
+                        }
+
+                    }
+                }
+                else if (cmd.StartsWith("ls "))
+                {
+                    cmddir = cmd.Remove(0, 3);
+
+                    foreach (string dir in Directory.GetDirectories(cmddir))
+                    {
+                        Color.DisplayTextColor("6");
+                        Console.Write(dir + "\t");
+                    }
+                    foreach (string file in Directory.GetFiles(cmddir))
+                    {
+                        Char formatDot = '.';
+                        string[] ext = file.Split(formatDot);
+                        string lastext = ext[ext.Length - 1];
+
+                        if ((lastext == "set") || (lastext == "nam") || (lastext == "usr"))
+                        {
+                            Color.DisplayTextColor("4");
+                            Console.Write(file + "\t");
+                        }
+                        else
+                        {
+                            Color.DisplayTextColor("1");
+                            Console.Write(file + "\t");
+                        }
+
+                    }
+                }
+
+                
             }
             else if (cmd.StartsWith("mkdir "))
             {
@@ -168,6 +229,7 @@ namespace Alve_OS.Shell
             else if (cmd.Equals("vol"))
             {
                 var vols = Kernel.FS.GetVolumes();
+                
                 L.Text.Display("NameSizeParent");
                 foreach (var vol in vols)
                 {

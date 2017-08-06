@@ -35,6 +35,7 @@ namespace Alve_OS
         public static string userLogged;
         public static string userLevelLogged;
         public static bool Logged = false;
+        public static string ComputerName = "Alve-PC";
 
         #endregion
 
@@ -71,9 +72,11 @@ namespace Alve_OS
             Console.ForegroundColor = ConsoleColor.White;
             #endregion
 
+            Info.getComputerName();
+
             Console.Clear();
 
-            Color.GetBackgroundTextColor();
+            Color.GetBackgroundColor();
 
             WelcomeMessage.Display();
 
@@ -122,7 +125,7 @@ namespace Alve_OS
                 Console.Write("@");
 
                 Console.ForegroundColor = ConsoleColor.Blue;
-                Console.Write(Info.getComputerName());
+                Console.Write(Kernel.ComputerName);
 
                 Console.ForegroundColor = ConsoleColor.Gray;
                 Console.Write("> ");
@@ -141,7 +144,7 @@ namespace Alve_OS
                 Console.Write("@");
 
                 Console.ForegroundColor = ConsoleColor.Blue;
-                Console.Write(Info.getComputerName());
+                Console.Write(Kernel.ComputerName);
 
                 Console.ForegroundColor = ConsoleColor.Gray;
                 Console.Write("> ");
