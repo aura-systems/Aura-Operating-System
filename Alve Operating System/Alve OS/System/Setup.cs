@@ -23,7 +23,7 @@ namespace Alve_OS.System
         {
             try
             {
-                if (!File.Exists(@"0:\System\setup"))
+                if (!File.Exists(@"0:\System\setup.set"))
                 {
                     StartSetup();
                 }
@@ -83,6 +83,12 @@ namespace Alve_OS.System
                 if (!Directory.Exists(@"0:\Users\root"))
                 {
                     Directory.CreateDirectory(@"0:\Users\root");
+                }
+
+                if (!File.Exists(@"0:\System\color.set"))
+                {
+                    File.Create(@"0:\System\color.set");
+                    File.WriteAllText(@"0:\System\color.set", "7");
                 }
 
                 Info.setComputerName("Alve-PC");
@@ -154,11 +160,11 @@ namespace Alve_OS.System
                 Kernel.langSelected = "en_US";
                 L.Keyboard.Init();
 
-                File.Create(@"0:\System\lang");
+                File.Create(@"0:\System\lang.set");
 
-                if (File.Exists(@"0:\System\lang"))
+                if (File.Exists(@"0:\System\lang.set"))
                 {
-                    File.WriteAllText(@"0:\System\lang", Kernel.langSelected);
+                    File.WriteAllText(@"0:\System\lang.set", Kernel.langSelected);
                 }
                 else
                 {
@@ -172,11 +178,11 @@ namespace Alve_OS.System
                 Kernel.langSelected = "fr_FR";
                 L.Keyboard.Init();
 
-                File.Create(@"0:\System\lang");
+                File.Create(@"0:\System\lang.set");
 
-                if (File.Exists(@"0:\System\lang"))
+                if (File.Exists(@"0:\System\lang.set"))
                 {
-                    File.WriteAllText(@"0:\System\lang", Kernel.langSelected);
+                    File.WriteAllText(@"0:\System\lang.set", Kernel.langSelected);
                 }
                 else
                 {
@@ -257,7 +263,7 @@ namespace Alve_OS.System
         /// </summary>
         private void Step6()
         {
-            File.Create(@"0:\System\setup");
+            File.Create(@"0:\System\setup.set");
             Console.Clear();
         }
 
