@@ -113,7 +113,7 @@ namespace Alve_OS.System.Computer
 
         }
 
-        public static void GetBackgroundTextColor(string defaultcolor = "7")
+        public static void GetBackgroundColor(string defaultcolor = "0")
         {
             if (File.Exists(@"0:\System\backcolor.set"))
             {
@@ -166,7 +166,7 @@ namespace Alve_OS.System.Computer
             if (File.Exists(@"0:\System\backcolor.set"))
             {
                 File.WriteAllText(@"0:\System\backcolor.set", color);
-                GetTextColor();
+                GetBackgroundColor();
             }
             else
             {
