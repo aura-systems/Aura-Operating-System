@@ -29,15 +29,17 @@ namespace Alve_OS.System
                     Console.WriteLine(" * Documentation: github.com/Alve-OS/Alve-Operating-System/wiki");
                     Console.ForegroundColor = ConsoleColor.White;
 
-                    if ((File.Exists(@"0:\System\Users\root.usr")) || (Info.getComputerName() == "Alve-PC"))
+                    if ((File.ReadAllText(@"0:\System\Users\root.usr") == MD5.hash("root") + "|admin") || (Info.getComputerName() == "Alve-PC"))
                     {
                         Console.WriteLine();
+
+                        Console.ForegroundColor = ConsoleColor.Green;
                         Text.Display("tips");
 
                         if (File.Exists(@"0:\System\Users\root.usr"))
                         {
                             string RootPassword = File.ReadAllText(@"0:\System\Users\root.usr");
-                            if (RootPassword == MD5.hash("root" + "|admin"))
+                            if (RootPassword == MD5.hash("root") + "|admin")
                             {
                                 Console.WriteLine(" ");
                                 Console.ForegroundColor = ConsoleColor.Blue;
@@ -64,9 +66,12 @@ namespace Alve_OS.System
                     Console.ForegroundColor = ConsoleColor.Green;
                     Console.WriteLine(" * Documentation: github.com/Alve-OS/Alve-Operating-System/wiki");
                     Console.ForegroundColor = ConsoleColor.White;
-                    if ((File.Exists(@"0:\System\Users\root.usr")) || (Info.getComputerName() == "Alve-PC"))
+
+                    if ((File.ReadAllText(@"0:\System\Users\root.usr") == MD5.hash("root") + "|admin") || (Info.getComputerName() == "Alve-PC"))
                     {
                         Console.WriteLine();
+
+                        Console.ForegroundColor = ConsoleColor.Green;
                         Text.Display("tips");
 
                         if (File.Exists(@"0:\System\Users\root.usr"))
@@ -74,6 +79,7 @@ namespace Alve_OS.System
                             string RootPassword = File.ReadAllText(@"0:\System\Users\root.usr");
                             if (RootPassword == MD5.hash("root" + "|admin"))
                             {
+                                
                                 Console.WriteLine(" ");
                                 Console.ForegroundColor = ConsoleColor.Blue;
                                 Console.WriteLine("   * Default password for root is 'root'");
@@ -82,6 +88,7 @@ namespace Alve_OS.System
 
                             if (Info.getComputerName() == "Alve-PC")
                             {
+                                
                                 Console.WriteLine(" ");
                                 Console.ForegroundColor = ConsoleColor.Blue;
                                 Console.WriteLine("   - Computer name is 'Alve-PC', think to change it.");
