@@ -135,7 +135,7 @@ namespace Alve_OS.System.Translation
                             Console.Write("Nom de l'ordinateur > ");
                             break;
                         case "computernamesuccess":
-                            Console.Write("Le nouveau nom de l'ordinateur a été appliqué !");
+                            Console.Write("Le nouveau nom de l'ordinateur a été appliqué ! \n\nRedémarrez l'ordinateur pour que le changement prenne effet.");
                             break;
                         case "tips":
                             Console.WriteLine(" * Conseil(s) :");
@@ -255,7 +255,7 @@ namespace Alve_OS.System.Translation
                             Console.Write("Computer name > ");
                             break;
                         case "computernamesuccess":
-                            Console.Write("The new computer name has been applied!");
+                            Console.Write("The new computer name has been applied! \n\nReboot the computer for the changing name take effect.");
                             break;
                         case "tips":
                             Console.WriteLine(" * Tips :");
