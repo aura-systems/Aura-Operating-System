@@ -1,4 +1,9 @@
-﻿
+﻿/*
+* PROJECT:          Alve Operating System Development
+* CONTENT:          Computer Information
+* PROGRAMMERS:      Alexy DA CRUZ <dacruzalexy@gmail.com>
+*/
+
 using System.IO;
 using System;
 using Alve_OS.System.Translation;
@@ -7,7 +12,10 @@ namespace Alve_OS.System.Computer
 {
     class Info
     {
-
+        /// <summary>
+        /// Méthode pour récupérer le nom de l'ordinateur.
+        /// </summary>
+        /// <returns></returns>
         public static string getComputerName()
         {
             try
@@ -16,11 +24,15 @@ namespace Alve_OS.System.Computer
             }
             catch
             {
-                AskComputerName();
+                setComputerName("Alve-PC");
                 return "Alve-PC";
             }
         }
 
+        /// <summary>
+        /// Méthode pour appliquer un nom pour l'ordinateur.
+        /// </summary>
+        /// <param name="name"></param>
         public static void setComputerName(string name)
         {
             if (File.Exists(@"0:\System\computer.nam"))
@@ -35,6 +47,9 @@ namespace Alve_OS.System.Computer
             }
         }
 
+        /// <summary>
+        /// Méthode pour demander à l'utilisateur un nom pour l'ordinateur.
+        /// </summary>
         public static void AskComputerName()
         {
             Console.WriteLine();
