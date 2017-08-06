@@ -125,3 +125,15 @@ Color (to change console foreground color)
 ```
 color 1 (choose an ID)
 ```
+
+Logout (to disconnect and change of user)
+```
+logout
+```
+
+Settings (to access to the settings of Alve)
+```
+settings {args}
+```
+
+
