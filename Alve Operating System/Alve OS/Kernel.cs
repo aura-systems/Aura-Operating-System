@@ -62,7 +62,7 @@ namespace Alve_OS
 
             setup.SetupVerifyCompleted();
 
-            langSelected = File.ReadAllText(@"0:\System\lang");
+            langSelected = File.ReadAllText(@"0:\System\lang.set");
 
             #region Language
             Lang.Keyboard.Init();
@@ -72,6 +72,8 @@ namespace Alve_OS
             #endregion
 
             Console.Clear();
+
+            Color.GetBackgroundTextColor();
 
             WelcomeMessage.Display();
 
@@ -125,7 +127,7 @@ namespace Alve_OS
                 Console.ForegroundColor = ConsoleColor.Gray;
                 Console.Write("> ");
 
-                Console.ForegroundColor = ConsoleColor.White;
+                Color.GetTextColor();
             }
             else
             {
@@ -147,11 +149,13 @@ namespace Alve_OS
                 Console.ForegroundColor = ConsoleColor.DarkGray;
                 Console.Write(current_directory + "~ ");
 
-                Console.ForegroundColor = ConsoleColor.White;
+                Color.GetTextColor();
             }
             
 
         }
+
+        
 
     }
 }
