@@ -41,9 +41,6 @@ namespace Alve_OS.System.Translation
                         case "directorydoesntexist":
                             Console.WriteLine("Ce répertoire n'éxiste pas !");
                             break;
-                        case "typename":
-                            Console.WriteLine("Type\t Nom");
-                            break;
                         case "doesnotexist":
                             Console.WriteLine(arg + " n'existe pas !");
                             break;
@@ -140,6 +137,12 @@ namespace Alve_OS.System.Translation
                         case "computernamesuccess":
                             Console.Write("Le nouveau nom de l'ordinateur a été appliqué !");
                             break;
+                        case "tips":
+                            Console.WriteLine(" * Conseil(s) :");
+                            break;
+                        case "foldercontent":
+                            Console.WriteLine("Contenu du dossier '" + arg + "':");
+                            break;
 
                     }
                     break;
@@ -160,9 +163,6 @@ namespace Alve_OS.System.Translation
                             break;
                         case "directorydoesntexist":
                             Console.WriteLine("This directory doesn't exist!");
-                            break;
-                        case "typename":
-                            Console.WriteLine("Type\t Name");
                             break;
                         case "doesnotexist":
                             Console.WriteLine(arg + " does not exist!");
@@ -256,6 +256,12 @@ namespace Alve_OS.System.Translation
                             break;
                         case "computernamesuccess":
                             Console.Write("The new computer name has been applied!");
+                            break;
+                        case "tips":
+                            Console.WriteLine(" * Tips :");
+                            break;
+                        case "foldercontent":
+                            Console.WriteLine("Folder's content of '" + arg + "':");
                             break;
                     }
                     break;
