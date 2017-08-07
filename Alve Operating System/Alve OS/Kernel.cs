@@ -45,20 +45,24 @@ namespace Alve_OS
         {
 
             #region FileSystem Init
+
             Console.WriteLine("Initializing FileSystem...");
             FS = new CosmosVFS();
             FS.Initialize();
             Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine("[OK]");
             Console.ForegroundColor = ConsoleColor.White;
+
             #endregion
 
             #region FileSystem Scan
+
             Console.WriteLine("Scanning FileSystem...");
             Sys.FileSystem.VFS.VFSManager.RegisterVFS(FS);
             Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine("[OK]");
             Console.ForegroundColor = ConsoleColor.White;
+
             #endregion
 
             setup.SetupVerifyCompleted();
@@ -66,10 +70,12 @@ namespace Alve_OS
             langSelected = File.ReadAllText(@"0:\System\lang.set");
 
             #region Language
+
             Lang.Keyboard.Init();
             Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine("[OK]");
             Console.ForegroundColor = ConsoleColor.White;
+
             #endregion
 
             Info.getComputerName();
@@ -97,7 +103,8 @@ namespace Alve_OS
                     var cmd = Console.ReadLine();
                     Shell.Interpreter.Interpret(cmd);
                     Console.WriteLine();
-                } else
+                }
+                else
                 {
                     Login.Init();
                 }
@@ -125,7 +132,7 @@ namespace Alve_OS
                 Console.Write("@");
 
                 Console.ForegroundColor = ConsoleColor.Blue;
-                Console.Write(Kernel.ComputerName);
+                Console.Write(ComputerName);
 
                 Console.ForegroundColor = ConsoleColor.Gray;
                 Console.Write("> ");
@@ -144,7 +151,7 @@ namespace Alve_OS
                 Console.Write("@");
 
                 Console.ForegroundColor = ConsoleColor.Blue;
-                Console.Write(Kernel.ComputerName);
+                Console.Write(ComputerName);
 
                 Console.ForegroundColor = ConsoleColor.Gray;
                 Console.Write("> ");
@@ -154,11 +161,6 @@ namespace Alve_OS
 
                 Color.GetTextColor();
             }
-            
-
         }
-
-        
-
     }
 }
