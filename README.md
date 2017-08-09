@@ -32,7 +32,7 @@ Shell:
 ![Alve Operating System](https://image.noelshack.com/fichiers/2017/31/4/1501777813-alve5.png)
 
 ## How to compile Alve ?
-Download and install [this repository](https://github.com/Alve-OS/Cosmos/tree/FilesystemFixes). Then run Alve OS.sln, and select "build" from Visual Studio 2017.
+Clone [this repository](https://github.com/Alve-OS/Alve-Operating-System) then inside the folder Alve OS, run Alve OS.sln and select "build" once Visual Studio 2017 has loaded.
 
 ## Commands
 
