@@ -32,7 +32,7 @@ Shell:
 ![Alve Operating System](https://image.noelshack.com/fichiers/2017/31/4/1501777813-alve5.png)
 
 ## How to compile Alve ?
-Clone [this repository](https://github.com/Alve-OS/Alve-Operating-System) then inside the folder Alve OS, run Alve OS.sln and select "build" once Visual Studio 2017 has loaded.
+First, clone [our modified version of Cosmos](https://github.com/Alve-OS/Cosmos), run the "install-VS2017.bat" file and wait until the installation is done. Then clone [this repository](https://github.com/Alve-OS/Alve-Operating-System) then inside the folder Alve OS, run Alve OS.sln and select "build" once Visual Studio 2017 has loaded.
 
 ## Commands
 
