@@ -204,9 +204,8 @@ namespace Alve_OS.Shell
                         Color.DisplayTextColor("1");
                         Console.Write(file + "\t");
                     }
-                    
                 }
-
+                Console.WriteLine();
             }
 
             else if ((cmd.StartsWith("dir ")) || (cmd.StartsWith("ls ")))
@@ -237,8 +236,8 @@ namespace Alve_OS.Shell
                             Color.DisplayTextColor("1");
                             Console.Write(file + "\t");
                         }
-
                     }
+                    Console.WriteLine();
                 }
 
                 else if (cmd.StartsWith("ls "))
@@ -266,8 +265,8 @@ namespace Alve_OS.Shell
                             Color.DisplayTextColor("1");
                             Console.Write(file + "\t");
                         }
-
                     }
+                    Console.WriteLine();
                 }
 
                 

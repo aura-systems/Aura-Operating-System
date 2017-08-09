@@ -15,6 +15,7 @@ namespace Alve_OS.System
             switch (Kernel.langSelected)
             {
                 case "fr_FR":
+                    Console.ForegroundColor = ConsoleColor.White;
                     Console.WriteLine($@"
   █████╗ ██╗    ██╗   ██╗███████╗
  ██╔══██╗██║    ██║   ██║██╔════╝
@@ -26,6 +27,7 @@ namespace Alve_OS.System
                     break;
 
                 case "en_US":
+                    Console.ForegroundColor = ConsoleColor.White;
                     Console.WriteLine($@"
   █████╗ ██╗    ██╗   ██╗███████╗
  ██╔══██╗██║    ██║   ██║██╔════╝

@@ -55,12 +55,10 @@ namespace Alve_OS.System
                             Console.WriteLine("   - Le nom de l'ordinateur est 'Alve-PC', pensez à le changer.");
                             Console.ForegroundColor = ConsoleColor.White;
                         }
-
-                        
                     }
                     Console.WriteLine(" ");
                     break;
-                     
+
                 case "en_US":
                     Logo.Print();
                     Console.ForegroundColor = ConsoleColor.Green;
@@ -77,24 +75,21 @@ namespace Alve_OS.System
                         if (File.Exists(@"0:\System\Users\root.usr"))
                         {
                             string RootPassword = File.ReadAllText(@"0:\System\Users\root.usr");
-                            if (RootPassword == MD5.hash("root" + "|admin"))
+                            if (RootPassword == MD5.hash("root") + "|admin")
                             {
-                                
                                 Console.WriteLine(" ");
                                 Console.ForegroundColor = ConsoleColor.Blue;
                                 Console.WriteLine("   * Default password for root is 'root'");
                                 Console.ForegroundColor = ConsoleColor.White;
                             }
+                        }
 
-                            if (Info.getComputerName() == "Alve-PC")
-                            {
-                                
-                                Console.WriteLine(" ");
-                                Console.ForegroundColor = ConsoleColor.Blue;
-                                Console.WriteLine("   - Computer name is 'Alve-PC', think to change it.");
-                                Console.ForegroundColor = ConsoleColor.White;
-                            }
-
+                        if (Info.getComputerName() == "Alve-PC")
+                        {
+                            Console.WriteLine(" ");
+                            Console.ForegroundColor = ConsoleColor.Blue;
+                            Console.WriteLine("   - Computer name is 'Alve-PC', think to change it.");
+                            Console.ForegroundColor = ConsoleColor.White;
                         }
                     }
                     Console.WriteLine(" ");

@@ -23,13 +23,13 @@ namespace Alve_OS.System.Users
             {
                 case "fr_FR":
                     Console.Write("Utilisateur > ");
-                    var user = Console.ReadLine();
+                    string user = Console.ReadLine();
                     Console.WriteLine();
 
                     if (File.Exists(@"0:\System\Users\" + user + ".usr"))
                     {
                         Console.Write("Mot de passe > ");
-                        var psw = Console.ReadLine();
+                        string psw = Console.ReadLine();
                         string md5psw = MD5.hash(psw);
                         Console.WriteLine();
 
@@ -70,18 +70,18 @@ namespace Alve_OS.System.Users
                     break;
 
                 case "en_US":
-                    Console.Write("Login > ");
-                    var user2 = Console.ReadLine();
+                    Console.Write("User > ");
+                    string user1 = Console.ReadLine();
                     Console.WriteLine();
 
-                    if (File.Exists(@"0:\System\Users\" + user2 + ".usr"))
+                    if (File.Exists(@"0:\System\Users\" + user1 + ".usr"))
                     {
-                        Console.Write("Mot de passe > ");
-                        var psw = Console.ReadLine();
+                        Console.Write("Password > ");
+                        string psw = Console.ReadLine();
                         string md5psw = MD5.hash(psw);
                         Console.WriteLine();
 
-                        string UserFile = File.ReadAllText(@"0:\System\Users\" + user2 + ".usr");
+                        string UserFile = File.ReadAllText(@"0:\System\Users\" + user1 + ".usr");
 
                         Char delimiter = '|';
                         string[] UserFileContent = UserFile.Split(delimiter);
@@ -89,15 +89,15 @@ namespace Alve_OS.System.Users
                         if (md5psw == UserFileContent[0])
                         {
                             //LOGGED
-                            Kernel.userLogged = user2;
+                            Kernel.userLogged = user1;
                             UserLevel.LevelReader(UserFileContent[1]);
-                            if (user2 == "root")
+                            if (user1 == "root")
                             {
                                 Kernel.userLevelLogged = UserLevel.Administrator();
                             }
                             Console.Clear();
                             WelcomeMessage.Display();
-                            Text.Display("logged", user2);
+                            Text.Display("logged", user1);
                             Console.WriteLine("");
                             Kernel.Logged = true;
                         }
@@ -114,7 +114,9 @@ namespace Alve_OS.System.Users
                         Console.ReadKey();
                         Login();
                     }
+
                     break;
+
             }
         }
 
@@ -152,7 +154,7 @@ namespace Alve_OS.System.Users
                         Console.WriteLine();
 
                         Console.ForegroundColor = ConsoleColor.Black;
-                        var clearpassword = Console.ReadLine();
+                        string clearpassword = Console.ReadLine();
                         Console.ForegroundColor = ConsoleColor.White;
                         if ((clearpassword.Length >= 6) && (clearpassword.Length <= 40))
                         {
@@ -173,7 +175,7 @@ namespace Alve_OS.System.Users
                                 Text.Display("groupsavailable");
                                 Console.WriteLine();
 
-                                var userlevel = Console.ReadLine();
+                                string userlevel = Console.ReadLine();
 
                                 if (userlevel == UserLevel.Administrator())
                                 {
