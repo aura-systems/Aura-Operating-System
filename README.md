@@ -126,7 +126,7 @@ TextColor (to change console foreground color)
 textcolor 1 (choose an ID)
 ```
 
-BackgroundColor (to change console foreground color)
+BackgroundColor (to change console background color)
 ```
 backgroundcolor 1 (choose an ID)
 ```
