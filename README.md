@@ -121,9 +121,14 @@ Ver (to display system version and revision)
 ver
 ```
 
-Color (to change console foreground color)
+TextColor (to change console foreground color)
 ```
-color 1 (choose an ID)
+textcolor 1 (choose an ID)
+```
+
+BackgroundColor (to change console foreground color)
+```
+backgroundcolor 1 (choose an ID)
 ```
 
 Logout (to disconnect and change of user)
