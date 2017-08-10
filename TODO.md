@@ -4,8 +4,8 @@
 * Access to last commands by pressing the up arrow.
 
 # TO DO (Low priority)
-* GUI; 
 * Base64 Hash; 
+* GUI; 
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-> To be done on Cosmos (VMWare driver and improvements)
 * Binary Loader;
