@@ -2,7 +2,7 @@
 A Cosmos based Operating System developped in C# made by Alexy DA CRUZ (GeomTech) and Valentin Charbonnier (valentinbreiz).
 
 ## Current features
-Please read the [TODO](https://github.com/Alve-OS/Alve-Operating-System/blob/master/TODO.md) file to know what will be added soon.
+Please read the [TODO](https://github.com/Alve-OS/Alve-Operating-System/blob/master/TODO.md) file or the [Alve Progression](https://github.com/Alve-OS/Alve-Operating-System/projects/1) to know what will be added soon.
 
 * Restart.
 * Shutdown.
