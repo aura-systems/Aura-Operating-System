@@ -36,7 +36,7 @@ Now click on "Create a new virtual machine", click the "Next" button (github.com
 
 Now click on "Other" for "Guest operating system" and "Other" for version, click "Next" again, select "Store virtual disk as a single file" and select "Finish". 
 
-The Virtual File System won't work so go to "C:\Users\username\Documents\Virtual Machines\Other" and replace the "Other.vmdk" by this file.
+The Virtual File System won't work so go to "C:\Users\username\Documents\Virtual Machines\Other" and replace the "Other.vmdk" by [this file](https://github.com/CosmosOS/Cosmos/raw/master/Cosmos/Build/VMWare/Workstation/Filesystem.vmdk).
 
 Now you can select Alve (Other) and click on "Play Virtual Machine".
 
