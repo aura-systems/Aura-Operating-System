@@ -50,51 +50,54 @@ namespace Alve_OS.System.Computer
             }
         }
 
-        public static void GetTextColor(string defaultcolor = "7")
+        public static int GetTextColor(string defaultcolor = "7")
         {
             if (File.Exists(@"0:\System\color.set"))
             {
                 string color = File.ReadAllText(@"0:\System\color.set");
 
-                File.WriteAllText(@"0:\System\color.set", color);
-
                 if (color.Equals("0"))
                 {
-                    Console.ForegroundColor = ConsoleColor.Black;
+                    return 0;
                 }
                 else if (color.Equals("1"))
                 {
-                    Console.ForegroundColor = ConsoleColor.Blue;
+                    return 1;
                 }
                 else if (color.Equals("2"))
                 {
-                    Console.ForegroundColor = ConsoleColor.Green;
+                    return 2;
                 }
                 else if (color.Equals("3"))
                 {
-                    Console.ForegroundColor = ConsoleColor.DarkBlue;
+                    return 3;
                 }
                 else if (color.Equals("4"))
                 {
-                    Console.ForegroundColor = ConsoleColor.Red;
+                    return 4;
                 }
                 else if (color.Equals("5"))
                 {
-                    Console.ForegroundColor = ConsoleColor.Magenta;
+                    return 5;
                 }
                 else if (color.Equals("6"))
                 {
-                    Console.ForegroundColor = ConsoleColor.Yellow;
+                    return 6;
                 }
                 else if (color.Equals("7"))
                 {
-                    Console.ForegroundColor = ConsoleColor.White;
+                    return 7;
+                }
+                else
+                {
+                    return -1;
                 }
             }
             else
             {
                 File.Create(@"0:\System\color.set");
                 File.WriteAllText(@"0:\System\color.set", defaultcolor);
+                return -1;
             }
         }
 

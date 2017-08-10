@@ -69,38 +69,47 @@ namespace Alve_OS.Shell
                 if (color.Equals("0"))
                 {
                     Color.SetTextColor("0");
+                    Kernel.color = 0;
                 }
                 else if (color.Equals("1"))
                 {
                     Color.SetTextColor("1");
+                    Kernel.color = 1;
                 }
                 else if (color.Equals("2"))
                 {
                     Color.SetTextColor("2");
+                    Kernel.color = 2;
                 }
                 else if (color.Equals("3"))
                 {
                     Color.SetTextColor("3");
+                    Kernel.color = 3;
                 }
                 else if (color.Equals("4"))
                 {
                     Color.SetTextColor("4");
+                    Kernel.color = 4;
                 }
                 else if (color.Equals("5"))
                 {
                     Color.SetTextColor("5");
+                    Kernel.color = 5;
                 }
                 else if (color.Equals("6"))
                 {
                     Color.SetTextColor("6");
+                    Kernel.color = 6;
                 }
                 else if (color.Equals("7"))
                 {
                     Color.SetTextColor("7");
+                    Kernel.color = 7;
                 }
                 else
                 {
                     L.Text.Display("unknowncolor");
+                    Kernel.color = -1;
                 }
             }
 
