@@ -1,8 +1,6 @@
 # TO DO (High priority)
-* Lock screen;
 * Interpreter (Batch like);
 * Better code structure (summary, relevant comments and in English..);
-* Better UI (not GUI);
 * Access to last commands by pressing the up arrow.
 
 # TO DO (Low priority)
