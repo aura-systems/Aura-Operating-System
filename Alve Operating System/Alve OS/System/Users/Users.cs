@@ -52,15 +52,13 @@ namespace Alve_OS.System.Users
                         }
                         else
                         {
-                            Text.Display("wrongpassword");
-                            Console.ReadKey();
+                            Menu.DispErrorDialog("Mauvais mot de passe.");
                             Login();
                         }
                     }
                     else
                     {
-                        Text.Display("unknownuser");
-                        Console.ReadKey();
+                        Menu.DispErrorDialog("Utilisateur inconnu.");
                         Login();
                     }
 
@@ -100,15 +98,13 @@ namespace Alve_OS.System.Users
                         }
                         else
                         {
-                            Text.Display("wrongpassword");
-                            Console.ReadKey();
+                            Menu.DispErrorDialog("Wrong Password.");
                             Login();
                         }
                     }
                     else
                     {
-                        Text.Display("unknownuser");
-                        Console.ReadKey();
+                        Menu.DispErrorDialog("Unknown user.");
                         Login();
                     }
 

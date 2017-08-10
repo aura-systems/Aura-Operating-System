@@ -11,6 +11,7 @@ using L = Alve_OS.System.Translation;
 using Alve_OS.System.Security;
 using Alve_OS.System.Computer;
 using Alve_OS.System.Drawable;
+using Alve_OS.System.Translation;
 
 namespace Alve_OS.System
 {
@@ -195,19 +196,19 @@ namespace Alve_OS.System
         /// <summary>
         /// Demande du nom pour l'ordinateur
         /// </summary>
-        private void Step5()
+        private void Step5(string user)
         {
             string computername = Menu.DispCompuernameDialog();
 
             if ((computername.Length >= 1) && (computername.Length <= 15)) //15 char max for NETBIOS name resolution (dns)
             {
                 Info.setComputerName(computername);
-                Step6();
+                Step6(user);
             }
             else
             {
                 Menu.DispErrorDialog("Computer name length must be 1-20 characters.");
-                Step5();
+                Step5(user);
             }
         }
 
@@ -215,10 +216,15 @@ namespace Alve_OS.System
         /// <summary>
         /// Méthode permettant de valider l'installation.
         /// </summary>
-        private void Step6()
+        private void Step6(string user)
         {
             File.Create(@"0:\System\setup.set");
+            Kernel.userLogged = user;
             Console.Clear();
+            WelcomeMessage.Display();
+            Text.Display("logged", user);
+            Console.WriteLine();
+            Kernel.Logged = true;
         }
 
         /// <summary>
@@ -260,7 +266,7 @@ namespace Alve_OS.System
 
                             if (Directory.Exists(@"0:\System"))
                             {
-                                Step5();
+                                Step5(user);
                             }
                         }
                         else

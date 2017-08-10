@@ -36,6 +36,7 @@ namespace Alve_OS
         public static string userLevelLogged;
         public static bool Logged = false;
         public static string ComputerName = "Alve-PC";
+        public static int color;
 
         #endregion
 
@@ -71,6 +72,7 @@ namespace Alve_OS
 
             #region Language
 
+            Console.WriteLine("Init Keyboard");
             Lang.Keyboard.Init();
             Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine("[OK]");
@@ -80,11 +82,9 @@ namespace Alve_OS
 
             Info.getComputerName();
 
-            Console.Clear();
-
             Color.GetBackgroundColor();
 
-            WelcomeMessage.Display();
+            color = Color.GetTextColor();
 
             running = true;
         }
@@ -97,16 +97,19 @@ namespace Alve_OS
         {
             try
             {
-                if (Logged) //If logged
+                while (running)
                 {
-                    BeforeCommand();
-                    var cmd = Console.ReadLine();
-                    Shell.Interpreter.Interpret(cmd);
-                    Console.WriteLine();
-                }
-                else
-                {
-                    Login.Init();
+                    if (Logged) //If logged
+                    {
+                        BeforeCommand();
+                        var cmd = Console.ReadLine();
+                        Shell.Interpreter.Interpret(cmd);
+                        Console.WriteLine();
+                    }
+                    else
+                    {
+                        Login.Init();
+                    }
                 }
             }
             catch (Exception ex)
@@ -122,6 +125,7 @@ namespace Alve_OS
         {
             if (current_directory == @"0:\")
             {
+
                 Console.ForegroundColor = ConsoleColor.Blue;
                 Console.Write(UserLevel.TypeUser());
 
@@ -137,10 +141,46 @@ namespace Alve_OS
                 Console.ForegroundColor = ConsoleColor.Gray;
                 Console.Write("> ");
 
-                Color.GetTextColor();
+                if (color == 0)
+                {
+                    Console.ForegroundColor = ConsoleColor.Black;
+                }
+                else if (color == 1)
+                {
+                    Console.ForegroundColor = ConsoleColor.Blue;
+                }
+                else if (color == 2)
+                {
+                    Console.ForegroundColor = ConsoleColor.Green;
+                }
+                else if (color == 3)
+                {
+                    Console.ForegroundColor = ConsoleColor.DarkBlue;
+                }
+                else if (color == 4)
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                }
+                else if (color == 5)
+                {
+                    Console.ForegroundColor = ConsoleColor.Magenta;
+                }
+                else if (color == 6)
+                {
+                    Console.ForegroundColor = ConsoleColor.Yellow;
+                }
+                else if (color == 7)
+                {
+                    Console.ForegroundColor = ConsoleColor.White;
+                }
+                else
+                {
+                    Console.ForegroundColor = ConsoleColor.White;
+                }
             }
             else
             {
+
                 Console.ForegroundColor = ConsoleColor.Blue;
                 Console.Write(UserLevel.TypeUser());
 
@@ -159,7 +199,42 @@ namespace Alve_OS
                 Console.ForegroundColor = ConsoleColor.DarkGray;
                 Console.Write(current_directory + "~ ");
 
-                Color.GetTextColor();
+                if (color == 0)
+                {
+                    Console.ForegroundColor = ConsoleColor.Black;
+                }
+                else if (color == 1)
+                {
+                    Console.ForegroundColor = ConsoleColor.Blue;
+                }
+                else if (color == 2)
+                {
+                    Console.ForegroundColor = ConsoleColor.Green;
+                }
+                else if (color == 3)
+                {
+                    Console.ForegroundColor = ConsoleColor.DarkBlue;
+                }
+                else if (color == 4)
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                }
+                else if (color == 5)
+                {
+                    Console.ForegroundColor = ConsoleColor.Magenta;
+                }
+                else if (color == 6)
+                {
+                    Console.ForegroundColor = ConsoleColor.Yellow;
+                }
+                else if (color == 7)
+                {
+                    Console.ForegroundColor = ConsoleColor.White;
+                }
+                else
+                {
+                    Console.ForegroundColor = ConsoleColor.White;
+                }
             }
         }
     }
