@@ -464,6 +464,7 @@ namespace Alve_OS.Shell
                 L.Text.Display("OSName");
                 L.Text.Display("OSVersion");
                 L.Text.Display("OSRevision");
+                L.Text.Display("time");
                 L.Text.Display("AmountRAM");
             }
 
