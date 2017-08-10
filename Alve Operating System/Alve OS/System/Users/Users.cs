@@ -8,6 +8,7 @@ using System;
 using System.IO;
 using Alve_OS.System.Translation;
 using Alve_OS.System.Security;
+using Alve_OS.System.Drawable;
 
 namespace Alve_OS.System.Users
 {
@@ -15,22 +16,18 @@ namespace Alve_OS.System.Users
     {
         public void Login()
         {
-
-            Console.Clear();
-            WelcomeMessage.Display();
-
             switch (Kernel.langSelected)
             {
                 case "fr_FR":
-                    Console.Write("Utilisateur > ");
-                    string user = Console.ReadLine();
-                    Console.WriteLine();
+                    string text = Menu.DispLoginForm("Connexion à un compte Alve.");
+
+                    int middle = text.IndexOf("//////");
+                    string user = text.Remove(middle, text.Length - middle);
+                    string pass = text.Remove(0, middle + 6);
 
                     if (File.Exists(@"0:\System\Users\" + user + ".usr"))
                     {
-                        Console.Write("Mot de passe > ");
-                        string psw = Console.ReadLine();
-                        string md5psw = MD5.hash(psw);
+                        string md5psw = MD5.hash(pass);
                         Console.WriteLine();
 
                         string UserFile = File.ReadAllText(@"0:\System\Users\" + user + ".usr");
@@ -70,15 +67,15 @@ namespace Alve_OS.System.Users
                     break;
 
                 case "en_US":
-                    Console.Write("User > ");
-                    string user1 = Console.ReadLine();
-                    Console.WriteLine();
+                    string text1 = Menu.DispLoginForm("Login to an Alve account.");
+
+                    int middle1 = text1.IndexOf("//////");
+                    string user1 = text1.Remove(middle1, text1.Length - middle1);
+                    string pass1 = text1.Remove(0, middle1 + 6);
 
                     if (File.Exists(@"0:\System\Users\" + user1 + ".usr"))
                     {
-                        Console.Write("Password > ");
-                        string psw = Console.ReadLine();
-                        string md5psw = MD5.hash(psw);
+                        string md5psw = MD5.hash(pass1);
                         Console.WriteLine();
 
                         string UserFile = File.ReadAllText(@"0:\System\Users\" + user1 + ".usr");
