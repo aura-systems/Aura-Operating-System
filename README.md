@@ -30,9 +30,9 @@ Shell:
 ![Alve Operating System](https://image.noelshack.com/fichiers/2017/31/4/1501777813-alve5.png)
 
 ## Want to try Alve?
-Download VMWare [at this address] (https://my.vmware.com/en/web/vmware/free#desktop_end_user_computing/vmware_workstation_player/12_0). Install and run it.
+Download VMWare [at this address](https://my.vmware.com/en/web/vmware/free#desktop_end_user_computing/vmware_workstation_player/12_0). Install and run it.
 
-Now click on "Create a new virtual machine", click the "Next" button (github.com/Alve-OS/Alve-Operating-System/releases/latest).
+Now click on "Create a new virtual machine", select the [Alve ISO](github.com/Alve-OS/Alve-Operating-System/releases/latest) and click the "Next" button.
 
 Now click on "Other" for "Guest operating system" and "Other" for version, click "Next" again, select "Store virtual disk as a single file" and select "Finish". 
 
