@@ -195,7 +195,7 @@ namespace Alve_OS.System.Drawable
             return language;
         }
 
-        public static string DispCompuernameDialog()
+        public static string DispCompuernameDialog(string title, string input)
         {
             Console.Clear();
 
@@ -213,7 +213,11 @@ namespace Alve_OS.System.Drawable
             Console.SetCursorPosition(x, y);
 
             Console.SetCursorPosition(8, 12);
-            Console.WriteLine("║ Choose your computer name:                                   ║");
+            Console.WriteLine("║                                                              ║");
+            Console.SetCursorPosition(x, y);
+
+            Console.SetCursorPosition(8, 12);
+            Console.WriteLine(title);
             Console.SetCursorPosition(x, y);
 
             Console.SetCursorPosition(8, 13);
@@ -229,7 +233,7 @@ namespace Alve_OS.System.Drawable
             Console.SetCursorPosition(x, y);
 
             Console.SetCursorPosition(8, 13);
-            Console.Write("║ Computer name: ");
+            Console.Write(input);
             string name = Console.ReadLine();
             Console.SetCursorPosition(x, y);
 

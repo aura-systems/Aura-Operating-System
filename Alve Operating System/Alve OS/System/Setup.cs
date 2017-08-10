@@ -33,23 +33,6 @@ namespace Alve_OS.System
             catch { }
         }
 
-
-        /// <summary>
-        /// Void appelé lors d'une erreur lors de l'installation
-        /// </summary>
-        public void ErrorDuringSetup(string error = "Setup Error")
-        {
-            Console.Clear();
-            Console.WriteLine();
-            Console.WriteLine();
-            Console.WriteLine("  Error during installation");
-            Console.WriteLine();
-            Console.WriteLine();
-            Console.WriteLine("  Error: " + error);
-            Console.WriteLine();
-        }
-
-
         /// <summary>
         /// Démarre l'installation
         /// </summary>
@@ -102,7 +85,7 @@ namespace Alve_OS.System
             }
             catch
             {
-                ErrorDuringSetup("Creating system folders");
+                Menu.DispErrorDialog("Error while creating system folders.");
             }
         }
 
@@ -139,7 +122,7 @@ namespace Alve_OS.System
             }
             catch
             {
-                ErrorDuringSetup("Creating root");
+                Menu.DispErrorDialog("Error while creating root.");
             }
         }
 
@@ -154,7 +137,7 @@ namespace Alve_OS.System
             if ((language.Equals("en_US")) || language.Equals("en-US"))
             {
                 Kernel.langSelected = "en_US";
-                L.Keyboard.Init();
+                Keyboard.Init();
 
                 File.Create(@"0:\System\lang.set");
 
@@ -172,7 +155,7 @@ namespace Alve_OS.System
             else if ((language.Equals("fr_FR")) || language.Equals("fr-FR"))
             {
                 Kernel.langSelected = "fr_FR";
-                L.Keyboard.Init();
+                Keyboard.Init();
 
                 File.Create(@"0:\System\lang.set");
 
@@ -198,7 +181,7 @@ namespace Alve_OS.System
         /// </summary>
         private void Step5(string user)
         {
-            string computername = Menu.DispCompuernameDialog();
+            string computername = Text.Menu("computernamedialog");
 
             if ((computername.Length >= 1) && (computername.Length <= 15)) //15 char max for NETBIOS name resolution (dns)
             {
@@ -207,7 +190,7 @@ namespace Alve_OS.System
             }
             else
             {
-                Menu.DispErrorDialog("Computer name length must be 1-20 characters.");
+                Text.Menu("errorcomputer");
                 Step5(user);
             }
         }
@@ -234,7 +217,7 @@ namespace Alve_OS.System
         {
             Console.Clear();
 
-            string text = Menu.DispLoginForm("Création d'un compte Alve.");
+            string text = Text.Menu("setup");
 
             int middle = text.IndexOf("//////");
             string user = text.Remove(middle, text.Length - middle);
@@ -242,8 +225,7 @@ namespace Alve_OS.System
 
             if (File.Exists(@"0:\System\Users\" + user + ".usr"))
             {
-                Menu.DispErrorDialog("Cet utilisateur existe déjà !");
-
+                Text.Menu("alreadyuser");
                 Step4();
             }
             else
@@ -271,18 +253,18 @@ namespace Alve_OS.System
                         }
                         else
                         {
-                            Menu.DispErrorDialog("Erreur pendant la création de l'utilisateur!");
+                            Text.Menu("error1");
                         }
                     }
                     else
                     {
-                        Menu.DispErrorDialog("Ce mot de passe est trop court!");
+                        Text.Menu("error2");
                         Step4();
                     }
                 }
                 else
                 {
-                    Menu.DispErrorDialog("Ce pseudo est trop court!");
+                    Text.Menu("error3");
                     Step4();
                 }             
             }

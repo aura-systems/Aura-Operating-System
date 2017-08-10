@@ -267,5 +267,68 @@ namespace Alve_OS.System.Translation
                     break;
             }
         }
+
+        public static string Menu(string ToTranslate)
+        {
+            switch (Kernel.langSelected)
+            {
+                case "fr_FR":
+
+                    switch (ToTranslate)
+                    {
+                        case "setup":
+                            string text = Drawable.Menu.DispLoginForm("Création d'un compte Alve.");
+                            return text;
+                        case "alreadyuser":
+                            Drawable.Menu.DispErrorDialog("Cet utilisateur existe déjà !");
+                            break;
+                        case "error1":
+                            Drawable.Menu.DispErrorDialog("Erreur pendant la création de l'utilisateur!");
+                            break;
+                        case "error2":
+                            Drawable.Menu.DispErrorDialog("Ce mot de passe est trop court !");
+                            break;
+                        case "error3":
+                            Drawable.Menu.DispErrorDialog("Ce pseudo est trop court !");
+                            break;
+                        case "errorcomputer":
+                            Drawable.Menu.DispErrorDialog("Computer name length must be 1-20 characters.");
+                            break;
+                        case "computernamedialog":
+                            string text1 = Drawable.Menu.DispCompuernameDialog("║ Choisissez un nom pour votre PC :", "║ Nom du PC : ");
+                            return text1;
+                    }
+                    break;
+
+                case "en_US":
+
+                    switch (ToTranslate)
+                    {
+                        case "setup":
+                            string text = Drawable.Menu.DispLoginForm("Alve account creation.");
+                            return text;
+                        case "alreadyuser":
+                            Drawable.Menu.DispErrorDialog("This user already exists!");
+                            break;
+                        case "error1":
+                            Drawable.Menu.DispErrorDialog("Error while creating the user!");
+                            break;
+                        case "error2":
+                            Drawable.Menu.DispErrorDialog("This password is too short!");
+                            break;
+                        case "error3":
+                            Drawable.Menu.DispErrorDialog("This nickname is too short!");
+                            break;
+                        case "errorcomputer":
+                            Drawable.Menu.DispErrorDialog("Computer name length must be 1-20 characters.");
+                            break;
+                        case "computernamedialog":
+                            string text2 = Drawable.Menu.DispCompuernameDialog("║ Choose your computer name:", "║ Computer name: ");
+                            return text2;
+                    }
+                    break;
+            }
+            return "";
+        }
     }
 }

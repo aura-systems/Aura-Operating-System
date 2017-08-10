@@ -72,11 +72,7 @@ namespace Alve_OS
 
             #region Language
 
-            Console.WriteLine("Init Keyboard");
             Lang.Keyboard.Init();
-            Console.ForegroundColor = ConsoleColor.Green;
-            Console.WriteLine("[OK]");
-            Console.ForegroundColor = ConsoleColor.White;
 
             #endregion
 
