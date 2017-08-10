@@ -452,6 +452,12 @@ namespace Alve_OS.Shell
                         L.Text.Display("availablelanguage");
                     }
                 }
+                else
+                {
+                    Console.ForegroundColor = ConsoleColor.DarkRed;
+                    L.Text.Display("UnknownCommand");
+                    Console.ForegroundColor = ConsoleColor.White;
+                }
             }
 
             #endregion
