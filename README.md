@@ -29,7 +29,18 @@ Shell:
 
 ![Alve Operating System](https://image.noelshack.com/fichiers/2017/31/4/1501777813-alve5.png)
 
-## How to compile Alve ?
+## Want to try Alve?
+Download VMWare [at this address] (https://my.vmware.com/en/web/vmware/free#desktop_end_user_computing/vmware_workstation_player/12_0). Install and run it.
+
+Now click on "Create a new virtual machine", click the "Next" button (github.com/Alve-OS/Alve-Operating-System/releases/latest).
+
+Now click on "Other" for "Guest operating system" and "Other" for version, click "Next" again, select "Store virtual disk as a single file" and select "Finish". 
+
+The Virtual File System won't work so go to "C:\Users\username\Documents\Virtual Machines\Other" and replace the "Other.vmdk" by this file.
+
+Now you can select Alve (Other) and click on "Play Virtual Machine".
+
+## How to compile Alve sources ?
 First, clone [our modified version of Cosmos](https://github.com/Alve-OS/Cosmos), run the "install-VS2017.bat" file and wait until the installation is done. 
 
 Now clone [this repository](https://github.com/Alve-OS/Alve-Operating-System) then inside the folder Alve OS, run Alve OS.sln and select "build" once Visual Studio 2017 has loaded.
