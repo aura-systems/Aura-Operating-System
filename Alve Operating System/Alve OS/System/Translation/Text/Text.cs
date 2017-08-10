@@ -146,6 +146,9 @@ namespace Alve_OS.System.Translation
                         case "foldercontent":
                             Console.WriteLine("Contenu du dossier '" + arg + "':");
                             break;
+                        case "time": //         07/08/2017, 01:12:40
+                            Console.WriteLine("Date et heure du système:      " + Time.DayString() + "/" + Time.MonthString() + "/" + Time.YearString() + ", " + Time.HourString() + ":" + Time.MinuteString() + ":" + Time.SecondString());
+                            break;
 
                     }
                     break;
@@ -268,6 +271,9 @@ namespace Alve_OS.System.Translation
                             break;
                         case "foldercontent":
                             Console.WriteLine("Folder's content of '" + arg + "':");
+                            break;
+                        case "time":
+                            Console.WriteLine("Date and time:             " + Time.MonthString() + "/" + Time.DayString() + "/" + Time.YearString() + ", " + Time.HourString() + ":" + Time.MinuteString() + ":" + Time.SecondString());
                             break;
                     }
                     break;
