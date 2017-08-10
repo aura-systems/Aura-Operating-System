@@ -5,6 +5,7 @@
 
 # TO DO (Low priority)
 * GUI; 
+* Base64 Hash; 
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-> To be done on Cosmos (VMWare driver and improvements)
 * Binary Loader;
