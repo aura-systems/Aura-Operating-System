@@ -50,6 +50,9 @@ namespace Alve_OS.System.Translation
                         case "NameSizeParent":
                             Console.WriteLine("Nom\tTaille\tParent");
                             break;
+                        case "Computername":
+                            Console.WriteLine("Nom du PC:                     " + Kernel.ComputerName);
+                            break;
                         case "OSName":
                             Console.WriteLine("Nom du système d'exploitation: Alve");
                             break;
@@ -173,6 +176,9 @@ namespace Alve_OS.System.Translation
                         case "NameSizeParent":
                             Console.WriteLine("Name\tSize\tParent");
                             break;
+                        case "Computername":
+                            Console.WriteLine("Computer name:             " + Kernel.ComputerName);
+                            break;
                         case "OSName":
                             Console.WriteLine("Operating system name:     Alve");
                             break;
@@ -192,7 +198,7 @@ namespace Alve_OS.System.Translation
                             Console.WriteLine("Unknown language.");
                             break;
                         case "availablelanguage":
-                            Console.WriteLine("Available languages: en_US fr_FR");
+                            Console.WriteLine("Available languages: en-US fr-FR");
                             break;
                         case "unknowncolor":
                             Console.WriteLine("Unknown colour.");

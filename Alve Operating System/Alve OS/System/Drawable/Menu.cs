@@ -169,7 +169,7 @@ namespace Alve_OS.System.Drawable
             Console.SetCursorPosition(x, y);
 
             Console.SetCursorPosition(8, 12);
-            Console.WriteLine("║ Please choose a language: (available: en_US fr_FR)           ║");
+            Console.WriteLine("║ Please choose a language: (available: en-US fr-FR)           ║");
             Console.SetCursorPosition(x, y);
 
             Console.SetCursorPosition(8, 13);

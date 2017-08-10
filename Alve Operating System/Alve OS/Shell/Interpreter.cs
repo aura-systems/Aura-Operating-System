@@ -368,31 +368,6 @@ namespace Alve_OS.Shell
 
             #region Settings
 
-            else if (cmd.Equals("langset"))
-            {
-                L.Text.Display("availablelanguage");
-            }
-
-            else if (cmd.StartsWith("langset "))
-            {
-                cmd = cmd.Remove(0, 8);
-                if ((cmd.Equals("en_US")) || cmd.Equals("en-US"))
-                {
-                    Kernel.langSelected = "en_US";
-                    L.Keyboard.Init();
-                }
-                else if ((cmd.Equals("fr_FR")) || cmd.Equals("fr-FR"))
-                {
-                    Kernel.langSelected = "fr_FR";
-                    L.Keyboard.Init();
-                }
-                else
-                {
-                    L.Text.Display("unknownlanguage");
-                    L.Text.Display("availablelanguage");
-                }
-            }
-
             else if (cmd.Equals("setup"))
             {
                 L.Text.Display("setupcmd");
@@ -433,8 +408,49 @@ namespace Alve_OS.Shell
                 {
                     //method computername
                     string argspcname = argsettings.Remove(0, 15);
-                    System.Computer.Info.AskComputerName();
+                    Info.AskComputerName();
 
+                }
+                else if (argsettings.Equals("setlang"))
+                {
+                    L.Text.Display("availablelanguage");
+                }
+                else if (argsettings.StartsWith("setlang "))
+                {
+                    string lang = argsettings.Remove(0, 8);
+                    if ((lang.Equals("en_US")) || lang.Equals("en-US"))
+                    {
+                        Kernel.langSelected = "en_US";
+                        L.Keyboard.Init();
+                        if (File.Exists(@"0:\System\lang.set"))
+                        {
+                            File.WriteAllText(@"0:\System\lang.set", Kernel.langSelected);
+                        }
+                        else
+                        {
+                            File.Create(@"0:\System\lang.set");
+                            File.WriteAllText(@"0:\System\lang.set", Kernel.langSelected);
+                        }
+                    }
+                    else if ((lang.Equals("fr_FR")) || lang.Equals("fr-FR"))
+                    {
+                        Kernel.langSelected = "fr_FR";
+                        L.Keyboard.Init();
+                        if (File.Exists(@"0:\System\lang.set"))
+                        {
+                            File.WriteAllText(@"0:\System\lang.set", Kernel.langSelected);
+                        }
+                        else
+                        {
+                            File.Create(@"0:\System\lang.set");
+                            File.WriteAllText(@"0:\System\lang.set", Kernel.langSelected);
+                        }
+                    }
+                    else
+                    {
+                        L.Text.Display("unknownlanguage");
+                        L.Text.Display("availablelanguage");
+                    }
                 }
             }
 
@@ -444,6 +460,7 @@ namespace Alve_OS.Shell
             
             else if (cmd.Equals("systeminfo"))
             {
+                L.Text.Display("Computername");
                 L.Text.Display("OSName");
                 L.Text.Display("OSVersion");
                 L.Text.Display("OSRevision");

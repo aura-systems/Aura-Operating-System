@@ -17,15 +17,13 @@ Please read the [TODO](https://github.com/Alve-OS/Alve-Operating-System/blob/mas
 
 ## Screenshots
 
-Setup:
-
-![Alve Operating System](https://image.noelshack.com/fichiers/2017/31/4/1501722160-alve1.png)
-
 Login:
 
-![Alve Operating System](https://image.noelshack.com/fichiers/2017/32/4/1502320901-alve1.png)
+![Alve Operating System](https://image.noelshack.com/fichiers/2017/32/4/1502379821-alve4.png)
 
 Shell:
+
+![Alve Operating System](https://image.noelshack.com/fichiers/2017/32/4/1502379822-alve5.png)
 
 ![Alve Operating System](https://image.noelshack.com/fichiers/2017/32/4/1502320901-alve2.png)
 
@@ -111,11 +109,6 @@ vol
 Systeminfo (to display system informations)
 ```
 systeminfo
-```
-
-Langset (to change system language, for now en_US and fr_FR)
-```
-langset
 ```
 
 Ver (to display system version and revision)

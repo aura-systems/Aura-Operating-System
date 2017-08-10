@@ -57,7 +57,6 @@ namespace Alve_OS.System.Translation
                     Console.WriteLine("- vol (to list volumes)");
                     Console.WriteLine("- echo (to echo text)");
                     Console.WriteLine("- systeminfo (to display system informations)");
-                    Console.WriteLine("- langset (to change system language)");
                     Console.WriteLine("- ver (to display system version)");
                     Console.WriteLine("- textcolor (change foreground colour)");
                     Console.WriteLine("- backgroundcolor (change background colour)");
@@ -75,12 +74,14 @@ namespace Alve_OS.System.Translation
                     Console.WriteLine("Commandes disponible:");
                     Console.WriteLine("- adduser (Pour créer un compte)");
                     Console.WriteLine("- setcomputername (Nom de l'ordinateur)");
+                    Console.WriteLine("- setlang {args} (Change la langue du système)");
                     break;
 
                 case "en_US":
                     Console.WriteLine("Available commands:");
                     Console.WriteLine("- adduser (To create an account)");
                     Console.WriteLine("- setcomputername (Computer name)");
+                    Console.WriteLine("- setlang {args} (Change system language)");
                     break;
             }
         }
