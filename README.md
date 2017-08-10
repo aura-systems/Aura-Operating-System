@@ -13,7 +13,8 @@ Please read the [TODO](https://github.com/Alve-OS/Alve-Operating-System/blob/mas
 * Extended ASCII support.
 * Multi users.
 * Secured Users With MD5 Encryption.
-* Text Editor (Liquid Editor)
+* Text Editor (Liquid Editor).
+* Get RAM, get time.
 
 ## Screenshots
 
