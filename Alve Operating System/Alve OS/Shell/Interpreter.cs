@@ -360,7 +360,7 @@ namespace Alve_OS.Shell
                 L.Text.Display("NameSizeParent");
                 foreach (var vol in vols)
                 {
-                    Console.WriteLine(vol.mName + "\t" + vol.mSize + "\t" + vol.mParent);
+                    Console.WriteLine(vol.mName + "\t" + vol.mSize + "MB\t" + vol.mParent);
                 }
             }
 

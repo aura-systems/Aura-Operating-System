@@ -53,7 +53,7 @@ namespace Alve_OS.System.Translation
                             Console.WriteLine(arg + " existe deja !");
                             break;
                         case "NameSizeParent":
-                            Console.WriteLine("Nom\tTaille\tParent");
+                            Console.WriteLine("Nom\tTaille  \tParent");
                             break;
                         case "Computername":
                             Console.WriteLine("Nom du PC:                     " + Kernel.ComputerName);
@@ -199,7 +199,7 @@ namespace Alve_OS.System.Translation
                             Console.WriteLine(arg + " already exist!");
                             break;
                         case "NameSizeParent":
-                            Console.WriteLine("Name\tSize\tParent");
+                            Console.WriteLine("Name\tSize  \tParent");
                             break;
                         case "Computername":
                             Console.WriteLine("Computer name:             " + Kernel.ComputerName);
