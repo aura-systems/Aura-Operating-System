@@ -250,7 +250,7 @@ namespace Alve_OS.System.Translation
                             Console.WriteLine("Wrong Password.");
                             break;
                         case "liquideditor":
-                            Console.WriteLine("Liquid Editor v" + arg + " by TheCool1James & valentinbreiz                            ");
+                            Console.WriteLine("Liquid Editor v" + arg + " by TheCool1James & valentinbreiz                             ");
                             break;
                         case "filename":
                             Console.Write("File name : ");
