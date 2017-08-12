@@ -58,10 +58,26 @@
     <Folder Include="Apps\User\" />
     <Folder Include="Shell\" />
     <Folder Include="System\" />
+    <Folder Include="System\Computer\" />
+    <Folder Include="System\Drawable\" />
     <Folder Include="System\Security\" />
     <Folder Include="System\Translation\" />
     <Folder Include="System\Translation\Text\" />
     <Folder Include="System\Users\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="Cosmos.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=5ae71220097cb983">
+      <Name>Cosmos.Common</Name>
+      <AssemblyName>Cosmos.Common.dll</AssemblyName>
+      <HintPath>..\..\..\..\..\AppData\Roaming\Cosmos User Kit\Kernel\Cosmos.Common.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Cosmos.Core, Version=1.0.0.0, Culture=neutral, PublicKeyToken=5ae71220097cb983">
+      <Name>Cosmos.Core</Name>
+      <AssemblyName>Cosmos.Core.dll</AssemblyName>
+      <HintPath>..\..\..\..\..\AppData\Roaming\Cosmos User Kit\Kernel\Cosmos.Core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
   </ItemGroup>
   <Import Project="$(AppData)\Cosmos User Kit\Build\VSIP\Cosmos.targets" />
 </Project>

@@ -46,9 +46,6 @@ namespace Alve_OS.System.Translation
                         case "directorydoesntexist":
                             Console.WriteLine("Ce répertoire n'éxiste pas !");
                             break;
-                        case "typename":
-                            Console.WriteLine("Type\t Nom");
-                            break;
                         case "doesnotexist":
                             Console.WriteLine(arg + " n'existe pas !");
                             break;
@@ -58,6 +55,9 @@ namespace Alve_OS.System.Translation
                         case "NameSizeParent":
                             Console.WriteLine("Nom\tTaille\tParent");
                             break;
+                        case "Computername":
+                            Console.WriteLine("Nom du PC:                     " + Kernel.ComputerName);
+                            break;
                         case "OSName":
                             Console.WriteLine("Nom du système d'exploitation: Alve");
                             break;
@@ -66,6 +66,9 @@ namespace Alve_OS.System.Translation
                             break;
                         case "OSRevision":
                             Console.WriteLine("Révision du système:           " + Kernel.revision);
+                            break;
+                        case "AmountRAM":
+                            Console.WriteLine("Montant de la RAM:             " + Cosmos.Core.CPU.GetAmountOfRAM() + "MB");
                             break;
                         case "UnknownCommand":
                             Console.WriteLine("Commande inconnue.");
@@ -148,6 +151,27 @@ namespace Alve_OS.System.Translation
                         case "line":
                             Console.WriteLine(" Ligne: " + arg + "\n");
                             break;
+                        case "askcomputername":
+                            Console.WriteLine("Choisissez le nom pour votre ordinateur :");
+                            break;
+                        case "computernameincorrect":
+                            Console.WriteLine("Le nom de l'ordinateur est incorrect, il doit être composé au maximum de 15 caractères.");
+                            break;
+                        case "computernamename":
+                            Console.Write("Nom de l'ordinateur > ");
+                            break;
+                        case "computernamesuccess":
+                            Console.Write("Le nouveau nom de l'ordinateur a été appliqué ! \n\nRedémarrez l'ordinateur pour que le changement prenne effet.");
+                            break;
+                        case "tips":
+                            Console.WriteLine(" * Conseil(s) :");
+                            break;
+                        case "foldercontent":
+                            Console.WriteLine("Contenu du dossier '" + arg + "':");
+                            break;
+                        case "time": //         07/08/2017, 01:12:40
+                            Console.WriteLine("Date et heure du système:      " + Time.DayString() + "/" + Time.MonthString() + "/" + Time.YearString() + ", " + Time.HourString() + ":" + Time.MinuteString() + ":" + Time.SecondString());
+                            break;
                     }
                     break;
 
@@ -168,9 +192,6 @@ namespace Alve_OS.System.Translation
                         case "directorydoesntexist":
                             Console.WriteLine("This directory doesn't exist!");
                             break;
-                        case "typename":
-                            Console.WriteLine("Type\t Name");
-                            break;
                         case "doesnotexist":
                             Console.WriteLine(arg + " does not exist!");
                             break;
@@ -179,6 +200,9 @@ namespace Alve_OS.System.Translation
                             break;
                         case "NameSizeParent":
                             Console.WriteLine("Name\tSize\tParent");
+                            break;
+                        case "Computername":
+                            Console.WriteLine("Computer name:             " + Kernel.ComputerName);
                             break;
                         case "OSName":
                             Console.WriteLine("Operating system name:     Alve");
@@ -189,6 +213,9 @@ namespace Alve_OS.System.Translation
                         case "OSRevision":
                             Console.WriteLine("Operating system revision: " + Kernel.revision);
                             break;
+                        case "AmountRAM":
+                            Console.WriteLine("Amount of RAM:             " + Cosmos.Core.CPU.GetAmountOfRAM() + "MB");
+                            break;
                         case "UnknownCommand":
                             Console.WriteLine("Unknown command.");
                             break;
@@ -196,7 +223,7 @@ namespace Alve_OS.System.Translation
                             Console.WriteLine("Unknown language.");
                             break;
                         case "availablelanguage":
-                            Console.WriteLine("Available languages: en_US fr_FR");
+                            Console.WriteLine("Available languages: en-US fr-FR");
                             break;
                         case "unknowncolor":
                             Console.WriteLine("Unknown colour.");
@@ -267,9 +294,93 @@ namespace Alve_OS.System.Translation
                         case "line":
                             Console.WriteLine(" Line: " + arg + "\n");
                             break;
+                        case "askcomputername":
+                            Console.WriteLine("Choose your computer name :");
+                            break;
+                        case "computernameincorrect":
+                            Console.WriteLine("The computer name is incorrect, computer name length should be 1-20 characters.");
+                            break;
+                        case "computernamename":
+                            Console.Write("Computer name > ");
+                            break;
+                        case "computernamesuccess":
+                            Console.Write("The new computer name has been applied! \n\nReboot the computer for the changing name take effect.");
+                            break;
+                        case "tips":
+                            Console.WriteLine(" * Tips :");
+                            break;
+                        case "foldercontent":
+                            Console.WriteLine("Folder's content of '" + arg + "':");
+                            break;
+                        case "time":
+                            Console.WriteLine("Date and time:             " + Time.MonthString() + "/" + Time.DayString() + "/" + Time.YearString() + ", " + Time.HourString() + ":" + Time.MinuteString() + ":" + Time.SecondString());
+                            break;
                     }
                     break;
             }
+        }
+
+        public static string Menu(string ToTranslate)
+        {
+            switch (Kernel.langSelected)
+            {
+                case "fr_FR":
+
+                    switch (ToTranslate)
+                    {
+                        case "setup":
+                            string text = Drawable.Menu.DispLoginForm("Création d'un compte Alve.");
+                            return text;
+                        case "alreadyuser":
+                            Drawable.Menu.DispErrorDialog("Cet utilisateur existe déjà !");
+                            break;
+                        case "error1":
+                            Drawable.Menu.DispErrorDialog("Erreur pendant la création de l'utilisateur!");
+                            break;
+                        case "error2":
+                            Drawable.Menu.DispErrorDialog("Ce mot de passe est trop court !");
+                            break;
+                        case "error3":
+                            Drawable.Menu.DispErrorDialog("Ce pseudo est trop court !");
+                            break;
+                        case "errorcomputer":
+                            Drawable.Menu.DispErrorDialog("Computer name length must be 1-20 characters.");
+                            break;
+                        case "computernamedialog":
+                            string text1 = Drawable.Menu.DispCompuernameDialog("║ Choisissez un nom pour votre PC :", "║ Nom du PC : ");
+                            return text1;
+                    }
+                    break;
+
+                case "en_US":
+
+                    switch (ToTranslate)
+                    {
+                        case "setup":
+                            string text = Drawable.Menu.DispLoginForm("Alve account creation.");
+                            return text;
+                        case "alreadyuser":
+                            Drawable.Menu.DispErrorDialog("This user already exists!");
+                            break;
+                        case "error1":
+                            Drawable.Menu.DispErrorDialog("Error while creating the user!");
+                            break;
+                        case "error2":
+                            Drawable.Menu.DispErrorDialog("This password is too short!");
+                            break;
+                        case "error3":
+                            Drawable.Menu.DispErrorDialog("This nickname is too short!");
+                            break;
+                        case "errorcomputer":
+                            Drawable.Menu.DispErrorDialog("Computer name length must be 1-20 characters.");
+                            break;
+                        case "computernamedialog":
+                            string text2 = Drawable.Menu.DispCompuernameDialog("║ Choose your computer name:", "║ Computer name: ");
+                            return text2;
+                    }
+                    break;
+            }
+            return "";
         }
     }
 }

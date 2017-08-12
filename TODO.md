@@ -1,8 +1,23 @@
 # TO DO (High priority)
-* Lock screen.
-* Interpreter (Batch like)
+* Interpreter (Batch like);
+* Better code structure (summary, relevant comments and in English..);
+* Access to last commands by pressing the up arrow.
 
 # TO DO (Low priority)
-* Object Loader
+* Base64 Hash; 
+* GUI; 
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-> To be done on Cosmos (VMWare driver and improvements)
+* Binary Loader;
 * Multitasking;
-* Network;
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-> To be done on Cosmos
+* Network; 
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-> To be done on Cosmos
+* Rijndael Encryption;
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-> need plugs, to implement on Cosmos
+* PCI Scanning.
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-> To be done on Cosmos

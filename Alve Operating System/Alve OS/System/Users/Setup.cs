@@ -9,6 +9,9 @@ using System;
 using System.IO;
 using L = Alve_OS.System.Translation;
 using Alve_OS.System.Security;
+using Alve_OS.System.Computer;
+using Alve_OS.System.Drawable;
+using Alve_OS.System.Translation;
 
 namespace Alve_OS.System
 {
@@ -22,30 +25,13 @@ namespace Alve_OS.System
         {
             try
             {
-                if (!File.Exists(@"0:\System\setup"))
+                if (!File.Exists(@"0:\System\setup.set"))
                 {
                     StartSetup();
                 }
             }
             catch { }
         }
-
-
-        /// <summary>
-        /// Void appelé lors d'une erreur lors de l'installation
-        /// </summary>
-        public void ErrorDuringSetup(string error = "Setup Error")
-        {
-            Console.Clear();
-            Console.WriteLine();
-            Console.WriteLine();
-            Console.WriteLine("  Error during installation");
-            Console.WriteLine();
-            Console.WriteLine();
-            Console.WriteLine("  Error: " + error);
-            Console.WriteLine();
-        }
-
 
         /// <summary>
         /// Démarre l'installation
@@ -84,6 +70,14 @@ namespace Alve_OS.System
                     Directory.CreateDirectory(@"0:\Users\root");
                 }
 
+                if (!File.Exists(@"0:\System\color.set"))
+                {
+                    File.Create(@"0:\System\color.set");
+                    File.WriteAllText(@"0:\System\color.set", "7");
+                }
+
+                Info.setComputerName("Alve-PC");
+
                 if ((Directory.Exists(@"0:\System")) && (Directory.Exists(@"0:\System\Users")) && (Directory.Exists(@"0:\Users")) && (Directory.Exists(@"0:\Users\root")))
                 {
                     Step2();
@@ -91,7 +85,7 @@ namespace Alve_OS.System
             }
             catch
             {
-                ErrorDuringSetup("Creating system folders");
+                Menu.DispErrorDialog("Error while creating system folders.");
             }
         }
 
@@ -128,7 +122,7 @@ namespace Alve_OS.System
             }
             catch
             {
-                ErrorDuringSetup("Creating root");
+                Menu.DispErrorDialog("Error while creating root.");
             }
         }
 
@@ -138,46 +132,40 @@ namespace Alve_OS.System
         /// </summary>
         private void Step3()
         {
-            Console.Clear();
-            Logo.Print();
-            L.Text.Display("languageask");
-            Console.WriteLine();
-            L.Text.Display("availablelanguage");
-            Console.WriteLine();
-            Console.Write("> ");
-            var cmd = Console.ReadLine();
-            if ((cmd.Equals("en_US")) || cmd.Equals("en-US"))
+            string language = Menu.DispLanguageDialog();
+
+            if ((language.Equals("en_US")) || language.Equals("en-US"))
             {
                 Kernel.langSelected = "en_US";
-                L.Keyboard.Init();
+                Keyboard.Init();
 
-                File.Create(@"0:\System\lang");
+                File.Create(@"0:\System\lang.set");
 
-                if (File.Exists(@"0:\System\lang"))
+                if (File.Exists(@"0:\System\lang.set"))
                 {
-                    File.WriteAllText(@"0:\System\lang", Kernel.langSelected);
+                    File.WriteAllText(@"0:\System\lang.set", Kernel.langSelected);
                 }
                 else
                 {
-                    ErrorDuringSetup("Lang Register");
+                    Menu.DispErrorDialog("The language configuration already exists!");
                 }
 
                 Step4();
             }
-            else if ((cmd.Equals("fr_FR")) || cmd.Equals("fr-FR"))
+            else if ((language.Equals("fr_FR")) || language.Equals("fr-FR"))
             {
                 Kernel.langSelected = "fr_FR";
-                L.Keyboard.Init();
+                Keyboard.Init();
 
-                File.Create(@"0:\System\lang");
+                File.Create(@"0:\System\lang.set");
 
-                if (File.Exists(@"0:\System\lang"))
+                if (File.Exists(@"0:\System\lang.set"))
                 {
-                    File.WriteAllText(@"0:\System\lang", Kernel.langSelected);
+                    File.WriteAllText(@"0:\System\lang.set", Kernel.langSelected);
                 }
                 else
                 {
-                    ErrorDuringSetup("Lang Register");
+                    Menu.DispErrorDialog("La configuration des langue existe déjà!");
                 }
 
                 Step4();
@@ -188,22 +176,22 @@ namespace Alve_OS.System
             }
         }
 
-
         /// <summary>
-        /// Méthode permettant la création d'un compte utilisateur.
+        /// Demande du nom pour l'ordinateur
         /// </summary>
-        private void Step4()
+        private void Step5(string user)
         {
-            try
+            string computername = Text.Menu("computernamedialog");
+
+            if ((computername.Length >= 1) && (computername.Length <= 15)) //15 char max for NETBIOS name resolution (dns)
             {
-                Console.Clear();
-                Logo.Print();
-                L.Text.Display("chooseyourusername");
-                AskUser();
+                Info.setComputerName(computername);
+                Step6(user);
             }
-            catch
+            else
             {
-                ErrorDuringSetup("Creating user");
+                Text.Menu("errorcomputer");
+                Step5(user);
             }
         }
 
@@ -211,73 +199,72 @@ namespace Alve_OS.System
         /// <summary>
         /// Méthode permettant de valider l'installation.
         /// </summary>
-        private void Step5()
+        private void Step6(string user)
         {
-            File.Create(@"0:\System\setup");
+            File.Create(@"0:\System\setup.set");
+            Kernel.userLogged = user;
             Console.Clear();
+            WelcomeMessage.Display();
+            Text.Display("logged", user);
+            Console.WriteLine();
+            Kernel.Logged = true;
         }
 
         /// <summary>
         /// Méthode permettant de créer un compte utilisateur
         /// </summary>
-        private void AskUser()
+        private void Step4()
         {
-            Console.WriteLine();
-            L.Text.Display("user");
-            var username = Console.ReadLine();
+            Console.Clear();
 
-            if (File.Exists(@"0:\System\Users\" + username + ".usr"))
+            string text = Text.Menu("setup");
+
+            int middle = text.IndexOf("//////");
+            string user = text.Remove(middle, text.Length - middle);
+            string pass = text.Remove(0, middle + 6);
+
+            if (File.Exists(@"0:\System\Users\" + user + ".usr"))
             {
-                L.Text.Display("alreadyuser");
-                Console.ReadKey();
+                Text.Menu("alreadyuser");
                 Step4();
             }
             else
             {
-                if((username.Length >= 4) && (username.Length <= 20))
+                if((user.Length >= 4) && (user.Length <= 20))
                 {
 
-                    Console.WriteLine();
-                    L.Text.Display("passuser", username);
-                    
-                    Console.WriteLine();
-                    L.Text.Display("passwd");
-                    string clearpassword = Console.ReadLine();
-
-                    if ((clearpassword.Length >= 6) && (clearpassword.Length <= 40))
+                    if ((pass.Length >= 6) && (pass.Length <= 40))
                     {
-                        string password = MD5.hash(clearpassword);
+                        string password = MD5.hash(pass);
 
                         Console.WriteLine();
 
-                        File.Create(@"0:\System\Users\" + username + ".usr");
-                        Directory.CreateDirectory(@"0:\Users\" + username);
+                        File.Create(@"0:\System\Users\" + user + ".usr");
+                        Directory.CreateDirectory(@"0:\Users\" + user);
 
-                        if (File.Exists(@"0:\System\Users\" + username + ".usr"))
+                        if (File.Exists(@"0:\System\Users\" + user + ".usr"))
                         {
-                            File.WriteAllText(@"0:\System\Users\" + username + ".usr", password + "|standard");
+                            File.WriteAllText(@"0:\System\Users\" + user + ".usr", password + "|standard");
 
                             if (Directory.Exists(@"0:\System"))
                             {
-                                Step5();
+                                Step5(user);
                             }
                         }
                         else
                         {
-                            ErrorDuringSetup("Creating user");
+                            Text.Menu("error1");
                         }
                     }
                     else
                     {
-                        L.Text.Display("pswcharmin");
-                        Console.ReadKey();
+                        Text.Menu("error2");
                         Step4();
                     }
                 }
                 else
                 {
-                    L.Text.Display("charmin");
-                    Console.ReadKey();
+                    Text.Menu("error3");
                     Step4();
                 }             
             }

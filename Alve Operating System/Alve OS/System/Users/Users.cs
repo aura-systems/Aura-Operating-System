@@ -8,6 +8,7 @@ using System;
 using System.IO;
 using Alve_OS.System.Translation;
 using Alve_OS.System.Security;
+using Alve_OS.System.Drawable;
 
 namespace Alve_OS.System.Users
 {
@@ -15,22 +16,18 @@ namespace Alve_OS.System.Users
     {
         public void Login()
         {
-
-            Console.Clear();
-            WelcomeMessage.Display();
-
             switch (Kernel.langSelected)
             {
                 case "fr_FR":
-                    Console.Write("Utilisateur > ");
-                    var user = Console.ReadLine();
-                    Console.WriteLine();
+                    string text = Menu.DispLoginForm("Connexion à un compte Alve.");
+
+                    int middle = text.IndexOf("//////");
+                    string user = text.Remove(middle, text.Length - middle);
+                    string pass = text.Remove(0, middle + 6);
 
                     if (File.Exists(@"0:\System\Users\" + user + ".usr"))
                     {
-                        Console.Write("Mot de passe > ");
-                        var psw = Console.ReadLine();
-                        string md5psw = MD5.hash(psw);
+                        string md5psw = MD5.hash(pass);
                         Console.WriteLine();
 
                         string UserFile = File.ReadAllText(@"0:\System\Users\" + user + ".usr");
@@ -55,33 +52,31 @@ namespace Alve_OS.System.Users
                         }
                         else
                         {
-                            Text.Display("wrongpassword");
-                            Console.ReadKey();
+                            Menu.DispErrorDialog("Mauvais mot de passe.");
                             Login();
                         }
                     }
                     else
                     {
-                        Text.Display("unknownuser");
-                        Console.ReadKey();
+                        Menu.DispErrorDialog("Utilisateur inconnu.");
                         Login();
                     }
 
                     break;
 
                 case "en_US":
-                    Console.Write("Login > ");
-                    var user2 = Console.ReadLine();
-                    Console.WriteLine();
+                    string text1 = Menu.DispLoginForm("Login to an Alve account.");
 
-                    if (File.Exists(@"0:\System\Users\" + user2 + ".usr"))
+                    int middle1 = text1.IndexOf("//////");
+                    string user1 = text1.Remove(middle1, text1.Length - middle1);
+                    string pass1 = text1.Remove(0, middle1 + 6);
+
+                    if (File.Exists(@"0:\System\Users\" + user1 + ".usr"))
                     {
-                        Console.Write("Mot de passe > ");
-                        var psw = Console.ReadLine();
-                        string md5psw = MD5.hash(psw);
+                        string md5psw = MD5.hash(pass1);
                         Console.WriteLine();
 
-                        string UserFile = File.ReadAllText(@"0:\System\Users\" + user2 + ".usr");
+                        string UserFile = File.ReadAllText(@"0:\System\Users\" + user1 + ".usr");
 
                         Char delimiter = '|';
                         string[] UserFileContent = UserFile.Split(delimiter);
@@ -89,32 +84,32 @@ namespace Alve_OS.System.Users
                         if (md5psw == UserFileContent[0])
                         {
                             //LOGGED
-                            Kernel.userLogged = user2;
+                            Kernel.userLogged = user1;
                             UserLevel.LevelReader(UserFileContent[1]);
-                            if (user2 == "root")
+                            if (user1 == "root")
                             {
                                 Kernel.userLevelLogged = UserLevel.Administrator();
                             }
                             Console.Clear();
                             WelcomeMessage.Display();
-                            Text.Display("logged", user2);
+                            Text.Display("logged", user1);
                             Console.WriteLine("");
                             Kernel.Logged = true;
                         }
                         else
                         {
-                            Text.Display("wrongpassword");
-                            Console.ReadKey();
+                            Menu.DispErrorDialog("Wrong Password.");
                             Login();
                         }
                     }
                     else
                     {
-                        Text.Display("unknownuser");
-                        Console.ReadKey();
+                        Menu.DispErrorDialog("Unknown user.");
                         Login();
                     }
+
                     break;
+
             }
         }
 
@@ -152,7 +147,7 @@ namespace Alve_OS.System.Users
                         Console.WriteLine();
 
                         Console.ForegroundColor = ConsoleColor.Black;
-                        var clearpassword = Console.ReadLine();
+                        string clearpassword = Console.ReadLine();
                         Console.ForegroundColor = ConsoleColor.White;
                         if ((clearpassword.Length >= 6) && (clearpassword.Length <= 40))
                         {
@@ -173,7 +168,7 @@ namespace Alve_OS.System.Users
                                 Text.Display("groupsavailable");
                                 Console.WriteLine();
 
-                                var userlevel = Console.ReadLine();
+                                string userlevel = Console.ReadLine();
 
                                 if (userlevel == UserLevel.Administrator())
                                 {
