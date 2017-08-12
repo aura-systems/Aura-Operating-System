@@ -20,8 +20,13 @@ namespace Alve_OS.System.Translation
          * à la langue du système. Vous devez donc
          * associer un mot clé à une phrase.
          */
-
-        public static void Display(string ToTranslate, string arg = "")
+        
+        /// <summary>
+        /// Affiche un string traduit dans la langue de l'utilisateur
+        /// </summary>
+        /// <param name="ToTranslate">mot clé</param>
+        /// <param name="arg">string dynamique</param>
+        public static void Display(string ToTranslate, string arg = "", string arg2 = "")
         {
             switch (Kernel.langSelected)
             {
@@ -128,6 +133,24 @@ namespace Alve_OS.System.Translation
                         case "wrongpassword":
                             Console.WriteLine("Mauvais mot de passe.");
                             break;
+                        case "liquideditor":
+                            Console.WriteLine("Liquid Editor v" + arg + " par TheCool1James & valentinbreiz                            ");
+                            break;
+                        case "filename":
+                            Console.Write("Nom du fichier : ");
+                            break;
+                        case "saved":
+                            Console.WriteLine("'" + arg + "' a bien été sauvegardé dans '" + arg2 + "' !");
+                            break;
+                        case "menuliquideditor":
+                            Console.Write("[F1]Sauvegarder  [F2]Nouveau  [ESC]Quitter\n");
+                            break;
+                        case "list":
+                            Console.WriteLine(" Liste: " + arg + "\n");
+                            break;
+                        case "line":
+                            Console.WriteLine(" Ligne: " + arg + "\n");
+                            break;
                         case "askcomputername":
                             Console.WriteLine("Choisissez le nom pour votre ordinateur :");
                             break;
@@ -149,7 +172,6 @@ namespace Alve_OS.System.Translation
                         case "time": //         07/08/2017, 01:12:40
                             Console.WriteLine("Date et heure du système:      " + Time.DayString() + "/" + Time.MonthString() + "/" + Time.YearString() + ", " + Time.HourString() + ":" + Time.MinuteString() + ":" + Time.SecondString());
                             break;
-
                     }
                     break;
 
@@ -253,6 +275,24 @@ namespace Alve_OS.System.Translation
                             break;
                         case "wrongpassword":
                             Console.WriteLine("Wrong Password.");
+                            break;
+                        case "liquideditor":
+                            Console.WriteLine("Liquid Editor v" + arg + " by TheCool1James & valentinbreiz                             ");
+                            break;
+                        case "filename":
+                            Console.Write("File name : ");
+                            break;
+                        case "saved":
+                            Console.WriteLine("'" + arg + "' has been saved in '" + arg2 + "' !");
+                            break;
+                        case "menuliquideditor":
+                            Console.Write("[F1]Save  [F2]New  [ESC]Exit\n");
+                            break;
+                        case "list":
+                            Console.WriteLine(" List: " + arg + "\n");
+                            break;
+                        case "line":
+                            Console.WriteLine(" Line: " + arg + "\n");
                             break;
                         case "askcomputername":
                             Console.WriteLine("Choose your computer name :");
