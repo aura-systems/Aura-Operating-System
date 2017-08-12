@@ -14,7 +14,7 @@ namespace Alve_OS.Apps.User
 {
     class Editor
     {
-        public static string prgm_version = "0.11";
+        public static string prgm_version = "0.2";
         char[] line = new char[80]; int pointer = 0;
         List<string> lines = new List<string>();
         string[] final;
@@ -220,7 +220,15 @@ namespace Alve_OS.Apps.User
             Console.SetCursorPosition(0, 0);
             Console.BackgroundColor = ConsoleColor.Gray;
             Console.ForegroundColor = ConsoleColor.Black;
-            Console.Write("Liquid Editor v" + prgm_version + "                                 ");
+            switch (Kernel.langSelected)
+            {
+                case "fr_FR":
+                    Console.Write("Liquid Editor v" + prgm_version + "                    ");
+                    break;
+                case "en_US":
+                    Console.Write("Liquid Editor v" + prgm_version + "                                  ");
+                    break;
+            }
             Console.ForegroundColor = ConsoleColor.Blue;
             Text.Display("menuliquideditor");
             Console.ForegroundColor = ConsoleColor.White;
