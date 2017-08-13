@@ -44,24 +44,42 @@ namespace Alve_OS
 
         protected override void BeforeRun()
         {
+            Console.Clear();
+
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.Write("[OK]");
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.Write(" ");
+            Console.ForegroundColor = ConsoleColor.DarkMagenta;
+            Console.Write("Cosmos Booted Successfully!\n");
+            Console.ForegroundColor = ConsoleColor.White;
+
+            Console.ForegroundColor = ConsoleColor.DarkMagenta;
+            Console.Write("Booting Alve Kernel...\n");
+            Console.ForegroundColor = ConsoleColor.White;
 
             #region FileSystem Init
 
-            Console.WriteLine("Initializing FileSystem...");
             FS = new CosmosVFS();
             FS.Initialize();
             Console.ForegroundColor = ConsoleColor.Green;
-            Console.WriteLine("[OK]");
+            Console.Write("[OK]");
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.Write(" ");
+            Console.ForegroundColor = ConsoleColor.DarkMagenta;
+            Console.Write("FileSystem Initialized\n");
             Console.ForegroundColor = ConsoleColor.White;
 
             #endregion
 
             #region FileSystem Scan
-
-            Console.WriteLine("Scanning FileSystem...");
             Sys.FileSystem.VFS.VFSManager.RegisterVFS(FS);
             Console.ForegroundColor = ConsoleColor.Green;
-            Console.WriteLine("[OK]");
+            Console.Write("[OK]");
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.Write(" ");
+            Console.ForegroundColor = ConsoleColor.DarkMagenta;
+            Console.Write("FileSystem Scanned\n");
             Console.ForegroundColor = ConsoleColor.White;
 
             #endregion
