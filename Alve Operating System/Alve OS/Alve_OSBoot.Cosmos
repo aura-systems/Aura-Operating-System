@@ -42,6 +42,18 @@
     <StackCorruptionDetectionEnabled>True</StackCorruptionDetectionEnabled>
     <ISO_StackCorruptionDetectionEnabled>True</ISO_StackCorruptionDetectionEnabled>
     <VMware_StackCorruptionDetectionEnabled>True</VMware_StackCorruptionDetectionEnabled>
+    <Bochs_StackCorruptionDetectionEnabled>True</Bochs_StackCorruptionDetectionEnabled>
+    <Bochs_Description>Use Bochs emulator to deploy and debug.</Bochs_Description>
+    <Bochs_Deployment>ISO</Bochs_Deployment>
+    <Bochs_Launch>Bochs</Bochs_Launch>
+    <Bochs_DebugEnabled>False</Bochs_DebugEnabled>
+    <Bochs_DebugMode>Source</Bochs_DebugMode>
+    <Bochs_VisualStudioDebugPort>Pipe: Cosmos\Serial</Bochs_VisualStudioDebugPort>
+    <Bochs_PxeInterface>192.168.68.1</Bochs_PxeInterface>
+    <Bochs_VMwareEdition>Player</Bochs_VMwareEdition>
+    <Bochs_OutputPath>bin\Debug\net462\</Bochs_OutputPath>
+    <Bochs_EnableGDB>False</Bochs_EnableGDB>
+    <Bochs_StartCosmosGDB>false</Bochs_StartCosmosGDB>
   </PropertyGroup>
   <ItemGroup>
     <None Remove="*" />
