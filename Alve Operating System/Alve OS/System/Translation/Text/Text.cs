@@ -70,6 +70,9 @@ namespace Alve_OS.System.Translation
                         case "AmountRAM":
                             Console.WriteLine("Montant de la RAM:             " + Cosmos.Core.CPU.GetAmountOfRAM() + "MB");
                             break;
+                        case "MAC":
+                            Console.WriteLine("Adresse MAC                    " + Cosmos.HAL.Network.MACAddress.Broadcast);
+                            break;
                         case "UnknownCommand":
                             Console.WriteLine("Commande inconnue.");
                             break;
@@ -215,6 +218,9 @@ namespace Alve_OS.System.Translation
                             break;
                         case "AmountRAM":
                             Console.WriteLine("Amount of RAM:             " + Cosmos.Core.CPU.GetAmountOfRAM() + "MB");
+                            break;
+                        case "MAC":
+                            Console.WriteLine("MAC Adress:                " + Cosmos.HAL.Network.MACAddress.Broadcast);
                             break;
                         case "UnknownCommand":
                             Console.WriteLine("Unknown command.");

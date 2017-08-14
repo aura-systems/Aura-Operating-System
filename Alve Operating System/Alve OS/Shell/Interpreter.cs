@@ -472,6 +472,7 @@ namespace Alve_OS.Shell
                 L.Text.Display("OSRevision");
                 L.Text.Display("time");
                 L.Text.Display("AmountRAM");
+                L.Text.Display("MAC");
             }
 
             else if (cmd.Equals("ver"))
