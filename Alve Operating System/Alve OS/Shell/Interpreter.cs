@@ -219,66 +219,29 @@ namespace Alve_OS.Shell
 
             else if ((cmd.StartsWith("dir ")) || (cmd.StartsWith("ls ")))
             {
-                string cmddir;
-                if (cmd.StartsWith("dir "))
+                string directory = Kernel.current_directory;
+
+                Char cmdargschar = '-';
+                string[] cmdargs = cmd.Split(cmdargschar);
+
+                Char cmddirectorychar = ' ';
+                string[] cmddirectories = cmd.Split(cmddirectorychar);
+
+                if (Directory.Exists(cmddirectories[1]))
                 {
-                    cmddir = cmd.Remove(0, 4);
+                    Console.WriteLine(cmddirectories[1] + " exist !");
+                    directory = cmddirectories[1];
+                }
+                else
+                {
 
-                    foreach (string dir in Directory.GetDirectories(cmddir))
-                    {
-                        Color.DisplayTextColor("6");
-                        Console.Write(dir + "\t");
-                    }
-                    foreach (string file in Directory.GetFiles(cmddir))
-                    {
-                        Char formatDot = '.';
-                        string[] ext = file.Split(formatDot);
-                        string lastext = ext[ext.Length - 1];
-
-                        if ((lastext == "set") || (lastext == "nam") || (lastext == "usr"))
-                        {
-                            Color.DisplayTextColor("4");
-                            Console.Write(file + "\t");
-                        }
-                        else
-                        {
-                            Color.DisplayTextColor("1");
-                            Console.Write(file + "\t");
-                        }
-                    }
-                    Console.WriteLine();
                 }
 
-                else if (cmd.StartsWith("ls "))
+                if (cmdargs[1] == "a")
                 {
-                    cmddir = cmd.Remove(0, 3);
-
-                    foreach (string dir in Directory.GetDirectories(cmddir))
-                    {
-                        Color.DisplayTextColor("6");
-                        Console.Write(dir + "\t");
-                    }
-                    foreach (string file in Directory.GetFiles(cmddir))
-                    {
-                        Char formatDot = '.';
-                        string[] ext = file.Split(formatDot);
-                        string lastext = ext[ext.Length - 1];
-
-                        if ((lastext == "set") || (lastext == "nam") || (lastext == "usr"))
-                        {
-                            Color.DisplayTextColor("4");
-                            Console.Write(file + "\t");
-                        }
-                        else
-                        {
-                            Color.DisplayTextColor("1");
-                            Console.Write(file + "\t");
-                        }
-                    }
-                    Console.WriteLine();
+                    DirectoryListing.DispDirectories(directory);
+                    DirectoryListing.DispHiddenFiles(directory);
                 }
-
-                
             }
 
             else if (cmd.StartsWith("mkdir "))
