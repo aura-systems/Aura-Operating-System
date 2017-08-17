@@ -26,6 +26,7 @@ namespace Alve_OS.System.Translation
         /// </summary>
         /// <param name="ToTranslate">mot clé</param>
         /// <param name="arg">string dynamique</param>
+        /// <param name="arg2">string dynamique</param>
         public static void Display(string ToTranslate, string arg = "", string arg2 = "")
         {
             switch (Kernel.langSelected)

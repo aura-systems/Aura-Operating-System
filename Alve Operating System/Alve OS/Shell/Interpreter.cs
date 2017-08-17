@@ -188,59 +188,51 @@ namespace Alve_OS.Shell
                 {
                     L.Text.Display("directorydoesntexist");
                 }
-            }
-
-            else if ((cmd.Equals("dir")) || (cmd.Equals("ls")))
-            {
-                foreach (string dir in Directory.GetDirectories(Kernel.current_directory))
-                {
-                    Color.DisplayTextColor("6");
-                    Console.Write(dir + "\t");
-                }
-                foreach (string file in Directory.GetFiles(Kernel.current_directory))
-                {                    
-                    Char formatDot = '.';
-                    string[] ext = file.Split(formatDot);
-                    string lastext = ext[ext.Length - 1];
-
-                    if ((lastext == "set") || (lastext == "nam") || (lastext == "usr"))
-                    {
-                        Color.DisplayTextColor("4");
-                        Console.Write(file + "\t");
-                    }
-                    else
-                    {
-                        Color.DisplayTextColor("1");
-                        Console.Write(file + "\t");
-                    }
-                }
-                Console.WriteLine();
-            }
+            }            
 
             else if ((cmd.StartsWith("dir ")) || (cmd.StartsWith("ls ")))
             {
-                string directory = Kernel.current_directory;
+                string directory;
 
-                Char cmdargschar = '-';
+                //args commands
+                Char cmdargschar = ' ';
                 string[] cmdargs = cmd.Split(cmdargschar);
 
-                Char cmddirectorychar = ' ';
-                string[] cmddirectories = cmd.Split(cmddirectorychar);
-
-                if (Directory.Exists(cmddirectories[1]))
+                if (cmdargs.Length == 2)
                 {
-                    Console.WriteLine(cmddirectories[1] + " exist !");
-                    directory = cmddirectories[1];
+                    if (!cmdargs[1].StartsWith("-"))
+                    {
+                        directory = cmdargs[1];
+
+                        if (Directory.Exists(directory))
+                        {
+                            DirectoryListing.DispDirectories(directory);
+                            DirectoryListing.DispFiles(directory);
+                        }
+                    }
+                    else
+                    {
+                        if (cmdargs[1].Equals("-a"))
+                        {
+                            DirectoryListing.DispDirectories(Kernel.current_directory);
+                            DirectoryListing.DispHiddenFiles(Kernel.current_directory);
+                        } else
+                        {
+                            directory = Kernel.current_directory;
+                            DirectoryListing.DispDirectories(directory);
+                            DirectoryListing.DispFiles(directory);
+                        }
+                    }                    
                 }
-                else
+                else if (cmdargs.Length == 3)
                 {
+                    if (cmdargs[1].Equals("-a"))
+                    {
+                        directory = cmdargs[2];
 
-                }
-
-                if (cmdargs[1] == "a")
-                {
-                    DirectoryListing.DispDirectories(directory);
-                    DirectoryListing.DispHiddenFiles(directory);
+                        DirectoryListing.DispDirectories(Kernel.current_directory + directory);
+                        DirectoryListing.DispHiddenFiles(Kernel.current_directory + directory);
+                    }
                 }
             }
 

@@ -11,7 +11,7 @@ namespace Alve_OS.Shell
 
         public static void DispDirectories(string directory)
         {
-            foreach (string dir in Directory.GetDirectories(Kernel.current_directory))
+            foreach (string dir in Directory.GetDirectories(directory))
             {
                 Color.DisplayTextColor("6");
                 Console.Write("\\" + dir + "\t");
@@ -20,7 +20,7 @@ namespace Alve_OS.Shell
 
         public static void DispFiles(string directory)
         {
-            foreach (string file in Directory.GetFiles(Kernel.current_directory))
+            foreach (string file in Directory.GetFiles(directory))
             {
                 Char formatDot = '.';
                 string[] ext = file.Split(formatDot);
@@ -45,7 +45,7 @@ namespace Alve_OS.Shell
 
         public static void DispHiddenFiles(string directory)
         {
-            foreach (string file in Directory.GetFiles(Kernel.current_directory))
+            foreach (string file in Directory.GetFiles(directory))
             {
                 Char formatDot = '.';
                 string[] ext = file.Split(formatDot);
