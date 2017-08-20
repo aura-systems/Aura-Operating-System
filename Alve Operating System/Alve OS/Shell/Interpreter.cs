@@ -41,7 +41,7 @@ namespace Alve_OS.Shell
             #endregion
 
             #region Console
-            
+
             else if (cmd.Equals("clear"))
             {
                 Console.Clear();
@@ -188,7 +188,13 @@ namespace Alve_OS.Shell
                 {
                     L.Text.Display("directorydoesntexist");
                 }
-            }            
+            }
+
+            else if ((cmd.Equals("dir")) || (cmd.Equals("ls")))
+            {
+                DirectoryListing.DispDirectories(Kernel.current_directory);
+                DirectoryListing.DispFiles(Kernel.current_directory);
+            }
 
             else if ((cmd.StartsWith("dir ")) || (cmd.StartsWith("ls ")))
             {
@@ -198,42 +204,38 @@ namespace Alve_OS.Shell
                 Char cmdargschar = ' ';
                 string[] cmdargs = cmd.Split(cmdargschar);
 
-                if (cmdargs.Length == 2)
-                {
-                    if (!cmdargs[1].StartsWith("-"))
-                    {
-                        directory = cmdargs[1];
 
-                        if (Directory.Exists(directory))
+                if (!cmdargs[1].StartsWith("-"))
+                {
+                    directory = cmdargs[1];
+
+                    if (Directory.Exists(Kernel.current_directory + directory))
+                    {
+                        DirectoryListing.DispDirectories(Kernel.current_directory + directory);
+                        DirectoryListing.DispFiles(Kernel.current_directory + directory);
+                    }
+                }
+                else
+                {
+                    if (cmdargs[1].Equals("-a"))
+                    {
+                        DirectoryListing.DispHiddenDirectories(Kernel.current_directory);
+                        DirectoryListing.DispHiddenFiles(Kernel.current_directory);
+
+                        if (cmdargs.Length == 3)
                         {
-                            DirectoryListing.DispDirectories(directory);
-                            DirectoryListing.DispFiles(directory);
+                            directory = cmdargs[2];
+
+                            DirectoryListing.DispHiddenDirectories(Kernel.current_directory + directory);
+                            DirectoryListing.DispHiddenFiles(Kernel.current_directory + directory);
                         }
                     }
                     else
                     {
-                        if (cmdargs[1].Equals("-a"))
-                        {
-                            DirectoryListing.DispDirectories(Kernel.current_directory);
-                            DirectoryListing.DispHiddenFiles(Kernel.current_directory);
-                        } else
-                        {
-                            directory = Kernel.current_directory;
-                            DirectoryListing.DispDirectories(directory);
-                            DirectoryListing.DispFiles(directory);
-                        }
-                    }                    
-                }
-                else if (cmdargs.Length == 3)
-                {
-                    if (cmdargs[1].Equals("-a"))
-                    {
-                        directory = cmdargs[2];
-
-                        DirectoryListing.DispDirectories(Kernel.current_directory + directory);
-                        DirectoryListing.DispHiddenFiles(Kernel.current_directory + directory);
+                        Console.WriteLine("cet argument est invalide");
                     }
                 }
+
             }
 
             else if (cmd.StartsWith("mkdir "))
@@ -245,6 +247,7 @@ namespace Alve_OS.Shell
                 }
                 else if (Directory.Exists(Kernel.current_directory + dir))
                 {
+                    //normalement ça bug ici
                     Kernel.FS.CreateDirectory(Kernel.current_directory + dir + "-1");
                 }
             }
@@ -311,7 +314,7 @@ namespace Alve_OS.Shell
             else if (cmd.Equals("vol"))
             {
                 var vols = Kernel.FS.GetVolumes();
-                
+
                 L.Text.Display("NameSizeParent");
                 foreach (var vol in vols)
                 {
@@ -418,7 +421,7 @@ namespace Alve_OS.Shell
             #endregion
 
             #region System Infos
-            
+
             else if (cmd.Equals("systeminfo"))
             {
                 L.Text.Display("Computername");
@@ -453,6 +456,6 @@ namespace Alve_OS.Shell
                 Console.ForegroundColor = ConsoleColor.White;
             }
 
-        } 
+        }
     }
 }

@@ -8,16 +8,39 @@ namespace Alve_OS.Shell
 {
     class DirectoryListing
     {
-
+        /// <summary>
+        /// Display directories of "directory"
+        /// </summary>
+        /// <param name="directory"></param>
         public static void DispDirectories(string directory)
         {
             foreach (string dir in Directory.GetDirectories(directory))
             {
-                Color.DisplayTextColor("6");
-                Console.Write("\\" + dir + "\t");
+                if (!dir.StartsWith("."))
+                {
+                    Color.DisplayTextColor("6");
+                    Console.Write(dir + "\t");
+                }
             }
         }
 
+        /// <summary>
+        /// Display hidden and normal directories of "directory"
+        /// </summary>
+        /// <param name="directory"></param>
+        public static void DispHiddenDirectories(string directory)
+        {
+            foreach (string dir in Directory.GetDirectories(directory))
+            {
+                Color.DisplayTextColor("6");
+                Console.Write(dir + "\t");
+            }
+        }
+
+        /// <summary>
+        /// Display files of "directory"
+        /// </summary>
+        /// <param name="directory"></param>
         public static void DispFiles(string directory)
         {
             foreach (string file in Directory.GetFiles(directory))
@@ -43,6 +66,10 @@ namespace Alve_OS.Shell
             }
         }
 
+        /// <summary>
+        /// Display hidden and normal files of "directory"
+        /// </summary>
+        /// <param name="directory"></param>
         public static void DispHiddenFiles(string directory)
         {
             foreach (string file in Directory.GetFiles(directory))
