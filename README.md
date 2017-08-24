@@ -47,6 +47,8 @@ First, clone [our modified version of Cosmos](https://github.com/Alve-OS/Cosmos)
 
 Now clone [this repository](https://github.com/Alve-OS/Alve-Operating-System) then inside the folder Alve OS, run Alve OS.sln and select "build" once Visual Studio 2017 has loaded.
 
+If you have an error like "A project with an Output type of Class Library cannot be started directly", right click on "Alve_OSBoot" and select "Set as startup project", now click again on "build"!
+
 ## Commands
 
 Shutdown (to do an ACPI Shutdown) :
