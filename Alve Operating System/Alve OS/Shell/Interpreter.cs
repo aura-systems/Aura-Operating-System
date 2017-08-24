@@ -219,14 +219,14 @@ namespace Alve_OS.Shell
                 {
                     if (cmdargs[1].Equals("-a"))
                     {
-                        DirectoryListing.DispHiddenDirectories(Kernel.current_directory);
+                        DirectoryListing.DispDirectories(Kernel.current_directory);
                         DirectoryListing.DispHiddenFiles(Kernel.current_directory);
 
                         if (cmdargs.Length == 3)
                         {
                             directory = cmdargs[2];
 
-                            DirectoryListing.DispHiddenDirectories(Kernel.current_directory + directory);
+                            DirectoryListing.DispDirectories(Kernel.current_directory + directory);
                             DirectoryListing.DispHiddenFiles(Kernel.current_directory + directory);
                         }
                     }
@@ -238,18 +238,78 @@ namespace Alve_OS.Shell
 
             }
 
+            //create directory
             else if (cmd.StartsWith("mkdir "))
             {
                 string dir = cmd.Remove(0, 6);
-                if (!Directory.Exists(Kernel.current_directory + dir))
+
+                if (dir.Contains("."))
                 {
-                    Kernel.FS.CreateDirectory(Kernel.current_directory + dir);
+                    L.Text.Display("mkdirunsupporteddot");
+                    Console.WriteLine();
                 }
-                else if (Directory.Exists(Kernel.current_directory + dir))
+                else
                 {
-                    //normalement ça bug ici
-                    Kernel.FS.CreateDirectory(Kernel.current_directory + dir + "-1");
-                }
+                    if (!Directory.Exists(Kernel.current_directory + dir))
+                    {
+                        Directory.CreateDirectory(Kernel.current_directory + dir);
+                    }
+                    else if (Directory.Exists(Kernel.current_directory + dir))
+                    {
+                        Char[] separators = new char[] { '(', ')' };
+                        Char[] directories = new char[] { '/', '\\' };
+
+                        //getting last directory.
+                        string x1 = Kernel.current_directory + dir;
+                        string[] x2 = x1.Split(directories);
+                        string x3 = x2[x2.Length - 1];
+                        int x4 = 0;
+
+                        //boucle
+                        boucle:
+                        x4 = x4 + 1;
+                        string DirectoryAlreadyExist = x3 + "(" + x4 +")";
+
+                        //if directory has already been recreated once or more
+                        if ((DirectoryAlreadyExist.Contains("(")) && (DirectoryAlreadyExist.Contains(")")))
+                        {
+                            //get number
+                            string[] endName = DirectoryAlreadyExist.Split(separators);
+                            int num = int.Parse(endName[1]);
+
+                            //add one to num
+                            num = num + 1;
+
+                            //set new directory name with the new number.
+                            string newName = dir + "(" + num + ")";
+
+                            if(Directory.Exists(Kernel.current_directory + newName))
+                            {                                
+                                goto boucle;
+                            }
+
+                            //create directory
+                            Directory.CreateDirectory(Kernel.current_directory + newName);
+
+                            //display text to inform the user that the directory has been created with an another name
+                            Console.WriteLine();
+                            Console.ForegroundColor = ConsoleColor.Yellow;
+                            L.Text.Display("mkdirfilealreadyexist", newName);
+                            Console.WriteLine();
+                        }
+                        else
+                        {
+                            //if not, we create directory with (1)
+                            Directory.CreateDirectory(Kernel.current_directory + dir + "(1)");
+
+                            //display text to inform the user that the directory has been created with an another name
+                            Console.WriteLine();
+                            Console.ForegroundColor = ConsoleColor.Yellow;
+                            L.Text.Display("mkdirfilealreadyexist", dir + "(1)");
+                            Console.WriteLine();
+                        }
+                    }
+                }                
             }
 
             else if (cmd.StartsWith("rmdir "))
@@ -276,6 +336,11 @@ namespace Alve_OS.Shell
                 {
                     L.Text.Display("doesnotexist");
                 }
+            }
+
+            else if (cmd.Equals("mkdir"))
+            {
+                L.Text.Display("mkdir");
             }
 
             else if (cmd.Equals("mkfil"))
