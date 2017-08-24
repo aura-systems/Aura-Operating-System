@@ -30,11 +30,14 @@ namespace Alve_OS.Shell
         /// <param name="directory"></param>
         public static void DispHiddenDirectories(string directory)
         {
-            foreach (string dir in Directory.GetDirectories(directory))
-            {
-                Color.DisplayTextColor("6");
-                Console.Write(dir + "\t");
-            }
+            //foreach (string dir in Directory.GetDirectories(directory))
+            //{
+            //  Color.DisplayTextColor("6");
+            //  Console.Write(dir + "\t");
+            //}
+
+            throw new NotImplementedException();
+            //Cosmos doesn't support directories with a dot in it. :/ (FAT problem)
         }
 
         /// <summary>
@@ -77,9 +80,15 @@ namespace Alve_OS.Shell
                 Char formatDot = '.';
                 string[] ext = file.Split(formatDot);
                 string lastext = ext[ext.Length - 1];
+
                 if ((lastext == "set") || (lastext == "nam") || (lastext == "usr"))
                 {
                     Color.DisplayTextColor("4");
+                    Console.Write(file + "\t");
+                }
+                else if (file.StartsWith("."))
+                {
+                    Color.DisplayTextColor("5");
                     Console.Write(file + "\t");
                 }
                 else
