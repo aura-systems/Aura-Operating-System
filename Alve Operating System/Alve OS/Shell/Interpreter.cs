@@ -1,4 +1,4 @@
-﻿/*
+/*
 * PROJECT:          Alve Operating System Development
 * CONTENT:          Interpreter
 * PROGRAMMERS:      Alexy DA CRUZ <dacruzalexy@gmail.com>

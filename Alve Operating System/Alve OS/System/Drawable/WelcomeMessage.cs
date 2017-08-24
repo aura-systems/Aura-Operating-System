@@ -26,7 +26,7 @@ namespace Alve_OS.System
                 case "fr_FR":
                     Logo.Print();
                     Console.ForegroundColor = ConsoleColor.Green;
-                    Console.WriteLine(" * Documentation: github.com/Alve-OS/Alve-Operating-System/wiki");
+                    Console.WriteLine(" * Documentation: alve-os.github.io");
                     Console.ForegroundColor = ConsoleColor.White;
 
                     if ((File.ReadAllText(@"0:\System\Users\root.usr") == MD5.hash("root") + "|admin") || (Info.getComputerName() == "Alve-PC"))
@@ -62,7 +62,7 @@ namespace Alve_OS.System
                 case "en_US":
                     Logo.Print();
                     Console.ForegroundColor = ConsoleColor.Green;
-                    Console.WriteLine(" * Documentation: github.com/Alve-OS/Alve-Operating-System/wiki");
+                    Console.WriteLine(" * Documentation: alve-os.github.io");
                     Console.ForegroundColor = ConsoleColor.White;
 
                     if ((File.ReadAllText(@"0:\System\Users\root.usr") == MD5.hash("root") + "|admin") || (Info.getComputerName() == "Alve-PC"))
