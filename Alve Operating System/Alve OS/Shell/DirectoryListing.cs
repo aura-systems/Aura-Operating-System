@@ -1,7 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
+﻿/*
+* PROJECT:          Alve Operating System Development
+* CONTENT:          Directory and files listing system.
+* PROGRAMMERS:      Alexy DA CRUZ <dacruzalexy@gmail.com>
+*                   Valentin Charbonnier <valentinbreiz@gmail.com>
+*/
+
+using System;
 using System.IO;
-using System.Text;
 using Alve_OS.System.Computer;
 
 namespace Alve_OS.Shell
@@ -99,6 +104,5 @@ namespace Alve_OS.Shell
 
             }
         }
-
     }
 }

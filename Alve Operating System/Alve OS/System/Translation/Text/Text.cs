@@ -182,6 +182,9 @@ namespace Alve_OS.System.Translation
                         case "mkdirunsupporteddot":
                             Console.WriteLine("Vous ne pouvez pas mettre de point(s) dans le nom de votre répertoire.");
                             break;
+                        case "invalidargument":
+                            Console.WriteLine("Cet argument est invalide.");
+                            break;
                     }
                     break;
 
@@ -333,6 +336,9 @@ namespace Alve_OS.System.Translation
                             break;
                         case "mkdirunsupporteddot":
                             Console.WriteLine("You can't have a dot in your directory name.");
+                            break;
+                        case "invalidargument":
+                            Console.WriteLine("This argument is invalid.");
                             break;
                     }
                     break;

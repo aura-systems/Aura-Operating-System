@@ -194,6 +194,7 @@ namespace Alve_OS.Shell
             {
                 DirectoryListing.DispDirectories(Kernel.current_directory);
                 DirectoryListing.DispFiles(Kernel.current_directory);
+                Console.WriteLine();
             }
 
             else if ((cmd.StartsWith("dir ")) || (cmd.StartsWith("ls ")))
@@ -232,10 +233,10 @@ namespace Alve_OS.Shell
                     }
                     else
                     {
-                        Console.WriteLine("cet argument est invalide");
+                        L.Text.Display("invalidargument");
                     }
                 }
-
+                Console.WriteLine();
             }
 
             //create directory
@@ -246,7 +247,6 @@ namespace Alve_OS.Shell
                 if (dir.Contains("."))
                 {
                     L.Text.Display("mkdirunsupporteddot");
-                    Console.WriteLine();
                 }
                 else
                 {
@@ -292,10 +292,8 @@ namespace Alve_OS.Shell
                             Directory.CreateDirectory(Kernel.current_directory + newName);
 
                             //display text to inform the user that the directory has been created with an another name
-                            Console.WriteLine();
                             Console.ForegroundColor = ConsoleColor.Yellow;
                             L.Text.Display("mkdirfilealreadyexist", newName);
-                            Console.WriteLine();
                         }
                         else
                         {
@@ -303,10 +301,8 @@ namespace Alve_OS.Shell
                             Directory.CreateDirectory(Kernel.current_directory + dir + "(1)");
 
                             //display text to inform the user that the directory has been created with an another name
-                            Console.WriteLine();
                             Console.ForegroundColor = ConsoleColor.Yellow;
                             L.Text.Display("mkdirfilealreadyexist", dir + "(1)");
-                            Console.WriteLine();
                         }
                     }
                 }                
