@@ -26,6 +26,7 @@ namespace Alve_OS.System.Translation
         /// </summary>
         /// <param name="ToTranslate">mot clé</param>
         /// <param name="arg">string dynamique</param>
+        /// <param name="arg2">string dynamique</param>
         public static void Display(string ToTranslate, string arg = "", string arg2 = "")
         {
             switch (Kernel.langSelected)
@@ -169,11 +170,20 @@ namespace Alve_OS.System.Translation
                         case "tips":
                             Console.WriteLine(" * Conseil(s) :");
                             break;
-                        case "foldercontent":
-                            Console.WriteLine("Contenu du dossier '" + arg + "':");
+                        case "mkdir":
+                            Console.WriteLine("Entrez le nom du dossier (mkdir dossier).");
                             break;
                         case "time": //         07/08/2017, 01:12:40
                             Console.WriteLine("Date et heure du système:      " + Time.DayString() + "/" + Time.MonthString() + "/" + Time.YearString() + ", " + Time.HourString() + ":" + Time.MinuteString() + ":" + Time.SecondString());
+                            break;
+                        case "mkdirfilealreadyexist":
+                            Console.WriteLine("Le dossier existait déjà, le répertoire \"" + arg + "\" a donc été créé.");
+                            break;
+                        case "mkdirunsupporteddot":
+                            Console.WriteLine("Vous ne pouvez pas mettre de point(s) dans le nom de votre répertoire.");
+                            break;
+                        case "invalidargument":
+                            Console.WriteLine("Cet argument est invalide.");
                             break;
                     }
                     break;
@@ -315,11 +325,20 @@ namespace Alve_OS.System.Translation
                         case "tips":
                             Console.WriteLine(" * Tips :");
                             break;
-                        case "foldercontent":
-                            Console.WriteLine("Folder's content of '" + arg + "':");
+                        case "mkdir":
+                            Console.WriteLine("Enter the directory name (mkdir directory).");
                             break;
                         case "time":
                             Console.WriteLine("Date and time:             " + Time.MonthString() + "/" + Time.DayString() + "/" + Time.YearString() + ", " + Time.HourString() + ":" + Time.MinuteString() + ":" + Time.SecondString());
+                            break;
+                        case "mkdirfilealreadyexist":
+                            Console.WriteLine("That folder existed already, directory \"" + arg + "\" has been created.");
+                            break;
+                        case "mkdirunsupporteddot":
+                            Console.WriteLine("You can't have a dot in your directory name.");
+                            break;
+                        case "invalidargument":
+                            Console.WriteLine("This argument is invalid.");
                             break;
                     }
                     break;

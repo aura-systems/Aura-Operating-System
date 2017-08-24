@@ -1,4 +1,4 @@
-﻿/*
+/*
 * PROJECT:          Alve Operating System Development
 * CONTENT:          Interpreter
 * PROGRAMMERS:      Alexy DA CRUZ <dacruzalexy@gmail.com>
@@ -41,7 +41,7 @@ namespace Alve_OS.Shell
             #endregion
 
             #region Console
-            
+
             else if (cmd.Equals("clear"))
             {
                 Console.Clear();
@@ -192,106 +192,120 @@ namespace Alve_OS.Shell
 
             else if ((cmd.Equals("dir")) || (cmd.Equals("ls")))
             {
-                foreach (string dir in Directory.GetDirectories(Kernel.current_directory))
-                {
-                    Color.DisplayTextColor("6");
-                    Console.Write(dir + "\t");
-                }
-                foreach (string file in Directory.GetFiles(Kernel.current_directory))
-                {
-                    Char formatDot = '.';
-                    string[] ext = file.Split(formatDot);
-                    string lastext = ext[ext.Length - 1];
-
-                    if ((lastext == "set") || (lastext == "nam") || (lastext == "usr"))
-                    {
-                        Color.DisplayTextColor("4");
-                        Console.Write(file + "\t");
-                    }
-                    else
-                    {
-                        Color.DisplayTextColor("1");
-                        Console.Write(file + "\t");
-                    }
-                }
+                DirectoryListing.DispDirectories(Kernel.current_directory);
+                DirectoryListing.DispFiles(Kernel.current_directory);
                 Console.WriteLine();
             }
 
             else if ((cmd.StartsWith("dir ")) || (cmd.StartsWith("ls ")))
             {
-                string cmddir;
-                if (cmd.StartsWith("dir "))
+                string directory;
+
+                //args commands
+                Char cmdargschar = ' ';
+                string[] cmdargs = cmd.Split(cmdargschar);
+
+
+                if (!cmdargs[1].StartsWith("-"))
                 {
-                    cmddir = cmd.Remove(0, 4);
+                    directory = cmdargs[1];
 
-                    foreach (string dir in Directory.GetDirectories(cmddir))
+                    if (Directory.Exists(Kernel.current_directory + directory))
                     {
-                        Color.DisplayTextColor("6");
-                        Console.Write(dir + "\t");
+                        DirectoryListing.DispDirectories(Kernel.current_directory + directory);
+                        DirectoryListing.DispFiles(Kernel.current_directory + directory);
                     }
-                    foreach (string file in Directory.GetFiles(cmddir))
-                    {
-                        Char formatDot = '.';
-                        string[] ext = file.Split(formatDot);
-                        string lastext = ext[ext.Length - 1];
-
-                        if ((lastext == "set") || (lastext == "nam") || (lastext == "usr"))
-                        {
-                            Color.DisplayTextColor("4");
-                            Console.Write(file + "\t");
-                        }
-                        else
-                        {
-                            Color.DisplayTextColor("1");
-                            Console.Write(file + "\t");
-                        }
-                    }
-                    Console.WriteLine();
                 }
-
-                else if (cmd.StartsWith("ls "))
+                else
                 {
-                    cmddir = cmd.Remove(0, 3);
-
-                    foreach (string dir in Directory.GetDirectories(cmddir))
+                    if (cmdargs[1].Equals("-a"))
                     {
-                        Color.DisplayTextColor("6");
-                        Console.Write(dir + "\t");
-                    }
-                    foreach (string file in Directory.GetFiles(cmddir))
-                    {
-                        Char formatDot = '.';
-                        string[] ext = file.Split(formatDot);
-                        string lastext = ext[ext.Length - 1];
+                        DirectoryListing.DispDirectories(Kernel.current_directory);
+                        DirectoryListing.DispHiddenFiles(Kernel.current_directory);
 
-                        if ((lastext == "set") || (lastext == "nam") || (lastext == "usr"))
+                        if (cmdargs.Length == 3)
                         {
-                            Color.DisplayTextColor("4");
-                            Console.Write(file + "\t");
-                        }
-                        else
-                        {
-                            Color.DisplayTextColor("1");
-                            Console.Write(file + "\t");
+                            directory = cmdargs[2];
+
+                            DirectoryListing.DispDirectories(Kernel.current_directory + directory);
+                            DirectoryListing.DispHiddenFiles(Kernel.current_directory + directory);
                         }
                     }
-                    Console.WriteLine();
+                    else
+                    {
+                        L.Text.Display("invalidargument");
+                    }
                 }
-
-
+                Console.WriteLine();
             }
 
+            //create directory
             else if (cmd.StartsWith("mkdir "))
             {
                 string dir = cmd.Remove(0, 6);
-                if (!Directory.Exists(Kernel.current_directory + dir))
+
+                if (dir.Contains("."))
                 {
-                    Kernel.FS.CreateDirectory(Kernel.current_directory + dir);
+                    L.Text.Display("mkdirunsupporteddot");
                 }
-                else if (Directory.Exists(Kernel.current_directory + dir))
+                else
                 {
-                    Kernel.FS.CreateDirectory(Kernel.current_directory + dir + "-1");
-                }
+                    if (!Directory.Exists(Kernel.current_directory + dir))
+                    {
+                        Directory.CreateDirectory(Kernel.current_directory + dir);
+                    }
+                    else if (Directory.Exists(Kernel.current_directory + dir))
+                    {
+                        Char[] separators = new char[] { '(', ')' };
+                        Char[] directories = new char[] { '/', '\\' };
+
+                        //getting last directory.
+                        string x1 = Kernel.current_directory + dir;
+                        string[] x2 = x1.Split(directories);
+                        string x3 = x2[x2.Length - 1];
+                        int x4 = 0;
+
+                        //boucle
+                        boucle:
+                        x4 = x4 + 1;
+                        string DirectoryAlreadyExist = x3 + "(" + x4 +")";
+
+                        //if directory has already been recreated once or more
+                        if ((DirectoryAlreadyExist.Contains("(")) && (DirectoryAlreadyExist.Contains(")")))
+                        {
+                            //get number
+                            string[] endName = DirectoryAlreadyExist.Split(separators);
+                            int num = int.Parse(endName[1]);
+
+                            //add one to num
+                            num = num + 1;
+
+                            //set new directory name with the new number.
+                            string newName = dir + "(" + num + ")";
+
+                            if(Directory.Exists(Kernel.current_directory + newName))
+                            {                                
+                                goto boucle;
+                            }
+
+                            //create directory
+                            Directory.CreateDirectory(Kernel.current_directory + newName);
+
+                            //display text to inform the user that the directory has been created with an another name
+                            Console.ForegroundColor = ConsoleColor.Yellow;
+                            L.Text.Display("mkdirfilealreadyexist", newName);
+                        }
+                        else
+                        {
+                            //if not, we create directory with (1)
+                            Directory.CreateDirectory(Kernel.current_directory + dir + "(1)");
+
+                            //display text to inform the user that the directory has been created with an another name
+                            Console.ForegroundColor = ConsoleColor.Yellow;
+                            L.Text.Display("mkdirfilealreadyexist", dir + "(1)");
+                        }
+                    }
+                }                
             }
 
             else if (cmd.StartsWith("rmdir "))
@@ -318,6 +332,11 @@ namespace Alve_OS.Shell
                 {
                     L.Text.Display("doesnotexist");
                 }
+            }
+
+            else if (cmd.Equals("mkdir"))
+            {
+                L.Text.Display("mkdir");
             }
 
             else if (cmd.Equals("mkfil"))
@@ -356,7 +375,7 @@ namespace Alve_OS.Shell
             else if (cmd.Equals("vol"))
             {
                 var vols = Kernel.FS.GetVolumes();
-                
+
                 L.Text.Display("NameSizeParent");
                 foreach (var vol in vols)
                 {
@@ -463,7 +482,7 @@ namespace Alve_OS.Shell
             #endregion
 
             #region System Infos
-            
+
             else if (cmd.Equals("systeminfo"))
             {
                 L.Text.Display("Computername");
@@ -498,6 +517,6 @@ namespace Alve_OS.Shell
                 Console.ForegroundColor = ConsoleColor.White;
             }
 
-        } 
+        }
     }
 }
