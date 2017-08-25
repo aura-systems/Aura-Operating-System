@@ -135,6 +135,9 @@ namespace Alve_OS
 
         #endregion
 
+        /// <summary>
+        /// Display the line before the user input and set the console color.
+        /// </summary>
         private void BeforeCommand()
         {
             if (current_directory == @"0:\")

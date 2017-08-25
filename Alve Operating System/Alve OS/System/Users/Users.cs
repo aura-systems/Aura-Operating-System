@@ -14,6 +14,9 @@ namespace Alve_OS.System.Users
 {
     class Users
     {
+        /// <summary>
+        /// Display login form
+        /// </summary>
         public void Login()
         {
             switch (Kernel.langSelected)
@@ -114,10 +117,10 @@ namespace Alve_OS.System.Users
         }
 
         /// <summary>
-        /// Méthode pour créer un utilisateur.
+        /// Method called to create an user
         /// </summary>
-        /// <param name="username">Nom du nouvel utilisateur</param>
-        /// <param name="userlevel">Niveau de l'utilisateur (Admin, Standard)</param>
+        /// <param name="username">User name</param>
+        /// <param name="userlevel">User type</param>
         public void Create(string username)
         {
             try

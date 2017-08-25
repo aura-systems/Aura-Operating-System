@@ -32,12 +32,16 @@ using System;
 
 namespace Alve_OS.System.Security
 {
-    /// <summary>
-    /// Thanks to Aurora01!
-    /// </summary>
+    
+    // Thanks to Aurora01!
+    
     public static class MD5
     {
-
+        /// <summary>
+        /// Return hash of a string
+        /// </summary>
+        /// <param name="str"></param>
+        /// <returns>Hash MD5</returns>
         public static string hash(string str)
         {
             Value = str;

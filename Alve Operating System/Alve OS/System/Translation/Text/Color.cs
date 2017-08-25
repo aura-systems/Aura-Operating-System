@@ -10,12 +10,15 @@ namespace Alve_OS.System.Translation
 {
     class Color
     {
+        /// <summary>
+        /// Display help on color
+        /// </summary>
         public static void Display()
         {
             switch (Kernel.langSelected)
             {
                 case "fr_FR":
-                    Console.WriteLine("Change les couleurs par défaut du premier plan de la console.");
+                    Console.WriteLine("Liste des couleurs disponible pour la console.");
                     Console.WriteLine("0 = Noir");
                     Console.WriteLine("1 = Bleu");
                     Console.WriteLine("2 = Vert");
@@ -27,7 +30,7 @@ namespace Alve_OS.System.Translation
                     break;
 
                 case "en_US":
-                    Console.WriteLine("Changes the default colors of the foreground of the console.");
+                    Console.WriteLine("List of the available colors for the console.");
                     Console.WriteLine("0 = Black");
                     Console.WriteLine("1 = Blue");
                     Console.WriteLine("2 = Green");

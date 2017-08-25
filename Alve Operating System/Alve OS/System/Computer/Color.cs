@@ -8,7 +8,10 @@ namespace Alve_OS.System.Computer
 {
     class Color
     {
-
+        /// <summary>
+        /// Change text color
+        /// </summary>
+        /// <param name="color"></param>
         public static void DisplayTextColor(string color = "7")
         {
 
@@ -50,6 +53,11 @@ namespace Alve_OS.System.Computer
             }
         }
 
+        /// <summary>
+        /// Get the actual text color set in color file
+        /// </summary>
+        /// <param name="defaultcolor"></param>
+        /// <returns></returns>
         public static int GetTextColor(string defaultcolor = "7")
         {
             if (File.Exists(@"0:\System\color.set"))
@@ -101,6 +109,10 @@ namespace Alve_OS.System.Computer
             }
         }
 
+        /// <summary>
+        /// Save actual text color in color file
+        /// </summary>
+        /// <param name="color"></param>
         public static void SetTextColor(string color = "7")
         {
             if (File.Exists(@"0:\System\color.set"))
@@ -116,6 +128,10 @@ namespace Alve_OS.System.Computer
 
         }
 
+        /// <summary>
+        /// Get background color in color file
+        /// </summary>
+        /// <param name="defaultcolor"></param>
         public static void GetBackgroundColor(string defaultcolor = "0")
         {
             if (File.Exists(@"0:\System\backcolor.set"))
@@ -164,6 +180,10 @@ namespace Alve_OS.System.Computer
             }
         }
 
+        /// <summary>
+        /// Save background color in color file
+        /// </summary>
+        /// <param name="color"></param>
         public static void SetBackgroundColor(string color = "0")
         {
             if (File.Exists(@"0:\System\backcolor.set"))

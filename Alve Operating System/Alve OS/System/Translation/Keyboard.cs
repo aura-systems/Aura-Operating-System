@@ -11,6 +11,9 @@ namespace Alve_OS.System.Translation
 {
     class Keyboard
     {
+        /// <summary>
+        /// Init the keyboard with the user language
+        /// </summary>
         public static void Init()
         {
             try

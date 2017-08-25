@@ -23,6 +23,10 @@ namespace Alve_OS.System
 
         static int DayOfWeek() { return RTC.DayOfTheWeek; }
 
+        /// <summary>
+        /// Hour String
+        /// </summary>
+        /// <returns>Actual Hour</returns>
         public static string HourString() {
             int inthour = Hour();
             string stringhour = inthour.ToString();
@@ -34,6 +38,10 @@ namespace Alve_OS.System
             return stringhour;
         }
 
+        /// <summary>
+        /// Minutes String
+        /// </summary>
+        /// <returns>Actual Minutes</returns>
         public static string MinuteString()
         {
             int intminute = Minute();
@@ -46,6 +54,10 @@ namespace Alve_OS.System
             return stringminute;
         }
 
+        /// <summary>
+        /// Year String
+        /// </summary>
+        /// <returns>Actual Seconds</returns>
         public static string SecondString()
         {
             int intsecond = Second();
@@ -58,6 +70,10 @@ namespace Alve_OS.System
             return stringsecond;
         }
 
+        /// <summary>
+        /// Year String
+        /// </summary>
+        /// <returns>Actual Year</returns>
         public static string YearString()
         {
             int intyear = Year();
@@ -70,6 +86,10 @@ namespace Alve_OS.System
             return stringyear;
         }
 
+        /// <summary>
+        /// Month String
+        /// </summary>
+        /// <returns>Actual Month</returns>
         public static string MonthString()
         {
             int intmonth = Month();
@@ -82,6 +102,10 @@ namespace Alve_OS.System
             return stringmonth;
         }
 
+        /// <summary>
+        /// Day String
+        /// </summary>
+        /// <returns>Actual Day</returns>
         public static string DayString()
         {
             int intday = DayOfMonth();

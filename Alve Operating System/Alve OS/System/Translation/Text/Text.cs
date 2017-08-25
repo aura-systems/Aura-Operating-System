@@ -20,13 +20,13 @@ namespace Alve_OS.System.Translation
          * à la langue du système. Vous devez donc
          * associer un mot clé à une phrase.
          */
-        
+
         /// <summary>
-        /// Affiche un string traduit dans la langue de l'utilisateur
+        /// Display text in user language
         /// </summary>
-        /// <param name="ToTranslate">mot clé</param>
-        /// <param name="arg">string dynamique</param>
-        /// <param name="arg2">string dynamique</param>
+        /// <param name="ToTranslate">keyword</param>
+        /// <param name="arg">dynamic string</param>
+        /// <param name="arg2">dynamic string</param>
         public static void Display(string ToTranslate, string arg = "", string arg2 = "")
         {
             switch (Kernel.langSelected)

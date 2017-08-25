@@ -19,7 +19,7 @@ namespace Alve_OS.System
     {
 
         /// <summary>
-        /// Vérifie que l'installation d'Alve est complète
+        /// Verify if Alve's Setup is complete
         /// </summary>
         public void SetupVerifyCompleted()
         {
@@ -34,7 +34,7 @@ namespace Alve_OS.System
         }
 
         /// <summary>
-        /// Démarre l'installation
+        /// Start setup
         /// </summary>
         public void StartSetup()
         {
@@ -42,7 +42,7 @@ namespace Alve_OS.System
         }
 
         /// <summary>
-        /// Créations des dossiers requis.
+        /// Making directories that are required for Alve.
         /// </summary>
         private void Step1()
         {
@@ -91,7 +91,7 @@ namespace Alve_OS.System
 
 
         /// <summary>
-        /// Méthode appelé pour créer 'root'.
+        /// Method called to make "root"
         /// </summary>
         private void Step2()
         {
@@ -128,7 +128,7 @@ namespace Alve_OS.System
 
 
         /// <summary>
-        /// Demande de la disposition du clavier
+        /// Asking user for his language
         /// </summary>
         private void Step3()
         {
@@ -177,7 +177,7 @@ namespace Alve_OS.System
         }
 
         /// <summary>
-        /// Demande du nom pour l'ordinateur
+        /// Asking user to choose a name for his computer
         /// </summary>
         private void Step5(string user)
         {
@@ -197,7 +197,7 @@ namespace Alve_OS.System
 
 
         /// <summary>
-        /// Méthode permettant de valider l'installation.
+        /// Method called to validate the setup.
         /// </summary>
         private void Step6(string user)
         {
@@ -211,7 +211,7 @@ namespace Alve_OS.System
         }
 
         /// <summary>
-        /// Méthode permettant de créer un compte utilisateur
+        /// Method to create users.
         /// </summary>
         private void Step4()
         {

@@ -17,7 +17,7 @@ namespace Alve_OS.System
     {
 
         /// <summary>
-        /// Affiche le message de bienvenue
+        /// Display the welcome message
         /// </summary>
         public static void Display()
         {
