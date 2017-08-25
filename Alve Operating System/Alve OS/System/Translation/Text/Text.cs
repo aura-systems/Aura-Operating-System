@@ -5,6 +5,7 @@
 *                   Valentin Charbonnier <valentinbreiz@gmail.com>
 */
 
+using Alve_OS.System.Computer;
 using System;
 
 namespace Alve_OS.System.Translation
@@ -69,10 +70,10 @@ namespace Alve_OS.System.Translation
                             Console.WriteLine("Révision du système:           " + Kernel.revision);
                             break;
                         case "AmountRAM":
-                            Console.WriteLine("Montant de la RAM:             " + Cosmos.Core.CPU.GetAmountOfRAM() + "MB");
+                            Console.WriteLine("Montant de la RAM:             " + Info.GetAmountRAM());
                             break;
                         case "MAC":
-                            Console.WriteLine("Adresse MAC                    " + Cosmos.HAL.Network.MACAddress.Broadcast);
+                            Console.WriteLine("Adresse MAC                    " + Info.GetMACAdress());
                             break;
                         case "UnknownCommand":
                             Console.WriteLine("Commande inconnue.");

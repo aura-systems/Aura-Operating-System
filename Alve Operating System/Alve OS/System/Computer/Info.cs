@@ -78,5 +78,19 @@ namespace Alve_OS.System.Computer
             }  
         }
 
+        public static string GetAmountRAM()
+        {
+            return Cosmos.Core.CPU.GetAmountOfRAM() + "MB";
+        }
+
+        public static string GetMACAdress()
+        {
+            return Cosmos.HAL.Network.MACAddress.Broadcast + "";
+        }
+
+        public static string GetIPAdress()
+        {
+            throw new NotImplementedException();
+        }
     }
 }
