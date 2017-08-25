@@ -14,7 +14,7 @@ namespace Alve_OS.System.Users
     class UserLevel
     {
         /// <summary>
-        /// Administrateur
+        /// Administrator
         /// </summary>
         /// <returns></returns>
         public static string Administrator()
@@ -32,9 +32,9 @@ namespace Alve_OS.System.Users
         }
 
         /// <summary>
-        /// Type d'utilisateur
+        /// User type
         /// </summary>
-        /// <returns>Le caractère correspondant au type d'utilisateur</returns>
+        /// <returns>User type char</returns>
         public static string TypeUser()
         {
             if(Kernel.userLevelLogged == Administrator())
@@ -49,10 +49,10 @@ namespace Alve_OS.System.Users
 
 
         /// <summary>
-        /// Méthode pour appliquer le type d'utilisateur à la session.
+        /// Method to apply type of user to actual session
         /// </summary>
         /// <param name="content">
-        /// Doit être la ligne avec le type d'utilisateur dans son fichier .USR
+        /// Line of user type in user file (.USR)
         /// </param>
         public static void LevelReader(string content)
         {

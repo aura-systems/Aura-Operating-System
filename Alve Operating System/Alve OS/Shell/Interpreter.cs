@@ -17,6 +17,10 @@ namespace Alve_OS.Shell
 {
     class Interpreter
     {
+        /// <summary>
+        /// Shell Interpreter
+        /// </summary>
+        /// <param name="cmd">Command</param>
         public static void Interpret(string cmd)
         {
 

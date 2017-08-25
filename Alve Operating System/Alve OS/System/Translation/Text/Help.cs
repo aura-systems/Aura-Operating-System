@@ -11,6 +11,9 @@ namespace Alve_OS.System.Translation
 {
     class Help
     {
+        /// <summary>
+        /// Display help on general commands.
+        /// </summary>
         public static void HelpD()
         {
             switch (Kernel.langSelected)
@@ -66,6 +69,9 @@ namespace Alve_OS.System.Translation
             }
         }
 
+        /// <summary>
+        /// Display help on settings commands.
+        /// </summary>
         public static void Settings()
         {
             switch (Kernel.langSelected)

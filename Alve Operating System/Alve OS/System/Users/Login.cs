@@ -10,6 +10,9 @@ namespace Alve_OS.System
 {
     class Login
     {
+        /// <summary>
+        /// Init user system
+        /// </summary>
         public static void Init()
         {
             usr.Users usr = new usr.Users();

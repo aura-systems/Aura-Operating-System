@@ -14,7 +14,7 @@ namespace Alve_OS.System
     class SetupInit
     {
         /// <summary>
-        /// Réinitialise le système
+        /// Reinit the system
         /// </summary>
         public static void Init()
         {

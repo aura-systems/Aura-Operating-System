@@ -11,6 +11,10 @@ namespace Alve_OS.System
 {
     class Crash
     {
+        /// <summary>
+        /// Stop the kernel and display exception
+        /// </summary>
+        /// <param name="ex">Exception that stop the kernel</param>
         public static void StopKernel(Exception ex)
         {
             Console.Clear();

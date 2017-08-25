@@ -10,6 +10,9 @@ namespace Alve_OS.System
 {
     class Logo
     {
+        /// <summary>
+        /// Display Logo of Alve
+        /// </summary>
         public static void Print()
         {
             switch (Kernel.langSelected)
