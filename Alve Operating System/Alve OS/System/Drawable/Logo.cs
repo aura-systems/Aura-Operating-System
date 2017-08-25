@@ -10,6 +10,7 @@ namespace Alve_OS.System
 {
     class Logo
     {
+
         /// <summary>
         /// Display Logo of Alve
         /// </summary>
@@ -42,5 +43,6 @@ namespace Alve_OS.System
                     break;
             }
         }
+
     }
 }

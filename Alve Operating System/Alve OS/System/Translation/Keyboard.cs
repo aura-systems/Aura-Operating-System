@@ -11,6 +11,7 @@ namespace Alve_OS.System.Translation
 {
     class Keyboard
     {
+
         /// <summary>
         /// Init the keyboard with the user language
         /// </summary>
@@ -34,5 +35,6 @@ namespace Alve_OS.System.Translation
                 Console.WriteLine("[ERROR]");
             }  
         }
+
     }
 }

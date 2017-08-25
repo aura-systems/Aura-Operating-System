@@ -7,7 +7,6 @@
 
 using System;
 using System.IO;
-using L = Alve_OS.System.Translation;
 using Alve_OS.System.Security;
 using Alve_OS.System.Computer;
 using Alve_OS.System.Drawable;

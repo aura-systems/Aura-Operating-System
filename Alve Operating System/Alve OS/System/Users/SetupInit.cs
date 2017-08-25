@@ -5,16 +5,14 @@
 */
 
 using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Text;
 
 namespace Alve_OS.System
 {
     class SetupInit
     {
+
         /// <summary>
-        /// Reinit the system
+        /// Reinstallation of Alve
         /// </summary>
         public static void Init()
         {

@@ -12,6 +12,7 @@ namespace Alve_OS.System.Computer
 {
     class Info
     {
+
         /// <summary>
         /// Méthode pour récupérer le nom de l'ordinateur.
         /// </summary>
@@ -74,12 +75,8 @@ namespace Alve_OS.System.Computer
                 Text.Display("computernameincorrect");
                 Console.WriteLine();
                 AskComputerName();
-            }
-
-            
+            }  
         }
-
-        
 
     }
 }

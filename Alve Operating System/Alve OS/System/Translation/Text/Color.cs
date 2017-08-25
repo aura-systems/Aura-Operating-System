@@ -10,6 +10,7 @@ namespace Alve_OS.System.Translation
 {
     class Color
     {
+
         /// <summary>
         /// Display help on color
         /// </summary>
@@ -42,5 +43,6 @@ namespace Alve_OS.System.Translation
                     break;
             }
         }
+
     }
 }

@@ -133,8 +133,6 @@ namespace Alve_OS
             }
         }
 
-        #endregion
-
         /// <summary>
         /// Display the line before the user input and set the console color.
         /// </summary>
@@ -197,7 +195,6 @@ namespace Alve_OS
             }
             else
             {
-
                 Console.ForegroundColor = ConsoleColor.Blue;
                 Console.Write(UserLevel.TypeUser());
 
@@ -254,5 +251,8 @@ namespace Alve_OS
                 }
             }
         }
+
+        #endregion
+
     }
 }

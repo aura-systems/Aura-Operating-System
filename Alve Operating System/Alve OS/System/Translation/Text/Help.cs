@@ -11,6 +11,7 @@ namespace Alve_OS.System.Translation
 {
     class Help
     {
+
         /// <summary>
         /// Display help on general commands.
         /// </summary>
@@ -91,5 +92,6 @@ namespace Alve_OS.System.Translation
                     break;
             }
         }
+
     }
 }

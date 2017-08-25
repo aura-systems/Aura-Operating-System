@@ -1,12 +1,16 @@
-﻿using Cosmos.HAL;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿/*
+* PROJECT:          Alve Operating System Development
+* CONTENT:          Time Implementation
+* PROGRAMMERS:      Valentin Charbonnier <valentinbreiz@gmail.com>
+*/
+
+using Cosmos.HAL;
 
 namespace Alve_OS.System
 {
     public static class Time
     {
+
         static int Hour() { return RTC.Hour; }
 
         static int Minute() { return RTC.Minute; }

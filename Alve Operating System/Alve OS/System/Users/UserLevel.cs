@@ -4,15 +4,11 @@
 * PROGRAMMERS:      Alexy DA CRUZ <dacruzalexy@gmail.com>
 */
 
-using System;
-using System.Collections.Generic;
-using System.Text;
-
-
 namespace Alve_OS.System.Users
 {
     class UserLevel
     {
+
         /// <summary>
         /// Administrator
         /// </summary>

@@ -32,11 +32,9 @@ using System;
 
 namespace Alve_OS.System.Security
 {
-    
-    // Thanks to Aurora01!
-    
     public static class MD5
     {
+
         /// <summary>
         /// Return hash of a string
         /// </summary>
@@ -114,7 +112,7 @@ namespace Alve_OS.System.Security
         }
 
         /// <summary>
-        /// get/sets as  byte array 
+        /// Get/sets as byte array 
         /// </summary>
         internal static byte[] ValueAsByte
         {
@@ -134,7 +132,9 @@ namespace Alve_OS.System.Security
             }
         }
 
-        //gets the signature/figner print as string
+        /// <summary>
+        /// Gets the signature/figner print as string
+        /// </summary>
         internal static string FingerPrint
         {
             get
@@ -306,7 +306,6 @@ namespace Alve_OS.System.Security
             return bMsg;
         }
 
-
         /// <summary>
         /// Copies a 512 bit block into X as 16 32 bit words
         /// </summary>
@@ -327,6 +326,7 @@ namespace Alve_OS.System.Security
 
     internal class Digest
     {
+
         public uint A;
         public uint B;
         public uint C;
@@ -339,6 +339,7 @@ namespace Alve_OS.System.Security
             C = 0x98BADCFE;
             D = 0X10325476;
         }
+
         public override string ToString()
         {
             string st;
@@ -348,6 +349,7 @@ namespace Alve_OS.System.Security
                 ToHexString(MD5Helper.ReverseByte(D), 32);
             return st;
         }
+
         internal string ToHexString(uint aNumber, byte aBits)
         {
             uint xValue = aNumber;
@@ -416,9 +418,12 @@ namespace Alve_OS.System.Security
             }
             return overall;
         }
+
     }
+
     internal class MD5Helper
     {
+
         internal MD5Helper() { }
 
         public static uint RotateLeft(uint uiNumber, ushort shift)
@@ -433,5 +438,6 @@ namespace Alve_OS.System.Security
                     ((uiNumber & 0x00ff0000) >> 8) |
                     ((uiNumber & 0x0000ff00) << 8));
         }
+
     }
 }

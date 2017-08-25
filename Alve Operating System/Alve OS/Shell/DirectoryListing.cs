@@ -13,6 +13,7 @@ namespace Alve_OS.Shell
 {
     class DirectoryListing
     {
+
         /// <summary>
         /// Display directories of "directory"
         /// </summary>
@@ -101,8 +102,8 @@ namespace Alve_OS.Shell
                     Color.DisplayTextColor("1");
                     Console.Write(file + "\t");
                 }
-
             }
         }
+
     }
 }

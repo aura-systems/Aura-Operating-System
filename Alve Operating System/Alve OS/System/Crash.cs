@@ -11,6 +11,7 @@ namespace Alve_OS.System
 {
     class Crash
     {
+
         /// <summary>
         /// Stop the kernel and display exception
         /// </summary>
@@ -73,7 +74,7 @@ namespace Alve_OS.System
 
             Console.ReadKey();
             Sys.Power.Reboot();
-            
         }
+
     }
 }

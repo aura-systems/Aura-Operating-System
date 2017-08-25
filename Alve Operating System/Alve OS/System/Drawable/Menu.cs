@@ -6,6 +6,10 @@ namespace Alve_OS.System.Drawable
 {
     public class Menu
     {
+
+        /// <summary>
+        /// Display the login form
+        /// </summary>
         public static string DispLoginForm(string title)
         {
             Console.Clear();
@@ -63,6 +67,9 @@ namespace Alve_OS.System.Drawable
             return text;
         }
 
+        /// <summary>
+        /// Display the error dialog
+        /// </summary>
         public static void DispErrorDialog(string error)
         {
             Console.Clear();
@@ -94,6 +101,9 @@ namespace Alve_OS.System.Drawable
             Console.Clear();
         }
 
+        /// <summary>
+        /// Display the Setup Dialog
+        /// </summary>
         public static string DispSetupForm(string title)
         {
             Console.Clear();
@@ -151,6 +161,9 @@ namespace Alve_OS.System.Drawable
             return text;
         }
 
+        /// <summary>
+        /// Display language dialog
+        /// </summary>
         public static string DispLanguageDialog()
         {
             Console.Clear();
@@ -189,12 +202,14 @@ namespace Alve_OS.System.Drawable
             string language = Console.ReadLine();
             Console.SetCursorPosition(x, y);
 
-
             Console.BackgroundColor = ConsoleColor.Black;
             Console.Clear();
             return language;
         }
 
+        /// <summary>
+        /// Display the computer name dialog
+        /// </summary>
         public static string DispCompuernameDialog(string title, string input)
         {
             Console.Clear();
@@ -237,10 +252,10 @@ namespace Alve_OS.System.Drawable
             string name = Console.ReadLine();
             Console.SetCursorPosition(x, y);
 
-
             Console.BackgroundColor = ConsoleColor.Black;
             Console.Clear();
             return name;
         }
+
     }
 }

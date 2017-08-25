@@ -1,20 +1,24 @@
-﻿using Alve_OS.System.Translation;
+﻿/*
+* PROJECT:          Alve Operating System Development
+* CONTENT:          Console Color
+* PROGRAMMERS:      Alexy DA CRUZ <dacruzalexy@gmail.com>
+*/
+
+using Alve_OS.System.Translation;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Text;
 
 namespace Alve_OS.System.Computer
 {
     class Color
     {
+
         /// <summary>
         /// Change text color
         /// </summary>
         /// <param name="color"></param>
         public static void DisplayTextColor(string color = "7")
         {
-
             if (color.Equals("0"))
             {
                 Console.ForegroundColor = ConsoleColor.Black;
@@ -125,7 +129,6 @@ namespace Alve_OS.System.Computer
                 File.Create(@"0:\System\color.set");
                 File.WriteAllText(@"0:\System\color.set", color);
             }
-
         }
 
         /// <summary>
@@ -196,7 +199,7 @@ namespace Alve_OS.System.Computer
                 File.Create(@"0:\System\backcolor.set");
                 File.WriteAllText(@"0:\System\backcolor.set", color);
             }
-
         }
+
     }
 }

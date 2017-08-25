@@ -14,6 +14,7 @@ namespace Alve_OS.System.Users
 {
     class Users
     {
+
         /// <summary>
         /// Display login form
         /// </summary>
@@ -110,9 +111,7 @@ namespace Alve_OS.System.Users
                         Menu.DispErrorDialog("Unknown user.");
                         Login();
                     }
-
                     break;
-
             }
         }
 
@@ -209,5 +208,6 @@ namespace Alve_OS.System.Users
                 Text.Display("errorwhileusercreating");
             }          
         }
+
     }
 }

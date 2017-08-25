@@ -10,6 +10,7 @@ namespace Alve_OS.System
 {
     class Login
     {
+
         /// <summary>
         /// Init user system
         /// </summary>
@@ -18,5 +19,6 @@ namespace Alve_OS.System
             usr.Users usr = new usr.Users();
             usr.Login();
         }
+
     }
 }

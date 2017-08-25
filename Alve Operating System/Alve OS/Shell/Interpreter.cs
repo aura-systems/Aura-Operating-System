@@ -17,6 +17,7 @@ namespace Alve_OS.Shell
 {
     class Interpreter
     {
+
         /// <summary>
         /// Shell Interpreter
         /// </summary>
@@ -522,5 +523,6 @@ namespace Alve_OS.Shell
             }
 
         }
+
     }
 }
