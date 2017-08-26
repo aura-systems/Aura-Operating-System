@@ -14,7 +14,7 @@ namespace Alve_OS.System.Computer
     {
 
         /// <summary>
-        /// Méthode pour récupérer le nom de l'ordinateur.
+        /// Method to get the computer name
         /// </summary>
         /// <returns></returns>
         public static string getComputerName()
@@ -32,7 +32,7 @@ namespace Alve_OS.System.Computer
         }
 
         /// <summary>
-        /// Méthode pour appliquer un nom pour l'ordinateur.
+        /// Method to apply the computer name
         /// </summary>
         /// <param name="name"></param>
         public static void setComputerName(string name)
@@ -52,7 +52,7 @@ namespace Alve_OS.System.Computer
         }
 
         /// <summary>
-        /// Méthode pour demander à l'utilisateur un nom pour l'ordinateur.
+        /// Method asking to user the computer name
         /// </summary>
         public static void AskComputerName()
         {

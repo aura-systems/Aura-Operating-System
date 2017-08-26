@@ -507,7 +507,7 @@ namespace Alve_OS.Shell
             #endregion
 
             #region Tests
-
+            //It will be removed in the final version
             else if (cmd.Equals("crash"))
             {
                 throw new Exception("Crash test");

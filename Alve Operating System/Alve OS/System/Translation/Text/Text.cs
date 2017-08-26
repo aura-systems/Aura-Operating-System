@@ -36,8 +36,8 @@ namespace Alve_OS.System.Translation
 
                     switch (ToTranslate)
                     {
-                        case "shutdown": //Ceci est un mot clé
-                            Console.WriteLine("Extinction en cours..."); //Ceci est une phrase traduite
+                        case "shutdown": //This is a keyword
+                            Console.WriteLine("Extinction en cours..."); //That is a translated sentence.
                             break;
                         case "keyboard":
                             Console.WriteLine("Initialisation clavier FR...");
