@@ -195,6 +195,65 @@ namespace Alve_OS.Shell
                 }
             }
 
+            else if (cmd.StartsWith("cp -o "))
+            {
+                string fileinput = cmd.Remove(0, 6);
+                Char delimiter = ' ';
+                string[] files = fileinput.Split(delimiter);
+
+                string sourcefile = files[0];
+                string destfile = files[1];
+
+                if (files.Length == 2)
+                {
+                    if ((File.Exists(Kernel.current_directory + sourcefile)) & (File.Exists(Kernel.current_directory + destfile)))
+                    {
+                        File.Copy(sourcefile, destfile, true);
+                    }
+                    else
+                    {
+                        L.Text.Display("directorydoesntexist");
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("DEBUG> cp -o " + files.Length);
+                }                
+            }
+
+            else if (cmd.StartsWith("cp "))
+            {
+                string fileinput = cmd.Remove(0, 3);
+                Char delimiter = ' ';
+                string[] files = fileinput.Split(delimiter);
+
+                string sourcefile = files[0];
+                string destfile = files[1];
+
+                if (files.Length == 2)
+                {
+                    if ((File.Exists(Kernel.current_directory + sourcefile)) & (File.Exists(Kernel.current_directory + destfile)))
+                    {
+                        try
+                        {
+                            File.Copy(sourcefile, destfile);
+                        }
+                        catch
+                        {
+                            Console.WriteLine("file exist");
+                        }
+                    }
+                    else
+                    {
+                        L.Text.Display("directorydoesntexist");
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("DEBUG> cp " + files.Length);
+                }
+            }
+
             else if ((cmd.Equals("dir")) || (cmd.Equals("ls")))
             {
                 DirectoryListing.DispDirectories(Kernel.current_directory);
