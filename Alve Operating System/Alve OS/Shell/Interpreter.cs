@@ -195,63 +195,99 @@ namespace Alve_OS.Shell
                 }
             }
 
-            else if (cmd.StartsWith("cp -o "))
-            {
-                string fileinput = cmd.Remove(0, 6);
-                Char delimiter = ' ';
-                string[] files = fileinput.Split(delimiter);
-
-                string sourcefile = files[0];
-                string destfile = files[1];
-
-                if (files.Length == 2)
-                {
-                    if ((File.Exists(Kernel.current_directory + sourcefile)) & (File.Exists(Kernel.current_directory + destfile)))
-                    {
-                        File.Copy(sourcefile, destfile, true);
-                    }
-                    else
-                    {
-                        L.Text.Display("directorydoesntexist");
-                    }
-                }
-                else
-                {
-                    Console.WriteLine("DEBUG> cp -o " + files.Length);
-                }                
-            }
-
             else if (cmd.StartsWith("cp "))
             {
+                //args commands
+                Char cmdargschar = ' ';
+                string[] cmdargs = cmd.Split(cmdargschar);
+
                 string fileinput = cmd.Remove(0, 3);
-                Char delimiter = ' ';
-                string[] files = fileinput.Split(delimiter);
 
-                string sourcefile = files[0];
-                string destfile = files[1];
-
-                if (files.Length == 2)
+                if (!cmdargs[1].StartsWith("-")) //WITHOUT ARGS, NO OVERWRITING
                 {
-                    if ((File.Exists(Kernel.current_directory + sourcefile)) & (File.Exists(Kernel.current_directory + destfile)))
+                    string sourcefile = cmdargs[1];
+                    string destfile = cmdargs[2];
+
+                    if (cmdargs.Length == 3)
                     {
-                        try
+                        if (File.Exists(Kernel.current_directory + sourcefile))
                         {
-                            File.Copy(sourcefile, destfile);
+                            if (!File.Exists(Kernel.current_directory + destfile))
+                            {
+                                try
+                                {
+                                    File.Copy(Kernel.current_directory + sourcefile, Kernel.current_directory + destfile);
+                                    Console.WriteLine("file copied");
+                                }
+                                catch(IOException ioEx)
+                                {
+                                    throw new IOException("File Copy", ioEx);
+                                }
+                            }
+                            else
+                            {
+                                Console.WriteLine("destination file already");
+                                Console.WriteLine("do an cp -o to overwriting");
+                            }
                         }
-                        catch
+                        else
                         {
-                            Console.WriteLine("file exist");
+                            Console.WriteLine("source file doesn't exist");
+                            Console.WriteLine(Kernel.current_directory + sourcefile);
                         }
                     }
                     else
                     {
-                        L.Text.Display("directorydoesntexist");
+                        Console.WriteLine("Usage: cp {args} sourceFile destinationFile");
                     }
                 }
                 else
                 {
-                    Console.WriteLine("DEBUG> cp " + files.Length);
+                    if (cmdargs[1].Equals("-o")) //FIRST ARGS, OVERWRITING
+                    {
+                        //string sourcefile = cmdargs[0]; args0 is command args "cp"
+                        string sourcefile = cmdargs[2];
+                        string destfile = cmdargs[3];
+
+                        //code following
+                        if (cmdargs.Length == 4)
+                        {
+                            if (File.Exists(Kernel.current_directory + sourcefile))
+                            {
+                                if (File.Exists(Kernel.current_directory + destfile))
+                                {
+                                    try
+                                    {
+                                        File.Copy(Kernel.current_directory + sourcefile, Kernel.current_directory + destfile, true);
+                                        Console.WriteLine("file copied");
+                                    }
+                                    catch (IOException ioEx)
+                                    {
+                                        throw new IOException("File Copy", ioEx);
+                                    }
+                                }
+                                else
+                                {
+                                    File.Copy(Kernel.current_directory + sourcefile, Kernel.current_directory + destfile);
+                                }
+                            }
+                            else
+                            {
+                                Console.WriteLine("source file doesn't exist");
+                                Console.WriteLine(Kernel.current_directory + sourcefile);
+                            }
+                        }
+                        else
+                        {
+                            Console.WriteLine("Usage: cp -o sourceFile destinationFile");
+                        }
+                    }
+                    else
+                    {
+                        L.Text.Display("invalidargument");
+                    }
                 }
+
             }
 
             else if ((cmd.Equals("dir")) || (cmd.Equals("ls")))
@@ -332,7 +368,7 @@ namespace Alve_OS.Shell
                         //boucle
                         boucle:
                         x4 = x4 + 1;
-                        string DirectoryAlreadyExist = x3 + "(" + x4 +")";
+                        string DirectoryAlreadyExist = x3 + "(" + x4 + ")";
 
                         //if directory has already been recreated once or more
                         if ((DirectoryAlreadyExist.Contains("(")) && (DirectoryAlreadyExist.Contains(")")))
@@ -347,8 +383,8 @@ namespace Alve_OS.Shell
                             //set new directory name with the new number.
                             string newName = dir + "(" + num + ")";
 
-                            if(Directory.Exists(Kernel.current_directory + newName))
-                            {                                
+                            if (Directory.Exists(Kernel.current_directory + newName))
+                            {
                                 goto boucle;
                             }
 
@@ -369,7 +405,7 @@ namespace Alve_OS.Shell
                             L.Text.Display("mkdirfilealreadyexist", dir + "(1)");
                         }
                     }
-                }                
+                }
             }
 
             else if (cmd.StartsWith("rmdir "))
