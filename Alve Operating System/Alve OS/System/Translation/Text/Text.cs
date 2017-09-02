@@ -183,6 +183,21 @@ namespace Alve_OS.System.Translation
                         case "invalidargument":
                             Console.WriteLine("Cet argument est invalide.");
                             break;
+                        case "filecopied":
+                            Console.WriteLine("Fichier copié.");
+                            break;
+                        case "filealreadyexist":
+                            Console.WriteLine("Le fichier existe déjà.");
+                            break;
+                        case "docpoover":
+                            Console.WriteLine("Faites 'cp -o sourceFile destinationFile' pour remplacer le fichier.");
+                            break;
+                        case "sourcefiledoesntexist":
+                            Console.WriteLine("Le fichier source n'existe pas.");
+                            break;
+                        case "usagecp":
+                            Console.WriteLine("Utilisation: cp {args} fichierSource fichierDestination");
+                            break;
                     }
                     break;
 
@@ -334,6 +349,21 @@ namespace Alve_OS.System.Translation
                             break;
                         case "invalidargument":
                             Console.WriteLine("This argument is invalid.");
+                            break;
+                        case "filecopied":
+                            Console.WriteLine("Copied File.");
+                            break;
+                        case "filealreadyexist":
+                            Console.WriteLine("This file already exist.");
+                            break;
+                        case "docpoover":
+                            Console.WriteLine("Do 'cp -o sourceFile destinationFile' to overwrite the file.");
+                            break;
+                        case "sourcefiledoesntexist":
+                            Console.WriteLine("Source file doesn't not exist.");
+                            break;
+                        case "usagecp":
+                            Console.WriteLine("Usage: cp {args} sourceFile destinationFile");
                             break;
                     }
                     break;
