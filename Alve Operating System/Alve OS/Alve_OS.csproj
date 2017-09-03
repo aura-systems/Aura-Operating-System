@@ -18,10 +18,4 @@
     <Folder Include="Apps\System\" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Reference Include="GLNFS">
-      <HintPath>..\..\..\..\..\Desktop\GLNFS.dll</HintPath>
-    </Reference>
-  </ItemGroup>
-
 </Project>
