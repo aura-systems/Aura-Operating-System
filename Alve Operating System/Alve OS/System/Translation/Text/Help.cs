@@ -21,6 +21,7 @@ namespace Alve_OS.System.Translation
             {
                 case "fr_FR":
                     Console.WriteLine("Commandes disponible:");
+                    Console.WriteLine();
                     Console.WriteLine("- shutdown (Arrêt ACPI)");
                     Console.WriteLine("- reboot (Redémarrage CPU)");
                     Console.WriteLine("- clear (Efface la console)");
@@ -28,6 +29,7 @@ namespace Alve_OS.System.Translation
                     Console.WriteLine("- cd (Pour aller à un dossier)");
                     Console.WriteLine("- dir (Liste les fichiers et dossiers)");
                     Console.WriteLine("- ls (Liste les fichiers et dossiers)");
+                    Console.WriteLine("- cp (Pour copier un fichier à une autre destination)");
                     Console.WriteLine("- mkdir (Pour créer un dossier)");
                     Console.WriteLine("- rmdir (Pour supprimer un dossier)");
                     Console.WriteLine("- mkfil (Pour créer un fichier)");
@@ -36,16 +38,17 @@ namespace Alve_OS.System.Translation
                     Console.WriteLine("- vol (Liste les volumes FAT)");
                     Console.WriteLine("- echo (Affiche un echo)");
                     Console.WriteLine("- systeminfo (Affiche des informations systeme)");
-                    Console.WriteLine("- langset (Changer le langage système)");
                     Console.WriteLine("- ver (Pour afficher la version système)");
                     Console.WriteLine("- textcolor (Permet de changer la couleur de premier plan)");
                     Console.WriteLine("- backgroundcolor (Permet de changer la couleur de dernier plan)");
                     Console.WriteLine("- settings {args} (Permet d'accéder aux paramètres)");
                     Console.WriteLine("- logout (Permet de se déconnecter)");
+                    //todo: readkey to continue and clear
                     break;
 
                 case "en_US":
                     Console.WriteLine("Available commands:");
+                    Console.WriteLine();
                     Console.WriteLine("- shutdown (to do a ACPI Shutdown)");
                     Console.WriteLine("- reboot (to do a CPU Reboot)");
                     Console.WriteLine("- clear (to clear the console)");
@@ -53,6 +56,7 @@ namespace Alve_OS.System.Translation
                     Console.WriteLine("- cd (to navigate to a folder)");
                     Console.WriteLine("- dir (to list directories and files)");
                     Console.WriteLine("- ls (to list directories and files)");
+                    Console.WriteLine("- cp (to copy a file to an another destination)");
                     Console.WriteLine("- mkdir (to create a directory");
                     Console.WriteLine("- rmdir (to remove a directory)");
                     Console.WriteLine("- mkfil (to create a file)");
@@ -66,6 +70,7 @@ namespace Alve_OS.System.Translation
                     Console.WriteLine("- backgroundcolor (change background colour)");
                     Console.WriteLine("- settings {args} (Access to settings)");
                     Console.WriteLine("- logout (To disconnect)");
+                    //todo: readkey to continue and clear
                     break;
             }
         }
@@ -81,14 +86,14 @@ namespace Alve_OS.System.Translation
                     Console.WriteLine("Commandes disponible:");
                     Console.WriteLine("- adduser (Pour créer un compte)");
                     Console.WriteLine("- setcomputername (Nom de l'ordinateur)");
-                    Console.WriteLine("- setlang {args} (Change la langue du système)");
+                    Console.WriteLine("- setlang {lang} (Change la langue du système)");
                     break;
 
                 case "en_US":
                     Console.WriteLine("Available commands:");
                     Console.WriteLine("- adduser (To create an account)");
                     Console.WriteLine("- setcomputername (Computer name)");
-                    Console.WriteLine("- setlang {args} (Change system language)");
+                    Console.WriteLine("- setlang {lang} (Change system language)");
                     break;
             }
         }
