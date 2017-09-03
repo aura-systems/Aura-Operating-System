@@ -510,7 +510,7 @@ namespace Alve_OS.Shell
 
                 foreach (var vol in vols)
                 {
-                    Console.WriteLine("  " + vol.mName + "\tFAT32 \t" + vol.mSize + " MB\t" + vol.mParent);
+                    Console.WriteLine("  " + vol.mName + "\t   \tFAT32 \t" + vol.mSize + " MB\t" + vol.mParent);
                 }
             }
 
