@@ -198,6 +198,26 @@ namespace Alve_OS.System.Translation
                         case "usagecp":
                             Console.WriteLine("Utilisation: cp {args} fichierSource fichierDestination");
                             break;
+                        case "emptyarg":
+                            Console.WriteLine("Argument inconnu.");
+                            break;
+                        case "about":
+                            Console.ForegroundColor = ConsoleColor.White;
+                            Console.WriteLine("Alve [version " + Kernel.version + "-" + Kernel.revision + "]");
+                            Console.WriteLine("créé par Alexy DA CRUZ et Valentin CHARBONNIER.");
+                            Console.WriteLine();
+                            Console.ForegroundColor = ConsoleColor.Green;
+                            Console.WriteLine("Site Web: alve-os.github.io");
+                            Console.ForegroundColor = ConsoleColor.White;
+                            break;
+                        case "errorthisisafile":
+                            Console.WriteLine("Erreur: Ceci est un fichier.");
+                            break;
+                        case "volCommand":
+                            Console.WriteLine();
+                            Console.WriteLine("  Volume ###\tFormat\tSize");
+                            Console.WriteLine("  ----------\t------\t--------");
+                            break;
                     }
                     break;
 
@@ -364,6 +384,26 @@ namespace Alve_OS.System.Translation
                             break;
                         case "usagecp":
                             Console.WriteLine("Usage: cp {args} sourceFile destinationFile");
+                            break;
+                        case "emptyarg":
+                            Console.WriteLine("Unknow Argument.");
+                            break;
+                        case "about":
+                            Console.ForegroundColor = ConsoleColor.White;
+                            Console.WriteLine("Alve [version " + Kernel.version + "-" + Kernel.revision + "]");
+                            Console.WriteLine("Created by Alexy DA CRUZ and Valentin CHARBONNIER.");
+                            Console.WriteLine();
+                            Console.ForegroundColor = ConsoleColor.Green;
+                            Console.WriteLine("Website: alve-os.github.io");
+                            Console.ForegroundColor = ConsoleColor.White;
+                            break;
+                        case "errorthisisafile":
+                            Console.WriteLine("Error: This is a file.");
+                            break;
+                        case "volCommand":
+                            Console.WriteLine();
+                            Console.WriteLine("  Volume ###\tFormat\tSize");
+                            Console.WriteLine("  ----------\t------\t--------");
                             break;
                     }
                     break;
