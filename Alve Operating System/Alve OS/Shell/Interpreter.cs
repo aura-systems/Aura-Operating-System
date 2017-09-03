@@ -47,7 +47,7 @@ namespace Alve_OS.Shell
 
             #region Console
 
-            else if (cmd.Equals("clear"))
+            else if ((cmd.Equals("clear")) || (cmd.Equals("cls")))
             {
                 Console.Clear();
             }
@@ -168,7 +168,7 @@ namespace Alve_OS.Shell
 
             #region FileSystem
 
-            else if (cmd.Equals("cd .."))
+            else if ((cmd.Equals("cd ..")) || (cmd.Equals("bkroot")))
             {
                 Directory.SetCurrentDirectory(Kernel.current_directory);
                 var dir = Kernel.FS.GetDirectory(Kernel.current_directory);
@@ -184,15 +184,29 @@ namespace Alve_OS.Shell
             else if (cmd.StartsWith("cd "))
             {
                 string dir = cmd.Remove(0, 3);
-                if (Directory.Exists(Kernel.current_directory + dir))
+                try
                 {
-                    Directory.SetCurrentDirectory(Kernel.current_directory);
-                    Kernel.current_directory = Kernel.current_directory + dir + @"\";
+                    if (Directory.Exists(Kernel.current_directory + dir))
+                    {
+                        Directory.SetCurrentDirectory(Kernel.current_directory);
+                        Kernel.current_directory = Kernel.current_directory + dir + @"\";
+                    }
+                    else if (File.Exists(Kernel.current_directory + dir))
+                    {
+                        L.Text.Display("errorthisisafile");
+                    }
+                    else
+                    {
+                        L.Text.Display("directorydoesntexist");
+                    }
                 }
-                else
+                catch
                 {
-                    L.Text.Display("directorydoesntexist");
                 }
+            }
+            else if (cmd.Equals("cp"))
+            {
+                L.Text.Display("usagecp");
             }
 
             else if (cmd.StartsWith("cp "))
@@ -217,28 +231,37 @@ namespace Alve_OS.Shell
                                 try
                                 {
                                     File.Copy(Kernel.current_directory + sourcefile, Kernel.current_directory + destfile);
-                                    Console.WriteLine("file copied");
+
+                                    Console.ForegroundColor = ConsoleColor.Green;
+                                    L.Text.Display("filecopied");
+                                    Console.ForegroundColor = ConsoleColor.White;
                                 }
-                                catch(IOException ioEx)
+                                catch (IOException ioEx)
                                 {
                                     throw new IOException("File Copy", ioEx);
                                 }
                             }
                             else
                             {
-                                Console.WriteLine("destination file already");
-                                Console.WriteLine("do an cp -o to overwriting");
+                                Console.ForegroundColor = ConsoleColor.Red;
+                                L.Text.Display("filealreadyexist");
+                                Console.ForegroundColor = ConsoleColor.Green;
+                                L.Text.Display("docpoover");
+                                Console.ForegroundColor = ConsoleColor.White;
                             }
                         }
                         else
                         {
-                            Console.WriteLine("source file doesn't exist");
-                            Console.WriteLine(Kernel.current_directory + sourcefile);
+                            Console.ForegroundColor = ConsoleColor.Red;
+                            L.Text.Display("sourcefiledoesntexist");
+                            Console.ForegroundColor = ConsoleColor.White;
                         }
                     }
                     else
                     {
-                        Console.WriteLine("Usage: cp {args} sourceFile destinationFile");
+                        Console.ForegroundColor = ConsoleColor.Green;
+                        L.Text.Display("usagecp");
+                        Console.ForegroundColor = ConsoleColor.White;
                     }
                 }
                 else
@@ -259,7 +282,10 @@ namespace Alve_OS.Shell
                                     try
                                     {
                                         File.Copy(Kernel.current_directory + sourcefile, Kernel.current_directory + destfile, true);
-                                        Console.WriteLine("file copied");
+
+                                        Console.ForegroundColor = ConsoleColor.Green;
+                                        L.Text.Display("filecopied");
+                                        Console.ForegroundColor = ConsoleColor.White;
                                     }
                                     catch (IOException ioEx)
                                     {
@@ -273,13 +299,16 @@ namespace Alve_OS.Shell
                             }
                             else
                             {
-                                Console.WriteLine("source file doesn't exist");
-                                Console.WriteLine(Kernel.current_directory + sourcefile);
+                                Console.ForegroundColor = ConsoleColor.Red;
+                                L.Text.Display("sourcefiledoesntexist");
+                                Console.ForegroundColor = ConsoleColor.White;
                             }
                         }
                         else
                         {
-                            Console.WriteLine("Usage: cp -o sourceFile destinationFile");
+                            Console.ForegroundColor = ConsoleColor.Green;
+                            L.Text.Display("usagecp");
+                            Console.ForegroundColor = ConsoleColor.White;
                         }
                     }
                     else
@@ -336,6 +365,7 @@ namespace Alve_OS.Shell
                         L.Text.Display("invalidargument");
                     }
                 }
+                
                 Console.WriteLine();
             }
 
@@ -458,9 +488,9 @@ namespace Alve_OS.Shell
                 }
             }
 
-            else if (cmd.StartsWith("prfil "))
+            else if (cmd.StartsWith("edit "))
             {
-                string file = cmd.Remove(0, 6);
+                string file = cmd.Remove(0, 5);
                 if (File.Exists(Kernel.current_directory + file))
                 {
                     Apps.User.Editor application = new Apps.User.Editor();
@@ -476,10 +506,11 @@ namespace Alve_OS.Shell
             {
                 var vols = Kernel.FS.GetVolumes();
 
-                L.Text.Display("NameSizeParent");
+                L.Text.Display("volCommand");
+
                 foreach (var vol in vols)
                 {
-                    Console.WriteLine(vol.mName + "\t" + vol.mSize + "MB\t" + vol.mParent);
+                    Console.WriteLine("  " + vol.mName + "\tFAT32 \t" + vol.mSize + " MB\t" + vol.mParent);
                 }
             }
 
@@ -487,23 +518,24 @@ namespace Alve_OS.Shell
 
             #region Settings
 
-            else if (cmd.Equals("setup"))
-            {
-                L.Text.Display("setupcmd");
-                string setup = Console.ReadLine();
-                if (setup == "o")
-                {
-                    SetupInit.Init();
-                }
-            }
+            //else if (cmd.Equals("setup"))
+            //{
+            //    L.Text.Display("setupcmd");
+            //    string setup = Console.ReadLine();
+            //    if (setup == "o")
+            //    {
+            //        SetupInit.Init();
+            //    }
+            //}
 
             else if (cmd.Equals("logout"))
             {
                 Kernel.Logged = false;
                 Kernel.userLevelLogged = "";
                 Kernel.userLogged = "";
+                Directory.SetCurrentDirectory(Kernel.current_directory);
+                Kernel.current_directory = @"0:\";
                 Console.Clear();
-                WelcomeMessage.Display();
             }
 
             else if (cmd.Equals("settings"))
@@ -513,30 +545,33 @@ namespace Alve_OS.Shell
 
             else if (cmd.StartsWith("settings "))
             {
-                string argsettings = cmd.Remove(0, 9);
-                if (argsettings.Equals("adduser"))
+                Char separator = ' ';
+                string[] cmdargs = cmd.Split(separator);
+
+
+                if (cmdargs[1].Equals("adduser"))
                 {
                     //method user
-                    string argsuser = argsettings.Remove(0, 7);
+                    string argsuser = cmdargs[2];
                     Users users = new Users();
 
                     users.Create(argsuser);
 
                 }
-                else if (argsettings.Equals("setcomputername"))
+                else if (cmdargs[1].Equals("setcomputername"))
                 {
                     //method computername
-                    string argspcname = argsettings.Remove(0, 15);
                     Info.AskComputerName();
 
                 }
-                else if (argsettings.Equals("setlang"))
+                else if (cmdargs[1].Equals("setlang"))
                 {
                     L.Text.Display("availablelanguage");
                 }
-                else if (argsettings.StartsWith("setlang "))
+                else if (cmdargs[1].StartsWith("setlang "))
                 {
-                    string lang = argsettings.Remove(0, 8);
+                    string lang = cmdargs[2];
+
                     if ((lang.Equals("en_US")) || lang.Equals("en-US"))
                     {
                         Kernel.langSelected = "en_US";
@@ -591,12 +626,16 @@ namespace Alve_OS.Shell
                 L.Text.Display("OSRevision");
                 L.Text.Display("time");
                 L.Text.Display("AmountRAM");
-                L.Text.Display("MAC");
+
+                if (Kernel.userLogged == "root")
+                {
+                    L.Text.Display("MAC");
+                }
             }
 
             else if (cmd.Equals("ver"))
             {
-                Console.WriteLine("Alve [version " + Kernel.version + "-" + Kernel.revision + "]");
+                L.Text.Display("about");
             }
 
             #endregion
