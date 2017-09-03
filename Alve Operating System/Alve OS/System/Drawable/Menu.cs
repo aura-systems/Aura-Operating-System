@@ -58,7 +58,10 @@ namespace Alve_OS.System.Drawable
             Console.SetCursorPosition(x, y);
             Console.SetCursorPosition(8, 14);
             Console.Write("║ Password: ");
+            Console.BackgroundColor = ConsoleColor.Black;
+            Console.ForegroundColor = ConsoleColor.Black;
             string password = Console.ReadLine();
+            Console.BackgroundColor = ConsoleColor.Blue;
             Console.SetCursorPosition(x, y);
 
             string text = name + "//////" + password;
@@ -152,11 +155,14 @@ namespace Alve_OS.System.Drawable
             Console.SetCursorPosition(x, y);
             Console.SetCursorPosition(8, 14);
             Console.Write("║ Password: ");
+            Console.BackgroundColor = ConsoleColor.Black;
+            Console.ForegroundColor = ConsoleColor.Black;
             string password = Console.ReadLine();
+            Console.BackgroundColor = ConsoleColor.Blue;
             Console.SetCursorPosition(x, y);
 
             string text = name + "//////" + password;
-            Console.BackgroundColor = ConsoleColor.Black;
+            Console.BackgroundColor = ConsoleColor.Blue;
             Console.Clear();
             return text;
         }
