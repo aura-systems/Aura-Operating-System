@@ -20,7 +20,7 @@ namespace Alve_OS.System.Translation
             switch (Kernel.langSelected)
             {
                 case "fr_FR":
-                    Console.WriteLine("Commandes disponible:");
+                    Console.WriteLine("Commandes disponibles (1/2):");
                     Console.WriteLine();
                     Console.WriteLine("- shutdown (Arrêt ACPI)");
                     Console.WriteLine("- reboot (Redémarrage CPU)");
@@ -43,11 +43,20 @@ namespace Alve_OS.System.Translation
                     Console.WriteLine("- backgroundcolor (Permet de changer la couleur de dernier plan)");
                     Console.WriteLine("- settings {args} (Permet d'accéder aux paramètres)");
                     Console.WriteLine("- logout (Permet de se déconnecter)");
-                    //todo: readkey to continue and clear
+
+                    Console.ReadKey(); //page 2
+
+                    Console.WriteLine("Commandes disponibles (2/2):");
+                    Console.WriteLine();
+                    Console.WriteLine("- time (Récupère le temps et la date du jour)");
+                    Console.WriteLine("- ipconfig (Affiche les informations réseau)");
+
+                    Console.ReadKey();
+
                     break;
 
                 case "en_US":
-                    Console.WriteLine("Available commands:");
+                    Console.WriteLine("Available commands (1/2):");
                     Console.WriteLine();
                     Console.WriteLine("- shutdown (to do a ACPI Shutdown)");
                     Console.WriteLine("- reboot (to do a CPU Reboot)");
@@ -70,7 +79,16 @@ namespace Alve_OS.System.Translation
                     Console.WriteLine("- backgroundcolor (change background colour)");
                     Console.WriteLine("- settings {args} (Access to settings)");
                     Console.WriteLine("- logout (To disconnect)");
-                    //todo: readkey to continue and clear
+                    
+                    Console.ReadKey(); //page 2
+
+                    Console.WriteLine("Available commands (2/2):");
+                    Console.WriteLine();
+                    Console.WriteLine("- time (to get time and date)");
+                    Console.WriteLine("- ipconfig (to get network informations)");
+
+                    Console.ReadKey();
+
                     break;
             }
         }
