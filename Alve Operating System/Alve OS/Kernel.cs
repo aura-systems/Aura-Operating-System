@@ -51,11 +51,11 @@ namespace Alve_OS
             Console.ForegroundColor = ConsoleColor.White;
             Console.Write(" ");
             Console.ForegroundColor = ConsoleColor.DarkMagenta;
-            Console.Write("Cosmos Booted Successfully!\n");
+            Console.Write("Alve Kernel Booted Successfully!\n");
             Console.ForegroundColor = ConsoleColor.White;
 
             Console.ForegroundColor = ConsoleColor.DarkMagenta;
-            Console.Write("Booting Alve Kernel...\n");
+            Console.Write("Booting Alve...\n");
             Console.ForegroundColor = ConsoleColor.White;
 
             #region FileSystem Init
