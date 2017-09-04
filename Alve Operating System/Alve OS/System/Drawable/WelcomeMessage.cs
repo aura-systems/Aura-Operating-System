@@ -10,6 +10,7 @@ using System.IO;
 using Alve_OS.System.Security;
 using Alve_OS.System.Computer;
 using Alve_OS.System.Translation;
+using Alve_OS.System.Users;
 
 namespace Alve_OS.System
 {
@@ -29,26 +30,25 @@ namespace Alve_OS.System
                     Console.WriteLine(" * Documentation: alve-os.github.io");
                     Console.ForegroundColor = ConsoleColor.White;
 
-                    if ((File.ReadAllText(@"0:\System\Users\root.usr") == MD5.hash("root") + "|admin") || (Info.getComputerName() == "Alve-PC"))
+                    //redo that bullshit code
+                    if ((Kernel.RootContent == MD5.hash("root") + "|admin") || (Kernel.ComputerName == "Alve-PC"))
                     {
                         Console.WriteLine();
 
                         Console.ForegroundColor = ConsoleColor.Green;
                         Text.Display("tips");
 
-                        if (File.Exists(@"0:\System\Users\root.usr"))
+                        if (Kernel.RootContent == MD5.hash("root") + "|admin")
                         {
-                            string RootPassword = File.ReadAllText(@"0:\System\Users\root.usr");
-                            if (RootPassword == MD5.hash("root") + "|admin")
-                            {
-                                Console.WriteLine(" ");
-                                Console.ForegroundColor = ConsoleColor.Blue;
-                                Console.WriteLine("   - Le mot de passe par défaut pour le compte root est 'root'");
-                                Console.ForegroundColor = ConsoleColor.White;
-                            }
+                            Console.WriteLine(" ");
+                            Console.ForegroundColor = ConsoleColor.Blue;
+                            Console.WriteLine("   - Le mot de passe par défaut pour le compte root est 'root'");
+                            Console.ForegroundColor = ConsoleColor.White;
                         }
 
-                        if (Info.getComputerName() == "Alve-PC")
+
+
+                        if (Kernel.ComputerName == "Alve-PC")
                         {
                             Console.WriteLine(" ");
                             Console.ForegroundColor = ConsoleColor.Blue;
@@ -65,26 +65,27 @@ namespace Alve_OS.System
                     Console.WriteLine(" * Documentation: alve-os.github.io");
                     Console.ForegroundColor = ConsoleColor.White;
 
-                    if ((File.ReadAllText(@"0:\System\Users\root.usr") == MD5.hash("root") + "|admin") || (Info.getComputerName() == "Alve-PC"))
+                    //redo that bullshit code
+                    if ((Kernel.RootContent == MD5.hash("root") + "|admin") || (Kernel.ComputerName == "Alve-PC"))
                     {
                         Console.WriteLine();
 
                         Console.ForegroundColor = ConsoleColor.Green;
                         Text.Display("tips");
 
-                        if (File.Exists(@"0:\System\Users\root.usr"))
+                        if (UserLevel.TypeUser() == UserLevel.Administrator())
                         {
-                            string RootPassword = File.ReadAllText(@"0:\System\Users\root.usr");
-                            if (RootPassword == MD5.hash("root") + "|admin")
+                            if (Kernel.RootContent == MD5.hash("root") + "|admin")
                             {
                                 Console.WriteLine(" ");
                                 Console.ForegroundColor = ConsoleColor.Blue;
                                 Console.WriteLine("   * Default password for root is 'root'");
                                 Console.ForegroundColor = ConsoleColor.White;
                             }
+
                         }
 
-                        if (Info.getComputerName() == "Alve-PC")
+                        if (Kernel.ComputerName == "Alve-PC")
                         {
                             Console.WriteLine(" ");
                             Console.ForegroundColor = ConsoleColor.Blue;

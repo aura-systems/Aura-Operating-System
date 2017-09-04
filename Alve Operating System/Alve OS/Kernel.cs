@@ -37,6 +37,7 @@ namespace Alve_OS
         public static bool Logged = false;
         public static string ComputerName = "Alve-PC";
         public static int color;
+        public static string RootContent;
 
         #endregion
 
@@ -93,6 +94,8 @@ namespace Alve_OS
             Lang.Keyboard.Init();
 
             #endregion
+
+            RootContent = File.ReadAllText(@"0:\System\Users\root.usr");
 
             Info.getComputerName();
 
