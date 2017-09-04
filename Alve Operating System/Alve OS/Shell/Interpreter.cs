@@ -365,7 +365,7 @@ namespace Alve_OS.Shell
                         L.Text.Display("invalidargument");
                     }
                 }
-                
+
                 Console.WriteLine();
             }
 
@@ -551,6 +551,9 @@ namespace Alve_OS.Shell
 
                 if (cmdargs[1].Equals("adduser"))
                 {
+                    //todo remake this method
+                    //with users.Create();
+
                     //method user
                     string argsuser = cmdargs[2];
                     Users users = new Users();
@@ -566,13 +569,12 @@ namespace Alve_OS.Shell
                 }
                 else if (cmdargs[1].Equals("setlang"))
                 {
-                    L.Text.Display("availablelanguage");
-                }
-                else if (cmdargs[1].StartsWith("setlang "))
-                {
-                    string lang = cmdargs[2];
+                    if (cmdargs.Length == 2)
+                    {
+                        L.Text.Display("availablelanguage");
+                    }
 
-                    if ((lang.Equals("en_US")) || lang.Equals("en-US"))
+                    if ((cmdargs[2].Equals("en_US")) || cmdargs[2].Equals("en-US"))
                     {
                         Kernel.langSelected = "en_US";
                         L.Keyboard.Init();
@@ -586,7 +588,7 @@ namespace Alve_OS.Shell
                             File.WriteAllText(@"0:\System\lang.set", Kernel.langSelected);
                         }
                     }
-                    else if ((lang.Equals("fr_FR")) || lang.Equals("fr-FR"))
+                    else if ((cmdargs[2].Equals("fr_FR")) || cmdargs[2].Equals("fr-FR"))
                     {
                         Kernel.langSelected = "fr_FR";
                         L.Keyboard.Init();
