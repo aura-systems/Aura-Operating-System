@@ -46,8 +46,6 @@ namespace Alve_OS.System
                             Console.ForegroundColor = ConsoleColor.White;
                         }
 
-
-
                         if (Kernel.ComputerName == "Alve-PC")
                         {
                             Console.WriteLine(" ");
@@ -73,16 +71,12 @@ namespace Alve_OS.System
                         Console.ForegroundColor = ConsoleColor.Green;
                         Text.Display("tips");
 
-                        if (UserLevel.TypeUser() == UserLevel.Administrator())
+                        if (Kernel.RootContent == MD5.hash("root") + "|admin")
                         {
-                            if (Kernel.RootContent == MD5.hash("root") + "|admin")
-                            {
-                                Console.WriteLine(" ");
-                                Console.ForegroundColor = ConsoleColor.Blue;
-                                Console.WriteLine("   * Default password for root is 'root'");
-                                Console.ForegroundColor = ConsoleColor.White;
-                            }
-
+                            Console.WriteLine(" ");
+                            Console.ForegroundColor = ConsoleColor.Blue;
+                            Console.WriteLine("   * Default password for root is 'root'");
+                            Console.ForegroundColor = ConsoleColor.White;
                         }
 
                         if (Kernel.ComputerName == "Alve-PC")
