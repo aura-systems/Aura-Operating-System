@@ -146,7 +146,7 @@ Logout (to disconnect and change of user)
 logout
 ```
 
-Settings (to access to the settings of Alve)
+Settings (to access to the settings of Aura)
 ```
 settings {args}
 ```
