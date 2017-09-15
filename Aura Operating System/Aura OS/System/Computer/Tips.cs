@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
-namespace Alve_OS.System.Computer
+namespace Aura_OS.System.Computer
 {
     class Tips
     {

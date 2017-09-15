@@ -1,14 +1,14 @@
 ﻿/*
-* PROJECT:          Alve Operating System Development
+* PROJECT:          Aura Operating System Development
 * CONTENT:          Console Color
 * PROGRAMMERS:      Alexy DA CRUZ <dacruzalexy@gmail.com>
 */
 
-using Alve_OS.System.Translation;
+using Aura_OS.System.Translation;
 using System;
 using System.IO;
 
-namespace Alve_OS.System.Computer
+namespace Aura_OS.System.Computer
 {
     class Color
     {

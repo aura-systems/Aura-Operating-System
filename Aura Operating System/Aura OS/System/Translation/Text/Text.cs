@@ -1,14 +1,14 @@
 ﻿/*
-* PROJECT:          Alve Operating System Development
+* PROJECT:          Aura Operating System Development
 * CONTENT:          Translation system
 * PROGRAMMERS:      Alexy DA CRUZ <dacruzalexy@gmail.com>
 *                   Valentin Charbonnier <valentinbreiz@gmail.com>
 */
 
-using Alve_OS.System.Computer;
+using Aura_OS.System.Computer;
 using System;
 
-namespace Alve_OS.System.Translation
+namespace Aura_OS.System.Translation
 {
     class Text
     {
@@ -58,7 +58,7 @@ namespace Alve_OS.System.Translation
                             Console.WriteLine("Nom du PC:                     " + Kernel.ComputerName);
                             break;
                         case "OSName":
-                            Console.WriteLine("Nom du système d'exploitation: Alve");
+                            Console.WriteLine("Nom du système d'exploitation: Aura");
                             break;
                         case "OSVersion":
                             Console.WriteLine("Version du système:            " + Kernel.version);
@@ -94,7 +94,7 @@ namespace Alve_OS.System.Translation
                             Console.WriteLine("Choisissez votre langue:");
                             break;
                         case "chooseyourusername":
-                            Console.WriteLine("Choisissez votre nom d'utilisateur pour votre compte Alve:");
+                            Console.WriteLine("Choisissez votre nom d'utilisateur pour votre compte Aura:");
                             break;
                         case "alreadyuser":
                             Console.WriteLine("Cet utilisateur existe déjà !");
@@ -203,7 +203,7 @@ namespace Alve_OS.System.Translation
                             break;
                         case "about":
                             Console.ForegroundColor = ConsoleColor.White;
-                            Console.WriteLine("Alve [version " + Kernel.version + "-" + Kernel.revision + "]");
+                            Console.WriteLine("Aura [version " + Kernel.version + "-" + Kernel.revision + "]");
                             Console.WriteLine("créé par Alexy DA CRUZ et Valentin CHARBONNIER.");
                             Console.WriteLine();
                             Console.ForegroundColor = ConsoleColor.Green;
@@ -248,7 +248,7 @@ namespace Alve_OS.System.Translation
                             Console.WriteLine("Computer name:             " + Kernel.ComputerName);
                             break;
                         case "OSName":
-                            Console.WriteLine("Operating system name:     Alve");
+                            Console.WriteLine("Operating system name:     Aura");
                             break;
                         case "OSVersion":
                             Console.WriteLine("Operating system version:  " + Kernel.version);
@@ -284,7 +284,7 @@ namespace Alve_OS.System.Translation
                             Console.WriteLine("Choose your language:");
                             break;
                         case "chooseyourusername":
-                            Console.WriteLine("Choose a user name for your Alve Account:");
+                            Console.WriteLine("Choose a user name for your Aura Account:");
                             break;
                         case "alreadyuser":
                             Console.WriteLine("This user exist already!");
@@ -390,7 +390,7 @@ namespace Alve_OS.System.Translation
                             break;
                         case "about":
                             Console.ForegroundColor = ConsoleColor.White;
-                            Console.WriteLine("Alve [version " + Kernel.version + "-" + Kernel.revision + "]");
+                            Console.WriteLine("Aura [version " + Kernel.version + "-" + Kernel.revision + "]");
                             Console.WriteLine("Created by Alexy DA CRUZ and Valentin CHARBONNIER.");
                             Console.WriteLine();
                             Console.ForegroundColor = ConsoleColor.Green;
@@ -419,7 +419,7 @@ namespace Alve_OS.System.Translation
                     switch (ToTranslate)
                     {
                         case "setup":
-                            string text = Drawable.Menu.DispLoginForm("Création d'un compte Alve.");
+                            string text = Drawable.Menu.DispLoginForm("Création d'un compte Aura.");
                             return text;
                         case "alreadyuser":
                             Drawable.Menu.DispErrorDialog("Cet utilisateur existe déjà !");
@@ -447,7 +447,7 @@ namespace Alve_OS.System.Translation
                     switch (ToTranslate)
                     {
                         case "setup":
-                            string text = Drawable.Menu.DispLoginForm("Alve account creation.");
+                            string text = Drawable.Menu.DispLoginForm("Aura account creation.");
                             return text;
                         case "alreadyuser":
                             Drawable.Menu.DispErrorDialog("This user already exists!");

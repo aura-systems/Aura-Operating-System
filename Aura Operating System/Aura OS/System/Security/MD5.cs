@@ -23,14 +23,14 @@ THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
 /*
-* PROJECT:          Alve Operating System Development
+* PROJECT:          Aura Operating System Development
 * CONTENT:          Keyboard initialization
 * PROGRAMMERS:      Alexy DA CRUZ <dacruzalexy@gmail.com>
 */
 
 using System;
 
-namespace Alve_OS.System.Security
+namespace Aura_OS.System.Security
 {
     public static class MD5
     {

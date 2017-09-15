@@ -1,8 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿/*
+* PROJECT:          Aura Operating System Development
+* CONTENT:          Menus
+* PROGRAMMERS:      Valentin Charbonnier <valentinbreiz@gmail.com>   
+*/
 
-namespace Alve_OS.System.Drawable
+using System;
+
+namespace Aura_OS.System.Drawable
 {
     public class Menu
     {

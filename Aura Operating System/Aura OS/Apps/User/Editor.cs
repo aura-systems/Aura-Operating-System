@@ -1,5 +1,5 @@
 ﻿/*
-* PROJECT:          Alve Operating System Development
+* PROJECT:          Aura Operating System Development
 * CONTENT:          Liquid Text Editor
 * PROGRAMMERS:      Valentin Charbonnier <valentinbreiz@gmail.com>
 *                   TheCool1Kevin        <kevindai02@outlook.com>
@@ -8,9 +8,9 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using Alve_OS.System.Translation;
+using Aura_OS.System.Translation;
 
-namespace Alve_OS.Apps.User
+namespace Aura_OS.Apps.User
 {
     class Editor
     {

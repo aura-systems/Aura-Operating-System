@@ -1,5 +1,5 @@
 ﻿/*
-* PROJECT:          Alve Operating System Development
+* PROJECT:          Aura Operating System Development
 * CONTENT:          Welcome Message
 * PROGRAMMERS:      Alexy DA CRUZ <dacruzalexy@gmail.com>
 *                   Valentin Charbonnier <valentinbreiz@gmail.com>
@@ -7,12 +7,12 @@
 
 using System;
 using System.IO;
-using Alve_OS.System.Security;
-using Alve_OS.System.Computer;
-using Alve_OS.System.Translation;
-using Alve_OS.System.Users;
+using Aura_OS.System.Security;
+using Aura_OS.System.Computer;
+using Aura_OS.System.Translation;
+using Aura_OS.System.Users;
 
-namespace Alve_OS.System
+namespace Aura_OS.System
 {
     class WelcomeMessage
     {
@@ -31,7 +31,7 @@ namespace Alve_OS.System
                     Console.ForegroundColor = ConsoleColor.White;
 
                     //redo that bullshit code
-                    if ((Kernel.RootContent == MD5.hash("root") + "|admin") || (Kernel.ComputerName == "Alve-PC"))
+                    if ((Kernel.RootContent == MD5.hash("root") + "|admin") || (Kernel.ComputerName == "Aura-PC"))
                     {
                         Console.WriteLine();
 
@@ -46,11 +46,11 @@ namespace Alve_OS.System
                             Console.ForegroundColor = ConsoleColor.White;
                         }
 
-                        if (Kernel.ComputerName == "Alve-PC")
+                        if (Kernel.ComputerName == "Aura-PC")
                         {
                             Console.WriteLine(" ");
                             Console.ForegroundColor = ConsoleColor.Blue;
-                            Console.WriteLine("   - Le nom de l'ordinateur est 'Alve-PC', pensez à le changer.");
+                            Console.WriteLine("   - Le nom de l'ordinateur est 'Aura-PC', pensez à le changer.");
                             Console.ForegroundColor = ConsoleColor.White;
                         }
                     }
@@ -64,7 +64,7 @@ namespace Alve_OS.System
                     Console.ForegroundColor = ConsoleColor.White;
 
                     //redo that bullshit code
-                    if ((Kernel.RootContent == MD5.hash("root") + "|admin") || (Kernel.ComputerName == "Alve-PC"))
+                    if ((Kernel.RootContent == MD5.hash("root") + "|admin") || (Kernel.ComputerName == "Aura-PC"))
                     {
                         Console.WriteLine();
 
@@ -79,11 +79,11 @@ namespace Alve_OS.System
                             Console.ForegroundColor = ConsoleColor.White;
                         }
 
-                        if (Kernel.ComputerName == "Alve-PC")
+                        if (Kernel.ComputerName == "Aura-PC")
                         {
                             Console.WriteLine(" ");
                             Console.ForegroundColor = ConsoleColor.Blue;
-                            Console.WriteLine("   - Computer name is 'Alve-PC', think to change it.");
+                            Console.WriteLine("   - Computer name is 'Aura-PC', think to change it.");
                             Console.ForegroundColor = ConsoleColor.White;
                         }
                     }

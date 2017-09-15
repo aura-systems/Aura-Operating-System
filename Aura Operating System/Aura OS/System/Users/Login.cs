@@ -1,12 +1,12 @@
 ﻿/*
-* PROJECT:          Alve Operating System Development
+* PROJECT:          Aura Operating System Development
 * CONTENT:          Login Class
 * PROGRAMMERS:      Alexy DA CRUZ <dacruzalexy@gmail.com>
 */
 
-using usr = Alve_OS.System.Users;
+using usr = Aura_OS.System.Users;
 
-namespace Alve_OS.System
+namespace Aura_OS.System
 {
     class Login
     {

@@ -1,5 +1,5 @@
 ﻿/*
-* PROJECT:          Alve Operating System Development
+* PROJECT:          Aura Operating System Development
 * CONTENT:          Keyboard initialization
 * PROGRAMMERS:      Alexy DA CRUZ <dacruzalexy@gmail.com>
 */
@@ -7,7 +7,7 @@
 using System;
 using Sys = Cosmos.System;
 
-namespace Alve_OS.System.Translation
+namespace Aura_OS.System.Translation
 {
     class Keyboard
     {

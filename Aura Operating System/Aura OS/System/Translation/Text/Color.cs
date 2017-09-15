@@ -1,12 +1,12 @@
 ﻿/*
-* PROJECT:          Alve Operating System Development
+* PROJECT:          Aura Operating System Development
 * CONTENT:          Help colours
 * PROGRAMMERS:      Valentin Charbonnier <valentinbreiz@gmail.com>
 */
 
 using System;
 
-namespace Alve_OS.System.Translation
+namespace Aura_OS.System.Translation
 {
     class Color
     {

@@ -1,18 +1,18 @@
 ﻿/*
-* PROJECT:          Alve Operating System Development
+* PROJECT:          Aura Operating System Development
 * CONTENT:          OS Reinitialization
 * PROGRAMMERS:      Alexy DA CRUZ <dacruzalexy@gmail.com>
 */
 
 using System;
 
-namespace Alve_OS.System
+namespace Aura_OS.System
 {
     class SetupInit
     {
 
         /// <summary>
-        /// Reinstallation of Alve
+        /// Reinstallation of Aura
         /// </summary>
         public static void Init()
         {

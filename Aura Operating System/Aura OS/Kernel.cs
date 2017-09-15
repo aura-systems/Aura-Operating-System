@@ -1,5 +1,5 @@
 ﻿/*
-* PROJECT:          Alve Operating System Development
+* PROJECT:          Aura Operating System Development
 * CONTENT:          Kernel
 * PROGRAMMERS:      Valentin Charbonnier <valentinbreiz@gmail.com>
 *                   Alexy DA CRUZ <dacruzalexy@gmail.com>
@@ -10,15 +10,15 @@
 using System;
 using Cosmos.System.FileSystem;
 using Sys = Cosmos.System;
-using Lang = Alve_OS.System.Translation;
-using Alve_OS.System;
+using Lang = Aura_OS.System.Translation;
+using Aura_OS.System;
 using System.IO;
-using Alve_OS.System.Users;
-using Alve_OS.System.Computer;
+using Aura_OS.System.Users;
+using Aura_OS.System.Computer;
 
 #endregion
 
-namespace Alve_OS
+namespace Aura_OS
 {
     public class Kernel: Sys.Kernel
     {
@@ -35,7 +35,7 @@ namespace Alve_OS
         public static string userLogged;
         public static string userLevelLogged;
         public static bool Logged = false;
-        public static string ComputerName = "Alve-PC";
+        public static string ComputerName = "Aura-PC";
         public static int color;
         public static string RootContent;
 
@@ -52,11 +52,11 @@ namespace Alve_OS
             Console.ForegroundColor = ConsoleColor.White;
             Console.Write(" ");
             Console.ForegroundColor = ConsoleColor.DarkMagenta;
-            Console.Write("Alve Kernel Booted Successfully!\n");
+            Console.Write("Aura Kernel Booted Successfully!\n");
             Console.ForegroundColor = ConsoleColor.White;
 
             Console.ForegroundColor = ConsoleColor.DarkMagenta;
-            Console.Write("Booting Alve...\n");
+            Console.Write("Booting Aura...\n");
             Console.ForegroundColor = ConsoleColor.White;
 
             #region FileSystem Init

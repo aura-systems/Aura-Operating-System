@@ -1,18 +1,18 @@
 ﻿/*
-* PROJECT:          Alve Operating System Development
+* PROJECT:          Aura Operating System Development
 * CONTENT:          Logo
 * PROGRAMMERS:      Valentin Charbonnier <valentinbreiz@gmail.com>
 */
 
 using System;
 
-namespace Alve_OS.System
+namespace Aura_OS.System
 {
     class Logo
     {
 
         /// <summary>
-        /// Display Logo of Alve
+        /// Display Logo of Aura
         /// </summary>
         public static void Print()
         {
@@ -21,24 +21,24 @@ namespace Alve_OS.System
                 case "fr_FR":
                     Console.ForegroundColor = ConsoleColor.White;
                     Console.WriteLine($@"
-  █████╗ ██╗    ██╗   ██╗███████╗
- ██╔══██╗██║    ██║   ██║██╔════╝
- ███████║██║    ██║   ██║█████╗   créé par Valentin Charbonnier
- ██╔══██║██║    ╚██╗ ██╔╝██╔══╝         et Alexy DA CRUZ
- ██║  ██║███████╗╚████╔╝ ███████╗
- ╚═╝  ╚═╝╚══════╝ ╚═══╝  ╚══════╝ v{ Kernel.version }
+  █████╗ ██╗   ██╗██████╗  █████╗ 
+ ██╔══██╗██║   ██║██╔══██╗██╔══██╗
+ ███████║██║   ██║██████╔╝███████║ créé par Valentin Charbonnier
+ ██╔══██║██║   ██║██╔══██╗██╔══██║       et Alexy DA CRUZ
+ ██║  ██║╚██████╔╝██║  ██║██║  ██║
+ ╚═╝  ╚═╝ ╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═╝ v{ Kernel.version }
 ");
                     break;
 
                 case "en_US":
                     Console.ForegroundColor = ConsoleColor.White;
                     Console.WriteLine($@"
-  █████╗ ██╗    ██╗   ██╗███████╗
- ██╔══██╗██║    ██║   ██║██╔════╝
- ███████║██║    ██║   ██║█████╗   created by Valentin Charbonnier
- ██╔══██║██║    ╚██╗ ██╔╝██╔══╝          and Alexy DA CRUZ
- ██║  ██║███████╗╚████╔╝ ███████╗
- ╚═╝  ╚═╝╚══════╝ ╚═══╝  ╚══════╝ v{ Kernel.version }
+  █████╗ ██╗   ██╗██████╗  █████╗ 
+ ██╔══██╗██║   ██║██╔══██╗██╔══██╗
+ ███████║██║   ██║██████╔╝███████║ created by Valentin Charbonnier
+ ██╔══██║██║   ██║██╔══██╗██╔══██║        and Alexy DA CRUZ
+ ██║  ██║╚██████╔╝██║  ██║██║  ██║
+ ╚═╝  ╚═╝ ╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═╝ v{ Kernel.version }
 ");
                     break;
             }

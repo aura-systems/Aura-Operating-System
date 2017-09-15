@@ -1,10 +1,10 @@
 ﻿/*
-* PROJECT:          Alve Operating System Development
+* PROJECT:          Aura Operating System Development
 * CONTENT:          UserLevel System
 * PROGRAMMERS:      Alexy DA CRUZ <dacruzalexy@gmail.com>
 */
 
-namespace Alve_OS.System.Users
+namespace Aura_OS.System.Users
 {
     class UserLevel
     {

@@ -1,5 +1,5 @@
 ﻿/*
-* PROJECT:          Alve Operating System Development
+* PROJECT:          Aura Operating System Development
 * CONTENT:          Setup
 * PROGRAMMERS:      Alexy DA CRUZ <dacruzalexy@gmail.com>
 *                   Valentin Charbonnier <valentinbreiz@gmail.com>
@@ -7,18 +7,18 @@
 
 using System;
 using System.IO;
-using Alve_OS.System.Security;
-using Alve_OS.System.Computer;
-using Alve_OS.System.Drawable;
-using Alve_OS.System.Translation;
+using Aura_OS.System.Security;
+using Aura_OS.System.Computer;
+using Aura_OS.System.Drawable;
+using Aura_OS.System.Translation;
 
-namespace Alve_OS.System
+namespace Aura_OS.System
 {
     class Setup
     {
 
         /// <summary>
-        /// Verify if Alve's Setup is complete
+        /// Verify if Aura's Setup is complete
         /// </summary>
         public void SetupVerifyCompleted()
         {
@@ -41,7 +41,7 @@ namespace Alve_OS.System
         }
 
         /// <summary>
-        /// Making directories that are required for Alve.
+        /// Making directories that are required for Aura.
         /// </summary>
         private void Step1()
         {
@@ -75,7 +75,7 @@ namespace Alve_OS.System
                     File.WriteAllText(@"0:\System\color.set", "7");
                 }
 
-                Info.setComputerName("Alve-PC");
+                Info.setComputerName("Aura-PC");
 
                 if ((Directory.Exists(@"0:\System")) && (Directory.Exists(@"0:\System\Users")) && (Directory.Exists(@"0:\Users")) && (Directory.Exists(@"0:\Users\root")))
                 {

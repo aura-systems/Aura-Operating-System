@@ -1,5 +1,5 @@
 ﻿/*
-* PROJECT:          Alve Operating System Development
+* PROJECT:          Aura Operating System Development
 * CONTENT:          Crash screen
 * PROGRAMMERS:      Valentin Charbonnier <valentinbreiz@gmail.com>
 */
@@ -7,7 +7,7 @@
 using System;
 using Sys = Cosmos.System;
 
-namespace Alve_OS.System
+namespace Aura_OS.System
 {
     class Crash
     {
@@ -35,7 +35,7 @@ namespace Alve_OS.System
             Console.WriteLine("╔══════════════════════════════════════════════════════════════╗");
             Console.SetCursorPosition(x, y);
             Console.SetCursorPosition(8, 9);
-            Console.WriteLine("║ AN FATAL ERROR occured in Alve Operating System              ║");
+            Console.WriteLine("║ AN FATAL ERROR occured in Aura Operating System              ║");
             Console.SetCursorPosition(x, y);
 
             Console.SetCursorPosition(8, 10);

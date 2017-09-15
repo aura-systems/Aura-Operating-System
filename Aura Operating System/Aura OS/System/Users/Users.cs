@@ -1,16 +1,16 @@
 ﻿/*
-* PROJECT:          Alve Operating System Development
+* PROJECT:          Aura Operating System Development
 * CONTENT:          User class
 * PROGRAMMERS:      Alexy DA CRUZ <dacruzalexy@gmail.com>
 */
 
 using System;
 using System.IO;
-using Alve_OS.System.Translation;
-using Alve_OS.System.Security;
-using Alve_OS.System.Drawable;
+using Aura_OS.System.Translation;
+using Aura_OS.System.Security;
+using Aura_OS.System.Drawable;
 
-namespace Alve_OS.System.Users
+namespace Aura_OS.System.Users
 {
     class Users
     {
@@ -23,7 +23,7 @@ namespace Alve_OS.System.Users
             switch (Kernel.langSelected)
             {
                 case "fr_FR":
-                    string text = Menu.DispLoginForm("Connexion à un compte Alve.");
+                    string text = Menu.DispLoginForm("Connexion à un compte Aura.");
 
                     int middle = text.IndexOf("//////");
                     string user = text.Remove(middle, text.Length - middle);
@@ -69,7 +69,7 @@ namespace Alve_OS.System.Users
                     break;
 
                 case "en_US":
-                    string text1 = Menu.DispLoginForm("Login to an Alve account.");
+                    string text1 = Menu.DispLoginForm("Login to an Aura account.");
 
                     int middle1 = text1.IndexOf("//////");
                     string user1 = text1.Remove(middle1, text1.Length - middle1);

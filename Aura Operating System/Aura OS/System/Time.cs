@@ -1,12 +1,12 @@
 ﻿/*
-* PROJECT:          Alve Operating System Development
+* PROJECT:          Aura Operating System Development
 * CONTENT:          Time Implementation
 * PROGRAMMERS:      Valentin Charbonnier <valentinbreiz@gmail.com>
 */
 
 using Cosmos.HAL;
 
-namespace Alve_OS.System
+namespace Aura_OS.System
 {
     public static class Time
     {

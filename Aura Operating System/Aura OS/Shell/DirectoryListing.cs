@@ -1,5 +1,5 @@
 ﻿/*
-* PROJECT:          Alve Operating System Development
+* PROJECT:          Aura Operating System Development
 * CONTENT:          Directory and files listing system.
 * PROGRAMMERS:      Alexy DA CRUZ <dacruzalexy@gmail.com>
 *                   Valentin Charbonnier <valentinbreiz@gmail.com>
@@ -7,9 +7,9 @@
 
 using System;
 using System.IO;
-using Alve_OS.System.Computer;
+using Aura_OS.System.Computer;
 
-namespace Alve_OS.Shell
+namespace Aura_OS.Shell
 {
     class DirectoryListing
     {

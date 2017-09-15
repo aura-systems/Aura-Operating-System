@@ -1,5 +1,5 @@
 /*
-* PROJECT:          Alve Operating System Development
+* PROJECT:          Aura Operating System Development
 * CONTENT:          Interpreter
 * PROGRAMMERS:      Alexy DA CRUZ <dacruzalexy@gmail.com>
 *                   Valentin Charbonnier <valentinbreiz@gmail.com>
@@ -8,12 +8,12 @@
 using System;
 using System.IO;
 using Sys = Cosmos.System;
-using L = Alve_OS.System.Translation;
-using Alve_OS.System;
-using Alve_OS.System.Users;
-using Alve_OS.System.Computer;
+using L = Aura_OS.System.Translation;
+using Aura_OS.System;
+using Aura_OS.System.Users;
+using Aura_OS.System.Computer;
 
-namespace Alve_OS.Shell
+namespace Aura_OS.Shell
 {
     class Interpreter
     {

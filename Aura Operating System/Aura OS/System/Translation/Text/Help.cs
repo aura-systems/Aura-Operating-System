@@ -1,5 +1,5 @@
 ﻿/*
-* PROJECT:          Alve Operating System Development
+* PROJECT:          Aura Operating System Development
 * CONTENT:          Help infos
 * PROGRAMMERS:      Alexy DA CRUZ <dacruzalexy@gmail.com>
 *                   Valentin Charbonnier <valentinbreiz@gmail.com>
@@ -7,7 +7,7 @@
 
 using System;
 
-namespace Alve_OS.System.Translation
+namespace Aura_OS.System.Translation
 {
     class Help
     {

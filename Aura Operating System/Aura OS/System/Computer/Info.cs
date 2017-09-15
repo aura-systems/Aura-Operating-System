@@ -1,14 +1,14 @@
 ﻿/*
-* PROJECT:          Alve Operating System Development
+* PROJECT:          Aura Operating System Development
 * CONTENT:          Computer Information
 * PROGRAMMERS:      Alexy DA CRUZ <dacruzalexy@gmail.com>
 */
 
 using System.IO;
 using System;
-using Alve_OS.System.Translation;
+using Aura_OS.System.Translation;
 
-namespace Alve_OS.System.Computer
+namespace Aura_OS.System.Computer
 {
     class Info
     {
@@ -26,8 +26,8 @@ namespace Alve_OS.System.Computer
             }
             else
             {
-                setComputerName("Alve-PC");
-                return "Alve-PC";
+                setComputerName("Aura-PC");
+                return "Aura-PC";
             }
         }
 
