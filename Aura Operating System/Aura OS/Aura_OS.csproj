@@ -6,7 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Alve_OSBoot.Cosmos" />
+    <None Remove="Aura_OSBoot.Cosmos" />
   </ItemGroup>
 
   <ItemGroup>

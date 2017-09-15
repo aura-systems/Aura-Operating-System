@@ -54,16 +54,11 @@
     <Bochs_OutputPath>bin\Debug\net462\</Bochs_OutputPath>
     <Bochs_EnableGDB>False</Bochs_EnableGDB>
     <Bochs_StartCosmosGDB>false</Bochs_StartCosmosGDB>
+    <Name>Aura_OSBoot</Name>
   </PropertyGroup>
   <ItemGroup>
     <None Remove="*" />
     <Compile Remove="*" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include=".\Alve_OS.csproj">
-      <Name>Alve_OS</Name>
-      <Project>{dd67a21e-24aa-45a8-9886-4bb88f63680a}</Project>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Apps\" />
@@ -90,6 +85,13 @@
       <HintPath>..\..\..\..\..\AppData\Roaming\Cosmos User Kit\Kernel\Cosmos.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Aura OS\Aura_OS.csproj">
+      <Name>Aura_OS</Name>
+      <Project>{dd67a21e-24aa-45a8-9886-4bb88f63680a}</Project>
+      <Private>True</Private>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(AppData)\Cosmos User Kit\Build\VSIP\Cosmos.targets" />
 </Project>
