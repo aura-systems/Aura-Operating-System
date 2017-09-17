@@ -12,6 +12,8 @@ using L = Aura_OS.System.Translation;
 using Aura_OS.System;
 using Aura_OS.System.Users;
 using Aura_OS.System.Computer;
+using System.IO.Compression;
+using System.Collections.Generic;
 
 namespace Aura_OS.Shell
 {
@@ -647,6 +649,27 @@ namespace Aura_OS.Shell
             else if (cmd.Equals("crash"))
             {
                 throw new Exception("Crash test");
+            }
+
+            else if (cmd.Equals("zip"))
+            {
+                // Open an existing zip file for reading
+                ZipStorer zip = ZipStorer.Open(@"0:\HELLO.ZIP", FileAccess.Read);
+
+                // Read the central directory collection
+                //List<ZipStorer.ZipFileEntry> dir = zip.ReadCentralDir();
+
+                // Look for the desired file
+                //foreach (ZipStorer.ZipFileEntry entry in dir)
+                //{
+                //    if (Path.GetFileName(entry.FilenameInZip) == "text.txt")
+                //    {
+                //        // File found, extract it
+                //        zip.ExtractFile(entry, @"0:\text.txt");
+                //        break;
+                //    }
+                //}
+                //zip.Close();
             }
 
             #endregion
