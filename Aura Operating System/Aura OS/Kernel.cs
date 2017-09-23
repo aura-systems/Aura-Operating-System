@@ -15,13 +15,13 @@ using Aura_OS.System;
 using System.IO;
 using Aura_OS.System.Users;
 using Aura_OS.System.Computer;
-
 #endregion
 
 namespace Aura_OS
 {
-    public class Kernel: Sys.Kernel
+    public class Kernel : Sys.Kernel
     {
+
 
         #region Global variables
 
@@ -45,6 +45,7 @@ namespace Aura_OS
 
         protected override void BeforeRun()
         {
+
             Console.Clear();
 
             Console.ForegroundColor = ConsoleColor.Green;
@@ -119,8 +120,9 @@ namespace Aura_OS
                     if (Logged) //If logged
                     {
                         BeforeCommand();
+
                         var cmd = Console.ReadLine();
-                        Shell.Interpreter.Interpret(cmd);
+                        Shell.cmdIntr.CommandManager._CommandManger(cmd);
                         Console.WriteLine();
                     }
                     else
@@ -139,7 +141,7 @@ namespace Aura_OS
         /// <summary>
         /// Display the line before the user input and set the console color.
         /// </summary>
-        private void BeforeCommand()
+        private static void BeforeCommand()
         {
             if (current_directory == @"0:\")
             {
@@ -257,5 +259,20 @@ namespace Aura_OS
 
         #endregion
 
+        #region Defaults
+        public void InitDefaults()
+        {
+            string[] DefaultDirctories =
+            {
+                "Desktop",
+                "Documents",
+                "Downloads",
+                "Music",
+            };
+            foreach (string dirs in DefaultDirctories)
+                if (!Directory.Exists(dirs))
+                    Directory.CreateDirectory(dirs);
+        }
+        #endregion Defaults
     }
 }
