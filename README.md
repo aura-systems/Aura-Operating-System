@@ -21,11 +21,11 @@ Please read the [TODO](https://github.com/aura-systems/Aura-Operating-System/blo
 
 Login:
 
-![Aura Operating System](https://image.noelshack.com/fichiers/2017/32/4/1502379821-alve4.png)
+![Aura Operating System](https://image.noelshack.com/fichiers/2017/38/7/1506264215-aura-1.png)
 
 Shell:
 
-![Aura Operating System](https://image.noelshack.com/fichiers/2017/32/4/1502379822-alve5.png)
+![Aura Operating System](https://image.noelshack.com/fichiers/2017/38/7/1506264209-aura-2.png)
 
 ![Aura Operating System](https://image.noelshack.com/fichiers/2017/32/5/1502404673-alve6.png)
 
