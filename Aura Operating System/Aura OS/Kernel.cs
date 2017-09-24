@@ -22,7 +22,6 @@ namespace Aura_OS
     public class Kernel : Sys.Kernel
     {
 
-
         #region Global variables
 
         Setup setup = new Setup();
@@ -127,7 +126,8 @@ namespace Aura_OS
                     }
                     else
                     {
-                        Login.Init();
+                        Users user = new Users();
+                        user.Login();
                     }
                 }
             }
@@ -259,20 +259,5 @@ namespace Aura_OS
 
         #endregion
 
-        #region Defaults
-        public void InitDefaults()
-        {
-            string[] DefaultDirctories =
-            {
-                "Desktop",
-                "Documents",
-                "Downloads",
-                "Music",
-            };
-            foreach (string dirs in DefaultDirctories)
-                if (!Directory.Exists(dirs))
-                    Directory.CreateDirectory(dirs);
-        }
-        #endregion Defaults
     }
 }
