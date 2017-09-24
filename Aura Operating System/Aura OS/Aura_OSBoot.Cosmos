@@ -64,6 +64,14 @@
     <Folder Include="Apps\" />
     <Folder Include="Apps\User\" />
     <Folder Include="Shell\" />
+    <Folder Include="Shell\cmdIntr\" />
+    <Folder Include="Shell\cmdIntr\c_Console\" />
+    <Folder Include="Shell\cmdIntr\FileSystem\" />
+    <Folder Include="Shell\cmdIntr\Power\" />
+    <Folder Include="Shell\cmdIntr\Settings\" />
+    <Folder Include="Shell\cmdIntr\SystemInfomation\" />
+    <Folder Include="Shell\cmdIntr\Tests\" />
+    <Folder Include="Shell\cmdIntr\Util\" />
     <Folder Include="System\" />
     <Folder Include="System\Computer\" />
     <Folder Include="System\Drawable\" />

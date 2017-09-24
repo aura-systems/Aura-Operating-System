@@ -65,11 +65,11 @@ namespace Aura_OS.System.Drawable
             Console.BackgroundColor = ConsoleColor.Black;
             Console.ForegroundColor = ConsoleColor.Black;
             string password = Console.ReadLine();
-            Console.BackgroundColor = ConsoleColor.Blue;
             Console.SetCursorPosition(x, y);
 
             string text = name + "//////" + password;
             Console.BackgroundColor = ConsoleColor.Black;
+            Console.ForegroundColor = ConsoleColor.White;
             Console.Clear();
             return text;
         }
@@ -106,69 +106,6 @@ namespace Aura_OS.System.Drawable
             Console.ReadKey();
 
             Console.Clear();
-        }
-
-        /// <summary>
-        /// Display the Setup Dialog
-        /// </summary>
-        public static string DispSetupForm(string title)
-        {
-            Console.Clear();
-            int x = Console.CursorLeft;
-            int y = Console.CursorTop;
-
-            Console.BackgroundColor = ConsoleColor.Blue;
-
-            Console.SetCursorPosition(8, 8);
-            Console.WriteLine("╔══════════════════════════════════════════════════════════════╗");
-            Console.SetCursorPosition(x, y);
-            Console.SetCursorPosition(8, 9);
-            Console.WriteLine("║                                                              ║");
-            Console.SetCursorPosition(x, y);
-            Console.SetCursorPosition(8, 9);
-            Console.WriteLine("║ " + title);
-            Console.SetCursorPosition(x, y);
-            Console.SetCursorPosition(8, 10);
-            Console.WriteLine("╠══════════════════════════════════════════════════════════════╣");
-            Console.SetCursorPosition(x, y);
-            Console.SetCursorPosition(8, 11);
-            Console.WriteLine("║                                                              ║");
-            Console.SetCursorPosition(x, y);
-            Console.SetCursorPosition(8, 12);
-            Console.WriteLine("║ Login:                                                       ║");
-            Console.SetCursorPosition(x, y);
-            Console.SetCursorPosition(8, 13);
-            Console.WriteLine("║                                                              ║");
-            Console.SetCursorPosition(x, y);
-            Console.SetCursorPosition(8, 14);
-            Console.WriteLine("║ Password:                                                    ║");
-            Console.SetCursorPosition(x, y);
-            Console.SetCursorPosition(8, 15);
-            Console.WriteLine("║                                                              ║");
-            Console.SetCursorPosition(x, y);
-            Console.SetCursorPosition(8, 16);
-            Console.WriteLine("╚══════════════════════════════════════════════════════════════╝");
-            Console.SetCursorPosition(x, y);
-
-            Console.SetCursorPosition(8, 12);
-            Console.Write("║ Login: ");
-            string name = Console.ReadLine();
-            Console.SetCursorPosition(x, y);
-            Console.SetCursorPosition(8, 13);
-            Console.WriteLine("║                                                              ║");
-            Console.SetCursorPosition(x, y);
-            Console.SetCursorPosition(8, 14);
-            Console.Write("║ Password: ");
-            Console.BackgroundColor = ConsoleColor.Black;
-            Console.ForegroundColor = ConsoleColor.Black;
-            string password = Console.ReadLine();
-            Console.BackgroundColor = ConsoleColor.Blue;
-            Console.SetCursorPosition(x, y);
-
-            string text = name + "//////" + password;
-            Console.BackgroundColor = ConsoleColor.Blue;
-            Console.Clear();
-            return text;
         }
 
         /// <summary>
