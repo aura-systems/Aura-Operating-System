@@ -1,9 +1,14 @@
 # Aura Operating System
-## You can find all documentation here: [alve-os.github.io](https://alve-os.github.io)
+## Join us on [Slack](https://join.slack.com/t/aura-systems/shared_invite/enQtMjQ2ODgyMjgwNTY2LTFmYWY1ZDljNGNjZjRjODUyZWI2ODY0ZmMxNzljMmJjODI4YjRiZGIzN2JhNjAyNzdhOTI0MTgwNjhjNzQ4ZTM)!
 A Cosmos based Operating System developped in C# made by Alexy DA CRUZ (GeomTech) and Valentin Charbonnier (valentinbreiz).
 
+## Active Contributors
+* djlw78
+* valentinbreiz
+* geomtech
+
 ## Current features
-Please read the [TODO](https://github.com/aura-systems/Aura-Operating-System/blob/master/TODO.md) file or the [Aura Progression](https://github.com/orgs/aura-systems/projects/1) to know what will be added soon.
+Please read the [Aura Progression](https://github.com/orgs/aura-systems/projects/1) to know what will be added soon.
 
 * Restart.
 * Shutdown.
@@ -21,11 +26,11 @@ Please read the [TODO](https://github.com/aura-systems/Aura-Operating-System/blo
 
 Login:
 
-![Aura Operating System](https://image.noelshack.com/fichiers/2017/32/4/1502379821-alve4.png)
+![Aura Operating System](https://image.noelshack.com/fichiers/2017/38/7/1506264215-aura-1.png)
 
 Shell:
 
-![Aura Operating System](https://image.noelshack.com/fichiers/2017/32/4/1502379822-alve5.png)
+![Aura Operating System](https://image.noelshack.com/fichiers/2017/38/7/1506264209-aura-2.png)
 
 ![Aura Operating System](https://image.noelshack.com/fichiers/2017/32/5/1502404673-alve6.png)
 

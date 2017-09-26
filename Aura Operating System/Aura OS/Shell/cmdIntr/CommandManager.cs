@@ -8,6 +8,7 @@ namespace Aura_OS.Shell.cmdIntr
 {
     class CommandManager
     {
+
         /// <summary>
         /// Empty constructor. (Good for debug)
         /// </summary>
@@ -20,6 +21,7 @@ namespace Aura_OS.Shell.cmdIntr
         {
 
         #region Power
+
             if (cmd.Equals("shutdown"))
             {//NOTE: Why isn't it just the constructor? This leaves more room for <package>.<class>.HelpInfo;
                 Power.Shutdown.c_Shutdown();
@@ -28,9 +30,11 @@ namespace Aura_OS.Shell.cmdIntr
             {
                 Power.Reboot.c_Reboot();
             }
-            #endregion Power
+
+        #endregion Power
 
         #region Console
+
             else if ((cmd.Equals("clear")) || (cmd.Equals("cls")))
             {
                 c_Console.Clear.c_Clear();
@@ -41,7 +45,7 @@ namespace Aura_OS.Shell.cmdIntr
             }
             else if (cmd.Equals("help"))
             {
-                //Wasn't implemented??
+                System.Translation.Help._Help();
             }
             else if (cmd.Equals("textcolor"))
             {
@@ -59,7 +63,8 @@ namespace Aura_OS.Shell.cmdIntr
             {
                 c_Console.BackGroundColor.c_BackGroundColor(cmd);
             }
-#endregion Console
+
+        #endregion Console
 
         #region FileSystem
             else if (cmd.StartsWith("cd "))
@@ -114,9 +119,11 @@ namespace Aura_OS.Shell.cmdIntr
             {
                 FileSystem.Vol.c_Vol();
             }
-            #endregion FileSystem
+
+        #endregion FileSystem
 
         #region Settings
+
             else if (cmd.Equals("logout"))
             {
                 Settings.Logout.c_Logout();
@@ -129,9 +136,11 @@ namespace Aura_OS.Shell.cmdIntr
             {
                 Settings.Settings.c_Settings(cmd);
             }
-            #endregion Settings
+
+        #endregion Settings
 
         #region System Infomation
+
             else if (cmd.Equals("systeminfo"))
             {
                 SystemInfomation.SystemInfomation.c_SystemInfomation();
@@ -140,21 +149,26 @@ namespace Aura_OS.Shell.cmdIntr
             {
                 SystemInfomation.Version.c_Version();
             }
-            #endregion System Infomation
+
+        #endregion System Infomation
 
         #region Tests
+
             else if (cmd.Equals("crash"))
             {
                 Tests.Crash.c_Crash();
             }
-            #endregion Tests
+
+        #endregion Tests
 
         #region Util
+
             else
             {
                 Util.CmdNotFound.c_CmdNotFound();
             }
-#endregion Util
+
+        #endregion Util
 
         }
     }

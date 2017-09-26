@@ -15,13 +15,12 @@ namespace Aura_OS.System.Translation
         /// <summary>
         /// Display help on general commands.
         /// </summary>
-        public static void HelpD()
+        public static void _Help()
         {
             switch (Kernel.langSelected)
             {
                 case "fr_FR":
                     Console.WriteLine("Commandes disponibles (1/2):");
-                    Console.WriteLine();
                     Console.WriteLine("- shutdown (Arrêt ACPI)");
                     Console.WriteLine("- reboot (Redémarrage CPU)");
                     Console.WriteLine("- clear (Efface la console)");
@@ -45,9 +44,8 @@ namespace Aura_OS.System.Translation
                     Console.WriteLine("- logout (Permet de se déconnecter)");
 
                     Console.ReadKey(); //page 2
-
-                    Console.WriteLine("Commandes disponibles (2/2):");
                     Console.WriteLine();
+                    Console.WriteLine("Commandes disponibles (2/2):");
                     Console.WriteLine("- time (Récupère le temps et la date du jour)");
                     Console.WriteLine("- ipconfig (Affiche les informations réseau)");
 
@@ -57,7 +55,6 @@ namespace Aura_OS.System.Translation
 
                 case "en_US":
                     Console.WriteLine("Available commands (1/2):");
-                    Console.WriteLine();
                     Console.WriteLine("- shutdown (to do a ACPI Shutdown)");
                     Console.WriteLine("- reboot (to do a CPU Reboot)");
                     Console.WriteLine("- clear (to clear the console)");
@@ -82,8 +79,8 @@ namespace Aura_OS.System.Translation
                     
                     Console.ReadKey(); //page 2
 
-                    Console.WriteLine("Available commands (2/2):");
                     Console.WriteLine();
+                    Console.WriteLine("Available commands (2/2):");
                     Console.WriteLine("- time (to get time and date)");
                     Console.WriteLine("- ipconfig (to get network informations)");
 

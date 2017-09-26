@@ -22,13 +22,12 @@ namespace Aura_OS
     public class Kernel : Sys.Kernel
     {
 
-
         #region Global variables
 
         Setup setup = new Setup();
         public static bool running;
-        public static string version = "0.2";
-        public static string revision = "100820171748";
+        public static string version = "0.3";
+        public static string revision = "240920171621";
         public static string current_directory = @"0:\";
         public static string langSelected = "en_US";
         public static CosmosVFS FS { get; private set; }
@@ -128,7 +127,8 @@ namespace Aura_OS
                     }
                     else
                     {
-                        Login.Init();
+                        Users user = new Users();
+                        user.Login();
                     }
                 }
             }
@@ -259,7 +259,5 @@ namespace Aura_OS
         }
 
         #endregion
-
-
     }
 }

@@ -86,7 +86,6 @@ namespace Aura_OS.System
         }
         #endregion Defaults
 
-
         /// <summary>
         /// Method called to make "root"
         /// </summary>
@@ -239,6 +238,8 @@ namespace Aura_OS.System
                         File.Create(@"0:\System\Users\" + user + ".usr");
                         Directory.CreateDirectory(@"0:\Users\" + user);
 
+                        InitDefaults(user);
+
                         if (File.Exists(@"0:\System\Users\" + user + ".usr"))
                         {
                             File.WriteAllText(@"0:\System\Users\" + user + ".usr", password + "|standard");
@@ -266,6 +267,26 @@ namespace Aura_OS.System
                 }             
             }
         }
+
+        #region Defaults
+
+        public void InitDefaults(string user)
+        {
+            string[] DefaultDirctories =
+            {
+                @"0:\Users\" + user +  @"\Desktop",
+                @"0:\Users\" + user +  @"\Documents",
+                @"0:\Users\" + user +  @"\Downloads",
+                @"0:\Users\" + user +  @"\Music"
+            };
+            foreach (string dirs in DefaultDirctories)
+            {
+                if (!Directory.Exists(dirs))
+                    Directory.CreateDirectory(dirs);
+            }
+        }
+
+        #endregion Defaults
 
     }
 }
