@@ -62,10 +62,6 @@ namespace Aura_OS.Shell.cmdIntr
 #endregion Console
 
         #region FileSystem
-            else if ((cmd.Equals("cd .. ")) || (cmd.Equals("bkroot")))
-            {
-                FileSystem.CD.c_CD();
-            }
             else if (cmd.StartsWith("cd "))
             {
                 FileSystem.CD.c_CD(cmd);

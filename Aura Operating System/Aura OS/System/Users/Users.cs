@@ -48,6 +48,7 @@ namespace Aura_OS.System.Users
                             {
                                 Kernel.userLevelLogged = UserLevel.Administrator();
                             }
+                            InitUserDirs(user);
                             Console.Clear();
                             WelcomeMessage.Display();
                             Text.Display("logged", user);
@@ -94,6 +95,7 @@ namespace Aura_OS.System.Users
                             {
                                 Kernel.userLevelLogged = UserLevel.Administrator();
                             }
+                            InitUserDirs(user1);
                             Console.Clear();
                             WelcomeMessage.Display();
                             Text.Display("logged", user1);
@@ -114,6 +116,22 @@ namespace Aura_OS.System.Users
                     break;
             }
         }
+
+        #region UserDirs
+        public void InitUserDirs(string user)
+        {
+            string[] DefaultDirctories =
+            {
+                @"0:\Users\" + user + @"\Desktop",
+                @"0:\Users\" + user + @"\Documents",
+                @"0:\Users\" + user + @"\Downloads",
+                @"0:\Users\" + user + @"\Music",
+            };
+            foreach (string dirs in DefaultDirctories)
+                if (!Directory.Exists(dirs))
+                    Directory.CreateDirectory(dirs);
+        }
+        #endregion UserDirs
 
         /// <summary>
         /// Method called to create an user

@@ -49,25 +49,7 @@ namespace Aura_OS.System
 
             try
             {
-                if (!Directory.Exists(@"0:\System"))
-                {
-                    Directory.CreateDirectory(@"0:\System");
-                }
-
-                if (!Directory.Exists(@"0:\System\Users"))
-                {
-                    Directory.CreateDirectory(@"0:\System\Users");
-                }
-
-                if (!Directory.Exists(@"0:\Users"))
-                {
-                    Directory.CreateDirectory(@"0:\Users");
-                }
-
-                if (!Directory.Exists(@"0:\Users\root"))
-                {
-                    Directory.CreateDirectory(@"0:\Users\root");
-                }
+                InitDefaults();
 
                 if (!File.Exists(@"0:\System\color.set"))
                 {
@@ -87,6 +69,22 @@ namespace Aura_OS.System
                 Menu.DispErrorDialog("Error while creating system folders.");
             }
         }
+
+        #region Defaults
+        public void InitDefaults()
+        {
+            string[] DefaultDirctories =
+            {
+                "System",
+                "System\\Users",
+                "Users",
+                "Users\\root",
+            };
+            foreach (string dirs in DefaultDirctories)
+                if (!Directory.Exists(dirs))
+                    Directory.CreateDirectory(dirs);
+        }
+        #endregion Defaults
 
 
         /// <summary>
