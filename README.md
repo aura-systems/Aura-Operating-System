@@ -3,9 +3,9 @@
 A Cosmos based Operating System developped in C# made by Alexy DA CRUZ (GeomTech) and Valentin Charbonnier (valentinbreiz).
 
 ## Active Contributors
-* djlw78
-* valentinbreiz
-* geomtech
+* @djlw78
+* @valentinbreiz
+* @geomtech
 
 ## Current features
 Please read the [Aura Progression](https://github.com/aura-systems/Aura-Operating-System/projects/4) or our [Roadmap](https://github.com/aura-systems/Aura-Operating-System/projects/3) to know what will be added soon.
