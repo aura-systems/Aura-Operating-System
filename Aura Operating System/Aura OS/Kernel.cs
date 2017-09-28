@@ -37,6 +37,7 @@ namespace Aura_OS
         public static string ComputerName = "Aura-PC";
         public static int color;
         public static string RootContent;
+        public static string UserDir = @"0:\Users\" + userLogged + "\\";
 
         #endregion
 
@@ -258,6 +259,5 @@ namespace Aura_OS
         }
 
         #endregion
-
     }
 }

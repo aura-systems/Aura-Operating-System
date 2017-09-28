@@ -29,32 +29,6 @@ namespace Aura_OS.Shell.cmdIntr.FileSystem
         /// <summary>
         /// c = commnad, c_CD
         /// </summary>
-        public static void c_CD()
-        {
-            Directory.SetCurrentDirectory(Kernel.current_directory);
-            var dir = Kernel.FS.GetDirectory(Kernel.current_directory);
-            if(!(Kernel.current_directory == @"0:\"))
-            {
-                Kernel.current_directory = dir.mParent.mFullPath;
-            } /*TO DOUBLE CHECK LOGIC, REPLACE IF FAILED TO WORK.*/ else { }
-
-            #region Logic?
-            /*
-             *  if (Kernel.current_directory == @"0:\")
-                {
-                }
-                else
-                {
-                    Kernel.current_directory = dir.mParent.mFullPath;
-                }
-             */
-            #endregion
-
-        }
-
-        /// <summary>
-        /// c = commnad, c_CD
-        /// </summary>
         /// <param name="cd">The directory you wish to pass in</param>
         /// <param name="startIndex">The start index for remove.</param>
         /// <param name="count">The count index for remove.</param>
@@ -63,19 +37,34 @@ namespace Aura_OS.Shell.cmdIntr.FileSystem
             string dir = cd.Remove(startIndex, count);
             try
             {
-                if (Directory.Exists(Kernel.current_directory + dir))
+                if(dir == "..")
                 {
                     Directory.SetCurrentDirectory(Kernel.current_directory);
-                    Kernel.current_directory = Kernel.current_directory + dir + @"\";
-                }
-                else if (File.Exists(Kernel.current_directory + dir))
-                {
-                    L.Text.Display("errorthisisafile");
+                    var root = Kernel.FS.GetDirectory(Kernel.current_directory);
+                    if (Kernel.current_directory == @"0:\")
+                    {
+                    }
+                    else
+                    {
+                        Kernel.current_directory = root.mParent.mFullPath;
+                    }
                 }
                 else
                 {
-                    L.Text.Display("directorydoesntexist");
-                }
+                    if (Directory.Exists(Kernel.current_directory + dir))
+                    {
+                        Directory.SetCurrentDirectory(Kernel.current_directory);
+                        Kernel.current_directory = Kernel.current_directory + dir + @"\";
+                    }
+                    else if (File.Exists(Kernel.current_directory + dir))
+                    {
+                        L.Text.Display("errorthisisafile");
+                    }
+                    else
+                    {
+                        L.Text.Display("directorydoesntexist");
+                    }
+                }                
             } catch { }
         }
     }
