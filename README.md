@@ -8,7 +8,7 @@ A Cosmos based Operating System developped in C# made by Alexy DA CRUZ (GeomTech
 * geomtech
 
 ## Current features
-Please read the [Aura Progression](https://github.com/orgs/aura-systems/projects/1) to know what will be added soon.
+Please read the [Aura Progression](https://github.com/orgs/aura-systems/projects/1) or our [Roadmap](https://github.com/aura-systems/Aura-Operating-System/projects/3) to know what will be added soon.
 
 * Restart.
 * Shutdown.
