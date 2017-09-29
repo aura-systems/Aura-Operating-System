@@ -4,6 +4,10 @@
 * PROGRAMMER(S):    John Welsh <djlw78@gmail.com>
 */
 
+using Aura_OS.System.Interpreter.ABS;
+using System;
+using System.IO;
+
 namespace Aura_OS.Shell.cmdIntr
 {
     class CommandManager
@@ -158,6 +162,22 @@ namespace Aura_OS.Shell.cmdIntr
             {
                 Tests.Crash.c_Crash();
             }
+
+            else if (cmd.Equals("testabs"))
+            {
+                Interpreter aurabasic = new Interpreter(File.ReadAllText("0:\\file.abs"));
+                try
+                {
+                    aurabasic.Exec();
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine("BAD");
+                    Console.WriteLine(e.Message);
+                }
+                Console.WriteLine("OK");
+            }
+
 
         #endregion Tests
 
