@@ -149,10 +149,14 @@ namespace Aura_OS.Shell.cmdIntr
             {
                 SystemInfomation.Version.c_Version();
             }
+            else if ((cmd.Equals("ipconfig")) || (cmd.Equals("ifconfig")))
+            {
+                SystemInfomation.IPConfig.c_IPConfig();
+            }
 
-        #endregion System Infomation
+            #endregion System Infomation
 
-        #region Tests
+            #region Tests
 
             else if (cmd.Equals("crash"))
             {

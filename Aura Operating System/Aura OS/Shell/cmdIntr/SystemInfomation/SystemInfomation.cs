@@ -37,11 +37,6 @@ namespace Aura_OS.Shell.cmdIntr.SystemInfomation
             L.Text.Display("OSRevision");
             L.Text.Display("time");
             L.Text.Display("AmountRAM");
-
-            if (Kernel.userLogged == "root")
-            {
-                L.Text.Display("MAC");
-            }
         }
     }
 }
