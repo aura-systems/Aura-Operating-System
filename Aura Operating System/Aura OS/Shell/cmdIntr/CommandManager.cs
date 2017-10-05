@@ -63,6 +63,10 @@ namespace Aura_OS.Shell.cmdIntr
             {
                 c_Console.BackGroundColor.c_BackGroundColor(cmd);
             }
+			 else if (cmd.StartsWith("abrun "))
+            {
+                //c_Console.AuraBasicRun.c_AuraBasicRun(cmd);
+            }
 
         #endregion Console
 
