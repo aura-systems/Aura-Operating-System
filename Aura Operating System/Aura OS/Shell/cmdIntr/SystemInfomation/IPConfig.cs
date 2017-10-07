@@ -25,6 +25,7 @@ namespace Aura_OS.Shell.cmdIntr.SystemInfomation
         /// </summary>
         public static void c_IPConfig()
         {
+            L.Text.Display("NetworkInProgress");
             L.Text.Display("MAC");            
         }
     }

@@ -8,6 +8,9 @@ namespace Aura_OS.Shell.cmdIntr
 {
     class CommandManager
     {
+        //TO-DO: Do for all commands:
+        //       Windows like command, Linux like command, Aura original command (optional for the last one)
+        //Example: else if ((cmd.Equals("ipconfig")) || (cmd.Equals("ifconfig")) || (cmd.Equals("netconf"))) {
 
         /// <summary>
         /// Empty constructor. (Good for debug)
@@ -149,7 +152,7 @@ namespace Aura_OS.Shell.cmdIntr
             {
                 SystemInfomation.Version.c_Version();
             }
-            else if ((cmd.Equals("ipconfig")) || (cmd.Equals("ifconfig")))
+            else if ((cmd.Equals("ipconfig")) || (cmd.Equals("ifconfig")) || (cmd.Equals("netconf")))
             {
                 SystemInfomation.IPConfig.c_IPConfig();
             }
