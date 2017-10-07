@@ -410,10 +410,10 @@ namespace Aura_OS.System.Translation
                             Console.WriteLine("  ----------\t------\t--------");
                             break;
                         case "NetworkInProgress":
-                            Console.WriteLine("Network is in alpha, this part will take time to work correctly,");
-                            Console.WriteLine("our team is working on it...");
-                            Console.WriteLine("You can go to the roadmap on http://aura-team.com to see how");
-                            Console.WriteLine("networking progress on Aura ;)");
+                            Console.WriteLine("We are working on network, so");
+                            Console.WriteLine("this feature is in alpha version.");
+                            Console.WriteLine("You can visit the roadmap here http://aura-team.com to");
+                            Console.WriteLine("see the progression on this part.");
                             Console.WriteLine();
                             break;
                         case "MAC":
