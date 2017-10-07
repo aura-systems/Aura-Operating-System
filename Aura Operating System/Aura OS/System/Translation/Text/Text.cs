@@ -69,9 +69,6 @@ namespace Aura_OS.System.Translation
                         case "AmountRAM":
                             Console.WriteLine("Montant de la RAM:             " + Info.GetAmountRAM());
                             break;
-                        case "MAC":
-                            Console.WriteLine("Adresse MAC                    " + Info.GetMACAdress());
-                            break;
                         case "UnknownCommand":
                             Console.WriteLine("Commande inconnue.");
                             break;
@@ -218,6 +215,16 @@ namespace Aura_OS.System.Translation
                             Console.WriteLine("  Volume ###\tFormat\tSize");
                             Console.WriteLine("  ----------\t------\t--------");
                             break;
+                        case "NetworkInProgress":
+                            Console.WriteLine("Nous travaillons sur le réseau actuellement, de ce fait,");
+                            Console.WriteLine("cette fonctionnalité est encore en Alpha.");
+                            Console.WriteLine("Vous pouvez visiter la roadmap http://aura-team.com pour");
+                            Console.WriteLine("voir la progression du projet sur ce domaine.");
+                            Console.WriteLine();
+                            break;
+                        case "MAC":
+                            Console.WriteLine("Addresse Physique (MAC): " + Cosmos.HAL.Drivers.PCI.Network.AMDPCNetII.PhysicalAdress());
+                            break;
                     }
                     break;
 
@@ -258,9 +265,6 @@ namespace Aura_OS.System.Translation
                             break;
                         case "AmountRAM":
                             Console.WriteLine("Amount of RAM:             " + Cosmos.Core.CPU.GetAmountOfRAM() + "MB");
-                            break;
-                        case "MAC":
-                            Console.WriteLine("MAC Adress:                " + Cosmos.HAL.Network.MACAddress.Broadcast);
                             break;
                         case "UnknownCommand":
                             Console.WriteLine("Unknown command.");
@@ -404,6 +408,16 @@ namespace Aura_OS.System.Translation
                             Console.WriteLine();
                             Console.WriteLine("  Volume ###\tFormat\tSize");
                             Console.WriteLine("  ----------\t------\t--------");
+                            break;
+                        case "NetworkInProgress":
+                            Console.WriteLine("We are working on network, so");
+                            Console.WriteLine("this feature is in alpha version.");
+                            Console.WriteLine("You can visit the roadmap here http://aura-team.com to");
+                            Console.WriteLine("see the progression on this part.");
+                            Console.WriteLine();
+                            break;
+                        case "MAC":
+                            Console.WriteLine("MAC Address: " + Cosmos.HAL.Drivers.PCI.Network.AMDPCNetII.PhysicalAdress());
                             break;
                     }
                     break;
