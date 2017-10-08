@@ -27,7 +27,7 @@ namespace Aura_OS.System
                 case "fr_FR":
                     Logo.Print();
                     Console.ForegroundColor = ConsoleColor.Green;
-                    Console.WriteLine(" * Documentation: alve-os.github.io");
+                    Console.WriteLine(" * Documentation: aura-team.com");
                     Console.ForegroundColor = ConsoleColor.White;
 
                     //redo that bullshit code
@@ -46,11 +46,11 @@ namespace Aura_OS.System
                             Console.ForegroundColor = ConsoleColor.White;
                         }
 
-                        if (Kernel.ComputerName == "Aura-PC")
+                        if (Kernel.ComputerName == "aura-pc")
                         {
                             Console.WriteLine(" ");
                             Console.ForegroundColor = ConsoleColor.Blue;
-                            Console.WriteLine("   - Le nom de l'ordinateur est 'Aura-PC', pensez à le changer.");
+                            Console.WriteLine("   - Le nom de l'ordinateur est 'aura-pc', pensez à le changer.");
                             Console.ForegroundColor = ConsoleColor.White;
                         }
                     }
@@ -60,7 +60,7 @@ namespace Aura_OS.System
                 case "en_US":
                     Logo.Print();
                     Console.ForegroundColor = ConsoleColor.Green;
-                    Console.WriteLine(" * Documentation: alve-os.github.io");
+                    Console.WriteLine(" * Documentation: aura-team.com");
                     Console.ForegroundColor = ConsoleColor.White;
 
                     //redo that bullshit code
@@ -79,11 +79,11 @@ namespace Aura_OS.System
                             Console.ForegroundColor = ConsoleColor.White;
                         }
 
-                        if (Kernel.ComputerName == "Aura-PC")
+                        if (Kernel.ComputerName == "aura-pc")
                         {
                             Console.WriteLine(" ");
                             Console.ForegroundColor = ConsoleColor.Blue;
-                            Console.WriteLine("   - Computer name is 'Aura-PC', think to change it.");
+                            Console.WriteLine("   - Computer name is 'aura-pc', think to change it.");
                             Console.ForegroundColor = ConsoleColor.White;
                         }
                     }

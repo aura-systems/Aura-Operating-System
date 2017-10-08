@@ -57,7 +57,7 @@ namespace Aura_OS.System
                     File.WriteAllText(@"0:\System\color.set", "7");
                 }
 
-                Info.setComputerName("Aura-PC");
+                Info.setComputerName("aura-pc");
 
                 if ((Directory.Exists(@"0:\System")) && (Directory.Exists(@"0:\System\Users")) && (Directory.Exists(@"0:\Users")) && (Directory.Exists(@"0:\Users\root")))
                 {
@@ -134,36 +134,12 @@ namespace Aura_OS.System
             {
                 Kernel.langSelected = "en_US";
                 Keyboard.Init();
-
-                File.Create(@"0:\System\lang.set");
-
-                if (File.Exists(@"0:\System\lang.set"))
-                {
-                    File.WriteAllText(@"0:\System\lang.set", Kernel.langSelected);
-                }
-                else
-                {
-                    Menu.DispErrorDialog("The language configuration already exists!");
-                }
-
                 Step4();
             }
             else if ((language.Equals("fr_FR")) || language.Equals("fr-FR"))
             {
                 Kernel.langSelected = "fr_FR";
                 Keyboard.Init();
-
-                File.Create(@"0:\System\lang.set");
-
-                if (File.Exists(@"0:\System\lang.set"))
-                {
-                    File.WriteAllText(@"0:\System\lang.set", Kernel.langSelected);
-                }
-                else
-                {
-                    Menu.DispErrorDialog("La configuration des langue existe déjà!");
-                }
-
                 Step4();
             }
             else
@@ -171,6 +147,8 @@ namespace Aura_OS.System
                 Step3();
             }
         }
+
+        string step5_computername;
 
         /// <summary>
         /// Asking user to choose a name for his computer
@@ -181,7 +159,7 @@ namespace Aura_OS.System
 
             if ((computername.Length >= 1) && (computername.Length <= 15)) //15 char max for NETBIOS name resolution (dns)
             {
-                Info.setComputerName(computername);
+                step5_computername = computername;
                 Step6(user);
             }
             else
@@ -197,14 +175,67 @@ namespace Aura_OS.System
         /// </summary>
         private void Step6(string user)
         {
+            Console.WriteLine("Installation in progress...");
+            Installation();
             File.Create(@"0:\System\setup.set");
             Kernel.userLogged = user;
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine("Done!");
+            Console.ForegroundColor = ConsoleColor.White;
             Console.Clear();
             WelcomeMessage.Display();
             Text.Display("logged", user);
             Console.WriteLine();
             Kernel.Logged = true;
         }
+
+        private void Installation()
+        {
+            switch (Kernel.langSelected)
+            {
+                case "en_US":
+                    File.Create(@"0:\System\lang.set");
+                    if (File.Exists(@"0:\System\lang.set"))
+                    {
+                        File.WriteAllText(@"0:\System\lang.set", Kernel.langSelected);
+                    }
+                    else
+                    {
+                        Menu.DispErrorDialog("The language configuration already exists!");
+                    }
+                    break;
+                case "fr_FR":
+                    File.Create(@"0:\System\lang.set");
+                    if (File.Exists(@"0:\System\lang.set"))
+                    {
+                        File.WriteAllText(@"0:\System\lang.set", Kernel.langSelected);
+                    }
+                    else
+                    {
+                        Menu.DispErrorDialog("La configuration des langue existe déjà!");
+                    }
+                    break;
+            }
+
+            File.Create(@"0:\System\Users\" + step4_user + ".usr");
+            Directory.CreateDirectory(@"0:\Users\" + step4_user);
+
+            InitDefaults(step4_user);
+
+            if (File.Exists(@"0:\System\Users\" + step4_user + ".usr"))
+            {
+                File.WriteAllText(@"0:\System\Users\" + step4_user + ".usr", step4_pass + "|standard");
+            }
+            else
+            {
+                Text.Menu("error1");
+            }
+
+            Info.setComputerName(step5_computername);
+        }
+
+        string step4_user;
+        string step4_pass;
 
         /// <summary>
         /// Method to create users.
@@ -232,27 +263,9 @@ namespace Aura_OS.System
                     if ((pass.Length >= 6) && (pass.Length <= 40))
                     {
                         string password = MD5.hash(pass);
-
-                        Console.WriteLine();
-
-                        File.Create(@"0:\System\Users\" + user + ".usr");
-                        Directory.CreateDirectory(@"0:\Users\" + user);
-
-                        InitDefaults(user);
-
-                        if (File.Exists(@"0:\System\Users\" + user + ".usr"))
-                        {
-                            File.WriteAllText(@"0:\System\Users\" + user + ".usr", password + "|standard");
-
-                            if (Directory.Exists(@"0:\System"))
-                            {
-                                Step5(user);
-                            }
-                        }
-                        else
-                        {
-                            Text.Menu("error1");
-                        }
+                        step4_pass = password;
+                        step4_user = user;
+                        Step5(step4_user);
                     }
                     else
                     {
