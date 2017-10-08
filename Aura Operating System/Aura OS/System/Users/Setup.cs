@@ -179,6 +179,9 @@ namespace Aura_OS.System
             Installation();
             File.Create(@"0:\System\setup.set");
             Kernel.userLogged = user;
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine("Done!");
+            Console.ForegroundColor = ConsoleColor.White;
             Console.Clear();
             WelcomeMessage.Display();
             Text.Display("logged", user);
