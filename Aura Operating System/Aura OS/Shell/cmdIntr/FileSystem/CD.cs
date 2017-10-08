@@ -49,6 +49,10 @@ namespace Aura_OS.Shell.cmdIntr.FileSystem
                         Kernel.current_directory = root.mParent.mFullPath;
                     }
                 }
+                else if (dir == @"0:\")
+                { 
+                    Kernel.current_directory = @"0:\";
+                }
                 else
                 {
                     if (Directory.Exists(Kernel.current_directory + dir))
