@@ -22,6 +22,17 @@ namespace Aura_OS.System.Translation
          * associer un mot clé à une phrase.
          */
 
+        // HELP
+
+        /*
+        * ## How to use keywords:
+        * 
+        * Keywords replace a sentence
+        * by their translation that correspond to the keyword
+        * to the system language. so you have
+        * a keyword to a sentence.
+        */
+
         /// <summary>
         /// Display text in user language
         /// </summary>
@@ -168,8 +179,8 @@ namespace Aura_OS.System.Translation
                         case "mkdir":
                             Console.WriteLine("Entrez le nom du dossier (mkdir dossier).");
                             break;
-                        case "time": //         07/08/2017, 01:12:40
-                            Console.WriteLine("Date et heure du système:      " + Time.DayString() + "/" + Time.MonthString() + "/" + Time.YearString() + ", " + Time.HourString() + ":" + Time.MinuteString() + ":" + Time.SecondString());
+                        case "time":
+                            Console.WriteLine("Date et heure: " + Time.MonthString() + "/" + Time.DayString() + "/" + Time.YearString() + ", " + Time.TimeString(true, true, true));
                             break;
                         case "mkdirfilealreadyexist":
                             Console.WriteLine("Le dossier existait déjà, le répertoire \"" + arg + "\" a donc été créé.");
@@ -363,7 +374,7 @@ namespace Aura_OS.System.Translation
                             Console.WriteLine("Enter the directory name (mkdir directory).");
                             break;
                         case "time":
-                            Console.WriteLine("Date and time:             " + Time.MonthString() + "/" + Time.DayString() + "/" + Time.YearString() + ", " + Time.HourString() + ":" + Time.MinuteString() + ":" + Time.SecondString());
+                            Console.WriteLine("Date and time: " + Time.MonthString() + "/" + Time.DayString() + "/" + Time.YearString() + ", " + Time.TimeString(true, true, true));
                             break;
                         case "mkdirfilealreadyexist":
                             Console.WriteLine("That folder existed already, directory \"" + arg + "\" has been created.");
