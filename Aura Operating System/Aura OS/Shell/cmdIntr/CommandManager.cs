@@ -156,6 +156,10 @@ namespace Aura_OS.Shell.cmdIntr
             {
                 SystemInfomation.IPConfig.c_IPConfig();
             }
+            else if ((cmd.Equals("time")) || (cmd.Equals("date")))
+            {
+                SystemInfomation.Time.c_Time();
+            }
 
             #endregion System Infomation
 
