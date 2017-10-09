@@ -163,7 +163,7 @@ namespace Aura_OS.Shell.cmdIntr
 
             #endregion System Infomation
 
-            #region Tests
+        #region Tests
 
             else if (cmd.Equals("crash"))
             {

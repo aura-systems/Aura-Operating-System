@@ -180,7 +180,7 @@ namespace Aura_OS.System.Translation
                             Console.WriteLine("Entrez le nom du dossier (mkdir dossier).");
                             break;
                         case "time":
-                            Console.WriteLine("Date et heure: " + Time.MonthString() + "/" + Time.DayString() + "/" + Time.YearString() + ", " + Time.TimeString(true, true, true));
+                            Console.WriteLine("Date et heure:                 " + Time.MonthString() + "/" + Time.DayString() + "/" + Time.YearString() + ", " + Time.TimeString(true, true, true));
                             break;
                         case "mkdirfilealreadyexist":
                             Console.WriteLine("Le dossier existait déjà, le répertoire \"" + arg + "\" a donc été créé.");
@@ -229,7 +229,7 @@ namespace Aura_OS.System.Translation
                         case "NetworkInProgress":
                             Console.WriteLine("Nous travaillons sur le réseau actuellement, de ce fait,");
                             Console.WriteLine("cette fonctionnalité est encore en Alpha.");
-                            Console.WriteLine("Vous pouvez visiter la roadmap http://aura-team.com pour");
+                            Console.WriteLine("Vous pouvez visiter la roadmap aura-team.com pour");
                             Console.WriteLine("voir la progression du projet sur ce domaine.");
                             Console.WriteLine();
                             break;
@@ -374,7 +374,7 @@ namespace Aura_OS.System.Translation
                             Console.WriteLine("Enter the directory name (mkdir directory).");
                             break;
                         case "time":
-                            Console.WriteLine("Date and time: " + Time.MonthString() + "/" + Time.DayString() + "/" + Time.YearString() + ", " + Time.TimeString(true, true, true));
+                            Console.WriteLine("Date and time:             " + Time.MonthString() + "/" + Time.DayString() + "/" + Time.YearString() + ", " + Time.TimeString(true, true, true));
                             break;
                         case "mkdirfilealreadyexist":
                             Console.WriteLine("That folder existed already, directory \"" + arg + "\" has been created.");
@@ -423,7 +423,7 @@ namespace Aura_OS.System.Translation
                         case "NetworkInProgress":
                             Console.WriteLine("We are working on network, so");
                             Console.WriteLine("this feature is in alpha version.");
-                            Console.WriteLine("You can visit the roadmap here http://aura-team.com to");
+                            Console.WriteLine("You can visit the roadmap here aura-team.com to");
                             Console.WriteLine("see the progression on this part.");
                             Console.WriteLine();
                             break;
