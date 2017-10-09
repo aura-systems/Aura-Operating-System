@@ -2,6 +2,8 @@
 * PROJECT:          Aura Operating System Development
 * CONTENT:          Time Implementation
 * PROGRAMMERS:      Valentin Charbonnier <valentinbreiz@gmail.com>
+*                   John Welsh <djlw78@gmail.com>
+*                   Alexy DA CRUZ <dacruzalexy@gmail.com>
 */
 
 using Cosmos.HAL;
@@ -27,51 +29,67 @@ namespace Aura_OS.System
 
         static int DayOfWeek() { return RTC.DayOfTheWeek; }
 
+        static string getTime24(bool hour, bool min, bool sec)
+        {
+            string timeStr = "";
+            if (hour) { timeStr += Hour().ToString(); }
+            if (min)
+            {
+                timeStr += ":";
+                timeStr += Minute().ToString();
+            }
+            if (sec)
+            {
+                timeStr += ":";
+                timeStr += Second().ToString();
+            }
+            return timeStr;
+        }
+
+        static string getTime12(bool hour, bool min, bool sec)
+        {
+            string timeStr = "";
+            if (hour)
+            {
+                if (Hour() > 12)
+                    timeStr += Hour() - 12;
+                else
+                    timeStr += Hour();
+            }
+            if (min)
+            {
+                timeStr += ":";
+                timeStr += Minute().ToString();
+            }
+            if (sec)
+            {
+                timeStr += ":";
+                timeStr += Second().ToString();
+            }
+            if (hour)
+            {
+                if (Hour() > 12)
+                    timeStr += " PM";
+                else
+                    timeStr += " AM";
+            }
+            return timeStr;
+        }
+
         /// <summary>
         /// Hour String
         /// </summary>
         /// <returns>Actual Hour</returns>
-        public static string HourString() {
-            int inthour = Hour();
-            string stringhour = inthour.ToString();
-
-            if (stringhour.Length == 1)
+        public static string TimeString(bool hour, bool min, bool sec) {
+            switch (Kernel.langSelected)
             {
-                stringhour = "0" + stringhour;
+                case "fr_FR":
+                    return getTime24(hour, min, sec);
+                case "en_US":
+                    return getTime12(hour, min, sec);
+                default:
+                    return getTime12(hour, min, sec);
             }
-            return stringhour;
-        }
-
-        /// <summary>
-        /// Minutes String
-        /// </summary>
-        /// <returns>Actual Minutes</returns>
-        public static string MinuteString()
-        {
-            int intminute = Minute();
-            string stringminute = intminute.ToString();
-
-            if (stringminute.Length == 1)
-            {
-                stringminute = "0" + stringminute;
-            }
-            return stringminute;
-        }
-
-        /// <summary>
-        /// Year String
-        /// </summary>
-        /// <returns>Actual Seconds</returns>
-        public static string SecondString()
-        {
-            int intsecond = Second();
-            string stringsecond = intsecond.ToString();
-
-            if (stringsecond.Length == 1)
-            {
-                stringsecond = "0" + stringsecond;
-            }
-            return stringsecond;
         }
 
         /// <summary>
