@@ -1,4 +1,11 @@
-﻿using L = Aura_OS.System.Translation;
+﻿/*
+* PROJECT:          Aura Operating System Development
+* CONTENT:          Command Interpreter - Network IPCONFIG
+* PROGRAMMER(S):    Alexy DA CRUZ <dacruzalexy@gmail.com>
+*/
+
+
+using L = Aura_OS.System.Translation;
 
 namespace Aura_OS.Shell.cmdIntr.SystemInfomation
 {
