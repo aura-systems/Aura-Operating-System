@@ -53,23 +53,16 @@ namespace Aura_OS.Shell.cmdIntr.Settings
                 Users users = new Users();
 
                 users.Create(argsuser);
-
             }
 
             else if (cmdargs[1].Equals("setcomputername"))
             {
                 //method computername
                 Info.AskComputerName();
-
             }
 
             else if (cmdargs[1].Equals("setlang"))
             {
-                if (cmdargs.Length == 2)
-                {
-                    L.Text.Display("availablelanguage");
-                }
-
                 if ((cmdargs[2].Equals("en_US")) || cmdargs[2].Equals("en-US"))
                 {
                     Kernel.langSelected = "en_US";
