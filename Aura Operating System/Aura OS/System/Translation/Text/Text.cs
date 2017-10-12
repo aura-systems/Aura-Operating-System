@@ -236,6 +236,9 @@ namespace Aura_OS.System.Translation
                         case "MAC":
                             Console.WriteLine("Addresse Physique (MAC): " + Cosmos.HAL.Drivers.PCI.Network.AMDPCNetII.PhysicalAdress());
                             break;
+                        case "notavalidscript":
+                            Console.WriteLine("Ce fichier n'est pas un script valide.");
+                            break;
                     }
                     break;
 
@@ -429,6 +432,9 @@ namespace Aura_OS.System.Translation
                             break;
                         case "MAC":
                             Console.WriteLine("MAC Address: " + Cosmos.HAL.Drivers.PCI.Network.AMDPCNetII.PhysicalAdress());
+                            break;
+                        case "notavalidscript":
+                            Console.WriteLine("This file is not a valid script.");
                             break;
                     }
                     break;
