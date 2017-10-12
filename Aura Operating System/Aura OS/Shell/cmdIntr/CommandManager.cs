@@ -122,10 +122,14 @@ namespace Aura_OS.Shell.cmdIntr
             {
                 FileSystem.Vol.c_Vol();
             }
+            else if (cmd.StartsWith("run "))
+            {
+                FileSystem.Run.c_Run(cmd);
+            }
 
-        #endregion FileSystem
+            #endregion FileSystem
 
-        #region Settings
+            #region Settings
 
             else if (cmd.Equals("logout"))
             {
