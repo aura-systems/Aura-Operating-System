@@ -44,7 +44,7 @@ Now click on "Create a new virtual machine", select the iso file downloaded on [
 
 Now click on "Other" for "Guest operating system" and "Other" for version, click "Next" again, select "Store virtual disk as a single file" and select "Finish". 
 
-The Virtual File System won't work so go to "C:\Users\username\Documents\Virtual Machines\Other" and replace the "Other.vmdk" by [this file](https://github.com/CosmosOS/Cosmos/raw/master/Cosmos/Build/VMWare/Workstation/Filesystem.vmdk).
+The Virtual File System won't work so go to "C:\Users\username\Documents\Virtual Machines\Other" and replace the "Other.vmdk" by [this file](https://github.com/CosmosOS/Cosmos/raw/master/Build/VMWare/Workstation/Filesystem.vmdk).
 
 Now you can select Aura (Other) and click on "Play Virtual Machine".
 
