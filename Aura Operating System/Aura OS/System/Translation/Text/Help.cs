@@ -21,33 +21,33 @@ namespace Aura_OS.System.Translation
             {
                 case "fr_FR":
                     Console.WriteLine("Commandes disponibles (1/2):");
-                    Console.WriteLine("- shutdown (Arrêt ACPI)");
-                    Console.WriteLine("- reboot (Redémarrage CPU)");
-                    Console.WriteLine("- clear (Efface la console)");
-                    Console.WriteLine("- cd .. (Pour naviguer dans l'arborescence)");
-                    Console.WriteLine("- cd (Pour aller à un dossier)");
-                    Console.WriteLine("- dir (Liste les fichiers et dossiers)");
-                    Console.WriteLine("- ls (Liste les fichiers et dossiers)");
-                    Console.WriteLine("- cp (Pour copier un fichier à une autre destination)");
-                    Console.WriteLine("- mkdir (Pour créer un dossier)");
-                    Console.WriteLine("- rmdir (Pour supprimer un dossier)");
-                    Console.WriteLine("- mkfil (Pour créer un fichier)");
-                    Console.WriteLine("- rmfil (Pour supprimer un fichier)");
-                    Console.WriteLine("- edit (Pour éditer un fichier)");
-                    Console.WriteLine("- vol (Liste les volumes FAT)");
-                    Console.WriteLine("- echo (Affiche un echo)");
-                    Console.WriteLine("- systeminfo (Affiche des informations systeme)");
-                    Console.WriteLine("- ver (Pour afficher la version système)");
-                    Console.WriteLine("- textcolor (Permet de changer la couleur de premier plan)");
-                    Console.WriteLine("- backgroundcolor (Permet de changer la couleur de dernier plan)");
-                    Console.WriteLine("- settings {args} (Permet d'accéder aux paramètres)");
-                    Console.WriteLine("- logout (Permet de se déconnecter)");
+                    Console.WriteLine("- shutdown (arrêt ACPI)");
+                    Console.WriteLine("- reboot (redémarrage CPU)");
+                    Console.WriteLine("- clear (efface la console)");
+                    Console.WriteLine("- cd .. (pour naviguer dans le dossier parent)");
+                    Console.WriteLine("- cd (pour aller à un dossier)");
+                    Console.WriteLine("- dir (liste les fichiers et dossiers)");
+                    Console.WriteLine("- ls (liste les fichiers et dossiers)");
+                    Console.WriteLine("- cp (pour copier un fichier à une autre destination)");
+                    Console.WriteLine("- mkdir (pour créer un dossier)");
+                    Console.WriteLine("- rmdir (pour supprimer un dossier)");
+                    Console.WriteLine("- mkfil (pour créer un fichier)");
+                    Console.WriteLine("- rmfil (pour supprimer un fichier)");
+                    Console.WriteLine("- edit (pour éditer un fichier)");
+                    Console.WriteLine("- vol (list les volumes FAT)");
+                    Console.WriteLine("- echo (affiche un echo)");
+                    Console.WriteLine("- systeminfo (affiche des informations systeme)");
+                    Console.WriteLine("- ver (pour afficher la version système)");
+                    Console.WriteLine("- textcolor (permet de changer la couleur de premier plan)");
+                    Console.WriteLine("- backgroundcolor (permet de changer la couleur de dernier plan)");
+                    Console.WriteLine("- settings {args} (permet d'accéder aux paramètres)");
+                    Console.WriteLine("- logout (permet de se déconnecter)");
 
                     Console.ReadKey(); //page 2
                     Console.WriteLine();
                     Console.WriteLine("Commandes disponibles (2/2):");
-                    Console.WriteLine("- time (Récupère le temps et la date du jour)");
-                    Console.WriteLine("- ipconfig (Affiche les informations réseau)");
+                    Console.WriteLine("- time (récupère la date et l'heure)");
+                    Console.WriteLine("- ipconfig (affiche les informations réseau)");
 
                     Console.ReadKey();
 
@@ -55,7 +55,7 @@ namespace Aura_OS.System.Translation
 
                 case "en_US":
                     Console.WriteLine("Available commands (1/2):");
-                    Console.WriteLine("- shutdown (to do a ACPI Shutdown)");
+                    Console.WriteLine("- shutdown (to do an ACPI Shutdown)");
                     Console.WriteLine("- reboot (to do a CPU Reboot)");
                     Console.WriteLine("- clear (to clear the console)");
                     Console.WriteLine("- cd .. (to navigate to the parent folder)");
@@ -70,19 +70,19 @@ namespace Aura_OS.System.Translation
                     Console.WriteLine("- edit (to edit a file)");
                     Console.WriteLine("- vol (to list volumes)");
                     Console.WriteLine("- echo (to echo text)");
-                    Console.WriteLine("- systeminfo (to display system informations)");
+                    Console.WriteLine("- systeminfo (to display system information)");
                     Console.WriteLine("- ver (to display system version)");
                     Console.WriteLine("- textcolor (change foreground colour)");
                     Console.WriteLine("- backgroundcolor (change background colour)");
-                    Console.WriteLine("- settings {args} (Access to settings)");
-                    Console.WriteLine("- logout (To disconnect)");
+                    Console.WriteLine("- settings {args} (access to settings)");
+                    Console.WriteLine("- logout (to disconnect)");
                     
                     Console.ReadKey(); //page 2
 
                     Console.WriteLine();
                     Console.WriteLine("Available commands (2/2):");
                     Console.WriteLine("- time (to get time and date)");
-                    Console.WriteLine("- ipconfig (to get network informations)");
+                    Console.WriteLine("- ipconfig (to get network information)");
 
                     Console.ReadKey();
 
@@ -99,16 +99,16 @@ namespace Aura_OS.System.Translation
             {
                 case "fr_FR":
                     Console.WriteLine("Commandes disponible:");
-                    Console.WriteLine("- adduser (Pour créer un compte)");
-                    Console.WriteLine("- setcomputername (Nom de l'ordinateur)");
-                    Console.WriteLine("- setlang {lang} (Change la langue du système)");
+                    Console.WriteLine("- adduser (pour créer un compte)");
+                    Console.WriteLine("- setcomputername (pour changer le nom de l'ordinateur)");
+                    Console.WriteLine("- setlang {lang} (pour changer la langue du système)");
                     break;
 
                 case "en_US":
                     Console.WriteLine("Available commands:");
-                    Console.WriteLine("- adduser (To create an account)");
-                    Console.WriteLine("- setcomputername (Computer name)");
-                    Console.WriteLine("- setlang {lang} (Change system language)");
+                    Console.WriteLine("- adduser (to create an account)");
+                    Console.WriteLine("- setcomputername (to change the computer name)");
+                    Console.WriteLine("- setlang {lang} (to change the system language)");
                     break;
             }
         }
