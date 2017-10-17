@@ -302,10 +302,10 @@ namespace Aura_OS.System.Translation
                             Console.WriteLine("Choose your language:");
                             break;
                         case "chooseyourusername":
-                            Console.WriteLine("Choose a user name for your Aura Account:");
+                            Console.WriteLine("Choose a user name for your Aura account:");
                             break;
                         case "alreadyuser":
-                            Console.WriteLine("This user exist already!");
+                            Console.WriteLine("This user already exists!");
                             break;
                         case "passuser":
                             Console.WriteLine("Choose a password for " + arg);
