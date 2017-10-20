@@ -11,6 +11,37 @@ namespace Aura_OS.System.Drawable
     public class Menu
     {
 
+        public static void DispInstallationDialog()
+        {
+            Console.Clear();
+
+            int x = Console.CursorLeft;
+            int y = Console.CursorTop;
+
+            Console.BackgroundColor = ConsoleColor.Blue;
+
+            Console.SetCursorPosition(8, 10);
+
+            Console.WriteLine("╔══════════════════ Installation in progress ══════════════════╗");
+            Console.SetCursorPosition(x, y);
+
+            Console.SetCursorPosition(8, 11);
+            Console.WriteLine("║                                                              ║");
+            Console.SetCursorPosition(x, y);
+
+            Console.SetCursorPosition(8, 12);
+            Console.WriteLine("║                                                              ║");
+            Console.SetCursorPosition(x, y);
+
+            Console.SetCursorPosition(8, 13);
+            Console.WriteLine("║                                                              ║");
+            Console.SetCursorPosition(x, y);
+
+            Console.SetCursorPosition(8, 14);
+            Console.WriteLine("╚══════════════════════════════════════════════════════════════╝");
+            Console.SetCursorPosition(x, y);
+        }
+
         /// <summary>
         /// Display the login form
         /// </summary>
