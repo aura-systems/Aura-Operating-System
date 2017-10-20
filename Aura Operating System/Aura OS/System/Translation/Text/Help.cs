@@ -38,8 +38,6 @@ namespace Aura_OS.System.Translation
                     Console.WriteLine("- echo (affiche un echo)");
                     Console.WriteLine("- systeminfo (affiche des informations systeme)");
                     Console.WriteLine("- ver (pour afficher la version système)");
-                    Console.WriteLine("- textcolor (permet de changer la couleur de premier plan)");
-                    Console.WriteLine("- backgroundcolor (permet de changer la couleur de dernier plan)");
                     Console.WriteLine("- settings {args} (permet d'accéder aux paramètres)");
                     Console.WriteLine("- logout (permet de se déconnecter)");
 
@@ -72,8 +70,6 @@ namespace Aura_OS.System.Translation
                     Console.WriteLine("- echo (to echo text)");
                     Console.WriteLine("- systeminfo (to display system information)");
                     Console.WriteLine("- ver (to display system version)");
-                    Console.WriteLine("- textcolor (change foreground colour)");
-                    Console.WriteLine("- backgroundcolor (change background colour)");
                     Console.WriteLine("- settings {args} (access to settings)");
                     Console.WriteLine("- logout (to disconnect)");
                     
@@ -102,6 +98,8 @@ namespace Aura_OS.System.Translation
                     Console.WriteLine("- adduser (pour créer un compte)");
                     Console.WriteLine("- setcomputername (pour changer le nom de l'ordinateur)");
                     Console.WriteLine("- setlang {lang} (pour changer la langue du système)");
+                    Console.WriteLine("- backgroundcolor {colorID} (permet de changer la couleur de dernier plan)");
+                    Console.WriteLine("- textcolor {colorID} (permet de changer la couleur de premier plan)");
                     break;
 
                 case "en_US":
@@ -109,6 +107,8 @@ namespace Aura_OS.System.Translation
                     Console.WriteLine("- adduser (to create an account)");
                     Console.WriteLine("- setcomputername (to change the computer name)");
                     Console.WriteLine("- setlang {lang} (to change the system language)");
+                    Console.WriteLine("- backgroundcolor {colorID} (to change background color)");
+                    Console.WriteLine("- textcolor {colorID} (to change foreground colour)");
                     break;
             }
         }

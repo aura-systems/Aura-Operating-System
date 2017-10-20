@@ -50,22 +50,6 @@ namespace Aura_OS.Shell.cmdIntr
             {
                 System.Translation.Help._Help();
             }
-            else if (cmd.Equals("textcolor"))
-            {
-                c_Console.TextColor.c_TextColor();
-            }
-            else if (cmd.StartsWith("textcolor "))
-            {
-                c_Console.TextColor.c_TextColor(cmd);
-            }
-            else if (cmd.Equals("backgroundcolor"))
-            {
-                c_Console.BackGroundColor.c_BackGroundColor();
-            }
-            else if (cmd.StartsWith("backgroundcolor "))
-            {
-                c_Console.BackGroundColor.c_BackGroundColor(cmd);
-            }
 
         #endregion Console
 
@@ -129,7 +113,7 @@ namespace Aura_OS.Shell.cmdIntr
 
             #endregion FileSystem
 
-            #region Settings
+        #region Settings
 
             else if (cmd.Equals("logout"))
             {
