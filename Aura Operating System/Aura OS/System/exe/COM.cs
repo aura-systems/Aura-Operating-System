@@ -6,6 +6,8 @@ using System.Runtime.InteropServices;
 using XSharp;
 using Cosmos.IL2CPU.API.Attribs;
 using XSharp.Assembler;
+using System.IO;
+
 namespace  Aura_OS.System.exe
 {
     public unsafe class COM
@@ -14,7 +16,8 @@ namespace  Aura_OS.System.exe
 
         public COM(string file)
         {
-           // code = { 0;//readfile
+            code = File.ReadAllBytes(file);
+            // code = { 0;//readfile
         }
 
         public void Execute()

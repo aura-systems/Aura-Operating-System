@@ -5,6 +5,10 @@
     <ProjectGuid>{dd67a21e-24aa-45a8-9886-4bb88f63680a}</ProjectGuid>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+
   <ItemGroup>
     <None Remove="Aura_OSBoot.Cosmos" />
   </ItemGroup>
