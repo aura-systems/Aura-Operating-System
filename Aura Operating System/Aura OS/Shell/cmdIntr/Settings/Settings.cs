@@ -100,7 +100,7 @@ namespace Aura_OS.Shell.cmdIntr.Settings
 
             else if (cmdargs[1].Equals("textcolor"))
             {
-                  c_Console.TextColor.c_TextColor(cmdargs[2]);
+                c_Console.TextColor.c_TextColor(cmdargs[2]);
             }
             else if (cmdargs[1].Equals("backgroundcolor"))
             {

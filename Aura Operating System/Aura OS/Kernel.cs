@@ -34,10 +34,11 @@ namespace Aura_OS
         public static string userLogged;
         public static string userLevelLogged;
         public static bool Logged = false;
-        public static string ComputerName = "Aura-PC";
-        public static int color;
+        public static string ComputerName = "aura-pc";
+        public static int color = 7;
         public static string RootContent;
         public static string UserDir = @"0:\Users\" + userLogged + "\\";
+        public static bool SystemExists = false;
 
         #endregion
 
@@ -47,15 +48,6 @@ namespace Aura_OS
         {
 
             Console.Clear();
-
-            Console.ForegroundColor = ConsoleColor.Green;
-            Console.Write("[OK]");
-            Console.ForegroundColor = ConsoleColor.White;
-            Console.Write(" ");
-            Console.ForegroundColor = ConsoleColor.DarkMagenta;
-            Console.Write("Aura Kernel Booted Successfully!\n");
-            Console.ForegroundColor = ConsoleColor.White;
-
             Console.ForegroundColor = ConsoleColor.DarkMagenta;
             Console.Write("Booting Aura...\n");
             Console.ForegroundColor = ConsoleColor.White;
@@ -88,23 +80,30 @@ namespace Aura_OS
 
             setup.SetupVerifyCompleted();
 
-            langSelected = File.ReadAllText(@"0:\System\lang.set");
+            if (SystemExists == true)
+            {
+                langSelected = File.ReadAllText(@"0:\System\lang.set");
 
-            #region Language
+                #region Language
 
-            Lang.Keyboard.Init();
+                Lang.Keyboard.Init();
 
-            #endregion
+                #endregion
 
-            RootContent = File.ReadAllText(@"0:\System\Users\root.usr");
+                RootContent = File.ReadAllText(@"0:\System\Users\root.usr");
 
-            Info.getComputerName();
+                Info.getComputerName();
 
-            Color.GetBackgroundColor();
+                Color.GetBackgroundColor();
 
-            color = Color.GetTextColor();
+                color = Color.GetTextColor();
 
-            running = true;
+                running = true;
+            }
+            else if (SystemExists == false)
+            {
+                running = true;
+            }
         }
 
         #endregion

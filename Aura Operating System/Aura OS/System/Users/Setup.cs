@@ -26,7 +26,12 @@ namespace Aura_OS.System
             {
                 if (!File.Exists(@"0:\System\setup.set"))
                 {
+                    Kernel.SystemExists = false;
                     StartSetup();
+                }
+                else
+                {
+                    Kernel.SystemExists = true;
                 }
             }
             catch { }
@@ -37,7 +42,7 @@ namespace Aura_OS.System
         /// </summary>
         public void StartSetup()
         {
-            Step1();
+            Step3();
         }
 
         /// <summary>
@@ -104,8 +109,6 @@ namespace Aura_OS.System
                             string text = "root";
                             string md5psw = MD5.hash(text);
                             File.WriteAllText(@"0:\System\Users\root.usr", md5psw + "|admin");
-
-                            Step3();
                         }
                     }
                     catch
@@ -184,12 +187,14 @@ namespace Aura_OS.System
             WelcomeMessage.Display();
             Text.Display("logged", user);
             Console.WriteLine();
+            Kernel.SystemExists = true;
             Kernel.Logged = true;
         }
 
         private void Installation()
         {
 
+            Step1();
             int x = Console.CursorLeft;
             int y = Console.CursorTop;
 
@@ -284,6 +289,13 @@ namespace Aura_OS.System
             Console.ForegroundColor = ConsoleColor.White;
         }
 
+        public static void RootLogin()
+        {
+            Kernel.SystemExists = false;
+            Kernel.userLogged = "root";
+            Kernel.Logged = true;
+        }
+
         string step4_user;
         string step4_pass;
 
@@ -300,34 +312,41 @@ namespace Aura_OS.System
             string user = text.Remove(middle, text.Length - middle);
             string pass = text.Remove(0, middle + 6);
 
-            if (File.Exists(@"0:\System\Users\" + user + ".usr"))
+            if (user == "root" || pass == "root")
             {
-                Text.Menu("alreadyuser");
-                Step4();
+                RootLogin();
             }
             else
             {
-                if((user.Length >= 4) && (user.Length <= 20))
+                if (File.Exists(@"0:\System\Users\" + user + ".usr"))
                 {
-
-                    if ((pass.Length >= 6) && (pass.Length <= 40))
-                    {
-                        string password = MD5.hash(pass);
-                        step4_pass = password;
-                        step4_user = user;
-                        Step5(step4_user);
-                    }
-                    else
-                    {
-                        Text.Menu("error2");
-                        Step4();
-                    }
+                    Text.Menu("alreadyuser");
+                    Step4();
                 }
                 else
                 {
-                    Text.Menu("error3");
-                    Step4();
-                }             
+                    if ((user.Length >= 4) && (user.Length <= 20))
+                    {
+
+                        if ((pass.Length >= 6) && (pass.Length <= 40))
+                        {
+                            string password = MD5.hash(pass);
+                            step4_pass = password;
+                            step4_user = user;
+                            Step5(step4_user);
+                        }
+                        else
+                        {
+                            Text.Menu("error2");
+                            Step4();
+                        }
+                    }
+                    else
+                    {
+                        Text.Menu("error3");
+                        Step4();
+                    }
+                }
             }
         }
 
