@@ -4,17 +4,17 @@
   </PropertyGroup>
   <PropertyGroup>
     <BinFormat>elf</BinFormat>
-    <Profile>VMware</Profile>
-    <DebugEnabled>True</DebugEnabled>
+    <Profile>ISO</Profile>
+    <DebugEnabled>False</DebugEnabled>
     <DebugMode>Source</DebugMode>
     <TraceMode>User</TraceMode>
     <EnableGDB>False</EnableGDB>
     <StartCosmosGDB>false</StartCosmosGDB>
-    <VMWareEdition>Workstation</VMWareEdition>
+    <VMWareEdition>Player</VMWareEdition>
     <OutputPath>bin\Debug\</OutputPath>
-    <Description>Use VMware Player or Workstation to deploy and debug.</Description>
+    <Description>Creates a bootable ISO image which can be burned to a DVD. After running the selected project, an explorer window will open containing the ISO file. The ISO file can then be burned to a CD or DVD and used to boot a physical or virtual system.</Description>
     <Deployment>ISO</Deployment>
-    <Launch>VMware</Launch>
+    <Launch>None</Launch>
     <VisualStudioDebugPort>Pipe: Cosmos\Serial</VisualStudioDebugPort>
     <PxeInterface>192.168.68.1</PxeInterface>
     <VMware_Description>Use VMware Player or Workstation to deploy and debug.</VMware_Description>
