@@ -21,11 +21,11 @@ namespace Aura_OS.System
                 case "fr_FR":
                     Console.ForegroundColor = ConsoleColor.White;
                     Console.WriteLine($@"
-  █████╗ ██╗   ██╗██████╗  █████╗ 
+  █████╗ ██╗   ██╗██████╗  █████╗
  ██╔══██╗██║   ██║██╔══██╗██╔══██╗
- ███████║██║   ██║██████╔╝███████║ créé par Valentin Charbonnier
- ██╔══██║██║   ██║██╔══██╗██╔══██║       et Alexy DA CRUZ
- ██║  ██║╚██████╔╝██║  ██║██║  ██║
+ ███████║██║   ██║██████╔╝███████║
+ ██╔══██║██║   ██║██╔══██╗██╔══██║ créé par Valentin Charbonnier
+ ██║  ██║╚██████╔╝██║  ██║██║  ██║ et Alexy DA CRUZ
  ╚═╝  ╚═╝ ╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═╝ v{ Kernel.version }
 ");
                     break;
@@ -33,11 +33,11 @@ namespace Aura_OS.System
                 case "en_US":
                     Console.ForegroundColor = ConsoleColor.White;
                     Console.WriteLine($@"
-  █████╗ ██╗   ██╗██████╗  █████╗ 
+  █████╗ ██╗   ██╗██████╗  █████╗
  ██╔══██╗██║   ██║██╔══██╗██╔══██╗
- ███████║██║   ██║██████╔╝███████║ created by Valentin Charbonnier
- ██╔══██║██║   ██║██╔══██╗██╔══██║        and Alexy DA CRUZ
- ██║  ██║╚██████╔╝██║  ██║██║  ██║
+ ███████║██║   ██║██████╔╝███████║ 
+ ██╔══██║██║   ██║██╔══██╗██╔══██║ created by Valentin Charbonnier
+ ██║  ██║╚██████╔╝██║  ██║██║  ██║ and Alexy DA CRUZ
  ╚═╝  ╚═╝ ╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═╝ v{ Kernel.version }
 ");
                     break;
