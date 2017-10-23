@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.Net.Sdk">
+<Project Sdk="Microsoft.Net.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
@@ -17,7 +17,7 @@
     <PackageReference Include="Cosmos.Debug.Kernel" Version="1.0.0-*" />
     <PackageReference Include="Cosmos.System2" Version="1.0.0-*" />
   </ItemGroup>
-
+   
   <ItemGroup>
     <Folder Include="Apps\System\" />
   </ItemGroup>
@@ -30,5 +30,4 @@
       <HintPath>..\..\..\..\Cosmos\XSharp\source\XSharp\bin\Debug\netstandard2.0\XSharp.Assembler.dll</HintPath>
     </Reference>
   </ItemGroup>
-
 </Project>

@@ -236,6 +236,9 @@ namespace Aura_OS.System.Translation
                         case "MAC":
                             Console.WriteLine("Addresse Physique (MAC): " + Cosmos.HAL.Drivers.PCI.Network.AMDPCNetII.PhysicalAdress());
                             break;
+                        case "notavalidscript":
+                            Console.WriteLine("Ce fichier n'est pas un script valide.");
+                            break;
                     }
                     break;
 
@@ -299,10 +302,10 @@ namespace Aura_OS.System.Translation
                             Console.WriteLine("Choose your language:");
                             break;
                         case "chooseyourusername":
-                            Console.WriteLine("Choose a user name for your Aura Account:");
+                            Console.WriteLine("Choose a user name for your Aura account:");
                             break;
                         case "alreadyuser":
-                            Console.WriteLine("This user exist already!");
+                            Console.WriteLine("This user already exists!");
                             break;
                         case "passuser":
                             Console.WriteLine("Choose a password for " + arg);
@@ -429,6 +432,9 @@ namespace Aura_OS.System.Translation
                             break;
                         case "MAC":
                             Console.WriteLine("MAC Address: " + Cosmos.HAL.Drivers.PCI.Network.AMDPCNetII.PhysicalAdress());
+                            break;
+                        case "notavalidscript":
+                            Console.WriteLine("This file is not a valid script.");
                             break;
                     }
                     break;
