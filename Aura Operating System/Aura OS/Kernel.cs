@@ -39,6 +39,7 @@ namespace Aura_OS
         public static string RootContent;
         public static string UserDir = @"0:\Users\" + userLogged + "\\";
         public static bool SystemExists = false;
+        public static bool JustInstalled = false;
 
         #endregion
 
@@ -82,23 +83,26 @@ namespace Aura_OS
 
             if (SystemExists == true)
             {
-                langSelected = File.ReadAllText(@"0:\System\lang.set");
+                if (JustInstalled == false)
+                {
+                    langSelected = File.ReadAllText(@"0:\System\lang.set");
 
-                #region Language
+                    #region Language
 
-                Lang.Keyboard.Init();
+                    Lang.Keyboard.Init();
 
-                #endregion
+                    #endregion
 
-                RootContent = File.ReadAllText(@"0:\System\Users\root.usr");
+                    RootContent = File.ReadAllText(@"0:\System\Users\root.usr");
 
-                Info.getComputerName();
+                    Info.getComputerName();
 
-                Color.GetBackgroundColor();
+                    Color.GetBackgroundColor();
 
-                color = Color.GetTextColor();
+                    color = Color.GetTextColor();
 
-                running = true;
+                    running = true;
+                }
             }
             else if (SystemExists == false)
             {

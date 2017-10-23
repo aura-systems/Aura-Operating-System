@@ -178,14 +178,14 @@ namespace Aura_OS.System
         /// </summary>
         private void Step6(string user)
         {
-            Menu.DispInstallationDialog();
             Installation();
-            Console.BackgroundColor = ConsoleColor.Black;
-            File.Create(@"0:\System\setup.set");
+
             Kernel.userLogged = user;
             Console.Clear();
+
             WelcomeMessage.Display();
             Text.Display("logged", user);
+
             Console.WriteLine();
             Kernel.SystemExists = true;
             Kernel.Logged = true;
@@ -194,15 +194,21 @@ namespace Aura_OS.System
         private void Installation()
         {
 
-            Step1();
             int x = Console.CursorLeft;
             int y = Console.CursorTop;
 
+            Menu.DispInstallationDialog();
+
             Console.ForegroundColor = ConsoleColor.Green;
             Console.SetCursorPosition(10, 12);
-            Console.WriteLine("########");
+            Console.WriteLine("#####");
             Console.SetCursorPosition(x, y);
-            Console.ForegroundColor = ConsoleColor.White;
+
+            Step1();
+
+            Console.SetCursorPosition(10, 12);
+            Console.WriteLine("##########");
+            Console.SetCursorPosition(x, y);
 
             switch (Kernel.langSelected)
             {
@@ -211,11 +217,9 @@ namespace Aura_OS.System
                     if (File.Exists(@"0:\System\lang.set"))
                     {
                         File.WriteAllText(@"0:\System\lang.set", Kernel.langSelected);
-                        Console.ForegroundColor = ConsoleColor.Green;
                         Console.SetCursorPosition(10, 12);
-                        Console.WriteLine("################");
+                        Console.WriteLine("###############");
                         Console.SetCursorPosition(x, y);
-                        Console.ForegroundColor = ConsoleColor.White;
                     }
                     else
                     {
@@ -227,11 +231,9 @@ namespace Aura_OS.System
                     if (File.Exists(@"0:\System\lang.set"))
                     {
                         File.WriteAllText(@"0:\System\lang.set", Kernel.langSelected);
-                        Console.ForegroundColor = ConsoleColor.Green;
                         Console.SetCursorPosition(10, 12);
-                        Console.WriteLine("################");
+                        Console.WriteLine("###############");
                         Console.SetCursorPosition(x, y);
-                        Console.ForegroundColor = ConsoleColor.White;
                     }
                     else
                     {
@@ -242,37 +244,29 @@ namespace Aura_OS.System
 
             File.Create(@"0:\System\Users\" + step4_user + ".usr");
 
-            Console.ForegroundColor = ConsoleColor.Green;
             Console.SetCursorPosition(10, 12);
-            Console.WriteLine("########################");
+            Console.WriteLine("####################");
             Console.SetCursorPosition(x, y);
-            Console.ForegroundColor = ConsoleColor.White;
 
             Directory.CreateDirectory(@"0:\Users\" + step4_user);
 
-            Console.ForegroundColor = ConsoleColor.Green;
             Console.SetCursorPosition(10, 12);
-            Console.WriteLine("################################");
+            Console.WriteLine("#########################");
             Console.SetCursorPosition(x, y);
-            Console.ForegroundColor = ConsoleColor.White;
 
             InitDefaults(step4_user);
 
-            Console.ForegroundColor = ConsoleColor.Green;
             Console.SetCursorPosition(10, 12);
-            Console.WriteLine("########################################");
+            Console.WriteLine("##############################");
             Console.SetCursorPosition(x, y);
-            Console.ForegroundColor = ConsoleColor.White;
 
             if (File.Exists(@"0:\System\Users\" + step4_user + ".usr"))
             {
                 File.WriteAllText(@"0:\System\Users\" + step4_user + ".usr", step4_pass + "|standard");
 
-                Console.ForegroundColor = ConsoleColor.Green;
                 Console.SetCursorPosition(10, 12);
-                Console.WriteLine("################################################");
+                Console.WriteLine("###################################");
                 Console.SetCursorPosition(x, y);
-                Console.ForegroundColor = ConsoleColor.White;
 
             }
             else
@@ -282,11 +276,49 @@ namespace Aura_OS.System
 
             Info.setComputerName(step5_computername);
 
-            Console.ForegroundColor = ConsoleColor.Green;
+            Console.SetCursorPosition(10, 12);
+            Console.WriteLine("########################################");
+            Console.SetCursorPosition(x, y);
+
+            File.Create(@"0:\System\setup.set");
+
+            Console.SetCursorPosition(10, 12);
+            Console.WriteLine("#############################################");
+            Console.SetCursorPosition(x, y);
+
+            Kernel.langSelected = File.ReadAllText(@"0:\System\lang.set");
+
+            #region Language
+
+            Keyboard.Init();
+
+            #endregion
+
+            Kernel.RootContent = File.ReadAllText(@"0:\System\Users\root.usr");
+
+            Info.getComputerName();
+
+            Console.SetCursorPosition(10, 12);
+            Console.WriteLine("##################################################");
+            Console.SetCursorPosition(x, y);
+
+            Computer.Color.GetBackgroundColor();
+
+            Console.SetCursorPosition(10, 12);
+            Console.WriteLine("#######################################################");
+            Console.SetCursorPosition(x, y);
+
+            Kernel.color = Computer.Color.GetTextColor();
+
             Console.SetCursorPosition(10, 12);
             Console.WriteLine("############################################################");
             Console.SetCursorPosition(x, y);
+
             Console.ForegroundColor = ConsoleColor.White;
+            Console.BackgroundColor = ConsoleColor.Black;
+
+            Kernel.JustInstalled = true;
+            Kernel.running = true;
         }
 
         public static void RootLogin()
