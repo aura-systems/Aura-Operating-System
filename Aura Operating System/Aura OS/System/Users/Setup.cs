@@ -344,42 +344,36 @@ namespace Aura_OS.System
             string user = text.Remove(middle, text.Length - middle);
             string pass = text.Remove(0, middle + 6);
 
-            if (user == "root" || pass == "root")
+
+            if (File.Exists(@"0:\System\Users\" + user + ".usr"))
             {
-                RootLogin();
+                Text.Menu("alreadyuser");
+                Step4();
             }
             else
             {
-                if (File.Exists(@"0:\System\Users\" + user + ".usr"))
+                if ((user.Length >= 4) && (user.Length <= 20))
                 {
-                    Text.Menu("alreadyuser");
-                    Step4();
-                }
-                else
-                {
-                    if ((user.Length >= 4) && (user.Length <= 20))
-                    {
 
-                        if ((pass.Length >= 6) && (pass.Length <= 40))
-                        {
-                            string password = MD5.hash(pass);
-                            step4_pass = password;
-                            step4_user = user;
-                            Step5(step4_user);
-                        }
-                        else
-                        {
-                            Text.Menu("error2");
-                            Step4();
-                        }
+                    if ((pass.Length >= 6) && (pass.Length <= 40))
+                    {
+                        string password = MD5.hash(pass);
+                        step4_pass = password;
+                        step4_user = user;
+                        Step5(step4_user);
                     }
                     else
                     {
-                        Text.Menu("error3");
+                        Text.Menu("error2");
                         Step4();
                     }
                 }
-            }
+                else
+                {
+                        Text.Menu("error3");
+                        Step4();
+                }
+            }  
         }
 
         #region Defaults
