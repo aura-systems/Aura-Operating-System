@@ -27,13 +27,13 @@ Please read the [Aura Progression](https://github.com/aura-systems/Aura-Operatin
 
 Login:
 
-![Aura Operating System](https://image.noelshack.com/fichiers/2017/38/7/1506264215-aura-1.png)
+![Aura Operating System](https://image.noelshack.com/fichiers/2017/43/2/1508857711-aura1.png)
 
 Shell:
 
-![Aura Operating System](https://image.noelshack.com/fichiers/2017/38/7/1506264209-aura-2.png)
+![Aura Operating System](https://image.noelshack.com/fichiers/2017/43/2/1508857715-aura2.png)
 
-![Aura Operating System](https://image.noelshack.com/fichiers/2017/32/5/1502404673-alve6.png)
+![Aura Operating System](https://image.noelshack.com/fichiers/2017/43/2/1508857703-aura3.png)
 
 ![Aura Operating System](https://image.noelshack.com/fichiers/2017/31/4/1501777813-alve5.png)
 
