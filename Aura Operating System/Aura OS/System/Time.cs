@@ -32,16 +32,42 @@ namespace Aura_OS.System
         static string getTime24(bool hour, bool min, bool sec)
         {
             string timeStr = "";
-            if (hour) { timeStr += Hour().ToString(); }
+            if (hour)
+            {
+                if (Hour().ToString().Length == 1)
+                {
+                    timeStr += "0" + Hour().ToString();
+                }
+                else
+                {
+                    timeStr += Hour().ToString();
+                }
+            }
             if (min)
             {
-                timeStr += ":";
-                timeStr += Minute().ToString();
+                if (Minute().ToString().Length == 1)
+                {
+                    timeStr += ":";
+                    timeStr += "0" + Minute().ToString();
+                }
+                else
+                {
+                    timeStr += ":";
+                    timeStr += Minute().ToString();
+                }
             }
             if (sec)
             {
-                timeStr += ":";
-                timeStr += Second().ToString();
+                if (Second().ToString().Length == 1)
+                {
+                    timeStr += ":";
+                    timeStr += "0" + Second().ToString();
+                }
+                else
+                {
+                    timeStr += ":";
+                    timeStr += Second().ToString();
+                }
             }
             return timeStr;
         }
@@ -58,13 +84,29 @@ namespace Aura_OS.System
             }
             if (min)
             {
-                timeStr += ":";
-                timeStr += Minute().ToString();
+                if (Minute().ToString().Length == 1)
+                {
+                    timeStr += ":";
+                    timeStr += "0" + Minute().ToString();
+                }
+                else
+                {
+                    timeStr += ":";
+                    timeStr += Minute().ToString();
+                }
             }
             if (sec)
             {
-                timeStr += ":";
-                timeStr += Second().ToString();
+                if (Second().ToString().Length == 1)
+                {
+                    timeStr += ":";
+                    timeStr += "0" + Second().ToString();
+                }
+                else
+                {
+                    timeStr += ":";
+                    timeStr += Second().ToString();
+                }
             }
             if (hour)
             {
