@@ -24,25 +24,37 @@ namespace Aura_OS.System
         {
             try
             {
-                if (!File.Exists(@"0:\System\setup.set"))
+                File.Create(@"0:\filesystem.sys");
+                if (File.Exists(@"0:\filesystem.sys"))
                 {
-                    Kernel.SystemExists = false;
-                    StartSetup();
+                    File.Delete(@"0:\filesystem.sys");
+                    if (!File.Exists(@"0:\System\setup.set"))
+                    {
+                        Kernel.SystemExists = false;
+                        StartSetup(true);
+                    }
+                    else
+                    {
+                        Kernel.SystemExists = true;
+                    }
                 }
                 else
                 {
-                    Kernel.SystemExists = true;
+                    StartSetup(false);
                 }
             }
-            catch { }
+            catch
+            {
+                StartSetup(false);
+            }
         }
 
         /// <summary>
         /// Start setup
         /// </summary>
-        public void StartSetup()
+        public void StartSetup(bool filesystemexists)
         {
-            Step3();
+            Step3(filesystemexists);
         }
 
         /// <summary>
@@ -71,6 +83,8 @@ namespace Aura_OS.System
             }
             catch
             {
+                Console.ForegroundColor = ConsoleColor.White;
+                Console.BackgroundColor = ConsoleColor.Black;
                 Menu.DispErrorDialog("Error while creating system folders.");
             }
         }
@@ -113,9 +127,9 @@ namespace Aura_OS.System
                     }
                     catch
                     {
-                        Console.ForegroundColor = ConsoleColor.Red;
-                        Console.WriteLine("[ERROR] Root writing file");
                         Console.ForegroundColor = ConsoleColor.White;
+                        Console.BackgroundColor = ConsoleColor.Black;
+                        Menu.DispErrorDialog("[ERROR] Root writing file");
                     }
                 }
             }
@@ -129,7 +143,7 @@ namespace Aura_OS.System
         /// <summary>
         /// Asking user for his language
         /// </summary>
-        private void Step3()
+        private void Step3(bool filesystemexists)
         {
             string language = Menu.DispLanguageDialog();
 
@@ -137,17 +151,31 @@ namespace Aura_OS.System
             {
                 Kernel.langSelected = "en_US";
                 Keyboard.Init();
-                Step4();
+                if (filesystemexists == true)
+                {
+                    Step4();
+                }
+                else if (filesystemexists == false)
+                {
+                    RootLogin();
+                }
             }
             else if ((language.Equals("fr_FR")) || language.Equals("fr-FR"))
             {
                 Kernel.langSelected = "fr_FR";
                 Keyboard.Init();
-                Step4();
+                if (filesystemexists == true)
+                {
+                    Step4();
+                }
+                else if (filesystemexists == false)
+                {
+                    RootLogin();
+                }
             }
             else
             {
-                Step3();
+                Step3(filesystemexists);
             }
         }
 
@@ -343,7 +371,6 @@ namespace Aura_OS.System
             int middle = text.IndexOf("//////");
             string user = text.Remove(middle, text.Length - middle);
             string pass = text.Remove(0, middle + 6);
-
 
             if (File.Exists(@"0:\System\Users\" + user + ".usr"))
             {
