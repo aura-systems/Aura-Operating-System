@@ -135,42 +135,42 @@ namespace Aura_OS.Apps.User
             {
                 if (gameover() && i == 585)
                 {
-                    Console.Write("###############################");
+                    Console.Write("╔═════════════════════════════╗");
                     i = i + 30;
                 }
                 else if (gameover() && i == 665)
                 {
-                    Console.Write("###############################");
+                    Console.Write("║#############################║");
                     i = i + 30;
                 }
                 else if (gameover() && i == 745)
                 {
-                    Console.Write("####                       ####");
+                    Console.Write("║###                       ###║");
                     i = i + 30;
                 }
                 else if (gameover() && i == 825)
                 {
-                    Console.Write("####       GAMEOVER        ####");
+                    Console.Write("║###       GAMEOVER        ###║");
                     i = i + 30;
                 }
                 else if (gameover() && i == 905)
                 {
-                    Console.Write("####      Score: " + getSnakeScore() + "      ####");
+                    Console.Write("║###      Score: " + getSnakeScore() + "      ###║");
                     i = i + 30;
                 }
                 else if (gameover() && i == 985)
                 {
-                    Console.Write("####                       ####");
+                    Console.Write("║###                       ###║");
                     i = i + 30;
                 }
                 else if (gameover() && i == 1065)
                 {
-                    Console.Write("###############################");
+                    Console.Write("║#############################║");
                     i = i + 30;
                 }
                 else if (gameover() && i == 1145)
                 {
-                    Console.Write("###############################");
+                    Console.Write("╚═════════════════════════════╝");
                     i = i + 30;
                 }
                 else if (matrix[i] == 1)
