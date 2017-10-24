@@ -4,6 +4,8 @@
 * PROGRAMMER(S):    John Welsh <djlw78@gmail.com>
 */
 
+using Aura_OS.Apps.User;
+
 namespace Aura_OS.Shell.cmdIntr
 {
     class CommandManager
@@ -70,6 +72,7 @@ namespace Aura_OS.Shell.cmdIntr
         #endregion Console
 
         #region FileSystem
+
             else if (cmd.StartsWith("cd "))
             {
                 FileSystem.CD.c_CD(cmd);
@@ -127,9 +130,9 @@ namespace Aura_OS.Shell.cmdIntr
                 FileSystem.Run.c_Run(cmd);
             }
 
-            #endregion FileSystem
+        #endregion FileSystem
 
-            #region Settings
+        #region Settings
 
             else if (cmd.Equals("logout"))
             {
@@ -177,6 +180,12 @@ namespace Aura_OS.Shell.cmdIntr
         #endregion Tests
 
         #region Util
+
+            else if (cmd.Equals("snake"))
+            {
+                PrgmSnake prgm = new PrgmSnake();
+                prgm.Run();
+            }
 
             else
             {
