@@ -26,18 +26,20 @@ namespace Aura_OS
 
         Setup setup = new Setup();
         public static bool running;
-        public static string version = "0.3.1";
-        public static string revision = "280920171000";
+        public static string version = "0.4";
+        public static string revision = "201020171915";
         public static string current_directory = @"0:\";
         public static string langSelected = "en_US";
         public static CosmosVFS FS { get; private set; }
         public static string userLogged;
         public static string userLevelLogged;
         public static bool Logged = false;
-        public static string ComputerName = "Aura-PC";
-        public static int color;
+        public static string ComputerName = "aura-pc";
+        public static int color = 7;
         public static string RootContent;
         public static string UserDir = @"0:\Users\" + userLogged + "\\";
+        public static bool SystemExists = false;
+        public static bool JustInstalled = false;
 
         #endregion
 
@@ -47,15 +49,6 @@ namespace Aura_OS
         {
 
             Console.Clear();
-
-            Console.ForegroundColor = ConsoleColor.Green;
-            Console.Write("[OK]");
-            Console.ForegroundColor = ConsoleColor.White;
-            Console.Write(" ");
-            Console.ForegroundColor = ConsoleColor.DarkMagenta;
-            Console.Write("Aura Kernel Booted Successfully!\n");
-            Console.ForegroundColor = ConsoleColor.White;
-
             Console.ForegroundColor = ConsoleColor.DarkMagenta;
             Console.Write("Booting Aura...\n");
             Console.ForegroundColor = ConsoleColor.White;
@@ -88,23 +81,33 @@ namespace Aura_OS
 
             setup.SetupVerifyCompleted();
 
-            langSelected = File.ReadAllText(@"0:\System\lang.set");
+            if (SystemExists == true)
+            {
+                if (JustInstalled == false)
+                {
+                    langSelected = File.ReadAllText(@"0:\System\lang.set");
 
-            #region Language
+                    #region Language
 
-            Lang.Keyboard.Init();
+                    Lang.Keyboard.Init();
 
-            #endregion
+                    #endregion
 
-            RootContent = File.ReadAllText(@"0:\System\Users\root.usr");
+                    RootContent = File.ReadAllText(@"0:\System\Users\root.usr");
 
-            Info.getComputerName();
+                    Info.getComputerName();
 
-            Color.GetBackgroundColor();
+                    Color.GetBackgroundColor();
 
-            color = Color.GetTextColor();
+                    color = Color.GetTextColor();
 
-            running = true;
+                    running = true;
+                }
+            }
+            else if (SystemExists == false)
+            {
+                running = true;
+            }
         }
 
         #endregion

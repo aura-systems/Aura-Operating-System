@@ -50,9 +50,9 @@ namespace Aura_OS.Shell.cmdIntr.c_Console
         /// <param name="fg_colour">The number of the color you wish to pass in</param>
         /// <param name="startIndex">The start index for remove.</param>
         /// <param name="count">The count index for remove.</param>
-        public static void c_TextColor(string fg_colour, short startIndex = 0, short count = 10)
+        public static void c_TextColor(string color, short startIndex = 0, short count = 10)
         {
-            string color = fg_colour.Remove(startIndex, count);
+            //string color = fg_colour.Remove(startIndex, count);
             if (color.Equals("0"))
             {
                 Color.SetTextColor("0");
@@ -96,6 +96,7 @@ namespace Aura_OS.Shell.cmdIntr.c_Console
             else
             {
                 L.Text.Display("unknowncolor");
+                c_TextColor();
                 Kernel.color = -1;
             }
         }

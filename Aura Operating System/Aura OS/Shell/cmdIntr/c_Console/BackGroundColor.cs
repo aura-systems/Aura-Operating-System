@@ -50,10 +50,9 @@ namespace Aura_OS.Shell.cmdIntr.c_Console
         /// <param name="bg_colour">The number of the color you wish to pass in.</param>
         /// <param name="startIndex">The start index for remove.</param>
         /// <param name="count">The count index for remove.</param>
-        public static void c_BackGroundColor(string bg_colour, short startIndex = 0, short count = 16)
+        public static void c_BackGroundColor(string color, short startIndex = 0, short count = 16)
         {
-            string color = bg_colour.Remove(startIndex, count);
-            
+            //string color = bg_colour.Remove(startIndex, count);
             if (color.Equals("0"))
             {
                 Color.SetBackgroundColor("0");
@@ -89,6 +88,7 @@ namespace Aura_OS.Shell.cmdIntr.c_Console
             else
             {
                 L.Text.Display("unknowncolor");
+                c_BackGroundColor();
             }
         }
     }

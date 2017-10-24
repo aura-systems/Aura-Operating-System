@@ -24,20 +24,37 @@ namespace Aura_OS.System
         {
             try
             {
-                if (!File.Exists(@"0:\System\setup.set"))
+                File.Create(@"0:\filesystem.sys");
+                if (File.Exists(@"0:\filesystem.sys"))
                 {
-                    StartSetup();
+                    File.Delete(@"0:\filesystem.sys");
+                    if (!File.Exists(@"0:\System\setup.set"))
+                    {
+                        Kernel.SystemExists = false;
+                        StartSetup(true);
+                    }
+                    else
+                    {
+                        Kernel.SystemExists = true;
+                    }
+                }
+                else
+                {
+                    StartSetup(false);
                 }
             }
-            catch { }
+            catch
+            {
+                StartSetup(false);
+            }
         }
 
         /// <summary>
         /// Start setup
         /// </summary>
-        public void StartSetup()
+        public void StartSetup(bool filesystemexists)
         {
-            Step1();
+            Step3(filesystemexists);
         }
 
         /// <summary>
@@ -66,6 +83,8 @@ namespace Aura_OS.System
             }
             catch
             {
+                Console.ForegroundColor = ConsoleColor.White;
+                Console.BackgroundColor = ConsoleColor.Black;
                 Menu.DispErrorDialog("Error while creating system folders.");
             }
         }
@@ -104,15 +123,13 @@ namespace Aura_OS.System
                             string text = "root";
                             string md5psw = MD5.hash(text);
                             File.WriteAllText(@"0:\System\Users\root.usr", md5psw + "|admin");
-
-                            Step3();
                         }
                     }
                     catch
                     {
-                        Console.ForegroundColor = ConsoleColor.Red;
-                        Console.WriteLine("[ERROR] Root writing file");
                         Console.ForegroundColor = ConsoleColor.White;
+                        Console.BackgroundColor = ConsoleColor.Black;
+                        Menu.DispErrorDialog("[ERROR] Root writing file");
                     }
                 }
             }
@@ -126,7 +143,7 @@ namespace Aura_OS.System
         /// <summary>
         /// Asking user for his language
         /// </summary>
-        private void Step3()
+        private void Step3(bool filesystemexists)
         {
             string language = Menu.DispLanguageDialog();
 
@@ -134,17 +151,31 @@ namespace Aura_OS.System
             {
                 Kernel.langSelected = "en_US";
                 Keyboard.Init();
-                Step4();
+                if (filesystemexists == true)
+                {
+                    Step4();
+                }
+                else if (filesystemexists == false)
+                {
+                    RootLogin();
+                }
             }
             else if ((language.Equals("fr_FR")) || language.Equals("fr-FR"))
             {
                 Kernel.langSelected = "fr_FR";
                 Keyboard.Init();
-                Step4();
+                if (filesystemexists == true)
+                {
+                    Step4();
+                }
+                else if (filesystemexists == false)
+                {
+                    RootLogin();
+                }
             }
             else
             {
-                Step3();
+                Step3(filesystemexists);
             }
         }
 
@@ -175,22 +206,38 @@ namespace Aura_OS.System
         /// </summary>
         private void Step6(string user)
         {
-            Console.WriteLine("Installation in progress...");
             Installation();
-            File.Create(@"0:\System\setup.set");
+
             Kernel.userLogged = user;
-            Console.ForegroundColor = ConsoleColor.Green;
-            Console.WriteLine("Done!");
-            Console.ForegroundColor = ConsoleColor.White;
             Console.Clear();
+
             WelcomeMessage.Display();
             Text.Display("logged", user);
+
             Console.WriteLine();
+            Kernel.SystemExists = true;
             Kernel.Logged = true;
         }
 
         private void Installation()
         {
+
+            int x = Console.CursorLeft;
+            int y = Console.CursorTop;
+
+            Menu.DispInstallationDialog();
+
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.SetCursorPosition(10, 12);
+            Console.WriteLine("#####");
+            Console.SetCursorPosition(x, y);
+
+            Step1();
+
+            Console.SetCursorPosition(10, 12);
+            Console.WriteLine("##########");
+            Console.SetCursorPosition(x, y);
+
             switch (Kernel.langSelected)
             {
                 case "en_US":
@@ -198,6 +245,9 @@ namespace Aura_OS.System
                     if (File.Exists(@"0:\System\lang.set"))
                     {
                         File.WriteAllText(@"0:\System\lang.set", Kernel.langSelected);
+                        Console.SetCursorPosition(10, 12);
+                        Console.WriteLine("###############");
+                        Console.SetCursorPosition(x, y);
                     }
                     else
                     {
@@ -209,6 +259,9 @@ namespace Aura_OS.System
                     if (File.Exists(@"0:\System\lang.set"))
                     {
                         File.WriteAllText(@"0:\System\lang.set", Kernel.langSelected);
+                        Console.SetCursorPosition(10, 12);
+                        Console.WriteLine("###############");
+                        Console.SetCursorPosition(x, y);
                     }
                     else
                     {
@@ -218,13 +271,31 @@ namespace Aura_OS.System
             }
 
             File.Create(@"0:\System\Users\" + step4_user + ".usr");
+
+            Console.SetCursorPosition(10, 12);
+            Console.WriteLine("####################");
+            Console.SetCursorPosition(x, y);
+
             Directory.CreateDirectory(@"0:\Users\" + step4_user);
 
+            Console.SetCursorPosition(10, 12);
+            Console.WriteLine("#########################");
+            Console.SetCursorPosition(x, y);
+
             InitDefaults(step4_user);
+
+            Console.SetCursorPosition(10, 12);
+            Console.WriteLine("##############################");
+            Console.SetCursorPosition(x, y);
 
             if (File.Exists(@"0:\System\Users\" + step4_user + ".usr"))
             {
                 File.WriteAllText(@"0:\System\Users\" + step4_user + ".usr", step4_pass + "|standard");
+
+                Console.SetCursorPosition(10, 12);
+                Console.WriteLine("###################################");
+                Console.SetCursorPosition(x, y);
+
             }
             else
             {
@@ -232,6 +303,57 @@ namespace Aura_OS.System
             }
 
             Info.setComputerName(step5_computername);
+
+            Console.SetCursorPosition(10, 12);
+            Console.WriteLine("########################################");
+            Console.SetCursorPosition(x, y);
+
+            File.Create(@"0:\System\setup.set");
+
+            Console.SetCursorPosition(10, 12);
+            Console.WriteLine("#############################################");
+            Console.SetCursorPosition(x, y);
+
+            Kernel.langSelected = File.ReadAllText(@"0:\System\lang.set");
+
+            #region Language
+
+            Keyboard.Init();
+
+            #endregion
+
+            Kernel.RootContent = File.ReadAllText(@"0:\System\Users\root.usr");
+
+            Info.getComputerName();
+
+            Console.SetCursorPosition(10, 12);
+            Console.WriteLine("##################################################");
+            Console.SetCursorPosition(x, y);
+
+            Computer.Color.GetBackgroundColor();
+
+            Console.SetCursorPosition(10, 12);
+            Console.WriteLine("#######################################################");
+            Console.SetCursorPosition(x, y);
+
+            Kernel.color = Computer.Color.GetTextColor();
+
+            Console.SetCursorPosition(10, 12);
+            Console.WriteLine("############################################################");
+            Console.SetCursorPosition(x, y);
+
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.BackgroundColor = ConsoleColor.Black;
+
+            Kernel.JustInstalled = true;
+            Kernel.running = true;
+        }
+
+        public static void RootLogin()
+        {
+            Kernel.SystemExists = false;
+            Kernel.userLogged = "root";
+            Kernel.Logged = true;
         }
 
         string step4_user;
@@ -257,7 +379,7 @@ namespace Aura_OS.System
             }
             else
             {
-                if((user.Length >= 4) && (user.Length <= 20))
+                if ((user.Length >= 4) && (user.Length <= 20))
                 {
 
                     if ((pass.Length >= 6) && (pass.Length <= 40))
@@ -275,10 +397,10 @@ namespace Aura_OS.System
                 }
                 else
                 {
-                    Text.Menu("error3");
-                    Step4();
-                }             
-            }
+                        Text.Menu("error3");
+                        Step4();
+                }
+            }  
         }
 
         #region Defaults

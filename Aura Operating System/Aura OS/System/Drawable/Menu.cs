@@ -11,6 +11,51 @@ namespace Aura_OS.System.Drawable
     public class Menu
     {
 
+
+        /// <summary>
+        /// Display a progress bar
+        /// </summary>
+        public static void DispInstallationDialog()
+        {
+            Console.Clear();
+
+            int x = Console.CursorLeft;
+            int y = Console.CursorTop;
+
+            Console.BackgroundColor = ConsoleColor.Blue;
+
+            switch(Kernel.langSelected)
+            {
+                case "en_US":
+                    Console.SetCursorPosition(8, 10);
+                    Console.WriteLine("╔══════════════════ Installation in progress ══════════════════╗");
+                    Console.SetCursorPosition(x, y);
+                    break;
+                case "fr_FR":
+                    Console.SetCursorPosition(8, 10);
+                    Console.WriteLine("╔═══════════════════ Installation en cours ════════════════════╗");
+                    Console.SetCursorPosition(x, y);
+                    break;
+            }
+
+
+            Console.SetCursorPosition(8, 11);
+            Console.WriteLine("║                                                              ║");
+            Console.SetCursorPosition(x, y);
+
+            Console.SetCursorPosition(8, 12);
+            Console.WriteLine("║                                                              ║");
+            Console.SetCursorPosition(x, y);
+
+            Console.SetCursorPosition(8, 13);
+            Console.WriteLine("║                                                              ║");
+            Console.SetCursorPosition(x, y);
+
+            Console.SetCursorPosition(8, 14);
+            Console.WriteLine("╚══════════════════════════════════════════════════════════════╝");
+            Console.SetCursorPosition(x, y);
+        }
+
         /// <summary>
         /// Display the login form
         /// </summary>
