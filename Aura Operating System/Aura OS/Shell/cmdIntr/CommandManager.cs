@@ -4,6 +4,9 @@
 * PROGRAMMER(S):    John Welsh <djlw78@gmail.com>
 */
 
+using DZetko.Xml;
+using System;
+
 namespace Aura_OS.Shell.cmdIntr
 {
     class CommandManager
@@ -174,9 +177,16 @@ namespace Aura_OS.Shell.cmdIntr
                 Tests.Crash.c_Crash();
             }
 
-        #endregion Tests
+            else if (cmd.Equals("xml1"))
+            {
+                XmlParser parser = new XmlParser(XmlParser.InputType.File, "0:\\file.xml"); // Creating new instance of XmlParser with file path
+                XmlDocument xmlDocument = parser.Parse(); // Creating a new instance of XmlDocument and asigning a result to it.
+                Console.WriteLine(xmlDocument.RootNode.Children["book"].Children["price"].Content); // Writing a part of the parsed XML file to the console.
+            }
 
-        #region Util
+            #endregion Tests
+
+            #region Util
 
             else
             {

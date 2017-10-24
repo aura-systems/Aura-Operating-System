@@ -78,6 +78,8 @@
     <Folder Include="System\" />
     <Folder Include="System\Computer\" />
     <Folder Include="System\Drawable\" />
+    <Folder Include="System\Parser\" />
+    <Folder Include="System\Parser\XML\" />
     <Folder Include="System\Security\" />
     <Folder Include="System\Translation\" />
     <Folder Include="System\Translation\Text\" />
