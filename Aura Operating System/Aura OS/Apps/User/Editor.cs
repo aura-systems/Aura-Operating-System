@@ -244,6 +244,12 @@ namespace Aura_OS.Apps.User
                 Console.Write(" "); Console.CursorLeft--;
                 line[pointer] = ' ';
             }
+            else if ((Console.CursorLeft <= 1) && (pointer <= 1))
+            {
+                //lines.Remove();
+                Console.CursorTop = Console.CursorTop - 1;
+                //Console.CursorLeft = 
+            }
         }
 
         private void listCheck()
