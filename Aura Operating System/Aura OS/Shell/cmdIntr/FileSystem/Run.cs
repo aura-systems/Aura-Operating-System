@@ -4,6 +4,8 @@
 * PROGRAMMER(S):    DA CRUZ Alexy <dacruzalexy@gmail.com>
 */
 
+using Aura_OS.System.exe;
+using System;
 using System.IO;
 using L = Aura_OS.System.Translation;
 
@@ -38,7 +40,19 @@ namespace Aura_OS.Shell.cmdIntr.FileSystem
             string file = run.Remove(startIndex, count);
             if (File.Exists(Kernel.current_directory + file))
             {
-                Apps.System.Batch.Execute(file);
+                if (file.EndsWith(".bat") || file.EndsWith(".BAT"))
+                {
+                    Apps.System.Batch.Execute(file);
+                }
+                else if (file.EndsWith(".com") || file.EndsWith(".COM"))
+                {
+                    COM comfile = new COM(Kernel.current_directory + file);
+                    comfile.Execute();
+                }
+                else
+                {
+                    Console.WriteLine("We are currently unable to run " + file);
+                }
             }
             else
             {

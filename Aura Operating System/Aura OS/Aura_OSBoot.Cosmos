@@ -64,6 +64,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Apps\" />
+    <Folder Include="Apps\System\" />
     <Folder Include="Apps\User\" />
     <Folder Include="Shell\" />
     <Folder Include="Shell\cmdIntr\" />
