@@ -199,12 +199,16 @@ namespace Aura_OS.Apps.User
                 for (int i = 0; i < s.Length; i++)
                 {
                     if (!string.IsNullOrWhiteSpace(s[i]))
+                    {
                         t = string.Concat(t, s[i].TrimEnd(), Environment.NewLine);
+                    }
                 }
             }
             else
+            {
                 t = s[0];
-            t = string.Concat(t, '\0');
+            }
+            //t = string.Concat(t, '\0');
             return t;
         }
 
@@ -246,23 +250,13 @@ namespace Aura_OS.Apps.User
             }
             else if ((Console.CursorLeft <= 1) && (pointer <= 1))
             {
-                //lines.Remove();
-                
                 if ((Console.CursorTop > 1))
                 {
-                    int previousline = Console.CursorTop - 1;
-                    lines.RemoveAt(previousline);
+                    lines.RemoveAt(Console.CursorTop - 2);
                     Console.CursorTop = Console.CursorTop - 1;
                     Console.CursorLeft = Console.CursorLeft + lines[lines.Count - 1].Length;
                     pointer = Console.CursorLeft;
-                    //var item = lines[lines.Count - 1];
-                    //Console.WriteLine(item);
-                    //Console.ReadKey();
-                    //lines.RemoveAt(previousline);
                 }
-                //Console.CursorLeft = Console.CursorLeft + 1;
-                //lines.RemoveAt(0);
-                //line[pointer] = ' ';
             }
         }
 
