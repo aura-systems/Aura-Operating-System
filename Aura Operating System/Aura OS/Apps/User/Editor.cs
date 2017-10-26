@@ -247,8 +247,10 @@ namespace Aura_OS.Apps.User
             else if ((Console.CursorLeft <= 1) && (pointer <= 1))
             {
                 //lines.Remove();
-                Console.CursorTop = Console.CursorTop - 1;
-                //Console.CursorLeft = 
+                Console.CursorTop = Console.CursorTop--;
+                //Console.CursorLeft = Console.CursorLeft + 1;
+                //lines.RemoveAt(0);
+                //line[pointer] = ' ';
             }
         }
 
