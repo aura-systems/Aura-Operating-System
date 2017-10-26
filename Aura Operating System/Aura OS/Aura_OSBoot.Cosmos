@@ -57,6 +57,7 @@
     <Name>Aura_OSBoot</Name>
     <VMware_Name>Aura_OSBoot</VMware_Name>
     <ISO_Name>Aura_OSBoot</ISO_Name>
+    <Bochs_Name>Aura_OSBoot</Bochs_Name>
   </PropertyGroup>
   <ItemGroup>
     <None Remove="*" />
