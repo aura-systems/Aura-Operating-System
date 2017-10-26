@@ -247,7 +247,19 @@ namespace Aura_OS.Apps.User
             else if ((Console.CursorLeft <= 1) && (pointer <= 1))
             {
                 //lines.Remove();
-                Console.CursorTop = Console.CursorTop--;
+                
+                if ((Console.CursorTop > 1))
+                {
+                    int previousline = Console.CursorTop - 1;
+                    lines.RemoveAt(previousline);
+                    Console.CursorTop = Console.CursorTop - 1;
+                    Console.CursorLeft = Console.CursorLeft + lines[lines.Count - 1].Length;
+                    pointer = Console.CursorLeft;
+                    //var item = lines[lines.Count - 1];
+                    //Console.WriteLine(item);
+                    //Console.ReadKey();
+                    //lines.RemoveAt(previousline);
+                }
                 //Console.CursorLeft = Console.CursorLeft + 1;
                 //lines.RemoveAt(0);
                 //line[pointer] = ' ';
