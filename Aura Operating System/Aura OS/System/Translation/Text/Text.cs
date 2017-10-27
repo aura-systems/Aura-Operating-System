@@ -63,7 +63,7 @@ namespace Aura_OS.System.Translation
                             Console.WriteLine(arg + " n'existe pas !");
                             break;
                         case "alreadyexist":
-                            Console.WriteLine(arg + " existe deja !");
+                            Console.WriteLine(arg + " existe déjà !");
                             break;
                         case "Computername":
                             Console.WriteLine("Nom du PC:                     " + Kernel.ComputerName);
@@ -263,7 +263,7 @@ namespace Aura_OS.System.Translation
                             Console.WriteLine(arg + " does not exist!");
                             break;
                         case "alreadyexist":
-                            Console.WriteLine(arg + " already exist!");
+                            Console.WriteLine(arg + " already exists!");
                             break;
                         case "Computername":
                             Console.WriteLine("Computer name:             " + Kernel.ComputerName);
