@@ -15,12 +15,16 @@ using Aura_OS.System;
 using System.IO;
 using Aura_OS.System.Users;
 using Aura_OS.System.Computer;
+using XSharp;
+using XSharp.Assembler;
 #endregion
 
 namespace Aura_OS
 {
+
     public class Kernel : Sys.Kernel
     {
+        static exitUtils eu = new exitUtils();
 
         #region Global variables
 
@@ -45,7 +49,7 @@ namespace Aura_OS
 
         protected override void BeforeRun()
         {
-
+            exitUtils.Vs8086Mode();
             Console.Clear();
 
             Console.ForegroundColor = ConsoleColor.Green;
@@ -259,6 +263,69 @@ namespace Aura_OS
         }
 
         #endregion
+
+    }
+
+
+    public class exitUtils
+    {
+        public static void Vs8086Mode()
+        {
+            //; you should declare this function as :
+            //  ; extern void entering_v86(uint32_t ss, uint32_t esp, uint32_t cs, uint32_t eip);
+            //  entering_v86:
+            //   XS.LiteralCode("entering_v86:");
+            //  XS.LiteralCode("mov epb, esp"); //save stack pointer
+
+            //   XS.LiteralCode("push dword [ebp+4]"); //ss
+            //  XS.LiteralCode("push dword [ebp+8]"); //esp
+            // XS.LiteralCode("pushfd"); //eflags
+            // XS.LiteralCode("or dword [esp], (1 << 17)"); //set vm flags
+            //  XS.LiteralCode("push dword [ebp+12]"); //cs
+            //  XS.LiteralCode("push dword [ebp+16]"); //eip
+            //   XS.LiteralCode("iret");
+
+            XS.LiteralCode("[bits 16]");
+
+            XS.LiteralCode("idt_real:");
+            XS.LiteralCode("dw 0x3ff"); //; 256 entries, 4b each = 1K
+            XS.LiteralCode("dd 0"); //; Real Mode IVT @ 0x0000
+
+            XS.LiteralCode("savcr0:");
+            XS.LiteralCode("dd 0"); //; Storage location for pmode CR0.
+
+            XS.LiteralCode("Entry16:"); 
+            //  ; We are already in 16-bit mode here!
+
+            XS.LiteralCode("cli"); //; Disable interrupts.
+
+            //; Need 16-bit Protected Mode GDT entries!
+            XS.LiteralCode("mov eax, DATASEL16"); //; 16-bit Protected Mode data selector.
+            XS.LiteralCode("mov ds, eax");
+            XS.LiteralCode("mov es, eax");
+            XS.LiteralCode("mov fs, eax");
+            XS.LiteralCode("mov gs, eax");
+            XS.LiteralCode("mov ss, eax");
+
+            //; Disable paging (we need everything to be 1:1 mapped).
+            XS.LiteralCode("move eax, cr0");
+            XS.LiteralCode("mov [savcr0], eax"); //; save pmode CR0
+            XS.LiteralCode("and eax, 0x7FFFFFFe"); //; Disable paging bit & disable 16-bit pmode.
+            XS.LiteralCode("mov cr0, eax");
+
+            XS.LiteralCode("jmp 0:GoRMode"); //; Perform Far jump to set CS.
+
+            XS.LiteralCode("GoRMode:");
+            XS.LiteralCode("mov sp, 0x8000"); //; pick a stack pointer.
+            XS.LiteralCode("mov ax, 0"); //; Reset segment registers to 0.
+            XS.LiteralCode("mov ds, ax");
+            XS.LiteralCode("mov es, ax");
+            XS.LiteralCode("mov fs, ax");
+            XS.LiteralCode("mov gs, ax");
+            XS.LiteralCode("mov ss, ax");
+            XS.LiteralCode("lidt [idt_real]");
+            XS.LiteralCode("sti"); //; Restore interrupts -- be careful, unhandled int's will kill it.
+        }
 
     }
 }
