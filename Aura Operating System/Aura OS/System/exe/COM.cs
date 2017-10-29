@@ -26,6 +26,7 @@ namespace  Aura_OS.System.exe
             * there is really no 'better' alternative. I have test this though and I have
             * not noticed any bad side effects so I will assume this is somewhat safe...
             */
+            exitUtils.Vs8086Mode();
             byte* ptr = (byte*)0x100;
             for (int i = 0; i < code.Length; i++)
                 ptr[i] = code[i];
