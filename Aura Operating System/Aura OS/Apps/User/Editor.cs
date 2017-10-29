@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using Aura_OS.System.Translation;
+using System.Linq;
 
 namespace Aura_OS.Apps.User
 {
@@ -112,7 +113,7 @@ namespace Aura_OS.Apps.User
                         case ConsoleKey.Backspace: deleteChar(); break;
                         case ConsoleKey.Delete: deleteChar(); break;
                         case ConsoleKey.Enter:
-                            lines.Add(new string(line).TrimEnd()); cleanArray(line); Console.CursorLeft = 0; Console.CursorTop++; pointer = 0;
+                            lines.Add(new string(line).TrimEnd()); cleanArray(line); Console.CursorLeft = 0; Console.CursorTop++; consoleline++; pointer = 0;
                             break;
                         default: line[pointer] = ch; pointer++; Console.Write(ch); break;
                     }
@@ -182,7 +183,7 @@ namespace Aura_OS.Apps.User
                     case ConsoleKey.Backspace: deleteChar(); break;
                     case ConsoleKey.Delete: deleteChar(); break;
                     case ConsoleKey.Enter:
-                        lines.Add(new string(line).TrimEnd()); cleanArray(line); Console.CursorLeft = 0; Console.CursorTop++; pointer = 0;
+                        lines.Add(new string(line).TrimEnd()); cleanArray(line); Console.CursorLeft = 0; Console.CursorTop++; consoleline++;  pointer = 0;
                         break;
                     default: line[pointer] = ch; pointer++; Console.Write(ch); break;
                 }
@@ -240,6 +241,8 @@ namespace Aura_OS.Apps.User
             Console.SetCursorPosition(x, y);
         }
 
+        int consoleline;
+
         private void deleteChar()
         {
             if ((Console.CursorLeft >= 1) && (pointer >= 1))
@@ -252,10 +255,12 @@ namespace Aura_OS.Apps.User
             {
                 if ((Console.CursorTop > 1))
                 {
-                    lines.RemoveAt(Console.CursorTop - 2);
+                    //lines.RemoveAt(Console.CursorTop );
                     Console.CursorTop = Console.CursorTop - 1;
-                    Console.CursorLeft = Console.CursorLeft + lines[lines.Count - 1].Length;
+                    Console.CursorLeft = Console.CursorLeft + lines[lines.Count].Length;
                     pointer = Console.CursorLeft;
+                    consoleline--;
+                    //line[pointer] = ' ';
                 }
             }
         }
