@@ -5,6 +5,7 @@
 */
 
 using Aura_OS.Apps.User;
+using Aura_OS.System.Threading;
 
 namespace Aura_OS.Shell.cmdIntr
 {
@@ -22,10 +23,44 @@ namespace Aura_OS.Shell.cmdIntr
         /// Shell Interpreter
         /// </summary>
         /// <param name="cmd">Command</param>
+        /// 
+
+        public static void Main()
+        {
+            for (int i = 0; i < 100; i++)
+            {
+                Console.Write("Yeah");
+            }
+        }
+
+        public static void Test1()
+        {
+            for (int i = 0; i < 100; i++)
+            {
+                Console.Write("One");
+            }
+        }
+
+        public static void Test2()
+        {
+            for (int i = 0; i < 100; i++)
+            {
+                Console.Write("Two");
+            }
+        }
         public static void _CommandManger(string cmd)
         {
+            if (cmd.Equals("TTh"))
+            {
+                Thread main = new Thread(Main, "Main");
+                Thread one = new Thread(Test1, "One");
+                Thread two = new Thread(Test2, "Two");
+                main.Start();
+                one.Start();
+                two.Start();
+            }
 
-        #region Power
+            #region Power
 
             if (cmd.Equals("shutdown"))
             {//NOTE: Why isn't it just the constructor? This leaves more room for <package>.<class>.HelpInfo;
@@ -36,9 +71,9 @@ namespace Aura_OS.Shell.cmdIntr
                 Power.Reboot.c_Reboot();
             }
 
-        #endregion Power
+            #endregion Power
 
-        #region Console
+            #region Console
 
             else if ((cmd.Equals("clear")) || (cmd.Equals("cls")))
             {
@@ -53,9 +88,9 @@ namespace Aura_OS.Shell.cmdIntr
                 System.Translation.Help._Help();
             }
 
-        #endregion Console
+            #endregion Console
 
-        #region FileSystem
+            #region FileSystem
 
             else if (cmd.StartsWith("cd "))
             {
@@ -114,9 +149,9 @@ namespace Aura_OS.Shell.cmdIntr
                 FileSystem.Run.c_Run(cmd);
             }
 
-        #endregion FileSystem
+            #endregion FileSystem
 
-        #region Settings
+            #region Settings
 
             else if (cmd.Equals("logout"))
             {
@@ -131,9 +166,9 @@ namespace Aura_OS.Shell.cmdIntr
                 Settings.Settings.c_Settings(cmd);
             }
 
-        #endregion Settings
+            #endregion Settings
 
-        #region System Infomation
+            #region System Infomation
 
             else if (cmd.Equals("systeminfo"))
             {
@@ -154,21 +189,21 @@ namespace Aura_OS.Shell.cmdIntr
 
             #endregion System Infomation
 
-        #region Tests
+            #region Tests
 
             else if (cmd.Equals("crash"))
             {
                 Tests.Crash.c_Crash();
             }
 
-        #endregion Tests
+            #endregion Tests
 
-        #region Util
+            #region Util
 
             else if (cmd.Equals("snake"))
             {
-                PrgmSnake prgm = new PrgmSnake();
-                prgm.Run();
+              //  PrgmSnake prgm = new PrgmSnake();
+               // prgm.Run();
             }
 
             else
@@ -176,7 +211,7 @@ namespace Aura_OS.Shell.cmdIntr
                 Util.CmdNotFound.c_CmdNotFound();
             }
 
-        #endregion Util
+            #endregion Util
 
         }
     }
