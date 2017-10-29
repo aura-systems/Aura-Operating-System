@@ -24,7 +24,6 @@ namespace Aura_OS
 
     public class Kernel : Sys.Kernel
     {
-        static exitUtils eu = new exitUtils();
 
         #region Global variables
 
@@ -49,7 +48,7 @@ namespace Aura_OS
 
         protected override void BeforeRun()
         {
-            exitUtils.Vs8086Mode();
+
             Console.Clear();
 
             Console.ForegroundColor = ConsoleColor.Green;
@@ -267,7 +266,7 @@ namespace Aura_OS
     }
 
 
-    public class exitUtils
+    public class ExitUtils
     {
         public static void Vs8086Mode()
         {
