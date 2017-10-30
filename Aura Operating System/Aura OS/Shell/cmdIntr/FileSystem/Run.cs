@@ -49,6 +49,11 @@ namespace Aura_OS.Shell.cmdIntr.FileSystem
                     COM comfile = new COM(Kernel.current_directory + file);
                     comfile.Execute();
                 }
+                else if (file.EndsWith(".exe") || file.EndsWith(".EXE"))
+                {
+                    COM comfile = new COM(Kernel.current_directory + file);
+                    comfile.Execute();
+                }
                 else
                 {
                     Console.WriteLine("We are currently unable to run " + file);
