@@ -87,8 +87,10 @@ namespace Aura_OS.System.exe
 
         private void Relocate(uint offset)
         {
-            BinaryWriter bw = new BinaryWriter(MemoryStream(code));
-            BinaryReader br = new BinaryReader(MemoryStream(code));
+            MemoryStream mem = new MemoryStream(code);
+            MemoryStream mem2 = new MemoryStream(code);
+            BinaryWriter bw = new BinaryWriter(mem);
+            BinaryReader br = new BinaryReader(mem2);
             for (int i = 0; i < symbolsToRelocate.Count; i++)
             {
                 br.BaseStream.Position = (int)symbolsToRelocate[i].Offset;

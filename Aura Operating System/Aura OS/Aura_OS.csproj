@@ -5,6 +5,10 @@
     <ProjectGuid>{dd67a21e-24aa-45a8-9886-4bb88f63680a}</ProjectGuid>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+
   <ItemGroup>
     <None Remove="Aura_OSBoot.Cosmos" />
   </ItemGroup>
@@ -12,6 +16,15 @@
   <ItemGroup>
     <PackageReference Include="Cosmos.Debug.Kernel" Version="1.0.0-*" />
     <PackageReference Include="Cosmos.System2" Version="1.0.0-*" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="XSharp">
+      <HintPath>..\..\..\..\Cosmos\XSharp\source\XSharp\bin\Debug\netstandard2.0\XSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="XSharp.Assembler">
+      <HintPath>..\..\..\..\Cosmos\XSharp\source\XSharp\bin\Debug\netstandard2.0\XSharp.Assembler.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 </Project>
