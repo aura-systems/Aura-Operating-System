@@ -46,6 +46,8 @@ namespace Aura_OS.System.Translation
                     Console.WriteLine("Commandes disponibles (2/2):");
                     Console.WriteLine("- time (récupère la date et l'heure)");
                     Console.WriteLine("- ipconfig (affiche les informations réseau)");
+                    Console.WriteLine("- snake (lance le jeu Snake)");
+                    Console.WriteLine("- md5 (affiche le hash des arguments)");
 
                     Console.ReadKey();
 
@@ -73,12 +75,14 @@ namespace Aura_OS.System.Translation
                     Console.WriteLine("- settings {args} (access to settings)");
                     Console.WriteLine("- logout (to disconnect)");
                     
-                    Console.ReadKey(); //page 2
+                    Console.ReadKey(); //page 2 (19 elements per page)
 
                     Console.WriteLine();
                     Console.WriteLine("Available commands (2/2):");
                     Console.WriteLine("- time (to get time and date)");
                     Console.WriteLine("- ipconfig (to get network information)");
+                    Console.WriteLine("- snake (launch the game Snake)");
+                    Console.WriteLine("- md5 (to display hash of arguments)");
 
                     Console.ReadKey();
 

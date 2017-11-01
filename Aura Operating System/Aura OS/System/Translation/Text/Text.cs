@@ -239,6 +239,9 @@ namespace Aura_OS.System.Translation
                         case "notavalidscript":
                             Console.WriteLine("Ce fichier n'est pas un script valide.");
                             break;
+                        case "md5":
+                            Console.WriteLine("Voici le résultat en MD5.");
+                            break;
                     }
                     break;
 
@@ -435,6 +438,9 @@ namespace Aura_OS.System.Translation
                             break;
                         case "notavalidscript":
                             Console.WriteLine("This file is not a valid script.");
+                            break;
+                        case "md5":
+                            Console.WriteLine("This is the result in MD5.");
                             break;
                     }
                     break;

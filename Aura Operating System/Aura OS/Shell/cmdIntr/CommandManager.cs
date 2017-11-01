@@ -161,15 +161,22 @@ namespace Aura_OS.Shell.cmdIntr
                 Tests.Crash.c_Crash();
             }
 
-        #endregion Tests
+            #endregion Tests
 
-        #region Util
+        #region Tools
 
             else if (cmd.Equals("snake"))
             {
-                PrgmSnake prgm = new PrgmSnake();
-                prgm.Run();
+                Tools.Snake.c_Snake();
             }
+            else if (cmd.StartsWith("md5"))
+            {
+                Tools.MD5.c_MD5(cmd);
+            }
+
+            #endregion
+
+            #region Util           
 
             else
             {
