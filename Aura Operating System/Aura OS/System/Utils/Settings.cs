@@ -83,20 +83,27 @@ namespace Aura_OS.System.Utils
             }
 
             int counter = -1;
+            int index = 0;
+
+            bool exists = false;
 
             foreach (string element in configurationfile)
             {
                 counter = counter + 1;
-
-                if (element.StartsWith(parameter))
+                if (element.Contains(parameter))
                 {
-                    configurationfile[counter] = parameter + "=" + value;
+                    index = counter;
+                    exists = true;
                 }
             }
+            if (exists)
+            {
+                configurationfile[index] = parameter + "=" + value;
 
-            file = configurationfile.ToArray();
+                file = configurationfile.ToArray();
 
-            configurationfile.Clear();
+                configurationfile.Clear();
+            }
         }
 
         public static void DeleteParameter(string parameter)
@@ -107,20 +114,27 @@ namespace Aura_OS.System.Utils
             }
 
             int counter = -1;
+            int index = 0;
+
+            bool exists = false;
 
             foreach (string element in configurationfile)
             {
                 counter = counter + 1;
-
-                if (element.StartsWith(parameter))
+                if (element.Contains(parameter))
                 {
-                    configurationfile.RemoveAt(counter);
+                    index = counter;
+                    exists = true;
                 }
             }
+            if (exists)
+            {
+                configurationfile.RemoveAt(index);
 
-            file = configurationfile.ToArray();
+                file = configurationfile.ToArray();
 
-            configurationfile.Clear();
+                configurationfile.Clear();
+            }
         }
 
     }

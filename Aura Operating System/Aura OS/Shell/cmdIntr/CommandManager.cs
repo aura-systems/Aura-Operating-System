@@ -170,9 +170,9 @@ namespace Aura_OS.Shell.cmdIntr
                 System.Utils.Settings.PushValues();
             }
 
-            else if (cmd.StartsWith("edit "))
+            else if (cmd.StartsWith("edi "))
             {
-                string parameter = cmd.Remove(0, 5);
+                string parameter = cmd.Remove(0, 4);
                 Console.Write("value=");
                 string value = Console.ReadLine();
                 System.Utils.Settings.LoadValues();
