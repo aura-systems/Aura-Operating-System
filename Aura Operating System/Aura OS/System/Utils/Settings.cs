@@ -41,12 +41,18 @@ namespace Aura_OS.System.Utils
 
         public static void PutValue(string parameter, string value)
         {
+            bool contains = false;
+
             foreach (string line in file)
             {
                 configurationfile.Add(line);
+                if (line.Contains(parameter))
+                {
+                    contains = true;
+                }
             }
 
-            if (!configurationfile.Contains(parameter))
+            if (!contains)
             {
                 configurationfile.Add(parameter + "=" + value);
             }
