@@ -52,16 +52,63 @@ namespace Aura_OS.System.Utils
                     value = element.Remove(parameter.Length + 1 );
                 }
             }
+
+            configurationfile.Clear();
+
             return value;
         }
         public static void EditValue(string parameter, string value)
         {
+            string[] file = File.ReadAllLines(@"0:\System\settings.conf");
+            foreach (string line in file)
+            {
+                configurationfile.Add(line);
+            }
 
+            int counter = -1;
+
+            foreach (string element in configurationfile)
+            {
+                counter = counter + 1;
+
+                if (element.Contains(parameter))
+                {
+                    configurationfile[counter] = parameter + "=" + value;
+                }
+            }
+
+            file = configurationfile.ToArray();
+
+            configurationfile.Clear();
+
+            File.WriteAllLines(@"0:\System\settings.conf", file);
         }
 
         public static void DeleteParameter(string parameter)
         {
+            string[] file = File.ReadAllLines(@"0:\System\settings.conf");
+            foreach (string line in file)
+            {
+                configurationfile.Add(line);
+            }
 
+            int counter = -1;
+
+            foreach (string element in configurationfile)
+            {
+                counter = counter + 1;
+
+                if (element.Contains(parameter))
+                {
+                    configurationfile.RemoveAt(counter);
+                }
+            }
+
+            file = configurationfile.ToArray();
+
+            configurationfile.Clear();
+
+            File.WriteAllLines(@"0:\System\settings.conf", file);
         }
 
     }
