@@ -222,21 +222,11 @@ namespace Aura_OS.System
         private void Installation()
         {
 
-            int x = Console.CursorLeft;
-            int y = Console.CursorTop;
-
-            Menu.DispInstallationDialog();
-
-            Console.ForegroundColor = ConsoleColor.Green;
-            Console.SetCursorPosition(10, 12);
-            Console.WriteLine("#####");
-            Console.SetCursorPosition(x, y);
+            Menu.DispInstallationDialog(0);
 
             Step1();
 
-            Console.SetCursorPosition(10, 12);
-            Console.WriteLine("##########");
-            Console.SetCursorPosition(x, y);
+            Menu.DispInstallationDialog(10);
 
             switch (Kernel.langSelected)
             {
@@ -245,9 +235,7 @@ namespace Aura_OS.System
                     if (File.Exists(@"0:\System\lang.set"))
                     {
                         File.WriteAllText(@"0:\System\lang.set", Kernel.langSelected);
-                        Console.SetCursorPosition(10, 12);
-                        Console.WriteLine("###############");
-                        Console.SetCursorPosition(x, y);
+                        Menu.DispInstallationDialog(20);
                     }
                     else
                     {
@@ -259,9 +247,7 @@ namespace Aura_OS.System
                     if (File.Exists(@"0:\System\lang.set"))
                     {
                         File.WriteAllText(@"0:\System\lang.set", Kernel.langSelected);
-                        Console.SetCursorPosition(10, 12);
-                        Console.WriteLine("###############");
-                        Console.SetCursorPosition(x, y);
+                        Menu.DispInstallationDialog(20);
                     }
                     else
                     {
@@ -272,29 +258,21 @@ namespace Aura_OS.System
 
             File.Create(@"0:\System\Users\" + step4_user + ".usr");
 
-            Console.SetCursorPosition(10, 12);
-            Console.WriteLine("####################");
-            Console.SetCursorPosition(x, y);
+            Menu.DispInstallationDialog(30);
 
             Directory.CreateDirectory(@"0:\Users\" + step4_user);
 
-            Console.SetCursorPosition(10, 12);
-            Console.WriteLine("#########################");
-            Console.SetCursorPosition(x, y);
+            Menu.DispInstallationDialog(40);
 
             InitDefaults(step4_user);
 
-            Console.SetCursorPosition(10, 12);
-            Console.WriteLine("##############################");
-            Console.SetCursorPosition(x, y);
+            Menu.DispInstallationDialog(50);
 
             if (File.Exists(@"0:\System\Users\" + step4_user + ".usr"))
             {
                 File.WriteAllText(@"0:\System\Users\" + step4_user + ".usr", step4_pass + "|standard");
 
-                Console.SetCursorPosition(10, 12);
-                Console.WriteLine("###################################");
-                Console.SetCursorPosition(x, y);
+                Menu.DispInstallationDialog(60);
 
             }
             else
@@ -304,15 +282,11 @@ namespace Aura_OS.System
 
             Info.setComputerName(step5_computername);
 
-            Console.SetCursorPosition(10, 12);
-            Console.WriteLine("########################################");
-            Console.SetCursorPosition(x, y);
+            Menu.DispInstallationDialog(70);
 
             File.Create(@"0:\System\setup.set");
 
-            Console.SetCursorPosition(10, 12);
-            Console.WriteLine("#############################################");
-            Console.SetCursorPosition(x, y);
+            Menu.DispInstallationDialog(80);
 
             Kernel.langSelected = File.ReadAllText(@"0:\System\lang.set");
 
@@ -326,21 +300,13 @@ namespace Aura_OS.System
 
             Info.getComputerName();
 
-            Console.SetCursorPosition(10, 12);
-            Console.WriteLine("##################################################");
-            Console.SetCursorPosition(x, y);
+            Menu.DispInstallationDialog(90);
 
             Computer.Color.GetBackgroundColor();
 
-            Console.SetCursorPosition(10, 12);
-            Console.WriteLine("#######################################################");
-            Console.SetCursorPosition(x, y);
-
             Kernel.color = Computer.Color.GetTextColor();
 
-            Console.SetCursorPosition(10, 12);
-            Console.WriteLine("############################################################");
-            Console.SetCursorPosition(x, y);
+            Menu.DispInstallationDialog(100);
 
             Console.ForegroundColor = ConsoleColor.White;
             Console.BackgroundColor = ConsoleColor.Black;
