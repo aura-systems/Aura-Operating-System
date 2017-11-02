@@ -18,6 +18,7 @@ namespace Aura_OS.System.Utils
         public static void PutValue(string parameter, string value)
         {
             string[] file = File.ReadAllLines(@"0:\System\settings.conf");
+
             foreach (string line in file)
             {
                 configurationfile.Add(line);
@@ -40,6 +41,7 @@ namespace Aura_OS.System.Utils
             string value = "null";
 
             string[] file = File.ReadAllLines(@"0:\System\settings.conf");
+
             foreach (string line in file)
             {
                 configurationfile.Add(line);
@@ -57,9 +59,11 @@ namespace Aura_OS.System.Utils
 
             return value;
         }
+
         public static void EditValue(string parameter, string value)
         {
             string[] file = File.ReadAllLines(@"0:\System\settings.conf");
+
             foreach (string line in file)
             {
                 configurationfile.Add(line);
@@ -87,6 +91,7 @@ namespace Aura_OS.System.Utils
         public static void DeleteParameter(string parameter)
         {
             string[] file = File.ReadAllLines(@"0:\System\settings.conf");
+
             foreach (string line in file)
             {
                 configurationfile.Add(line);
