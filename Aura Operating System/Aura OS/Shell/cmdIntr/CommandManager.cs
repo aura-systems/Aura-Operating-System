@@ -5,6 +5,7 @@
 */
 
 using Aura_OS.Apps.User;
+using System;
 
 namespace Aura_OS.Shell.cmdIntr
 {
@@ -161,9 +162,37 @@ namespace Aura_OS.Shell.cmdIntr
                 Tests.Crash.c_Crash();
             }
 
+            else if (cmd.StartsWith("del "))
+            {
+                string paramater = cmd.Remove(0, 4);
+                System.Utils.Settings.DeleteParameter(paramater);
+            }
+
+            else if (cmd.StartsWith("edit "))
+            {
+                string parameter = cmd.Remove(0, 5);
+                Console.Write("value=");
+                string value = Console.ReadLine();
+                System.Utils.Settings.EditValue(parameter, value);
+            }
+
+            else if (cmd.StartsWith("get "))
+            {
+                string parameter = cmd.Remove(0, 4);
+                Console.WriteLine(System.Utils.Settings.GetValue(parameter));
+            }
+
+            else if (cmd.StartsWith("put "))
+            {
+                string parameter = cmd.Remove(0, 4);
+                Console.Write("value=");
+                string value = Console.ReadLine();
+                System.Utils.Settings.PutValue(parameter, value);
+            }
+
             #endregion Tests
 
-        #region Tools
+            #region Tools
 
             else if (cmd.Equals("snake"))
             {
@@ -176,7 +205,7 @@ namespace Aura_OS.Shell.cmdIntr
 
             #endregion
 
-            #region Util           
+        #region Util           
 
             else
             {

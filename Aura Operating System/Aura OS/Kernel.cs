@@ -144,7 +144,6 @@ namespace Aura_OS
 
         #endregion
 
-
         #region BeforeCommand
         /// <summary>
         /// Display the line before the user input and set the console color.

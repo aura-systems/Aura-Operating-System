@@ -51,7 +51,7 @@ namespace Aura_OS.System.Utils
             {
                 if (element.Contains(parameter))
                 {
-                    value = element.Remove(parameter.Length + 1 );
+                    value = element.Remove(0, parameter.Length + 1 );
                 }
             }
 
