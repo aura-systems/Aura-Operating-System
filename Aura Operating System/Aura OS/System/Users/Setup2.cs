@@ -11,6 +11,7 @@ using Aura_OS.System.Security;
 using Aura_OS.System.Computer;
 using Aura_OS.System.Drawable;
 using Aura_OS.System.Translation;
+using Aura_OS.System.Utils;
 
 namespace Aura_OS.System
 {
@@ -19,20 +20,29 @@ namespace Aura_OS.System
         private string username;
         private string password;
         private string lang;
+        private string hostname;
 
         public void RegisterHostname()
         {
-
+            Console.WriteLine("Hostname:");
+            hostname = Console.ReadLine();
+            Settings.PutValue("hostname", hostname);
         }
 
         public void RegisterUser()
         {
-
+            Console.WriteLine("Username:");
+            username = Console.ReadLine();
+            Console.WriteLine("Password");
+            password = MD5.hash(Console.ReadLine());
+            Settings.PutValue("user:" + username, password);
         }
 
         public void RegisterLanguage()
         {
-
+            Console.WriteLine("Language (fr_FR, en_US):");
+            lang = Console.ReadLine();
+            Settings.PutValue("language", lang);
         }
 
         public void InitDefaults()
