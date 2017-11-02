@@ -16,28 +16,77 @@ namespace Aura_OS.System
 {
     class Setup2
     {
+        private string username;
+        private string password;
+        private string lang;
 
-        public void isInstalled()
+        public void RegisterUser()
         {
-            
+
+        }
+
+        public void RegisterLanguage()
+        {
+
+        }
+
+        public void InitDefaults()
+        {
+            InitDirs();
+        }
+
+        public void InitFiles()
+        {
+            try
+            {
+                string[] DefaultSystemFiles =
+                {
+                    @"0:\System\settings.conf"
+                };
+
+                foreach (string file in DefaultSystemFiles)
+                {
+                    if (!File.Exists(file))
+                        File.Create(file);
+                }
+            }
+            catch
+            {
+                NoFileSystem();
+            }            
         }
 
         #region Defaults
 
-        public void InitDefaults(string user)
+        public void InitDirs()
         {
-            string[] DefaultDirctories =
+            try
             {
-                @"0:\Users\" + user +  @"\Desktop",
-                @"0:\Users\" + user +  @"\Documents",
-                @"0:\Users\" + user +  @"\Downloads",
-                @"0:\Users\" + user +  @"\Music"
-            };
-            foreach (string dirs in DefaultDirctories)
-            {
-                if (!Directory.Exists(dirs))
-                    Directory.CreateDirectory(dirs);
+                string[] DefaultSystemDirectories =
+                {
+                    @"0:\System\",
+                    @"0:\Users\"
+                };
+
+                foreach (string dirs in DefaultSystemDirectories)
+                {
+                    if (!Directory.Exists(dirs))
+                        Directory.CreateDirectory(dirs);
+                }
+
+                InitFiles();
             }
+            catch
+            {
+                NoFileSystem();
+            }            
+        }
+
+        public void NoFileSystem()
+        {
+            Kernel.SystemExists = false;
+            Kernel.userLogged = "root";
+            Kernel.Logged = true;
         }
 
         #endregion Defaults
