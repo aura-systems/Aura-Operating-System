@@ -14,6 +14,25 @@ namespace Aura_OS.System.Utils
     {
 
         static List<string> configurationfile = new List<string>();
+        static List<string> resetconfigurationfile = new List<string>();
+        static string[] file;
+        static string[] reset;
+
+        private static void Clear()
+        {
+            configurationfile = resetconfigurationfile;
+        }
+
+        public static void LoadConfiguration()
+        {
+            //reset of config in memory if there is "something"
+            if(file.Length >= 1)
+            {
+                file = reset;
+            }
+            //load
+            file = File.ReadAllLines(@"0:\System\settings.conf");
+        }
 
         public static void PutValue(string parameter, string value)
         {
@@ -31,7 +50,7 @@ namespace Aura_OS.System.Utils
 
             file = configurationfile.ToArray();
 
-            configurationfile.Clear();
+            Clear();
 
             File.WriteAllLines(@"0:\System\settings.conf", file);
         }
@@ -55,7 +74,7 @@ namespace Aura_OS.System.Utils
                 }
             }
 
-            configurationfile.Clear();
+            Clear();
 
             return value;
         }
@@ -83,7 +102,7 @@ namespace Aura_OS.System.Utils
 
             file = configurationfile.ToArray();
 
-            configurationfile.Clear();
+            Clear();
 
             File.WriteAllLines(@"0:\System\settings.conf", file);
         }
@@ -111,7 +130,7 @@ namespace Aura_OS.System.Utils
 
             file = configurationfile.ToArray();
 
-            configurationfile.Clear();
+            Clear();
 
             File.WriteAllLines(@"0:\System\settings.conf", file);
         }

@@ -20,6 +20,11 @@ namespace Aura_OS.System
         private string password;
         private string lang;
 
+        public void RegisterHostname()
+        {
+
+        }
+
         public void RegisterUser()
         {
 
