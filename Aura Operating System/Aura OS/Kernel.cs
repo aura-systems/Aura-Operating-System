@@ -81,9 +81,9 @@ namespace Aura_OS
 
             setup.SetupVerifyCompleted();
 
-            if (SystemExists == true)
+            if (SystemExists)
             {
-                if (JustInstalled == false)
+                if (!JustInstalled)
                 {
                     langSelected = File.ReadAllText(@"0:\System\lang.set");
 
@@ -104,7 +104,7 @@ namespace Aura_OS
                     running = true;
                 }
             }
-            else if (SystemExists == false)
+            else
             {
                 running = true;
             }
@@ -142,6 +142,10 @@ namespace Aura_OS
             }
         }
 
+        #endregion
+
+
+        #region BeforeCommand
         /// <summary>
         /// Display the line before the user input and set the console color.
         /// </summary>
@@ -259,8 +263,7 @@ namespace Aura_OS
                     Console.ForegroundColor = ConsoleColor.White;
                 }
             }
-        }
-
+        } 
         #endregion
 
     }
