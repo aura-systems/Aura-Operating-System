@@ -50,6 +50,16 @@ namespace Aura_OS.System
             Settings.PutValue("user:root", MD5.hash("root") + "|admin");
             Users.Add(username);
             Users.Add("root");
+            CreateUserDirectories();
+        }
+
+        public void CreateUserDirectories()
+        {
+            foreach(string user in Users)
+            {
+                if (!Directory.Exists(@"0:\Users\" + user))
+                    Directory.CreateDirectory(@"0:\Users\" + user);                
+            }
         }
 
         public void RegisterLanguage()
@@ -74,6 +84,12 @@ namespace Aura_OS.System
             }
         }
 
+        public void RegisterDefaults()
+        {
+            Settings.PutValue("foregroundcolor","7");
+            Settings.PutValue("backgroundcolor", "0");
+        }
+
         public void InitSetup()
         {
             InitDirs();
@@ -81,10 +97,15 @@ namespace Aura_OS.System
             if (!File.Exists(@"0:\System\settings.conf"))
             {
                 File.Create(@"0:\System\settings.conf");
+                RegisterLanguage();
+                RegisterHostname();
+                RegisterUser();
+                RegisterDefaults();
+                YesFileSystem();
             }
             else
             {
-                AlreadyInstalled();
+                YesFileSystem();
             }                
         }
 
@@ -110,16 +131,17 @@ namespace Aura_OS.System
             }            
         }
 
-        public void NoFileSystem() //login in (direct cd live)
+        public void NoFileSystem() //logged with root without using filesystem
         {
             Kernel.SystemExists = false;
             Kernel.userLogged = "root";
             Kernel.Logged = true;
         }
 
-        public void AlreadyInstalled()
+        public void YesFileSystem() //not logged using filesystem
         {
-
+            Kernel.SystemExists = false;
+            Kernel.running = true;
         }
 
     }
