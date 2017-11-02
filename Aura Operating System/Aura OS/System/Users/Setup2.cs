@@ -12,6 +12,7 @@ using Aura_OS.System.Computer;
 using Aura_OS.System.Drawable;
 using Aura_OS.System.Translation;
 using Aura_OS.System.Utils;
+using System.Collections.Generic;
 
 namespace Aura_OS.System
 {
@@ -22,11 +23,21 @@ namespace Aura_OS.System
         private string lang;
         private string hostname;
 
+        private List<string> Users = new List<string>();
+
         public void RegisterHostname()
         {
-            Console.WriteLine("Hostname:");
-            hostname = Console.ReadLine();
-            Settings.PutValue("hostname", hostname);
+            hostname = Text.Menu("computernamedialog");
+
+            if ((hostname.Length >= 1) && (hostname.Length <= 15)) //15 char max for NETBIOS name resolution (dns)
+            {
+                Settings.PutValue("hostname", hostname);
+            }
+            else
+            {
+                Text.Menu("errorcomputer");
+                RegisterHostname();
+            }
         }
 
         public void RegisterUser()
@@ -35,44 +46,47 @@ namespace Aura_OS.System
             username = Console.ReadLine();
             Console.WriteLine("Password");
             password = MD5.hash(Console.ReadLine());
-            Settings.PutValue("user:" + username, password);
-            Settings.PutValue("user:root", MD5.hash("root"));
+            Settings.PutValue("user:" + username, password + "|admin");
+            Settings.PutValue("user:root", MD5.hash("root") + "|admin");
+            Users.Add(username);
+            Users.Add("root");
         }
 
         public void RegisterLanguage()
         {
-            Console.WriteLine("Language (fr_FR, en_US):");
-            lang = Console.ReadLine();
-            Settings.PutValue("language", lang);
+            string language = Menu.DispLanguageDialog();
+
+            if ((language.Equals("en_US")) || language.Equals("en-US"))
+            {
+                Kernel.langSelected = "en_US";
+                Keyboard.Init();
+                Settings.PutValue("language", "en_US");
+            }
+            else if ((language.Equals("fr_FR")) || language.Equals("fr-FR"))
+            {
+                Kernel.langSelected = "fr_FR";
+                Keyboard.Init();
+                Settings.PutValue("language", "fr_FR");
+            }
+            else
+            {
+                RegisterLanguage();
+            }
         }
 
-        public void InitDefaults()
+        public void InitSetup()
         {
             InitDirs();
-        }
 
-        public void InitFiles()
-        {
-            try
+            if (!File.Exists(@"0:\System\settings.conf"))
             {
-                string[] DefaultSystemFiles =
-                {
-                    @"0:\System\settings.conf"
-                };
-
-                foreach (string file in DefaultSystemFiles)
-                {
-                    if (!File.Exists(file))
-                        File.Create(file);
-                }
+                File.Create(@"0:\System\settings.conf");
             }
-            catch
+            else
             {
-                NoFileSystem();
-            }            
+                AlreadyInstalled();
+            }                
         }
-
-        #region Defaults
 
         public void InitDirs()
         {
@@ -89,8 +103,6 @@ namespace Aura_OS.System
                     if (!Directory.Exists(dirs))
                         Directory.CreateDirectory(dirs);
                 }
-
-                InitFiles();
             }
             catch
             {
@@ -98,14 +110,17 @@ namespace Aura_OS.System
             }            
         }
 
-        public void NoFileSystem()
+        public void NoFileSystem() //login in (direct cd live)
         {
             Kernel.SystemExists = false;
             Kernel.userLogged = "root";
             Kernel.Logged = true;
         }
 
-        #endregion Defaults
+        public void AlreadyInstalled()
+        {
+
+        }
 
     }
 }
