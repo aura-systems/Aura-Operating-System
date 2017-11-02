@@ -36,6 +36,7 @@ namespace Aura_OS.System
             Console.WriteLine("Password");
             password = MD5.hash(Console.ReadLine());
             Settings.PutValue("user:" + username, password);
+            Settings.PutValue("user:root", MD5.hash("root"));
         }
 
         public void RegisterLanguage()
