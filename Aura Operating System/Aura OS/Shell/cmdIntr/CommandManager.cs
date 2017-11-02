@@ -165,7 +165,9 @@ namespace Aura_OS.Shell.cmdIntr
             else if (cmd.StartsWith("del "))
             {
                 string paramater = cmd.Remove(0, 4);
+                System.Utils.Settings.LoadValues();
                 System.Utils.Settings.DeleteParameter(paramater);
+                System.Utils.Settings.PushValues();
             }
 
             else if (cmd.StartsWith("edit "))
@@ -173,12 +175,15 @@ namespace Aura_OS.Shell.cmdIntr
                 string parameter = cmd.Remove(0, 5);
                 Console.Write("value=");
                 string value = Console.ReadLine();
+                System.Utils.Settings.LoadValues();
                 System.Utils.Settings.EditValue(parameter, value);
+                System.Utils.Settings.PushValues();
             }
 
             else if (cmd.StartsWith("get "))
             {
                 string parameter = cmd.Remove(0, 4);
+                System.Utils.Settings.LoadValues();
                 Console.WriteLine(System.Utils.Settings.GetValue(parameter));
             }
 
@@ -187,7 +192,9 @@ namespace Aura_OS.Shell.cmdIntr
                 string parameter = cmd.Remove(0, 4);
                 Console.Write("value=");
                 string value = Console.ReadLine();
+                System.Utils.Settings.LoadValues();
                 System.Utils.Settings.PutValue(parameter, value);
+                System.Utils.Settings.PushValues();
             }
 
             #endregion Tests
