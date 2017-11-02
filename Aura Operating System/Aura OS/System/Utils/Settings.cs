@@ -14,22 +14,13 @@ namespace Aura_OS.System.Utils
     {
 
         static List<string> configurationfile = new List<string>();
-        static List<string> resetconfigurationfile = new List<string>();
         static string[] file;
         static string[] reset;
-
-        private static void Clear()
-        {
-            configurationfile = resetconfigurationfile;
-        }
 
         public static void LoadValues()
         {
             //reset of config in memory if there is "something"
-            if(file.Length >= 1)
-            {
-                file = reset;
-            }
+            file = reset;
             //load
             file = File.ReadAllLines(@"0:\System\settings.conf");
         }
@@ -46,7 +37,7 @@ namespace Aura_OS.System.Utils
             foreach (string line in file)
             {
                 configurationfile.Add(line);
-                if (line.Contains(parameter))
+                if (line.StartsWith(parameter))
                 {
                     contains = true;
                 }
@@ -59,7 +50,7 @@ namespace Aura_OS.System.Utils
 
             file = configurationfile.ToArray();
 
-            Clear();
+            configurationfile.Clear();
         }
 
         public static string GetValue(string parameter)
@@ -73,13 +64,13 @@ namespace Aura_OS.System.Utils
 
             foreach (string element in configurationfile)
             {
-                if (element.Contains(parameter))
+                if (element.StartsWith(parameter))
                 {
                     value = element.Remove(0, parameter.Length + 1 );
                 }
             }
 
-            Clear();
+            configurationfile.Clear();
 
             return value;
         }
@@ -97,7 +88,7 @@ namespace Aura_OS.System.Utils
             {
                 counter = counter + 1;
 
-                if (element.Contains(parameter))
+                if (element.StartsWith(parameter))
                 {
                     configurationfile[counter] = parameter + "=" + value;
                 }
@@ -105,7 +96,7 @@ namespace Aura_OS.System.Utils
 
             file = configurationfile.ToArray();
 
-            Clear();
+            configurationfile.Clear();
         }
 
         public static void DeleteParameter(string parameter)
@@ -121,7 +112,7 @@ namespace Aura_OS.System.Utils
             {
                 counter = counter + 1;
 
-                if (element.Contains(parameter))
+                if (element.StartsWith(parameter))
                 {
                     configurationfile.RemoveAt(counter);
                 }
@@ -129,7 +120,7 @@ namespace Aura_OS.System.Utils
 
             file = configurationfile.ToArray();
 
-            Clear();
+            configurationfile.Clear();
         }
 
     }
