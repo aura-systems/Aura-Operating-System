@@ -296,6 +296,8 @@ namespace Aura_OS.System
 
             #endregion
 
+            Menu.DispInstallationDialog(85);
+
             Kernel.RootContent = File.ReadAllText(@"0:\System\Users\root.usr");
 
             Info.getComputerName();
@@ -303,6 +305,8 @@ namespace Aura_OS.System
             Menu.DispInstallationDialog(90);
 
             Computer.Color.GetBackgroundColor();
+
+            Menu.DispInstallationDialog(95);
 
             Kernel.color = Computer.Color.GetTextColor();
 

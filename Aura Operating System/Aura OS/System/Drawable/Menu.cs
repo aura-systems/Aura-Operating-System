@@ -57,11 +57,25 @@ namespace Aura_OS.System.Drawable
                 Console.WriteLine("╚══════════════════════════════════════════════════════════════╝");
                 Console.SetCursorPosition(x, y);
             }
+            else if (percent == 5)
+            {
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.SetCursorPosition(10, 12);
+                Console.WriteLine("###");
+                Console.SetCursorPosition(x, y);
+            }
             else if (percent == 10)
             {
                 Console.ForegroundColor = ConsoleColor.Green;
                 Console.SetCursorPosition(10, 12);
                 Console.WriteLine("######");
+                Console.SetCursorPosition(x, y);
+            }
+            else if (percent == 15)
+            {
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.SetCursorPosition(10, 12);
+                Console.WriteLine("#########");
                 Console.SetCursorPosition(x, y);
             }
             else if (percent == 20)
@@ -70,10 +84,22 @@ namespace Aura_OS.System.Drawable
                 Console.WriteLine("############");
                 Console.SetCursorPosition(x, y);
             }
+            else if (percent == 25)
+            {
+                Console.SetCursorPosition(10, 12);
+                Console.WriteLine("###############");
+                Console.SetCursorPosition(x, y);
+            }
             else if (percent == 30)
             {
                 Console.SetCursorPosition(10, 12);
                 Console.WriteLine("##################");
+                Console.SetCursorPosition(x, y);
+            }
+            else if (percent == 35)
+            {
+                Console.SetCursorPosition(10, 12);
+                Console.WriteLine("#####################");
                 Console.SetCursorPosition(x, y);
             }
             else if (percent == 40)
@@ -82,10 +108,22 @@ namespace Aura_OS.System.Drawable
                 Console.WriteLine("########################");
                 Console.SetCursorPosition(x, y);
             }
+            else if (percent == 45)
+            {
+                Console.SetCursorPosition(10, 12);
+                Console.WriteLine("###########################");
+                Console.SetCursorPosition(x, y);
+            }
             else if (percent == 50)
             {
                 Console.SetCursorPosition(10, 12);
                 Console.WriteLine("##############################");
+                Console.SetCursorPosition(x, y);
+            }
+            else if (percent == 55)
+            {
+                Console.SetCursorPosition(10, 12);
+                Console.WriteLine("#################################");
                 Console.SetCursorPosition(x, y);
             }
             else if (percent == 60)
@@ -94,10 +132,22 @@ namespace Aura_OS.System.Drawable
                 Console.WriteLine("####################################");
                 Console.SetCursorPosition(x, y);
             }
+            else if (percent == 65)
+            {
+                Console.SetCursorPosition(10, 12);
+                Console.WriteLine("#######################################");
+                Console.SetCursorPosition(x, y);
+            }
             else if (percent == 70)
             {
                 Console.SetCursorPosition(10, 12);
                 Console.WriteLine("##########################################");
+                Console.SetCursorPosition(x, y);
+            }
+            else if (percent == 75)
+            {
+                Console.SetCursorPosition(10, 12);
+                Console.WriteLine("#############################################");
                 Console.SetCursorPosition(x, y);
             }
             else if (percent == 80)
@@ -106,16 +156,35 @@ namespace Aura_OS.System.Drawable
                 Console.WriteLine("################################################");
                 Console.SetCursorPosition(x, y);
             }
+            else if (percent == 85)
+            {
+                Console.SetCursorPosition(10, 12);
+                Console.WriteLine("###################################################");
+                Console.SetCursorPosition(x, y);
+            }
             else if (percent == 90)
             {
                 Console.SetCursorPosition(10, 12);
                 Console.WriteLine("######################################################");
                 Console.SetCursorPosition(x, y);
             }
+            else if (percent == 95)
+            {
+                Console.SetCursorPosition(10, 12);
+                Console.WriteLine("#########################################################");
+                Console.SetCursorPosition(x, y);
+            }
             else if (percent == 100)
             {
                 Console.SetCursorPosition(10, 12);
                 Console.WriteLine("############################################################");
+                Console.SetCursorPosition(x, y);
+                Console.ForegroundColor = ConsoleColor.White;
+            }
+            else
+            {
+                Console.SetCursorPosition(10, 12);
+                Console.WriteLine("                                                            ");
                 Console.SetCursorPosition(x, y);
                 Console.ForegroundColor = ConsoleColor.White;
             }
