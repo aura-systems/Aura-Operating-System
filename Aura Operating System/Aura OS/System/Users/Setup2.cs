@@ -66,11 +66,11 @@ namespace Aura_OS.System
                 Run();
             }
             else if(FileSystem() == "continue")
-            {                
+            {
+                
                 RegisterLanguage();
                 RegisterHostname();
                 RegisterUser();
-                RegisterDefaults();
                 Installation();
             }           
         }
@@ -106,7 +106,7 @@ namespace Aura_OS.System
             username = text.Remove(middle, text.Length - middle);
             password = text.Remove(0, middle + 6);
 
-            string tryusername = Settings.GetValue("user:" + username);
+            string tryusername = "";
 
             if (tryusername.StartsWith("user:" + username))
             {
@@ -182,6 +182,8 @@ namespace Aura_OS.System
         {
             Settings.PutValue("foregroundcolor","7");
             Settings.PutValue("backgroundcolor", "0");
+
+            Settings.PushValues();
         }
 
         /// <summary>
@@ -231,13 +233,14 @@ namespace Aura_OS.System
 
         public void Installation()
         {
-            Menu.DispInstallationDialog(0);
-
-            File.Create(@"0:\System\settings.conf");
-
-            Menu.DispInstallationDialog(10);
+            Menu.DispInstallationDialog(5);            
 
             InitDirs(); //create needed directories if they doesn't exist
+
+            Menu.DispInstallationDialog(15);
+
+            File.Create(@"0:\System\settings.conf");
+            Settings.LoadValues();
 
             Menu.DispInstallationDialog(10);
 
