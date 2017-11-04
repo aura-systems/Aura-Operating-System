@@ -15,6 +15,7 @@ using Aura_OS.System;
 using System.IO;
 using Aura_OS.System.Users;
 using Aura_OS.System.Computer;
+using Aura_OS.System.Utils;
 #endregion
 
 namespace Aura_OS
@@ -79,13 +80,13 @@ namespace Aura_OS
 
             #endregion
 
-            setup.SetupVerifyCompleted();
+            setup.InitSetup();
 
             if (SystemExists)
             {
                 if (!JustInstalled)
                 {
-                    langSelected = File.ReadAllText(@"0:\System\lang.set");
+                    langSelected = Settings.GetValue("language");
 
                     #region Language
 
@@ -93,7 +94,7 @@ namespace Aura_OS
 
                     #endregion
 
-                    RootContent = File.ReadAllText(@"0:\System\Users\root.usr");
+                    RootContent = Settings.GetValue("user:root");
 
                     Info.getComputerName();
 
