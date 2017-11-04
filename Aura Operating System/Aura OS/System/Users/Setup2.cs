@@ -16,22 +16,75 @@ using System.Collections.Generic;
 
 namespace Aura_OS.System
 {
-    class Setup2
+    class Setup
     {
         private string username;
         private string password;
         private string lang;
         private string hostname;
+        private string[] Users;
 
-        private List<string> Users = new List<string>();
+        private string FinalUsername;
+        private string FinalPassword;
+        private string FinalLang;
+        private string FinalHostname;
 
+        /// <summary>
+        /// Verify filesystem
+        /// </summary>
+        /// <returns>"true", if we don't need to init setup</returns>
+        /// <returns>"continue", if we need to init setup with FS</returns>
+        /// <returns>"false", if there is not a FS</returns>
+        public string FileSystem()
+        {
+            try
+            {
+                if (File.Exists(@"0:\System\settings.conf"))
+                {
+                    return "true";
+                } else
+                {
+                    return "continue";
+                }
+            }
+            catch
+            {
+                return "false";
+            }            
+        }
+
+        /// <summary>
+        /// Init setup and verify which mode we use to run Aura_OS (if we start setup or not) 
+        /// </summary>
+        public void InitSetup()
+        {           
+            if(FileSystem() == "false")
+            {
+                RunWithoutFS();
+            }
+            else if(FileSystem() == "true"){
+                Run();
+            }
+            else if(FileSystem() == "continue")
+            {                
+                RegisterLanguage();
+                RegisterHostname();
+                RegisterUser();
+                RegisterDefaults();
+                Installation();
+            }           
+        }
+
+        /// <summary>
+        /// Method to register the hostname of the computer (computer name)
+        /// </summary>
         public void RegisterHostname()
         {
             hostname = Text.Menu("computernamedialog");
 
             if ((hostname.Length >= 1) && (hostname.Length <= 15)) //15 char max for NETBIOS name resolution (dns)
             {
-                Settings.PutValue("hostname", hostname);
+                FinalHostname = hostname;
             }
             else
             {
@@ -40,20 +93,55 @@ namespace Aura_OS.System
             }
         }
 
+        /// <summary>
+        /// Method to register a new user
+        /// </summary>
         public void RegisterUser()
         {
-            Console.WriteLine("Username:");
-            username = Console.ReadLine();
-            Console.WriteLine("Password");
-            password = MD5.hash(Console.ReadLine());
-            Settings.PutValue("user:" + username, password + "|admin");
-            Settings.PutValue("user:root", MD5.hash("root") + "|admin");
-            Users.Add(username);
-            Users.Add("root");
-            CreateUserDirectories();
+            Console.Clear();
+
+            string text = Text.Menu("setup");
+
+            int middle = text.IndexOf("//////");
+            username = text.Remove(middle, text.Length - middle);
+            password = text.Remove(0, middle + 6);
+
+            string tryusername = Settings.GetValue("user:" + username);
+
+            if (tryusername.StartsWith("user:" + username))
+            {
+                Text.Menu("alreadyuser");
+                RegisterUser();
+            }
+            else
+            {
+                if ((username.Length >= 4) && (username.Length <= 20))
+                {
+                    if ((password.Length >= 6) && (password.Length <= 40))
+                    {
+                        //good
+                        password = MD5.hash(password);
+                        FinalUsername = "user:" + username;
+                        FinalPassword = password;
+                    }
+                    else
+                    {
+                        Text.Menu("error2");
+                        RegisterUser();
+                    }
+                }
+                else
+                {
+                    Text.Menu("error3");
+                    RegisterUser();
+                }
+            }            
         }
 
-        public void CreateUserDirectories()
+        /// <summary>
+        /// Method called to create all users directories
+        /// </summary>
+        public void CreateUserDirectories(string[] Users)
         {
             foreach(string user in Users)
             {
@@ -62,6 +150,9 @@ namespace Aura_OS.System
             }
         }
 
+        /// <summary>
+        /// Method to register the language that will be used on the computer
+        /// </summary>
         public void RegisterLanguage()
         {
             string language = Menu.DispLanguageDialog();
@@ -69,14 +160,14 @@ namespace Aura_OS.System
             if ((language.Equals("en_US")) || language.Equals("en-US"))
             {
                 Kernel.langSelected = "en_US";
-                Keyboard.Init();
-                Settings.PutValue("language", "en_US");
+                FinalLang = "en_US";
+                Keyboard.Init();                
             }
             else if ((language.Equals("fr_FR")) || language.Equals("fr-FR"))
             {
-                Kernel.langSelected = "fr_FR";
+                Kernel.langSelected = "en_US";
+                FinalLang = "en_US";
                 Keyboard.Init();
-                Settings.PutValue("language", "fr_FR");
             }
             else
             {
@@ -84,31 +175,18 @@ namespace Aura_OS.System
             }
         }
 
+        /// <summary>
+        /// Called to define default colors
+        /// </summary>
         public void RegisterDefaults()
         {
             Settings.PutValue("foregroundcolor","7");
             Settings.PutValue("backgroundcolor", "0");
         }
 
-        public void InitSetup()
-        {
-            InitDirs();
-
-            if (!File.Exists(@"0:\System\settings.conf"))
-            {
-                File.Create(@"0:\System\settings.conf");
-                RegisterLanguage();
-                RegisterHostname();
-                RegisterUser();
-                RegisterDefaults();
-                YesFileSystem();
-            }
-            else
-            {
-                YesFileSystem();
-            }                
-        }
-
+        /// <summary>
+        /// Create defaults directories of the system
+        /// </summary>
         public void InitDirs()
         {
             try
@@ -127,22 +205,75 @@ namespace Aura_OS.System
             }
             catch
             {
-                NoFileSystem();
+                RunWithoutFS();
             }            
         }
 
-        public void NoFileSystem() //logged with root without using filesystem
+        /// <summary>
+        /// Method called to start Aura_OS without using filesystem and loggged to "root"
+        /// </summary>
+        public void RunWithoutFS() //logged with root without using filesystem
         {
             Kernel.SystemExists = false;
             Kernel.userLogged = "root";
             Kernel.Logged = true;
         }
 
-        public void YesFileSystem() //not logged using filesystem
+        /// <summary>
+        /// Method called to start Aura_OS to run with filesystem and not logged to any user by default
+        /// </summary>
+        public void Run()
         {
-            Kernel.SystemExists = false;
+            Console.Clear();
+            Kernel.SystemExists = true;
             Kernel.running = true;
         }
 
+        public void Installation()
+        {
+            Menu.DispInstallationDialog(0);
+
+            File.Create(@"0:\System\settings.conf");
+
+            Menu.DispInstallationDialog(10);
+
+            InitDirs(); //create needed directories if they doesn't exist
+
+            Menu.DispInstallationDialog(10);
+
+            Settings.PutValue("hostname", FinalHostname);
+
+            Menu.DispInstallationDialog(20);
+
+            Settings.PutValue("user:" + FinalUsername, FinalPassword + "|admin");
+
+            Menu.DispInstallationDialog(30);
+
+            Settings.PutValue("user:root", MD5.hash("root") + "|admin");
+
+            Menu.DispInstallationDialog(40);
+
+            string[] Users = { "root", FinalUsername };
+            CreateUserDirectories(Users);
+
+            Menu.DispInstallationDialog(50);
+
+            if ((FinalLang.Equals("en_US")) || FinalLang.Equals("en-US"))
+            {
+                Settings.PutValue("language", "en_US");
+            }
+            else if ((FinalLang.Equals("fr_FR")) || FinalLang.Equals("fr-FR"))
+            {
+                Settings.PutValue("language", "fr_FR");
+            }
+
+            Menu.DispInstallationDialog(80);
+
+            RegisterDefaults();
+
+            Menu.DispInstallationDialog(100);
+
+            Run();
+        }
     }
 }
