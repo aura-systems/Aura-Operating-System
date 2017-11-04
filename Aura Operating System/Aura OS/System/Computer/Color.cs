@@ -5,6 +5,7 @@
 */
 
 using Aura_OS.System.Translation;
+using Aura_OS.System.Utils;
 using System;
 using System.IO;
 
@@ -64,9 +65,9 @@ namespace Aura_OS.System.Computer
         /// <returns></returns>
         public static int GetTextColor(string defaultcolor = "7")
         {
-            if (File.Exists(@"0:\System\color.set"))
+            if (Kernel.SystemExists)
             {
-                string color = File.ReadAllText(@"0:\System\color.set");
+                string color = Settings.GetValue("foregroundcolor");
 
                 if (color.Equals("0"))
                 {
@@ -107,9 +108,7 @@ namespace Aura_OS.System.Computer
             }
             else
             {
-                File.Create(@"0:\System\color.set");
-                File.WriteAllText(@"0:\System\color.set", defaultcolor);
-                return -1;
+                return int.Parse(defaultcolor);
             }
         }
 
@@ -137,11 +136,9 @@ namespace Aura_OS.System.Computer
         /// <param name="defaultcolor"></param>
         public static void GetBackgroundColor(string defaultcolor = "0")
         {
-            if (File.Exists(@"0:\System\backcolor.set"))
+            if (Kernel.SystemExists)
             {
-                string color = File.ReadAllText(@"0:\System\backcolor.set");
-
-                File.WriteAllText(@"0:\System\backcolor.set", color);
+                string color = Settings.GetValue("backgroundcolor");
 
                 if (color.Equals("0"))
                 {
@@ -183,11 +180,6 @@ namespace Aura_OS.System.Computer
                     Console.BackgroundColor = ConsoleColor.White;
                     Console.Clear();
                 }
-            }
-            else
-            {
-                File.Create(@"0:\System\backcolor.set");
-                File.WriteAllText(@"0:\System\backcolor.set", defaultcolor);
             }
         }
 

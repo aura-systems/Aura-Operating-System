@@ -7,6 +7,7 @@
 using System.IO;
 using System;
 using Aura_OS.System.Translation;
+using Aura_OS.System.Utils;
 
 namespace Aura_OS.System.Computer
 {
@@ -19,15 +20,13 @@ namespace Aura_OS.System.Computer
         /// <returns></returns>
         public static string getComputerName()
         {
-            if (File.Exists(@"0:\System\computer.nam"))
+            if (Kernel.SystemExists)
             {
-                Kernel.ComputerName = File.ReadAllText(@"0:\System\computer.nam");
-                return Kernel.ComputerName;
+                return Settings.GetValue("hostname");
             }
             else
             {
-                setComputerName("Aura-PC");
-                return "Aura-PC";
+                return Kernel.ComputerName;
             }
         }
 
