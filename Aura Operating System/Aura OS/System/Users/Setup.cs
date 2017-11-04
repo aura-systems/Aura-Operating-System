@@ -14,7 +14,7 @@ using Aura_OS.System.Translation;
 
 namespace Aura_OS.System
 {
-    class Setup
+    class SetupBackup
     {
 
         /// <summary>
