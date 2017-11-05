@@ -71,34 +71,50 @@ namespace Aura_OS.System.Computer
 
                 if (color.Equals("0"))
                 {
+                    Console.ForegroundColor = ConsoleColor.Black;
+                    Console.Clear();
                     return 0;
                 }
                 else if (color.Equals("1"))
                 {
+                    Console.ForegroundColor = ConsoleColor.Blue;
+                    Console.Clear();
                     return 1;
                 }
                 else if (color.Equals("2"))
                 {
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    Console.Clear();
                     return 2;
                 }
                 else if (color.Equals("3"))
                 {
+                    Console.ForegroundColor = ConsoleColor.DarkBlue;
+                    Console.Clear();
                     return 3;
                 }
                 else if (color.Equals("4"))
                 {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.Clear();
                     return 4;
                 }
                 else if (color.Equals("5"))
                 {
+                    Console.ForegroundColor = ConsoleColor.Magenta;
+                    Console.Clear();
                     return 5;
                 }
                 else if (color.Equals("6"))
                 {
+                    Console.ForegroundColor = ConsoleColor.Yellow;
+                    Console.Clear();
                     return 6;
                 }
                 else if (color.Equals("7"))
                 {
+                    Console.ForegroundColor = ConsoleColor.White;
+                    Console.Clear();
                     return 7;
                 }
                 else
@@ -118,16 +134,7 @@ namespace Aura_OS.System.Computer
         /// <param name="color"></param>
         public static void SetTextColor(string color = "7")
         {
-            if (File.Exists(@"0:\System\color.set"))
-            {
-                File.WriteAllText(@"0:\System\color.set", color);
-                GetTextColor();
-            }
-            else
-            {
-                File.Create(@"0:\System\color.set");
-                File.WriteAllText(@"0:\System\color.set", color);
-            }
+            GetTextColor();
         }
 
         /// <summary>
@@ -189,16 +196,7 @@ namespace Aura_OS.System.Computer
         /// <param name="color"></param>
         public static void SetBackgroundColor(string color = "0")
         {
-            if (File.Exists(@"0:\System\backcolor.set"))
-            {
-                File.WriteAllText(@"0:\System\backcolor.set", color);
-                GetBackgroundColor();
-            }
-            else
-            {
-                File.Create(@"0:\System\backcolor.set");
-                File.WriteAllText(@"0:\System\backcolor.set", color);
-            }
+            GetBackgroundColor();
         }
 
     }
