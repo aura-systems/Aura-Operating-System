@@ -53,6 +53,35 @@ namespace Aura_OS.System.Utils
             configurationfile.Clear();
         }
 
+        public static void PutValue(string parameter, string value, string path)
+        {
+            file = reset;
+            //load
+            file = File.ReadAllLines(path);
+
+            bool contains = false;
+
+            foreach (string line in file)
+            {
+                configurationfile.Add(line);
+                if (line.StartsWith(parameter))
+                {
+                    contains = true;
+                }
+            }
+
+            if (!contains)
+            {
+                configurationfile.Add(parameter + "=" + value);
+            }
+
+            file = configurationfile.ToArray();
+
+            configurationfile.Clear();
+
+            File.WriteAllLines(path, file);
+        }
+
         public static string GetValue(string parameter)
         {
             string value = "null";

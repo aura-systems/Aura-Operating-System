@@ -8,7 +8,7 @@
 using System;
 using System.IO;
 using Aura_OS.System.Security;
-using Aura_OS.System.Computer;
+using Aura_OS.System.Users;
 using Aura_OS.System.Drawable;
 using Aura_OS.System.Translation;
 using Aura_OS.System.Utils;
@@ -63,11 +63,10 @@ namespace Aura_OS.System
                 RunWithoutFS();
             }
             else if(FileSystem() == "true"){
-                Run();
+                Kernel.SystemExists = true;
             }
             else if(FileSystem() == "continue")
             {
-                
                 RegisterLanguage();
                 RegisterHostname();
                 RegisterUser();
@@ -227,6 +226,7 @@ namespace Aura_OS.System
         public void Run()
         {
             Console.Clear();
+
             Kernel.SystemExists = true;
             Kernel.userLogged = username;
             Kernel.JustInstalled = true;
@@ -250,27 +250,25 @@ namespace Aura_OS.System
 
             InitDirs(); //create needed directories if they doesn't exist
 
-            Menu.DispInstallationDialog(15);
-
-            File.Create(@"0:\System\settings.conf");
-            Settings.LoadValues();
-
             Menu.DispInstallationDialog(10);
 
-            Settings.PutValue("hostname", FinalHostname);
+            File.Create(@"0:\System\settings.conf");
+            File.Create(@"0:\System\passwd");
 
-            Menu.DispInstallationDialog(20);
+            Menu.DispInstallationDialog(15);
 
-            Settings.PutValue("user:" + FinalUsername, FinalPassword + "|admin");
+            Settings.PutValue("user:" + FinalUsername, FinalPassword + "|admin", @"0:\System\passwd");
 
             Menu.DispInstallationDialog(30);
 
-            Settings.PutValue("user:root", MD5.hash("root") + "|admin");
+            Settings.PutValue("user:root", MD5.hash("root") + "|admin", @"0:\System\passwd");
 
             Menu.DispInstallationDialog(40);
 
             string[] Users = { "root", FinalUsername };
             CreateUserDirectories(Users);
+
+            Settings.LoadValues();
 
             Menu.DispInstallationDialog(50);
 
@@ -284,6 +282,8 @@ namespace Aura_OS.System
                 Settings.PutValue("language", "fr_FR");
                 Menu.DispInstallationDialog(60);
             }
+
+            Settings.PutValue("hostname", FinalHostname);
 
             Menu.DispInstallationDialog(80);
 
