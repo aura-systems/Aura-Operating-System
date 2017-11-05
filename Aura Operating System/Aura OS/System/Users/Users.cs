@@ -61,7 +61,7 @@ namespace Aura_OS.System.Users
                                     Login();
                                 }
                             }
-                            else if (users.StartsWith("user:root=" + user))
+                            else if (users.StartsWith("user:root="))
                             {
                                 string passandlevel = users.Remove(0, 11 + user.Length);
                                 Char delimiter = '|';
@@ -86,14 +86,12 @@ namespace Aura_OS.System.Users
                                     Login();
                                 }
                             }
-                            else
-                            {
-                                Menu.DispErrorDialog("Utilisateur inconnu.");
-                                Login();
-                            }
+                            //else
+                            //{
+                            //   Menu.DispErrorDialog("Utilisateur inconnu.");
+                            // Login();
+                            //}
                         }
-
-
                     }
                     
                     break;
