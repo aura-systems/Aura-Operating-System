@@ -228,14 +228,16 @@ namespace Aura_OS.System
         {
             Console.Clear();
             Kernel.SystemExists = true;
-            Kernel.userLogged = FinalUsername;
+            Kernel.userLogged = username;
             Kernel.JustInstalled = true;
             Kernel.running = true;
 
             Console.Clear();
 
             WelcomeMessage.Display();
-            Text.Display("logged", FinalUsername);
+            Text.Display("logged", username);
+
+            Console.WriteLine();
 
             Kernel.Logged = true;
         }
