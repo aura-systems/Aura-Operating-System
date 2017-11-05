@@ -9,6 +9,7 @@ using System.IO;
 using Aura_OS.System.Translation;
 using Aura_OS.System.Security;
 using Aura_OS.System.Drawable;
+using Aura_OS.System.Utils;
 
 namespace Aura_OS.System.Users
 {
@@ -29,92 +30,76 @@ namespace Aura_OS.System.Users
                     string user = text.Remove(middle, text.Length - middle);
                     string pass = text.Remove(0, middle + 6);
 
-                    if (File.Exists(@"0:\System\passwd"))
+                    string md5psw = MD5.hash(pass);
+
+                    string uservaluetosplit = Settings.GetUser("user:" + user);
+
+                    Char twodots = ':';
+
+                    string[] userarray = uservaluetosplit.Split(twodots);
+
+                    if (Settings.GetUser("user:" + user) != "null")
                     {
-                        string md5psw = MD5.hash(pass);
 
-                        string[] UserFile = File.ReadAllLines(@"0:\System\passwd");
+                        /* 1 = md5 password
+                         * 2 = level
+                         */
 
-                        foreach (string users in UserFile)
+                        if (md5psw == userarray[0])
                         {
-                            if (users.Contains(user))
-                            {
-                                if (users.StartsWith("user:" + user + ":"))
-                                {
-                                    Char twodot = ':';
-                                    string[] userarray = users.Split(twodot);
-
-                                    /* 1 = type user (group later)
-                                     * 2 = username
-                                     * 3 = password (MD5)
-                                     * 4 = account right
-                                     */
-
-                                    if (md5psw == userarray[2])
-                                    {
-                                        //LOGGED
-                                        Kernel.userLogged = user;
-                                        UserLevel.LevelReader(userarray[4]);
-                                        InitUserDirs(user);
-                                        Console.Clear();
-                                        WelcomeMessage.Display();
-                                        Text.Display("logged", user);
-                                        Console.WriteLine("");
-                                        Kernel.Logged = true;
-                                        break;
-                                    }
-                                    else
-                                    {
-                                        Menu.DispErrorDialog("Mauvais mot de passe.");
-                                        Login();
-                                        break;
-                                    }
-                                }
-                            }
-                            else if (user=="root")
-                            {
-                                if (users.StartsWith("user:root:"))
-                                {
-                                    Char twodot = ':';
-                                    string[] userarray = users.Split(twodot);
-
-                                    /* 1 = type user (group later)
-                                     * 2 = username
-                                     * 3 = password (MD5)
-                                     * 4 = account right
-                                     */
-
-                                    if (md5psw == userarray[3])
-                                    {
-                                        //LOGGED
-                                        Kernel.userLogged = user;
-                                        UserLevel.LevelReader(userarray[4]);
-                                        Kernel.userLevelLogged = UserLevel.Administrator();
-                                        InitUserDirs(user);
-                                        Console.Clear();
-                                        WelcomeMessage.Display();
-                                        Text.Display("logged", user);
-                                        Console.WriteLine("");
-                                        Kernel.Logged = true;
-                                        break;
-                                    }
-                                    else
-                                    {
-                                        Menu.DispErrorDialog("Mauvais mot de passe.");
-                                        Login();
-                                        break;
-                                    }
-                                }
-                            }
-                            else
-                            {
-                               Menu.DispErrorDialog("Utilisateur inconnu.");
-                             Login();
-                                break;
-                            }
+                            //LOGGED
+                            Kernel.userLogged = user;
+                            UserLevel.LevelReader(userarray[1]);
+                            InitUserDirs(user);
+                            Console.Clear();
+                            WelcomeMessage.Display();
+                            Text.Display("logged", user);
+                            Console.WriteLine("");
+                            Kernel.Logged = true;
                         }
+                        else
+                        {
+                            Menu.DispErrorDialog("Mauvais mot de passe.");
+                            Login();
+                        }
+
                     }
-                    
+                    else if (Settings.GetUser("user:root") != "null")
+                    {
+
+                        /* 1 = md5 password
+                         * 2 = level
+                         */
+
+                        if (md5psw == userarray[0])
+                        {
+                            //LOGGED
+                            Kernel.userLogged = user;
+                            UserLevel.LevelReader(userarray[1]);
+                            Kernel.userLevelLogged = UserLevel.Administrator();
+                            InitUserDirs(user);
+                            Console.Clear();
+                            WelcomeMessage.Display();
+                            Text.Display("logged", user);
+                            Console.WriteLine("");
+                            Kernel.Logged = true;
+                        }
+                        else
+                        {
+                            Menu.DispErrorDialog("Mauvais mot de passe.");
+                            Login();
+                        }
+
+                    }
+                    else
+                    {
+                        Menu.DispErrorDialog("Utilisateur inconnu.");
+                        Login();
+                        break;
+                    }
+
+
+
                     break;
 
                 case "en_US":
@@ -125,91 +110,75 @@ namespace Aura_OS.System.Users
                     string user1 = text1.Remove(middle1, text1.Length - middle1);
                     string pass1 = text1.Remove(0, middle1 + 6);
 
-                    if (File.Exists(@"0:\System\passwd"))
+                    string md5psw1 = MD5.hash(pass1);
+
+                    string uservaluetosplit1 = Settings.GetUser("user:" + user1);
+
+                    Char twodots1 = ':';
+
+                    string[] userarray1 = uservaluetosplit1.Split(twodots1);
+
+                    if (Settings.GetUser("user:" + user1) != "null")
                     {
-                        string md5psw = MD5.hash(pass1);
 
-                        string[] UserFile = File.ReadAllLines(@"0:\System\passwd");
+                        /* 1 = md5 password
+                         * 2 = level
+                         */
 
-                        foreach (string users in UserFile)
+                        if (md5psw1 == userarray1[0])
                         {
-                            if (users.Contains(user1))
-                            {
-                                if (users.StartsWith("user:" + user1 + ":"))
-                                {
-                                    Char twodot = ':';
-                                    string[] userarray = users.Split(twodot);
-
-                                    /* 1 = type user (group later)
-                                     * 2 = username
-                                     * 3 = password (MD5)
-                                     * 4 = account right
-                                     */
-
-                                    if (md5psw == userarray[3])
-                                    {
-                                        //LOGGED
-                                        Kernel.userLogged = user1;
-                                        UserLevel.LevelReader(userarray[4]);
-                                        InitUserDirs(user1);
-                                        Console.Clear();
-                                        WelcomeMessage.Display();
-                                        Text.Display("logged", user1);
-                                        Console.WriteLine("");
-                                        Kernel.Logged = true;
-                                        break;
-                                    }
-                                    else
-                                    {
-                                        Menu.DispErrorDialog("Wrong Password.");
-                                        Login();
-                                        break;
-                                    }
-                                }
-                            }
-                            else if (user1 == "root")
-                            {
-                                if (users.StartsWith("user:root:"))
-                                {
-                                    Char twodot = ':';
-                                    string[] userarray = users.Split(twodot);
-
-                                    /* 1 = type user (group later)
-                                     * 2 = username
-                                     * 3 = password (MD5)
-                                     * 4 = account right
-                                     */
-
-                                    if (md5psw == userarray[3])
-                                    {
-                                        //LOGGED
-                                        Kernel.userLogged = user1;
-                                        UserLevel.LevelReader(userarray[4]);
-                                        Kernel.userLevelLogged = UserLevel.Administrator();
-                                        InitUserDirs(user1);
-                                        Console.Clear();
-                                        WelcomeMessage.Display();
-                                        Text.Display("logged", user1);
-                                        Console.WriteLine("");
-                                        Kernel.Logged = true;
-                                        break;
-                                    }
-                                    else
-                                    {
-                                        Menu.DispErrorDialog("Wrong Password.");
-                                        Login();
-                                        break;
-                                    }
-                                }
-                            }
-                            else
-                            {
-                                Menu.DispErrorDialog("Unknown user.");
-                                Login();
-                                break;
-                            }
+                            //LOGGED
+                            Kernel.userLogged = user1;
+                            UserLevel.LevelReader(userarray1[1]);
+                            InitUserDirs(user1);
+                            Console.Clear();
+                            WelcomeMessage.Display();
+                            Text.Display("logged", user1);
+                            Console.WriteLine("");
+                            Kernel.Logged = true;
                         }
+                        else
+                        {
+                            Menu.DispErrorDialog("Wrong password.");
+                            Login();
+                        }
+
                     }
+                    else if (Settings.GetUser("user:root") != "null")
+                    {
+
+                        /* 1 = md5 password
+                         * 2 = level
+                         */
+
+                        if (md5psw1 == userarray1[0])
+                        {
+                            //LOGGED
+                            Kernel.userLogged = user1;
+                            UserLevel.LevelReader(userarray1[1]);
+                            Kernel.userLevelLogged = UserLevel.Administrator();
+                            InitUserDirs(user1);
+                            Console.Clear();
+                            WelcomeMessage.Display();
+                            Text.Display("logged", user1);
+                            Console.WriteLine("");
+                            Kernel.Logged = true;
+                        }
+                        else
+                        {
+                            Menu.DispErrorDialog("Wrong password.");
+                            Login();
+                        }
+
+                    }
+                    else
+                    {
+                        Menu.DispErrorDialog("Unknow user.");
+                        Login();
+                        break;
+                    }
+
+
 
                     break;
             }
@@ -334,7 +303,7 @@ namespace Aura_OS.System.Users
             catch
             {
                 Text.Display("errorwhileusercreating");
-            }          
+            }
         }
 
     }

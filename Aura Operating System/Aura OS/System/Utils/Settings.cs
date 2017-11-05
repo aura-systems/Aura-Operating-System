@@ -14,8 +14,10 @@ namespace Aura_OS.System.Utils
     {
 
         static List<string> configurationfile = new List<string>();
+        static List<string> usersfile = new List<string>();
         static string[] file;
         static string[] reset;
+        static string[] users;
 
         public static void LoadValues()
         {
@@ -25,9 +27,22 @@ namespace Aura_OS.System.Utils
             file = File.ReadAllLines(@"0:\System\settings.conf");
         }
 
+        public static void LoadUsers()
+        {
+            //reset of users string array in memory if there is "something"
+            users = reset;
+            //load
+            users = File.ReadAllLines(@"0:\System\passwd");
+        }
+
         public static void PushValues()
         {
             File.WriteAllLines(@"0:\System\settings.conf", file);
+        }
+
+        public static void PushUsers()
+        {
+            File.WriteAllLines(@"0:\System\passwd", users);
         }
 
         public static void PutValue(string parameter, string value)
@@ -53,17 +68,13 @@ namespace Aura_OS.System.Utils
             configurationfile.Clear();
         }
 
-        public static void PutValue(string parameter, string value, string path)
+        public static void PutUser(string parameter, string value)
         {
-            file = reset;
-            //load
-            file = File.ReadAllLines(path);
-
             bool contains = false;
 
-            foreach (string line in file)
+            foreach (string line in users)
             {
-                configurationfile.Add(line);
+                usersfile.Add(line);
                 if (line.StartsWith(parameter))
                 {
                     contains = true;
@@ -72,20 +83,34 @@ namespace Aura_OS.System.Utils
 
             if (!contains)
             {
-                if (path.Contains("passwd"))
+                usersfile.Add(parameter + ":" + value);
+            }
+
+            users = usersfile.ToArray();
+
+            usersfile.Clear();
+        }
+
+        public static string GetUser(string parameter)
+        {
+            string value = "null";
+
+            foreach (string line in users)
+            {
+                usersfile.Add(line);
+            }
+
+            foreach (string element in usersfile)
+            {
+                if (element.StartsWith(parameter))
                 {
-                    configurationfile.Add(parameter + ":" + value);
-                } else
-                {
-                    configurationfile.Add(parameter + "=" + value);
+                    value = element.Remove(0, parameter.Length + 1);
                 }
             }
 
-            file = configurationfile.ToArray();
+            usersfile.Clear();
 
-            configurationfile.Clear();
-
-            File.WriteAllLines(path, file);
+            return value;
         }
 
         public static string GetValue(string parameter)
