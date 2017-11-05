@@ -253,11 +253,11 @@ namespace Aura_OS.System
 
             Menu.DispInstallationDialog(15);
 
-            Settings.PutValue("user:" + FinalUsername, FinalPassword + "|admin", @"0:\System\passwd");
+            Settings.PutValue("user:" + FinalUsername, FinalPassword + ":admin", @"0:\System\passwd");
 
             Menu.DispInstallationDialog(30);
 
-            Settings.PutValue("user:root", MD5.hash("root") + "|admin", @"0:\System\passwd");
+            Settings.PutValue("user:root", MD5.hash("root") + ":admin", @"0:\System\passwd");
 
             Menu.DispInstallationDialog(40);
 
