@@ -36,18 +36,10 @@ namespace Aura_OS.System.Computer
         /// <param name="name"></param>
         public static void setComputerName(string name)
         {
-            if (File.Exists(@"0:\System\computer.nam"))
-            {
-                File.Delete(@"0:\System\computer.nam");
-                File.Create(@"0:\System\computer.nam");
-                File.WriteAllText(@"0:\System\computer.nam", name);
-            }
-            else
-            {
-                File.Create(@"0:\System\computer.nam");
-                File.WriteAllText(@"0:\System\computer.nam", name);
-
-            }
+            Settings.LoadValues();
+            Settings.EditValue("hostname", name);
+            Settings.PushValues();
+            Kernel.ComputerName = name;
         }
 
         /// <summary>

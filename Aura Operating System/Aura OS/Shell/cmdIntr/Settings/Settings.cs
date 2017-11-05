@@ -67,29 +67,17 @@ namespace Aura_OS.Shell.cmdIntr.Settings
                 {
                     Kernel.langSelected = "en_US";
                     L.Keyboard.Init();
-                    if (File.Exists(@"0:\System\lang.set"))
-                    {
-                        File.WriteAllText(@"0:\System\lang.set", Kernel.langSelected);
-                    }
-                    else
-                    {
-                        File.Create(@"0:\System\lang.set");
-                        File.WriteAllText(@"0:\System\lang.set", Kernel.langSelected);
-                    }
+                    System.Utils.Settings.LoadValues();
+                    System.Utils.Settings.EditValue("language", "en_US");
+                    System.Utils.Settings.PushValues();
                 }
                 else if ((cmdargs[2].Equals("fr_FR")) || cmdargs[2].Equals("fr-FR"))
                 {
                     Kernel.langSelected = "fr_FR";
                     L.Keyboard.Init();
-                    if (File.Exists(@"0:\System\lang.set"))
-                    {
-                        File.WriteAllText(@"0:\System\lang.set", Kernel.langSelected);
-                    }
-                    else
-                    {
-                        File.Create(@"0:\System\lang.set");
-                        File.WriteAllText(@"0:\System\lang.set", Kernel.langSelected);
-                    }
+                    System.Utils.Settings.LoadValues();
+                    System.Utils.Settings.EditValue("language", "fr_FR");
+                    System.Utils.Settings.PushValues();
                 }
                 else
                 {
@@ -101,10 +89,16 @@ namespace Aura_OS.Shell.cmdIntr.Settings
             else if (cmdargs[1].Equals("textcolor"))
             {
                 c_Console.TextColor.c_TextColor(cmdargs[2]);
+                System.Utils.Settings.LoadValues();
+                System.Utils.Settings.EditValue("foregroundcolor", cmdargs[2]);
+                System.Utils.Settings.PushValues();
             }
             else if (cmdargs[1].Equals("backgroundcolor"))
             {
                 c_Console.BackGroundColor.c_BackGroundColor(cmdargs[2]);
+                System.Utils.Settings.LoadValues();
+                System.Utils.Settings.EditValue("backgroundcolor", cmdargs[2]);
+                System.Utils.Settings.PushValues();
             }
 
             else

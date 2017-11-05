@@ -106,6 +106,7 @@ namespace Aura_OS.System.Users
                     break;
 
                 case "en_US":
+
                     string text1 = Menu.DispLoginForm("Login to your Aura account.");
 
                     int middle1 = text1.IndexOf("//////");
