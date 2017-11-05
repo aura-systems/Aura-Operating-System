@@ -10,10 +10,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Include="System\Users\Setup.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="Cosmos.Debug.Kernel" Version="1.0.0-*" />
     <PackageReference Include="Cosmos.System2" Version="1.0.0-*" />
   </ItemGroup>
