@@ -231,6 +231,13 @@ namespace Aura_OS.System
             Kernel.userLogged = FinalUsername;
             Kernel.JustInstalled = true;
             Kernel.running = true;
+
+            Console.Clear();
+
+            WelcomeMessage.Display();
+            Text.Display("logged", FinalUsername);
+
+            Kernel.Logged = true;
         }
 
         public void Installation()
@@ -281,6 +288,9 @@ namespace Aura_OS.System
             RegisterDefaults();
 
             Menu.DispInstallationDialog(100);
+
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.BackgroundColor = ConsoleColor.Black;
 
             Run();
         }
