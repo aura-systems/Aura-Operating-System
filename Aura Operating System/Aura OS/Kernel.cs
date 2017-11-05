@@ -86,6 +86,8 @@ namespace Aura_OS
             {
                 if (!JustInstalled)
                 {
+
+                    Settings.LoadValues();
                     langSelected = Settings.GetValue("language");
 
                     #region Language
@@ -94,8 +96,6 @@ namespace Aura_OS
 
                     #endregion
 
-                    RootContent = Settings.GetValue("user:root");
-
                     Info.getComputerName();
 
                     Color.GetBackgroundColor();
@@ -103,6 +103,7 @@ namespace Aura_OS
                     color = Color.GetTextColor();
 
                     running = true;
+
                 }
             }
             else
