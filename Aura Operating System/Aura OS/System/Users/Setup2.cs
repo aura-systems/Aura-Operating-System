@@ -165,8 +165,8 @@ namespace Aura_OS.System
             }
             else if ((language.Equals("fr_FR")) || language.Equals("fr-FR"))
             {
-                Kernel.langSelected = "en_US";
-                FinalLang = "en_US";
+                Kernel.langSelected = "fr_FR";
+                FinalLang = "fr_FR";
                 Keyboard.Init();
             }
             else
@@ -228,11 +228,15 @@ namespace Aura_OS.System
         {
             Console.Clear();
             Kernel.SystemExists = true;
+            Kernel.userLogged = FinalUsername;
+            Kernel.JustInstalled = true;
             Kernel.running = true;
         }
 
         public void Installation()
         {
+            Menu.DispInstallationDialog(0);
+
             Menu.DispInstallationDialog(5);            
 
             InitDirs(); //create needed directories if they doesn't exist
@@ -264,10 +268,12 @@ namespace Aura_OS.System
             if ((FinalLang.Equals("en_US")) || FinalLang.Equals("en-US"))
             {
                 Settings.PutValue("language", "en_US");
+                Menu.DispInstallationDialog(60);
             }
             else if ((FinalLang.Equals("fr_FR")) || FinalLang.Equals("fr-FR"))
             {
                 Settings.PutValue("language", "fr_FR");
+                Menu.DispInstallationDialog(60);
             }
 
             Menu.DispInstallationDialog(80);
