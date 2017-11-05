@@ -53,6 +53,7 @@ namespace Aura_OS.System.Users
                                     Text.Display("logged", user);
                                     Console.WriteLine("");
                                     Kernel.Logged = true;
+                                    break;
                                 }
                                 else
                                 {
@@ -77,6 +78,7 @@ namespace Aura_OS.System.Users
                                     Text.Display("logged", user);
                                     Console.WriteLine("");
                                     Kernel.Logged = true;
+                                    break;
                                 }
                                 else
                                 {
@@ -127,6 +129,7 @@ namespace Aura_OS.System.Users
                                     Text.Display("logged", user1);
                                     Console.WriteLine("");
                                     Kernel.Logged = true;
+                                    break;
                                 }
                                 else
                                 {
@@ -151,6 +154,7 @@ namespace Aura_OS.System.Users
                                     Text.Display("logged", user1);
                                     Console.WriteLine("");
                                     Kernel.Logged = true;
+                                    break;
                                 }
                                 else
                                 {
