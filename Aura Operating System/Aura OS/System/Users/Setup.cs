@@ -118,7 +118,7 @@ namespace Aura_OS.System
                     {
                         //good
                         password = MD5.hash(password);
-                        FinalUsername = "user:" + username;
+                        FinalUsername = username;
                         FinalPassword = password;
                     }
                     else

@@ -75,6 +75,7 @@
     <Folder Include="Shell\cmdIntr\SystemInfomation\" />
     <Folder Include="Shell\cmdIntr\Tests\" />
     <Folder Include="Shell\cmdIntr\Tools\" />
+    <Folder Include="Shell\cmdIntr\Users\" />
     <Folder Include="Shell\cmdIntr\Util\" />
     <Folder Include="System\" />
     <Folder Include="System\Computer\" />
