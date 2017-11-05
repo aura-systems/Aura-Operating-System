@@ -72,7 +72,13 @@ namespace Aura_OS.System.Utils
 
             if (!contains)
             {
-                configurationfile.Add(parameter + "=" + value);
+                if (path.Contains("passwd"))
+                {
+                    configurationfile.Add(parameter + ":" + value);
+                } else
+                {
+                    configurationfile.Add(parameter + "=" + value);
+                }
             }
 
             file = configurationfile.ToArray();

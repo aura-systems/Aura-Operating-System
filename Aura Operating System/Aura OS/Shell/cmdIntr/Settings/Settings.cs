@@ -7,7 +7,6 @@
 using System;
 using System.IO;
 using L = Aura_OS.System.Translation;
-using Aura_OS.System.Users;
 using Aura_OS.System.Computer;
 
 namespace Aura_OS.Shell.cmdIntr.Settings
@@ -50,7 +49,7 @@ namespace Aura_OS.Shell.cmdIntr.Settings
 
                 //method user
                 string argsuser = cmdargs[2];
-                Users users = new Users();
+                System.Users.Users users = new System.Users.Users();
 
                 users.Create(argsuser);
             }

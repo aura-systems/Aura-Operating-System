@@ -39,16 +39,22 @@ namespace Aura_OS.System.Users
                         {
                             if (users.Contains(user))
                             {
-                                if (users.StartsWith("user:user:" + user + "="))
+                                if (users.StartsWith("user:" + user + ":"))
                                 {
-                                    string passandlevel = users.Remove(0, 11 + user.Length);
-                                    Char delimiter = '|';
-                                    string[] passandlevelarray = passandlevel.Split(delimiter);
-                                    if (md5psw == passandlevelarray[0])
+                                    Char twodot = ':';
+                                    string[] userarray = users.Split(twodot);
+
+                                    /* 1 = type user (group later)
+                                     * 2 = username
+                                     * 3 = password (MD5)
+                                     * 4 = account right
+                                     */
+
+                                    if (md5psw == userarray[2])
                                     {
                                         //LOGGED
                                         Kernel.userLogged = user;
-                                        UserLevel.LevelReader(passandlevelarray[1]);
+                                        UserLevel.LevelReader(userarray[4]);
                                         InitUserDirs(user);
                                         Console.Clear();
                                         WelcomeMessage.Display();
@@ -67,16 +73,22 @@ namespace Aura_OS.System.Users
                             }
                             else if (user=="root")
                             {
-                                if (users.StartsWith("user:root="))
+                                if (users.StartsWith("user:root:"))
                                 {
-                                    string passandlevel = users.Remove(0, 10);
-                                    Char delimiter = '|';
-                                    string[] passandlevelarray = passandlevel.Split(delimiter);
-                                    if (md5psw == passandlevelarray[0])
+                                    Char twodot = ':';
+                                    string[] userarray = users.Split(twodot);
+
+                                    /* 1 = type user (group later)
+                                     * 2 = username
+                                     * 3 = password (MD5)
+                                     * 4 = account right
+                                     */
+
+                                    if (md5psw == userarray[3])
                                     {
                                         //LOGGED
                                         Kernel.userLogged = user;
-                                        UserLevel.LevelReader(passandlevelarray[1]);
+                                        UserLevel.LevelReader(userarray[4]);
                                         Kernel.userLevelLogged = UserLevel.Administrator();
                                         InitUserDirs(user);
                                         Console.Clear();
@@ -123,16 +135,22 @@ namespace Aura_OS.System.Users
                         {
                             if (users.Contains(user1))
                             {
-                                if (users.StartsWith("user:user:" + user1 + "="))
+                                if (users.StartsWith("user:" + user1 + ":"))
                                 {
-                                    string passandlevel = users.Remove(0, 11 + user1.Length);
-                                    Char delimiter = '|';
-                                    string[] passandlevelarray = passandlevel.Split(delimiter);
-                                    if (md5psw == passandlevelarray[0])
+                                    Char twodot = ':';
+                                    string[] userarray = users.Split(twodot);
+
+                                    /* 1 = type user (group later)
+                                     * 2 = username
+                                     * 3 = password (MD5)
+                                     * 4 = account right
+                                     */
+
+                                    if (md5psw == userarray[3])
                                     {
                                         //LOGGED
                                         Kernel.userLogged = user1;
-                                        UserLevel.LevelReader(passandlevelarray[1]);
+                                        UserLevel.LevelReader(userarray[4]);
                                         InitUserDirs(user1);
                                         Console.Clear();
                                         WelcomeMessage.Display();
@@ -151,16 +169,22 @@ namespace Aura_OS.System.Users
                             }
                             else if (user1 == "root")
                             {
-                                if (users.StartsWith("user:root="))
+                                if (users.StartsWith("user:root:"))
                                 {
-                                    string passandlevel = users.Remove(0, 10);
-                                    Char delimiter = '|';
-                                    string[] passandlevelarray = passandlevel.Split(delimiter);
-                                    if (md5psw == passandlevelarray[0])
+                                    Char twodot = ':';
+                                    string[] userarray = users.Split(twodot);
+
+                                    /* 1 = type user (group later)
+                                     * 2 = username
+                                     * 3 = password (MD5)
+                                     * 4 = account right
+                                     */
+
+                                    if (md5psw == userarray[3])
                                     {
                                         //LOGGED
                                         Kernel.userLogged = user1;
-                                        UserLevel.LevelReader(passandlevelarray[1]);
+                                        UserLevel.LevelReader(userarray[4]);
                                         Kernel.userLevelLogged = UserLevel.Administrator();
                                         InitUserDirs(user1);
                                         Console.Clear();
@@ -194,6 +218,18 @@ namespace Aura_OS.System.Users
         #region UserDirs
         public void InitUserDirs(string user)
         {
+            if (user == "root")
+            {
+                string[] RootDirectories =
+                {
+                @"0:\Users\" + user + @"\Root"
+                };
+                foreach (string dirs in RootDirectories)
+                    if (!Directory.Exists(dirs))
+                        Directory.CreateDirectory(dirs);
+                return;
+            }
+
             string[] DefaultDirctories =
             {
                 @"0:\Users\" + user + @"\Desktop",
