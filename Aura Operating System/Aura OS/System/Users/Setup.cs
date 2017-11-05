@@ -8,390 +8,291 @@
 using System;
 using System.IO;
 using Aura_OS.System.Security;
-using Aura_OS.System.Computer;
 using Aura_OS.System.Drawable;
 using Aura_OS.System.Translation;
+using Aura_OS.System.Utils;
 
 namespace Aura_OS.System
 {
-    class SetupBackup
+    class Setup
     {
+        private string username;
+        private string password;
+        private string lang;
+        private string hostname;
+        private string[] Users;
+
+        private string FinalUsername;
+        private string FinalPassword;
+        private string FinalLang;
+        private string FinalHostname;
 
         /// <summary>
-        /// Verify if Aura's Setup is complete
+        /// Verify filesystem
         /// </summary>
-        public void SetupVerifyCompleted()
+        /// <returns>"true", if we don't need to init setup</returns>
+        /// <returns>"continue", if we need to init setup with FS</returns>
+        /// <returns>"false", if there is not a FS</returns>
+        public string FileSystem()
         {
             try
             {
-                File.Create(@"0:\filesystem.sys");
-                if (File.Exists(@"0:\filesystem.sys"))
+                if (File.Exists(@"0:\System\settings.conf"))
                 {
-                    File.Delete(@"0:\filesystem.sys");
-                    if (!File.Exists(@"0:\System\setup.set"))
-                    {
-                        Kernel.SystemExists = false;
-                        StartSetup(true);
-                    }
-                    else
-                    {
-                        Kernel.SystemExists = true;
-                    }
-                }
-                else
+                    return "true";
+                } else
                 {
-                    StartSetup(false);
+                    return "continue";
                 }
             }
             catch
             {
-                StartSetup(false);
-            }
+                return "false";
+            }            
         }
 
         /// <summary>
-        /// Start setup
+        /// Init setup and verify which mode we use to run Aura_OS (if we start setup or not) 
         /// </summary>
-        public void StartSetup(bool filesystemexists)
-        {
-            Step3(filesystemexists);
+        public void InitSetup()
+        {           
+            if(FileSystem() == "false")
+            {
+                RunWithoutFS();
+            }
+            else if(FileSystem() == "true"){
+                Kernel.SystemExists = true;
+            }
+            else if(FileSystem() == "continue")
+            {
+                RegisterLanguage();
+                RegisterHostname();
+                RegisterUser();
+                Installation();
+            }           
         }
 
         /// <summary>
-        /// Making directories that are required for Aura.
+        /// Method to register the hostname of the computer (computer name)
         /// </summary>
-        private void Step1()
+        public void RegisterHostname()
         {
-            //creating folders
+            hostname = Text.Menu("computernamedialog");
 
-            try
+            if ((hostname.Length >= 1) && (hostname.Length <= 15)) //15 char max for NETBIOS name resolution (dns)
             {
-                InitDefaults();
-
-                if (!File.Exists(@"0:\System\color.set"))
-                {
-                    File.Create(@"0:\System\color.set");
-                    File.WriteAllText(@"0:\System\color.set", "7");
-                }
-
-                Info.setComputerName("aura-pc");
-
-                if ((Directory.Exists(@"0:\System")) && (Directory.Exists(@"0:\System\Users")) && (Directory.Exists(@"0:\Users")) && (Directory.Exists(@"0:\Users\root")))
-                {
-                    Step2();
-                }
-            }
-            catch
-            {
-                Console.ForegroundColor = ConsoleColor.White;
-                Console.BackgroundColor = ConsoleColor.Black;
-                Menu.DispErrorDialog("Error while creating system folders.");
-            }
-        }
-
-        #region Defaults
-        public void InitDefaults()
-        {
-            string[] DefaultDirctories =
-            {
-                "System",
-                "System\\Users",
-                "Users",
-                "Users\\root",
-            };
-            foreach (string dirs in DefaultDirctories)
-                if (!Directory.Exists(dirs))
-                    Directory.CreateDirectory(dirs);
-        }
-        #endregion Defaults
-
-        /// <summary>
-        /// Method called to make "root"
-        /// </summary>
-        private void Step2()
-        {
-            try
-            {
-                if (!File.Exists(@"0:\System\Users\root.usr"))
-                {
-                    File.Create(@"0:\System\Users\root.usr");
-
-                    try
-                    {
-                        if (File.Exists(@"0:\System\Users\root.usr"))
-                        {
-                            string text = "root";
-                            string md5psw = MD5.hash(text);
-                            File.WriteAllText(@"0:\System\Users\root.usr", md5psw + "|admin");
-                        }
-                    }
-                    catch
-                    {
-                        Console.ForegroundColor = ConsoleColor.White;
-                        Console.BackgroundColor = ConsoleColor.Black;
-                        Menu.DispErrorDialog("[ERROR] Root writing file");
-                    }
-                }
-            }
-            catch
-            {
-                Menu.DispErrorDialog("Error while creating root.");
-            }
-        }
-
-
-        /// <summary>
-        /// Asking user for his language
-        /// </summary>
-        private void Step3(bool filesystemexists)
-        {
-            string language = Menu.DispLanguageDialog();
-
-            if ((language.Equals("en_US")) || language.Equals("en-US"))
-            {
-                Kernel.langSelected = "en_US";
-                Keyboard.Init();
-                if (filesystemexists == true)
-                {
-                    Step4();
-                }
-                else if (filesystemexists == false)
-                {
-                    RootLogin();
-                }
-            }
-            else if ((language.Equals("fr_FR")) || language.Equals("fr-FR"))
-            {
-                Kernel.langSelected = "fr_FR";
-                Keyboard.Init();
-                if (filesystemexists == true)
-                {
-                    Step4();
-                }
-                else if (filesystemexists == false)
-                {
-                    RootLogin();
-                }
-            }
-            else
-            {
-                Step3(filesystemexists);
-            }
-        }
-
-        string step5_computername;
-
-        /// <summary>
-        /// Asking user to choose a name for his computer
-        /// </summary>
-        private void Step5(string user)
-        {
-            string computername = Text.Menu("computernamedialog");
-
-            if ((computername.Length >= 1) && (computername.Length <= 15)) //15 char max for NETBIOS name resolution (dns)
-            {
-                step5_computername = computername;
-                Step6(user);
+                FinalHostname = hostname;
             }
             else
             {
                 Text.Menu("errorcomputer");
-                Step5(user);
+                RegisterHostname();
             }
         }
-
 
         /// <summary>
-        /// Method called to validate the setup.
+        /// Method to register a new user
         /// </summary>
-        private void Step6(string user)
-        {
-            Installation();
-
-            Kernel.userLogged = user;
-            Console.Clear();
-
-            WelcomeMessage.Display();
-            Text.Display("logged", user);
-
-            Console.WriteLine();
-            Kernel.SystemExists = true;
-            Kernel.Logged = true;
-        }
-
-        private void Installation()
-        {
-
-            Menu.DispInstallationDialog(0);
-
-            Step1();
-
-            Menu.DispInstallationDialog(10);
-
-            switch (Kernel.langSelected)
-            {
-                case "en_US":
-                    File.Create(@"0:\System\lang.set");
-                    if (File.Exists(@"0:\System\lang.set"))
-                    {
-                        File.WriteAllText(@"0:\System\lang.set", Kernel.langSelected);
-                        Menu.DispInstallationDialog(20);
-                    }
-                    else
-                    {
-                        Menu.DispErrorDialog("The language configuration already exists!");
-                    }
-                    break;
-                case "fr_FR":
-                    File.Create(@"0:\System\lang.set");
-                    if (File.Exists(@"0:\System\lang.set"))
-                    {
-                        File.WriteAllText(@"0:\System\lang.set", Kernel.langSelected);
-                        Menu.DispInstallationDialog(20);
-                    }
-                    else
-                    {
-                        Menu.DispErrorDialog("La configuration des langue existe déjà!");
-                    }
-                    break;
-            }
-
-            File.Create(@"0:\System\Users\" + step4_user + ".usr");
-
-            Menu.DispInstallationDialog(30);
-
-            Directory.CreateDirectory(@"0:\Users\" + step4_user);
-
-            Menu.DispInstallationDialog(40);
-
-            InitDefaults(step4_user);
-
-            Menu.DispInstallationDialog(50);
-
-            if (File.Exists(@"0:\System\Users\" + step4_user + ".usr"))
-            {
-                File.WriteAllText(@"0:\System\Users\" + step4_user + ".usr", step4_pass + "|standard");
-
-                Menu.DispInstallationDialog(60);
-
-            }
-            else
-            {
-                Text.Menu("error1");
-            }
-
-            Info.setComputerName(step5_computername);
-
-            Menu.DispInstallationDialog(70);
-
-            File.Create(@"0:\System\setup.set");
-
-            Menu.DispInstallationDialog(80);
-
-            Kernel.langSelected = File.ReadAllText(@"0:\System\lang.set");
-
-            #region Language
-
-            Keyboard.Init();
-
-            #endregion
-
-            Menu.DispInstallationDialog(85);
-
-            Kernel.RootContent = File.ReadAllText(@"0:\System\Users\root.usr");
-
-            Info.getComputerName();
-
-            Menu.DispInstallationDialog(90);
-
-            Computer.Color.GetBackgroundColor();
-
-            Menu.DispInstallationDialog(95);
-
-            Kernel.color = Computer.Color.GetTextColor();
-
-            Menu.DispInstallationDialog(100);
-
-            Console.ForegroundColor = ConsoleColor.White;
-            Console.BackgroundColor = ConsoleColor.Black;
-
-            Kernel.JustInstalled = true;
-            Kernel.running = true;
-        }
-
-        public static void RootLogin()
-        {
-            Kernel.SystemExists = false;
-            Kernel.userLogged = "root";
-            Kernel.Logged = true;
-        }
-
-        string step4_user;
-        string step4_pass;
-
-        /// <summary>
-        /// Method to create users.
-        /// </summary>
-        private void Step4()
+        public void RegisterUser()
         {
             Console.Clear();
 
             string text = Text.Menu("setup");
 
             int middle = text.IndexOf("//////");
-            string user = text.Remove(middle, text.Length - middle);
-            string pass = text.Remove(0, middle + 6);
+            username = text.Remove(middle, text.Length - middle);
+            password = text.Remove(0, middle + 6);
 
-            if (File.Exists(@"0:\System\Users\" + user + ".usr"))
+            string tryusername = "";
+
+            if (tryusername.StartsWith("user:" + username))
             {
                 Text.Menu("alreadyuser");
-                Step4();
+                RegisterUser();
             }
             else
             {
-                if ((user.Length >= 4) && (user.Length <= 20))
+                if ((username.Length >= 4) && (username.Length <= 20))
                 {
-
-                    if ((pass.Length >= 6) && (pass.Length <= 40))
+                    if ((password.Length >= 6) && (password.Length <= 40))
                     {
-                        string password = MD5.hash(pass);
-                        step4_pass = password;
-                        step4_user = user;
-                        Step5(step4_user);
+                        //good
+                        password = MD5.hash(password);
+                        FinalUsername = "user:" + username;
+                        FinalPassword = password;
                     }
                     else
                     {
                         Text.Menu("error2");
-                        Step4();
+                        RegisterUser();
                     }
                 }
                 else
                 {
-                        Text.Menu("error3");
-                        Step4();
+                    Text.Menu("error3");
+                    RegisterUser();
                 }
-            }  
+            }            
         }
 
-        #region Defaults
-
-        public void InitDefaults(string user)
+        /// <summary>
+        /// Method called to create all users directories
+        /// </summary>
+        public void CreateUserDirectories(string[] Users)
         {
-            string[] DefaultDirctories =
+            foreach(string user in Users)
             {
-                @"0:\Users\" + user +  @"\Desktop",
-                @"0:\Users\" + user +  @"\Documents",
-                @"0:\Users\" + user +  @"\Downloads",
-                @"0:\Users\" + user +  @"\Music"
-            };
-            foreach (string dirs in DefaultDirctories)
-            {
-                if (!Directory.Exists(dirs))
-                    Directory.CreateDirectory(dirs);
+                if (!Directory.Exists(@"0:\Users\" + user))
+                    Directory.CreateDirectory(@"0:\Users\" + user);                
             }
         }
 
-        #endregion Defaults
+        /// <summary>
+        /// Method to register the language that will be used on the computer
+        /// </summary>
+        public void RegisterLanguage()
+        {
+            string language = Menu.DispLanguageDialog();
 
+            if ((language.Equals("en_US")) || language.Equals("en-US"))
+            {
+                Kernel.langSelected = "en_US";
+                FinalLang = "en_US";
+                Keyboard.Init();                
+            }
+            else if ((language.Equals("fr_FR")) || language.Equals("fr-FR"))
+            {
+                Kernel.langSelected = "fr_FR";
+                FinalLang = "fr_FR";
+                Keyboard.Init();
+            }
+            else
+            {
+                RegisterLanguage();
+            }
+        }
+
+        /// <summary>
+        /// Called to define default colors
+        /// </summary>
+        public void RegisterDefaults()
+        {
+            Settings.PutValue("foregroundcolor","7");
+            Settings.PutValue("backgroundcolor", "0");
+        }
+
+        /// <summary>
+        /// Create defaults directories of the system
+        /// </summary>
+        public void InitDirs()
+        {
+            try
+            {
+                string[] DefaultSystemDirectories =
+                {
+                    @"0:\System\",
+                    @"0:\Users\"
+                };
+
+                foreach (string dirs in DefaultSystemDirectories)
+                {
+                    if (!Directory.Exists(dirs))
+                        Directory.CreateDirectory(dirs);
+                }
+            }
+            catch
+            {
+                RunWithoutFS();
+            }            
+        }
+
+        /// <summary>
+        /// Method called to start Aura_OS without using filesystem and loggged to "root"
+        /// </summary>
+        public void RunWithoutFS() //logged with root without using filesystem
+        {
+            Kernel.SystemExists = false;
+            Kernel.userLogged = "root";
+            Kernel.Logged = true;
+        }
+
+        /// <summary>
+        /// Method called to start Aura_OS to run with filesystem and not logged to any user by default
+        /// </summary>
+        public void Run()
+        {
+            Console.Clear();
+
+            Kernel.SystemExists = true;
+            Kernel.userLogged = username;
+            Kernel.JustInstalled = true;
+            Kernel.running = true;
+
+            Console.Clear();
+
+            WelcomeMessage.Display();
+            Text.Display("logged", username);
+
+            Console.WriteLine();
+
+            Kernel.Logged = true;
+        }
+
+        public void Installation()
+        {
+            Menu.DispInstallationDialog(0);
+
+            Menu.DispInstallationDialog(5);            
+
+            InitDirs(); //create needed directories if they doesn't exist
+
+            Menu.DispInstallationDialog(10);
+
+            File.Create(@"0:\System\settings.conf");
+            File.Create(@"0:\System\passwd");
+
+            Menu.DispInstallationDialog(15);
+
+            Settings.PutValue("user:" + FinalUsername, FinalPassword + "|admin", @"0:\System\passwd");
+
+            Menu.DispInstallationDialog(30);
+
+            Settings.PutValue("user:root", MD5.hash("root") + "|admin", @"0:\System\passwd");
+
+            Menu.DispInstallationDialog(40);
+
+            string[] Users = { "root", FinalUsername };
+            CreateUserDirectories(Users);
+
+            Settings.LoadValues();
+
+            Menu.DispInstallationDialog(50);
+
+            if ((FinalLang.Equals("en_US")) || FinalLang.Equals("en-US"))
+            {
+                Settings.PutValue("language", "en_US");
+                Menu.DispInstallationDialog(60);
+            }
+            else if ((FinalLang.Equals("fr_FR")) || FinalLang.Equals("fr-FR"))
+            {
+                Settings.PutValue("language", "fr_FR");
+                Menu.DispInstallationDialog(60);
+            }
+
+            Settings.PutValue("hostname", FinalHostname);
+
+            Menu.DispInstallationDialog(80);
+
+            RegisterDefaults();
+
+            Settings.PushValues();
+
+            Menu.DispInstallationDialog(100);
+
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.BackgroundColor = ConsoleColor.Black;
+
+            Run();
+        }
     }
 }

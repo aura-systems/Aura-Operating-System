@@ -10,7 +10,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="System\Users\Setup.cs" />
+    <Compile Include="System\Users\Setup.cs" />
   </ItemGroup>
 
   <ItemGroup>
