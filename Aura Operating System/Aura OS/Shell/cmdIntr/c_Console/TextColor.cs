@@ -50,54 +50,63 @@ namespace Aura_OS.Shell.cmdIntr.c_Console
         /// <param name="fg_colour">The number of the color you wish to pass in</param>
         /// <param name="startIndex">The start index for remove.</param>
         /// <param name="count">The count index for remove.</param>
-        public static void c_TextColor(string color, short startIndex = 0, short count = 10)
+        public static bool c_TextColor(string color, short startIndex = 0, short count = 10)
         {
             //string color = fg_colour.Remove(startIndex, count);
             if (color.Equals("0"))
             {
                 Color.SetTextColor("0");
                 Kernel.color = 0;
+                return true;
             }
             else if (color.Equals("1"))
             {
                 Color.SetTextColor("1");
                 Kernel.color = 1;
+                return true;
             }
             else if (color.Equals("2"))
             {
                 Color.SetTextColor("2");
                 Kernel.color = 2;
+                return true;
             }
             else if (color.Equals("3"))
             {
                 Color.SetTextColor("3");
                 Kernel.color = 3;
+                return true;
             }
             else if (color.Equals("4"))
             {
                 Color.SetTextColor("4");
                 Kernel.color = 4;
+                return true;
             }
             else if (color.Equals("5"))
             {
                 Color.SetTextColor("5");
                 Kernel.color = 5;
+                return true;
             }
             else if (color.Equals("6"))
             {
                 Color.SetTextColor("6");
                 Kernel.color = 6;
+                return true;
             }
             else if (color.Equals("7"))
             {
                 Color.SetTextColor("7");
                 Kernel.color = 7;
+                return true;
             }
             else
             {
                 L.Text.Display("unknowncolor");
                 c_TextColor();
                 Kernel.color = -1;
+                return false;
             }
         }
     }
