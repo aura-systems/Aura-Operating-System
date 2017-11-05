@@ -50,7 +50,7 @@ namespace Aura_OS.System.Users
                             //LOGGED
                             Kernel.userLogged = user;
                             UserLevel.LevelReader(userarray[1]);
-                            InitUserDirs(user);
+                            //InitUserDirs(user);
                             Console.Clear();
                             WelcomeMessage.Display();
                             Text.Display("logged", user);
@@ -77,7 +77,7 @@ namespace Aura_OS.System.Users
                             Kernel.userLogged = user;
                             UserLevel.LevelReader(userarray[1]);
                             Kernel.userLevelLogged = UserLevel.Administrator();
-                            InitUserDirs(user);
+                            //InitUserDirs(user);
                             Console.Clear();
                             WelcomeMessage.Display();
                             Text.Display("logged", user);
@@ -130,7 +130,7 @@ namespace Aura_OS.System.Users
                             //LOGGED
                             Kernel.userLogged = user1;
                             UserLevel.LevelReader(userarray1[1]);
-                            InitUserDirs(user1);
+                            //InitUserDirs(user1);
                             Console.Clear();
                             WelcomeMessage.Display();
                             Text.Display("logged", user1);
@@ -157,7 +157,7 @@ namespace Aura_OS.System.Users
                             Kernel.userLogged = user1;
                             UserLevel.LevelReader(userarray1[1]);
                             Kernel.userLevelLogged = UserLevel.Administrator();
-                            InitUserDirs(user1);
+                            //InitUserDirs(user1);
                             Console.Clear();
                             WelcomeMessage.Display();
                             Text.Display("logged", user1);
