@@ -132,8 +132,7 @@ namespace Aura_OS
                     }
                     else
                     {
-                        Users user = new Users();
-                        user.Login();
+                        Login.LoginForm();
                     }
                 }
             }
