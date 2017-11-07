@@ -44,14 +44,9 @@ namespace Aura_OS.Shell.cmdIntr.Settings
 
             if (cmdargs[1].Equals("adduser"))
             {
-                //todo remake this method
-                //with users.Create();
-
-                //method user
-                string argsuser = cmdargs[2];
                 System.Users.Users users = new System.Users.Users();
 
-                users.Create(argsuser);
+                users.Create(cmdargs[2], cmdargs[3]);
             }
 
             else if (cmdargs[1].Equals("setcomputername"))
