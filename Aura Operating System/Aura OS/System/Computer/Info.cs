@@ -22,6 +22,7 @@ namespace Aura_OS.System.Computer
         {
             if (Kernel.SystemExists)
             {
+                Settings.LoadValues();
                 return Settings.GetValue("hostname");
             }
             else
@@ -81,7 +82,7 @@ namespace Aura_OS.System.Computer
 
         public static string GetIPAdress()
         {
-            throw new NotImplementedException();
+            return "0.0.0.0/0";
         }
     }
 }
