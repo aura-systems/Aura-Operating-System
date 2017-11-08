@@ -20,14 +20,16 @@ namespace Aura_OS.System.Computer
         /// <returns></returns>
         public static string getComputerName()
         {
-            if (Kernel.SystemExists)
+            try
             {
                 Settings.LoadValues();
-                return Settings.GetValue("hostname");
+                string hostname = Settings.GetValue("hostname");
+                Kernel.ComputerName = hostname;
+                return hostname;
             }
-            else
+            catch
             {
-                return Kernel.ComputerName;
+                return "aura-pc";
             }
         }
 
@@ -54,7 +56,7 @@ namespace Aura_OS.System.Computer
             Text.Display("computernamename");
             var computername = Console.ReadLine();
 
-            if((computername.Length >= 1) && (computername.Length <= 15)) //15 char max for NETBIOS name resolution (dns)
+            if ((computername.Length >= 1) && (computername.Length <= 15)) //15 char max for NETBIOS name resolution (dns)
             {
                 setComputerName(computername);
                 Console.WriteLine();
@@ -67,7 +69,7 @@ namespace Aura_OS.System.Computer
                 Text.Display("computernameincorrect");
                 Console.WriteLine();
                 AskComputerName();
-            }  
+            }
         }
 
         public static string GetAmountRAM()
