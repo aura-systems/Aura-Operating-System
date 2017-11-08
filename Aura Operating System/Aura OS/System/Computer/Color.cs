@@ -134,6 +134,17 @@ namespace Aura_OS.System.Computer
         /// <param name="color"></param>
         public static void SetTextColor(string color = "7")
         {
+            Settings.LoadValues();
+            if (!Settings.GetValue("foregroundcolor").Equals("null"))
+            {
+                Settings.EditValue("foregroundcolor", color);
+                Settings.PushValues();
+            }
+            else
+            {
+                Settings.PutValue("foregroundcolor", color);
+                Settings.PushValues();
+            }
             GetTextColor();
         }
 
@@ -150,42 +161,34 @@ namespace Aura_OS.System.Computer
                 if (color.Equals("0"))
                 {
                     Console.BackgroundColor = ConsoleColor.Black;
-                    Console.Clear();
                 }
                 else if (color.Equals("1"))
                 {
                     Console.BackgroundColor = ConsoleColor.Blue;
-                    Console.Clear();
                 }
                 else if (color.Equals("2"))
                 {
                     Console.BackgroundColor = ConsoleColor.Green;
-                    Console.Clear();
                 }
                 else if (color.Equals("3"))
                 {
                     Console.BackgroundColor = ConsoleColor.DarkBlue;
-                    Console.Clear();
                 }
                 else if (color.Equals("4"))
                 {
                     Console.BackgroundColor = ConsoleColor.Red;
-                    Console.Clear();
                 }
                 else if (color.Equals("5"))
                 {
                     Console.BackgroundColor = ConsoleColor.Magenta;
-                    Console.Clear();
                 }
                 else if (color.Equals("6"))
                 {
                     Console.BackgroundColor = ConsoleColor.Yellow;
-                    Console.Clear();
                 }
                 else if (color.Equals("7"))
                 {
                     Console.BackgroundColor = ConsoleColor.White;
-                    Console.Clear();
                 }
             }
         }
@@ -196,6 +199,17 @@ namespace Aura_OS.System.Computer
         /// <param name="color"></param>
         public static void SetBackgroundColor(string color = "0")
         {
+            Settings.LoadValues();
+            if (!Settings.GetValue("backgroundcolor").Equals("null"))
+            {
+                Settings.EditValue("backgroundcolor", color);
+                Settings.PushValues();
+            }
+            else
+            {
+                Settings.PutValue("backgroundcolor", color);
+                Settings.PushValues();
+            }
             GetBackgroundColor();
         }
 

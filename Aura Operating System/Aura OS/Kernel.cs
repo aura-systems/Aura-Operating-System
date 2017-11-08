@@ -124,11 +124,14 @@ namespace Aura_OS
                 {
                     if (Logged) //If logged
                     {
-                        BeforeCommand();
+                        BeforeCommand();                  
 
                         var cmd = Console.ReadLine();
                         Shell.cmdIntr.CommandManager._CommandManger(cmd);
                         Console.WriteLine();
+
+                        Color.GetBackgroundColor();
+                        color = Color.GetTextColor();
                     }
                     else
                     {
