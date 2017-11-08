@@ -242,6 +242,15 @@ namespace Aura_OS.System.Translation
                         case "md5":
                             Console.WriteLine("Voici le résultat en MD5.");
                             break;
+                        case "user:existalready":
+                            Console.WriteLine($"{arg} existe déjà !");
+                            break;
+                        case "user:hasbeencreated":
+                            Console.WriteLine($"{arg} a bien été créé !");
+                            break;
+                        case "user:personaldirectories":
+                            Console.WriteLine($"{arg} Les dossiers personnelles ont bien été créés !");
+                            break;
                     }
                     break;
 
@@ -441,6 +450,15 @@ namespace Aura_OS.System.Translation
                             break;
                         case "md5":
                             Console.WriteLine("This is the result in MD5.");
+                            break;
+                        case "user:existalready":
+                            Console.WriteLine($"{arg} exist already !");
+                            break;
+                        case "user:hasbeencreated":
+                            Console.WriteLine($"{arg} has been created !");
+                            break;
+                        case "user:personaldirectories":
+                            Console.WriteLine($"{arg} Personal directories has been created ! !");
                             break;
                     }
                     break;

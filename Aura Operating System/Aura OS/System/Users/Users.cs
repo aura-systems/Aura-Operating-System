@@ -54,15 +54,15 @@ namespace Aura_OS.System.Users
                 Settings.LoadUsers();
                 if (Settings.GetUser("user").StartsWith(username))
                 {
-                    Console.WriteLine($"[NotTranslated] {username} exist already !");
+                    Text.Display("user:existalready", username);
                     return;
                 }
                 Settings.PutUser("user:" + username, password + "|" + type);
                 Settings.PushUsers();
-                Console.WriteLine($"[NotTranslated] {username} has been created !");
+                Text.Display("user:hasbeencreated", username);
 
                 InitUserDirs(username);
-                Console.WriteLine("[NotTranslated] Personal directories has been created !");
+                Text.Display("user:personaldirectories", username);
             }
             catch
             {
