@@ -102,8 +102,8 @@ namespace Aura_OS.System.Translation
                     Console.WriteLine("- adduser (pour créer un compte)");
                     Console.WriteLine("- setcomputername (pour changer le nom de l'ordinateur)");
                     Console.WriteLine("- setlang {lang} (pour changer la langue du système)");
-                    Console.WriteLine("- backgroundcolor {colorID} (permet de changer la couleur de dernier plan)");
-                    Console.WriteLine("- textcolor {colorID} (permet de changer la couleur de premier plan)");
+                    //Console.WriteLine("- backgroundcolor {colorID} (permet de changer la couleur de dernier plan)");
+                    //Console.WriteLine("- textcolor {colorID} (permet de changer la couleur de premier plan)");
                     break;
 
                 case "en_US":
@@ -111,8 +111,8 @@ namespace Aura_OS.System.Translation
                     Console.WriteLine("- adduser (to create an account)");
                     Console.WriteLine("- setcomputername (to change the computer name)");
                     Console.WriteLine("- setlang {lang} (to change the system language)");
-                    Console.WriteLine("- backgroundcolor {colorID} (to change background color)");
-                    Console.WriteLine("- textcolor {colorID} (to change foreground colour)");
+                    //Console.WriteLine("- backgroundcolor {colorID} (to change background color)");
+                    //Console.WriteLine("- textcolor {colorID} (to change foreground colour)");
                     break;
             }
         }

@@ -80,26 +80,26 @@ namespace Aura_OS.Shell.cmdIntr.Settings
                 }
             }
 
-            else if (cmdargs[1].Equals("textcolor"))
-            {
-                bool save = c_Console.TextColor.c_TextColor(cmdargs[2]);
-                if (save)
-                {
-                    System.Utils.Settings.LoadValues();
-                    System.Utils.Settings.EditValue("foregroundcolor", cmdargs[2]);
-                    System.Utils.Settings.PushValues();
-                }
-            }
-            else if (cmdargs[1].Equals("backgroundcolor"))
-            {
-                bool save = c_Console.BackGroundColor.c_BackGroundColor(cmdargs[2]);
-                if (save)
-                {
-                    System.Utils.Settings.LoadValues();
-                    System.Utils.Settings.EditValue("backgroundcolor", cmdargs[2]);
-                    System.Utils.Settings.PushValues();
-                }
-            }
+            //else if (cmdargs[1].Equals("textcolor"))
+            //{
+            //    bool save = c_Console.TextColor.c_TextColor(cmdargs[2]);
+            //    if (save)
+            //    {
+            //        System.Utils.Settings.LoadValues();
+            //        System.Utils.Settings.EditValue("foregroundcolor", cmdargs[2]);
+            //        System.Utils.Settings.PushValues();
+            //    }
+            //}
+            //else if (cmdargs[1].Equals("backgroundcolor"))
+            //{
+            //    bool save = c_Console.BackGroundColor.c_BackGroundColor(cmdargs[2]);
+            //    if (save)
+            //    {
+            //        System.Utils.Settings.LoadValues();
+            //        System.Utils.Settings.EditValue("backgroundcolor", cmdargs[2]);
+            //        System.Utils.Settings.PushValues();
+            //    }
+            //}
 
             else
             {

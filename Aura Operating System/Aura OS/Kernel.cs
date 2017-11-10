@@ -98,10 +98,6 @@ namespace Aura_OS
 
                     Info.getComputerName();
 
-                    Color.GetBackgroundColor();
-
-                    color = Color.GetTextColor();
-
                     running = true;
 
                 }
@@ -129,9 +125,6 @@ namespace Aura_OS
                         var cmd = Console.ReadLine();
                         Shell.cmdIntr.CommandManager._CommandManger(cmd);
                         Console.WriteLine();
-
-                        Color.GetBackgroundColor();
-                        color = Color.GetTextColor();
                     }
                     else
                     {
