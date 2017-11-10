@@ -166,34 +166,125 @@ namespace Aura_OS.System.Utils
             }
         }
 
-        public static void DeleteParameter(string parameter)
+        public static void EditUser(string username, string password)
+        {
+            foreach (string line in users)
+            {
+                usersfile.Add(line);
+            }
+
+            int counter = -1;
+            int index = 0;
+
+            bool exists = false;
+
+            foreach (string element in usersfile)
+            {
+                counter = counter + 1;
+                if (element.Contains("user:" + username + ":"))
+                {
+                    index = counter;
+                    exists = true;
+                }
+            }
+            if (exists)
+            {
+                string UserValue = GetUser("user:" + username + ":");
+                string[] uservaluesplitted = UserValue.Split('|');
+                string level = uservaluesplitted[1];
+                
+                usersfile[index] = "user:" + username + ":" + Security.MD5.hash(password) + "|" + level;
+
+                users = usersfile.ToArray();
+
+                usersfile.Clear();
+            }
+        }
+
+        public static void DisableParameter(string parameter)
         {
             foreach (string line in file)
             {
-                if (!line.Contains(parameter + ":"))
-                {
-                    usersfile.Add(line);
-                }
+                configurationfile.Add(line);
             }
 
-            users = usersfile.ToArray();
+            int counter = -1;
+            int index = 0;
 
-            usersfile.Clear();
+            bool exists = false;
+
+            foreach (string element in configurationfile)
+            {
+                counter = counter + 1;
+                if (element.Contains(parameter))
+                {
+                    index = counter;
+                    exists = true;
+                }
+            }
+            if (exists)
+            {
+                configurationfile[index] = "#" + parameter + "=" + GetValue(parameter);
+
+                file = configurationfile.ToArray();
+
+                configurationfile.Clear();
+            }
+        }
+
+        public static void EnableParameter(string parameter)
+        {
+            foreach (string line in file)
+            {
+                configurationfile.Add(line);
+            }
+
+            int counter = -1;
+            int index = 0;
+
+            bool exists = false;
+
+            foreach (string element in configurationfile)
+            {
+                counter = counter + 1;
+                if (element.Contains(parameter))
+                {
+                    index = counter;
+                    exists = true;
+                }
+            }
+            if (exists)
+            {
+                configurationfile[index] = parameter + "=" + GetValue(parameter);
+
+                file = configurationfile.ToArray();
+
+                configurationfile.Clear();
+            }
         }
 
         public static void DeleteUser(string user)
         {
+            List<string> NewUsersFile = new List<string>();
+
             foreach (string line in users)
             {
-                if (!line.Contains("user:" + user))
+                if (!line.StartsWith("user:" + user + ":"))
                 {
-                    usersfile.Add(line);
-                }                
+                    NewUsersFile.Add(line);
+                    Console.WriteLine("[FALSE] OK");
+                }
+                else
+                {
+                    Console.WriteLine("[TRUE] " + line);
+                }
             }
+            File.Delete(@"0:\System\passwd");
+            File.WriteAllLines(@"0:\System\passwd", NewUsersFile.ToArray());
 
-            users = usersfile.ToArray();
+            LoadUsers();
 
-            usersfile.Clear();            
+            NewUsersFile.Clear();            
         }
 
     }
