@@ -72,8 +72,33 @@ namespace Aura_OS.System.Users
 
         public void Remove(string username)
         {
-            Settings.DeleteUser(username);
-            Directory.Delete(@"0:\Users\" + username, true);
+            if (Settings.GetUser("user").StartsWith(username))
+            {
+                Settings.LoadUsers();
+                Settings.DeleteUser(username);
+                //Directory.Delete(@"0:\Users\" + username, true);
+                Text.Display("user:hasbeenremoved", username);
+            }
+            else
+            {
+                Text.Display("user:doesntexist", username);
+            }
+        }
+
+        public void ChangePassword(string username, string password)
+        {
+            if (Settings.GetUser(username) == "null")
+            {
+                Text.Display("user:doesntexist", username);
+            }
+            else
+            {
+                Settings.LoadUsers();
+                Settings.EditUser(username, password);
+                Settings.PushUsers();
+                //Directory.Delete(@"0:\Users\" + username, true);
+                Text.Display("user:passwordhasbeenchanged", username);
+            }
         }
 
     }
