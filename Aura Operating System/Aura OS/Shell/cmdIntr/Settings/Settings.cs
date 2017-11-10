@@ -55,6 +55,20 @@ namespace Aura_OS.Shell.cmdIntr.Settings
                 Info.AskComputerName();
             }
 
+            else if (cmdargs[1].Equals("remuser"))
+            {
+                System.Users.Users users = new System.Users.Users();
+
+                users.Remove(cmdargs[2]);
+            }
+
+            else if (cmdargs[1].Equals("passuser"))
+            {
+                System.Users.Users users = new System.Users.Users();
+
+                users.ChangePassword(cmdargs[2], cmdargs[3]);
+            }
+
             else if (cmdargs[1].Equals("setlang"))
             {
                 if ((cmdargs[2].Equals("en_US")) || cmdargs[2].Equals("en-US"))
