@@ -70,5 +70,11 @@ namespace Aura_OS.System.Users
             }
         }
 
+        public void Remove(string username)
+        {
+            Settings.DeleteUser(username);
+            Directory.Delete(@"0:\Users\" + username, true);
+        }
+
     }
 }
