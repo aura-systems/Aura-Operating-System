@@ -131,10 +131,18 @@ namespace Aura_OS.Shell.cmdIntr
             {
                 Settings.Settings.c_Settings(cmd);
             }
+            else if (cmd.StartsWith("passwd "))
+            {
+                Settings.Passwd.c_Passwd(cmd);
+            }
+            else if (cmd.Equals("passwd"))
+            {
+                Settings.Passwd.c_Passwd(Kernel.userLogged);
+            }
 
-        #endregion Settings
+            #endregion Settings
 
-        #region System Infomation
+            #region System Infomation
 
             else if (cmd.Equals("systeminfo"))
             {
@@ -161,42 +169,7 @@ namespace Aura_OS.Shell.cmdIntr
             {
                 Tests.Crash.c_Crash();
             }
-
-            else if (cmd.StartsWith("del "))
-            {
-                string paramater = cmd.Remove(0, 4);
-                System.Utils.Settings.LoadValues();
-                System.Utils.Settings.DeleteParameter(paramater);
-                System.Utils.Settings.PushValues();
-            }
-
-            else if (cmd.StartsWith("edi "))
-            {
-                string parameter = cmd.Remove(0, 4);
-                Console.Write("value=");
-                string value = Console.ReadLine();
-                System.Utils.Settings.LoadValues();
-                System.Utils.Settings.EditValue(parameter, value);
-                System.Utils.Settings.PushValues();
-            }
-
-            else if (cmd.StartsWith("get "))
-            {
-                string parameter = cmd.Remove(0, 4);
-                System.Utils.Settings.LoadValues();
-                Console.WriteLine(System.Utils.Settings.GetValue(parameter));
-            }
-
-            else if (cmd.StartsWith("put "))
-            {
-                string parameter = cmd.Remove(0, 4);
-                Console.Write("value=");
-                string value = Console.ReadLine();
-                System.Utils.Settings.LoadValues();
-                System.Utils.Settings.PutValue(parameter, value);
-                System.Utils.Settings.PushValues();
-            }
-
+            
             #endregion Tests
 
             #region Tools
