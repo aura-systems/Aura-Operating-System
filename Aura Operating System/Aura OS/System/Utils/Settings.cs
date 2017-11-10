@@ -170,31 +170,30 @@ namespace Aura_OS.System.Utils
         {
             foreach (string line in file)
             {
-                configurationfile.Add(line);
-            }
-
-            int counter = -1;
-            int index = 0;
-
-            bool exists = false;
-
-            foreach (string element in configurationfile)
-            {
-                counter = counter + 1;
-                if (element.Contains(parameter))
+                if (!line.Contains(parameter + ":"))
                 {
-                    index = counter;
-                    exists = true;
+                    usersfile.Add(line);
                 }
             }
-            if (exists)
+
+            users = usersfile.ToArray();
+
+            usersfile.Clear();
+        }
+
+        public static void DeleteUser(string user)
+        {
+            foreach (string line in users)
             {
-                configurationfile.RemoveAt(index);
-
-                file = configurationfile.ToArray();
-
-                configurationfile.Clear();
+                if (!line.Contains("user:" + user))
+                {
+                    usersfile.Add(line);
+                }                
             }
+
+            users = usersfile.ToArray();
+
+            usersfile.Clear();            
         }
 
     }
