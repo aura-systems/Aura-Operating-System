@@ -7,6 +7,8 @@ using XSharp;
 using Cosmos.IL2CPU.API.Attribs;
 using XSharp.Assembler;
 using System.IO;
+using Cosmos.Core.Memory;
+using CPUx86 = XSharp.Assembler.x86;
 
 namespace  Aura_OS.System.exe
 {
@@ -18,6 +20,37 @@ namespace  Aura_OS.System.exe
         {
             code = File.ReadAllBytes(file);
             // code = { 0;//readfile
+        }
+
+        public static uint ProgramAddress;
+
+        public static void LoadPlainBinary(byte[] code)
+        {
+            uint mem_ptr = (uint)Heap.Alloc((uint)code.Length);
+            byte* ptr = (byte*)mem_ptr;
+            for (int i = 0; i < code.Length; i++)
+            {
+                ptr[i] = code[i];
+            }
+
+            ProgramAddress = mem_ptr;
+
+            Caller c = new Caller();
+            c.CallCode(0x100);
+            //jmp2addr(mem_ptr);
+
+        }
+
+        private static void jmp2addr(uint mem_ptr)
+        {
+            //XS.Push(Cosmos.Core.INTs.TSS.);
+            //XS.
+            //XS.Push();
+            //XS.Pop();
+            //XS.Call();
+            //XS.Mov
+
+            //XS.Pop();
         }
 
         public void Execute()
@@ -59,3 +92,4 @@ namespace  Aura_OS.System.exe
         }
     }
 }
+

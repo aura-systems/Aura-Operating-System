@@ -107,6 +107,9 @@ namespace Aura_OS
 
             color = Color.GetTextColor();
 
+            Syscalls.Init();
+            Console.ReadKey();
+
             running = true;
         }
 
