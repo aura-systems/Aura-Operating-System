@@ -249,7 +249,25 @@ namespace Aura_OS.System.Translation
                             Console.WriteLine($"{arg} a bien été créé !");
                             break;
                         case "user:personaldirectories":
-                            Console.WriteLine($"{arg} Les dossiers personnelles ont bien été créés !");
+                            Console.WriteLine($"Les dossiers personnelles ont bien été créés !");
+                            break;
+                        case "user:doesntexist":
+                            Console.WriteLine($"{arg} n'existe pas !");
+                            break;
+                        case "user:hasbeenremoved":
+                            Console.WriteLine($"{arg} a bien été supprimé !");
+                            break;
+                        case "user:passwordhasbeenchanged":
+                            Console.WriteLine($"Le mot de passe a bien été changé !");
+                            break;
+                        case "passwd:newpass":
+                            Console.Write($"Entrer un nouveau mot de passe: ");
+                            break;
+                        case "passwd:retype":
+                            Console.Write($"Confirmer le nouveau mot de passe: ");
+                            break;
+                        case "passwd:updated":
+                            Console.WriteLine($"passwd: Le mot de passe a bien été changé.");
                             break;
                     }
                     break;
@@ -459,6 +477,24 @@ namespace Aura_OS.System.Translation
                             break;
                         case "user:personaldirectories":
                             Console.WriteLine($"{arg} Personal directories has been created ! !");
+                            break;
+                        case "user:doesntexist":
+                            Console.WriteLine($"{arg} doesn't exist !");
+                            break;
+                        case "user:hasbeenremoved":
+                            Console.WriteLine($"{arg} has been removed !");
+                            break;
+                        case "user:passwordhasbeenchanged":
+                            Console.WriteLine($"Password has been changed !");
+                            break;
+                        case "passwd:newpass":
+                            Console.Write($"Enter new password: ");
+                            break;
+                        case "passwd:retype":
+                            Console.Write($"Retype new password: ");
+                            break;
+                        case "passwd:updated":
+                            Console.WriteLine($"passwd: password updated successfully.");
                             break;
                     }
                     break;
