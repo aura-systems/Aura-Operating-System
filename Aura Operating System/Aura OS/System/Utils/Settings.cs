@@ -181,7 +181,7 @@ namespace Aura_OS.System.Utils
             foreach (string element in usersfile)
             {
                 counter = counter + 1;
-                if (element.Contains("user:" + username + ":"))
+                if (element.Contains(username))
                 {
                     index = counter;
                     exists = true;
@@ -189,11 +189,9 @@ namespace Aura_OS.System.Utils
             }
             if (exists)
             {
-                string UserValue = GetUser("user:" + username + ":");
-                string[] uservaluesplitted = UserValue.Split('|');
-                string level = uservaluesplitted[1];
-                
-                usersfile[index] = "user:" + username + ":" + Security.MD5.hash(password) + "|" + level;
+                password = Security.MD5.hash(password);
+
+                usersfile[index] = "user:" + username + ":" + password + "|" + Kernel.userLevelLogged;
 
                 users = usersfile.ToArray();
 

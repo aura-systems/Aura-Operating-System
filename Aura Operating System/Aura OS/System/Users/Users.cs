@@ -41,7 +41,7 @@ namespace Aura_OS.System.Users
                 foreach (string dirs in DefaultDirectories)
                     if (!Directory.Exists(dirs))
                         Directory.CreateDirectory(dirs);
-            }            
+            }
         }
         #endregion UserDirs
 
@@ -87,18 +87,15 @@ namespace Aura_OS.System.Users
 
         public void ChangePassword(string username, string password)
         {
-            if (Settings.GetUser(username) == "null")
-            {
-                Text.Display("user:doesntexist", username);
-            }
-            else
-            {
-                Settings.LoadUsers();
-                Settings.EditUser(username, password);
-                Settings.PushUsers();
-                //Directory.Delete(@"0:\Users\" + username, true);
-                Text.Display("user:passwordhasbeenchanged", username);
-            }
+
+            Settings.LoadUsers();
+            Settings.EditUser(username, password);
+            File.Delete(@"0:\System\passwd");
+            File.Create(@"0:\System\passwd");
+            Settings.PushUsers();
+            //Directory.Delete(@"0:\Users\" + username, true);
+            Text.Display("user:passwordhasbeenchanged", username);
+
         }
 
     }
