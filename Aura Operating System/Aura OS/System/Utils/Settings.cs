@@ -17,7 +17,7 @@ namespace Aura_OS.System.Utils
         static List<string> usersfile = new List<string>();
         static string[] file;
         static string[] reset;
-        static string[] users;
+        public static string[] users;
 
         public static void LoadValues()
         {
@@ -263,26 +263,38 @@ namespace Aura_OS.System.Utils
 
         public static void DeleteUser(string user)
         {
-            List<string> NewUsersFile = new List<string>();
 
             foreach (string line in users)
             {
-                if (!line.StartsWith("user:" + user + ":"))
+                usersfile.Add(line);
+            }
+
+            int counter = -1;
+            int index = 0;
+
+            bool exists = false;
+
+            foreach (string element in usersfile)
+            {
+                counter = counter + 1;
+                if (element.Contains(user))
                 {
-                    NewUsersFile.Add(line);
-                    Console.WriteLine("[FALSE] OK");
-                }
-                else
-                {
-                    Console.WriteLine("[TRUE] " + line);
+                    index = counter;
+                    exists = true;
                 }
             }
-            File.Delete(@"0:\System\passwd");
-            File.WriteAllLines(@"0:\System\passwd", NewUsersFile.ToArray());
+            if (exists)
+            {
+                usersfile[index] = "";
 
-            LoadUsers();
+                users = usersfile.ToArray();
 
-            NewUsersFile.Clear();            
+                usersfile.Clear();
+
+                File.Delete(@"0:\System\passwd");
+
+                PushUsers();
+            }
         }
 
     }

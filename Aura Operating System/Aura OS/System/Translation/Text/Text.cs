@@ -269,6 +269,9 @@ namespace Aura_OS.System.Translation
                         case "passwd:updated":
                             Console.WriteLine($"passwd: Le mot de passe a bien été changé.");
                             break;
+                        case "adduser":
+                            Console.WriteLine($"Essayez: settings adduser user pass");
+                            break;
                     }
                     break;
 
@@ -495,6 +498,9 @@ namespace Aura_OS.System.Translation
                             break;
                         case "passwd:updated":
                             Console.WriteLine($"passwd: password updated successfully.");
+                            break;
+                        case "adduser":
+                            Console.WriteLine($"Try: settings adduser user pass");
                             break;
                     }
                     break;
