@@ -99,7 +99,9 @@ namespace Aura_OS.System.Translation
             {
                 case "fr_FR":
                     Console.WriteLine("Commandes disponible:");
-                    Console.WriteLine("- adduser (pour créer un compte)");
+                    Console.WriteLine("- adduser {user} {pass} (pour créer un compte)");
+                    Console.WriteLine("- remuser {user} (pour supprimer un compte)");
+                    Console.WriteLine("- passuser {user} {pass} (pour changer le mot de passe)");
                     Console.WriteLine("- setcomputername (pour changer le nom de l'ordinateur)");
                     Console.WriteLine("- setlang {lang} (pour changer la langue du système)");
                     //Console.WriteLine("- backgroundcolor {colorID} (permet de changer la couleur de dernier plan)");
@@ -108,7 +110,9 @@ namespace Aura_OS.System.Translation
 
                 case "en_US":
                     Console.WriteLine("Available commands:");
-                    Console.WriteLine("- adduser (to create an account)");
+                    Console.WriteLine("- adduser {user} {pass} (to create an account)");
+                    Console.WriteLine("- remuser {user} (to remove an account)");
+                    Console.WriteLine("- passuser {user} {pass} (to change password)");
                     Console.WriteLine("- setcomputername (to change the computer name)");
                     Console.WriteLine("- setlang {lang} (to change the system language)");
                     //Console.WriteLine("- backgroundcolor {colorID} (to change background color)");

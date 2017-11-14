@@ -129,7 +129,7 @@ namespace Aura_OS.System.Users
             }
             if (exists)
             {
-                usersfile[index] = "";
+                usersfile.RemoveAt(index);
 
                 users = usersfile.ToArray();
 
@@ -164,7 +164,7 @@ namespace Aura_OS.System.Users
             }
             if (exists)
             {
-                password = Security.MD5.hash(password);
+                password = MD5.hash(password);
 
                 usersfile[index] = "user:" + username + ":" + password + "|" + Kernel.userLevelLogged;
 

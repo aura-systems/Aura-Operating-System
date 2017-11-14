@@ -42,15 +42,11 @@ namespace Aura_OS.Shell.cmdIntr.Settings
             Char separator = ' ';
             string[] cmdargs = settings.Split(separator);
 
-            if (cmdargs[1].Equals("adduser") || !cmdargs[2].Equals("") || !cmdargs[3].Equals(""))
+            if (cmdargs[1].Equals("adduser"))
             {
                 System.Users.Users users = new System.Users.Users();
 
                 users.Create(cmdargs[2], cmdargs[3]);
-            }
-            else if (cmdargs[1].Equals("adduser"))
-            {
-                L.Text.Display("adduser");
             }
 
             else if (cmdargs[1].Equals("setcomputername"))
