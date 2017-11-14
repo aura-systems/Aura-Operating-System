@@ -11,7 +11,6 @@ namespace Aura_OS.System.Drawable
     public class Menu
     {
 
-
         /// <summary>
         /// Display a progress bar
         /// </summary>

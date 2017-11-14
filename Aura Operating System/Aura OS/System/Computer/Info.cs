@@ -72,17 +72,26 @@ namespace Aura_OS.System.Computer
             }
         }
 
+        /// <summary>
+        /// Method to get the amount of RAM.
+        /// </summary>
         public static string GetAmountRAM()
         {
             return Cosmos.Core.CPU.GetAmountOfRAM() + "MB";
         }
 
-        public static string GetMACAdress()
+        /// <summary>
+        /// Display the MAC address.
+        /// </summary>
+        public static string GetMACAddress()
         {
             return Cosmos.HAL.Network.MACAddress.Broadcast + "";
         }
 
-        public static string GetIPAdress()
+        /// <summary>
+        /// Display local IP Address.
+        /// </summary>
+        public static string GetIPAddress()
         {
             return "0.0.0.0/0";
         }

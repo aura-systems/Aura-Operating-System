@@ -140,9 +140,9 @@ namespace Aura_OS.Shell.cmdIntr
                 Settings.Passwd.c_Passwd(Kernel.userLogged);
             }
 
-            #endregion Settings
+        #endregion Settings
 
-            #region System Infomation
+        #region System Infomation
 
             else if (cmd.Equals("systeminfo"))
             {
@@ -161,7 +161,7 @@ namespace Aura_OS.Shell.cmdIntr
                 SystemInfomation.Time.c_Time();
             }
 
-            #endregion System Infomation
+        #endregion System Infomation
 
         #region Tests
 
@@ -170,44 +170,9 @@ namespace Aura_OS.Shell.cmdIntr
                 Tests.Crash.c_Crash();
             }
 
-            else if (cmd.StartsWith("edi "))
-            {
-                string parameter = cmd.Remove(0, 4);
-                Console.Write("value=");
-                string value = Console.ReadLine();
-                System.Utils.Settings.LoadValues();
-                System.Utils.Settings.EditValue(parameter, value);
-                System.Utils.Settings.PushValues();
-            }
+        #endregion Tests
 
-            else if (cmd.StartsWith("get "))
-            {
-                string parameter = cmd.Remove(0, 4);
-                System.Utils.Settings.LoadValues();
-                Console.WriteLine(System.Utils.Settings.GetValue(parameter));
-            }
-
-            else if (cmd.StartsWith("put "))
-            {
-                string parameter = cmd.Remove(0, 4);
-                Console.Write("value=");
-                string value = Console.ReadLine();
-                System.Utils.Settings.LoadValues();
-                System.Utils.Settings.PutValue(parameter, value);
-                System.Utils.Settings.PushValues();
-            }
-
-            else if (cmd.Equals("list"))
-            {
-                foreach (string line in System.Users.Users.users)
-                {
-                    Console.WriteLine(line);
-                }
-            }
-
-            #endregion Tests
-
-            #region Tools
+        #region Tools
 
             else if (cmd.Equals("snake"))
             {
@@ -218,7 +183,7 @@ namespace Aura_OS.Shell.cmdIntr
                 Tools.MD5.c_MD5(cmd);
             }
 
-            #endregion
+        #endregion
 
         #region Util           
 

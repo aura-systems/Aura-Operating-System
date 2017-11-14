@@ -238,6 +238,9 @@ namespace Aura_OS.System
             Kernel.Logged = true;
         }
 
+        /// <summary>
+        /// Installation with progressbar.
+        /// </summary>
         public void Installation()
         {
             Menu.DispInstallationDialog(0);
@@ -299,5 +302,6 @@ namespace Aura_OS.System
 
             Run();
         }
+
     }
 }

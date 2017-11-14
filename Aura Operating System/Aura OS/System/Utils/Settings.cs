@@ -18,7 +18,6 @@ namespace Aura_OS.System.Utils
         static string[] file;
         static string[] reset;
 
-
         /// <summary>
         /// Load values from settings.conf.
         /// </summary>

@@ -51,6 +51,9 @@ namespace Aura_OS.System.Users
         static string[] reset;
         static List<string> usersfile = new List<string>();
 
+        /// <summary>
+        /// Method to create an user.
+        /// </summary>
         public void Create(string username, string password, string type = "standard")
         {
             try
@@ -75,6 +78,9 @@ namespace Aura_OS.System.Users
             }
         }
 
+        /// <summary>
+        /// Method to remove an user.
+        /// </summary>
         public void Remove(string username)
         {
             if (GetUser("user").StartsWith(username))
@@ -90,6 +96,9 @@ namespace Aura_OS.System.Users
             }
         }
 
+        /// <summary>
+        /// Method to change the password of an user.
+        /// </summary>
         public void ChangePassword(string username, string password)
         {
 

@@ -11,6 +11,9 @@ namespace Aura_OS.System.Users
     class Login
     {
 
+        /// <summary>
+        /// Display the login form.
+        /// </summary>
         public static void LoginForm()
         {
             string title = Title();
@@ -44,6 +47,9 @@ namespace Aura_OS.System.Users
 
         }
 
+        /// <summary>
+        /// Display the login title.
+        /// </summary>
         private static string Title()
         {
             string title_fr = "Connexion à votre compte Aura.";
@@ -60,6 +66,9 @@ namespace Aura_OS.System.Users
             return title_en; //default
         }
 
+        /// <summary>
+        /// Alert if the password is wrong.
+        /// </summary>
         private static void WrongPasswordForm()
         {
             string text_fr = "Mauvais mot de passe.";
@@ -75,6 +84,9 @@ namespace Aura_OS.System.Users
             }            
         }
 
+        /// <summary>
+        /// Start Aura after login.
+        /// </summary>
         private static void Start(string username)
         {
             Console.Clear();
