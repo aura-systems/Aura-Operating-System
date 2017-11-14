@@ -272,6 +272,12 @@ namespace Aura_OS.System.Translation
                         case "adduser":
                             Console.WriteLine($"Essayez: settings adduser user pass");
                             break;
+                        case "_passuser":
+                            Console.WriteLine($"Essayez: settings passuser user pass");
+                            break;
+                        case "remuser":
+                            Console.WriteLine($"Essayez: settings remuser user");
+                            break;
                     }
                     break;
 
@@ -501,6 +507,12 @@ namespace Aura_OS.System.Translation
                             break;
                         case "adduser":
                             Console.WriteLine($"Try: settings adduser user pass");
+                            break;
+                        case "_passuser":
+                            Console.WriteLine($"Try: settings passuser user pass");
+                            break;
+                        case "remuser":
+                            Console.WriteLine($"Try: settings remuser user");
                             break;
                     }
                     break;
