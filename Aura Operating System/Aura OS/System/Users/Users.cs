@@ -10,11 +10,13 @@ using Aura_OS.System.Translation;
 using Aura_OS.System.Security;
 using Aura_OS.System.Drawable;
 using Aura_OS.System.Utils;
+using System.Collections.Generic;
 
 namespace Aura_OS.System.Users
 {
     class Users
     {
+
         #region UserDirs
         public void InitUserDirs(string user)
         {
@@ -45,20 +47,23 @@ namespace Aura_OS.System.Users
         }
         #endregion UserDirs
 
+        public static string[] users;
+        static string[] reset;
+        static List<string> usersfile = new List<string>();
 
         public void Create(string username, string password, string type = "standard")
         {
             try
             {
                 password = MD5.hash(password);
-                Settings.LoadUsers();
-                if (Settings.GetUser("user").StartsWith(username))
+                LoadUsers();
+                if (GetUser("user").StartsWith(username))
                 {
                     Text.Display("user:existalready", username);
                     return;
                 }
-                Settings.PutUser("user:" + username, password + "|" + type);
-                Settings.PushUsers();
+                PutUser("user:" + username, password + "|" + type);
+                PushUsers();
                 Text.Display("user:hasbeencreated", username);
 
                 InitUserDirs(username);
@@ -72,10 +77,10 @@ namespace Aura_OS.System.Users
 
         public void Remove(string username)
         {
-            if (Settings.GetUser("user").StartsWith(username))
+            if (GetUser("user").StartsWith(username))
             {
-                Settings.LoadUsers();
-                Settings.DeleteUser(username);
+                LoadUsers();
+                DeleteUser(username);
                 //Directory.Delete(@"0:\Users\" + username, true);
                 Text.Display("user:hasbeenremoved", username);
             }
@@ -88,14 +93,143 @@ namespace Aura_OS.System.Users
         public void ChangePassword(string username, string password)
         {
 
-            Settings.LoadUsers();
-            Settings.EditUser(username, password);
+            LoadUsers();
+            EditUser(username, password);
             File.Delete(@"0:\System\passwd");
             File.Create(@"0:\System\passwd");
-            Settings.PushUsers();
+            PushUsers();
             //Directory.Delete(@"0:\Users\" + username, true);
             Text.Display("user:passwordhasbeenchanged", username);
 
+        }
+
+        ///////
+
+        static void DeleteUser(string user)
+        {
+
+            foreach (string line in users)
+            {
+                usersfile.Add(line);
+            }
+
+            int counter = -1;
+            int index = 0;
+
+            bool exists = false;
+
+            foreach (string element in usersfile)
+            {
+                counter = counter + 1;
+                if (element.Contains(user))
+                {
+                    index = counter;
+                    exists = true;
+                }
+            }
+            if (exists)
+            {
+                usersfile[index] = "";
+
+                users = usersfile.ToArray();
+
+                usersfile.Clear();
+
+                File.Delete(@"0:\System\passwd");
+
+                PushUsers();
+            }
+        }
+
+        static void EditUser(string username, string password)
+        {
+            foreach (string line in users)
+            {
+                usersfile.Add(line);
+            }
+
+            int counter = -1;
+            int index = 0;
+
+            bool exists = false;
+
+            foreach (string element in usersfile)
+            {
+                counter = counter + 1;
+                if (element.Contains(username))
+                {
+                    index = counter;
+                    exists = true;
+                }
+            }
+            if (exists)
+            {
+                password = Security.MD5.hash(password);
+
+                usersfile[index] = "user:" + username + ":" + password + "|" + Kernel.userLevelLogged;
+
+                users = usersfile.ToArray();
+
+                usersfile.Clear();
+            }
+        }
+
+        static string GetUser(string parameter)
+        {
+            string value = "null";
+
+            foreach (string line in users)
+            {
+                usersfile.Add(line);
+            }
+
+            foreach (string element in usersfile)
+            {
+                if (element.StartsWith(parameter))
+                {
+                    value = element.Remove(0, parameter.Length + 1);
+                }
+            }
+
+            usersfile.Clear();
+
+            return value;
+        }
+
+        static void PutUser(string parameter, string value)
+        {
+            bool contains = false;
+
+            foreach (string line in users)
+            {
+                usersfile.Add(line);
+                if (line.StartsWith(parameter))
+                {
+                    contains = true;
+                }
+            }
+
+            if (!contains)
+            {
+                usersfile.Add(parameter + ":" + value);
+            }
+
+            users = usersfile.ToArray();
+
+            usersfile.Clear();
+        }
+
+        static void PushUsers()
+        {
+            File.WriteAllLines(@"0:\System\passwd", users);
+        }
+
+        static void LoadUsers()
+        {
+            //reset of users string array in memory if there is "something"
+            users = reset;
+            //load
+            users = File.ReadAllLines(@"0:\System\passwd");
         }
 
     }

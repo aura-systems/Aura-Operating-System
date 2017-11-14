@@ -17,8 +17,11 @@ namespace Aura_OS.System.Utils
         static List<string> usersfile = new List<string>();
         static string[] file;
         static string[] reset;
-        public static string[] users;
 
+
+        /// <summary>
+        /// Load values from settings.conf.
+        /// </summary>
         public static void LoadValues()
         {
             //reset of config in memory if there is "something"
@@ -27,24 +30,17 @@ namespace Aura_OS.System.Utils
             file = File.ReadAllLines(@"0:\System\settings.conf");
         }
 
-        public static void LoadUsers()
-        {
-            //reset of users string array in memory if there is "something"
-            users = reset;
-            //load
-            users = File.ReadAllLines(@"0:\System\passwd");
-        }
-
+        /// <summary>
+        /// Push values to settings.conf.
+        /// </summary>
         public static void PushValues()
         {
             File.WriteAllLines(@"0:\System\settings.conf", file);
         }
 
-        public static void PushUsers()
-        {
-            File.WriteAllLines(@"0:\System\passwd", users);
-        }
-
+        /// <summary>
+        /// Put a value in settings.
+        /// </summary>
         public static void PutValue(string parameter, string value)
         {
             bool contains = false;
@@ -68,51 +64,9 @@ namespace Aura_OS.System.Utils
             configurationfile.Clear();
         }
 
-        public static void PutUser(string parameter, string value)
-        {
-            bool contains = false;
-
-            foreach (string line in users)
-            {
-                usersfile.Add(line);
-                if (line.StartsWith(parameter))
-                {
-                    contains = true;
-                }
-            }
-
-            if (!contains)
-            {
-                usersfile.Add(parameter + ":" + value);
-            }
-
-            users = usersfile.ToArray();
-
-            usersfile.Clear();
-        }
-
-        public static string GetUser(string parameter)
-        {
-            string value = "null";
-
-            foreach (string line in users)
-            {
-                usersfile.Add(line);
-            }
-
-            foreach (string element in usersfile)
-            {
-                if (element.StartsWith(parameter))
-                {
-                    value = element.Remove(0, parameter.Length + 1);
-                }
-            }
-
-            usersfile.Clear();
-
-            return value;
-        }
-
+        /// <summary>
+        /// Get a value from settings.
+        /// </summary>
         public static string GetValue(string parameter)
         {
             string value = "null";
@@ -135,6 +89,9 @@ namespace Aura_OS.System.Utils
             return value;
         }
 
+        /// <summary>
+        /// Edit a value in settings.
+        /// </summary>
         public static void EditValue(string parameter, string value)
         {
             foreach (string line in file)
@@ -166,40 +123,7 @@ namespace Aura_OS.System.Utils
             }
         }
 
-        public static void EditUser(string username, string password)
-        {
-            foreach (string line in users)
-            {
-                usersfile.Add(line);
-            }
-
-            int counter = -1;
-            int index = 0;
-
-            bool exists = false;
-
-            foreach (string element in usersfile)
-            {
-                counter = counter + 1;
-                if (element.Contains(username))
-                {
-                    index = counter;
-                    exists = true;
-                }
-            }
-            if (exists)
-            {
-                password = Security.MD5.hash(password);
-
-                usersfile[index] = "user:" + username + ":" + password + "|" + Kernel.userLevelLogged;
-
-                users = usersfile.ToArray();
-
-                usersfile.Clear();
-            }
-        }
-
-        public static void DisableParameter(string parameter)
+        /** public static void DisableParameter(string parameter)
         {
             foreach (string line in file)
             {
@@ -260,42 +184,7 @@ namespace Aura_OS.System.Utils
                 configurationfile.Clear();
             }
         }
-
-        public static void DeleteUser(string user)
-        {
-
-            foreach (string line in users)
-            {
-                usersfile.Add(line);
-            }
-
-            int counter = -1;
-            int index = 0;
-
-            bool exists = false;
-
-            foreach (string element in usersfile)
-            {
-                counter = counter + 1;
-                if (element.Contains(user))
-                {
-                    index = counter;
-                    exists = true;
-                }
-            }
-            if (exists)
-            {
-                usersfile[index] = "";
-
-                users = usersfile.ToArray();
-
-                usersfile.Clear();
-
-                File.Delete(@"0:\System\passwd");
-
-                PushUsers();
-            }
-        }
+    **/
 
     }
 }
