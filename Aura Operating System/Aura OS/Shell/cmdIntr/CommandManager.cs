@@ -199,7 +199,7 @@ namespace Aura_OS.Shell.cmdIntr
 
             else if (cmd.Equals("list"))
             {
-                foreach (string line in System.Utils.Settings.users)
+                foreach (string line in System.Users.Users.users)
                 {
                     Console.WriteLine(line);
                 }

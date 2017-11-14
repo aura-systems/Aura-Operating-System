@@ -253,15 +253,15 @@ namespace Aura_OS.System
 
             Menu.DispInstallationDialog(15);
 
-            Settings.LoadUsers();
+            System.Users.Users.LoadUsers();
 
             Menu.DispInstallationDialog(20);
 
-            Settings.PutUser("user:" + FinalUsername, FinalPassword + ":admin");
+            System.Users.Users.PutUser("user:" + FinalUsername, FinalPassword + ":admin");
 
             Menu.DispInstallationDialog(30);
 
-            Settings.PutUser("user:root", MD5.hash("root") + ":admin");
+            System.Users.Users.PutUser("user:root", MD5.hash("root") + ":admin");
 
             Menu.DispInstallationDialog(40);
 
@@ -290,7 +290,7 @@ namespace Aura_OS.System
             RegisterDefaults();
 
             Settings.PushValues();
-            Settings.PushUsers();
+            System.Users.Users.PushUsers();
 
             Menu.DispInstallationDialog(100);
 

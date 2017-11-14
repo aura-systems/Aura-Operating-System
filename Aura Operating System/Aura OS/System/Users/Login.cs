@@ -21,9 +21,9 @@ namespace Aura_OS.System.Users
             string md5psw = MD5.hash(pass);
             string type;
 
-            Settings.LoadUsers();
+            Users.LoadUsers();
 
-            if(Settings.GetUser("user:" + user).Contains(UserLevel.Administrator()))
+            if(Users.GetUser("user:" + user).Contains(UserLevel.Administrator()))
             {
                 type = UserLevel.Administrator();
             }
@@ -32,7 +32,7 @@ namespace Aura_OS.System.Users
                 type = UserLevel.StandardUser();
             }
 
-            if (Settings.GetUser("user:" + user).Contains(md5psw))
+            if (Users.GetUser("user:" + user).Contains(md5psw))
             {
                 Start(user);
             }

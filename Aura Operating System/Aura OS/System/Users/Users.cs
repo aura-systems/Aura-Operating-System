@@ -105,7 +105,7 @@ namespace Aura_OS.System.Users
 
         ///////
 
-        static void DeleteUser(string user)
+        public static void DeleteUser(string user)
         {
 
             foreach (string line in users)
@@ -141,7 +141,7 @@ namespace Aura_OS.System.Users
             }
         }
 
-        static void EditUser(string username, string password)
+        public static void EditUser(string username, string password)
         {
             foreach (string line in users)
             {
@@ -174,7 +174,7 @@ namespace Aura_OS.System.Users
             }
         }
 
-        static string GetUser(string parameter)
+        public static string GetUser(string parameter)
         {
             string value = "null";
 
@@ -196,7 +196,7 @@ namespace Aura_OS.System.Users
             return value;
         }
 
-        static void PutUser(string parameter, string value)
+        public static void PutUser(string parameter, string value)
         {
             bool contains = false;
 
@@ -219,12 +219,12 @@ namespace Aura_OS.System.Users
             usersfile.Clear();
         }
 
-        static void PushUsers()
+        public static void PushUsers()
         {
             File.WriteAllLines(@"0:\System\passwd", users);
         }
 
-        static void LoadUsers()
+        public static void LoadUsers()
         {
             //reset of users string array in memory if there is "something"
             users = reset;
