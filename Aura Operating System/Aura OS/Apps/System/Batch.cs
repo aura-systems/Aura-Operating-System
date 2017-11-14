@@ -1,8 +1,12 @@
-﻿using Aura_OS.System.Translation;
+﻿/*
+* PROJECT:          Aura Operating System Development
+* CONTENT:          Batch (.bat) implementation.
+* PROGRAMMERS:      Alexy DA CRUZ <dacruzalexy@gmail.com>
+*/
+
+using Aura_OS.System.Translation;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Text;
 
 namespace Aura_OS.Apps.System
 {

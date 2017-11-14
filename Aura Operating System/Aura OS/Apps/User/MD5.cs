@@ -1,6 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿/*
+* PROJECT:          Aura Operating System Development
+* CONTENT:          MD5 Hash
+* PROGRAMMERS:      Alexy DA CRUZ <dacruzalexy@gmail.com>
+*/
+
+using System;
 using Security = Aura_OS.System.Security;
 using Aura_OS.System.Translation;
 

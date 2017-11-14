@@ -4,9 +4,6 @@
 * PROGRAMMER(S):    John Welsh <djlw78@gmail.com>
 */
 
-using Aura_OS.Apps.User;
-using System;
-
 namespace Aura_OS.Shell.cmdIntr
 {
     class CommandManager

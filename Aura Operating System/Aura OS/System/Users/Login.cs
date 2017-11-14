@@ -1,10 +1,14 @@
-﻿using Aura_OS.System.Drawable;
+﻿/*
+* PROJECT:          Aura Operating System Development
+* CONTENT:          Login class.
+* PROGRAMMERS:      Alexy DA CRUZ <dacruzalexy@gmail.com>
+*                   Valentin Charbonnier <valentinbreiz@gmail.com>
+*/
+
+using Aura_OS.System.Drawable;
 using Aura_OS.System.Security;
 using Aura_OS.System.Translation;
-using Aura_OS.System.Utils;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Aura_OS.System.Users
 {

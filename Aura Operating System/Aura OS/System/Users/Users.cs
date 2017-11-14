@@ -2,6 +2,7 @@
 * PROJECT:          Aura Operating System Development
 * CONTENT:          User class
 * PROGRAMMERS:      Alexy DA CRUZ <dacruzalexy@gmail.com>
+*                   Valentin Charbonnier <valentinbreiz@gmail.com>
 */
 
 using System;
