@@ -18,9 +18,9 @@ namespace Aura_OS.Core
         {
             if (aContext.Interrupt == 0x21)
             {
-                if (aContext.AH == 0x09) // corde d'affichage
+                if ((aContext.EAX & 0xFF00) >> 8 == 0x09) // AH
                 {
-                    uint ptr = aContext.DX;
+                    uint ptr = aContext.EDX & 0xFFFF; //DX
                     byte* dat = (byte*)(ptr + System.exe.COM.ProgramAddress);
                     for (int i = 0; dat[i] != 0; i++)
                     {

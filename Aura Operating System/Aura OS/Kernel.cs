@@ -125,7 +125,6 @@ namespace Aura_OS
 
             }
 
-            Console.ReadKey();
             running = true;
         }
 
