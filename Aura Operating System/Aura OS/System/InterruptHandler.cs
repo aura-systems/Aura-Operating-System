@@ -8,7 +8,7 @@ namespace Aura_OS.System
     public class InterruptHandler
     {
         public byte intNum;
-        public Cosmos.Core.INTs.InterruptDelegate handler;
+        public Cosmos.Core.INTs.ExceptionInterruptDelegate handler;
         public static List<InterruptHandler> interruptHandlers = new List<InterruptHandler>();
     }
 }

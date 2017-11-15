@@ -282,7 +282,7 @@ namespace Aura_OS
         #endregion
 
 
-        internal static void SetInterruptGate(byte intnum, INTs.InterruptDelegate handler)
+        internal static void SetInterruptGate(byte intnum, INTs.ExceptionInterruptDelegate handler)
         {
             InterruptHandler i = new InterruptHandler();
             i.intNum = intnum;
