@@ -26,7 +26,7 @@ namespace Aura_OS.Core
             Console.WriteLine("Infinity API interrupts installed");
             return true;
         }
-        public unsafe static void SWI_0x80(ref Cosmos.Core.INTs.IRQContext aContext, ref bool getHandled)
+        public unsafe static void SWI_0x80(ref Cosmos.Core.INTs.IRQContext aContext)
         {
             Console.WriteLine("SWI_0x80");
             if (aContext.Interrupt == 0x80)
@@ -37,8 +37,7 @@ namespace Aura_OS.Core
                 if (aContext.EAX == 0x1) // Write to stdout
                 {
                     uint ptr = aContext.ESI;
-
-                    byte* dat = (byte*)(ptr);
+                    byte* dat = (byte*)(ptr + System.exe.COM.ProgramAddress);
                     for (int i = 0; dat[i] != 0; i++)
                     {
                         Console.Write((char)dat[i]);

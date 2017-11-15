@@ -23,7 +23,7 @@ namespace Aura_OS.HAL
             Cosmos.Core.Global.CPU.Halt();
         }
 
-        public void setIntHandler(byte Int, Cosmos.Core.INTs.ExceptionInterruptDelegate id)
+        public void setIntHandler(byte Int, Cosmos.Core.INTs.InterruptDelegate id)
         {
             Kernel.SetInterruptGate(Int, id);
         }
