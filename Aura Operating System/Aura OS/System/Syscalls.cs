@@ -20,36 +20,66 @@ namespace Aura_OS.Core
         public override bool Init()
         {
             Cosmos.Core.CPU.EnableInterrupts();
-            this.Name = "infinity API";
+            this.Name = "Aura API";
             Console.WriteLine("Initilizing API");
-            Cosmos.Core.INTs.SetIntHandler(0x80, SWI_0x80);
-            Console.WriteLine("Infinity API interrupts installed");
+            //Cosmos.Core.INTs.SetIrqHandler(0x49, SWI_0x49);
+            Cosmos.Core.INTs.SetIntHandler(0x49, SWI_0x49);
+            Console.WriteLine("Aura API interrupts installed");
             return true;
         }
-        public unsafe static void SWI_0x80(ref Cosmos.Core.INTs.IRQContext aContext)
+        public unsafe static void SWI_0x49(ref Cosmos.Core.INTs.IRQContext aContext)
         {
-            Console.WriteLine("SWI_0x80");
-            if (aContext.Interrupt == 0x80)
+            if (aContext.Interrupt == 0x49)
             {
-                Console.WriteLine("0x80");
-                //Terminal.WriteLine("int");
-                //Assembly.RestoreDataSegment(); // Restore kernels data segment
-                if (aContext.EAX == 0x1) // Write to stdout
+                if (aContext.EAX == 0x01) // Write to stdout
                 {
                     uint ptr = aContext.ESI;
-
-                    byte* dat = (byte*)(ptr);
+                    byte* dat = (byte*)(ptr + System.exe.COM.ProgramAddress);
                     for (int i = 0; dat[i] != 0; i++)
                     {
                         Console.Write((char)dat[i]);
                     }
                 }
-                else if (aContext.EAX == 0x2)
-                    Console.WriteLine("0x2");
-                else if (aContext.EAX == 0x3)
-                    Console.WriteLine("0x3");
-                else if (aContext.EAX == 0x4)
-                    Console.WriteLine("0x4");
+                else if (aContext.EAX == 0x02) // Read from stdin
+                {
+
+                }
+                else if (aContext.EAX == 0x03)
+                {
+                    Console.Clear();
+                }   
+                else if (aContext.EAX == 0x04) // set cursor pos
+                {
+
+                }
+                else if (aContext.EAX == 0x05)
+                {
+
+                }
+                else if (aContext.EAX == 0x06) // Push screen state
+                {
+
+                }
+                else if (aContext.EAX == 0x61) // Push screen state
+                {
+
+                }
+                else if (aContext.EAX == 0x07) // String cmp
+                {
+
+                }
+                else if (aContext.EAX == 0x08) // String cmp
+                {
+                    
+                }
+                else if (aContext.EAX == 0x09) // Get File count in CD
+                {
+
+                }
+                else if (aContext.EAX == 0x0A) // Get File count in CD
+                {
+
+                }
             }
         }
     }
