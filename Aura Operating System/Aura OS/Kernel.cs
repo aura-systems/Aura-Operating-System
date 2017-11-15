@@ -12,9 +12,10 @@ using Cosmos.System.FileSystem;
 using Sys = Cosmos.System;
 using Lang = Aura_OS.System.Translation;
 using Aura_OS.System;
-using System.IO;
 using Aura_OS.System.Users;
 using Aura_OS.System.Computer;
+using Aura_OS.System.Utils;
+
 #endregion
 
 namespace Aura_OS
@@ -79,13 +80,15 @@ namespace Aura_OS
 
             #endregion
 
-            setup.SetupVerifyCompleted();
+            setup.InitSetup();
 
             if (SystemExists)
             {
                 if (!JustInstalled)
                 {
-                    langSelected = File.ReadAllText(@"0:\System\lang.set");
+
+                    Settings.LoadValues();
+                    langSelected = Settings.GetValue("language");
 
                     #region Language
 
@@ -93,15 +96,10 @@ namespace Aura_OS
 
                     #endregion
 
-                    RootContent = File.ReadAllText(@"0:\System\Users\root.usr");
-
                     Info.getComputerName();
 
-                    Color.GetBackgroundColor();
-
-                    color = Color.GetTextColor();
-
                     running = true;
+
                 }
             }
             else
@@ -122,7 +120,7 @@ namespace Aura_OS
                 {
                     if (Logged) //If logged
                     {
-                        BeforeCommand();
+                        BeforeCommand();                  
 
                         var cmd = Console.ReadLine();
                         Shell.cmdIntr.CommandManager._CommandManger(cmd);
@@ -130,8 +128,7 @@ namespace Aura_OS
                     }
                     else
                     {
-                        Users user = new Users();
-                        user.Login();
+                        Login.LoginForm();
                     }
                 }
             }
@@ -143,7 +140,6 @@ namespace Aura_OS
         }
 
         #endregion
-
 
         #region BeforeCommand
         /// <summary>

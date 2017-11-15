@@ -171,7 +171,7 @@ namespace Aura_OS.System.Translation
                             Console.Write("Nom de l'ordinateur > ");
                             break;
                         case "computernamesuccess":
-                            Console.Write("Le nouveau nom de l'ordinateur a été appliqué ! \n\nRedémarrez l'ordinateur pour que le changement prenne effet.");
+                            Console.Write("Le nouveau nom de l'ordinateur a été appliqué !");
                             break;
                         case "tips":
                             Console.WriteLine(" * Conseil(s) :");
@@ -241,6 +241,42 @@ namespace Aura_OS.System.Translation
                             break;
                         case "md5":
                             Console.WriteLine("Voici le résultat en MD5.");
+                            break;
+                        case "user:existalready":
+                            Console.WriteLine($"{arg} existe déjà !");
+                            break;
+                        case "user:hasbeencreated":
+                            Console.WriteLine($"{arg} a bien été créé !");
+                            break;
+                        case "user:personaldirectories":
+                            Console.WriteLine($"Les dossiers personnelles ont bien été créés !");
+                            break;
+                        case "user:doesntexist":
+                            Console.WriteLine($"{arg} n'existe pas !");
+                            break;
+                        case "user:hasbeenremoved":
+                            Console.WriteLine($"{arg} a bien été supprimé !");
+                            break;
+                        case "user:passwordhasbeenchanged":
+                            Console.WriteLine($"Le mot de passe a bien été changé !");
+                            break;
+                        case "passwd:newpass":
+                            Console.Write($"Entrer un nouveau mot de passe: ");
+                            break;
+                        case "passwd:retype":
+                            Console.Write($"Confirmer le nouveau mot de passe: ");
+                            break;
+                        case "passwd:updated":
+                            Console.WriteLine($"passwd: Le mot de passe a bien été changé.");
+                            break;
+                        case "adduser":
+                            Console.WriteLine($"Essayez: settings adduser user pass");
+                            break;
+                        case "_passuser":
+                            Console.WriteLine($"Essayez: settings passuser user pass");
+                            break;
+                        case "remuser":
+                            Console.WriteLine($"Essayez: settings remuser user");
                             break;
                     }
                     break;
@@ -371,7 +407,7 @@ namespace Aura_OS.System.Translation
                             Console.Write("Computer name > ");
                             break;
                         case "computernamesuccess":
-                            Console.Write("The new computer name has been applied! \n\nReboot the computer for the changing name take effect.");
+                            Console.Write("The new computer name has been applied!");
                             break;
                         case "tips":
                             Console.WriteLine(" * Tips :");
@@ -442,6 +478,42 @@ namespace Aura_OS.System.Translation
                         case "md5":
                             Console.WriteLine("This is the result in MD5.");
                             break;
+                        case "user:existalready":
+                            Console.WriteLine($"{arg} exist already !");
+                            break;
+                        case "user:hasbeencreated":
+                            Console.WriteLine($"{arg} has been created !");
+                            break;
+                        case "user:personaldirectories":
+                            Console.WriteLine($"{arg} Personal directories has been created ! !");
+                            break;
+                        case "user:doesntexist":
+                            Console.WriteLine($"{arg} doesn't exist !");
+                            break;
+                        case "user:hasbeenremoved":
+                            Console.WriteLine($"{arg} has been removed !");
+                            break;
+                        case "user:passwordhasbeenchanged":
+                            Console.WriteLine($"Password has been changed !");
+                            break;
+                        case "passwd:newpass":
+                            Console.Write($"Enter new password: ");
+                            break;
+                        case "passwd:retype":
+                            Console.Write($"Retype new password: ");
+                            break;
+                        case "passwd:updated":
+                            Console.WriteLine($"passwd: password updated successfully.");
+                            break;
+                        case "adduser":
+                            Console.WriteLine($"Try: settings adduser user pass");
+                            break;
+                        case "_passuser":
+                            Console.WriteLine($"Try: settings passuser user pass");
+                            break;
+                        case "remuser":
+                            Console.WriteLine($"Try: settings remuser user");
+                            break;
                     }
                     break;
             }
@@ -474,7 +546,7 @@ namespace Aura_OS.System.Translation
                             Drawable.Menu.DispErrorDialog("Computer name length must be 1-20 characters.");
                             break;
                         case "computernamedialog":
-                            string text1 = Drawable.Menu.DispCompuernameDialog("║ Choisissez un nom pour votre PC :", "║ Nom du PC : ");
+                            string text1 = Drawable.Menu.DispComputernameDialog("║ Choisissez un nom pour votre PC :", "║ Nom du PC : ");
                             return text1;
                     }
                     break;
@@ -502,7 +574,7 @@ namespace Aura_OS.System.Translation
                             Drawable.Menu.DispErrorDialog("Computer name length must be 1-20 characters.");
                             break;
                         case "computernamedialog":
-                            string text2 = Drawable.Menu.DispCompuernameDialog("║ Choose your computer name:", "║ Computer name: ");
+                            string text2 = Drawable.Menu.DispComputernameDialog("║ Choose your computer name:", "║ Computer name: ");
                             return text2;
                     }
                     break;

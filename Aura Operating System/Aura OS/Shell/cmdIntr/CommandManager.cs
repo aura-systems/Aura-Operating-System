@@ -4,8 +4,6 @@
 * PROGRAMMER(S):    John Welsh <djlw78@gmail.com>
 */
 
-using Aura_OS.Apps.User;
-
 namespace Aura_OS.Shell.cmdIntr
 {
     class CommandManager
@@ -130,6 +128,14 @@ namespace Aura_OS.Shell.cmdIntr
             {
                 Settings.Settings.c_Settings(cmd);
             }
+            else if (cmd.StartsWith("passwd "))
+            {
+                Settings.Passwd.c_Passwd(cmd);
+            }
+            else if (cmd.Equals("passwd"))
+            {
+                Settings.Passwd.c_Passwd(Kernel.userLogged);
+            }
 
         #endregion Settings
 
@@ -152,7 +158,7 @@ namespace Aura_OS.Shell.cmdIntr
                 SystemInfomation.Time.c_Time();
             }
 
-            #endregion System Infomation
+        #endregion System Infomation
 
         #region Tests
 
@@ -161,7 +167,7 @@ namespace Aura_OS.Shell.cmdIntr
                 Tests.Crash.c_Crash();
             }
 
-            #endregion Tests
+        #endregion Tests
 
         #region Tools
 
@@ -174,9 +180,9 @@ namespace Aura_OS.Shell.cmdIntr
                 Tools.MD5.c_MD5(cmd);
             }
 
-            #endregion
+        #endregion
 
-            #region Util           
+        #region Util           
 
             else
             {
