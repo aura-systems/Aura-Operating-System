@@ -465,7 +465,7 @@ namespace Aura_OS.System.Drawable
         {
             LanguageMenu();
             string[] item = { "English: en_US", "Français: fr_FR"};
-            int language = GenericMenu(item);
+            int language = GenericMenu(item, LanguageMenu);
             if (language == 0)
             {
                 return "en_US";
@@ -525,13 +525,14 @@ namespace Aura_OS.System.Drawable
             Console.BackgroundColor = ConsoleColor.Black;
         }
 
-        public static int GenericMenu(string[] items)
+        public static int GenericMenu(string[] items, Action method)
         {
             int currentitem = 0, c;
             ConsoleKeyInfo key;
             do
             {
-                LanguageMenu();
+                method();
+
                 int counter = 11;
                 for (c = 0; c < items.Length; c++)
                 {
