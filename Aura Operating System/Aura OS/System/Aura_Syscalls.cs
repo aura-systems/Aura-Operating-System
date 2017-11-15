@@ -11,7 +11,7 @@ namespace Aura_OS.Core
             this.Name = "Aura API";
             Console.WriteLine("Initilizing API");
             Cosmos.Core.INTs.SetIntHandler(0x49, SWI_0x49);
-            Console.WriteLine("Aura API interrupts installed");
+            Console.WriteLine("Aura API installed");
             return true;
         }
         public unsafe static void SWI_0x49(ref Cosmos.Core.INTs.IRQContext aContext)

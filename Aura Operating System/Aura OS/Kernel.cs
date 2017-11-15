@@ -48,7 +48,7 @@ namespace Aura_OS
 
         #endregion
 
-        public static List<Aura_OS.HAL.Driver> Drivers = new List<Aura_OS.HAL.Driver>();
+        public static List<HAL.Driver> Drivers = new List<HAL.Driver>();
 
         #region Before Run
 
@@ -113,7 +113,8 @@ namespace Aura_OS
 
             color = Color.GetTextColor();
 
-            Core.Syscalls syscalls = new Core.Syscalls();
+            Core.Aura_Syscalls aura_syscalls = new Core.Aura_Syscalls();
+            Core.MSDOS_Syscalls msdos_syscalls = new Core.MSDOS_Syscalls();
 
             for (int i = 0; i < Drivers.Count; i++)
             {

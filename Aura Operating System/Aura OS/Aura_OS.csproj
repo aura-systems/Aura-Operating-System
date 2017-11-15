@@ -10,7 +10,15 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="System\InterruptHandler.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Remove="Aura_OSBoot.Cosmos" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="System\Aura_Syscalls.cs" />
   </ItemGroup>
 
   <ItemGroup>
