@@ -22,11 +22,11 @@ namespace Aura_OS.Core
             Cosmos.Core.CPU.EnableInterrupts();
             this.Name = "infinity API";
             Console.WriteLine("Initilizing API");
-            setIntHandler(0x80, SWI_0x80);
+            Cosmos.Core.INTs.SetIntHandler(0x80, SWI_0x80);
             Console.WriteLine("Infinity API interrupts installed");
             return true;
         }
-        public unsafe static void SWI_0x80(ref Cosmos.Core.INTs.IRQContext aContext, ref bool getHandled)
+        public unsafe static void SWI_0x80(ref Cosmos.Core.INTs.IRQContext aContext)
         {
             Console.WriteLine("SWI_0x80");
             if (aContext.Interrupt == 0x80)

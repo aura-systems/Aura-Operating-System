@@ -7,7 +7,7 @@ using XSharp;
 using Cosmos.IL2CPU.API.Attribs;
 using XSharp.Assembler;
 using System.IO;
-using Cosmos.Core.Memory;
+using Cosmos.Core;
 using CPUx86 = XSharp.Assembler.x86;
 
 namespace  Aura_OS.System.exe
@@ -19,7 +19,8 @@ namespace  Aura_OS.System.exe
 
         public static void LoadPlainBinary(byte[] code)
         {
-            byte* data = Heap.Alloc((uint)code.Length);
+            //byte* data = Cosmos.Core.Memory.Heap.Alloc((uint)code.Length);
+            byte* data = (byte*)Cosmos.Core.Memory.Old.Heap.MemAlloc((uint)code.Length);
             ProgramAddress = (uint)&data[0];
             for (int i = 0; i < code.Length; i++)
             {
