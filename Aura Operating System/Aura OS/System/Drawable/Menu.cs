@@ -109,6 +109,7 @@ namespace Aura_OS.System.Drawable
             }
             else if (percent == 20)
             {
+                Console.ForegroundColor = ConsoleColor.Green;
                 Console.SetCursorPosition(10, 13);
                 Console.WriteLine("############");
                 Console.SetCursorPosition(x, y);
@@ -119,6 +120,7 @@ namespace Aura_OS.System.Drawable
             }
             else if (percent == 25)
             {
+                Console.ForegroundColor = ConsoleColor.Green;
                 Console.SetCursorPosition(10, 13);
                 Console.WriteLine("###############");
                 Console.SetCursorPosition(x, y);
@@ -129,6 +131,7 @@ namespace Aura_OS.System.Drawable
             }
             else if (percent == 30)
             {
+                Console.ForegroundColor = ConsoleColor.Green;
                 Console.SetCursorPosition(10, 13);
                 Console.WriteLine("##################");
                 Console.SetCursorPosition(x, y);
@@ -139,6 +142,7 @@ namespace Aura_OS.System.Drawable
             }
             else if (percent == 35)
             {
+                Console.ForegroundColor = ConsoleColor.Green;
                 Console.SetCursorPosition(10, 13);
                 Console.WriteLine("#####################");
                 Console.SetCursorPosition(x, y);
@@ -149,6 +153,7 @@ namespace Aura_OS.System.Drawable
             }
             else if (percent == 40)
             {
+                Console.ForegroundColor = ConsoleColor.Green;
                 Console.SetCursorPosition(10, 13);
                 Console.WriteLine("########################");
                 Console.SetCursorPosition(x, y);
@@ -159,6 +164,7 @@ namespace Aura_OS.System.Drawable
             }
             else if (percent == 45)
             {
+                Console.ForegroundColor = ConsoleColor.Green;
                 Console.SetCursorPosition(10, 13);
                 Console.WriteLine("###########################");
                 Console.SetCursorPosition(x, y);
@@ -169,6 +175,7 @@ namespace Aura_OS.System.Drawable
             }
             else if (percent == 50)
             {
+                Console.ForegroundColor = ConsoleColor.Green;
                 Console.SetCursorPosition(10, 13);
                 Console.WriteLine("##############################");
                 Console.SetCursorPosition(x, y);
@@ -179,6 +186,7 @@ namespace Aura_OS.System.Drawable
             }
             else if (percent == 55)
             {
+                Console.ForegroundColor = ConsoleColor.Green;
                 Console.SetCursorPosition(10, 13);
                 Console.WriteLine("#################################");
                 Console.SetCursorPosition(x, y);
@@ -189,6 +197,7 @@ namespace Aura_OS.System.Drawable
             }
             else if (percent == 60)
             {
+                Console.ForegroundColor = ConsoleColor.Green;
                 Console.SetCursorPosition(10, 13);
                 Console.WriteLine("####################################");
                 Console.SetCursorPosition(x, y);
@@ -199,6 +208,7 @@ namespace Aura_OS.System.Drawable
             }
             else if (percent == 65)
             {
+                Console.ForegroundColor = ConsoleColor.Green;
                 Console.SetCursorPosition(10, 13);
                 Console.WriteLine("#######################################");
                 Console.SetCursorPosition(x, y);
@@ -209,6 +219,7 @@ namespace Aura_OS.System.Drawable
             }
             else if (percent == 70)
             {
+                Console.ForegroundColor = ConsoleColor.Green;
                 Console.SetCursorPosition(10, 13);
                 Console.WriteLine("##########################################");
                 Console.SetCursorPosition(x, y);
@@ -219,6 +230,7 @@ namespace Aura_OS.System.Drawable
             }
             else if (percent == 75)
             {
+                Console.ForegroundColor = ConsoleColor.Green;
                 Console.SetCursorPosition(10, 13);
                 Console.WriteLine("#############################################");
                 Console.SetCursorPosition(x, y);
@@ -229,6 +241,7 @@ namespace Aura_OS.System.Drawable
             }
             else if (percent == 80)
             {
+                Console.ForegroundColor = ConsoleColor.Green;
                 Console.SetCursorPosition(10, 13);
                 Console.WriteLine("################################################");
                 Console.SetCursorPosition(x, y);
@@ -239,6 +252,7 @@ namespace Aura_OS.System.Drawable
             }
             else if (percent == 85)
             {
+                Console.ForegroundColor = ConsoleColor.Green;
                 Console.SetCursorPosition(10, 13);
                 Console.WriteLine("###################################################");
                 Console.SetCursorPosition(x, y);
@@ -249,6 +263,7 @@ namespace Aura_OS.System.Drawable
             }
             else if (percent == 90)
             {
+                Console.ForegroundColor = ConsoleColor.Green;
                 Console.SetCursorPosition(10, 13);
                 Console.WriteLine("######################################################");
                 Console.SetCursorPosition(x, y);
@@ -259,6 +274,7 @@ namespace Aura_OS.System.Drawable
             }
             else if (percent == 95)
             {
+                Console.ForegroundColor = ConsoleColor.Green;
                 Console.SetCursorPosition(10, 13);
                 Console.WriteLine("#########################################################");
                 Console.SetCursorPosition(x, y);
@@ -269,6 +285,7 @@ namespace Aura_OS.System.Drawable
             }
             else if (percent == 100)
             {
+                Console.ForegroundColor = ConsoleColor.Green;
                 Console.SetCursorPosition(10, 13);
                 Console.WriteLine("############################################################");
                 Console.SetCursorPosition(x, y);
