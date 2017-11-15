@@ -14,59 +14,19 @@ namespace  Aura_OS.System.exe
 {
     public unsafe class COM
     {
-        private byte[] code;
-
-        public COM(string file)
-        {
-            code = File.ReadAllBytes(file);
-            // code = { 0;//readfile
-        }
 
         public static uint ProgramAddress;
 
         public static void LoadPlainBinary(byte[] code)
         {
-            uint mem_ptr = (uint)Heap.Alloc((uint)code.Length);
-            byte* ptr = (byte*)mem_ptr;
+            byte* data = Heap.Alloc((uint)code.Length);
+            ProgramAddress = (uint)&data[0];
             for (int i = 0; i < code.Length; i++)
             {
-                ptr[i] = code[i];
+                data[i] = code[i];
             }
-
-            ProgramAddress = mem_ptr;
-
-            Caller c = new Caller();
-            c.CallCode(0x100);
-            //jmp2addr(mem_ptr);
-
-        }
-
-        private static void jmp2addr(uint mem_ptr)
-        {
-            //XS.Push(Cosmos.Core.INTs.TSS.);
-            //XS.
-            //XS.Push();
-            //XS.Pop();
-            //XS.Call();
-            //XS.Mov
-
-            //XS.Pop();
-        }
-
-        public void Execute()
-        {
-            /* This might be overwritting something, but since we do not have paging working
-            * there is really no 'better' alternative. I have test this though and I have
-            * not noticed any bad side effects so I will assume this is somewhat safe...
-            */
-            //ExitUtils.Vs8086Mode();
-            byte* ptr = (byte*)0x100;
-            for (int i = 0; i < code.Length; i++)
-                ptr[i] = code[i];
-            Caller c = new Caller();
-            c.CallCode(0x100);
-            //caller c = new caller();
-           // c.callercode0x100
+            Caller call = new Caller();
+            call.CallCode((uint)&data[0]);
         }
 		
         public class Caller

@@ -53,8 +53,7 @@ namespace Aura_OS.Shell.cmdIntr.FileSystem
                 }
                 else if (file.EndsWith(".exe") || file.EndsWith(".EXE"))
                 {
-                    COM comfile = new COM(Kernel.current_directory + file);
-                    comfile.Execute();
+                    COM.LoadPlainBinary(File.ReadAllBytes(Kernel.current_directory + file));
                 }
                 else
                 {

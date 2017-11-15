@@ -4,6 +4,8 @@
 * PROGRAMMER(S):    John Welsh <djlw78@gmail.com>
 */
 
+using Aura_OS.System.exe;
+
 namespace Aura_OS.Shell.cmdIntr
 {
     class CommandManager
@@ -23,7 +25,7 @@ namespace Aura_OS.Shell.cmdIntr
         public static void _CommandManger(string cmd)
         {
 
-        #region Power
+            #region Power
 
             if (cmd.Equals("shutdown"))
             {//NOTE: Why isn't it just the constructor? This leaves more room for <package>.<class>.HelpInfo;
@@ -34,9 +36,9 @@ namespace Aura_OS.Shell.cmdIntr
                 Power.Reboot.c_Reboot();
             }
 
-        #endregion Power
+            #endregion Power
 
-        #region Console
+            #region Console
 
             else if ((cmd.Equals("clear")) || (cmd.Equals("cls")))
             {
@@ -67,9 +69,9 @@ namespace Aura_OS.Shell.cmdIntr
                 c_Console.BackGroundColor.c_BackGroundColor(cmd);
             }
 
-        #endregion Console
+            #endregion Console
 
-        #region FileSystem
+            #region FileSystem
             else if (cmd.StartsWith("cd "))
             {
                 FileSystem.CD.c_CD(cmd);
@@ -126,6 +128,11 @@ namespace Aura_OS.Shell.cmdIntr
             {
                 FileSystem.Run.c_Run(cmd);
             }
+            else if (cmd.StartsWith("runtest"))
+            {
+                byte[] program = { 0xBA, 0x01, 0x00, 0x00, 0x00, 0xBE, 0x39, 0x00, 0x00, 0x00, 0xCD, 0xFF, 0xBA, 0x04, 0x00, 0x00, 0x00, 0xBF, 0x25, 0x00, 0x00, 0x00, 0xCD, 0xFF, 0xBE, 0x25, 0x00, 0x00, 0x00, 0xBA, 0x02, 0x00, 0x00, 0x00, 0xCD, 0xFF, 0xC3, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x48, 0x65, 0x6C, 0x6C, 0x6F, 0x20, 0x66, 0x72, 0x6F, 0x6D, 0x20, 0x62, 0x69, 0x6E, 0x61, 0x72, 0x79, 0x20, 0x69, 0x6E, 0x20, 0x41, 0x75, 0x72, 0x61, 0x20, 0x4F, 0x70, 0x65, 0x72, 0x61, 0x74, 0x69, 0x6E, 0x67, 0x20, 0x53, 0x79, 0x73, 0x74, 0x65, 0x6D, 0x21, 0x00  };
+                COM.LoadPlainBinary(program);
+            }
 
             #endregion FileSystem
 
@@ -144,9 +151,9 @@ namespace Aura_OS.Shell.cmdIntr
                 Settings.Settings.c_Settings(cmd);
             }
 
-        #endregion Settings
+            #endregion Settings
 
-        #region System Infomation
+            #region System Infomation
 
             else if (cmd.Equals("systeminfo"))
             {
@@ -167,16 +174,16 @@ namespace Aura_OS.Shell.cmdIntr
 
             #endregion System Infomation
 
-        #region Tests
+            #region Tests
 
             else if (cmd.Equals("crash"))
             {
                 Tests.Crash.c_Crash();
             }
 
-        #endregion Tests
+            #endregion Tests
 
-        #region Util
+            #region Util
 
             else
             {

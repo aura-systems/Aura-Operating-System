@@ -17,6 +17,8 @@ using Aura_OS.System.Users;
 using Aura_OS.System.Computer;
 using XSharp;
 using XSharp.Assembler;
+using System.Collections.Generic;
+using Cosmos.Core;
 #endregion
 
 namespace Aura_OS
@@ -30,6 +32,8 @@ namespace Aura_OS
         Setup setup = new Setup();
         public static bool running;
         public static string version = "0.3.1";
+
+
         public static string revision = "280920171000";
         public static string current_directory = @"0:\";
         public static string langSelected = "en_US";
@@ -43,6 +47,8 @@ namespace Aura_OS
         public static string UserDir = @"0:\Users\" + userLogged + "\\";
 
         #endregion
+
+        public static List<Aura_OS.HAL.Driver> Drivers = new List<Aura_OS.HAL.Driver>();
 
         #region Before Run
 
@@ -107,9 +113,18 @@ namespace Aura_OS
 
             color = Color.GetTextColor();
 
-            Syscalls.Init();
-            Console.ReadKey();
+            Core.Syscalls syscalls = new Core.Syscalls();
 
+            for (int i = 0; i < Drivers.Count; i++)
+            {
+                if (Drivers[i].Init())
+                    Console.WriteLine("Loading '" + Drivers[i].Name + "' loaded sucessfully");
+                else
+                    Console.WriteLine("Failure loading module '" + Drivers[i].Name + "'");
+
+            }
+
+            Console.ReadKey();
             running = true;
         }
 
@@ -266,7 +281,19 @@ namespace Aura_OS
 
         #endregion
 
+
+        internal static void SetInterruptGate(byte intnum, INTs.ExceptionInterruptDelegate handler)
+        {
+            InterruptHandler i = new InterruptHandler();
+            i.intNum = intnum;
+            i.handler = handler;
+            InterruptHandler.interruptHandlers.Add(i);
+        }
+
     }
+
+
+
 
 
     public class ExitUtils
