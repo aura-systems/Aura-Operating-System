@@ -19,6 +19,7 @@ namespace Aura_OS.Core
     {
         public override bool Init()
         {
+            Cosmos.Core.CPU.EnableInterrupts();
             this.Name = "infinity API";
             Console.WriteLine("Initilizing API");
             setIntHandler(0x80, SWI_0x80);
@@ -33,7 +34,7 @@ namespace Aura_OS.Core
                 Console.WriteLine("0x80");
                 //Terminal.WriteLine("int");
                 //Assembly.RestoreDataSegment(); // Restore kernels data segment
-                if (aContext.EDX == 0x1) // Write to stdout
+                if (aContext.EAX == 0x1) // Write to stdout
                 {
                     uint ptr = aContext.ESI;
 
@@ -42,13 +43,12 @@ namespace Aura_OS.Core
                     {
                         Console.Write((char)dat[i]);
                     }
-
                 }
-                else if (aContext.EDX == 0x2)
+                else if (aContext.EAX == 0x2)
                     Console.WriteLine("0x2");
-                else if (aContext.EDX == 0x3)
+                else if (aContext.EAX == 0x3)
                     Console.WriteLine("0x3");
-                else if (aContext.EDX == 0x4)
+                else if (aContext.EAX == 0x4)
                     Console.WriteLine("0x4");
             }
         }
