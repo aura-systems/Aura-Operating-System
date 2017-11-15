@@ -546,7 +546,7 @@ namespace Aura_OS.System.Translation
                             Drawable.Menu.DispErrorDialog("Computer name length must be 1-20 characters.");
                             break;
                         case "computernamedialog":
-                            string text1 = Drawable.Menu.DispCompuernameDialog("║ Choisissez un nom pour votre PC :", "║ Nom du PC : ");
+                            string text1 = Drawable.Menu.DispComputernameDialog("║ Choisissez un nom pour votre PC :", "║ Nom du PC : ");
                             return text1;
                     }
                     break;
@@ -574,7 +574,7 @@ namespace Aura_OS.System.Translation
                             Drawable.Menu.DispErrorDialog("Computer name length must be 1-20 characters.");
                             break;
                         case "computernamedialog":
-                            string text2 = Drawable.Menu.DispCompuernameDialog("║ Choose your computer name:", "║ Computer name: ");
+                            string text2 = Drawable.Menu.DispComputernameDialog("║ Choose your computer name:", "║ Computer name: ");
                             return text2;
                     }
                     break;
