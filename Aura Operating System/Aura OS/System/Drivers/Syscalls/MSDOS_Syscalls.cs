@@ -16,8 +16,10 @@ namespace Aura_OS.Core
             if (aContext.Interrupt == 0x48)
             {
                 Console.WriteLine("0x48");
+                Console.WriteLine("'" + aContext.EAX + "'");
                 if ((aContext.EAX & 0xFF00) >> 8 == 0x09) // AH
                 {
+                    
                     Console.WriteLine("AH");
                     //uint ptr = aContext.EDX & 0xFFFF; //DX
                     //byte* dat = (byte*)(ptr + System.Executable.Executables.ProgramAddress);

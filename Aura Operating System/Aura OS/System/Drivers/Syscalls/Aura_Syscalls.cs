@@ -15,8 +15,10 @@ namespace Aura_OS.Core
         {
             if (aContext.Interrupt == 0x49)
             {
+                Console.WriteLine("'" + aContext.EAX + "'");
                 if (aContext.EAX == 0x01) // Write to stdout
                 {
+                    
                     uint ptr = aContext.ESI;
                     byte* dat = (byte*)(ptr + System.Executable.COM.ProgramAddress);
                     for (int i = 0; dat[i] != 0; i++)
