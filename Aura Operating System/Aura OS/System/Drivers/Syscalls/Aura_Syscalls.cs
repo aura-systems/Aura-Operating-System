@@ -7,7 +7,7 @@ namespace Aura_OS.Core
     {
         public override bool Init()
         {
-            Cosmos.Core.CPU.EnableInterrupts();
+            //Cosmos.Core.CPU.EnableInterrupts();
             this.Name = "Aura API";
             Console.WriteLine("Initilizing API");
             Cosmos.Core.INTs.SetIntHandler(0x49, SWI_0x49);
