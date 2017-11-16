@@ -10,16 +10,28 @@ using System.IO;
 using Cosmos.Core;
 using CPUx86 = XSharp.Assembler.x86;
 
-namespace  Aura_OS.System.exe
+namespace  Aura_OS.System.Executable
 {
     public unsafe class COM
     {
 
         public static uint ProgramAddress;
 
-        public static void LoadPlainBinary(byte[] code)
+        public static void LoadAuraProgram(byte[] code)
         {
-            //byte* data = Cosmos.Core.Memory.Heap.Alloc((uint)code.Length);
+            byte* data = (byte*)Cosmos.Core.Memory.Old.Heap.MemAlloc((uint)code.Length);
+            ProgramAddress = (uint)&data[0];
+            for (int i = 0; i < code.Length; i++)
+            {
+                data[i] = code[i];
+            }
+            Caller call = new Caller();
+            call.CallCode((uint)&data[0]);
+        }
+
+        public static void LoadCOMProgram(byte[] code)
+        {
+            code = Replace(code);
             byte* data = (byte*)Cosmos.Core.Memory.Old.Heap.MemAlloc((uint)code.Length);
             ProgramAddress = (uint)&data[0];
             for (int i = 0; i < code.Length; i++)
@@ -50,6 +62,23 @@ namespace  Aura_OS.System.exe
                 XS.Set(XSRegisters.EAX, XSRegisters.EBP, sourceDisplacement: 8);
                 XS.Call(XSRegisters.EAX);
             }
+        }
+
+        private static byte[] Replace(byte[] input)
+        {
+            List<byte> bytes = new List<byte>();
+
+            foreach (byte byte_ in input)
+            {
+                if (byte_ == 0x21)
+                    bytes.Add(0x48);
+                else
+                    bytes.Add(byte_);
+            }
+
+            byte[] result = bytes.ToArray();
+
+            return result;
         }
     }
 }

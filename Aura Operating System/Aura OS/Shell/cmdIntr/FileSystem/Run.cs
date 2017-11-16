@@ -4,7 +4,7 @@
 * PROGRAMMER(S):    DA CRUZ Alexy <dacruzalexy@gmail.com>
 */
 
-using Aura_OS.System.exe;
+using Aura_OS.System.Executable;
 using System;
 using System.IO;
 using L = Aura_OS.System.Translation;
@@ -47,17 +47,19 @@ namespace Aura_OS.Shell.cmdIntr.FileSystem
                 else if (file.EndsWith(".com") || file.EndsWith(".COM"))
                 {
                     byte[] filearray = File.ReadAllBytes(Kernel.current_directory + file);
-                    COM.LoadPlainBinary(filearray);
+                    COM.LoadCOMProgram(filearray);
                     //COM comfile = new COM(Kernel.current_directory + file);
                     //comfile.Execute();
                 }
                 else if (file.EndsWith(".exe") || file.EndsWith(".EXE"))
                 {
-                    COM.LoadPlainBinary(File.ReadAllBytes(Kernel.current_directory + file));
+                    //COM.LoadCOMProgram(File.ReadAllBytes(Kernel.current_directory + file));
                 }
                 else
                 {
-                    Console.WriteLine("We are currently unable to run " + file);
+                    byte[] filearray = File.ReadAllBytes(Kernel.current_directory + file);
+                    COM.LoadAuraProgram(filearray);
+                    //Console.WriteLine("We are currently unable to run " + file);
                 }
             }
             else

@@ -7,11 +7,8 @@ namespace Aura_OS.Core
     {
         public override bool Init()
         {
-            //Cosmos.Core.CPU.EnableInterrupts();
             this.Name = "Aura API";
-            Console.WriteLine("Initilizing API");
             Cosmos.Core.INTs.SetIntHandler(0x49, SWI_0x49);
-            Console.WriteLine("Aura API installed");
             return true;
         }
         public unsafe static void SWI_0x49(ref Cosmos.Core.INTs.IRQContext aContext)
@@ -21,7 +18,7 @@ namespace Aura_OS.Core
                 if (aContext.EAX == 0x01) // Write to stdout
                 {
                     uint ptr = aContext.ESI;
-                    byte* dat = (byte*)(ptr + System.exe.COM.ProgramAddress);
+                    byte* dat = (byte*)(ptr + System.Executable.COM.ProgramAddress);
                     for (int i = 0; dat[i] != 0; i++)
                     {
                         Console.Write((char)dat[i]);

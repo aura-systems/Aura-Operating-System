@@ -104,7 +104,7 @@ namespace Aura_OS
                     #region Drivers
                     
                     Core.Aura_Syscalls aura_syscalls = new Core.Aura_Syscalls(); //Aura API
-                    //Core.MSDOS_Syscalls msdos_syscalls = new Core.MSDOS_Syscalls(); //MSDOS API
+                    Core.MSDOS_Syscalls msdos_syscalls = new Core.MSDOS_Syscalls(); //MSDOS API
 
                     for (int i = 0; i < Drivers.Count; i++)
                     {

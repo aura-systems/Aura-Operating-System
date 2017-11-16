@@ -81,6 +81,9 @@
     <Folder Include="System\" />
     <Folder Include="System\Computer\" />
     <Folder Include="System\Drawable\" />
+    <Folder Include="System\Drivers\" />
+    <Folder Include="System\Drivers\Syscalls\" />
+    <Folder Include="System\Executables\" />
     <Folder Include="System\Executable\" />
     <Folder Include="System\exe\" />
     <Folder Include="System\Security\" />
