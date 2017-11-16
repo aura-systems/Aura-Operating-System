@@ -25,7 +25,7 @@ namespace Aura_OS.Shell.cmdIntr
         public static void _CommandManger(string cmd)
         {
 
-            #region Power
+        #region Power
 
             if (cmd.Equals("shutdown"))
             {//NOTE: Why isn't it just the constructor? This leaves more room for <package>.<class>.HelpInfo;
@@ -36,9 +36,9 @@ namespace Aura_OS.Shell.cmdIntr
                 Power.Reboot.c_Reboot();
             }
 
-            #endregion Power
+       #endregion Power
 
-            #region Console
+       #region Console
 
             else if ((cmd.Equals("clear")) || (cmd.Equals("cls")))
             {
@@ -52,26 +52,11 @@ namespace Aura_OS.Shell.cmdIntr
             {
                 System.Translation.Help._Help();
             }
-            else if (cmd.Equals("textcolor"))
-            {
-                c_Console.TextColor.c_TextColor();
-            }
-            else if (cmd.StartsWith("textcolor "))
-            {
-                c_Console.TextColor.c_TextColor(cmd);
-            }
-            else if (cmd.Equals("backgroundcolor"))
-            {
-                c_Console.BackGroundColor.c_BackGroundColor();
-            }
-            else if (cmd.StartsWith("backgroundcolor "))
-            {
-                c_Console.BackGroundColor.c_BackGroundColor(cmd);
-            }
 
-            #endregion Console
+        #endregion Console
 
-            #region FileSystem
+        #region FileSystem
+
             else if (cmd.StartsWith("cd "))
             {
                 FileSystem.CD.c_CD(cmd);
@@ -129,9 +114,9 @@ namespace Aura_OS.Shell.cmdIntr
                 FileSystem.Run.c_Run(cmd);
             }
 
-            #endregion FileSystem
+        #endregion FileSystem
 
-            #region Settings
+        #region Settings
 
             else if (cmd.Equals("logout"))
             {
@@ -145,10 +130,18 @@ namespace Aura_OS.Shell.cmdIntr
             {
                 Settings.Settings.c_Settings(cmd);
             }
+            else if (cmd.StartsWith("passwd "))
+            {
+                Settings.Passwd.c_Passwd(cmd);
+            }
+            else if (cmd.Equals("passwd"))
+            {
+                Settings.Passwd.c_Passwd(Kernel.userLogged);
+            }
 
-            #endregion Settings
+       #endregion Settings
 
-            #region System Infomation
+       #region System Infomation
 
             else if (cmd.Equals("systeminfo"))
             {
@@ -167,7 +160,7 @@ namespace Aura_OS.Shell.cmdIntr
                 SystemInfomation.Time.c_Time();
             }
 
-            #endregion System Infomation
+        #endregion System Infomation
 
             #region Tests
 
@@ -178,7 +171,20 @@ namespace Aura_OS.Shell.cmdIntr
 
             #endregion Tests
 
-            #region Util
+        #region Tools
+
+            else if (cmd.Equals("snake"))
+            {
+                Tools.Snake.c_Snake();
+            }
+            else if (cmd.StartsWith("md5"))
+            {
+                Tools.MD5.c_MD5(cmd);
+            }
+
+        #endregion
+
+        #region Util           
 
             else
             {

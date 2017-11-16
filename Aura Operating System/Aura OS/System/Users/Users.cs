@@ -2,6 +2,7 @@
 * PROJECT:          Aura Operating System Development
 * CONTENT:          User class
 * PROGRAMMERS:      Alexy DA CRUZ <dacruzalexy@gmail.com>
+*                   Valentin Charbonnier <valentinbreiz@gmail.com>
 */
 
 using System;
@@ -9,222 +10,236 @@ using System.IO;
 using Aura_OS.System.Translation;
 using Aura_OS.System.Security;
 using Aura_OS.System.Drawable;
+using Aura_OS.System.Utils;
+using System.Collections.Generic;
 
 namespace Aura_OS.System.Users
 {
     class Users
     {
 
-        /// <summary>
-        /// Display login form
-        /// </summary>
-        public void Login()
-        {
-            switch (Kernel.langSelected)
-            {
-                case "fr_FR":
-                    string text = Menu.DispLoginForm("Connexion à un compte Aura.");
-
-                    int middle = text.IndexOf("//////");
-                    string user = text.Remove(middle, text.Length - middle);
-                    string pass = text.Remove(0, middle + 6);
-
-                    if (File.Exists(@"0:\System\Users\" + user + ".usr"))
-                    {
-                        string md5psw = MD5.hash(pass);
-                        Console.WriteLine();
-
-                        string UserFile = File.ReadAllText(@"0:\System\Users\" + user + ".usr");
-
-                        Char delimiter = '|';
-                        string[] UserFileContent = UserFile.Split(delimiter);
-
-                        if (md5psw == UserFileContent[0])
-                        {
-                            //LOGGED
-                            Kernel.userLogged = user;
-                            UserLevel.LevelReader(UserFileContent[1]);
-                            if(user == "root")
-                            {
-                                Kernel.userLevelLogged = UserLevel.Administrator();
-                            }
-                            InitUserDirs(user);
-                            Console.Clear();
-                            WelcomeMessage.Display();
-                            Text.Display("logged", user);
-                            Console.WriteLine("");
-                            Kernel.Logged = true;
-                        }
-                        else
-                        {
-                            Menu.DispErrorDialog("Mauvais mot de passe.");
-                            Login();
-                        }
-                    }
-                    else
-                    {
-                        Menu.DispErrorDialog("Utilisateur inconnu.");
-                        Login();
-                    }
-
-                    break;
-
-                case "en_US":
-                    string text1 = Menu.DispLoginForm("Login to your Aura account.");
-
-                    int middle1 = text1.IndexOf("//////");
-                    string user1 = text1.Remove(middle1, text1.Length - middle1);
-                    string pass1 = text1.Remove(0, middle1 + 6);
-
-                    if (File.Exists(@"0:\System\Users\" + user1 + ".usr"))
-                    {
-                        string md5psw = MD5.hash(pass1);
-                        Console.WriteLine();
-
-                        string UserFile = File.ReadAllText(@"0:\System\Users\" + user1 + ".usr");
-
-                        Char delimiter = '|';
-                        string[] UserFileContent = UserFile.Split(delimiter);
-
-                        if (md5psw == UserFileContent[0])
-                        {
-                            //LOGGED
-                            Kernel.userLogged = user1;
-                            UserLevel.LevelReader(UserFileContent[1]);
-                            if (user1 == "root")
-                            {
-                                Kernel.userLevelLogged = UserLevel.Administrator();
-                            }
-                            InitUserDirs(user1);
-                            Console.Clear();
-                            WelcomeMessage.Display();
-                            Text.Display("logged", user1);
-                            Console.WriteLine("");
-                            Kernel.Logged = true;
-                        }
-                        else
-                        {
-                            Menu.DispErrorDialog("Wrong Password.");
-                            Login();
-                        }
-                    }
-                    else
-                    {
-                        Menu.DispErrorDialog("Unknown user.");
-                        Login();
-                    }
-                    break;
-            }
-        }
-
         #region UserDirs
         public void InitUserDirs(string user)
         {
-            string[] DefaultDirctories =
+            if (user == "root")
             {
-                @"0:\Users\" + user + @"\Desktop",
-                @"0:\Users\" + user + @"\Documents",
-                @"0:\Users\" + user + @"\Downloads",
-                @"0:\Users\" + user + @"\Music",
-            };
-            foreach (string dirs in DefaultDirctories)
-                if (!Directory.Exists(dirs))
-                    Directory.CreateDirectory(dirs);
+                string[] RootDirectories =
+                {
+                    @"0:\Users\" + user + @"\root"
+                };
+                foreach (string dirs in RootDirectories)
+                    if (!Directory.Exists(dirs))
+                        Directory.CreateDirectory(dirs);
+                return;
+            }
+            else
+            {
+                string[] DefaultDirectories =
+                {
+                    @"0:\Users\" + user + @"\Desktop",
+                    @"0:\Users\" + user + @"\Documents",
+                    @"0:\Users\" + user + @"\Downloads",
+                    @"0:\Users\" + user + @"\Music",
+                };
+                foreach (string dirs in DefaultDirectories)
+                    if (!Directory.Exists(dirs))
+                        Directory.CreateDirectory(dirs);
+            }
         }
         #endregion UserDirs
 
+        public static string[] users;
+        static string[] reset;
+        static List<string> usersfile = new List<string>();
+
         /// <summary>
-        /// Method called to create an user
+        /// Method to create an user.
         /// </summary>
-        /// <param name="username">User name</param>
-        /// <param name="userlevel">User type</param>
-        public void Create(string username)
+        public void Create(string username, string password, string type = "standard")
         {
             try
             {
-                Console.WriteLine();
-                Text.Display("chooseyourusername");
-                Console.WriteLine();
-                Text.Display("user");
-                username = Console.ReadLine();
-
-                if (File.Exists(@"0:\System\Users\" + username + ".usr"))
+                password = MD5.hash(password);
+                LoadUsers();
+                if (GetUser("user").StartsWith(username))
                 {
-                    Text.Display("alreadyuser");
-                    Create(username);
+                    Text.Display("user:existalready", username);
+                    return;
                 }
-                else
-                {
-                    if ((username.Length >= 4) && (username.Length <= 20))
-                    {
-                        Console.WriteLine();
-                        Text.Display("passuser", username);
+                PutUser("user:" + username, password + "|" + type);
+                PushUsers();
+                Text.Display("user:hasbeencreated", username);
 
-                        psw:
-
-                        Console.WriteLine();
-                        Text.Display("passwd");
-                        Console.WriteLine();
-
-                        Console.ForegroundColor = ConsoleColor.Black;
-                        string clearpassword = Console.ReadLine();
-                        Console.ForegroundColor = ConsoleColor.White;
-                        if ((clearpassword.Length >= 6) && (clearpassword.Length <= 40))
-                        {
-                            string password = MD5.hash(clearpassword);
-                            Console.ForegroundColor = ConsoleColor.White;
-
-                            Console.WriteLine();
-
-                            File.Create(@"0:\System\Users\" + username + ".usr");
-                            Directory.CreateDirectory(@"0:\Users\" + username);
-
-                            if (File.Exists(@"0:\System\Users\" + username + ".usr"))
-                            {
-
-                                Console.WriteLine();
-                                Text.Display("whattypeuser");
-                                groups:
-                                Text.Display("groupsavailable");
-                                Console.WriteLine();
-
-                                string userlevel = Console.ReadLine();
-
-                                if (userlevel == UserLevel.Administrator())
-                                {
-                                    File.WriteAllText(@"0:\System\Users\" + username + ".usr", password + "|admin");
-                                }
-                                else if (userlevel == UserLevel.StandardUser())
-                                {
-                                    File.WriteAllText(@"0:\System\Users\" + username + ".usr", password + "|standard");
-                                }
-                                else
-                                {
-                                    Console.WriteLine();
-                                    goto groups;
-                                }
-                            }
-                            else
-                            {
-                                Text.Display("passwd");
-                            }
-                        }
-                        else
-                        {
-                            Text.Display("pswcharmin");
-                            goto psw;
-                        }
-                    }
-                    else
-                    {
-                        Text.Display("charmin");
-                    }
-                }
+                InitUserDirs(username);
+                Text.Display("user:personaldirectories", username);
             }
             catch
             {
                 Text.Display("errorwhileusercreating");
-            }          
+            }
+        }
+
+        /// <summary>
+        /// Method to remove an user.
+        /// </summary>
+        public void Remove(string username)
+        {
+            if (GetUser("user").StartsWith(username))
+            {
+                LoadUsers();
+                DeleteUser(username);
+                //Directory.Delete(@"0:\Users\" + username, true);
+                Text.Display("user:hasbeenremoved", username);
+            }
+            else
+            {
+                Text.Display("user:doesntexist", username);
+            }
+        }
+
+        /// <summary>
+        /// Method to change the password of an user.
+        /// </summary>
+        public void ChangePassword(string username, string password)
+        {
+
+            LoadUsers();
+            EditUser(username, password);
+            File.Delete(@"0:\System\passwd");
+            File.Create(@"0:\System\passwd");
+            PushUsers();
+            //Directory.Delete(@"0:\Users\" + username, true);
+            Text.Display("user:passwordhasbeenchanged", username);
+
+        }
+
+        ///////
+
+        public static void DeleteUser(string user)
+        {
+
+            foreach (string line in users)
+            {
+                usersfile.Add(line);
+            }
+
+            int counter = -1;
+            int index = 0;
+
+            bool exists = false;
+
+            foreach (string element in usersfile)
+            {
+                counter = counter + 1;
+                if (element.Contains(user))
+                {
+                    index = counter;
+                    exists = true;
+                }
+            }
+            if (exists)
+            {
+                usersfile.RemoveAt(index);
+
+                users = usersfile.ToArray();
+
+                usersfile.Clear();
+
+                File.Delete(@"0:\System\passwd");
+
+                PushUsers();
+            }
+        }
+
+        public static void EditUser(string username, string password)
+        {
+            foreach (string line in users)
+            {
+                usersfile.Add(line);
+            }
+
+            int counter = -1;
+            int index = 0;
+
+            bool exists = false;
+
+            foreach (string element in usersfile)
+            {
+                counter = counter + 1;
+                if (element.Contains(username))
+                {
+                    index = counter;
+                    exists = true;
+                }
+            }
+            if (exists)
+            {
+                password = MD5.hash(password);
+
+                usersfile[index] = "user:" + username + ":" + password + "|" + Kernel.userLevelLogged;
+
+                users = usersfile.ToArray();
+
+                usersfile.Clear();
+            }
+        }
+
+        public static string GetUser(string parameter)
+        {
+            string value = "null";
+
+            foreach (string line in users)
+            {
+                usersfile.Add(line);
+            }
+
+            foreach (string element in usersfile)
+            {
+                if (element.StartsWith(parameter))
+                {
+                    value = element.Remove(0, parameter.Length + 1);
+                }
+            }
+
+            usersfile.Clear();
+
+            return value;
+        }
+
+        public static void PutUser(string parameter, string value)
+        {
+            bool contains = false;
+
+            foreach (string line in users)
+            {
+                usersfile.Add(line);
+                if (line.StartsWith(parameter))
+                {
+                    contains = true;
+                }
+            }
+
+            if (!contains)
+            {
+                usersfile.Add(parameter + ":" + value);
+            }
+
+            users = usersfile.ToArray();
+
+            usersfile.Clear();
+        }
+
+        public static void PushUsers()
+        {
+            File.WriteAllLines(@"0:\System\passwd", users);
+        }
+
+        public static void LoadUsers()
+        {
+            //reset of users string array in memory if there is "something"
+            users = reset;
+            //load
+            users = File.ReadAllLines(@"0:\System\passwd");
         }
 
     }

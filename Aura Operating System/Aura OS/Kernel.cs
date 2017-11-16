@@ -1,4 +1,4 @@
-﻿/*
+/*
 * PROJECT:          Aura Operating System Development
 * CONTENT:          Kernel
 * PROGRAMMERS:      Valentin Charbonnier <valentinbreiz@gmail.com>
@@ -12,18 +12,14 @@ using Cosmos.System.FileSystem;
 using Sys = Cosmos.System;
 using Lang = Aura_OS.System.Translation;
 using Aura_OS.System;
-using System.IO;
 using Aura_OS.System.Users;
 using Aura_OS.System.Computer;
-using XSharp;
-using XSharp.Assembler;
-using System.Collections.Generic;
-using Cosmos.Core;
+using Aura_OS.System.Utils;
+
 #endregion
 
 namespace Aura_OS
 {
-
     public class Kernel : Sys.Kernel
     {
 
@@ -31,24 +27,23 @@ namespace Aura_OS
 
         Setup setup = new Setup();
         public static bool running;
-        public static string version = "0.3.1";
-
-
-        public static string revision = "280920171000";
+        public static string version = "0.4.1";
+        public static string revision = "011020171159";
         public static string current_directory = @"0:\";
         public static string langSelected = "en_US";
         public static CosmosVFS FS { get; private set; }
         public static string userLogged;
         public static string userLevelLogged;
         public static bool Logged = false;
-        public static string ComputerName = "Aura-PC";
-        public static int color;
+        public static string ComputerName = "aura-pc";
+        public static int color = 7;
         public static string RootContent;
         public static string UserDir = @"0:\Users\" + userLogged + "\\";
+        public static bool SystemExists = false;
+        public static bool JustInstalled = false;
+        public static List<HAL.Driver> Drivers = new List<HAL.Driver>();
 
         #endregion
-
-        public static List<HAL.Driver> Drivers = new List<HAL.Driver>();
 
         #region Before Run
 
@@ -56,15 +51,6 @@ namespace Aura_OS
         {
 
             Console.Clear();
-
-            Console.ForegroundColor = ConsoleColor.Green;
-            Console.Write("[OK]");
-            Console.ForegroundColor = ConsoleColor.White;
-            Console.Write(" ");
-            Console.ForegroundColor = ConsoleColor.DarkMagenta;
-            Console.Write("Aura Kernel Booted Successfully!\n");
-            Console.ForegroundColor = ConsoleColor.White;
-
             Console.ForegroundColor = ConsoleColor.DarkMagenta;
             Console.Write("Booting Aura...\n");
             Console.ForegroundColor = ConsoleColor.White;
@@ -95,37 +81,48 @@ namespace Aura_OS
 
             #endregion
 
-            setup.SetupVerifyCompleted();
+            setup.InitSetup();
 
-            langSelected = File.ReadAllText(@"0:\System\lang.set");
-
-            #region Language
-
-            Lang.Keyboard.Init();
-
-            #endregion
-
-            RootContent = File.ReadAllText(@"0:\System\Users\root.usr");
-
-            Info.getComputerName();
-
-            Color.GetBackgroundColor();
-
-            color = Color.GetTextColor();
-
-            Core.Aura_Syscalls aura_syscalls = new Core.Aura_Syscalls();
-            Core.MSDOS_Syscalls msdos_syscalls = new Core.MSDOS_Syscalls();
-
-            for (int i = 0; i < Drivers.Count; i++)
+            if (SystemExists)
             {
-                if (Drivers[i].Init())
-                    Console.WriteLine("Loading '" + Drivers[i].Name + "' loaded sucessfully");
-                else
-                    Console.WriteLine("Failure loading module '" + Drivers[i].Name + "'");
+                if (!JustInstalled)
+                {
 
+                    Settings.LoadValues();
+                  
+                    langSelected = Settings.GetValue("language");
+
+                    #region Language
+
+                    Lang.Keyboard.Init();
+
+                    #endregion
+
+                    Info.getComputerName();
+
+                    #region Drivers
+                    
+                    Core.Aura_Syscalls aura_syscalls = new Core.Aura_Syscalls(); //Aura API
+                    Core.MSDOS_Syscalls msdos_syscalls = new Core.MSDOS_Syscalls(); //MSDOS API
+
+                    for (int i = 0; i < Drivers.Count; i++)
+                    {
+                    if (Drivers[i].Init())
+                        Console.WriteLine("Loading '" + Drivers[i].Name + "' loaded sucessfully");
+                    else
+                        Console.WriteLine("Failure loading module '" + Drivers[i].Name + "'");
+                    }
+                  
+                    #endregion
+                  
+                    running = true;
+
+                }
             }
-
-            running = true;
+            else
+            {
+                running = true;
+            }
         }
 
         #endregion
@@ -140,7 +137,7 @@ namespace Aura_OS
                 {
                     if (Logged) //If logged
                     {
-                        BeforeCommand();
+                        BeforeCommand();                  
 
                         var cmd = Console.ReadLine();
                         Shell.cmdIntr.CommandManager._CommandManger(cmd);
@@ -148,8 +145,7 @@ namespace Aura_OS
                     }
                     else
                     {
-                        Users user = new Users();
-                        user.Login();
+                        Login.LoginForm();
                     }
                 }
             }
@@ -160,6 +156,9 @@ namespace Aura_OS
             }
         }
 
+        #endregion
+
+        #region BeforeCommand
         /// <summary>
         /// Display the line before the user input and set the console color.
         /// </summary>
@@ -277,18 +276,8 @@ namespace Aura_OS
                     Console.ForegroundColor = ConsoleColor.White;
                 }
             }
-        }
-
+        } 
         #endregion
-
-    }
-
-    public class ExitUtils
-    {
-        public static void Vs8086Mode()
-        {
-
-        }
 
     }
 }
