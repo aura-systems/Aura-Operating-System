@@ -17,6 +17,8 @@ namespace Aura_OS.Core
             {
                 Console.WriteLine("0x48");
                 Console.WriteLine("'" + aContext.EAX + "'");
+                int test = (int)(aContext.EAX & 0xFF00) >> 8;
+                Console.WriteLine("'" + test + "'");
                 if ((aContext.EAX & 0xFF00) >> 8 == 0x09) // AH
                 {
                     
