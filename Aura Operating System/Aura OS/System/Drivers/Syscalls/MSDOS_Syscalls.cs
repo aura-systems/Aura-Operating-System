@@ -1,17 +1,17 @@
 ﻿using System;
 using Aura_OS.HAL;
-
+using static Cosmos.Core.INTs;
 namespace Aura_OS.Core
 {
     class MSDOS_Syscalls : Driver
     {
         public override bool Init()
         {
-            this.Name = "MSDOS API";
-            Cosmos.Core.INTs.SetIntHandler(0x48, SWI);
+            Name = "MSDOS API";
+            SetIntHandler(0x48, SWI); //ints.setinthandler
             return true;
         }
-        public unsafe static void SWI(ref Cosmos.Core.INTs.IRQContext aContext)
+        public unsafe static void SWI(ref IRQContext aContext)
         {
             if (aContext.Interrupt == 0x48)
             {
@@ -23,21 +23,16 @@ namespace Aura_OS.Core
                     byte* dat = (byte*)(ptr + System.Executable.COM.ProgramAddress);
                     for (int i = 0; dat[i] != 0; i++)
                     {
-                        if ((char)dat[i] == 0x0A)
-                        {
-                            Console.Write("\n");
-                        }
-                        else
-                        {
-                            Console.Write((char)dat[i]);
-                        }
+                        Console.Write((char)dat[i]);
                     }
                 }
                 else if (aContext.EAX == 0x02)
                 {
                     Console.Clear();
                 }
+                
             }
+
         }
     }
 }
