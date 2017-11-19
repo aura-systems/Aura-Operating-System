@@ -31,29 +31,29 @@ namespace Aura_OS.System
                     Console.ForegroundColor = ConsoleColor.White;
 
                     //redo that bullshit code
-                    if ((Kernel.RootContent == MD5.hash("root") + "|admin") || (Kernel.ComputerName == "Aura-PC"))
-                    {
-                        Console.WriteLine();
-
-                        Console.ForegroundColor = ConsoleColor.Green;
-                        Text.Display("tips");
-
-                        if (Kernel.RootContent == MD5.hash("root") + "|admin")
-                        {
-                            Console.WriteLine(" ");
-                            Console.ForegroundColor = ConsoleColor.Blue;
-                            Console.WriteLine("   - Le mot de passe par défaut pour le compte root est 'root'");
-                            Console.ForegroundColor = ConsoleColor.White;
-                        }
-
-                        if (Kernel.ComputerName == "aura-pc")
-                        {
-                            Console.WriteLine(" ");
-                            Console.ForegroundColor = ConsoleColor.Blue;
-                            Console.WriteLine("   - Le nom de l'ordinateur est 'aura-pc', pensez à le changer.");
-                            Console.ForegroundColor = ConsoleColor.White;
-                        }
-                    }
+                    //if ((Kernel.RootContent == MD5.hash("root") + "|admin") || (Kernel.ComputerName == "aura-pc"))
+                    //{
+                    //    Console.WriteLine();
+                    //
+                    //    Console.ForegroundColor = ConsoleColor.Green;
+                    //    Text.Display("tips");
+                    //
+                     //   if (Kernel.RootContent == MD5.hash("root") + "|admin")
+                     //   {
+                     //       Console.WriteLine(" ");
+                     //       Console.ForegroundColor = ConsoleColor.Blue;
+                     //       Console.WriteLine("   - Le mot de passe par défaut pour le compte root est 'root'");
+                     //       Console.ForegroundColor = ConsoleColor.White;
+                     //   }
+                     //
+                     //   if (Kernel.ComputerName == "aura-pc")
+                     //   {
+                     //       Console.WriteLine(" ");
+                      //      Console.ForegroundColor = ConsoleColor.Blue;
+                      //      Console.WriteLine("   - Le nom de l'ordinateur est 'aura-pc', pensez à le changer.");
+                      //      Console.ForegroundColor = ConsoleColor.White;
+                      //  }
+                    //}
                     Console.WriteLine(" ");
                     break;
 
@@ -64,29 +64,29 @@ namespace Aura_OS.System
                     Console.ForegroundColor = ConsoleColor.White;
 
                     //redo that bullshit code
-                    if ((Kernel.RootContent == MD5.hash("root") + "|admin") || (Kernel.ComputerName == "Aura-PC"))
-                    {
-                        Console.WriteLine();
-
-                        Console.ForegroundColor = ConsoleColor.Green;
-                        Text.Display("tips");
-
-                        if (Kernel.RootContent == MD5.hash("root") + "|admin")
-                        {
-                            Console.WriteLine(" ");
-                            Console.ForegroundColor = ConsoleColor.Blue;
-                            Console.WriteLine("   * Default password for root is 'root'");
-                            Console.ForegroundColor = ConsoleColor.White;
-                        }
-
-                        if (Kernel.ComputerName == "aura-pc")
-                        {
-                            Console.WriteLine(" ");
-                            Console.ForegroundColor = ConsoleColor.Blue;
-                            Console.WriteLine("   - Computer name is 'aura-pc', think to change it.");
-                            Console.ForegroundColor = ConsoleColor.White;
-                        }
-                    }
+                    //if ((Kernel.RootContent == MD5.hash("root") + "|admin") || (Kernel.ComputerName == "Aura-PC"))
+                    //{
+                    //    Console.WriteLine();
+                     //
+                    //    Console.ForegroundColor = ConsoleColor.Green;
+                     //   Text.Display("tips");
+                     //
+                     //   if (Kernel.RootContent == MD5.hash("root") + "|admin")
+                     //   {
+                     //       Console.WriteLine(" ");
+                     //       Console.ForegroundColor = ConsoleColor.Blue;
+                     //       Console.WriteLine("   * Default password for root is 'root'");
+                     //       Console.ForegroundColor = ConsoleColor.White;
+                      //  }
+                      //
+                     //   if (Kernel.ComputerName == "aura-pc")
+                      //  {
+                      //      Console.WriteLine(" ");
+                      //      Console.ForegroundColor = ConsoleColor.Blue;
+                      //      Console.WriteLine("   - Computer name is 'aura-pc', think to change it.");
+                      //      Console.ForegroundColor = ConsoleColor.White;
+                      //  }
+                     // }
                     Console.WriteLine(" ");
                     break;
             }

@@ -50,26 +50,11 @@ namespace Aura_OS.Shell.cmdIntr
             {
                 System.Translation.Help._Help();
             }
-            else if (cmd.Equals("textcolor"))
-            {
-                c_Console.TextColor.c_TextColor();
-            }
-            else if (cmd.StartsWith("textcolor "))
-            {
-                c_Console.TextColor.c_TextColor(cmd);
-            }
-            else if (cmd.Equals("backgroundcolor"))
-            {
-                c_Console.BackGroundColor.c_BackGroundColor();
-            }
-            else if (cmd.StartsWith("backgroundcolor "))
-            {
-                c_Console.BackGroundColor.c_BackGroundColor(cmd);
-            }
 
         #endregion Console
 
         #region FileSystem
+
             else if (cmd.StartsWith("cd "))
             {
                 FileSystem.CD.c_CD(cmd);
@@ -122,6 +107,10 @@ namespace Aura_OS.Shell.cmdIntr
             {
                 FileSystem.Vol.c_Vol();
             }
+            else if (cmd.StartsWith("run "))
+            {
+                FileSystem.Run.c_Run(cmd);
+            }
 
         #endregion FileSystem
 
@@ -138,6 +127,14 @@ namespace Aura_OS.Shell.cmdIntr
             else if (cmd.StartsWith("settings "))
             {
                 Settings.Settings.c_Settings(cmd);
+            }
+            else if (cmd.StartsWith("passwd "))
+            {
+                Settings.Passwd.c_Passwd(cmd);
+            }
+            else if (cmd.Equals("passwd"))
+            {
+                Settings.Passwd.c_Passwd(Kernel.userLogged);
             }
 
         #endregion Settings
@@ -156,10 +153,14 @@ namespace Aura_OS.Shell.cmdIntr
             {
                 SystemInfomation.IPConfig.c_IPConfig();
             }
+            else if ((cmd.Equals("time")) || (cmd.Equals("date")))
+            {
+                SystemInfomation.Time.c_Time();
+            }
 
-            #endregion System Infomation
+        #endregion System Infomation
 
-            #region Tests
+        #region Tests
 
             else if (cmd.Equals("crash"))
             {
@@ -168,7 +169,20 @@ namespace Aura_OS.Shell.cmdIntr
 
         #endregion Tests
 
-        #region Util
+        #region Tools
+
+            else if (cmd.Equals("snake"))
+            {
+                Tools.Snake.c_Snake();
+            }
+            else if (cmd.StartsWith("md5"))
+            {
+                Tools.MD5.c_MD5(cmd);
+            }
+
+        #endregion
+
+        #region Util           
 
             else
             {

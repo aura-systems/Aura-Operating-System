@@ -1,6 +1,6 @@
 ﻿/*
 * PROJECT:          Aura Operating System Development
-* CONTENT:          Command Interpreter - Network IPCONFIG
+* CONTENT:          Command Interpreter - Time
 * PROGRAMMER(S):    Alexy DA CRUZ <dacruzalexy@gmail.com>
 */
 
@@ -9,7 +9,7 @@ using L = Aura_OS.System.Translation;
 
 namespace Aura_OS.Shell.cmdIntr.SystemInfomation
 {
-    class IPConfig
+    class Time
     {
         private static string HelpInfo = "";
 
@@ -25,15 +25,14 @@ namespace Aura_OS.Shell.cmdIntr.SystemInfomation
         /// <summary>
         /// Empty constructor. (Good for debug)
         /// </summary>
-        public IPConfig() { }
+        public Time() { }
 
         /// <summary>
-        /// c = command, c_SystemInfomation
+        /// c = command, c_Time
         /// </summary>
-        public static void c_IPConfig()
+        public static void c_Time()
         {
-            L.Text.Display("NetworkInProgress");
-            L.Text.Display("MAC");            
+            L.Text.Display("time");
         }
     }
 }

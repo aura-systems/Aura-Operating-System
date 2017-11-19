@@ -22,6 +22,17 @@ namespace Aura_OS.System.Translation
          * associer un mot clé à une phrase.
          */
 
+        // HELP
+
+        /*
+        * ## How to use keywords:
+        * 
+        * Keywords replace a sentence
+        * by their translation that correspond to the keyword
+        * to the system language. so you have
+        * a keyword to a sentence.
+        */
+
         /// <summary>
         /// Display text in user language
         /// </summary>
@@ -52,7 +63,7 @@ namespace Aura_OS.System.Translation
                             Console.WriteLine(arg + " n'existe pas !");
                             break;
                         case "alreadyexist":
-                            Console.WriteLine(arg + " existe deja !");
+                            Console.WriteLine(arg + " existe déjà !");
                             break;
                         case "Computername":
                             Console.WriteLine("Nom du PC:                     " + Kernel.ComputerName);
@@ -160,7 +171,7 @@ namespace Aura_OS.System.Translation
                             Console.Write("Nom de l'ordinateur > ");
                             break;
                         case "computernamesuccess":
-                            Console.Write("Le nouveau nom de l'ordinateur a été appliqué ! \n\nRedémarrez l'ordinateur pour que le changement prenne effet.");
+                            Console.Write("Le nouveau nom de l'ordinateur a été appliqué !");
                             break;
                         case "tips":
                             Console.WriteLine(" * Conseil(s) :");
@@ -168,8 +179,8 @@ namespace Aura_OS.System.Translation
                         case "mkdir":
                             Console.WriteLine("Entrez le nom du dossier (mkdir dossier).");
                             break;
-                        case "time": //         07/08/2017, 01:12:40
-                            Console.WriteLine("Date et heure du système:      " + Time.DayString() + "/" + Time.MonthString() + "/" + Time.YearString() + ", " + Time.HourString() + ":" + Time.MinuteString() + ":" + Time.SecondString());
+                        case "time":
+                            Console.WriteLine("Date et heure:                 " + Time.MonthString() + "/" + Time.DayString() + "/" + Time.YearString() + ", " + Time.TimeString(true, true, true));
                             break;
                         case "mkdirfilealreadyexist":
                             Console.WriteLine("Le dossier existait déjà, le répertoire \"" + arg + "\" a donc été créé.");
@@ -204,7 +215,7 @@ namespace Aura_OS.System.Translation
                             Console.WriteLine("créé par Alexy DA CRUZ et Valentin CHARBONNIER.");
                             Console.WriteLine();
                             Console.ForegroundColor = ConsoleColor.Green;
-                            Console.WriteLine("Site Web: alve-os.github.io");
+                            Console.WriteLine("Site Web: aura-team.com");
                             Console.ForegroundColor = ConsoleColor.White;
                             break;
                         case "errorthisisafile":
@@ -218,12 +229,54 @@ namespace Aura_OS.System.Translation
                         case "NetworkInProgress":
                             Console.WriteLine("Nous travaillons sur le réseau actuellement, de ce fait,");
                             Console.WriteLine("cette fonctionnalité est encore en Alpha.");
-                            Console.WriteLine("Vous pouvez visiter la roadmap http://aura-team.com pour");
+                            Console.WriteLine("Vous pouvez visiter la roadmap aura-team.com pour");
                             Console.WriteLine("voir la progression du projet sur ce domaine.");
                             Console.WriteLine();
                             break;
                         case "MAC":
                             Console.WriteLine("Addresse Physique (MAC): " + Cosmos.HAL.Drivers.PCI.Network.AMDPCNetII.PhysicalAdress());
+                            break;
+                        case "notavalidscript":
+                            Console.WriteLine("Ce fichier n'est pas un script valide.");
+                            break;
+                        case "md5":
+                            Console.WriteLine("Voici le résultat en MD5.");
+                            break;
+                        case "user:existalready":
+                            Console.WriteLine($"{arg} existe déjà !");
+                            break;
+                        case "user:hasbeencreated":
+                            Console.WriteLine($"{arg} a bien été créé !");
+                            break;
+                        case "user:personaldirectories":
+                            Console.WriteLine($"Les dossiers personnelles ont bien été créés !");
+                            break;
+                        case "user:doesntexist":
+                            Console.WriteLine($"{arg} n'existe pas !");
+                            break;
+                        case "user:hasbeenremoved":
+                            Console.WriteLine($"{arg} a bien été supprimé !");
+                            break;
+                        case "user:passwordhasbeenchanged":
+                            Console.WriteLine($"Le mot de passe a bien été changé !");
+                            break;
+                        case "passwd:newpass":
+                            Console.Write($"Entrer un nouveau mot de passe: ");
+                            break;
+                        case "passwd:retype":
+                            Console.Write($"Confirmer le nouveau mot de passe: ");
+                            break;
+                        case "passwd:updated":
+                            Console.WriteLine($"passwd: Le mot de passe a bien été changé.");
+                            break;
+                        case "adduser":
+                            Console.WriteLine($"Essayez: settings adduser user pass");
+                            break;
+                        case "_passuser":
+                            Console.WriteLine($"Essayez: settings passuser user pass");
+                            break;
+                        case "remuser":
+                            Console.WriteLine($"Essayez: settings remuser user");
                             break;
                     }
                     break;
@@ -249,7 +302,7 @@ namespace Aura_OS.System.Translation
                             Console.WriteLine(arg + " does not exist!");
                             break;
                         case "alreadyexist":
-                            Console.WriteLine(arg + " already exist!");
+                            Console.WriteLine(arg + " already exists!");
                             break;
                         case "Computername":
                             Console.WriteLine("Computer name:             " + Kernel.ComputerName);
@@ -288,10 +341,10 @@ namespace Aura_OS.System.Translation
                             Console.WriteLine("Choose your language:");
                             break;
                         case "chooseyourusername":
-                            Console.WriteLine("Choose a user name for your Aura Account:");
+                            Console.WriteLine("Choose a user name for your Aura account:");
                             break;
                         case "alreadyuser":
-                            Console.WriteLine("This user exist already!");
+                            Console.WriteLine("This user already exists!");
                             break;
                         case "passuser":
                             Console.WriteLine("Choose a password for " + arg);
@@ -354,7 +407,7 @@ namespace Aura_OS.System.Translation
                             Console.Write("Computer name > ");
                             break;
                         case "computernamesuccess":
-                            Console.Write("The new computer name has been applied! \n\nReboot the computer for the changing name take effect.");
+                            Console.Write("The new computer name has been applied!");
                             break;
                         case "tips":
                             Console.WriteLine(" * Tips :");
@@ -363,7 +416,7 @@ namespace Aura_OS.System.Translation
                             Console.WriteLine("Enter the directory name (mkdir directory).");
                             break;
                         case "time":
-                            Console.WriteLine("Date and time:             " + Time.MonthString() + "/" + Time.DayString() + "/" + Time.YearString() + ", " + Time.HourString() + ":" + Time.MinuteString() + ":" + Time.SecondString());
+                            Console.WriteLine("Date and time:             " + Time.MonthString() + "/" + Time.DayString() + "/" + Time.YearString() + ", " + Time.TimeString(true, true, true));
                             break;
                         case "mkdirfilealreadyexist":
                             Console.WriteLine("That folder existed already, directory \"" + arg + "\" has been created.");
@@ -398,7 +451,7 @@ namespace Aura_OS.System.Translation
                             Console.WriteLine("Created by Alexy DA CRUZ and Valentin CHARBONNIER.");
                             Console.WriteLine();
                             Console.ForegroundColor = ConsoleColor.Green;
-                            Console.WriteLine("Website: alve-os.github.io");
+                            Console.WriteLine("Website: aura-team.com");
                             Console.ForegroundColor = ConsoleColor.White;
                             break;
                         case "errorthisisafile":
@@ -412,12 +465,54 @@ namespace Aura_OS.System.Translation
                         case "NetworkInProgress":
                             Console.WriteLine("We are working on network, so");
                             Console.WriteLine("this feature is in alpha version.");
-                            Console.WriteLine("You can visit the roadmap here http://aura-team.com to");
+                            Console.WriteLine("You can visit the roadmap here aura-team.com to");
                             Console.WriteLine("see the progression on this part.");
                             Console.WriteLine();
                             break;
                         case "MAC":
                             Console.WriteLine("MAC Address: " + Cosmos.HAL.Drivers.PCI.Network.AMDPCNetII.PhysicalAdress());
+                            break;
+                        case "notavalidscript":
+                            Console.WriteLine("This file is not a valid script.");
+                            break;
+                        case "md5":
+                            Console.WriteLine("This is the result in MD5.");
+                            break;
+                        case "user:existalready":
+                            Console.WriteLine($"{arg} exist already !");
+                            break;
+                        case "user:hasbeencreated":
+                            Console.WriteLine($"{arg} has been created !");
+                            break;
+                        case "user:personaldirectories":
+                            Console.WriteLine($"{arg} Personal directories has been created ! !");
+                            break;
+                        case "user:doesntexist":
+                            Console.WriteLine($"{arg} doesn't exist !");
+                            break;
+                        case "user:hasbeenremoved":
+                            Console.WriteLine($"{arg} has been removed !");
+                            break;
+                        case "user:passwordhasbeenchanged":
+                            Console.WriteLine($"Password has been changed !");
+                            break;
+                        case "passwd:newpass":
+                            Console.Write($"Enter new password: ");
+                            break;
+                        case "passwd:retype":
+                            Console.Write($"Retype new password: ");
+                            break;
+                        case "passwd:updated":
+                            Console.WriteLine($"passwd: password updated successfully.");
+                            break;
+                        case "adduser":
+                            Console.WriteLine($"Try: settings adduser user pass");
+                            break;
+                        case "_passuser":
+                            Console.WriteLine($"Try: settings passuser user pass");
+                            break;
+                        case "remuser":
+                            Console.WriteLine($"Try: settings remuser user");
                             break;
                     }
                     break;
@@ -451,7 +546,7 @@ namespace Aura_OS.System.Translation
                             Drawable.Menu.DispErrorDialog("Computer name length must be 1-20 characters.");
                             break;
                         case "computernamedialog":
-                            string text1 = Drawable.Menu.DispCompuernameDialog("║ Choisissez un nom pour votre PC :", "║ Nom du PC : ");
+                            string text1 = Drawable.Menu.DispComputernameDialog("║ Choisissez un nom pour votre PC :", "║ Nom du PC : ");
                             return text1;
                     }
                     break;
@@ -479,7 +574,7 @@ namespace Aura_OS.System.Translation
                             Drawable.Menu.DispErrorDialog("Computer name length must be 1-20 characters.");
                             break;
                         case "computernamedialog":
-                            string text2 = Drawable.Menu.DispCompuernameDialog("║ Choose your computer name:", "║ Computer name: ");
+                            string text2 = Drawable.Menu.DispComputernameDialog("║ Choose your computer name:", "║ Computer name: ");
                             return text2;
                     }
                     break;

@@ -35,7 +35,7 @@ namespace Aura_OS.System
             Console.WriteLine("╔══════════════════════════════════════════════════════════════╗");
             Console.SetCursorPosition(x, y);
             Console.SetCursorPosition(8, 9);
-            Console.WriteLine("║ AN FATAL ERROR occured in Aura Operating System              ║");
+            Console.WriteLine("║ A FATAL ERROR occured in Aura Operating System               ║");
             Console.SetCursorPosition(x, y);
 
             Console.SetCursorPosition(8, 10);

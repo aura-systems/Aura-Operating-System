@@ -64,6 +64,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Apps\" />
+    <Folder Include="Apps\System\" />
     <Folder Include="Apps\User\" />
     <Folder Include="Shell\" />
     <Folder Include="Shell\cmdIntr\" />
@@ -73,6 +74,8 @@
     <Folder Include="Shell\cmdIntr\Settings\" />
     <Folder Include="Shell\cmdIntr\SystemInfomation\" />
     <Folder Include="Shell\cmdIntr\Tests\" />
+    <Folder Include="Shell\cmdIntr\Tools\" />
+    <Folder Include="Shell\cmdIntr\Users\" />
     <Folder Include="Shell\cmdIntr\Util\" />
     <Folder Include="System\" />
     <Folder Include="System\Computer\" />
@@ -81,6 +84,7 @@
     <Folder Include="System\Translation\" />
     <Folder Include="System\Translation\Text\" />
     <Folder Include="System\Users\" />
+    <Folder Include="System\Utils\" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Cosmos.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=5ae71220097cb983">

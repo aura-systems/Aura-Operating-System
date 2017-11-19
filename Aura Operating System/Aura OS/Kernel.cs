@@ -12,9 +12,10 @@ using Cosmos.System.FileSystem;
 using Sys = Cosmos.System;
 using Lang = Aura_OS.System.Translation;
 using Aura_OS.System;
-using System.IO;
 using Aura_OS.System.Users;
 using Aura_OS.System.Computer;
+using Aura_OS.System.Utils;
+
 #endregion
 
 namespace Aura_OS
@@ -26,18 +27,20 @@ namespace Aura_OS
 
         Setup setup = new Setup();
         public static bool running;
-        public static string version = "0.3.1";
-        public static string revision = "280920171000";
+        public static string version = "0.4.1";
+        public static string revision = "011020171159";
         public static string current_directory = @"0:\";
         public static string langSelected = "en_US";
         public static CosmosVFS FS { get; private set; }
         public static string userLogged;
         public static string userLevelLogged;
         public static bool Logged = false;
-        public static string ComputerName = "Aura-PC";
-        public static int color;
+        public static string ComputerName = "aura-pc";
+        public static int color = 7;
         public static string RootContent;
         public static string UserDir = @"0:\Users\" + userLogged + "\\";
+        public static bool SystemExists = false;
+        public static bool JustInstalled = false;
 
         #endregion
 
@@ -47,15 +50,6 @@ namespace Aura_OS
         {
 
             Console.Clear();
-
-            Console.ForegroundColor = ConsoleColor.Green;
-            Console.Write("[OK]");
-            Console.ForegroundColor = ConsoleColor.White;
-            Console.Write(" ");
-            Console.ForegroundColor = ConsoleColor.DarkMagenta;
-            Console.Write("Aura Kernel Booted Successfully!\n");
-            Console.ForegroundColor = ConsoleColor.White;
-
             Console.ForegroundColor = ConsoleColor.DarkMagenta;
             Console.Write("Booting Aura...\n");
             Console.ForegroundColor = ConsoleColor.White;
@@ -86,25 +80,32 @@ namespace Aura_OS
 
             #endregion
 
-            setup.SetupVerifyCompleted();
+            setup.InitSetup();
 
-            langSelected = File.ReadAllText(@"0:\System\lang.set");
+            if (SystemExists)
+            {
+                if (!JustInstalled)
+                {
 
-            #region Language
+                    Settings.LoadValues();
+                    langSelected = Settings.GetValue("language");
 
-            Lang.Keyboard.Init();
+                    #region Language
 
-            #endregion
+                    Lang.Keyboard.Init();
 
-            RootContent = File.ReadAllText(@"0:\System\Users\root.usr");
+                    #endregion
 
-            Info.getComputerName();
+                    Info.getComputerName();
 
-            Color.GetBackgroundColor();
+                    running = true;
 
-            color = Color.GetTextColor();
-
-            running = true;
+                }
+            }
+            else
+            {
+                running = true;
+            }
         }
 
         #endregion
@@ -119,7 +120,7 @@ namespace Aura_OS
                 {
                     if (Logged) //If logged
                     {
-                        BeforeCommand();
+                        BeforeCommand();                  
 
                         var cmd = Console.ReadLine();
                         Shell.cmdIntr.CommandManager._CommandManger(cmd);
@@ -127,8 +128,7 @@ namespace Aura_OS
                     }
                     else
                     {
-                        Users user = new Users();
-                        user.Login();
+                        Login.LoginForm();
                     }
                 }
             }
@@ -139,6 +139,9 @@ namespace Aura_OS
             }
         }
 
+        #endregion
+
+        #region BeforeCommand
         /// <summary>
         /// Display the line before the user input and set the console color.
         /// </summary>
@@ -256,8 +259,7 @@ namespace Aura_OS
                     Console.ForegroundColor = ConsoleColor.White;
                 }
             }
-        }
-
+        } 
         #endregion
 
     }
