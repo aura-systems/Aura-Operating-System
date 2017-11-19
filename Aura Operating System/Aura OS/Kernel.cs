@@ -106,7 +106,7 @@ namespace Aura_OS
 
                     #region Drivers
                     
-                    Core.Aura_Syscalls aura_syscalls = new Core.Aura_Syscalls(); //Aura API
+                    //Core.Aura_Syscalls aura_syscalls = new Core.Aura_Syscalls(); //Aura API
                     Core.MSDOS_Syscalls msdos_syscalls = new Core.MSDOS_Syscalls(); //MSDOS API
 
                     for (int i = 0; i < Drivers.Count; i++)
@@ -302,46 +302,7 @@ namespace Aura_OS
 
         public override void AssembleNew(Assembler aAssembler, object aMethodInfo)
         {//I asked jp2masa
-            XS.LiteralCode("[bits 16]");
 
-            XS.LiteralCode("idt_real:");
-            XS.LiteralCode("dw 0x3ff"); //; 256 entries, 4b each = 1K
-            XS.LiteralCode("dd 0"); //; Real Mode IVT @ 0x0000
-
-            XS.LiteralCode("savcr0:");
-            XS.LiteralCode("dd 0"); //; Storage location for pmode CR0.
-
-            XS.LiteralCode("Entry16:");
-            //  ; We are already in 16-bit mode here!
-
-            XS.LiteralCode("cli"); //; Disable interrupts.
-
-            //; Need 16-bit Protected Mode GDT entries!
-            XS.LiteralCode("mov eax, DATASEL16"); //; 16-bit Protected Mode data selector.
-            XS.LiteralCode("mov ds, eax");
-            XS.LiteralCode("mov es, eax");
-            XS.LiteralCode("mov fs, eax");
-            XS.LiteralCode("mov gs, eax");
-            XS.LiteralCode("mov ss, eax");
-
-            //; Disable paging (we need everything to be 1:1 mapped).
-            XS.LiteralCode("mov eax, cr0");
-            XS.LiteralCode("mov [savcr0], eax"); //; save pmode CR0
-            XS.LiteralCode("and eax, 0x7FFFFFFe"); //; Disable paging bit & disable 16-bit pmode.
-            XS.LiteralCode("mov cr0, eax");
-
-            XS.LiteralCode("jmp 0:GoRMode"); //; Perform Far jump to set CS.
-
-            XS.LiteralCode("GoRMode:");
-            XS.LiteralCode("mov sp, 0x8000"); //; pick a stack pointer.
-            XS.LiteralCode("mov ax, 0"); //; Reset segment registers to 0.
-            XS.LiteralCode("mov ds, ax");
-            XS.LiteralCode("mov es, ax");
-            XS.LiteralCode("mov fs, ax");
-            XS.LiteralCode("mov gs, ax");
-            XS.LiteralCode("mov ss, ax");
-            XS.LiteralCode("lidt [idt_real]");
-            XS.LiteralCode("sti"); //; Restore interrupts -- be careful, unhandled int's will kill it.
         }
     }
 }

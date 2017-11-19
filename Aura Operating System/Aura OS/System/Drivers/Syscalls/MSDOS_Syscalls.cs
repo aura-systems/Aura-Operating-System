@@ -8,27 +8,23 @@ namespace Aura_OS.Core
         public override bool Init()
         {
             this.Name = "MSDOS API";
-            Cosmos.Core.INTs.SetIntHandler(0x48, SWI_0x48);
+            Cosmos.Core.INTs.SetIntHandler(0x48, SWI);
             return true;
         }
-        public unsafe static void SWI_0x48(ref Cosmos.Core.INTs.IRQContext aContext)
+        public unsafe static void SWI(ref Cosmos.Core.INTs.IRQContext aContext)
         {
             if (aContext.Interrupt == 0x48)
             {
-                Console.WriteLine("0x48");
                 Console.WriteLine("'" + aContext.EAX + "'");
-                int test = (int)(aContext.EAX & 0xFF00) >> 8;
-                Console.WriteLine("'" + test + "'");
-                if ((aContext.EAX & 0xFF00) >> 8 == 0x09) // AH
+                if (aContext.EAX == 0x01)
                 {
-                    
-                    Console.WriteLine("AH");
-                    //uint ptr = aContext.EDX & 0xFFFF; //DX
-                    //byte* dat = (byte*)(ptr + System.Executable.Executables.ProgramAddress);
-                    //for (int i = 0; dat[i] != 0; i++)
-                    //{
-                    //    Console.Write((char)dat[i]);
-                    //}
+                    //Console.WriteLine("EAX is 0x01");
+                    uint ptr = aContext.ESI;
+                    byte* dat = (byte*)(ptr + System.Executable.COM.ProgramAddress);
+                    for (int i = 0; dat[i] != 0; i++)
+                    {
+                        Console.Write((char)dat[i]);
+                    }
                 }
             }
         }

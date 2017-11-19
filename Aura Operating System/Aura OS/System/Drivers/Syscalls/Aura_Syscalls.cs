@@ -8,10 +8,10 @@ namespace Aura_OS.Core
         public override bool Init()
         {
             this.Name = "Aura API";
-            Cosmos.Core.INTs.SetIntHandler(0x49, SWI_0x49);
+            Cosmos.Core.INTs.SetIntHandler(0x49, SWI);
             return true;
         }
-        public unsafe static void SWI_0x49(ref Cosmos.Core.INTs.IRQContext aContext)
+        public unsafe static void SWI(ref Cosmos.Core.INTs.IRQContext aContext)
         {
             if (aContext.Interrupt == 0x49)
             {

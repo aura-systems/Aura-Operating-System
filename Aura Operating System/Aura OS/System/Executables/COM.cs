@@ -31,21 +31,14 @@ namespace  Aura_OS.System.Executable
 
         public static void LoadCOMProgram(byte[] code)
         {
-            code = Replace(code);
+            //code = Replace(code);
             byte* data = (byte*)Cosmos.Core.Memory.Old.Heap.MemAlloc((uint)code.Length);
-
             ProgramAddress = (uint)&data[0];
             for (int i = 0; i < code.Length; i++)
             {
                 data[i] = code[i];
             }
-
-            Console.WriteLine((uint)&data[0]);
-
             Caller call = new Caller();
-
-            exitUtils.Vs8086Mode();
-
             call.CallCode((uint)&data[0]);
         }
 		
