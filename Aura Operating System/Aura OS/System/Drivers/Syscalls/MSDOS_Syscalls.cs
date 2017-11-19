@@ -15,7 +15,7 @@ namespace Aura_OS.Core
         {
             if (aContext.Interrupt == 0x48)
             {
-                Console.WriteLine("'" + aContext.EAX + "'");
+                //Console.WriteLine("'" + aContext.EAX + "'");
                 if (aContext.EAX == 0x01)
                 {
                     //Console.WriteLine("EAX is 0x01");
@@ -23,7 +23,14 @@ namespace Aura_OS.Core
                     byte* dat = (byte*)(ptr + System.Executable.COM.ProgramAddress);
                     for (int i = 0; dat[i] != 0; i++)
                     {
-                        Console.Write((char)dat[i]);
+                        if ((char)dat[i] == 0x0A && (char)dat[i+1] == 0x00)
+                        {
+                            Console.Write("\n");
+                        }
+                        else
+                        {
+                            Console.Write((char)dat[i]);
+                        }
                     }
                 }
             }
