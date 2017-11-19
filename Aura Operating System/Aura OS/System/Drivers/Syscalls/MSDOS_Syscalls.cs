@@ -33,6 +33,10 @@ namespace Aura_OS.Core
                         }
                     }
                 }
+                else if (aContext.EAX == 0x02)
+                {
+                    Console.Clear();
+                }
             }
         }
     }
