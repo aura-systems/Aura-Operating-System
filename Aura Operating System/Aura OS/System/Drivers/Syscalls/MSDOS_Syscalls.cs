@@ -23,7 +23,7 @@ namespace Aura_OS.Core
                     byte* dat = (byte*)(ptr + System.Executable.COM.ProgramAddress);
                     for (int i = 0; dat[i] != 0; i++)
                     {
-                        if ((char)dat[i] == 0x0A && (char)dat[i+1] == 0x00)
+                        if ((char)dat[i] == 0x0A)
                         {
                             Console.Write("\n");
                         }
