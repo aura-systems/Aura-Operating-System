@@ -1,22 +1,26 @@
 ﻿using System;
 using Aura_OS.HAL;
-
+using static Cosmos.Core.INTs;
 namespace Aura_OS.Core
 {
     class MSDOS_Syscalls : Driver
     {
         public override bool Init()
         {
-            this.Name = "MSDOS API";
-            Cosmos.Core.INTs.SetIntHandler(0x48, SWI);
+            Name = "MSDOS API";
+            SetIntHandler(0x48, SWI); //ints.setinthandler
             return true;
         }
+<<<<<<< HEAD
 
         public static int x = Console.CursorLeft;
         public static int y = Console.CursorTop;
         static int result;
 
         public unsafe static void SWI(ref Cosmos.Core.INTs.IRQContext aContext)
+=======
+        public unsafe static void SWI(ref IRQContext aContext)
+>>>>>>> c67871091c678137b52208ff08eec8b3219e7822
         {
             if (aContext.Interrupt == 0x48)
             {
@@ -29,19 +33,16 @@ namespace Aura_OS.Core
                     for (int i = 0; dat[i] != 0; i++)
                     {
                         if ((char)dat[i] == 0x0A)
-                        {
-                            Console.Write("\n");
-                        }
+                            Console.WriteLine("\n");
                         else
-                        {
                             Console.Write((char)dat[i]);
-                        }
                     }
                 }
                 else if (aContext.EAX == 0x02)
                 {
                     Console.Clear();
                 }
+<<<<<<< HEAD
                 else if (aContext.EAX == 0x03)
                 {
                     uint xesi = aContext.ESI;
@@ -95,7 +96,11 @@ namespace Aura_OS.Core
                     }
 
                 }
+=======
+                
+>>>>>>> c67871091c678137b52208ff08eec8b3219e7822
             }
+
         }
     }
 }
