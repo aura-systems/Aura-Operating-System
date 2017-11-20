@@ -2,6 +2,7 @@
 using Aura_OS.HAL;
 using static Cosmos.Core.INTs;
 using System.Collections.Generic;
+using XSharp;
 
 namespace Aura_OS.Core
 {
@@ -64,14 +65,44 @@ namespace Aura_OS.Core
                     Console.Write(input);
                     string output = Console.ReadLine();
 
-                    aContext.EDI = aContext.ESI
 
-                    //List<byte> list = new List<byte>();
+                    uint ptr2 = aContext.EDI;
+                    byte* dat2 = (byte*)(ptr + System.Executable.COM.ProgramAddress);
 
-                    //foreach (char charr in output)
+                    Console.WriteLine(aContext.ESI);
+                    Console.WriteLine((uint)dat);
+
+                    //XS.Set(XSRegisters.EDI, XSRegisters.EBP, sourceDisplacement: 8);
+
+                    List<byte> list = new List<byte>();
+
+                    foreach (char charr in output)
+                    {
+                        list.Add(System.Utils.Convert.StringToByte(charr));
+                    }
+
+                    byte[] test = list.ToArray();
+
+                    for (int i = 0; i < test.Length; i++)
+                    {
+                        //ptr2[i] = code[i];
+                        dat2[i] = test[i];
+                    }
+
+                    aContext.EDI = (uint)dat2 - System.Executable.COM.ProgramAddress;
+
+                    Console.WriteLine(aContext.EDI);
+                    Console.WriteLine((uint)dat2);
+
+                    //aContext.ESI = aContext.ESI 
+
+                    //for (int i = 0; test[i] != 0; i++)
                     //{
-                    //    list.Add(System.Utils.Convert.StringToByte(charr));
+                    //    aContext.EDI = aContext.EDI + test[i];
                     //}
+
+                    //aContext.EDI = (uint)BitConverter.ToInt32(list.ToArray(), 0);
+
 
                     // byte[] test = list.ToArray();
                     //
@@ -85,8 +116,6 @@ namespace Aura_OS.Core
 
                     //System.Utils.Convert.StringToByte();
 
-                    //Console.WriteLine(aContext.ESI);
-                    //Console.WriteLine(aContext.EDI);
                     //Console.WriteLine(ptr1);
 
                     //byte* dat1 = (byte*)(ptr1 + System.Executable.COM.ProgramAddress);
