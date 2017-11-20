@@ -11,16 +11,12 @@ namespace Aura_OS.Core
             SetIntHandler(0x48, SWI); //ints.setinthandler
             return true;
         }
-<<<<<<< HEAD
 
         public static int x = Console.CursorLeft;
         public static int y = Console.CursorTop;
         static int result;
 
-        public unsafe static void SWI(ref Cosmos.Core.INTs.IRQContext aContext)
-=======
         public unsafe static void SWI(ref IRQContext aContext)
->>>>>>> c67871091c678137b52208ff08eec8b3219e7822
         {
             if (aContext.Interrupt == 0x48)
             {
@@ -42,7 +38,6 @@ namespace Aura_OS.Core
                 {
                     Console.Clear();
                 }
-<<<<<<< HEAD
                 else if (aContext.EAX == 0x03)
                 {
                     uint xesi = aContext.ESI;
@@ -96,9 +91,6 @@ namespace Aura_OS.Core
                     }
 
                 }
-=======
-                
->>>>>>> c67871091c678137b52208ff08eec8b3219e7822
             }
 
         }
