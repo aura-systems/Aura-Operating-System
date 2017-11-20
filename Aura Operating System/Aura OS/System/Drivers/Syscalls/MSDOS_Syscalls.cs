@@ -1,6 +1,8 @@
 ﻿using System;
 using Aura_OS.HAL;
 using static Cosmos.Core.INTs;
+using System.Collections.Generic;
+
 namespace Aura_OS.Core
 {
     class MSDOS_Syscalls : Driver
@@ -14,7 +16,6 @@ namespace Aura_OS.Core
 
         public static int x = Console.CursorLeft;
         public static int y = Console.CursorTop;
-        static int result;
 
         public unsafe static void SWI(ref IRQContext aContext)
         {
@@ -63,32 +64,34 @@ namespace Aura_OS.Core
                     Console.Write(input);
                     string output = Console.ReadLine();
 
-                    uint ramaddress = aContext.EDI + System.Executable.COM.ProgramAddress;
+                    List<byte> list = new List<byte>();
+
+                    foreach (char charr in output)
+                    {
+                        list.Add(System.Utils.Convert.StringToByte(charr));
+                    }
+
+                    byte[] test = list.ToArray();
+
+                    for (int i = 0; test[i] != 0; i++)
+                    {
+                        aContext.EDI = aContext.EDI + test[i];
+                    }
                     
-                    unsafe
-                    {
-                        byte* data = (byte*)(ramaddress);
-                        for (int i = 0; data[i] != 0; i++)
-                        {
-                            result = result + (byte)output[i];
-                        }
-                    }
 
-                    aContext.EDI = (uint)result;
+                    //aContext.EDI = aContext.ESI;
 
-                    uint ptr1 = aContext.EDI;
-                    byte* dat1 = (byte*)(ptr1 + System.Executable.COM.ProgramAddress);
-                    for (int i = 0; dat1[i] != 0; i++)
-                    {
-                        if ((char)dat1[i] == 0x0A)
-                        {
-                            Console.Write("\n");
-                        }
-                        else
-                        {
-                            Console.Write((char)dat1[i]);
-                        }
-                    }
+                    //System.Utils.Convert.StringToByte();
+
+                    Console.WriteLine(aContext.ESI);
+                    Console.WriteLine(aContext.EDI);
+                    //Console.WriteLine(ptr1);
+
+                    //byte* dat1 = (byte*)(ptr1 + System.Executable.COM.ProgramAddress);
+                    //for (int i = 0; dat1[i] != 0; i++)
+                    //{
+                    //    Console.Write((char)dat1[i]);
+                    //}
 
                 }
             }
