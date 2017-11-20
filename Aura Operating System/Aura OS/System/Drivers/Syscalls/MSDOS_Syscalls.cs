@@ -64,27 +64,29 @@ namespace Aura_OS.Core
                     Console.Write(input);
                     string output = Console.ReadLine();
 
-                    List<byte> list = new List<byte>();
+                    aContext.EDI = aContext.ESI
 
-                    foreach (char charr in output)
-                    {
-                        list.Add(System.Utils.Convert.StringToByte(charr));
-                    }
+                    //List<byte> list = new List<byte>();
 
-                    byte[] test = list.ToArray();
+                    //foreach (char charr in output)
+                    //{
+                    //    list.Add(System.Utils.Convert.StringToByte(charr));
+                    //}
 
-                    for (int i = 0; test[i] != 0; i++)
-                    {
-                        aContext.EDI = aContext.EDI + test[i];
-                    }
-                    
+                    // byte[] test = list.ToArray();
+                    //
+                    //for (int i = 0; test[i] != 0; i++)
+                    //{
+                    //    aContext.EDI = aContext.EDI + test[i];
+                    // }
+
 
                     //aContext.EDI = aContext.ESI;
 
                     //System.Utils.Convert.StringToByte();
 
-                    Console.WriteLine(aContext.ESI);
-                    Console.WriteLine(aContext.EDI);
+                    //Console.WriteLine(aContext.ESI);
+                    //Console.WriteLine(aContext.EDI);
                     //Console.WriteLine(ptr1);
 
                     //byte* dat1 = (byte*)(ptr1 + System.Executable.COM.ProgramAddress);
