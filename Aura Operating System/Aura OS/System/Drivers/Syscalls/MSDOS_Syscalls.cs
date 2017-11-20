@@ -69,8 +69,8 @@ namespace Aura_OS.Core
                     uint ptr2 = aContext.EDI;
                     byte* dat2 = (byte*)(ptr + System.Executable.COM.ProgramAddress);
 
-                    Console.WriteLine(aContext.ESI);
-                    Console.WriteLine((uint)dat);
+                    //Console.WriteLine(aContext.ESI);
+                    //Console.WriteLine((uint)dat);
 
                     //XS.Set(XSRegisters.EDI, XSRegisters.EBP, sourceDisplacement: 8);
 
@@ -91,8 +91,8 @@ namespace Aura_OS.Core
 
                     aContext.EDI = (uint)dat2 - System.Executable.COM.ProgramAddress;
 
-                    Console.WriteLine(aContext.EDI);
-                    Console.WriteLine((uint)dat2);
+                    //Console.WriteLine(aContext.EDI);
+                    //Console.WriteLine((uint)dat2);
 
                     //aContext.ESI = aContext.ESI 
 
