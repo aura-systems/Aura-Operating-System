@@ -84,16 +84,6 @@ namespace Aura_OS.Core
 
                     aContext.EDI = (uint)dat2 - System.Executable.COM.ProgramAddress;
 
-                    uint ptr3 = aContext.EDI;
-                    byte* dat3 = (byte*)(ptr3 + System.Executable.COM.ProgramAddress);
-
-                    string input3 = "";
-
-                    for (int i = 0; dat3[i] != 0; i++)
-                    {
-                        input3 = input3 + (char)dat3[i];
-                    }
-
                 }
             }
 
