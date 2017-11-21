@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Globalization;
 
 namespace Aura_OS.System.Interpreter.ABS
 {
@@ -257,7 +258,7 @@ namespace Aura_OS.System.Interpreter.ABS
                 do { num += lastChar; } while (char.IsDigit(GetChar()) || lastChar == '.');
 
                 double real;
-                if (!double.TryParse(num, System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out real))
+                if (!double.TryParse(num, NumberStyles.Float, CultureInfo.InvariantCulture, out real))
                     throw new Exception("ERROR while parsing number");
                 Value = new Value(real);
                 return Token.Value;
@@ -474,7 +475,7 @@ namespace Aura_OS.System.Interpreter.ABS
 
                 string input = Console.ReadLine();
                 double d;
-                if (double.TryParse(input, System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out d))
+                if (double.TryParse(input, NumberStyles.Float, CultureInfo.InvariantCulture, out d))
                     vars[lex.Identifer] = new Value(d);
                 else
                     vars[lex.Identifer] = new Value(input);
