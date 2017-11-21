@@ -85,7 +85,7 @@ namespace Aura_OS.System.Interpreter.ABS
                 switch (type)
                 {
                     case ValueType.Real:
-                        this.Real = double.Parse(this.String);
+                        this.Real = Int32.Parse(this.String);
                         this.Type = ValueType.Real;
                         break;
                     case ValueType.String:
@@ -226,7 +226,7 @@ namespace Aura_OS.System.Interpreter.ABS
                 Identifer = lastChar.ToString();
                 while (char.IsLetterOrDigit(GetChar()))
                     Identifer += lastChar;
-                switch (Identifer.ToUpper())
+                switch (CharImpl.ToUpper(Identifer))
                 {
                     case "PRINT": return Token.Print;
                     case "IF": return Token.If;
@@ -257,10 +257,10 @@ namespace Aura_OS.System.Interpreter.ABS
                 string num = "";
                 do { num += lastChar; } while (char.IsDigit(GetChar()) || lastChar == '.');
 
-                double real;
-                if (!double.TryParse(num, NumberStyles.Float, CultureInfo.InvariantCulture, out real))
-                    throw new Exception("ERROR while parsing number");
-                Value = new Value(real);
+                //double real;
+                //if (!double.TryParse(num, NumberStyles.Float, CultureInfo.InvariantCulture, out real))
+                //    throw new Exception("ERROR while parsing number");
+                //Value = new Value(real);
                 return Token.Value;
             }
 
@@ -300,7 +300,8 @@ namespace Aura_OS.System.Interpreter.ABS
                     {
                         if (lastChar == '\\')
                         {
-                            switch (char.ToLower(GetChar()))
+                            //switch (char.ToLower(GetChar())) PLUGGED
+                            switch (CharImpl.ToLower(GetChar()))
                             {
                                 case 'n': str += '\n'; break;
                                 case 't': str += '\t'; break;
@@ -338,7 +339,7 @@ namespace Aura_OS.System.Interpreter.ABS
         private Dictionary<string, Value> vars;
         private Dictionary<string, Marker> loops;
 
-        public delegate Value AuraBasicFunction(Interpreter interpreter, List<Value> args);
+        public delegate Value AuraBasicFunction(Interpreter interpreter, ref List<Value> args);
         private Dictionary<string, AuraBasicFunction> funcs;
 
         private int ifcounter;
@@ -369,7 +370,7 @@ namespace Aura_OS.System.Interpreter.ABS
             else vars[name] = val;
         }
 
-        public void AddFunction(string name, AuraBasicFunction function)
+        public void AddFunction(ref string name, ref AuraBasicFunction function)
         {
             if (!funcs.ContainsKey(name)) funcs.Add(name, function);
             else funcs[name] = function;
@@ -474,10 +475,10 @@ namespace Aura_OS.System.Interpreter.ABS
                 if (!vars.ContainsKey(lex.Identifer)) vars.Add(lex.Identifer, new Value());
 
                 string input = Console.ReadLine();
-                double d;
-                if (double.TryParse(input, NumberStyles.Float, CultureInfo.InvariantCulture, out d))
-                    vars[lex.Identifer] = new Value(d);
-                else
+                //double d;
+                //if (double.TryParse(input, NumberStyles.Float, CultureInfo.InvariantCulture, out d))
+                //    vars[lex.Identifer] = new Value(d);
+               // else
                     vars[lex.Identifer] = new Value(input);
 
                 GetNextToken();
@@ -662,7 +663,8 @@ namespace Aura_OS.System.Interpreter.ABS
                                 goto start;
                         }
 
-                        stack.Push(funcs[name](null, args));
+                        Interpreter variable = null;
+                        stack.Push(funcs[name](variable, ref args));
                     }
                     else
                     {
@@ -720,12 +722,18 @@ namespace Aura_OS.System.Interpreter.ABS
     {
         public static void InstallAll(Interpreter interpreter)
         {
-            interpreter.AddFunction("str", Str);
-            interpreter.AddFunction("num", Num);
-            interpreter.AddFunction("abs", Abs);
-            interpreter.AddFunction("min", Min);
-            interpreter.AddFunction("max", Max);
-            interpreter.AddFunction("not", Not);
+            string str = "str";
+            string num = "num";
+            string abs = "abs";
+            string min = "min";
+            string max = "max";
+            string not = "not";
+            interpreter.AddFunction(ref  str, Str);
+            interpreter.AddFunction(ref  num, Num);
+            interpreter.AddFunction(ref  abs, Abs);
+            interpreter.AddFunction(ref  min, Min);
+            interpreter.AddFunction(ref  max, Max);
+            interpreter.AddFunction(ref  not, Not);
         }
 
         public static Value Str(Interpreter interpreter, List<Value> args)
