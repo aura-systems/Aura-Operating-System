@@ -65,14 +65,8 @@ namespace Aura_OS.Core
                     Console.Write(input);
                     string output = Console.ReadLine();
 
-
                     uint ptr2 = aContext.EDI;
-                    byte* dat2 = (byte*)(ptr + System.Executable.COM.ProgramAddress);
-
-                    //Console.WriteLine(aContext.ESI);
-                    //Console.WriteLine((uint)dat);
-
-                    //XS.Set(XSRegisters.EDI, XSRegisters.EBP, sourceDisplacement: 8);
+                    byte* dat2 = (byte*)(ptr2 + System.Executable.COM.ProgramAddress);
 
                     List<byte> list = new List<byte>();
 
@@ -85,44 +79,20 @@ namespace Aura_OS.Core
 
                     for (int i = 0; i < test.Length; i++)
                     {
-                        //ptr2[i] = code[i];
                         dat2[i] = test[i];
                     }
 
                     aContext.EDI = (uint)dat2 - System.Executable.COM.ProgramAddress;
 
-                    //Console.WriteLine(aContext.EDI);
-                    //Console.WriteLine((uint)dat2);
+                    uint ptr3 = aContext.EDI;
+                    byte* dat3 = (byte*)(ptr3 + System.Executable.COM.ProgramAddress);
 
-                    //aContext.ESI = aContext.ESI 
+                    string input3 = "";
 
-                    //for (int i = 0; test[i] != 0; i++)
-                    //{
-                    //    aContext.EDI = aContext.EDI + test[i];
-                    //}
-
-                    //aContext.EDI = (uint)BitConverter.ToInt32(list.ToArray(), 0);
-
-
-                    // byte[] test = list.ToArray();
-                    //
-                    //for (int i = 0; test[i] != 0; i++)
-                    //{
-                    //    aContext.EDI = aContext.EDI + test[i];
-                    // }
-
-
-                    //aContext.EDI = aContext.ESI;
-
-                    //System.Utils.Convert.StringToByte();
-
-                    //Console.WriteLine(ptr1);
-
-                    //byte* dat1 = (byte*)(ptr1 + System.Executable.COM.ProgramAddress);
-                    //for (int i = 0; dat1[i] != 0; i++)
-                    //{
-                    //    Console.Write((char)dat1[i]);
-                    //}
+                    for (int i = 0; dat3[i] != 0; i++)
+                    {
+                        input3 = input3 + (char)dat3[i];
+                    }
 
                 }
             }
