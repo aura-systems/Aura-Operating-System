@@ -6,10 +6,96 @@ namespace Aura_OS.System.Utils
 {
     public static class Convert
     {
-        public static byte StringToByte(char text)
+        public static byte teststb(char text)
         {
+            //   var byteArray = dataString.Select(x => (byte)x).ToArray();
+            return 0;
+        }
+        public static byte StringToByte(char text)
+        {//quite literally copied the ascii table.
             switch (text)
             {
+
+                case '\a':
+                    return 0x07;
+                case '\b':
+                    return 0x08;
+                case '\t':
+                    return 0x09;
+                case '\n':
+                    return 0x0A;
+                case '\f':
+                    return 0x0C;
+                case '\v':
+                    return 0x0B;
+                case '\r':
+                    return 0x0D;
+
+                case ' ':
+                    return 0x20;
+                case '!':
+                    return 0x21;
+                case '"':
+                    return 0x22;
+                case '#':
+                    return 0x23;
+                case '$':
+                    return 0x24;
+                case '%':
+                    return 0x25;
+                case '\'':
+                    return 0x26;
+                case '(':
+                    return 0x27;
+                case ')':
+                    return 0x28;
+                case '*':
+                    return 0x29;
+                case '+':
+                    return 0x2A;
+                case ',':
+                    return 0x2B;
+                case '-':
+                    return 0x2C;
+                case '.':
+                    return 0x2D;
+                case '/':
+                    return 0x2E;
+                case '0':
+                    return 0x2F;
+                case '1':
+                    return 0x30;
+                case '2':
+                    return 0x31;
+                case '3':
+                    return 0x32;
+                case '4':
+                    return 0x33;
+                case '5':
+                    return 0x34;
+                case '6':
+                    return 0x35;
+                case '7':
+                    return 0x36;
+                case '8':
+                    return 0x37;
+                case '9':
+                    return 0x38;
+                case ':':
+                    return 0x39;
+                case ';':
+                    return 0x3A;
+                case '<':
+                    return 0x3B;
+                case '=':
+                    return 0x3C;
+                case '>':
+                    return 0x3D;
+                case '?':
+                    return 0x3E;
+                case '_':
+                    return 0x3F;
+
                 case '@':
                     return 0x40;
                 case 'A':
@@ -72,8 +158,8 @@ namespace Aura_OS.System.Utils
                     return 0x5D;
                 case '^':
                     return 0x5E;
-                case '_':
-                    return 0x5F;
+               // case '_':
+              //      return 0x5F;
 
                 case '`':
                     return 0x60;
