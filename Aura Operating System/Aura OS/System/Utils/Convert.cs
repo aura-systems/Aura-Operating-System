@@ -1,6 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿/*
+* PROJECT:          Aura Operating System Development
+* CONTENT:          Plugged methods to convert char strings etc.
+* PROGRAMMER(S):    John Welsh <djlw78@gmail.com>
+*                   Valentin Charbonnier <valentinbreiz@gmail.com>
+*/
 
 namespace Aura_OS.System.Utils
 {

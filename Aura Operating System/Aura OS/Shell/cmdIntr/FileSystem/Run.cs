@@ -2,9 +2,10 @@
 * PROJECT:          Aura Operating System Development
 * CONTENT:          Command Interpreter - Run Script
 * PROGRAMMER(S):    DA CRUZ Alexy <dacruzalexy@gmail.com>
+*                   Valentin Charbonnier <valentinbreiz@gmail.com>
 */
 
-using Aura_OS.System.Executable;
+using Aura_OS.System.Executables;
 using System;
 using System.IO;
 using L = Aura_OS.System.Translation;
@@ -44,22 +45,18 @@ namespace Aura_OS.Shell.cmdIntr.FileSystem
                 {
                     Apps.System.Batch.Execute(file);
                 }
-                else if (file.EndsWith(".com") || file.EndsWith(".COM"))
+                else if (file.EndsWith(".aexe") || file.EndsWith(".AEXE"))
                 {
                     byte[] filearray = File.ReadAllBytes(Kernel.current_directory + file);
-                    COM.LoadCOMProgram(filearray);
-                    //COM comfile = new COM(Kernel.current_directory + file);
-                    //comfile.Execute();
+                    PlainBinaryProgram.LoadProgram(filearray);
                 }
                 else if (file.EndsWith(".exe") || file.EndsWith(".EXE"))
                 {
-                    //COM.LoadCOMProgram(File.ReadAllBytes(Kernel.current_directory + file));
+                    //PE.LoadProgram(File.ReadAllBytes(Kernel.current_directory + file));
                 }
                 else
                 {
-                    byte[] filearray = File.ReadAllBytes(Kernel.current_directory + file);
-                    COM.LoadAuraProgram(filearray);
-                    //Console.WriteLine("We are currently unable to run " + file);
+                    Console.WriteLine("We are currently unable to run " + file);
                 }
             }
             else
