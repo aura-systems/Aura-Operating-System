@@ -18,7 +18,7 @@ using Aura_OS.System.Utils;
 using System.Collections.Generic;
 using XSharp.Assembler;
 using Cosmos.IL2CPU.API.Attribs;
-using XSharp;
+using Aura_OS.System.Drivers;
 
 #endregion
 
@@ -45,7 +45,7 @@ namespace Aura_OS
         public static string UserDir = @"0:\Users\" + userLogged + "\\";
         public static bool SystemExists = false;
         public static bool JustInstalled = false;
-        public static List<HAL.Driver> Drivers = new List<HAL.Driver>();
+        public static List<Driver> Drivers = new List<Driver>();
 
         #endregion
 

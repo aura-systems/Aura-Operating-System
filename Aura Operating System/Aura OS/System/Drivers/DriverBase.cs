@@ -4,7 +4,7 @@
 * PROGRAMMER(S):    Valentin Charbonnier <valentinbreiz@gmail.com>
 */
 
-namespace Aura_OS.HAL
+namespace Aura_OS.System.Drivers
 {
     public abstract class Driver
     {

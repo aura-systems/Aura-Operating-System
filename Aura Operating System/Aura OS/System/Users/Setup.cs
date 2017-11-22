@@ -12,6 +12,17 @@ using Aura_OS.System.Drawable;
 using Aura_OS.System.Translation;
 using Aura_OS.System.Utils;
 
+using Cosmos.System.FileSystem;
+using Sys = Cosmos.System;
+using Lang = Aura_OS.System.Translation;
+using Aura_OS.System;
+using Aura_OS.System.Users;
+using Aura_OS.System.Computer;
+using System.Collections.Generic;
+using XSharp.Assembler;
+using Cosmos.IL2CPU.API.Attribs;
+using Aura_OS.System.Drivers;
+
 namespace Aura_OS.System
 {
     class Setup
@@ -216,6 +227,8 @@ namespace Aura_OS.System
             Kernel.Logged = true;
         }
 
+        public static List<Driver> Drivers = new List<Driver>();
+
         /// <summary>
         /// Method called to start Aura_OS to run with filesystem and not logged to any user by default
         /// </summary>
@@ -227,6 +240,21 @@ namespace Aura_OS.System
             Kernel.userLogged = username;
             Kernel.JustInstalled = true;
             Kernel.running = true;
+
+            #region Drivers
+
+            Drivers.Syscalls.AuraAPI auraapi_syscalls = new Drivers.Syscalls.AuraAPI(); //Aura API
+
+            for (int i = 0; i < Drivers.Count; i++)
+            {
+                if (Drivers[i].Init())
+                    Console.WriteLine("Loading '" + Drivers[i].Name + "' loaded sucessfully");
+                else
+                    Console.WriteLine("Failure loading module '" + Drivers[i].Name + "'");
+                Console.ReadKey();
+            }
+
+            #endregion
 
             Console.Clear();
 
