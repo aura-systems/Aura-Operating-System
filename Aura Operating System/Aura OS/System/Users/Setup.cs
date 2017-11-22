@@ -248,10 +248,14 @@ namespace Aura_OS.System
             for (int i = 0; i < Drivers.Count; i++)
             {
                 if (Drivers[i].Init())
-                    Console.WriteLine("Loading '" + Drivers[i].Name + "' loaded sucessfully");
+                {
+                    Console.WriteLine(Drivers[i].Name + "' loaded sucessfully");
+                }
                 else
+                {
                     Console.WriteLine("Failure loading module '" + Drivers[i].Name + "'");
-                Console.ReadKey();
+                    Console.ReadKey();
+                }
             }
 
             #endregion
