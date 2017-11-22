@@ -6,7 +6,6 @@
 */
 
 using System;
-using Aura_OS.HAL;
 using static Cosmos.Core.INTs;
 using System.Collections.Generic;
 
