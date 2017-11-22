@@ -105,9 +105,8 @@ namespace Aura_OS
                     Info.getComputerName();
 
                     #region Drivers
-                    
-                    //Core.Aura_Syscalls aura_syscalls = new Core.Aura_Syscalls(); //Aura API
-                    Core.AuraAPI msdos_syscalls = new Core.AuraAPI(); //MSDOS API
+
+                    System.Drivers.Syscalls.AuraAPI auraapi_syscalls = new System.Drivers.Syscalls.AuraAPI(); //Aura API
 
                     for (int i = 0; i < Drivers.Count; i++)
                     {
@@ -115,6 +114,7 @@ namespace Aura_OS
                         Console.WriteLine("Loading '" + Drivers[i].Name + "' loaded sucessfully");
                     else
                         Console.WriteLine("Failure loading module '" + Drivers[i].Name + "'");
+                        Console.ReadKey();
                     }
                   
                     #endregion
