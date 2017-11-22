@@ -88,6 +88,10 @@ namespace Aura_OS.System.Drivers.Syscalls
                     aContext.EDI = (uint)dat2 - Executables.PlainBinaryProgram.ProgramAddress;
 
                 }
+                else if (aContext.EAX == 0x05) //Readkey function
+                {
+                    //Console.SetCursorPosition(x, y);
+                }
             }
 
         }
