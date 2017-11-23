@@ -18,63 +18,67 @@ namespace Aura_OS.System
         /// <param name="ex">Exception that stop the kernel</param>
         public static void StopKernel(Exception ex)
         {
-            Console.Clear();
+            Kernel.running = false;
 
             string ex_message = ex.Message;
-            string inner_message = "<none>";
-
-            if (ex.InnerException != null)
-                inner_message = ex.InnerException.Message;
-
-            int x = Console.CursorLeft;
-            int y = Console.CursorTop;
+            string inner_message = "";
 
             Console.BackgroundColor = ConsoleColor.Red;
 
-            Console.SetCursorPosition(8, 8);
-            Console.WriteLine("╔══════════════════════════════════════════════════════════════╗");
-            Console.SetCursorPosition(x, y);
-            Console.SetCursorPosition(8, 9);
-            Console.WriteLine("║ A FATAL ERROR occured in Aura Operating System               ║");
-            Console.SetCursorPosition(x, y);
+            Console.Clear();
 
-            Console.SetCursorPosition(8, 10);
-            Console.WriteLine("╠══════════════════════════════════════════════════════════════╣");
-            Console.SetCursorPosition(x, y);
-            Console.SetCursorPosition(8, 11);
-            Console.WriteLine("║                                                              ║");
-            Console.SetCursorPosition(x, y);
-            Console.SetCursorPosition(8, 12);
-            Console.WriteLine("║ Login:                                                       ║");
-            Console.SetCursorPosition(x, y);
-            Console.SetCursorPosition(8, 13);
-            Console.WriteLine("║                                                              ║");
-            Console.SetCursorPosition(x, y);
-            Console.SetCursorPosition(8, 14);
-            Console.WriteLine("║ Password:                                                    ║");
-            Console.SetCursorPosition(x, y);
-            Console.SetCursorPosition(8, 15);
-            Console.WriteLine("║                                                              ║");
-            Console.SetCursorPosition(x, y);
-            Console.SetCursorPosition(8, 16);
-            Console.WriteLine("╚══════════════════Press any key to reboot.════════════════════╝");
-            Console.SetCursorPosition(x, y);
-
-            Console.SetCursorPosition(8, 12);
-            Console.WriteLine("║ Exception message : " + ex_message);
-
-            Console.SetCursorPosition(x, y);
-            Console.SetCursorPosition(8, 13);
-            Console.WriteLine("║                                                              ║");
-            Console.SetCursorPosition(x, y);
-            Console.SetCursorPosition(8, 14);
-            Console.WriteLine("║ Error : " + inner_message);
-
-            Console.SetCursorPosition(x, y);
+            Console.WriteLine("An error occured in Aura Operating System:");
+            Console.WriteLine(ex);
+            if (ex.InnerException != null)
+            {
+                inner_message = ex.InnerException.Message;
+                Console.WriteLine(inner_message);
+            }
+            Console.WriteLine();
+            Console.WriteLine("If this is the first time you've seen this error screen, press on a key to restart your computer. If this screen appears again, follow these steps:");
+            Console.WriteLine();
+            Console.WriteLine("Try to reinstall Aura Operating System on your computer or Virtual Machine. You can also try to reset the filesystem with a blanck .vmdk file if you're on a Virtual Machine and if not by formatting your device.");
+            Console.WriteLine();
+            Console.WriteLine(@"If problems continue, you can contact us at aura-team.com or you can create an issue on our GitHub repository (github.com/aura-systems/Aura-Operating-System)");
+            Console.WriteLine();
+            Console.WriteLine("Press any key to reboot...");
 
             Console.ReadKey();
+
             Sys.Power.Reboot();
         }
 
+        /// <summary>
+        /// Stop the kernel and display exception
+        /// </summary>
+        /// <param name="ex">Exception that stop the kernel</param>
+        public static void StopKernel(string exception, string description, string lastknowaddress, string ctxinterrupt)
+        {
+            Kernel.running = false;
+
+            Console.BackgroundColor = ConsoleColor.Red;
+
+            Console.Clear();
+
+            Console.WriteLine("CPU Exception x" + ctxinterrupt + " occured in Aura Operating System:");
+            Console.WriteLine("Exception: " + exception);
+            Console.WriteLine("Description: " + description);
+            if (lastknowaddress != "")
+            {
+                Console.WriteLine("Last known address: 0x" + lastknowaddress);
+            }
+            Console.WriteLine();
+            Console.WriteLine("If this is the first time you've seen this error screen, press on a key to restart your computer. If this screen appears again, follow these steps:");
+            Console.WriteLine();
+            Console.WriteLine("Try to reinstall Aura Operating System on your computer or Virtual Machine. You can also try to reset the filesystem with a blanck .vmdk file if you're on a Virtual Machine and if not by formatting your device.");
+            Console.WriteLine();
+            Console.WriteLine(@"If problems continue, you can contact us at aura-team.com or you can create an issue on our GitHub repository (github.com/aura-systems/Aura-Operating-System)");
+            Console.WriteLine();
+            Console.WriteLine("Press any key to reboot...");
+
+            Console.ReadKey();
+
+            Sys.Power.Reboot();
+        }
     }
 }
