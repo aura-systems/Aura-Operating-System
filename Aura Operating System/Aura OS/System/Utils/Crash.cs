@@ -39,7 +39,7 @@ namespace Aura_OS.System
             Console.WriteLine();
             Console.WriteLine("Try to reinstall Aura Operating System on your computer or Virtual Machine. You can also try to reset the filesystem with a blanck .vmdk file if you're on a Virtual Machine and if not by formatting your device.");
             Console.WriteLine();
-            Console.WriteLine(@"If problems continue, you can contact us at aura-team.com or you can create an issue on our GitHub repository (github.com/aura-systems/Aura-Operating-System)");
+            Console.WriteLine(@"If problems continue, you can contact us at aura-team.com or you can create an issue on our GitHub repository (github.com/aura-systems/Aura-Operating-System).");
             Console.WriteLine();
             Console.WriteLine("Press any key to reboot...");
 
@@ -72,7 +72,7 @@ namespace Aura_OS.System
             Console.WriteLine();
             Console.WriteLine("Try to reinstall Aura Operating System on your computer or Virtual Machine. You can also try to reset the filesystem with a blanck .vmdk file if you're on a Virtual Machine and if not by formatting your device.");
             Console.WriteLine();
-            Console.WriteLine(@"If problems continue, you can contact us at aura-team.com or you can create an issue on our GitHub repository (github.com/aura-systems/Aura-Operating-System)");
+            Console.WriteLine(@"If problems continue, you can contact us at aura-team.com or you can create an issue on our GitHub repository (github.com/aura-systems/Aura-Operating-System).");
             Console.WriteLine();
             Console.WriteLine("Press any key to reboot...");
 
