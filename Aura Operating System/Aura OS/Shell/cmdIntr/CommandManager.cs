@@ -4,6 +4,8 @@
 * PROGRAMMER(S):    John Welsh <djlw78@gmail.com>
 */
 
+using System;
+
 namespace Aura_OS.Shell.cmdIntr
 {
     class CommandManager
@@ -167,9 +169,14 @@ namespace Aura_OS.Shell.cmdIntr
                 Tests.Crash.c_Crash();
             }
 
-        #endregion Tests
+            else if (cmd.Equals("crashex"))
+            {
+                //VVoid();
+            }
 
-        #region Tools
+            #endregion Tests
+
+            #region Tools
 
             else if (cmd.Equals("snake"))
             {
