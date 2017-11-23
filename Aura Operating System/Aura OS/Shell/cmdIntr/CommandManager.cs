@@ -7,6 +7,7 @@
 using Aura_OS.System.Executables;
 using System;
 using System.IO;
+using System;
 
 namespace Aura_OS.Shell.cmdIntr
 {
@@ -191,8 +192,10 @@ namespace Aura_OS.Shell.cmdIntr
                 File.WriteAllBytes(@"0:\test.aexe", filearray2);
 
 
-
-
+            }
+            else if (cmd.Equals("crashex"))
+            {
+                //VVoid();
             }
 
             #endregion Tests
