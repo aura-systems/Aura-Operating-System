@@ -35,11 +35,11 @@ namespace Aura_OS.System
                 Console.WriteLine(inner_message);
             }
             Console.WriteLine();
-            Console.WriteLine("If this is the first time you've seen this error screen, press on a key to restart your computer. If this screen appears again, follow these steps:");
+            Console.WriteLine("If this is the first time you've seen this error screen, press any key to restart your computer. If this screen appears again, follow these steps:");
             Console.WriteLine();
             Console.WriteLine("Try to reinstall Aura Operating System on your computer or Virtual Machine. You can also try to reset the filesystem with a blank .vmdk file if you're on a Virtual Machine and if not by formatting your device.");
             Console.WriteLine();
-            Console.WriteLine(@"If problems continue, you can contact us at aura-team.com or you can create an issue on our GitHub repository (github.com/aura-systems/Aura-Operating-System).");
+            Console.WriteLine(@"If problems continue, you can contact us at aura-team.com or you can submit your issue on our GitHub repository (github.com/aura-systems/Aura-Operating-System).");
             Console.WriteLine();
             Console.WriteLine("Press any key to reboot...");
 
@@ -68,11 +68,11 @@ namespace Aura_OS.System
                 Console.WriteLine("Last known address: 0x" + lastknowaddress);
             }
             Console.WriteLine();
-            Console.WriteLine("If this is the first time you've seen this error screen, press on a key to restart your computer. If this screen appears again, follow these steps:");
+            Console.WriteLine("If this is the first time you've seen this error screen, press any key to restart your computer. If this screen appears again, follow these steps:");
             Console.WriteLine();
             Console.WriteLine("Try to reinstall Aura Operating System on your computer or Virtual Machine. You can also try to reset the filesystem with a blank .vmdk file if you're on a Virtual Machine and if not by formatting your device.");
             Console.WriteLine();
-            Console.WriteLine(@"If problems continue, you can contact us at aura-team.com or you can create an issue on our GitHub repository (github.com/aura-systems/Aura-Operating-System).");
+            Console.WriteLine(@"If problems continue, you can contact us at aura-team.com or you can submit your issue on our GitHub repository (github.com/aura-systems/Aura-Operating-System).");
             Console.WriteLine();
             Console.WriteLine("Press any key to reboot...");
 
