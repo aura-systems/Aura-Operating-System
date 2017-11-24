@@ -27,8 +27,8 @@ namespace Aura_OS
 
         Setup setup = new Setup();
         public static bool running;
-        public static string version = "0.4.1";
-        public static string revision = "011020171159";
+        public static string version = "0.4.2";
+        public static string revision = "241120171926";
         public static string current_directory = @"0:\";
         public static string langSelected = "en_US";
         public static CosmosVFS FS { get; private set; }
