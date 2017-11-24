@@ -31,11 +31,11 @@ Login:
 
 Shell:
 
-![Aura Operating System](https://image.noelshack.com/fichiers/2017/43/2/1508857715-aura2.png)
+![Aura Operating System](https://image.noelshack.com/fichiers/2017/47/5/1511551694-1.png)
 
-![Aura Operating System](https://image.noelshack.com/fichiers/2017/43/2/1508857703-aura3.png)
+![Aura Operating System](https://image.noelshack.com/fichiers/2017/47/5/1511551696-2.png)
 
-![Aura Operating System](https://image.noelshack.com/fichiers/2017/31/4/1501777813-alve5.png)
+![Aura Operating System](https://image.noelshack.com/fichiers/2017/47/5/1511551820-3.png)
 
 ## Want to try Aura?
 Download VMWare [at this address](https://my.vmware.com/en/web/vmware/free#desktop_end_user_computing/vmware_workstation_player/12_0). Install and run it.
