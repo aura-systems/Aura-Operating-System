@@ -65,39 +65,39 @@ namespace Aura_OS.System.Utils
                 case '/':
                     return 0x2E;
                 case '0':
-                    return 0x2F;
-                case '1':
                     return 0x30;
-                case '2':
+                case '1':
                     return 0x31;
-                case '3':
+                case '2':
                     return 0x32;
-                case '4':
+                case '3':
                     return 0x33;
-                case '5':
+                case '4':
                     return 0x34;
-                case '6':
+                case '5':
                     return 0x35;
-                case '7':
+                case '6':
                     return 0x36;
-                case '8':
+                case '7':
                     return 0x37;
-                case '9':
+                case '8':
                     return 0x38;
-                case ':':
+                case '9':
                     return 0x39;
-                case ';':
+                case ':':
                     return 0x3A;
-                case '<':
+                case ';':
                     return 0x3B;
-                case '=':
+                case '<':
                     return 0x3C;
-                case '>':
+                case '=':
                     return 0x3D;
-                case '?':
+                case '>':
                     return 0x3E;
-                case '_':
+                case '?':
                     return 0x3F;
+                case '_':
+                    return 0x5F;
 
                 case '@':
                     return 0x40;

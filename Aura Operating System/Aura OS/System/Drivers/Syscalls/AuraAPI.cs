@@ -104,14 +104,22 @@ namespace Aura_OS.System.Drivers.Syscalls
                         input = input + (char)dat[i];
                     }
 
+                    Console.WriteLine(input);
+
                     int returned = Int32.Parse(input);
+
+                    Console.WriteLine(returned);
 
                     uint ptr2 = aContext.EDI;
                     byte* dat2 = (byte*)(ptr2 + Executables.PlainBinaryProgram.ProgramAddress);
 
                     dat2 = (byte*)returned;
 
+
                     aContext.EDI = (uint)dat2 - Executables.PlainBinaryProgram.ProgramAddress;
+
+                    Console.WriteLine(aContext.EDI +Executables.PlainBinaryProgram.ProgramAddress);
+
                 }
             }
 
