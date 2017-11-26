@@ -7,7 +7,6 @@
 using Aura_OS.System.Executables;
 using System;
 using System.IO;
-using System;
 
 namespace Aura_OS.Shell.cmdIntr
 {
@@ -179,10 +178,8 @@ namespace Aura_OS.Shell.cmdIntr
                 PlainBinaryProgram.LoadProgram(filearray);
 
 
-            }
-            else if (cmd.Equals("crashex"))
-            {
-                //VVoid();
+
+
             }
 
             #endregion Tests

@@ -19,7 +19,6 @@ using System.Collections.Generic;
 using XSharp.Assembler;
 using Cosmos.IL2CPU.API.Attribs;
 using Aura_OS.System.Drivers;
-using static Cosmos.Core.INTs;
 
 #endregion
 
@@ -59,27 +58,6 @@ namespace Aura_OS
             Console.ForegroundColor = ConsoleColor.DarkMagenta;
             Console.Write("Booting Aura...\n");
             Console.ForegroundColor = ConsoleColor.White;
-
-            //SetIrqHandler();
-
-            //var xCtx = new IRQContext();
-            //Core.CPUExceptions.HandleInterrupt_Default(ref xCtx);
-            //Core.CPUExceptions.HandleInterrupt_00(ref xCtx);
-            //Core.CPUExceptions.HandleInterrupt_01(ref xCtx);
-            //Core.CPUExceptions.HandleInterrupt_02(ref xCtx);
-            //Core.CPUExceptions.HandleInterrupt_03(ref xCtx);
-            //Core.CPUExceptions.HandleInterrupt_04(ref xCtx);
-            //Core.CPUExceptions.HandleInterrupt_05(ref xCtx);
-            //Core.CPUExceptions.HandleInterrupt_06(ref xCtx);
-            //Core.CPUExceptions.HandleInterrupt_07(ref xCtx);
-            //Core.CPUExceptions.HandleInterrupt_08(ref xCtx);
-            // Core.CPUExceptions.HandleInterrupt_09(ref xCtx);
-            //Core.CPUExceptions.HandleInterrupt_0A(ref xCtx);
-            // Core.CPUExceptions.HandleInterrupt_0B(ref xCtx);
-            // Core.CPUExceptions.HandleInterrupt_0C(ref xCtx);
-            // Core.CPUExceptions.HandleInterrupt_0D(ref xCtx);
-            // Core.CPUExceptions.HandleInterrupt_0E(ref xCtx);
-            // Core.CPUExceptions.HandleInterrupt_0F(ref xCtx);
 
             #region FileSystem Init
 
