@@ -57,6 +57,19 @@
     <Name>Aura_OSBoot</Name>
     <VMware_Name>Aura_OSBoot</VMware_Name>
     <ISO_Name>Aura_OSBoot</ISO_Name>
+    <PXE_StackCorruptionDetectionEnabled>True</PXE_StackCorruptionDetectionEnabled>
+    <PXE_Name>Aura_OSBoot</PXE_Name>
+    <PXE_Description>Creates a PXE setup and hosts a DCHP and TFTP server to deploy directly to physical hardware. Allows debugging with a serial cable.</PXE_Description>
+    <PXE_Deployment>PXE</PXE_Deployment>
+    <PXE_Launch>None</PXE_Launch>
+    <PXE_DebugEnabled>False</PXE_DebugEnabled>
+    <PXE_DebugMode>Source</PXE_DebugMode>
+    <PXE_VisualStudioDebugPort>Pipe: Cosmos\Serial</PXE_VisualStudioDebugPort>
+    <PXE_PxeInterface>192.168.68.1</PXE_PxeInterface>
+    <PXE_VMwareEdition>Player</PXE_VMwareEdition>
+    <PXE_OutputPath>bin\Debug\net462\</PXE_OutputPath>
+    <PXE_EnableGDB>False</PXE_EnableGDB>
+    <PXE_StartCosmosGDB>false</PXE_StartCosmosGDB>
   </PropertyGroup>
   <ItemGroup>
     <None Remove="*" />
