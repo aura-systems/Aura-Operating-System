@@ -92,6 +92,27 @@ namespace Aura_OS.System.Drivers.Syscalls
                 {
                     //Console.SetCursorPosition(x, y);
                 }
+                else if (aContext.EAX == 0x06) //Convert *char to int
+                {
+                    uint ptr = aContext.ESI;
+                    byte* dat = (byte*)(ptr + Executables.PlainBinaryProgram.ProgramAddress);
+
+                    string input = "";
+
+                    for (int i = 0; dat[i] != 0; i++)
+                    {
+                        input = input + (char)dat[i];
+                    }
+
+                    int returned = Int32.Parse(input);
+
+                    uint ptr2 = aContext.EDI;
+                    byte* dat2 = (byte*)(ptr2 + Executables.PlainBinaryProgram.ProgramAddress);
+
+                    dat2 = (byte*)returned;
+
+                    aContext.EDI = (uint)dat2 - Executables.PlainBinaryProgram.ProgramAddress;
+                }
             }
 
         }

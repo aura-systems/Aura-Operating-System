@@ -67,6 +67,7 @@
     <Folder Include="Apps\" />
     <Folder Include="Apps\System\" />
     <Folder Include="Apps\User\" />
+    <Folder Include="Core\" />
     <Folder Include="Shell\" />
     <Folder Include="Shell\cmdIntr\" />
     <Folder Include="Shell\cmdIntr\c_Console\" />
