@@ -104,11 +104,11 @@ namespace Aura_OS.System.Drivers.Syscalls
                         input = input + (char)dat[i];
                     }
 
-                    Console.WriteLine(input);
+                    Console.WriteLine("AURA: " + input);
 
                     int returned = Int32.Parse(input);
 
-                    Console.WriteLine(returned);
+                    Console.WriteLine("AURA: " + returned);
 
                     uint ptr2 = aContext.EDI;
                     byte* dat2 = (byte*)(ptr2 + Executables.PlainBinaryProgram.ProgramAddress);
@@ -118,8 +118,17 @@ namespace Aura_OS.System.Drivers.Syscalls
 
                     aContext.EDI = (uint)dat2 - Executables.PlainBinaryProgram.ProgramAddress;
 
-                    Console.WriteLine(aContext.EDI +Executables.PlainBinaryProgram.ProgramAddress);
+                    //Console.WriteLine("AURA: " + aContext.EDI + Executables.PlainBinaryProgram.ProgramAddress);
 
+                }
+                else if (aContext.EAX == 0x07) //Print int
+                {
+                    uint ptr = aContext.ESI;
+                    byte* dat = (byte*)(ptr + Executables.PlainBinaryProgram.ProgramAddress);
+                    for (int i = 0; dat[i] != 0; i++)
+                    {
+                        Console.Write(Utils.Convert.StringToByte((char)dat[i]));
+                    }
                 }
             }
 
