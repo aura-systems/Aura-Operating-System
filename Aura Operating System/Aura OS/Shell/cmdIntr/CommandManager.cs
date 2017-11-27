@@ -180,15 +180,19 @@ namespace Aura_OS.Shell.cmdIntr
                 Cosmos.HAL.Drivers.PCI.Network.AMDPCNetII nic = new Cosmos.HAL.Drivers.PCI.Network.AMDPCNetII(device);
 
                 NetworkDevice.Devices.Add(nic);
-
+                
                 Cosmos.System.Network.NetworkStack.Init();
 
+                Cosmos.System.Network.IPv4.Address myIP = new Cosmos.System.Network.IPv4.Address(192, 168, 1, 51);
+                Cosmos.System.Network.IPv4.Address mySubnet = new Cosmos.System.Network.IPv4.Address(255, 255, 255, 0);
+                Cosmos.System.Network.IPv4.Address myGateway = new Cosmos.System.Network.IPv4.Address(192, 168, 1, 1);
+                Cosmos.System.Network.IPv4.Config myConfig = new Cosmos.System.Network.IPv4.Config(myIP, mySubnet, myGateway);
+
+                NetworkStack.ConfigIP(nic, myConfig);
                 nic.Enable();
 
-                Cosmos.System.Network.NetworkStack.ConfigIP(nic, new Config(new Address(192, 168, 1, 16), new Address(255, 255, 255, 0)));
-
-                var xClient = new UdpClient(55845);
-                xClient.Connect(new Address(192, 168, 1, 12), 55845);
+                var xClient = new UdpClient(58615);
+                xClient.Connect(new Address(192, 168, 1, 12), 58615);
                 xClient.Send(new byte[]
                              {
                                  0x48, 0x65, 0x6c, 0x6c, 0x6f, 0x20, 0x77, 0x6f, 0x72, 0x6c, 0x64, 0x21
