@@ -4,6 +4,11 @@
 * PROGRAMMER(S):    John Welsh <djlw78@gmail.com>
 */
 
+using Cosmos.HAL;
+using Cosmos.System.Network;
+using Cosmos.System.Network.IPv4;
+using System;
+
 namespace Aura_OS.Shell.cmdIntr
 {
     class CommandManager
@@ -167,9 +172,38 @@ namespace Aura_OS.Shell.cmdIntr
                 Tests.Crash.c_Crash();
             }
 
-        #endregion Tests
+            else if (cmd.Equals("net"))
+            {
+                PCIDevice device;
+                device = PCI.GetDevice(0x1022, 0x2000);
 
-        #region Tools
+                Cosmos.HAL.Drivers.PCI.Network.AMDPCNetII nic = new Cosmos.HAL.Drivers.PCI.Network.AMDPCNetII(device);
+
+                NetworkDevice.Devices.Add(nic);
+
+                Cosmos.System.Network.NetworkStack.Init();
+
+                nic.Enable();
+
+                Cosmos.System.Network.NetworkStack.ConfigIP(nic, new Config(new Address(192, 168, 1, 16), new Address(255, 255, 255, 0)));
+
+                var xClient = new UdpClient(55845);
+                xClient.Connect(new Address(192, 168, 1, 12), 55845);
+                xClient.Send(new byte[]
+                             {
+                                 0x48, 0x65, 0x6c, 0x6c, 0x6f, 0x20, 0x77, 0x6f, 0x72, 0x6c, 0x64, 0x21
+                             });
+
+                NetworkStack.Update();
+                Console.WriteLine("Done");
+                Console.ReadKey();
+
+
+            }
+
+            #endregion Tests
+
+            #region Tools
 
             else if (cmd.Equals("snake"))
             {
