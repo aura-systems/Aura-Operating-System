@@ -28,7 +28,7 @@ namespace Aura_OS.Shell.cmdIntr
         public static void _CommandManger(string cmd)
         {
 
-        #region Power
+            #region Power
 
             if (cmd.Equals("shutdown"))
             {//NOTE: Why isn't it just the constructor? This leaves more room for <package>.<class>.HelpInfo;
@@ -39,9 +39,9 @@ namespace Aura_OS.Shell.cmdIntr
                 Power.Reboot.c_Reboot();
             }
 
-        #endregion Power
+            #endregion Power
 
-        #region Console
+            #region Console
 
             else if ((cmd.Equals("clear")) || (cmd.Equals("cls")))
             {
@@ -56,9 +56,9 @@ namespace Aura_OS.Shell.cmdIntr
                 System.Translation.Help._Help();
             }
 
-        #endregion Console
+            #endregion Console
 
-        #region FileSystem
+            #region FileSystem
 
             else if (cmd.StartsWith("cd "))
             {
@@ -117,9 +117,9 @@ namespace Aura_OS.Shell.cmdIntr
                 FileSystem.Run.c_Run(cmd);
             }
 
-        #endregion FileSystem
+            #endregion FileSystem
 
-        #region Settings
+            #region Settings
 
             else if (cmd.Equals("logout"))
             {
@@ -142,9 +142,9 @@ namespace Aura_OS.Shell.cmdIntr
                 Settings.Passwd.c_Passwd(Kernel.userLogged);
             }
 
-        #endregion Settings
+            #endregion Settings
 
-        #region System Infomation
+            #region System Infomation
 
             else if (cmd.Equals("systeminfo"))
             {
@@ -163,9 +163,9 @@ namespace Aura_OS.Shell.cmdIntr
                 SystemInfomation.Time.c_Time();
             }
 
-        #endregion System Infomation
+            #endregion System Infomation
 
-        #region Tests
+            #region Tests
 
             else if (cmd.Equals("crash"))
             {
@@ -180,7 +180,7 @@ namespace Aura_OS.Shell.cmdIntr
                 Cosmos.HAL.Drivers.PCI.Network.AMDPCNetII nic = new Cosmos.HAL.Drivers.PCI.Network.AMDPCNetII(device);
 
                 NetworkDevice.Devices.Add(nic);
-                
+
                 Cosmos.System.Network.NetworkStack.Init();
 
                 Cosmos.System.Network.IPv4.Address myIP = new Cosmos.System.Network.IPv4.Address(192, 168, 1, 128);
@@ -207,8 +207,8 @@ namespace Aura_OS.Shell.cmdIntr
                 //                 0x48, 0x65, 0x6c, 0x6c, 0x6f, 0x20, 0x77, 0x6f, 0x72, 0x6c, 0x64, 0x21
                 //             });
 
-               // NetworkStack.Update();
-               // xClient.Close();
+                // NetworkStack.Update();
+                // xClient.Close();
                 Console.WriteLine("Done");
 
 
@@ -227,16 +227,16 @@ namespace Aura_OS.Shell.cmdIntr
                 Tools.MD5.c_MD5(cmd);
             }
 
-        #endregion
+            #endregion
 
-        #region Util           
+            #region Util           
 
             else
             {
                 Util.CmdNotFound.c_CmdNotFound();
             }
 
-        #endregion Util
+            #endregion Util
 
         }
     }
