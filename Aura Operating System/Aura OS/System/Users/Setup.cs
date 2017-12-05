@@ -56,20 +56,9 @@ namespace Aura_OS.System
         /// </summary>
         public void InitSetup()
         {           
-            if(FileSystem() == "false")
-            {
+
                 RunWithoutFS();
-            }
-            else if(FileSystem() == "true"){
-                Kernel.SystemExists = true;
-            }
-            else if(FileSystem() == "continue")
-            {
-                RegisterLanguage();
-                RegisterHostname();
-                RegisterUser();
-                Installation();
-            }           
+            
         }
 
         /// <summary>
@@ -214,6 +203,7 @@ namespace Aura_OS.System
             Kernel.SystemExists = false;
             Kernel.userLogged = "root";
             Kernel.Logged = true;
+            Kernel.running = true;
         }
 
         /// <summary>

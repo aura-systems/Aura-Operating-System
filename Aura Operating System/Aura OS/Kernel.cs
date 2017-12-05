@@ -82,30 +82,7 @@ namespace Aura_OS
 
             setup.InitSetup();
 
-            if (SystemExists)
-            {
-                if (!JustInstalled)
-                {
-
-                    Settings.LoadValues();
-                    langSelected = Settings.GetValue("language");
-
-                    #region Language
-
-                    Lang.Keyboard.Init();
-
-                    #endregion
-
-                    Info.getComputerName();
-
-                    running = true;
-
-                }
-            }
-            else
-            {
-                running = true;
-            }
+            
         }
 
         #endregion
