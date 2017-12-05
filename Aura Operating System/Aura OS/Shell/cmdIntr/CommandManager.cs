@@ -188,6 +188,11 @@ namespace Aura_OS.Shell.cmdIntr
                NetworkStack.ConfigIP(nic, myConfig);
                nic.Enable();
                 
+               while(true)
+               {
+                   NetworkStack.Update();
+               }
+                
                 //PCIDevice device;
                 //device = PCI.GetDevice(0x1022, 0x2000);
 
