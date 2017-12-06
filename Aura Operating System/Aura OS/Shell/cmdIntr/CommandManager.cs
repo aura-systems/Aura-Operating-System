@@ -178,9 +178,9 @@ namespace Aura_OS.Shell.cmdIntr
                 Console.WriteLine("Finding network devices...");
                 Cosmos.HAL.Drivers.PCI.Network.AMDPCNetII.FindAll();
 
-                NetworkDevice nic = NetworkDevice.Devices[0];
+                Cosmos.HAL.Drivers.PCI.Network.AMDPCNetII nic = new Cosmos.HAL.Drivers.PCI.Network.AMDPCNetII(PCI.GetDevice(0x1022, 0x2000));
 
-                IPv4.Address myIP = new IPv4.Address(192, 168, 1, 51);
+                IPv4.Address myIP = new IPv4.Address(192, 168, 1, 26);
                 IPv4.Address mySubnet = new IPv4.Address(255, 255, 255, 0);
                 IPv4.Address myGateway = new IPv4.Address(192, 168, 1, 1);
                 IPv4.Config myConfig = new IPv4.Config(myIP, mySubnet, myGateway);
