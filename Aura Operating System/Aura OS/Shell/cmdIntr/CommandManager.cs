@@ -4,6 +4,8 @@
 * PROGRAMMER(S):    John Welsh <djlw78@gmail.com>
 */
 
+using System;
+
 namespace Aura_OS.Shell.cmdIntr
 {
     class CommandManager
@@ -178,6 +180,26 @@ namespace Aura_OS.Shell.cmdIntr
             else if (cmd.StartsWith("md5"))
             {
                 Tools.MD5.c_MD5(cmd);
+            }
+
+            #endregion
+
+        #region BatchCommands
+            
+            else if (cmd.StartsWith("echo "))
+            {
+                string value = cmd.Remove(0, 5);
+
+                if((value == "off") || (value == "on"))
+                {
+                    //we don't have this feature on Aura,
+                    //but we can handle it to prevent to return on or off 
+                    //on the console :-)
+                }
+                else
+                {
+                    Console.WriteLine(value);
+                }
             }
 
         #endregion
