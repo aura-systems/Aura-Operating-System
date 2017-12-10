@@ -113,10 +113,18 @@ namespace Aura_OS.Shell.cmdIntr
             {
                 FileSystem.Run.c_Run(cmd);
             }
+            else if (cmd.Equals("chdir"))
+            {
+                FileSystem.Chdir.CurrentDirectory();
+            }
+            else if (cmd.StartsWith("chdir "))
+            {
+                FileSystem.Chdir.c_Chdir(cmd);
+            }
 
-        #endregion FileSystem
+            #endregion FileSystem
 
-        #region Settings
+            #region Settings
 
             else if (cmd.Equals("logout"))
             {
