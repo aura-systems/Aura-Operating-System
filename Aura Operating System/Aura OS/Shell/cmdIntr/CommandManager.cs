@@ -186,9 +186,17 @@ namespace Aura_OS.Shell.cmdIntr
 
         #region BatchCommands
             
-            else if (cmd.StartsWith("echo "))
+            else if ((cmd.StartsWith("echo ")) || (cmd.StartsWith("@echo ")))
             {
-                string value = cmd.Remove(0, 5);
+                string value;
+                if (cmd.Contains("@echo"))
+                {
+                    value = cmd.Remove(0, 6);
+                }                
+                else
+                {
+                    value = cmd.Remove(0, 5);
+                }
 
                 if((value == "off") || (value == "on"))
                 {
