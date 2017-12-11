@@ -189,11 +189,15 @@ namespace Aura_OS.Shell.cmdIntr
             {
                 Tools.MD5.c_MD5(cmd);
             }
+            else if (cmd.Equals("bug"))
+            {
+                Tools.Bug.c_Bug();
+            }
 
             #endregion
 
-        #region BatchCommands
-            
+            #region BatchCommands
+
             else if ((cmd.StartsWith("echo ")) || (cmd.StartsWith("@echo ")))
             {
                 string value;
@@ -218,9 +222,9 @@ namespace Aura_OS.Shell.cmdIntr
                 }
             }
 
-        #endregion
+            #endregion
 
-        #region Util           
+            #region Util           
 
             else
             {
