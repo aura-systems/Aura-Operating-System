@@ -5,6 +5,8 @@
 */
 
 using Aura_OS.Apps.User;
+using System;
+using System.IO;
 
 namespace Aura_OS.Shell.cmdIntr
 {
@@ -161,9 +163,19 @@ namespace Aura_OS.Shell.cmdIntr
                 Tests.Crash.c_Crash();
             }
 
-        #endregion Tests
+            else if (cmd.StartsWith("print "))
+            {
+                string file = cmd.Remove(0, 6);
 
-        #region Util
+                foreach (string line in File.ReadAllLines("0:\\" + file))
+                {
+                    Console.WriteLine(line);
+                }
+            }
+
+            #endregion Tests
+
+            #region Util
 
             else if (cmd.Equals("snake"))
             {
