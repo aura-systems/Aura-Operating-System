@@ -182,11 +182,18 @@ namespace Aura_OS.Apps.User
                 if ((Console.CursorTop > 1))
                 {
                     Console.CursorTop = Console.CursorTop - 1;
-                    //lines.Remove(linecounter);
+
                     int cursorleft = lines.Values[linecounter - 1].Length;
                     Console.CursorLeft = Console.CursorLeft + cursorleft;
                     pointer = cursorleft;
                     linecounter--;
+
+                    string previouslines = lines.Values[linecounter];
+                    lines.Values.RemoveAt(lines.Keys[linecounter]);
+                    lines.Keys.RemoveAt(lines.Keys[linecounter]);
+
+                    cleanArray(line);
+                    line = previouslines.ToCharArray();
                 }
             }
         }

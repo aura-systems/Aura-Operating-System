@@ -47,6 +47,23 @@ namespace Aura_OS.System.Utils
             Values.Add(value);
         }
 
+        public TKey[] GetKeys()
+        {
+            return Keys.ToArray();
+        }
+
+        public TValue[] GetValues()
+        {
+            return Values.ToArray();
+        }
+
+        public TKey GetKeyByValue(TValue value)
+        {
+            var x = Values.IndexOf(value);
+            var x_ = Keys[x];
+            return x_;
+        }
+
         public void Remove(TKey key)
         {
             int index = Keys.IndexOf(key);
@@ -77,5 +94,6 @@ namespace Aura_OS.System.Utils
         {
             return ((IEnumerable)Keys).GetEnumerator();
         }
+
     }
 }
