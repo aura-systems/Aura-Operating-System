@@ -82,6 +82,7 @@
     <Folder Include="System\Translation\" />
     <Folder Include="System\Translation\Text\" />
     <Folder Include="System\Users\" />
+    <Folder Include="System\Utils\" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Cosmos.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=5ae71220097cb983">
