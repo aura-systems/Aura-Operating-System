@@ -46,6 +46,8 @@ namespace Aura_OS.System.Translation
                     Console.WriteLine("Commandes disponibles (2/2):");
                     Console.WriteLine("- time (récupère la date et l'heure)");
                     Console.WriteLine("- ipconfig (affiche les informations réseau)");
+                    Console.WriteLine("- snake (lance le jeu Snake)");
+                    Console.WriteLine("- md5 (affiche le hash des arguments)");
 
                     Console.ReadKey();
 
@@ -73,12 +75,14 @@ namespace Aura_OS.System.Translation
                     Console.WriteLine("- settings {args} (access to settings)");
                     Console.WriteLine("- logout (to disconnect)");
                     
-                    Console.ReadKey(); //page 2
+                    Console.ReadKey(); //page 2 (19 elements per page)
 
                     Console.WriteLine();
                     Console.WriteLine("Available commands (2/2):");
                     Console.WriteLine("- time (to get time and date)");
                     Console.WriteLine("- ipconfig (to get network information)");
+                    Console.WriteLine("- snake (launch the game Snake)");
+                    Console.WriteLine("- md5 (to display hash of arguments)");
 
                     Console.ReadKey();
 
@@ -95,20 +99,24 @@ namespace Aura_OS.System.Translation
             {
                 case "fr_FR":
                     Console.WriteLine("Commandes disponible:");
-                    Console.WriteLine("- adduser (pour créer un compte)");
+                    Console.WriteLine("- adduser {user} {pass} (pour créer un compte)");
+                    Console.WriteLine("- remuser {user} (pour supprimer un compte)");
+                    Console.WriteLine("- passuser {user} {pass} (pour changer le mot de passe)");
                     Console.WriteLine("- setcomputername (pour changer le nom de l'ordinateur)");
                     Console.WriteLine("- setlang {lang} (pour changer la langue du système)");
-                    Console.WriteLine("- backgroundcolor {colorID} (permet de changer la couleur de dernier plan)");
-                    Console.WriteLine("- textcolor {colorID} (permet de changer la couleur de premier plan)");
+                    //Console.WriteLine("- backgroundcolor {colorID} (permet de changer la couleur de dernier plan)");
+                    //Console.WriteLine("- textcolor {colorID} (permet de changer la couleur de premier plan)");
                     break;
 
                 case "en_US":
                     Console.WriteLine("Available commands:");
-                    Console.WriteLine("- adduser (to create an account)");
+                    Console.WriteLine("- adduser {user} {pass} (to create an account)");
+                    Console.WriteLine("- remuser {user} (to remove an account)");
+                    Console.WriteLine("- passuser {user} {pass} (to change password)");
                     Console.WriteLine("- setcomputername (to change the computer name)");
                     Console.WriteLine("- setlang {lang} (to change the system language)");
-                    Console.WriteLine("- backgroundcolor {colorID} (to change background color)");
-                    Console.WriteLine("- textcolor {colorID} (to change foreground colour)");
+                    //Console.WriteLine("- backgroundcolor {colorID} (to change background color)");
+                    //Console.WriteLine("- textcolor {colorID} (to change foreground colour)");
                     break;
             }
         }

@@ -7,6 +7,7 @@
 using System.IO;
 using System;
 using Aura_OS.System.Translation;
+using Aura_OS.System.Utils;
 
 namespace Aura_OS.System.Computer
 {
@@ -19,15 +20,16 @@ namespace Aura_OS.System.Computer
         /// <returns></returns>
         public static string getComputerName()
         {
-            if (File.Exists(@"0:\System\computer.nam"))
+            try
             {
-                Kernel.ComputerName = File.ReadAllText(@"0:\System\computer.nam");
-                return Kernel.ComputerName;
+                Settings.LoadValues();
+                string hostname = Settings.GetValue("hostname");
+                Kernel.ComputerName = hostname;
+                return hostname;
             }
-            else
+            catch
             {
-                setComputerName("Aura-PC");
-                return "Aura-PC";
+                return "aura-pc";
             }
         }
 
@@ -37,18 +39,10 @@ namespace Aura_OS.System.Computer
         /// <param name="name"></param>
         public static void setComputerName(string name)
         {
-            if (File.Exists(@"0:\System\computer.nam"))
-            {
-                File.Delete(@"0:\System\computer.nam");
-                File.Create(@"0:\System\computer.nam");
-                File.WriteAllText(@"0:\System\computer.nam", name);
-            }
-            else
-            {
-                File.Create(@"0:\System\computer.nam");
-                File.WriteAllText(@"0:\System\computer.nam", name);
-
-            }
+            Settings.LoadValues();
+            Settings.EditValue("hostname", name);
+            Settings.PushValues();
+            Kernel.ComputerName = name;
         }
 
         /// <summary>
@@ -62,7 +56,7 @@ namespace Aura_OS.System.Computer
             Text.Display("computernamename");
             var computername = Console.ReadLine();
 
-            if((computername.Length >= 1) && (computername.Length <= 15)) //15 char max for NETBIOS name resolution (dns)
+            if ((computername.Length >= 1) && (computername.Length <= 15)) //15 char max for NETBIOS name resolution (dns)
             {
                 setComputerName(computername);
                 Console.WriteLine();
@@ -75,22 +69,31 @@ namespace Aura_OS.System.Computer
                 Text.Display("computernameincorrect");
                 Console.WriteLine();
                 AskComputerName();
-            }  
+            }
         }
 
+        /// <summary>
+        /// Method to get the amount of RAM.
+        /// </summary>
         public static string GetAmountRAM()
         {
             return Cosmos.Core.CPU.GetAmountOfRAM() + "MB";
         }
 
-        public static string GetMACAdress()
+        /// <summary>
+        /// Display the MAC address.
+        /// </summary>
+        public static string GetMACAddress()
         {
             return Cosmos.HAL.Network.MACAddress.Broadcast + "";
         }
 
-        public static string GetIPAdress()
+        /// <summary>
+        /// Display local IP Address.
+        /// </summary>
+        public static string GetIPAddress()
         {
-            throw new NotImplementedException();
+            return "0.0.0.0/0";
         }
     }
 }

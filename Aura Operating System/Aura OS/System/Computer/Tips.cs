@@ -1,7 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Text;
+﻿/*
+* PROJECT:          Aura Operating System Development
+* CONTENT:          Tips
+* PROGRAMMERS:      Alexy DA CRUZ <dacruzalexy@gmail.com>
+*/
 
 namespace Aura_OS.System.Computer
 {
@@ -14,12 +15,10 @@ namespace Aura_OS.System.Computer
 
         public static void Disable()
         {
-
         }
 
         public static void Enable()
         {
-
         }
 
     }

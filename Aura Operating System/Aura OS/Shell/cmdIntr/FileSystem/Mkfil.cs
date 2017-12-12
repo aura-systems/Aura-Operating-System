@@ -52,7 +52,7 @@ namespace Aura_OS.Shell.cmdIntr.FileSystem
             }
             else
             {
-                L.Text.Display("alreadyexist");
+                L.Text.Display("alreadyexist", file);
             }
         }
     }
