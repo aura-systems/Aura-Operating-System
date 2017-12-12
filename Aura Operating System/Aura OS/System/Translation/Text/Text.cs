@@ -153,7 +153,7 @@ namespace Aura_OS.System.Translation
                             Console.WriteLine("'" + arg + "' a bien été sauvegardé dans '" + arg2 + "' !");
                             break;
                         case "menuliquideditor":
-                            Console.Write("[F1]Sauvegarder  [F2]Nouveau  [ESC]Quitter\n");
+                            Console.Write("[F1]Sauvegarder  [F2]Nouveau  [F3]Paramètres  [ESC]Quitter\n");
                             break;
                         case "list":
                             Console.WriteLine(" Liste: " + arg + "\n");
@@ -389,7 +389,7 @@ namespace Aura_OS.System.Translation
                             Console.WriteLine("'" + arg + "' has been saved in '" + arg2 + "' !");
                             break;
                         case "menuliquideditor":
-                            Console.Write("[F1]Save  [F2]New  [ESC]Exit\n");
+                            Console.Write("[F1]Save  [F2]New  [F2]Settings  [ESC]Exit\n");
                             break;
                         case "list":
                             Console.WriteLine(" List: " + arg + "\n");

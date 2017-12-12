@@ -8,14 +8,12 @@
 using System;
 using System.IO;
 using Aura_OS.System.Translation;
-using Cosmos.Debug.Kernel;
+using Aura_OS.System.Drawable;
 
 namespace Aura_OS.Apps.User
 {
     class Editor
     {
-
-        public static readonly Debugger mDebugger = new Debugger("System", "Editor");
 
         public static string prgm_version = "0.3";
         char[] line = new char[80]; int pointer = 0;
@@ -101,7 +99,12 @@ namespace Aura_OS.Apps.User
                     filepath(Kernel.current_directory);
                     break;
                 }
-                    switch (c.Key)
+                else if (c.Key == ConsoleKey.F3)
+                {
+                    drawSettings();
+                    break;
+                }
+                switch (c.Key)
                 {
                     case ConsoleKey.Home: break;
                     case ConsoleKey.PageUp: break;
@@ -130,6 +133,95 @@ namespace Aura_OS.Apps.User
                 }
             }
             Console.Clear();
+        }
+
+        static int x = Console.CursorLeft;
+        static int y = Console.CursorTop;
+
+        private string drawSettings()
+        {
+            settingsMenu();
+            string[] item = { "C", "C#", "ASM", "None" };
+            int language = Menu.GenericMenu(item, Settings);
+            if (language == 0)
+            {
+                return "C";
+            }
+            else if (language == 1)
+            {
+                return "C#";
+            }
+            else if (language == 2)
+            {
+                return "ASM";
+            }
+            else
+            {
+                return "none";
+            }
+        }
+
+        static void Settings()
+        {
+            Console.BackgroundColor = ConsoleColor.Blue;
+            Console.SetCursorPosition(8, 11);
+            Console.WriteLine("║                                                              ║");
+            Console.SetCursorPosition(x, y);
+
+            Console.SetCursorPosition(8, 12);
+            Console.WriteLine("║                                                              ║");
+            Console.SetCursorPosition(x, y);
+
+            Console.SetCursorPosition(8, 13);
+            Console.WriteLine("║                                                              ║");
+            Console.SetCursorPosition(x, y);
+
+            Console.SetCursorPosition(8, 14);
+            Console.WriteLine("║                                                              ║");
+            Console.SetCursorPosition(x, y);
+
+            Console.SetCursorPosition(8, 15);
+            Console.WriteLine("║                                                              ║");
+            Console.SetCursorPosition(x, y);
+            Console.BackgroundColor = ConsoleColor.Black;
+        }
+
+        private void settingsMenu()
+        {
+            Console.BackgroundColor = ConsoleColor.Blue;
+            Console.SetCursorPosition(8, 8);
+            Console.WriteLine("╔══════════════════════════════════════════════════════════════╗");
+            Console.SetCursorPosition(x, y);
+            Console.SetCursorPosition(8, 9);
+            Console.WriteLine("║ Settings                                                     ║");
+            Console.SetCursorPosition(x, y);
+            Console.SetCursorPosition(8, 10);
+            Console.WriteLine("╠══════════════════════════════════════════════════════════════╣");
+
+            Console.SetCursorPosition(8, 11);
+            Console.WriteLine("║ Programming language:                                        ║");
+            Console.SetCursorPosition(x, y);
+
+            Console.SetCursorPosition(8, 12);
+            Console.WriteLine("║                                                              ║");
+            Console.SetCursorPosition(x, y);
+
+            Console.SetCursorPosition(8, 13);
+            Console.WriteLine("║                                                              ║");
+            Console.SetCursorPosition(x, y);
+
+            Console.SetCursorPosition(8, 14);
+            Console.WriteLine("║                                                              ║");
+            Console.SetCursorPosition(x, y);
+
+            Console.SetCursorPosition(8, 15);
+            Console.WriteLine("║                                                              ║");
+            Console.SetCursorPosition(x, y);
+
+            Console.SetCursorPosition(8, 16);
+            Console.WriteLine("╚══════════════════════════════════════════════════════════════╝");
+            Console.SetCursorPosition(x, y);
+            Console.BackgroundColor = ConsoleColor.Black;
         }
 
         private string concatString(string[] s)
@@ -168,10 +260,10 @@ namespace Aura_OS.Apps.User
             switch (Kernel.langSelected)
             {
                 case "fr_FR":
-                    Console.Write("Liquid Editor v" + prgm_version + "                    ");
+                    Console.Write("Liquid Editor v" + prgm_version + "    ");
                     break;
                 case "en_US":
-                    Console.Write("Liquid Editor v" + prgm_version + "                                  ");
+                    Console.Write("Liquid Editor v" + prgm_version + "                    ");
                     break;
             }
             Console.ForegroundColor = ConsoleColor.Blue;
