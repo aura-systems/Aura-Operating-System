@@ -24,8 +24,9 @@ namespace Aura_OS.Shell
             {
                 if (!dir.StartsWith("."))
                 {
-                    Color.DisplayTextColor("6");
+                    Console.ForegroundColor = ConsoleColor.Yellow;
                     Console.Write(dir + "\t");
+                    Console.ForegroundColor = ConsoleColor.White;
                 }
             }
         }
@@ -36,14 +37,7 @@ namespace Aura_OS.Shell
         /// <param name="directory"></param>
         public static void DispHiddenDirectories(string directory)
         {
-            //foreach (string dir in Directory.GetDirectories(directory))
-            //{
-            //  Color.DisplayTextColor("6");
-            //  Console.Write(dir + "\t");
-            //}
-
             throw new NotImplementedException();
-            //Cosmos doesn't support directories with a dot in it. :/ (FAT problem)
         }
 
         /// <summary>
@@ -61,15 +55,23 @@ namespace Aura_OS.Shell
                 //display file that doesn't have a dot before the name.
                 if (!file.StartsWith("."))
                 {
-                    if ((lastext == "set") || (lastext == "nam") || (lastext == "usr"))
+                    if (lastext == "conf")
                     {
-                        Color.DisplayTextColor("4");
+                        Console.ForegroundColor = ConsoleColor.Red;
                         Console.Write(file + "\t");
+                        Console.ForegroundColor = ConsoleColor.White;
+                    }
+                    else if (file.StartsWith("passwd"))
+                    {
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.Write(file + "\t");
+                        Console.ForegroundColor = ConsoleColor.White;
                     }
                     else
                     {
-                        Color.DisplayTextColor("1");
+                        Console.ForegroundColor = ConsoleColor.Blue;
                         Console.Write(file + "\t");
+                        Console.ForegroundColor = ConsoleColor.White;
                     }
                 }
             }
@@ -87,19 +89,26 @@ namespace Aura_OS.Shell
                 string[] ext = file.Split(formatDot);
                 string lastext = ext[ext.Length - 1];
 
-                if ((lastext == "set") || (lastext == "nam") || (lastext == "usr"))
+                if (lastext == "conf")
                 {
-                    Color.DisplayTextColor("4");
+                    Console.ForegroundColor = ConsoleColor.Red;
                     Console.Write(file + "\t");
+                    Console.ForegroundColor = ConsoleColor.White;
+                }
+                else if (file.StartsWith("passwd"))
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.Write(file + "\t");
+                    Console.ForegroundColor = ConsoleColor.White;
                 }
                 else if (file.StartsWith("."))
                 {
-                    Color.DisplayTextColor("5");
+                    Console.ForegroundColor = ConsoleColor.Magenta;
                     Console.Write(file + "\t");
+                    Console.ForegroundColor = ConsoleColor.White;
                 }
                 else
                 {
-                    Color.DisplayTextColor("1");
                     Console.Write(file + "\t");
                 }
             }

@@ -4,27 +4,27 @@
   </PropertyGroup>
   <PropertyGroup>
     <BinFormat>elf</BinFormat>
-    <Profile>VMware</Profile>
-    <DebugEnabled>True</DebugEnabled>
+    <Profile>ISO</Profile>
+    <DebugEnabled>False</DebugEnabled>
     <DebugMode>Source</DebugMode>
     <TraceMode>User</TraceMode>
     <EnableGDB>False</EnableGDB>
     <StartCosmosGDB>false</StartCosmosGDB>
-    <VMWareEdition>Workstation</VMWareEdition>
+    <VMWareEdition>Player</VMWareEdition>
     <OutputPath>bin\Debug\</OutputPath>
-    <Description>Use VMware Player or Workstation to deploy and debug.</Description>
+    <Description>Creates a bootable ISO image which can be burned to a DVD. After running the selected project, an explorer window will open containing the ISO file. The ISO file can then be burned to a CD or DVD and used to boot a physical or virtual system.</Description>
     <Deployment>ISO</Deployment>
-    <Launch>VMware</Launch>
+    <Launch>None</Launch>
     <VisualStudioDebugPort>Pipe: Cosmos\Serial</VisualStudioDebugPort>
     <PxeInterface>192.168.68.1</PxeInterface>
     <VMware_Description>Use VMware Player or Workstation to deploy and debug.</VMware_Description>
     <VMware_Deployment>ISO</VMware_Deployment>
     <VMware_Launch>VMware</VMware_Launch>
-    <VMware_DebugEnabled>True</VMware_DebugEnabled>
+    <VMware_DebugEnabled>False</VMware_DebugEnabled>
     <VMware_DebugMode>Source</VMware_DebugMode>
     <VMware_VisualStudioDebugPort>Pipe: Cosmos\Serial</VMware_VisualStudioDebugPort>
     <VMware_PxeInterface>192.168.68.1</VMware_PxeInterface>
-    <VMware_VMwareEdition>Workstation</VMware_VMwareEdition>
+    <VMware_VMwareEdition>Player</VMware_VMwareEdition>
     <VMware_OutputPath>bin\Debug\net462\</VMware_OutputPath>
     <VMware_EnableGDB>False</VMware_EnableGDB>
     <VMware_StartCosmosGDB>false</VMware_StartCosmosGDB>
@@ -57,6 +57,19 @@
     <Name>Aura_OSBoot</Name>
     <VMware_Name>Aura_OSBoot</VMware_Name>
     <ISO_Name>Aura_OSBoot</ISO_Name>
+    <PXE_StackCorruptionDetectionEnabled>True</PXE_StackCorruptionDetectionEnabled>
+    <PXE_Name>Aura_OSBoot</PXE_Name>
+    <PXE_Description>Creates a PXE setup and hosts a DCHP and TFTP server to deploy directly to physical hardware. Allows debugging with a serial cable.</PXE_Description>
+    <PXE_Deployment>PXE</PXE_Deployment>
+    <PXE_Launch>None</PXE_Launch>
+    <PXE_DebugEnabled>False</PXE_DebugEnabled>
+    <PXE_DebugMode>Source</PXE_DebugMode>
+    <PXE_VisualStudioDebugPort>Pipe: Cosmos\Serial</PXE_VisualStudioDebugPort>
+    <PXE_PxeInterface>192.168.68.1</PXE_PxeInterface>
+    <PXE_VMwareEdition>Player</PXE_VMwareEdition>
+    <PXE_OutputPath>bin\Debug\net462\</PXE_OutputPath>
+    <PXE_EnableGDB>False</PXE_EnableGDB>
+    <PXE_StartCosmosGDB>false</PXE_StartCosmosGDB>
   </PropertyGroup>
   <ItemGroup>
     <None Remove="*" />
@@ -66,6 +79,7 @@
     <Folder Include="Apps\" />
     <Folder Include="Apps\System\" />
     <Folder Include="Apps\User\" />
+    <Folder Include="Core\" />
     <Folder Include="Shell\" />
     <Folder Include="Shell\cmdIntr\" />
     <Folder Include="Shell\cmdIntr\c_Console\" />
@@ -74,6 +88,8 @@
     <Folder Include="Shell\cmdIntr\Settings\" />
     <Folder Include="Shell\cmdIntr\SystemInfomation\" />
     <Folder Include="Shell\cmdIntr\Tests\" />
+    <Folder Include="Shell\cmdIntr\Tools\" />
+    <Folder Include="Shell\cmdIntr\Users\" />
     <Folder Include="Shell\cmdIntr\Util\" />
     <Folder Include="System\" />
     <Folder Include="System\Computer\" />

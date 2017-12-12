@@ -1,4 +1,4 @@
-﻿/*
+/*
 * PROJECT:          Aura Operating System Development
 * CONTENT:          Command Interpreter - CommandManager
 * PROGRAMMER(S):    John Welsh <djlw78@gmail.com>
@@ -132,6 +132,14 @@ namespace Aura_OS.Shell.cmdIntr
             {
                 Settings.Settings.c_Settings(cmd);
             }
+            else if (cmd.StartsWith("passwd "))
+            {
+                Settings.Passwd.c_Passwd(cmd);
+            }
+            else if (cmd.Equals("passwd"))
+            {
+                Settings.Passwd.c_Passwd(Kernel.userLogged);
+            }
 
         #endregion Settings
 
@@ -154,7 +162,7 @@ namespace Aura_OS.Shell.cmdIntr
                 SystemInfomation.Time.c_Time();
             }
 
-            #endregion System Infomation
+        #endregion System Infomation
 
         #region Tests
 
@@ -175,13 +183,20 @@ namespace Aura_OS.Shell.cmdIntr
 
             #endregion Tests
 
-            #region Util
+        #region Tools
 
             else if (cmd.Equals("snake"))
             {
-                PrgmSnake prgm = new PrgmSnake();
-                prgm.Run();
+                Tools.Snake.c_Snake();
             }
+            else if (cmd.StartsWith("md5"))
+            {
+                Tools.MD5.c_MD5(cmd);
+            }
+
+        #endregion
+
+        #region Util           
 
             else
             {

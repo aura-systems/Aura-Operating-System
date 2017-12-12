@@ -40,7 +40,7 @@ namespace Aura_OS.Shell.cmdIntr.FileSystem
             }
             else
             {
-                L.Text.Display("doesnotexist");
+                L.Text.Display("doesnotexist", file);
             }
         }
     }

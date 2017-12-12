@@ -1,15 +1,17 @@
 ﻿/*
 * PROJECT:          Aura Operating System Development
-* CONTENT:          Command Interpreter - Rmdir
+* CONTENT:          Command Interpreter - Mkdir
 * PROGRAMMER(S):    John Welsh <djlw78@gmail.com>
 */
 
+using Aura_OS.Apps.User;
+using System;
 using System.IO;
 using L = Aura_OS.System.Translation;
 
-namespace Aura_OS.Shell.cmdIntr.FileSystem
+namespace Aura_OS.Shell.cmdIntr.Tools
 {
-    class Rmdir
+    class Snake
     {
         private static string HelpInfo = "";
 
@@ -22,29 +24,22 @@ namespace Aura_OS.Shell.cmdIntr.FileSystem
             set { HelpInfo = value; /*PUSHED OUT VALUE (in)*/}
         }
 
-
         /// <summary>
         /// Empty constructor. (Good for debug)
         /// </summary>
-        public Rmdir() { }
+        public Snake() { }
 
         /// <summary>
-        /// c = commnad, c_Rmdir
+        /// c = command, c_Mkdir
         /// </summary>
+        /// <param name="Snake">The file you wish to create.</param>
         /// <param name="startIndex">The start index for remove.</param>
         /// <param name="count">The count index for remove.</param>
-        public static void c_Rmdir(string rmdir, short startIndex = 0, short count = 6)
+        public static void c_Snake()
         {
-            string dir = rmdir.Remove(startIndex, count);
-            if (Directory.Exists(Kernel.current_directory + dir))
-            {
-                Directory.Delete(Kernel.current_directory + dir, true);
-            }
-            else
-            {
-                L.Text.Display("doesnotexist", dir);
-            }
-        }
+            PrgmSnake prgm = new PrgmSnake();
+            prgm.Run();
 
+        }
     }
 }

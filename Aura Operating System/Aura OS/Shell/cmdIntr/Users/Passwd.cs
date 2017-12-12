@@ -1,15 +1,15 @@
 ﻿/*
 * PROJECT:          Aura Operating System Development
-* CONTENT:          Command Interpreter - Rmdir
+* CONTENT:          Command Interpreter - CD
 * PROGRAMMER(S):    John Welsh <djlw78@gmail.com>
 */
 
 using System.IO;
-using L = Aura_OS.System.Translation;
+using Aura_OS.System.Users;
 
-namespace Aura_OS.Shell.cmdIntr.FileSystem
+namespace Aura_OS.Shell.cmdIntr.Users
 {
-    class Rmdir
+    class Passwd
     {
         private static string HelpInfo = "";
 
@@ -22,29 +22,21 @@ namespace Aura_OS.Shell.cmdIntr.FileSystem
             set { HelpInfo = value; /*PUSHED OUT VALUE (in)*/}
         }
 
-
         /// <summary>
         /// Empty constructor. (Good for debug)
         /// </summary>
-        public Rmdir() { }
+        public Passwd() { }
 
         /// <summary>
-        /// c = commnad, c_Rmdir
+        /// c = commnad, c_CD
         /// </summary>
+        /// <param name="user">The directory you wish to pass in</param>
         /// <param name="startIndex">The start index for remove.</param>
         /// <param name="count">The count index for remove.</param>
-        public static void c_Rmdir(string rmdir, short startIndex = 0, short count = 6)
+        public static void c_Passwd(string user, short startIndex = 0, short count = 3)
         {
-            string dir = rmdir.Remove(startIndex, count);
-            if (Directory.Exists(Kernel.current_directory + dir))
-            {
-                Directory.Delete(Kernel.current_directory + dir, true);
-            }
-            else
-            {
-                L.Text.Display("doesnotexist", dir);
-            }
+            string dir = user.Remove(startIndex, count);
+            
         }
-
     }
 }
