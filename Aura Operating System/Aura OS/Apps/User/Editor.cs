@@ -37,8 +37,6 @@ namespace Aura_OS.Apps.User
             Start(filename, currentdirectory, false);
         }
 
-        public static bool firstread;
-
         internal void Start(string filename, string currentdirectory, bool exists)
         {
             Console.Clear();
@@ -47,7 +45,6 @@ namespace Aura_OS.Apps.User
 
             if (exists)
             {
-                firstread = true;
                 string[] file = File.ReadAllLines(currentdirectory + filename);
 
                 foreach (string value in file)
@@ -55,10 +52,8 @@ namespace Aura_OS.Apps.User
                     line = value.ToCharArray();
                     Console.Write(line);
                     lines.Add(linecounter++, new string(line).TrimEnd()); cleanArray(line); Console.CursorLeft = 0; Console.CursorTop++; pointer = 0;
-                    mDebugger.Send("line : " + linecounter);
                 }
             }
-
             
             ConsoleKeyInfo c; cleanArray(line);
             while ((c = Console.ReadKey(true)) != null)
@@ -198,15 +193,12 @@ namespace Aura_OS.Apps.User
             {
                 if ((Console.CursorTop > 1))
                 {
-
                     Console.CursorTop = Console.CursorTop - 1;
-
                     int cursorleft = lines.Values[linecounter - 1].Length;
                     Console.CursorLeft = Console.CursorLeft + cursorleft;
                     pointer = cursorleft;
-                    linecounter--;
 
-                    
+                    linecounter--;
 
                     string previouslines = lines.Values[linecounter];
                     lines.Values.RemoveAt(lines.Keys[linecounter]);
@@ -214,13 +206,6 @@ namespace Aura_OS.Apps.User
 
                     cleanArray(line);
                     line = previouslines.ToCharArray();
-
-                    firstread = false;
-                    foreach (string eee in lines.Values)
-                    {
-                        mDebugger.Send(eee + " | line : " + linecounter);
-                    }
-                    
                 }
             }
         }
