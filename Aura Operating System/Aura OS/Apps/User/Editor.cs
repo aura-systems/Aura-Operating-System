@@ -8,11 +8,15 @@
 using System;
 using System.IO;
 using Aura_OS.System.Translation;
+using Cosmos.Debug.Kernel;
 
 namespace Aura_OS.Apps.User
 {
     class Editor
     {
+
+        public static readonly Debugger mDebugger = new Debugger("System", "Editor");
+
         public static string prgm_version = "0.3";
         char[] line = new char[80]; int pointer = 0;
         string[] final;
@@ -33,6 +37,8 @@ namespace Aura_OS.Apps.User
             Start(filename, currentdirectory, false);
         }
 
+        public static bool firstread;
+
         internal void Start(string filename, string currentdirectory, bool exists)
         {
             Console.Clear();
@@ -41,6 +47,7 @@ namespace Aura_OS.Apps.User
 
             if (exists)
             {
+                firstread = true;
                 string[] file = File.ReadAllLines(currentdirectory + filename);
 
                 foreach (string value in file)
@@ -48,6 +55,7 @@ namespace Aura_OS.Apps.User
                     line = value.ToCharArray();
                     Console.Write(line);
                     lines.Add(linecounter++, new string(line).TrimEnd()); cleanArray(line); Console.CursorLeft = 0; Console.CursorTop++; pointer = 0;
+                    mDebugger.Send("line : " + linecounter);
                 }
             }
 
@@ -190,6 +198,7 @@ namespace Aura_OS.Apps.User
             {
                 if ((Console.CursorTop > 1))
                 {
+
                     Console.CursorTop = Console.CursorTop - 1;
 
                     int cursorleft = lines.Values[linecounter - 1].Length;
@@ -197,12 +206,21 @@ namespace Aura_OS.Apps.User
                     pointer = cursorleft;
                     linecounter--;
 
+                    
+
                     string previouslines = lines.Values[linecounter];
                     lines.Values.RemoveAt(lines.Keys[linecounter]);
                     lines.Keys.RemoveAt(lines.Keys[linecounter]);
 
                     cleanArray(line);
                     line = previouslines.ToCharArray();
+
+                    firstread = false;
+                    foreach (string eee in lines.Values)
+                    {
+                        mDebugger.Send(eee + " | line : " + linecounter);
+                    }
+                    
                 }
             }
         }
