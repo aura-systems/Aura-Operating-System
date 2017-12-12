@@ -99,11 +99,11 @@ namespace Aura_OS.Apps.User
                     filepath(Kernel.current_directory);
                     break;
                 }
-                else if (c.Key == ConsoleKey.F3)
-                {
-                    drawSettings();
-                    break;
-                }
+                //else if (c.Key == ConsoleKey.F3)
+                //{
+                //    drawSettings();
+                //    break;
+                //}
                 switch (c.Key)
                 {
                     case ConsoleKey.Home: break;
