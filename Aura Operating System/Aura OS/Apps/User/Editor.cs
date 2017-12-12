@@ -6,22 +6,16 @@
 */
 
 using System;
-using System.Collections.Generic;
 using System.IO;
 using Aura_OS.System.Translation;
-using System.Linq;
 
 namespace Aura_OS.Apps.User
 {
     class Editor
     {
-        public static string prgm_version = "0.2";
+        public static string prgm_version = "0.3";
         char[] line = new char[80]; int pointer = 0;
-        //List<string> lines = new List<string>();
         string[] final;
-
-        int x = Console.CursorLeft;
-        int y = Console.CursorTop;
 
         Aura_OS.System.Utils.Dictionary<int, string> lines = new Aura_OS.System.Utils.Dictionary<int, string>();
         int linecounter = 0;
@@ -36,14 +30,28 @@ namespace Aura_OS.Apps.User
             Console.BackgroundColor = ConsoleColor.Black;
             Text.Display("filename");
             string filename = Console.ReadLine();
-            Start(filename, currentdirectory);
+            Start(filename, currentdirectory, false);
         }
 
-        internal void Start(string filename, string currentdirectory)
+        internal void Start(string filename, string currentdirectory, bool exists)
         {
             Console.Clear();
             drawTopBar();
             Console.SetCursorPosition(0, 1);
+
+            if (exists)
+            {
+                string[] file = File.ReadAllLines(currentdirectory + filename);
+
+                foreach (string value in file)
+                {
+                    line = value.ToCharArray();
+                    Console.Write(line);
+                    lines.Add(linecounter++, new string(line).TrimEnd()); cleanArray(line); Console.CursorLeft = 0; Console.CursorTop++; pointer = 0;
+                }
+            }
+
+            
             ConsoleKeyInfo c; cleanArray(line);
             while ((c = Console.ReadKey(true)) != null)
             {
@@ -61,12 +69,16 @@ namespace Aura_OS.Apps.User
                     Console.BackgroundColor = ConsoleColor.Black;
 
                     lines.Add(linecounter++, new string(line).TrimEnd());
-                    //lines.Add();
 
                     final = lines.Values.ToArray();
 
                     string foo = concatString(final);
-                    File.Create(currentdirectory + filename);
+
+                    if (!exists)
+                    {
+                        File.Create(currentdirectory + filename);
+                    }
+
                     File.WriteAllText(currentdirectory + filename, foo); 
                     Console.ForegroundColor = ConsoleColor.Green;
                     int lastline = 0;
@@ -110,9 +122,6 @@ namespace Aura_OS.Apps.User
                     case ConsoleKey.Delete: deleteChar(); break;
                     case ConsoleKey.Enter:
                         lines.Add(linecounter++, new string(line).TrimEnd()); cleanArray(line); Console.CursorLeft = 0; Console.CursorTop++;  pointer = 0;
-                        //Console.SetCursorPosition(72, 24);
-                        //Console.WriteLine(linecounter + " lines");
-                        //Console.SetCursorPosition(x, y);
                         break;
                     default: line[pointer] = ch; pointer++; Console.Write(ch); break;
                 }

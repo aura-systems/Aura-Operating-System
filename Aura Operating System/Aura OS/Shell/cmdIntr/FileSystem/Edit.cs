@@ -39,7 +39,7 @@ namespace Aura_OS.Shell.cmdIntr.FileSystem
             if (File.Exists(Kernel.current_directory + file))
             {
                 Apps.User.Editor application = new Apps.User.Editor();
-                application.Start(file, Kernel.current_directory);
+                application.Start(file, Kernel.current_directory, true);
             }
             else
             {
