@@ -292,12 +292,11 @@ namespace Aura_OS.Apps.User
 
                     linecounter--;
 
-                    string previouslines = lines.Values[linecounter];
+                    cleanArray(line);
+                    line = lines.Values[linecounter].ToCharArray();
                     lines.Values.RemoveAt(lines.Keys[linecounter]);
                     lines.Keys.RemoveAt(lines.Keys[linecounter]);
 
-                    cleanArray(line);
-                    line = previouslines.ToCharArray();
                 }
             }
         }
