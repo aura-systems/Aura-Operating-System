@@ -23,7 +23,7 @@ namespace Aura_OS.Shell.cmdIntr
         public static void _CommandManger(string cmd)
         {
 
-        #region Power
+            #region Power
 
             if (cmd.Equals("shutdown"))
             {//NOTE: Why isn't it just the constructor? This leaves more room for <package>.<class>.HelpInfo;
@@ -34,9 +34,9 @@ namespace Aura_OS.Shell.cmdIntr
                 Power.Reboot.c_Reboot();
             }
 
-        #endregion Power
+            #endregion Power
 
-        #region Console
+            #region Console
 
             else if ((cmd.Equals("clear")) || (cmd.Equals("cls")))
             {
@@ -51,9 +51,9 @@ namespace Aura_OS.Shell.cmdIntr
                 System.Translation.Help._Help();
             }
 
-        #endregion Console
+            #endregion Console
 
-        #region FileSystem
+            #region FileSystem
 
             else if (cmd.StartsWith("cd "))
             {
@@ -112,9 +112,9 @@ namespace Aura_OS.Shell.cmdIntr
                 FileSystem.Run.c_Run(cmd);
             }
 
-        #endregion FileSystem
+            #endregion FileSystem
 
-        #region Settings
+            #region Settings
 
             else if (cmd.Equals("logout"))
             {
@@ -137,9 +137,9 @@ namespace Aura_OS.Shell.cmdIntr
                 Settings.Passwd.c_Passwd(Kernel.userLogged);
             }
 
-        #endregion Settings
+            #endregion Settings
 
-        #region System Infomation
+            #region System Infomation
 
             else if (cmd.Equals("systeminfo"))
             {
@@ -158,18 +158,25 @@ namespace Aura_OS.Shell.cmdIntr
                 SystemInfomation.Time.c_Time();
             }
 
-        #endregion System Infomation
+            #endregion System Infomation
 
-        #region Tests
+            #region Tests
 
             else if (cmd.Equals("crash"))
             {
                 Tests.Crash.c_Crash();
             }
 
-        #endregion Tests
+            else if (cmd.Equals("crashcpu"))
+            {
+                int value = 1;
+                value = value - 1;
+                int result = 1 / value; //Division by 0
+            }
 
-        #region Tools
+            #endregion Tests
+
+            #region Tools
 
             else if (cmd.Equals("snake"))
             {
@@ -180,16 +187,16 @@ namespace Aura_OS.Shell.cmdIntr
                 Tools.MD5.c_MD5(cmd);
             }
 
-        #endregion
+            #endregion
 
-        #region Util           
+            #region Util           
 
             else
             {
                 Util.CmdNotFound.c_CmdNotFound();
             }
 
-        #endregion Util
+            #endregion Util
 
         }
     }

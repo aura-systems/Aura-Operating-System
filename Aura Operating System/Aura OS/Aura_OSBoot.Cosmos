@@ -70,6 +70,19 @@
     <PXE_OutputPath>bin\Debug\net462\</PXE_OutputPath>
     <PXE_EnableGDB>False</PXE_EnableGDB>
     <PXE_StartCosmosGDB>false</PXE_StartCosmosGDB>
+    <IntelEdison_StackCorruptionDetectionEnabled>True</IntelEdison_StackCorruptionDetectionEnabled>
+    <IntelEdison_Name>Aura_OSBoot</IntelEdison_Name>
+    <IntelEdison_Description>Connect to Intel Edison device to deploy and debug.</IntelEdison_Description>
+    <IntelEdison_Deployment>BinaryImage</IntelEdison_Deployment>
+    <IntelEdison_Launch>IntelEdison</IntelEdison_Launch>
+    <IntelEdison_DebugEnabled>False</IntelEdison_DebugEnabled>
+    <IntelEdison_DebugMode>Source</IntelEdison_DebugMode>
+    <IntelEdison_VisualStudioDebugPort>Pipe: Cosmos\Serial</IntelEdison_VisualStudioDebugPort>
+    <IntelEdison_PxeInterface>192.168.68.1</IntelEdison_PxeInterface>
+    <IntelEdison_VMwareEdition>Player</IntelEdison_VMwareEdition>
+    <IntelEdison_OutputPath>bin\Debug\net462\</IntelEdison_OutputPath>
+    <IntelEdison_EnableGDB>False</IntelEdison_EnableGDB>
+    <IntelEdison_StartCosmosGDB>false</IntelEdison_StartCosmosGDB>
   </PropertyGroup>
   <ItemGroup>
     <None Remove="*" />
