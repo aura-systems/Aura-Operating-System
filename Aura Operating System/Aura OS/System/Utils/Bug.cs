@@ -20,7 +20,7 @@ namespace Aura_OS.System.Utils
             if (!Directory.Exists(@"0:\System"))
             {
                 IssuesNumber++;
-                Crash.StopKernel("Error 0x91: Aura is not installed anymore");
+                throw new Exception("Error 0x91: Aura is not installed anymore");
             }
             else if(!Directory.Exists(@"0:\Users"))
             {
@@ -30,7 +30,7 @@ namespace Aura_OS.System.Utils
             else if (!File.Exists(@"0:\System\settings.conf"))
             {
                 IssuesNumber++;
-                Crash.StopKernel("Error 0x92: Config file doesn't exist ! Need to be reinstalled.");
+                throw new Exception("Error 0x92: Config file doesn't exist ! Need to be reinstalled.");
             }
             
             if (IssuesNumber <= 0)
