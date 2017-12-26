@@ -25,6 +25,10 @@ namespace Aura_OS.Apps.System
                     string[] lines = File.ReadAllLines(filename);
                     foreach (string line in lines)
                     {
+                        if(line == "PAUSE")
+                        {
+                            return;
+                        }
                         Shell.cmdIntr.CommandManager._CommandManger(line);
                     }
                 }
