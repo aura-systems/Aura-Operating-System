@@ -46,6 +46,16 @@ namespace Aura_OS
 
         #region Before Run
 
+        public static bool ContainsVolumes()
+        {
+            var vols = vFS.GetVolumes();
+            foreach (var vol in vols)
+            {
+                return true;
+            }
+            return false;
+        }
+
         protected override void BeforeRun()
         {
             try
@@ -57,13 +67,26 @@ namespace Aura_OS
 
                 #region Register Filesystem
                 Sys.FileSystem.VFS.VFSManager.RegisterVFS(vFS);
-                Console.ForegroundColor = ConsoleColor.Green;
-                Console.Write("[OK]");
-                Console.ForegroundColor = ConsoleColor.White;
-                Console.Write(" ");
-                Console.ForegroundColor = ConsoleColor.DarkMagenta;
-                Console.Write("FileSystem Registered\n");
-                Console.ForegroundColor = ConsoleColor.White;
+                if (ContainsVolumes())
+                {
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    Console.Write("[OK]");
+                    Console.ForegroundColor = ConsoleColor.White;
+                    Console.Write(" ");
+                    Console.ForegroundColor = ConsoleColor.DarkMagenta;
+                    Console.Write("FileSystem Registration\n");
+                    Console.ForegroundColor = ConsoleColor.White;
+                }
+                else
+                {
+                    Console.ForegroundColor = ConsoleColor.DarkRed;
+                    Console.Write("[Error]");
+                    Console.ForegroundColor = ConsoleColor.White;
+                    Console.Write(" ");
+                    Console.ForegroundColor = ConsoleColor.DarkMagenta;
+                    Console.Write("FileSystem Registration\n");
+                    Console.ForegroundColor = ConsoleColor.White;
+                }
                 #endregion
 
                 setup.InitSetup();

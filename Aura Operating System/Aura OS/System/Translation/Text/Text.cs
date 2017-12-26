@@ -278,6 +278,9 @@ namespace Aura_OS.System.Translation
                         case "remuser":
                             Console.WriteLine($"Essayez: settings remuser user");
                             break;
+                        case "nofilesystem":
+                            Console.WriteLine("Aucun volume détecté, le sytème de fichiers est désactivé!");
+                            break;
                     }
                     break;
 
@@ -513,6 +516,9 @@ namespace Aura_OS.System.Translation
                             break;
                         case "remuser":
                             Console.WriteLine($"Try: settings remuser user");
+                            break;
+                        case "nofilesystem":
+                            Console.WriteLine("No volumes are detected, filesystem is disabled!");
                             break;
                     }
                     break;
