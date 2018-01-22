@@ -35,7 +35,15 @@ namespace Aura_OS.Shell.cmdIntr.c_Console
         public static void c_Echo(string txt, short startIndex = 0, int count = 5)
         {
             txt = txt.Remove(startIndex, count);
-            Console.WriteLine(txt);
+			if (txt.StartWith("$"))
+			{
+				txt = txt.Remove(0, 1);
+				Console.WriteLine(Aura_OS.Kernel.environmentvariables[txt]);
+			}
+			else 
+			{
+				Console.WriteLine(txt);
+			}
         }
     }
 }

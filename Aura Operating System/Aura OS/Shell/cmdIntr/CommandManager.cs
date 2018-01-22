@@ -190,7 +190,12 @@ namespace Aura_OS.Shell.cmdIntr
             #endregion
 
             #region Util           
-
+			
+			else if (cmd.StartsWith("export"))
+            {
+                Util.EnvVar.c_Export(cmd);
+            }
+			
             else
             {
                 Util.CmdNotFound.c_CmdNotFound();
