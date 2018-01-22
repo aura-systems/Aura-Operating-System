@@ -281,13 +281,13 @@ namespace Aura_OS.System.Translation
                         case "nofilesystem":
                             Console.WriteLine("Aucun volume détecté, le sytème de fichiers est désactivé!");
                             break;
-						            case "safemodeenabled":
+			case "safemodeenabled":
                             Console.WriteLine("Mode sécurisé activé!");
                             break;
-						            case "safemodedisabled":
+			case "safemodedisabled":
                             Console.WriteLine("Mode sécurisé désactivé! Vous pouvez maintenant executer les fichiers binaires, à vos risques et perils!");
                             break;
-						            case "safemode":
+			case "safemode":
                             Console.WriteLine($"Essayez: safemode enable/disable");
                             break;
                     }
@@ -529,13 +529,13 @@ namespace Aura_OS.System.Translation
                         case "nofilesystem":
                             Console.WriteLine("No volumes are detected, filesystem is disabled!");
                             break;
-						            case "safemodeenabled":
+			case "safemodeenabled":
                             Console.WriteLine("Safe mode enabled!");
                             break;
-						            case "safemodedisabled":
+			case "safemodedisabled":
                             Console.WriteLine("Safe mode disabled! You can now execute binary files, be aware!");
                             break;
-						            case "safemode":
+			case "safemode":
                             Console.WriteLine($"Try: safemode enable/disable");
                             break;
                     }
