@@ -40,7 +40,7 @@ namespace Aura_OS.Shell.cmdIntr.FileSystem
                 if(dir == "..")
                 {
                     Directory.SetCurrentDirectory(Kernel.current_directory);
-                    var root = Kernel.FS.GetDirectory(Kernel.current_directory);
+                    var root = Kernel.vFS.GetDirectory(Kernel.current_directory);
                     if (Kernel.current_directory == @"0:\")
                     {
                     }

@@ -42,6 +42,7 @@ namespace Aura_OS.System.Translation
                     Console.WriteLine("- logout (permet de se déconnecter)");
 
                     Console.ReadKey(); //page 2
+                
                     Console.WriteLine();
                     Console.WriteLine("Commandes disponibles (2/2):");
                     Console.WriteLine("- time (récupère la date et l'heure)");
@@ -51,6 +52,8 @@ namespace Aura_OS.System.Translation
                     Console.WriteLine("- bug (vérifie Aura, pour découvrir d'éventuel(s) problème(s))");
                     Console.WriteLine("- echo (affiche la valeur retournée)");
                     Console.WriteLine("- chdir (modifie le répertoire ou affiche le nom du répertoire actif)");
+                    Console.WriteLine("- crash (crash Aura)");
+                    Console.WriteLine("- crashcpu (crash CPU)");
 
                     Console.ReadKey();
 
@@ -89,6 +92,8 @@ namespace Aura_OS.System.Translation
                     Console.WriteLine("- bug (verify Aura to detect problem(s))");
                     Console.WriteLine("- echo (display the return value)");
                     Console.WriteLine("- chdir (display the name of the current directory or changes the current folder)");
+                    Console.WriteLine("- crash (crash Aura)");
+                    Console.WriteLine("- crashcpu (crash CPU)");
 
                     Console.ReadKey();
 
