@@ -41,6 +41,7 @@ namespace Aura_OS
         public static bool SystemExists = false;
         public static bool JustInstalled = false;
         public static CosmosVFS vFS = new CosmosVFS();
+		public static bool Safemode = true;
 
         #endregion
 
