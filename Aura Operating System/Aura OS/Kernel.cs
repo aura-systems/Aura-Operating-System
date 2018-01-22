@@ -41,6 +41,7 @@ namespace Aura_OS
         public static bool SystemExists = false;
         public static bool JustInstalled = false;
         public static CosmosVFS vFS = new CosmosVFS();
+    	public static bool Safemode = true;
 
         #endregion
 
@@ -135,7 +136,7 @@ namespace Aura_OS
                 {
                     if (Logged) //If logged
                     {
-                        BeforeCommand();                  
+                        BeforeCommand();
 
                         var cmd = Console.ReadLine();
                         Shell.cmdIntr.CommandManager._CommandManger(cmd);
@@ -274,7 +275,7 @@ namespace Aura_OS
                     Console.ForegroundColor = ConsoleColor.White;
                 }
             }
-        } 
+        }
         #endregion
 
     }

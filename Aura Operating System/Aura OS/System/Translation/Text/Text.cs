@@ -15,7 +15,7 @@ namespace Aura_OS.System.Translation
 
         /*
          * ## Utilisation des mots clés:
-         * 
+         *
          * Les mots clés remplace une phrase
          * par leur traduction correspondant
          * à la langue du système. Vous devez donc
@@ -26,7 +26,7 @@ namespace Aura_OS.System.Translation
 
         /*
         * ## How to use keywords:
-        * 
+        *
         * Keywords replace a sentence
         * by their translation that correspond to the keyword
         * to the system language. so you have
@@ -53,8 +53,8 @@ namespace Aura_OS.System.Translation
                         case "keyboard":
                             Console.WriteLine("Initialisation clavier FR...");
                             break;
-                        case "restart": 
-                            Console.WriteLine("Redémarrage en cours..."); 
+                        case "restart":
+                            Console.WriteLine("Redémarrage en cours...");
                             break;
                         case "directorydoesntexist":
                             Console.WriteLine("Ce répertoire n'éxiste pas !");
@@ -280,6 +280,15 @@ namespace Aura_OS.System.Translation
                             break;
                         case "nofilesystem":
                             Console.WriteLine("Aucun volume détecté, le sytème de fichiers est désactivé!");
+                            break;
+			case "safemodeenabled":
+                            Console.WriteLine("Mode sécurisé activé!");
+                            break;
+			case "safemodedisabled":
+                            Console.WriteLine("Mode sécurisé désactivé! Vous pouvez maintenant executer les fichiers binaires, à vos risques et perils!");
+                            break;
+			case "safemode":
+                            Console.WriteLine($"Essayez: safemode enable/disable");
                             break;
                     }
                     break;
@@ -519,6 +528,15 @@ namespace Aura_OS.System.Translation
                             break;
                         case "nofilesystem":
                             Console.WriteLine("No volumes are detected, filesystem is disabled!");
+                            break;
+			case "safemodeenabled":
+                            Console.WriteLine("Safe mode enabled!");
+                            break;
+			case "safemodedisabled":
+                            Console.WriteLine("Safe mode disabled! You can now execute binary files, be aware!");
+                            break;
+			case "safemode":
+                            Console.WriteLine($"Try: safemode enable/disable");
                             break;
                     }
                     break;
