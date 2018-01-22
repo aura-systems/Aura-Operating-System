@@ -76,7 +76,7 @@ namespace Aura_OS.System.Translation
                     Console.WriteLine("- ver (to display system version)");
                     Console.WriteLine("- settings {args} (access to settings)");
                     Console.WriteLine("- logout (to disconnect)");
-                    
+
                     Console.ReadKey(); //page 2 (19 elements per page)
 
                     Console.WriteLine();
@@ -108,7 +108,7 @@ namespace Aura_OS.System.Translation
                     Console.WriteLine("- passuser {user} {pass} (pour changer le mot de passe)");
                     Console.WriteLine("- setcomputername (pour changer le nom de l'ordinateur)");
                     Console.WriteLine("- setlang {lang} (pour changer la langue du système)");
-					Console.WriteLine("- safemode {enable/disable} (pour activer ou non le mode sécurisé)");
+					          Console.WriteLine("- safemode {enable/disable} (pour activer ou non le mode sécurisé)");
                     //Console.WriteLine("- backgroundcolor {colorID} (permet de changer la couleur de dernier plan)");
                     //Console.WriteLine("- textcolor {colorID} (permet de changer la couleur de premier plan)");
                     break;
@@ -120,7 +120,7 @@ namespace Aura_OS.System.Translation
                     Console.WriteLine("- passuser {user} {pass} (to change password)");
                     Console.WriteLine("- setcomputername (to change the computer name)");
                     Console.WriteLine("- setlang {lang} (to change the system language)");
-					Console.WriteLine("- safemode {enable/disable} (to activate or no the safe mode)");
+					          Console.WriteLine("- safemode {enable/disable} (to activate or no the safe mode)");
                     //Console.WriteLine("- backgroundcolor {colorID} (to change background color)");
                     //Console.WriteLine("- textcolor {colorID} (to change foreground colour)");
                     break;

@@ -69,12 +69,13 @@ namespace Aura_OS.Shell.cmdIntr.Settings
                 {
                     L.Text.Display("_passuser");
                 }
-				
-				else if (cmdargs[1].Equals("safemode"))
+
+    				    else if (cmdargs[1].Equals("safemode"))
                 {
-					L.Text.Display("safemode");
+                    L.Text.Display("safemode");
                 }
             }
+
             else if (cmdargs.Length == 3 ) //One arg
             {
                 if (cmdargs[1].Equals("remuser"))
@@ -83,23 +84,23 @@ namespace Aura_OS.Shell.cmdIntr.Settings
 
                     users.Remove(cmdargs[2]);
                 }
-				
-				else if (cmdargs[1].Equals("safemode"))
+
+				        else if (cmdargs[1].Equals("safemode"))
                 {
                     if (cmdargs[2].Equals("enable"))
-					{
-						Aura_OS.Kernel.Safemode = true;
-						L.Text.Display("safemodeenabled");
-					}
-					else if (cmdargs[2].Equals("disable") 
-					{
-						Aura_OS.Kernel.Safemode = false;
-						L.Text.Display("safemodedisabled");
-					}
-					else 
-					{
-						L.Text.Display("UnknownCommand");
-					}
+					          {
+						            Aura_OS.Kernel.Safemode = true;
+						            L.Text.Display("safemodeenabled");
+					          }
+          					else if (cmdargs[2].Equals("disable")
+          					{
+          					    Aura_OS.Kernel.Safemode = false;
+          					    L.Text.Display("safemodedisabled");
+          					}
+          					else
+          					{
+          					    L.Text.Display("UnknownCommand");
+          					}
                 }
 
                 else if (cmdargs[1].Equals("setlang"))
@@ -137,6 +138,7 @@ namespace Aura_OS.Shell.cmdIntr.Settings
                     L.Text.Display("_passuser");
                 }
             }
+
             else if (cmdargs.Length == 4) //Two args
             {
                 if (cmdargs[1].Equals("adduser"))
@@ -162,10 +164,10 @@ namespace Aura_OS.Shell.cmdIntr.Settings
                 {
                     L.Text.Display("remuser");
                 }
-				
-				else if (cmdargs[1].Equals("safemode"))
+
+				        else if (cmdargs[1].Equals("safemode"))
                 {
-					L.Text.Display("safemode");
+					          L.Text.Display("safemode");
                 }
             }
 
