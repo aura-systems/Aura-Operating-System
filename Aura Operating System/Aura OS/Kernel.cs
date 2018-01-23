@@ -16,8 +16,6 @@ using Aura_OS.System.Users;
 using Aura_OS.System.Computer;
 using Aura_OS.System.Utils;
 using System.Collections.Generic;
-using XSharp.Assembler;
-using Cosmos.IL2CPU.API.Attribs;
 using Aura_OS.System.Drivers;
 
 #endregion
@@ -308,14 +306,14 @@ namespace Aura_OS
 
     }
 
-    public static class exitUtils
-    {
-        [PlugMethod(Assembler = typeof(exitUtilsPlug))]
-        public static void Vs8086Mode() { }
-    }
-    [Plug(Target = typeof(exitUtils))]
-    public class exitUtilsPlug : AssemblerMethod// : PlugMethod // : Method
-    {
+    //public static class exitUtils
+    //{
+    //    [PlugMethod(Assembler = typeof(exitUtilsPlug))]
+    //    public static void Vs8086Mode() { }
+    //}
+    //[Plug(Target = typeof(exitUtils))]
+    //public class exitUtilsPlug : AssemblerMethod// : PlugMethod // : Method
+    //{
         // public override void AssembleNew(object aAssembler, object aMethodInfo)
         // {
         //   XS.Set(XSRegisters.EBX, false, false, 8, true, null XSRegisters.RegisterSize.Byte8);
@@ -323,9 +321,9 @@ namespace Aura_OS
         //  XS.Call(XSRegisters.EAX);
         // }
 
-        public override void AssembleNew(Assembler aAssembler, object aMethodInfo)
-        {//I asked jp2masa
+    //    public override void AssembleNew(Assembler aAssembler, object aMethodInfo)
+    //     {//I asked jp2masa
 
-        }
-    }
+    //     }
+    //}
 }

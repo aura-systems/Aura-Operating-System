@@ -11,16 +11,7 @@ using Aura_OS.System.Security;
 using Aura_OS.System.Drawable;
 using Aura_OS.System.Translation;
 using Aura_OS.System.Utils;
-
-using Cosmos.System.FileSystem;
-using Sys = Cosmos.System;
-using Lang = Aura_OS.System.Translation;
-using Aura_OS.System;
-using Aura_OS.System.Users;
-using Aura_OS.System.Computer;
 using System.Collections.Generic;
-using XSharp.Assembler;
-using Cosmos.IL2CPU.API.Attribs;
 using Aura_OS.System.Drivers;
 
 namespace Aura_OS.System

@@ -6,7 +6,7 @@
 */
 
 using XSharp;
-using Cosmos.IL2CPU.API.Attribs;
+using IL2CPU.API.Attribs;
 using XSharp.Assembler;
 
 namespace  Aura_OS.System.Executables
