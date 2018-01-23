@@ -1,11 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26730.12
+VisualStudioVersion = 15.0.27130.2010
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Aura_OS", "Aura OS\Aura_OS.csproj", "{DD67A21E-24AA-45A8-9886-4BB88F63680A}"
-EndProject
-Project("{471EC4BB-E47E-4229-A789-D1F5F83B52D4}") = "Aura_OSBoot", "Aura OS\Aura_OSBoot.Cosmos", "{9D95C4B9-9A5A-444E-AE56-0593901086B6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,10 +15,6 @@ Global
 		{DD67A21E-24AA-45A8-9886-4BB88F63680A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DD67A21E-24AA-45A8-9886-4BB88F63680A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DD67A21E-24AA-45A8-9886-4BB88F63680A}.Release|Any CPU.Build.0 = Release|Any CPU
-		{9D95C4B9-9A5A-444E-AE56-0593901086B6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{9D95C4B9-9A5A-444E-AE56-0593901086B6}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{9D95C4B9-9A5A-444E-AE56-0593901086B6}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{9D95C4B9-9A5A-444E-AE56-0593901086B6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
