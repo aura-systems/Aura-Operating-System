@@ -465,7 +465,7 @@ namespace Aura_OS.System.Drawable
         {
             LanguageMenu();
             string[] item = { "English: en_US", "Français: fr_FR"};
-            int language = GenericMenu(item, LanguageMenu);
+            int language = GenericMenu(item, Langues);
             if (language == 0)
             {
                 return "en_US";
@@ -478,6 +478,31 @@ namespace Aura_OS.System.Drawable
             {
                 return "en_US";
             }
+        }
+
+        static void Langues()
+        {
+            Console.BackgroundColor = ConsoleColor.Blue;
+
+            Console.SetCursorPosition(8, 11);
+            Console.WriteLine("║                                                              ║");
+            Console.SetCursorPosition(x_lang, y_lang);
+
+            Console.SetCursorPosition(8, 12);
+            Console.WriteLine("║                                                              ║");
+            Console.SetCursorPosition(x_lang, y_lang);
+
+            Console.SetCursorPosition(8, 13);
+            Console.WriteLine("║                                                              ║");
+            Console.SetCursorPosition(x_lang, y_lang);
+
+            Console.SetCursorPosition(8, 14);
+            Console.WriteLine("║                                                              ║");
+            Console.SetCursorPosition(x_lang, y_lang);
+
+            Console.SetCursorPosition(8, 15);
+            Console.WriteLine("║                                                              ║");
+            Console.SetCursorPosition(x_lang, y_lang);
         }
 
         static int x_lang = Console.CursorLeft;
@@ -493,7 +518,7 @@ namespace Aura_OS.System.Drawable
             Console.WriteLine("╔══════════════════════════════════════════════════════════════╗");
             Console.SetCursorPosition(x_lang, y_lang);
             Console.SetCursorPosition(8, 9);
-            Console.WriteLine("║ Please choose a language: (available: en-US fr-FR)           ║");
+            Console.WriteLine("║ Please choose a language:                                    ║");
             Console.SetCursorPosition(x_lang, y_lang);
             Console.SetCursorPosition(8, 10);
             Console.WriteLine("╠══════════════════════════════════════════════════════════════╣");
@@ -541,7 +566,7 @@ namespace Aura_OS.System.Drawable
                     {
                         Console.BackgroundColor = ConsoleColor.Blue;
                         Console.SetCursorPosition(10, counter);
-                        Console.Write(">>");
+                        Console.Write("* ");
                         Console.WriteLine(items[c]);
                         Console.SetCursorPosition(x_lang, y_lang);
                         Console.BackgroundColor = ConsoleColor.Black;
@@ -550,7 +575,7 @@ namespace Aura_OS.System.Drawable
                     {
                         Console.BackgroundColor = ConsoleColor.Blue;
                         Console.SetCursorPosition(10, counter);
-                        Console.WriteLine(items[c]);
+                        Console.WriteLine("  " + items[c]);
                         Console.SetCursorPosition(x_lang, y_lang);
                         Console.BackgroundColor = ConsoleColor.Black;
                     }

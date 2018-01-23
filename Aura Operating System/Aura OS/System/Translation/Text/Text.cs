@@ -234,7 +234,7 @@ namespace Aura_OS.System.Translation
                             Console.WriteLine();
                             break;
                         case "MAC":
-                            Console.WriteLine("Addresse Physique (MAC): " + Cosmos.HAL.Drivers.PCI.Network.AMDPCNetII.PhysicalAdress());
+                            Console.WriteLine("Addresse Physique (MAC): " + Core.Network.PhysicalAddress());
                             break;
                         case "notavalidscript":
                             Console.WriteLine("Ce fichier n'est pas un script valide.");
@@ -277,6 +277,9 @@ namespace Aura_OS.System.Translation
                             break;
                         case "remuser":
                             Console.WriteLine($"Essayez: settings remuser user");
+                            break;
+                        case "nofilesystem":
+                            Console.WriteLine("Aucun volume détecté, le sytème de fichiers est désactivé!");
                             break;
                     }
                     break;
@@ -470,7 +473,7 @@ namespace Aura_OS.System.Translation
                             Console.WriteLine();
                             break;
                         case "MAC":
-                            Console.WriteLine("MAC Address: " + Cosmos.HAL.Drivers.PCI.Network.AMDPCNetII.PhysicalAdress());
+                            Console.WriteLine("MAC Address: " + Core.Network.PhysicalAddress());
                             break;
                         case "notavalidscript":
                             Console.WriteLine("This file is not a valid script.");
@@ -513,6 +516,9 @@ namespace Aura_OS.System.Translation
                             break;
                         case "remuser":
                             Console.WriteLine($"Try: settings remuser user");
+                            break;
+                        case "nofilesystem":
+                            Console.WriteLine("No volumes are detected, filesystem is disabled!");
                             break;
                     }
                     break;

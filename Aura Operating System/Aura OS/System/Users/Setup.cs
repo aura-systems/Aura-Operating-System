@@ -29,9 +29,7 @@ namespace Aura_OS.System
     {
         private string username;
         private string password;
-        private string lang;
         private string hostname;
-        private string[] Users;
 
         private string FinalUsername;
         private string FinalPassword;
@@ -46,20 +44,21 @@ namespace Aura_OS.System
         /// <returns>"false", if there is not a FS</returns>
         public string FileSystem()
         {
-            try
+            if (Kernel.ContainsVolumes())
             {
                 if (File.Exists(@"0:\System\settings.conf"))
                 {
                     return "true";
-                } else
+                }
+                else
                 {
                     return "continue";
                 }
             }
-            catch
+            else
             {
                 return "false";
-            }            
+            }         
         }
 
         /// <summary>
@@ -222,9 +221,15 @@ namespace Aura_OS.System
         /// </summary>
         public void RunWithoutFS() //logged with root without using filesystem
         {
+            RegisterLanguage();
             Kernel.SystemExists = false;
             Kernel.userLogged = "root";
             Kernel.Logged = true;
+            Console.Clear();
+            WelcomeMessage.Display();
+            Text.Display("logged", "root");
+            Text.Display("nofilesystem");
+            Console.WriteLine();
         }
 
         public static List<Driver> Drivers = new List<Driver>();
