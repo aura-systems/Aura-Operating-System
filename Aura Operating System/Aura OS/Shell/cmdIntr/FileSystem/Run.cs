@@ -50,10 +50,10 @@ namespace Aura_OS.Shell.cmdIntr.FileSystem
                     byte[] filearray = File.ReadAllBytes(Kernel.current_directory + file);
                     PlainBinaryProgram.LoadProgram(filearray);
                 }
-                else if (file.EndsWith(".exe") || file.EndsWith(".EXE"))
-                {
+                //else if (file.EndsWith(".exe") || file.EndsWith(".EXE"))
+                //{
                     //PE.LoadProgram(File.ReadAllBytes(Kernel.current_directory + file));
-                }
+                //}
                 else
                 {
                     Console.WriteLine("We are currently unable to run " + file);
