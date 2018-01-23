@@ -39,7 +39,7 @@ namespace Aura_OS.Shell.cmdIntr.Util
 			string[] exportcmd = str.Split('=');
 			string var = exportcmd[0];
 			string value = exportcmd[1];
-			Aura_OS.Kernel.environmentvariables.Add(var, value)
+            Kernel.environmentvariables.Add(var, value);
 		}
     }
 }
