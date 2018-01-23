@@ -44,6 +44,7 @@ namespace Aura_OS
         public static bool JustInstalled = false;
         public static List<Driver> Drivers = new List<Driver>();
         public static CosmosVFS vFS = new CosmosVFS();
+        public static bool Safemode = true;
 
         #endregion
 

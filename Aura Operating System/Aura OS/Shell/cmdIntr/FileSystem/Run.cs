@@ -38,30 +38,37 @@ namespace Aura_OS.Shell.cmdIntr.FileSystem
         /// <param name="count">The count index for remove.</param>
         public static void c_Run(string run, short startIndex = 0, short count = 4)
         {
-            string file = run.Remove(startIndex, count);
-            if (File.Exists(Kernel.current_directory + file))
+            if (!Kernel.Safemode)
             {
-                if (file.EndsWith(".bat") || file.EndsWith(".BAT"))
+                string file = run.Remove(startIndex, count);
+                if (File.Exists(Kernel.current_directory + file))
                 {
-                    Apps.System.Batch.Execute(file);
-                }
-                else if (file.EndsWith(".aexe") || file.EndsWith(".AEXE"))
-                {
-                    byte[] filearray = File.ReadAllBytes(Kernel.current_directory + file);
-                    PlainBinaryProgram.LoadProgram(filearray);
-                }
-                //else if (file.EndsWith(".exe") || file.EndsWith(".EXE"))
-                //{
+                    if (file.EndsWith(".bat") || file.EndsWith(".BAT"))
+                    {
+                        Apps.System.Batch.Execute(file);
+                    }
+                    else if (file.EndsWith(".aexe") || file.EndsWith(".AEXE"))
+                    {
+                        byte[] filearray = File.ReadAllBytes(Kernel.current_directory + file);
+                        PlainBinaryProgram.LoadProgram(filearray);
+                    }
+                    //else if (file.EndsWith(".exe") || file.EndsWith(".EXE"))
+                    //{
                     //PE.LoadProgram(File.ReadAllBytes(Kernel.current_directory + file));
-                //}
+                    //}
+                    else
+                    {
+                        Console.WriteLine("We are currently unable to run " + file);
+                    }
+                }
                 else
                 {
-                    Console.WriteLine("We are currently unable to run " + file);
+                    L.Text.Display("doesnotexit");
                 }
             }
             else
             {
-                L.Text.Display("doesnotexit");
+                L.Text.Display("safemodedisabledex");
             }
         }
 

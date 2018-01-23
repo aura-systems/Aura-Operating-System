@@ -37,6 +37,7 @@ namespace Aura_OS.Shell.cmdIntr.SystemInfomation
             L.Text.Display("OSRevision");
             L.Text.Display("time");
             L.Text.Display("AmountRAM");
+            L.Text.Display("safeismodeenabled");
         }
     }
 }

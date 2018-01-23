@@ -281,6 +281,28 @@ namespace Aura_OS.System.Translation
                         case "nofilesystem":
                             Console.WriteLine("Aucun volume détecté, le sytème de fichiers est désactivé!");
                             break;
+                        case "safemodeenabled":
+                            Console.WriteLine("Mode sécurisé activé!");
+                            break;
+                        case "safemodedisabled":
+                            Console.WriteLine("Mode sécurisé désactivé! Vous pouvez maintenant executer les fichiers binaires, à vos risques et perils!");
+                            break;
+                        case "safemode":
+                            Console.WriteLine($"Essayez: safemode enable/disable");
+                            break;
+                        case "safemodedisabledex":
+                            Console.WriteLine($"Le mode sécurisé est activé! Vous ne pouvez rien charger dans la mémoire. Si vous savez ce que vous faites, tapez 'settings safemode enable'.");
+                            break;
+                        case "safeismodeenabled":
+                            if (Kernel.Safemode)
+                            {
+                                Console.WriteLine("Mode sécurisé:                 Activé");
+                            }
+                            else
+                            {
+                                Console.WriteLine("Mode sécurisé:                 Désactivé");
+                            }
+                            break;
                     }
                     break;
 
@@ -519,6 +541,28 @@ namespace Aura_OS.System.Translation
                             break;
                         case "nofilesystem":
                             Console.WriteLine("No volumes are detected, filesystem is disabled!");
+                            break;
+                        case "safemodeenabled":
+                            Console.WriteLine("Safe mode enabled!");
+                            break;
+                        case "safemodedisabled":
+                            Console.WriteLine("Safe mode disabled! You can now execute binary files, be aware!");
+                            break;
+                        case "safemode":
+                            Console.WriteLine($"Try: safemode enable/disable");
+                            break;
+                        case "safemodedisabledex":
+                            Console.WriteLine($"Safe mode is enabled! You can't load binary into memory. If you're sure about what you're trying to do, type 'settings safemode enable'.");
+                            break;
+                        case "safeismodeenabled":
+                            if (Kernel.Safemode)
+                            {
+                                Console.WriteLine("Safe mode:                 Enabled");
+                            }
+                            else
+                            {
+                                Console.WriteLine("Safe mode:                 Disabled");
+                            }
                             break;
                     }
                     break;
