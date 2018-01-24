@@ -38,8 +38,12 @@ namespace Aura_OS.Shell.cmdIntr.c_Console
 			if (txt.StartsWith("$"))
 			{
 				txt = txt.Remove(0, 1);
-				Console.WriteLine(Kernel.environmentvariables[txt]);
-			}
+                Console.WriteLine(txt);
+                Console.ReadKey();
+				Console.WriteLine(Kernel.environmentvariables.Get(txt));
+                Console.WriteLine("2");
+                Console.ReadKey();
+            }
 			else 
 			{
 				Console.WriteLine(txt);

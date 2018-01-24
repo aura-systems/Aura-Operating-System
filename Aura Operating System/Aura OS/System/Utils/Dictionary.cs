@@ -1,7 +1,11 @@
-﻿using System;
+﻿/*
+* PROJECT:          Aura Operating System Development
+* CONTENT:          Dictionary
+* PROGRAMMERS:      John Welsh <djlw78@gmail.com>
+*/
+
 using System.Collections;
 using System.Collections.Generic;
-using System.Text;
 
 namespace Aura_OS.System.Utils
 {

@@ -4,6 +4,8 @@
 * PROGRAMMER(S):    John Welsh <djlw78@gmail.com>
 */
 
+using System;
+
 namespace Aura_OS.Shell.cmdIntr
 {
     class CommandManager
@@ -172,6 +174,14 @@ namespace Aura_OS.Shell.cmdIntr
                 int value = 1;
                 value = value - 1;
                 int result = 1 / value; //Division by 0
+            }
+
+            else if (cmd.Equals("testt"))
+            {
+                //foreach (string text in Kernel.environmentvariables)
+                //{
+                //    Console.WriteLine(text);
+                //}
             }
 
             #endregion Tests

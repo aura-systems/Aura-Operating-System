@@ -11,7 +11,7 @@
     <EnableGDB>False</EnableGDB>
     <StartCosmosGDB>false</StartCosmosGDB>
     <VMWareEdition>Player</VMWareEdition>
-    <OutputPath>bin\Debug\net462\</OutputPath>
+    <OutputPath>bin\Debug\net462\netstandard2.0\</OutputPath>
     <Description>Use VMware Player or Workstation to deploy and debug.</Description>
     <Deployment>ISO</Deployment>
     <Launch>VMware</Launch>
