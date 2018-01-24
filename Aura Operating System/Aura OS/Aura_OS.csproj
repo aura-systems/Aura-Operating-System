@@ -11,7 +11,7 @@
     <EnableGDB>False</EnableGDB>
     <StartCosmosGDB>false</StartCosmosGDB>
     <VMWareEdition>Player</VMWareEdition>
-    <OutputPath>bin\Debug\net462\netstandard2.0\</OutputPath>
+    <OutputPath>bin\Debug\net462\netstandard2.0\netstandard2.0\</OutputPath>
     <Description>Use VMware Player or Workstation to deploy and debug.</Description>
     <Deployment>ISO</Deployment>
     <Launch>VMware</Launch>
@@ -25,7 +25,7 @@
     <VMware_VisualStudioDebugPort>Pipe: Cosmos\Serial</VMware_VisualStudioDebugPort>
     <VMware_PxeInterface>192.168.68.1</VMware_PxeInterface>
     <VMware_VMwareEdition>Player</VMware_VMwareEdition>
-    <VMware_OutputPath>bin\Debug\net462\</VMware_OutputPath>
+    <VMware_OutputPath>bin\Debug\net462\netstandard2.0\</VMware_OutputPath>
     <VMware_EnableGDB>False</VMware_EnableGDB>
     <VMware_StartCosmosGDB>false</VMware_StartCosmosGDB>
     <ISO_Description>Creates a bootable ISO image which can be burned to a DVD. After running the selected project, an explorer window will open containing the ISO file. The ISO file can then be burned to a CD or DVD and used to boot a physical or virtual system.</ISO_Description>
