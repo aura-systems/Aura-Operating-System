@@ -15,6 +15,8 @@ using Aura_OS.System;
 using Aura_OS.System.Users;
 using Aura_OS.System.Computer;
 using Aura_OS.System.Utils;
+using System.Text;
+using Cosmos.System.ExtendedASCII;
 
 #endregion
 
@@ -61,6 +63,9 @@ namespace Aura_OS
             try
             {
                 Console.Clear();
+                Encoding.RegisterProvider(CosmosEncodingProvider.Instance);
+                Console.InputEncoding = Encoding.GetEncoding(437);
+                Console.OutputEncoding = Encoding.GetEncoding(437);
                 Console.ForegroundColor = ConsoleColor.DarkMagenta;
                 Console.Write("Booting Aura...\n");
                 Console.ForegroundColor = ConsoleColor.White;
