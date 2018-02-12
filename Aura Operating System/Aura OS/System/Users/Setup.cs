@@ -57,20 +57,20 @@ namespace Aura_OS.System
         /// </summary>
         public void InitSetup()
         {           
-            if(FileSystem() == "false")
-            {
+            //if(FileSystem() == "false")
+            //{
                 RunWithoutFS();
-            }
-            else if(FileSystem() == "true"){
-                Kernel.SystemExists = true;
-            }
-            else if(FileSystem() == "continue")
-            {
-                RegisterLanguage();
-                RegisterHostname();
-                RegisterUser();
-                Installation();
-            }           
+            //}
+            ///else if(FileSystem() == "true"){
+            //    Kernel.SystemExists = true;
+            //}
+            //else if(FileSystem() == "continue")
+            //{
+            //    RegisterLanguage();
+            //    RegisterHostname();
+            //    RegisterUser();
+            //    Installation();
+            //}           
         }
 
         /// <summary>
