@@ -176,14 +176,6 @@ namespace Aura_OS.Shell.cmdIntr
                 int result = 1 / value; //Division by 0
             }
 
-            else if (cmd.Equals("testt"))
-            {
-                //foreach (string text in Kernel.environmentvariables)
-                //{
-                //    Console.WriteLine(text);
-                //}
-            }
-
             #endregion Tests
 
             #region Tools
