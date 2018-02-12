@@ -4,6 +4,8 @@
 * PROGRAMMER(S):    John Welsh <djlw78@gmail.com>
 */
 
+using System;
+
 namespace Aura_OS.Shell.cmdIntr
 {
     class CommandManager
@@ -190,7 +192,12 @@ namespace Aura_OS.Shell.cmdIntr
             #endregion
 
             #region Util           
-
+			
+			else if (cmd.StartsWith("export"))
+            {
+                Util.EnvVar.c_Export(cmd);
+            }
+			
             else
             {
                 Util.CmdNotFound.c_CmdNotFound();

@@ -15,6 +15,7 @@ using Aura_OS.System;
 using Aura_OS.System.Users;
 using Aura_OS.System.Computer;
 using Aura_OS.System.Utils;
+using System.Collections.Generic;
 using System.Text;
 using Cosmos.System.ExtendedASCII;
 
@@ -43,6 +44,7 @@ namespace Aura_OS
         public static bool SystemExists = false;
         public static bool JustInstalled = false;
         public static CosmosVFS vFS = new CosmosVFS();
+		public static Dictionary<string, string> environmentvariables = new Dictionary<string, string>();
 
         #endregion
 

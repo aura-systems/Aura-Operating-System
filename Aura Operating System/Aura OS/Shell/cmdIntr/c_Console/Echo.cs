@@ -1,7 +1,8 @@
 ﻿/*
 * PROJECT:          Aura Operating System Development
 * CONTENT:          Command Interpreter - Echo
-* PROGRAMMER(S):      John Welsh <djlw78@gmail.com>
+* PROGRAMMER(S):    John Welsh <djlw78@gmail.com>
+*                   Valentin Charbonnier <valentinbreiz@gmail.com>
 */
 
 //NOTE: Console conflicted with Console so now it is c_Console. (Still readable)
@@ -35,7 +36,19 @@ namespace Aura_OS.Shell.cmdIntr.c_Console
         public static void c_Echo(string txt, short startIndex = 0, int count = 5)
         {
             txt = txt.Remove(startIndex, count);
-            Console.WriteLine(txt);
+			if (txt.StartsWith("$"))
+			{
+                try
+                {
+                    txt = txt.Remove(0, 1);
+                    Console.WriteLine(Kernel.environmentvariables[txt]);
+                }
+                catch { }
+            }
+			else 
+			{
+				Console.WriteLine(txt);
+			}
         }
     }
 }
