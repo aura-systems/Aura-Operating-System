@@ -91,6 +91,43 @@ namespace Aura_OS.System.Translation
                     Console.ReadKey();
 
                     break;
+
+                case "nl_NL":
+                    Console.WriteLine("Mogelijke commando's (1/2):");
+                    Console.WriteLine("- shutdown (om een ACPI-shutdown te doen)");
+                    Console.WriteLine("- reboot (opnieuw opstarten met de CPU)");
+                    Console.WriteLine("- clear (om de console leeg te maken)");
+                    Console.WriteLine("- cd .. (om naar de bovenliggende map te navigeren)");
+                    Console.WriteLine("- cd (om te navigeren naar een folder)");
+                    Console.WriteLine("- dir (geeft een weergave van mappen en bestanden)");
+                    Console.WriteLine("- ls (geeft een weergave van mappen en bestanden)");
+                    Console.WriteLine("- cp (om een bestand naar een andere bestemming te kopiëren)");
+                    Console.WriteLine("- mkdir (om een map te maken");
+                    Console.WriteLine("- rmdir (om een map te verwijderen)");
+                    Console.WriteLine("- mkfil (om een bestand aan te maken)");
+                    Console.WriteLine("- rmfil (om een bestand te verwijderen)");
+                    Console.WriteLine("- edit (om een bestand te bewerken)");
+                    Console.WriteLine("- vol (geeft een lijst met volumes)");
+                    Console.WriteLine("- echo (om tekst te echoën)");
+                    Console.WriteLine("- systeminfo (om systeeminformatie te weergeven)");
+                    Console.WriteLine("- ver (om de systeemversie weer te geven)");
+                    Console.WriteLine("- settings {argumenten} (toegang tot instellingen)");
+                    Console.WriteLine("- logout (om los te koppelen)");
+
+                    Console.ReadKey(); //page 2 (19 elements per page)
+
+                    Console.WriteLine();
+                    Console.WriteLine("Mogelijke commando's (2/2):");
+                    Console.WriteLine("- time (om tijd en datum te verkrijgen)");
+                    Console.WriteLine("- ipconfig (om netwerk informatie te verkrijgen)");
+                    Console.WriteLine("- snake (start het spel Snake)");
+                    Console.WriteLine("- md5 (om de hash van argumenten weer te geven)");
+                    Console.WriteLine("- crash (crasht Aura)");
+                    Console.WriteLine("- crashcpu (crasht CPU)");
+
+                    Console.ReadKey();
+
+                    break;
             }
         }
 
@@ -121,6 +158,17 @@ namespace Aura_OS.System.Translation
                     Console.WriteLine("- setlang {lang} (to change the system language)");
                     //Console.WriteLine("- backgroundcolor {colorID} (to change background color)");
                     //Console.WriteLine("- textcolor {colorID} (to change foreground colour)");
+                    break;
+
+                case "nl_NL":
+                    Console.WriteLine("Mogelijke commando's:");
+                    Console.WriteLine("- adduser {gebruiker} {wachtwoord} (om een account aan te maken)");
+                    Console.WriteLine("- remuser {gebruiker} (om een account te verwijderen)");
+                    Console.WriteLine("- passuser {gebruiker} {wachtwoord} (om het wachtwoord te veranderen)");
+                    Console.WriteLine("- setcomputername (om de naam van de computer te veranderen)");
+                    Console.WriteLine("- setlang {lang} (om de systeemtaal aan te passen)");
+                    //Console.WriteLine("- backgroundcolor {colorID} (verander de kleur van de achtergrond.)");
+                    //Console.WriteLine("- textcolor {colorID} (verander de kleur van de voorgrond.)");
                     break;
             }
         }
