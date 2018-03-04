@@ -97,6 +97,14 @@ namespace Aura_OS.Shell.cmdIntr.Settings
                         System.Utils.Settings.EditValue("language", "fr_FR");
                         System.Utils.Settings.PushValues();
                     }
+                    else if ((cmdargs[2].Equals("nl_NL")) || cmdargs[2].Equals("nl-NL"))
+                    {
+                        Kernel.langSelected = "nl_NL";
+                        L.Keyboard.Init();
+                        System.Utils.Settings.LoadValues();
+                        System.Utils.Settings.EditValue("language", "nl_NL");
+                        System.Utils.Settings.PushValues();
+                    }
                     else
                     {
                         L.Text.Display("unknownlanguage");

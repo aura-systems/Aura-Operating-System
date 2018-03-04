@@ -41,6 +41,18 @@ namespace Aura_OS.System
  ╚═╝  ╚═╝ ╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═╝ v{ Kernel.version }
 ");
                     break;
+
+                case "nl_NL":
+                    Console.ForegroundColor = ConsoleColor.White;
+                    Console.WriteLine($@"
+  █████╗ ██╗   ██╗██████╗  █████╗
+ ██╔══██╗██║   ██║██╔══██╗██╔══██╗
+ ███████║██║   ██║██████╔╝███████║ 
+ ██╔══██║██║   ██║██╔══██╗██╔══██║ ontwikkeld door Valentin Charbonnier
+ ██║  ██║╚██████╔╝██║  ██║██║  ██║ en Alexy DA CRUZ
+ ╚═╝  ╚═╝ ╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═╝ v{ Kernel.version }
+");
+                    break;
             }
         }
 

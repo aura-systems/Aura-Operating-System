@@ -28,6 +28,10 @@ namespace Aura_OS.System.Translation
                     case "en_US":
                         Sys.KeyboardManager.SetKeyLayout(new Sys.ScanMaps.US_Standard());
                         break;
+
+                    case "nl_NL":
+                        Sys.KeyboardManager.SetKeyLayout(new Sys.ScanMaps.US_Standard());
+                        break;
                 }
             }
             catch
