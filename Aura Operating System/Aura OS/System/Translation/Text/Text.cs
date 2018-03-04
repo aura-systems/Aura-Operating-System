@@ -87,7 +87,7 @@ namespace Aura_OS.System.Translation
                             Console.WriteLine("Langue inconnue.");
                             break;
                         case "availablelanguage":
-                            Console.WriteLine("Langues disponibles: en_US fr_FR");
+                            Console.WriteLine("Langues disponibles: en_US fr_FR nl_NL");
                             break;
                         case "unknowncolor":
                             Console.WriteLine("Couleur inconnue.");
@@ -329,7 +329,7 @@ namespace Aura_OS.System.Translation
                             Console.WriteLine("Unknown language.");
                             break;
                         case "availablelanguage":
-                            Console.WriteLine("Available languages: en-US fr-FR");
+                            Console.WriteLine("Available languages: en-US fr-FR nl-NL");
                             break;
                         case "unknowncolor":
                             Console.WriteLine("Unknown colour.");
@@ -550,7 +550,7 @@ namespace Aura_OS.System.Translation
                             Console.WriteLine("Naam computer:             " + Kernel.ComputerName);
                             break;
                         case "OSName":
-                            Console.WriteLine("Naam besturingssysteem:     Aura");
+                            Console.WriteLine("Naam besturingssysteem:    Aura");
                             break;
                         case "OSVersion":
                             Console.WriteLine("Versie besturingssysteem:  " + Kernel.version);
@@ -559,7 +559,7 @@ namespace Aura_OS.System.Translation
                             Console.WriteLine("Revisie besturingssysteem: " + Kernel.revision);
                             break;
                         case "AmountRAM":
-                            Console.WriteLine("Hoeveelheid RAM:             " + Cosmos.Core.CPU.GetAmountOfRAM() + "MB");
+                            Console.WriteLine("Hoeveelheid RAM:           " + Cosmos.Core.CPU.GetAmountOfRAM() + "MB");
                             break;
                         case "UnknownCommand":
                             Console.WriteLine("Onbekend commando.");
