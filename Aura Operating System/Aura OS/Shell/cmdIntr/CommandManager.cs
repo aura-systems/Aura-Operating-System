@@ -176,6 +176,11 @@ namespace Aura_OS.Shell.cmdIntr
                 int result = 1 / value; //Division by 0
             }
 
+            else if (cmd.Equals("startx"))
+            {
+                System.GUI.UI.Desktop.Main();
+            }
+
             #endregion Tests
 
             #region Tools
