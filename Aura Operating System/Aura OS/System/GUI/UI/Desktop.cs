@@ -92,12 +92,12 @@ namespace Aura_OS.System.GUI.UI
 
             Canvas.WriteToScreen();
 
-            terminus = new SdfFont(Fonts.Terminus.Terminus_fnt,
-                Image.FromBytes(Fonts.Terminus.Terminus_ppm, "ppm"));
+            //terminus = new SdfFont(Fonts.Terminus.Terminus_fnt,
+            //    Image.FromBytes(Fonts.Terminus.Terminus_ppm, "ppm"));
 
 
-            g.DrawString(10, 10, "ABCDEFGHIJKLMNOPQRSTUVWXYZ", 14f, terminus, Colors.Black);
-            Canvas.WriteToScreen();
+            //g.DrawString(10, 10, "ABCDEFGHIJKLMNOPQRSTUVWXYZ", 14f, terminus, Colors.Black);
+            //Canvas.WriteToScreen();
         }
 
         public static void Initialize()
@@ -114,8 +114,6 @@ namespace Aura_OS.System.GUI.UI
 
 
             Canvas.WriteToScreen();
-
-            //terminus = new SdfFont(Fonts.Terminus.Terminus_fnt,Image.FromBytes(Fonts.Terminus.Terminus_ppm, "ppm"));
         }
 
         public static void Final()
