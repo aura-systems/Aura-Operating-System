@@ -12,6 +12,7 @@ using Aura_OS.System.GUI.Graphics;
 using Aura_OS.System.GUI.Imaging;
 
 using Cosmos.HAL;
+using static Cosmos.HAL.Mouse;
 
 namespace Aura_OS.System.GUI.UI
 {
@@ -37,11 +38,11 @@ namespace Aura_OS.System.GUI.UI
 
             while(true)
             {
-                //int ret = Update();
-                //if (ret == 1)
-                //{
-                //    break;
-                //}
+                int ret = Update();
+                if (ret == 1)
+                {
+                    break;
+                }
                 Render();
             }
 
@@ -54,17 +55,37 @@ namespace Aura_OS.System.GUI.UI
 
         public static int Update()
         {
-            c = Console.ReadKey(true);
+            //c = Console.ReadKey(true);
 
-            if (c.Key == ConsoleKey.Escape)
+            //if (c.Key == ConsoleKey.Escape)
+            //{
+            //    return 1;
+            //}
+            //else
+            //{
+            //    return 0;
+            //}
+
+            switch (Cursor.Mouse.Buttons)
             {
-                return 1;
+                case MouseState.Left:
+                    Cosmos.System.Power.Reboot();
+                    break;
+                case MouseState.Right:
+                    Cosmos.System.Power.Shutdown();
+                    break;
+                case MouseState.Middle:
+                    break;
+                case MouseState.None:
+                    break;
+                default:
+                    break;
             }
-            else
-            {
-                return 0;
-            }
+
+            return 0;
         }
+
+
 
         public static Image cursor;
 
