@@ -14,14 +14,14 @@ namespace Aura_OS.System.GUI.UI
 
         public static void Init()
         {
-            Mouse.Initialize((uint)Desktop.Widht, (uint)Desktop.Height);
+            Mouse.Initialize((uint)Desktop.Width, (uint)Desktop.Height);
         }
 
         public static void Render()
         {
             if (Enabled)
             {
-                Desktop.g.DrawImage(10, 10, Desktop.cursor);
+                Desktop.g.DrawImage(Mouse.X, Mouse.Y, Desktop.cursor);
             }
         }
     }

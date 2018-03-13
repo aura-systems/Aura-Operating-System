@@ -22,8 +22,8 @@ namespace Aura_OS.System.GUI.UI
         public static Canvas Canvas = new Canvas(800, 600);
         public static SdfFont terminus;
 
-        public static int Widht;
-        public static int Height;
+        public static int Width = 800;
+        public static int Height = 600;
 
         static int _frames = 0;
         static int _fps = 0;
@@ -54,16 +54,17 @@ namespace Aura_OS.System.GUI.UI
 
         public static int Update()
         {
-            c = Console.ReadKey(true);
+            // c = Console.ReadKey(true);
 
-            if (c.Key == ConsoleKey.Escape)
-            {
-                return 1;
-            }
-            else
-            {
-                return 0;
-            }
+            // if (c.Key == ConsoleKey.Escape)
+            // {
+            //     return 1;
+            // }
+            // else
+            // {
+            //     return 0;
+            // }
+            return 0;
         }
 
         public static Image cursor;
@@ -112,8 +113,6 @@ namespace Aura_OS.System.GUI.UI
         public static void Initialize()
         {
 
-            Widht = 800; 
-            Height = 600;
             Console.Clear();
             Screen.SetMode(VbeScreen.ScreenSize.Size800X600, VbeScreen.Bpp.Bpp32);
             Screen.Clear(Colors.Blue);
