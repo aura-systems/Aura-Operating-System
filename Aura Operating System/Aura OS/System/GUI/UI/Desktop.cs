@@ -19,8 +19,11 @@ namespace Aura_OS.System.GUI.UI
     {
 
         public static VbeScreen Screen = new VbeScreen();
-        public static Canvas Canvas = new Canvas(800, 600);
+        public static Canvas Canvas = new Canvas(Widht, Height);
         public static SdfFont terminus;
+
+        public static int Widht = 800;
+        public static int Height = 600;
 
         static int _frames = 0;
         static int _fps = 0;
@@ -63,6 +66,10 @@ namespace Aura_OS.System.GUI.UI
             }
         }
 
+        public static Image cursor;
+
+        public static Graphics.Graphics g;
+
         public static void Render()
         {
             if (_deltaT != RTC.Second)
@@ -74,21 +81,23 @@ namespace Aura_OS.System.GUI.UI
 
             _frames++;
 
-            var g = new Graphics.Graphics(Canvas);
+            g = new Graphics.Graphics(Canvas);
 
             //if (RTC.Second > 30 && !flag)
             //{
-                flag = true;
-                g.Clear(Colors.White);
-                //g.DrawString(10, 10, "FPS: " + _fps, 50f, terminus, Colors.Black);
-                //g.DrawString(10, 10 + 17, "Frames: " + _frames, 50f, terminus, Colors.Cyan);
-                //g.DrawString(10, 10 + 17 + 17, "DeltaT: " + _deltaT, 50f, terminus, Colors.Orange);
-                //g.DrawString(10, 10 + 17 + 17 + 17, "RTC.Second: " + RTC.Second, 50f, terminus, Colors.Purple);
+            flag = true;
+            g.Clear(Colors.White);
+            //g.DrawString(10, 10, "FPS: " + _fps, 50f, terminus, Colors.Black);
+            //g.DrawString(10, 10 + 17, "Frames: " + _frames, 50f, terminus, Colors.Cyan);
+            //g.DrawString(10, 10 + 17 + 17, "DeltaT: " + _deltaT, 50f, terminus, Colors.Orange);
+            //g.DrawString(10, 10 + 17 + 17 + 17, "RTC.Second: " + RTC.Second, 50f, terminus, Colors.Purple);
             //}
-            
+
             //var img = Image.FromBytes(MyvarLogoPng.Myvar_LogoPng, "png");
-            //var img = Image.FromBytes(Images.MyvarLogoPPM.Myvar_LogoPPM, "ppm");
-            //g.DrawImage(10, 10, img);
+
+            cursor = Image.FromBytes(Images.Cursors.Normal, "ppm");
+
+            Cursor.Render();
 
             Canvas.WriteToScreen();
 
@@ -106,14 +115,15 @@ namespace Aura_OS.System.GUI.UI
             Screen.SetMode(VbeScreen.ScreenSize.Size800X600, VbeScreen.Bpp.Bpp32);
             Screen.Clear(Colors.Blue);
 
-
             _deltaT = RTC.Second;
 
-            var g = new Graphics.Graphics(Canvas);
+            g = new Graphics.Graphics(Canvas);
             g.Clear(Colors.LightGreen);
 
-
             Canvas.WriteToScreen();
+
+            Cursor.Init();
+            Cursor.Enabled = true;
         }
 
         public static void Final()
