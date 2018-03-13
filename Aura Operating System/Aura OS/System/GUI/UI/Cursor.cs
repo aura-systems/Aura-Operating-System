@@ -21,7 +21,8 @@ namespace Aura_OS.System.GUI.UI
         {
             if (Enabled)
             {
-                Desktop.g.DrawImage(Mouse.X, Mouse.Y, Desktop.cursor);
+                //Desktop.g.DrawImage(Mouse.X, Mouse.Y, Desktop.cursor);
+                Desktop.g.FillRectangle(Mouse.X, Mouse.Y, 7, 7, Colors.Black);
             }
         }
     }
