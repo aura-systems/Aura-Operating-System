@@ -19,11 +19,11 @@ namespace Aura_OS.System.GUI.UI
     {
 
         public static VbeScreen Screen = new VbeScreen();
-        public static Canvas Canvas = new Canvas(Widht, Height);
+        public static Canvas Canvas = new Canvas(800, 600);
         public static SdfFont terminus;
 
-        public static int Widht = 800;
-        public static int Height = 600;
+        public static int Widht;
+        public static int Height;
 
         static int _frames = 0;
         static int _fps = 0;
@@ -111,6 +111,9 @@ namespace Aura_OS.System.GUI.UI
 
         public static void Initialize()
         {
+
+            Widht = 800; 
+            Height = 600;
             Console.Clear();
             Screen.SetMode(VbeScreen.ScreenSize.Size800X600, VbeScreen.Bpp.Bpp32);
             Screen.Clear(Colors.Blue);
