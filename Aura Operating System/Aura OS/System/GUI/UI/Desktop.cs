@@ -65,7 +65,39 @@ namespace Aura_OS.System.GUI.UI
 
         public static void Render()
         {
-        
+            if (_deltaT != RTC.Second)
+            {
+                _fps = _frames;
+                _frames = 0;
+                _deltaT = RTC.Second;
+            }
+
+            _frames++;
+
+            var g = new Graphics.Graphics(Canvas);
+
+            //if (RTC.Second > 30 && !flag)
+            //{
+                flag = true;
+                g.Clear(Colors.White);
+                //g.DrawString(10, 10, "FPS: " + _fps, 50f, terminus, Colors.Black);
+                //g.DrawString(10, 10 + 17, "Frames: " + _frames, 50f, terminus, Colors.Cyan);
+                //g.DrawString(10, 10 + 17 + 17, "DeltaT: " + _deltaT, 50f, terminus, Colors.Orange);
+                //g.DrawString(10, 10 + 17 + 17 + 17, "RTC.Second: " + RTC.Second, 50f, terminus, Colors.Purple);
+            //}
+            
+            //var img = Image.FromBytes(MyvarLogoPng.Myvar_LogoPng, "png");
+            //var img = Image.FromBytes(Images.MyvarLogoPPM.Myvar_LogoPPM, "ppm");
+            //g.DrawImage(10, 10, img);
+
+            Canvas.WriteToScreen();
+
+            terminus = new SdfFont(Fonts.Terminus.Terminus_fnt,
+                Image.FromBytes(Fonts.Terminus.Terminus_ppm, "ppm"));
+
+
+            g.DrawString(10, 10, "ABCDEFGHIJKLMNOPQRSTUVWXYZ", 14f, terminus, Colors.Black);
+            Canvas.WriteToScreen();
         }
 
         public static void Initialize()
@@ -78,23 +110,12 @@ namespace Aura_OS.System.GUI.UI
             _deltaT = RTC.Second;
 
             var g = new Graphics.Graphics(Canvas);
-            g.Clear(Colors.White);
+            g.Clear(Colors.LightGreen);
 
 
             Canvas.WriteToScreen();
 
-            terminus = new SdfFont(Fonts.Terminus.Terminus_fnt,
-            Image.FromBytes(Fonts.Terminus.Terminus_ppm, "ppm"));
-
-
-            g.DrawString(10, 10, "ABCDEFGHIJKLMNOPQRSTUVWXYZ", 14f, terminus, Colors.Black);
-            Canvas.WriteToScreen();
-            g.DrawString(10, 25, "abcdefghijklmnopqrstuvwxyz", 14f, terminus, Colors.Black);
-            Canvas.WriteToScreen();
-            g.DrawString(10, 44, "ABCDEFGHIJKLMNOPQRSTUVWXYZ", 30f, terminus, Colors.Black);
-            Canvas.WriteToScreen();
-            g.DrawString(10, 74, "abcdefghijklmnopqrstuvwxyz", 30f, terminus, Colors.Black);
-            Canvas.WriteToScreen();
+            //terminus = new SdfFont(Fonts.Terminus.Terminus_fnt,Image.FromBytes(Fonts.Terminus.Terminus_ppm, "ppm"));
         }
 
         public static void Final()
