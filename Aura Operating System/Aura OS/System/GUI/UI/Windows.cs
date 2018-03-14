@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Aura_OS.System.GUI.Graphics;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -12,10 +13,10 @@ namespace Aura_OS.System.GUI.UI
         public static void AddWindow(int sizex, int sizey, int posx, int posy, string name)
         {
             Window win = new Window();
-            //Point position = new Point(posx, posy);
-            //Point size = new Point(sizex, sizey);
-            //win.pos = position;
-            //win.size = size;
+            Util.Point position = new Util.Point(posx, posy);
+            Util.Point size = new Util.Point(sizex, sizey);
+            win.pos = position;
+            win.size = size;
             win.Name = name;
             AddWindow(win);
         }
@@ -39,15 +40,23 @@ namespace Aura_OS.System.GUI.UI
 
         public string Name;
 
-        //public Point pos;
+        public Util.Point pos;
 
-        //public Point size;
+        public Util.Point size;
 
-       // public Area CloseArea;
+        public Util.Area CloseArea;
 
         public void Draw()
         {
-
+            Desktop.g.FillRectangle(pos.X, pos.Y - 21, size.X, 20, Colors.AliceBlue);
+            //Graphics.DrawString(Name, pos.X, pos.Y - 22, Colors.Black, Internals.Files.Fonts.SegoeUI11_cff);
+            Desktop.g.FillRectangle(pos.X, pos.Y - 1, size.X + 1, size.Y + 1, Colors.LightGray);
+            Desktop.g.DrawRectangle(pos.X - 1, pos.Y - 22, size.X + 2, size.Y + 22, Colors.DarkGray);
+            Desktop.g.FillRectangle(pos.X + size.X - 19, pos.Y - 21, 20, 20, Colors.Red);
+            CloseArea.X = pos.X + size.X - 19;
+            CloseArea.Y = pos.Y - 20;
+            CloseArea.XMAX = CloseArea.X + 19;
+            CloseArea.YMAX = CloseArea.Y + 19;
         }
 
     }

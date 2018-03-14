@@ -133,6 +133,9 @@ namespace Aura_OS.System.GUI.UI
 
             g.FillRectangle(0 , 738, 1366, 29, Colors.LightBlue);
 
+            WindowsManager.AddWindow(300, 300, 100, 100, "Test Window");
+            WindowsManager.ShowWindows();
+
             if (windows)
             {
                 g.FillRectangle(0, 288, 250, 450, Colors.LightBlue);
@@ -152,12 +155,12 @@ namespace Aura_OS.System.GUI.UI
 
         public static void Initialize()
         {
-
             Console.Clear();
+
             Screen.SetMode(VbeScreen.ScreenSize.Size1366X768, VbeScreen.Bpp.Bpp32);
             Screen.Clear(Colors.Blue);
 
-            _deltaT = RTC.Second;
+            //_deltaT = RTC.Second;
 
             g = new Graphics.Graphics(Canvas);
             g.Clear(Colors.White);
