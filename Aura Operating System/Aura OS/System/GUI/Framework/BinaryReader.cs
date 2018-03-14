@@ -1,9 +1,14 @@
-﻿namespace Aura_OS.System.GUI
+﻿using System.Collections.Generic;
+
+namespace Aura_OS.System.GUI
 {
     public class BinaryReader
     {
         private int _pos = 0;
         private byte[] _data;
+
+        public List<byte> _buffer = new List<byte>();
+        public int _index = -1;
 
         public BinaryReader(byte[] data)
         {
@@ -93,6 +98,21 @@
         public char GetChar()
         {
             return (char) GetUint8();
+        }
+
+        public int ReadInt32()
+        {
+            return unchecked(
+                   ((int)ReadByte() << 24) |
+                   ((int)ReadByte() << 16) |
+                   ((int)ReadByte() << 8) |
+                    (int)ReadByte());
+        }
+
+        public byte ReadByte()
+        {
+            _index++;
+            return _buffer[_index];
         }
     }
 }

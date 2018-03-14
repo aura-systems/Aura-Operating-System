@@ -15,6 +15,8 @@ namespace Aura_OS.System.GUI.Imaging
             {
                 case "ppm":
                     return new PPM().Read(data);
+                case "cif":
+                    return new CIF().Read(data);
             }
 
             return null;

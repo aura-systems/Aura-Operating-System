@@ -12,9 +12,12 @@ namespace Aura_OS.System.GUI.UI
 
         public static Mouse Mouse = new Mouse();
 
+        public static int sizex = 7;
+        public static int sizey = 7;
+
         public static void Init()
         {
-            Mouse.Initialize((uint)Desktop.Width, (uint)Desktop.Height);
+            Mouse.Initialize((uint)Desktop.Width, (uint)Desktop.Height - (uint)sizey);
         }
 
         public static void Render()
@@ -22,7 +25,7 @@ namespace Aura_OS.System.GUI.UI
             if (Enabled)
             {
                 //Desktop.g.DrawImage(Mouse.X, Mouse.Y, Desktop.cursor);
-                Desktop.g.FillRectangle(Mouse.X, Mouse.Y, 7, 7, Colors.Black);
+                Desktop.g.FillRectangle(Mouse.X, Mouse.Y, sizex, sizey, Colors.Black);
             }
         }
     }

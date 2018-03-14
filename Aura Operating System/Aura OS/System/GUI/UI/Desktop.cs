@@ -51,20 +51,25 @@ namespace Aura_OS.System.GUI.UI
             return 0;
         }
 
-        static ConsoleKeyInfo c;
+        static bool windows = false;
+        static bool active = false;
 
         public static int Update()
         {
-            //c = Console.ReadKey(true);
 
-            //if (c.Key == ConsoleKey.Escape)
-            //{
-            //    return 1;
-            //}
-            //else
-            //{
-            //    return 0;
-            //}
+
+            while (Console.KeyAvailable)
+            {
+                 if (Console.ReadKey(true).Key == ConsoleKey.LeftWindows)
+                 {
+                    windows = true;
+                 }
+                 else
+                 {
+                    windows = false;
+                 }
+            }
+            
 
             switch (Cursor.Mouse.Buttons)
             {
@@ -87,7 +92,7 @@ namespace Aura_OS.System.GUI.UI
 
 
 
-        public static Image cursor;
+        //public static Image cursor;
 
         public static Graphics.Graphics g;
 
@@ -107,16 +112,31 @@ namespace Aura_OS.System.GUI.UI
             //if (RTC.Second > 30 && !flag)
             //{
             //flag = true;
+
+
             g.Clear(Colors.White);
+
+
             //g.DrawString(10, 10, "FPS: " + _fps, 50f, terminus, Colors.Black);
             //g.DrawString(10, 10 + 17, "Frames: " + _frames, 50f, terminus, Colors.Cyan);
             //g.DrawString(10, 10 + 17 + 17, "DeltaT: " + _deltaT, 50f, terminus, Colors.Orange);
             //g.DrawString(10, 10 + 17 + 17 + 17, "RTC.Second: " + RTC.Second, 50f, terminus, Colors.Purple);
             //}
 
-            //var img = Image.FromBytes(MyvarLogoPng.Myvar_LogoPng, "png");
+            g.FillRectangle(0 , 738, 1024, 29, Colors.LightBlue);
 
-            
+            if (windows)
+            {
+                if (!active)
+                {
+                    g.FillRectangle(0, 588, 1024, 150, Colors.LightBlue);
+                    active = true;
+                }
+                else
+                {
+                    active = false;
+                }
+            }
 
             Cursor.Render();
 
@@ -147,7 +167,7 @@ namespace Aura_OS.System.GUI.UI
             Cursor.Init();
             Cursor.Enabled = true;
 
-            //cursor = Image.FromBytes(Images.Cursors.Normal, "ppm");
+            //cursor = Image.FromBytes(Images.Cursors.Cif, "cif");
         }
 
         public static void Final()
