@@ -43,7 +43,8 @@ namespace Aura_OS.System.GUI
             Size640X480,
             Size800X600,
             Size1024X768,
-            Size1280X1024
+            Size1280X1024,
+            Size1366X768
 
         }
         /// <summary>
@@ -90,6 +91,10 @@ namespace Aura_OS.System.GUI
                 case ScreenSize.Size1280X1024:
                     ScreenWidth = 1280;
                     ScreenHeight = 1024;
+                    break;
+                case ScreenSize.Size1366X768:
+                    ScreenWidth = 1366;
+                    ScreenHeight = 768;
                     break;
             }
             //Get bpp

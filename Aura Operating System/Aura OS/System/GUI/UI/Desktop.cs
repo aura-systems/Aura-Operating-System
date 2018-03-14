@@ -20,10 +20,10 @@ namespace Aura_OS.System.GUI.UI
     {
 
         public static VbeScreen Screen = new VbeScreen();
-        public static Canvas Canvas = new Canvas(1024, 768);
+        public static Canvas Canvas = new Canvas(1366, 768);
         public static SdfFont terminus;
 
-        public static int Width = 1024;
+        public static int Width = 1366;
         public static int Height = 768;
 
         static int _frames = 0;
@@ -52,40 +52,48 @@ namespace Aura_OS.System.GUI.UI
         }
 
         static bool windows = false;
-        static bool active = false;
 
         public static int Update()
         {
 
 
+
             while (Console.KeyAvailable)
             {
-                 if (Console.ReadKey(true).Key == ConsoleKey.LeftWindows)
-                 {
-                    windows = true;
-                 }
-                 else
-                 {
-                    windows = false;
-                 }
+                var key = Console.ReadKey().Key;
+                switch (key)
+                {
+                    case ConsoleKey.LeftWindows:
+                        if (windows)
+                        {
+                            windows = false;
+                        }
+                        else
+                        {
+                            windows = true;
+                        }
+                        break;
+                    case ConsoleKey.F1:
+                        Cosmos.System.Power.Reboot();
+                        break;
+                    case ConsoleKey.F2:
+                        Cosmos.System.Power.Shutdown();
+                        break;
+                    default:
+                        break;
+                }
             }
             
 
-            switch (Cursor.Mouse.Buttons)
-            {
-                case MouseState.Left:
-                    Cosmos.System.Power.Reboot();
-                    break;
-                case MouseState.Right:
-                    Cosmos.System.Power.Shutdown();
-                    break;
-                case MouseState.Middle:
-                    break;
-                case MouseState.None:
-                    break;
-                default:
-                    break;
-            }
+            //switch (Cursor.Mouse.Buttons)
+            //{
+            //    case MouseState.Left:
+            //        Cosmos.System.Power.Reboot();
+            //        break;
+            //    case MouseState.Right:
+            //        Cosmos.System.Power.Shutdown();
+            //        break;
+            //}
 
             return 0;
         }
@@ -107,7 +115,7 @@ namespace Aura_OS.System.GUI.UI
 
             //_frames++;
 
-            g = new Graphics.Graphics(Canvas);
+            //g = new Graphics.Graphics(Canvas);
 
             //if (RTC.Second > 30 && !flag)
             //{
@@ -123,19 +131,11 @@ namespace Aura_OS.System.GUI.UI
             //g.DrawString(10, 10 + 17 + 17 + 17, "RTC.Second: " + RTC.Second, 50f, terminus, Colors.Purple);
             //}
 
-            g.FillRectangle(0 , 738, 1024, 29, Colors.LightBlue);
+            g.FillRectangle(0 , 738, 1366, 29, Colors.LightBlue);
 
             if (windows)
             {
-                if (!active)
-                {
-                    g.FillRectangle(0, 588, 1024, 150, Colors.LightBlue);
-                    active = true;
-                }
-                else
-                {
-                    active = false;
-                }
+                g.FillRectangle(0, 288, 250, 450, Colors.LightBlue);
             }
 
             Cursor.Render();
@@ -154,7 +154,7 @@ namespace Aura_OS.System.GUI.UI
         {
 
             Console.Clear();
-            Screen.SetMode(VbeScreen.ScreenSize.Size1024X768, VbeScreen.Bpp.Bpp32);
+            Screen.SetMode(VbeScreen.ScreenSize.Size1366X768, VbeScreen.Bpp.Bpp32);
             Screen.Clear(Colors.Blue);
 
             _deltaT = RTC.Second;
