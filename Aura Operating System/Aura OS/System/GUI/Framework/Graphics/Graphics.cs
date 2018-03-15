@@ -302,68 +302,68 @@ namespace Aura_OS.System.GUI.Graphics
 
         private byte Cftb(float f) => (byte) Math.Floor(f >= 1.0f ? 255f : f * 256.0f);
 
-        //public void DrawString(int x, int y, string str, float size, SdfFont font, Color txtcolor)
-        //{
-        //    float width = 0.5f;
-        //    float edge = 0.2f;
-        //
-        //    float borderWidth = 0.0f;
-        //    float borderEdge = 0.05f;
+        public void DrawString(int x, int y, string str, float size, SdfFont font, Color txtcolor)
+        {
+            float width = 0.5f;
+            float edge = 0.2f;
+
+            float borderWidth = 0.0f;
+            float borderEdge = 0.05f;
 
 
             // ScaleTransform(sz, sz);
 
-        //    var atlas = font.AtlasImage;
-         //   float sz = 1.0f / ((float) font.FontSize / (float) size);
+            var atlas = font.AtlasImage;
+            float sz = 1.0f / ((float) font.FontSize / (float) size);
 
             // if (size != font.FontSize)
-         //   {
-         //       atlas = atlas.ResizeImage((int) ((float) atlas.Width * sz), (int) ((float) atlas.Height * sz));
-         //   }
+            {
+                atlas = atlas.ResizeImage((int) ((float) atlas.Width * sz), (int) ((float) atlas.Height * sz));
+            }
 
-         //   foreach (var c in str)
-         //   {
-          //      var chr = font.GetChar(c).Clone();
+            foreach (var c in str)
+            {
+                var chr = font.GetChar(c).Clone();
 
-          //      chr.Width = (int) ((float) chr.Width * sz);
-          //      chr.Height = (int) ((float) chr.Height * sz);
-          //      chr.X = (int) ((float) chr.X * sz);
-           //     chr.Y = (int) ((float) chr.Y * sz);
-           //     chr.Xadvance = (int) ((float) chr.Xadvance * sz);
-           //     chr.Xoffset = (int) ((float) chr.Xoffset * sz);
-           //     chr.Yoffset = (int) ((float) chr.Yoffset * sz);
+                chr.Width = (int) ((float) chr.Width * sz);
+                chr.Height = (int) ((float) chr.Height * sz);
+                chr.X = (int) ((float) chr.X * sz);
+                chr.Y = (int) ((float) chr.Y * sz);
+                chr.Xadvance = (int) ((float) chr.Xadvance * sz);
+                chr.Xoffset = (int) ((float) chr.Xoffset * sz);
+                chr.Yoffset = (int) ((float) chr.Yoffset * sz);
 
 
-            //    for (int x1 = chr.X; x1 < chr.X + chr.Width; x1++)
-            //    {
-              //      for (int y1 = chr.Y; y1 < chr.Y + chr.Height; y1++)
-             //       {
-               //         float distance = 1.0f - (atlas.GetPixel(x1, y1).R / 255f);
-               //         float alpha = 1.0f - Smoothstep(width, width + edge, distance);
+                for (int x1 = chr.X; x1 < chr.X + chr.Width; x1++)
+                {
+                    for (int y1 = chr.Y; y1 < chr.Y + chr.Height; y1++)
+                    {
+                        float distance = 1.0f - (atlas.GetPixel(x1, y1).R / 255f);
+                        float alpha = 1.0f - Smoothstep(width, width + edge, distance);
 
-                //        float distance2 = 1.0f - (atlas.GetPixel(x1, y1).R / 255f);
-                //        float outlinealpha = 1.0f - Smoothstep(borderWidth, borderWidth + borderEdge, distance2);
+                        float distance2 = 1.0f - (atlas.GetPixel(x1, y1).R / 255f);
+                        float outlinealpha = 1.0f - Smoothstep(borderWidth, borderWidth + borderEdge, distance2);
 
-                 //       float overallAlpha = alpha + (1.0f - alpha) * outlinealpha;
+                        float overallAlpha = alpha + (1.0f - alpha) * outlinealpha;
 
-                 //       var color = txtcolor;
+                        var color = txtcolor;
 
-                  //      if (overallAlpha != 1.0f)
-                   //     {
-                   //         var gpx = _canvas.GetPixel(x + x1 - chr.X + chr.Xoffset, y + y1 - chr.Y + chr.Yoffset);
-                   //         color = Blend(txtcolor, gpx, overallAlpha);
-                    //    }
+                        if (overallAlpha != 1.0f)
+                        {
+                            var gpx = _canvas.GetPixel(x + x1 - chr.X + chr.Xoffset, y + y1 - chr.Y + chr.Yoffset);
+                            color = Blend(txtcolor, gpx, overallAlpha);
+                        }
 
-                   //     color.A = 255;
+                        color.A = 255;
 
-                  //      SetPixel(Offset.X + x + x1 - chr.X + chr.Xoffset, Offset.Y + y + y1 - chr.Y + chr.Yoffset,
-                   //         color);
-                  //  }
-               // }
+                        SetPixel(Offset.X + x + x1 - chr.X + chr.Xoffset, Offset.Y + y + y1 - chr.Y + chr.Yoffset,
+                            color);
+                    }
+                }
 
-               // x += chr.Xadvance;
-            //}
-      //  }
+                x += chr.Xadvance;
+            }
+        }
 
         public Size MeasureString(string str, float size, SdfFont font)
         {

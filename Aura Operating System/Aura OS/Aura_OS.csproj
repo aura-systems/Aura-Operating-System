@@ -5,6 +5,11 @@
     <IgnoreDebugStubAttribute>False</IgnoreDebugStubAttribute>
     <VMware_StackCorruptionDetectionLevel>MethodFooters</VMware_StackCorruptionDetectionLevel>
     <VMware_IgnoreDebugStubAttribute>False</VMware_IgnoreDebugStubAttribute>
+    <ISO_StackCorruptionDetectionLevel>MethodFooters</ISO_StackCorruptionDetectionLevel>
+    <ISO_IgnoreDebugStubAttribute>False</ISO_IgnoreDebugStubAttribute>
+    <Bochs_StackCorruptionDetectionLevel>MethodFooters</Bochs_StackCorruptionDetectionLevel>
+    <Bochs_Name>Aura_OSBoot</Bochs_Name>
+    <Bochs_IgnoreDebugStubAttribute>False</Bochs_IgnoreDebugStubAttribute>
   </PropertyGroup>
   <PropertyGroup>
     <BinFormat>elf</BinFormat>
@@ -24,7 +29,7 @@
     <VMware_Description>Use VMware Player or Workstation to deploy and debug.</VMware_Description>
     <VMware_Deployment>ISO</VMware_Deployment>
     <VMware_Launch>VMware</VMware_Launch>
-    <VMware_DebugEnabled>True</VMware_DebugEnabled>
+    <VMware_DebugEnabled>False</VMware_DebugEnabled>
     <VMware_DebugMode>Source</VMware_DebugMode>
     <VMware_VisualStudioDebugPort>Pipe: Cosmos\Serial</VMware_VisualStudioDebugPort>
     <VMware_PxeInterface>192.168.68.1</VMware_PxeInterface>
