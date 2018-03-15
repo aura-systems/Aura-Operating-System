@@ -103,17 +103,18 @@ namespace Aura_OS.System.GUI.UI
         //public static Image cursor;
 
         public static Graphics.Graphics g;
+        public static bool firsttime = true;
 
         public static void Render()
         {
-            //if (_deltaT != RTC.Second)
-            //{
-            //    _fps = _frames;
-            //    _frames = 0;
-            //    _deltaT = RTC.Second;
-            //}
+            if (_deltaT != RTC.Second)
+            {
+                _fps = _frames;
+                _frames = 0;
+                _deltaT = RTC.Second;
+            }
 
-            //_frames++;
+            _frames++;
 
             //g = new Graphics.Graphics(Canvas);
 
@@ -122,7 +123,7 @@ namespace Aura_OS.System.GUI.UI
             //flag = true;
 
 
-            g.Clear(Colors.White);
+            //g.Clear(Colors.White);
 
 
             //g.DrawString(10, 10, "FPS: " + _fps, 50f, terminus, Colors.Black);
@@ -131,20 +132,14 @@ namespace Aura_OS.System.GUI.UI
             //g.DrawString(10, 10 + 17 + 17 + 17, "RTC.Second: " + RTC.Second, 50f, terminus, Colors.Purple);
             //}
 
-            g.FillRectangle(0 , 738, 1366, 29, Colors.LightBlue);
-
-            WindowsManager.AddWindow(300, 300, 100, 100, "Test Window");
-            WindowsManager.ShowWindows();
-
-            if (windows)
-            {
-                g.FillRectangle(0, 288, 250, 450, Colors.LightBlue);
-            }
+            Desktop.g.FillRectangle(10, 500, 100, 20, Colors.White);
+            Desktop.g.DrawString("FPS: " + _fps, 10, 500, Colors.Black, Fonts.CFF.SegoeUI11_cff);
 
             Cursor.Render();
 
             Canvas.WriteToScreen();
 
+            firsttime = false;
             //terminus = new SdfFont(Fonts.Terminus.Terminus_fnt,
             //    Image.FromBytes(Fonts.Terminus.Terminus_ppm, "ppm"));
 
@@ -165,10 +160,27 @@ namespace Aura_OS.System.GUI.UI
             g = new Graphics.Graphics(Canvas);
             g.Clear(Colors.White);
 
-            Canvas.WriteToScreen();
+            
 
             Cursor.Init();
             Cursor.Enabled = true;
+
+            g.FillRectangle(0, 738, 1366, 29, Colors.LightBlue);
+
+            WindowsManager.AddWindow(300, 300, 100, 100, "Test Window.");
+            WindowsManager.ShowWindows();
+
+            if (windows)
+            {
+                g.FillRectangle(0, 288, 250, 450, Colors.LightBlue);
+            }
+
+            var img = Image.FromBytes(Images.CosmosLogoPPM.Cosmos_LogoPPM, "ppm");
+            g.DrawImage(10, 10, img);
+
+            //Cursor.Image = Framework.Graphics.Image.Load(Images.Cursors.Normal_CIF);
+
+            Canvas.WriteToScreen();
 
             //cursor = Image.FromBytes(Images.Cursors.Cif, "cif");
         }

@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using Aura_OS.System.GUI.Framework.Graphics;
 using Aura_OS.System.GUI.Graphics.Rasterizing;
 using Aura_OS.System.GUI.Imaging;
+using Aura_OS.System.GUI.UI.Fonts;
 using PolyPartition;
 
 namespace Aura_OS.System.GUI.Graphics
@@ -22,6 +24,83 @@ namespace Aura_OS.System.GUI.Graphics
         public int Height { get; set; }
         public int Width { get; set; }
 
+        public void DrawImage(Framework.Graphics.Image img, int x, int y, Color TransparencyKey = null)
+        {
+            int z = 0;
+            for (int p = y; p < y + img.Height; p++)
+            {
+                for (int i = x; i < x + img.Width; i++)
+                {
+                    if (TransparencyKey != null)
+                    {
+                        if (img.Map[z] != TransparencyKey.ToHex())
+                        {
+                            SetPixel(i, p, new Color((int)img.Map[z]));
+                        }
+                    }
+                    else
+                    {
+                        SetPixel(i, p, new Color((int)img.Map[z]));
+                    }
+
+                    z++;
+                }
+            }
+        }
+
+        public void DrawString(string c, int x, int y, Color color, Font f)
+        {
+            int totalwidth = 0;
+            for (int i = 0; i < c.Length; i++)
+            {
+
+                var ch = c[i];
+                if (ch == ' ')
+                {
+                    totalwidth += f.Width[0];
+                }
+                else if (ch == '\t')
+                {
+                    totalwidth += (f.Width[0] * 4);
+                }
+                else
+                {
+                    totalwidth += DrawChar(ch, x + totalwidth, y, color, f);
+                }
+
+            }
+        }
+
+        public static int DrawChar(char c, int x, int y, Color color, Font f)
+        {
+            var index = 0;
+            for (int i = 0; i < f.Char.Count; i++)
+            {
+                if (c == f.Char[i])
+                {
+                    index = i;
+                    break;
+                }
+            }
+
+            var width = f.Width[index];
+
+            int z = 0;
+            for (int p = y; p < y + f.Height[index]; p++)
+            {
+                for (int i = x; i < x + width; i++)
+                {
+                    if (f.Data[index][z] == 1)
+                    {
+                        UI.Desktop.g.SetPixel(i, p, color);
+                    }
+
+                    z++;
+                }
+            }
+
+            return width;
+        }
 
         public Graphics(ICanvas canvas)
         {
@@ -31,6 +110,26 @@ namespace Aura_OS.System.GUI.Graphics
 
             Container = new Rectangle(0, 0, canvas.Width, canvas.Height);
             ContainerFlag = false;
+        }
+
+        public void GetFillRectangle(int x, int y, int sizex, int sizey)
+        {
+            
+            x = (int)((float)x * Scale.X);
+            y = (int)((float)y * Scale.Y);
+
+            x += Transform.X;
+            y += Transform.Y;
+
+            for (int height = y; height < y + sizey; height++)
+            {
+                //_canvas.SetScanLine(Offset.X + x + ((Offset.Y + height) * _canvas.Width), sizex, (uint)c.ToHex());
+                /*  for (int width = x; width < w; width++)
+                    {
+                            SetPixel(width, height, c);
+                    }*/
+            }
+            
         }
 
         #region Internals
@@ -165,7 +264,7 @@ namespace Aura_OS.System.GUI.Graphics
 
         #region Draw
 
-        public void DrawImage(int x, int y, Image img)
+        public void DrawImage(int x, int y, Imaging.Image img)
         {
             for (int x1 = 0; x1 < img.Width; x1++)
             {
@@ -203,68 +302,68 @@ namespace Aura_OS.System.GUI.Graphics
 
         private byte Cftb(float f) => (byte) Math.Floor(f >= 1.0f ? 255f : f * 256.0f);
 
-        public void DrawString(int x, int y, string str, float size, SdfFont font, Color txtcolor)
-        {
-            float width = 0.5f;
-            float edge = 0.2f;
-
-            float borderWidth = 0.0f;
-            float borderEdge = 0.05f;
+        //public void DrawString(int x, int y, string str, float size, SdfFont font, Color txtcolor)
+        //{
+        //    float width = 0.5f;
+        //    float edge = 0.2f;
+        //
+        //    float borderWidth = 0.0f;
+        //    float borderEdge = 0.05f;
 
 
             // ScaleTransform(sz, sz);
 
-            var atlas = font.AtlasImage;
-            float sz = 1.0f / ((float) font.FontSize / (float) size);
+        //    var atlas = font.AtlasImage;
+         //   float sz = 1.0f / ((float) font.FontSize / (float) size);
 
             // if (size != font.FontSize)
-            {
-                atlas = atlas.ResizeImage((int) ((float) atlas.Width * sz), (int) ((float) atlas.Height * sz));
-            }
+         //   {
+         //       atlas = atlas.ResizeImage((int) ((float) atlas.Width * sz), (int) ((float) atlas.Height * sz));
+         //   }
 
-            foreach (var c in str)
-            {
-                var chr = font.GetChar(c).Clone();
+         //   foreach (var c in str)
+         //   {
+          //      var chr = font.GetChar(c).Clone();
 
-                chr.Width = (int) ((float) chr.Width * sz);
-                chr.Height = (int) ((float) chr.Height * sz);
-                chr.X = (int) ((float) chr.X * sz);
-                chr.Y = (int) ((float) chr.Y * sz);
-                chr.Xadvance = (int) ((float) chr.Xadvance * sz);
-                chr.Xoffset = (int) ((float) chr.Xoffset * sz);
-                chr.Yoffset = (int) ((float) chr.Yoffset * sz);
+          //      chr.Width = (int) ((float) chr.Width * sz);
+          //      chr.Height = (int) ((float) chr.Height * sz);
+          //      chr.X = (int) ((float) chr.X * sz);
+           //     chr.Y = (int) ((float) chr.Y * sz);
+           //     chr.Xadvance = (int) ((float) chr.Xadvance * sz);
+           //     chr.Xoffset = (int) ((float) chr.Xoffset * sz);
+           //     chr.Yoffset = (int) ((float) chr.Yoffset * sz);
 
 
-                for (int x1 = chr.X; x1 < chr.X + chr.Width; x1++)
-                {
-                    for (int y1 = chr.Y; y1 < chr.Y + chr.Height; y1++)
-                    {
-                        float distance = 1.0f - (atlas.GetPixel(x1, y1).R / 255f);
-                        float alpha = 1.0f - Smoothstep(width, width + edge, distance);
+            //    for (int x1 = chr.X; x1 < chr.X + chr.Width; x1++)
+            //    {
+              //      for (int y1 = chr.Y; y1 < chr.Y + chr.Height; y1++)
+             //       {
+               //         float distance = 1.0f - (atlas.GetPixel(x1, y1).R / 255f);
+               //         float alpha = 1.0f - Smoothstep(width, width + edge, distance);
 
-                        float distance2 = 1.0f - (atlas.GetPixel(x1, y1).R / 255f);
-                        float outlinealpha = 1.0f - Smoothstep(borderWidth, borderWidth + borderEdge, distance2);
+                //        float distance2 = 1.0f - (atlas.GetPixel(x1, y1).R / 255f);
+                //        float outlinealpha = 1.0f - Smoothstep(borderWidth, borderWidth + borderEdge, distance2);
 
-                        float overallAlpha = alpha + (1.0f - alpha) * outlinealpha;
+                 //       float overallAlpha = alpha + (1.0f - alpha) * outlinealpha;
 
-                        var color = txtcolor;
+                 //       var color = txtcolor;
 
-                        if (overallAlpha != 1.0f)
-                        {
-                            var gpx = _canvas.GetPixel(x + x1 - chr.X + chr.Xoffset, y + y1 - chr.Y + chr.Yoffset);
-                            color = Blend(txtcolor, gpx, overallAlpha);
-                        }
+                  //      if (overallAlpha != 1.0f)
+                   //     {
+                   //         var gpx = _canvas.GetPixel(x + x1 - chr.X + chr.Xoffset, y + y1 - chr.Y + chr.Yoffset);
+                   //         color = Blend(txtcolor, gpx, overallAlpha);
+                    //    }
 
-                        color.A = 255;
+                   //     color.A = 255;
 
-                        SetPixel(Offset.X + x + x1 - chr.X + chr.Xoffset, Offset.Y + y + y1 - chr.Y + chr.Yoffset,
-                            color);
-                    }
-                }
+                  //      SetPixel(Offset.X + x + x1 - chr.X + chr.Xoffset, Offset.Y + y + y1 - chr.Y + chr.Yoffset,
+                   //         color);
+                  //  }
+               // }
 
-                x += chr.Xadvance;
-            }
-        }
+               // x += chr.Xadvance;
+            //}
+      //  }
 
         public Size MeasureString(string str, float size, SdfFont font)
         {

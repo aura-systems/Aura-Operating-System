@@ -15,6 +15,10 @@ namespace Aura_OS.System.GUI.UI
         public static int sizex = 7;
         public static int sizey = 7;
 
+        static Util.Point lastposition;
+
+        public static Framework.Graphics.Image Image;
+
         public static void Init()
         {
             Mouse.Initialize((uint)Desktop.Width, (uint)Desktop.Height - (uint)sizey);
@@ -24,8 +28,17 @@ namespace Aura_OS.System.GUI.UI
         {
             if (Enabled)
             {
+                if (!Desktop.firsttime)
+                {
+                    //Desktop.g.DrawImage(Image, Mouse.X, Mouse.Y, Colors.White);
+                    Desktop.g.FillRectangle(lastposition.X, lastposition.Y, sizex, sizey, Colors.White);
+                    //Desktop.g.GetFillRectangle(lastposition.X, lastposition.Y, sizex, sizey);
+                }
+                lastposition.X = Mouse.X;
+                lastposition.Y = Mouse.Y;
                 //Desktop.g.DrawImage(Mouse.X, Mouse.Y, Desktop.cursor);
                 Desktop.g.FillRectangle(Mouse.X, Mouse.Y, sizex, sizey, Colors.Black);
+                
             }
         }
     }
