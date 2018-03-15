@@ -168,24 +168,24 @@ namespace Aura_OS.System.GUI.UI
 
             g.FillRectangle(0, 738, 1366, 29, Colors.LightBlue);
 
-            //WindowsManager.AddWindow(300, 300, 100, 100, "Test Window.");
-            //WindowsManager.ShowWindows();
+            WindowsManager.AddWindow(300, 300, 100, 100, "Test Window.");
+            WindowsManager.ShowWindows();
 
-            if (windows)
-            {
-                g.FillRectangle(0, 288, 250, 450, Colors.LightBlue);
-            }
+            //if (windows)
+            //{
+            //    g.FillRectangle(0, 288, 250, 450, Colors.LightBlue);
+            //}
 
             //var img = Image.FromBytes(Images.CosmosLogoPPM.Cosmos_LogoPPM, "ppm");
             //g.DrawImage(10, 10, img);
 
             //Cursor.Image = Framework.Graphics.Image.Load(Images.Cursors.Normal_CIF);
 
-            terminus = new SdfFont(Fonts.Terminus.Terminus_fnt,
-                Image.FromBytes(Fonts.Terminus.Terminus_ppm, "ppm"));
+            //terminus = new SdfFont(Fonts.Terminus.Terminus_fnt,
+            //    Image.FromBytes(Fonts.Terminus.Terminus_ppm, "ppm"));
 
 
-            g.DrawString(10, 10, "ABCDEFGHIJKLMNOPQRSTUVWXYZ", 14f, terminus, Colors.Black);
+            //g.DrawString(10, 10, "ABCDEFGHIJKLMNOPQRSTUVWXYZ", 14f, terminus, Colors.Black);
 
             Canvas.WriteToScreen();
 
