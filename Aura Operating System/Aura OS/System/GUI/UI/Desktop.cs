@@ -10,7 +10,7 @@ using System.Text;
 using Aura_OS.System.GUI;
 using Aura_OS.System.GUI.Graphics;
 using Aura_OS.System.GUI.Imaging;
-
+using Aura_OS.System.GUI.UI.Util;
 using Cosmos.HAL;
 using static Cosmos.HAL.Mouse;
 
@@ -29,6 +29,9 @@ namespace Aura_OS.System.GUI.UI
         static int _frames = 0;
         static int _fps = 0;
         static int _deltaT = 0;
+
+        static Util.Point mouse_click;
+        static Dictionary<string, Util.Area> clickabled_area = new Dictionary<string, Util.Area>();
 
         private static bool flag = false;
 
@@ -85,15 +88,12 @@ namespace Aura_OS.System.GUI.UI
             }
             
 
-            //switch (Cursor.Mouse.Buttons)
-            //{
-            //    case MouseState.Left:
-            //        Cosmos.System.Power.Reboot();
-            //        break;
-            //    case MouseState.Right:
-            //        Cosmos.System.Power.Shutdown();
-            //        break;
-            //}
+            switch (Cursor.Mouse.Buttons)
+            {
+                case MouseState.Left:
+                    mouse_click = new Util.Point(Cursor.Mouse.X, Cursor.Mouse.Y);
+                    break;
+            }
 
             return 0;
         }
@@ -113,6 +113,21 @@ namespace Aura_OS.System.GUI.UI
                 _frames = 0;
                 _deltaT = RTC.Second;
             }
+
+            //if (mouse_click != null)
+            //{
+            //    foreach (KeyValuePair<string, Util.Area> entry in clickabled_area)
+            //    {
+            //        foreach (Window win in WindowsManager.Active_Windows)
+            //        {
+            //            if (click_contained_in_area(win.CloseArea, mouse_click))
+            //            {
+            //                WindowsManager.Active_Windows.Remove(win);
+            //            }
+            //        }
+            //    }
+            //    mouse_click = null;
+            //}
 
             _frames++;
 
@@ -147,6 +162,11 @@ namespace Aura_OS.System.GUI.UI
 
             //g.DrawString(10, 10, "ABCDEFGHIJKLMNOPQRSTUVWXYZ", 14f, terminus, Colors.Black);
             //Canvas.WriteToScreen();
+        }
+
+        public static bool click_contained_in_area(Area CloseArea, Util.Point ClickPoint)
+        {
+            return true;
         }
 
         public static void Initialize()
