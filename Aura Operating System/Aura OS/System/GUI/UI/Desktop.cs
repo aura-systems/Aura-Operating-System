@@ -133,7 +133,7 @@ namespace Aura_OS.System.GUI.UI
             //}
 
             Desktop.g.FillRectangle(10, 500, 100, 20, Colors.White);
-            Desktop.g.DrawString("FPS: " + _fps, 10, 500, Colors.Black, Fonts.CFF.Pixel11_cff);
+            Desktop.g.DrawString("FPS: " + _fps, 10, 500, Colors.Black, Fonts.CFF.Pixel13_cff);
             //g.DrawString(10, 500, "FPS: " + _fps, 14f, terminus, Colors.Black);
 
             Cursor.Render();
@@ -166,7 +166,7 @@ namespace Aura_OS.System.GUI.UI
             Cursor.Init();
             Cursor.Enabled = true;
 
-            g.FillRectangle(0, 738, 1366, 29, Colors.LightBlue);
+            g.FillRectangle(0, 738, 1366, 30, Colors.LightBlue);
 
             WindowsManager.AddWindow(300, 300, 100, 100, "Test Window.");
             WindowsManager.ShowWindows();
