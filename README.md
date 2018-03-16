@@ -6,8 +6,10 @@ A Cosmos based Operating System developped in C# made by Alexy DA CRUZ (GeomTech
 ## Current features
 Please read the [Aura Progression](https://github.com/aura-systems/Aura-Operating-System/projects/4) or our [Roadmap](https://github.com/aura-systems/Aura-Operating-System/projects/3) to know what will be added soon.
 
-* Restart.
-* ACPI Shutdown.
+* PS2 Keyboard
+* ATA IDE Driver
+* PCI Device Scan
+* Restart + ACPI Shutdown.
 * Basic command interpreter.
 * FAT32 + Virtual FileSystem.
 * Multilanguage support.
