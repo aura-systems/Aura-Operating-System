@@ -71,7 +71,7 @@ namespace Aura_OS.System.GUI.Graphics
             }
         }
 
-        public static int DrawChar(char c, int x, int y, Color color, Font f)
+        public int DrawChar(char c, int x, int y, Color color, Font f)
         {
             var index = 0;
             for (int i = 0; i < f.Char.Count; i++)
@@ -92,7 +92,7 @@ namespace Aura_OS.System.GUI.Graphics
                 {
                     if (f.Data[index][z] == 1)
                     {
-                        UI.Desktop.g.SetPixel(i, p, color);
+                        SetPixel(i, p, color);
                     }
 
                     z++;
