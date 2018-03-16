@@ -4,15 +4,15 @@
 * PROGRAMMER(S):    John Welsh <djlw78@gmail.com>
 */
 
+using TObject.Shared;
 using System;
-
+using System.IO;
+using Cosmos.System.ExtendedASCII;
+using System.Text;
 namespace Aura_OS.Shell.cmdIntr
 {
     class CommandManager
     {
-        //TO-DO: Do for all commands:
-        //       Windows like command, Linux like command, Aura original command (optional for the last one)
-        //Example: else if ((cmd.Equals("ipconfig")) || (cmd.Equals("ifconfig")) || (cmd.Equals("netconf"))) {
 
         /// <summary>
         /// Empty constructor. (Good for debug)
@@ -25,7 +25,7 @@ namespace Aura_OS.Shell.cmdIntr
         public static void _CommandManger(string cmd)
         {
 
-            #region Power
+        #region Power
 
             if (cmd.Equals("shutdown"))
             {//NOTE: Why isn't it just the constructor? This leaves more room for <package>.<class>.HelpInfo;
@@ -36,9 +36,9 @@ namespace Aura_OS.Shell.cmdIntr
                 Power.Reboot.c_Reboot();
             }
 
-            #endregion Power
+        #endregion Power
 
-            #region Console
+        #region Console
 
             else if ((cmd.Equals("clear")) || (cmd.Equals("cls")))
             {
@@ -52,11 +52,31 @@ namespace Aura_OS.Shell.cmdIntr
             {
                 System.Translation.Help._Help();
             }
+            else if (cmd.Equals("textcolor"))
+            {
+                c_Console.TextColor.c_TextColor();
+            }
+            else if (cmd.StartsWith("textcolor "))
+            {
+                c_Console.TextColor.c_TextColor(cmd);
+            }
+            else if (cmd.Equals("backgroundcolor"))
+            {
+                c_Console.BackGroundColor.c_BackGroundColor();
+            }
+            else if (cmd.StartsWith("backgroundcolor "))
+            {
+                c_Console.BackGroundColor.c_BackGroundColor(cmd);
+            }
 
-            #endregion Console
+        #endregion Console
 
-            #region FileSystem
+        #region FileSystem
 
+            else if ((cmd.Equals("cd ..")) || (cmd.Equals("bkroot")))
+            {
+                FileSystem.CD.c_CD();
+            }
             else if (cmd.StartsWith("cd "))
             {
                 FileSystem.CD.c_CD(cmd);
@@ -109,14 +129,10 @@ namespace Aura_OS.Shell.cmdIntr
             {
                 FileSystem.Vol.c_Vol();
             }
-            else if (cmd.StartsWith("run "))
-            {
-                FileSystem.Run.c_Run(cmd);
-            }
 
-            #endregion FileSystem
+        #endregion FileSystem
 
-            #region Settings
+        #region Settings
 
             else if (cmd.Equals("logout"))
             {
@@ -130,18 +146,10 @@ namespace Aura_OS.Shell.cmdIntr
             {
                 Settings.Settings.c_Settings(cmd);
             }
-            else if (cmd.StartsWith("passwd "))
-            {
-                Settings.Passwd.c_Passwd(cmd);
-            }
-            else if (cmd.Equals("passwd"))
-            {
-                Settings.Passwd.c_Passwd(Kernel.userLogged);
-            }
 
-            #endregion Settings
+        #endregion Settings
 
-            #region System Infomation
+        #region System Infomation
 
             else if (cmd.Equals("systeminfo"))
             {
@@ -151,59 +159,34 @@ namespace Aura_OS.Shell.cmdIntr
             {
                 SystemInfomation.Version.c_Version();
             }
-            else if ((cmd.Equals("ipconfig")) || (cmd.Equals("ifconfig")) || (cmd.Equals("netconf")))
-            {
-                SystemInfomation.IPConfig.c_IPConfig();
-            }
-            else if ((cmd.Equals("time")) || (cmd.Equals("date")))
-            {
-                SystemInfomation.Time.c_Time();
-            }
 
-            #endregion System Infomation
+        #endregion System Infomation
 
-            #region Tests
+        #region Tests
 
             else if (cmd.Equals("crash"))
             {
                 Tests.Crash.c_Crash();
             }
 
-            else if (cmd.Equals("crashcpu"))
+            else if (cmd.Equals("xml1"))
             {
-                int value = 1;
-                value = value - 1;
-                int result = 1 / value; //Division by 0
+                //  XmlParser parser = new XmlParser(XmlParser.InputType.File, "0:\\file.xml"); // Creating new instance of XmlParser with file path
+                // XmlDocument xmlDocument = parser.Parse(); // Creating a new instance of XmlDocument and asigning a result to it.
+                // Console.WriteLine(xmlDocument.RootNode.Children["book"].Children["price"].Content); // Writing a part of the parsed XML file to the console.
+                Util.xml.CmdXmlParser.c_CmdXmlParser(cmd, 0, 5);
             }
 
             #endregion Tests
 
-            #region Tools
+            #region Util
 
-            else if (cmd.Equals("snake"))
-            {
-                Tools.Snake.c_Snake();
-            }
-            else if (cmd.StartsWith("md5"))
-            {
-                Tools.MD5.c_MD5(cmd);
-            }
-
-            #endregion
-
-            #region Util           
-			
-			else if (cmd.StartsWith("export"))
-            {
-                Util.EnvVar.c_Export(cmd);
-            }
-			
             else
             {
                 Util.CmdNotFound.c_CmdNotFound();
             }
 
-            #endregion Util
+        #endregion Util
 
         }
     }
