@@ -24,6 +24,16 @@ namespace Aura_OS.System.GUI.Graphics
         public int Height { get; set; }
         public int Width { get; set; }
 
+        public uint GetArea(int x0, int y0, int w, int h)
+        {
+            return _canvas.Blit(x0, y0, w, h);
+        }
+
+        public void DrawArea(uint area, int posx, int posy)
+        {
+            
+        }
+
         public void DrawImage(Framework.Graphics.Image img, int x, int y, Color TransparencyKey = null)
         {
             int z = 0;

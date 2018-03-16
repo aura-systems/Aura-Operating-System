@@ -38,6 +38,18 @@ namespace Aura_OS.System.GUI.Graphics
             Memory.Memcpy((uint*) 0xE0000000, _buffer, Width * Height);
         }
 
+        public uint Blit(int x0, int y0, int w, int h)
+        {
+            int y;
+            uint target = 0;
+            for (y = 0; y < h; y++)
+            {
+                int yoff = ((y + y0) * w * 4);
+                Memory.Memcpy((byte*)target, (byte*)_buffer + (yoff) + (x0 * 4), w);
+            }
+            return target;
+        }
+
         public void SetScanLine(int offset, int length, uint color)
         {
             Memory.Memset(offset + _buffer, color, (uint)length);
