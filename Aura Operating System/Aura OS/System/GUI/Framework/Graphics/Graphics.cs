@@ -4,6 +4,7 @@ using Aura_OS.System.GUI.Framework.Graphics;
 using Aura_OS.System.GUI.Graphics.Rasterizing;
 using Aura_OS.System.GUI.Imaging;
 using Aura_OS.System.GUI.UI.Fonts;
+using Cosmos.Core.Memory.Old;
 using PolyPartition;
 
 namespace Aura_OS.System.GUI.Graphics
@@ -31,7 +32,7 @@ namespace Aura_OS.System.GUI.Graphics
 
         public void DrawArea(uint area, int posx, int posy)
         {
-            
+            Heap.MemAlloc((uint)(Width * Height * 4));
         }
 
         public void DrawImage(Framework.Graphics.Image img, int x, int y, Color TransparencyKey = null)

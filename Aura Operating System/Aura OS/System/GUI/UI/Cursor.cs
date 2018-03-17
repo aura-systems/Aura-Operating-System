@@ -31,8 +31,8 @@ namespace Aura_OS.System.GUI.UI
                 if (!Desktop.firsttime)
                 {
                     //Desktop.g.DrawImage(Image, Mouse.X, Mouse.Y, Colors.White);
-                    uint area = Desktop.g.GetArea(lastposition.X, lastposition.Y, sizex, sizey);
-                    Desktop.g.DrawArea(area, 10, 10);
+                    //uint area = Desktop.g.GetArea(lastposition.X, lastposition.Y, sizex, sizey);
+                   // Desktop.g.DrawArea(area, 10, 10);
                     Desktop.g.FillRectangle(lastposition.X, lastposition.Y, sizex, sizey, Colors.White);
                     //Desktop.g.GetFillRectangle(lastposition.X, lastposition.Y, sizex, sizey);
                 }

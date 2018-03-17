@@ -49,10 +49,11 @@ namespace Aura_OS.System.GUI.UI
         public void Draw()
         {
             Desktop.g.FillRectangle(pos.X, pos.Y - 21, size.X, 20, Colors.AliceBlue);
-            Desktop.g.DrawString(Name, pos.X + 1, pos.Y - 20, Colors.Black, Fonts.CFF.Pixel13_cff);
+            Desktop.g.DrawString(Name, pos.X + 1, pos.Y - 20, Colors.Black, Fonts.CFF._Pixel7_Mini_cff);
             Desktop.g.FillRectangle(pos.X, pos.Y - 1, size.X + 1, size.Y + 1, Colors.White);
             Desktop.g.DrawRectangle(pos.X - 1, pos.Y - 22, size.X + 2, size.Y + 22, Colors.DarkGray);
             Desktop.g.FillRectangle(pos.X + size.X - 19, pos.Y - 21, 20, 20, Colors.Red);
+            Desktop.g.FillRectangle(pos.X + size.X - 39, pos.Y - 21, 20, 20, Colors.Orange);
             CloseArea.X = pos.X + size.X - 19;
             CloseArea.Y = pos.Y - 20;
             CloseArea.XMAX = CloseArea.X + 19;

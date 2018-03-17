@@ -29,6 +29,7 @@ namespace Aura_OS.System.GUI.UI
         static int _frames = 0;
         static int _fps = 0;
         static int _deltaT = 0;
+        static int _deltaTM = 0;
 
         static Util.Point mouse_click;
         static Dictionary<string, Util.Area> clickabled_area = new Dictionary<string, Util.Area>();
@@ -104,6 +105,7 @@ namespace Aura_OS.System.GUI.UI
 
         public static Graphics.Graphics g;
         public static bool firsttime = true;
+        public static string hour;
 
         public static void Render()
         {
@@ -112,6 +114,14 @@ namespace Aura_OS.System.GUI.UI
                 _fps = _frames;
                 _frames = 0;
                 _deltaT = RTC.Second;
+                
+                if (_deltaTM != RTC.Minute)
+                {
+                    hour = Time.TimeString(true, true, false);
+                    g.FillRectangle(1295, 738, 86, 30, Colors.LightBlue);
+                    Desktop.g.DrawString(hour, 1295, 744, Colors.Black, Fonts.CFF._Pixel7_Mini_cff);
+                    _deltaTM = RTC.Minute;
+                }
             }
 
             //if (mouse_click != null)
@@ -148,7 +158,9 @@ namespace Aura_OS.System.GUI.UI
             //}
 
             Desktop.g.FillRectangle(10, 500, 100, 20, Colors.White);
-            Desktop.g.DrawString("FPS: " + _fps, 10, 500, Colors.Black, Fonts.CFF.Pixel13_cff);
+            Desktop.g.DrawString("FPS: " + _fps, 10, 500, Colors.Black, Fonts.CFF._Pixel7_Mini_cff);
+
+            
             //g.DrawString(10, 500, "FPS: " + _fps, 14f, terminus, Colors.Black);
 
             Cursor.Render();
