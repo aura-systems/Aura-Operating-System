@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace TObject.Shared
+namespace Aura_OS.System.Parser.XML
 {
   /// <summary>
   /// Base class containing usefull features for all XML classes

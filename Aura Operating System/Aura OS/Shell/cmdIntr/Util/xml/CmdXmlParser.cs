@@ -1,8 +1,14 @@
-﻿using System;
+﻿/*
+* PROJECT:          Aura Operating System Development
+* CONTENT:          XML Parser test command.
+* PROGRAMMER(S):    John Welsh <djlw78@gmail.com>
+*/
+
+using Aura_OS.System.Parser.XML;
 using System.IO;
-using System.Collections.Generic;
 using System.Text;
-using TObject.Shared;
+using System;
+
 namespace Aura_OS.Shell.cmdIntr.Util.xml
 {
     public class CmdXmlParser
@@ -37,6 +43,11 @@ namespace Aura_OS.Shell.cmdIntr.Util.xml
 
             string strData = Encoding.UTF8.GetString(data);
             NanoXMLDocument xml = new NanoXMLDocument(strData);
+
+            string myAttribute = 
+
+            Console.WriteLine(myAttribute);
+
         }
 
     }
