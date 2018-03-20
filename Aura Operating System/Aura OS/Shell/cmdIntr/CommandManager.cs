@@ -144,7 +144,7 @@ namespace Aura_OS.Shell.cmdIntr
                 Tests.Crash.c_Crash();
             }
 
-            else if (cmd.Equals("xml"))
+            else if (cmd.StartsWith("xml "))
             {
                 Util.xml.CmdXmlParser.c_CmdXmlParser(cmd, 0, 4);
             }

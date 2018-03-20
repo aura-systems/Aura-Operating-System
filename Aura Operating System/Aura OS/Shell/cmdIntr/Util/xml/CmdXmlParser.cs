@@ -32,22 +32,40 @@ namespace Aura_OS.Shell.cmdIntr.Util.xml
         /// <summary>
         /// c = command, c_CmdXmlParser
         /// </summary>
-        public static void c_CmdXmlParser(string txt, short startIndex = 0, int count = 5)
+        public static void c_CmdXmlParser(string txt, short startIndex = 0, int count = 4)
         {
             txt = txt.Remove(startIndex, count);
 
-            FileStream fs = new FileStream(txt, FileMode.Open, FileAccess.Read);
-            byte[] data = new byte[fs.Length];
-            fs.Read(data, 0, (int)fs.Length);
-            fs.Close();
+            
+            Console.WriteLine("1");
+            Console.ReadKey();
 
-            string strData = Encoding.UTF8.GetString(data);
+            string strData = Encoding.UTF8.GetString(File.ReadAllBytes(txt));
+
+            Console.WriteLine("2");
+            Console.ReadKey();
+
             NanoXMLDocument xml = new NanoXMLDocument(strData);
 
-            string myAttribute = 
+            Console.WriteLine("3");
+            Console.ReadKey();
+
+            string myAttribute = xml.RootNode["app"].GetAttribute("text").Name;
+
+            Console.WriteLine("4");
+            Console.ReadKey();
+
+            string myAttribute1 = xml.RootNode["app"].GetAttribute("text").Value;
+
+            Console.WriteLine("5");
+            Console.ReadKey();
 
             Console.WriteLine(myAttribute);
 
+            Console.WriteLine("6");
+            Console.ReadKey();
+
+            Console.WriteLine(myAttribute1);
         }
 
     }
