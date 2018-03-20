@@ -268,11 +268,24 @@ namespace Aura_OS.System.Parser.XML
     /// <returns><see cref="NanoXMLAttribute"/> with given name or null if no such attribute</returns>
     public NanoXMLAttribute GetAttribute(string attributeName)
     {
-      foreach (NanoXMLAttribute nanoXmlAttribute in attributes)
-        if (nanoXmlAttribute.Name == attributeName)
-          return nanoXmlAttribute;
+            Console.WriteLine("kek");
+            Console.ReadKey();
+            foreach (NanoXMLAttribute nanoXmlAttribute in attributes)
+            {
+                Console.WriteLine(nanoXmlAttribute.Name);
+                Console.ReadKey();
+                if (nanoXmlAttribute.Name == attributeName)
+                {
+                    
+                    return nanoXmlAttribute;
+                }
+                    
+            }
+            Console.WriteLine("glub");
+            Console.ReadKey();
 
-      return null;
+
+            return null;
     }
   }
 

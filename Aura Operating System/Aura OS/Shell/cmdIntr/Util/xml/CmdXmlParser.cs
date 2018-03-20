@@ -36,36 +36,29 @@ namespace Aura_OS.Shell.cmdIntr.Util.xml
         {
             txt = txt.Remove(startIndex, count);
 
-            
+            string strData = Encoding.UTF8.GetString(File.ReadAllBytes(txt));
+            NanoXMLDocument xml = new NanoXMLDocument(strData);
             Console.WriteLine("1");
             Console.ReadKey();
 
-            string strData = Encoding.UTF8.GetString(File.ReadAllBytes(txt));
+            NanoXMLNode myAttribute = xml.RootNode["app"];
+
+            if (myAttribute == null)
+            {
+                Console.WriteLine("myAttribute null");
+                Console.ReadKey();
+            }
 
             Console.WriteLine("2");
             Console.ReadKey();
 
-            NanoXMLDocument xml = new NanoXMLDocument(strData);
+            string attibute = myAttribute.GetAttribute("text").Name;
 
             Console.WriteLine("3");
             Console.ReadKey();
 
-            string myAttribute = xml.RootNode["app"].GetAttribute("text").Name;
-
-            Console.WriteLine("4");
-            Console.ReadKey();
-
-            string myAttribute1 = xml.RootNode["app"].GetAttribute("text").Value;
-
-            Console.WriteLine("5");
-            Console.ReadKey();
-
-            Console.WriteLine(myAttribute);
-
-            Console.WriteLine("6");
-            Console.ReadKey();
-
-            Console.WriteLine(myAttribute1);
+            Console.WriteLine(attibute);
+            //Console.WriteLine(myAttribute1);
         }
 
     }
