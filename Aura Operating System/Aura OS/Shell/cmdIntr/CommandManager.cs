@@ -4,10 +4,15 @@
 * PROGRAMMER(S):    John Welsh <djlw78@gmail.com>
 */
 
+using System;
+
 namespace Aura_OS.Shell.cmdIntr
 {
     class CommandManager
     {
+        //TO-DO: Do for all commands:
+        //       Windows like command, Linux like command, Aura original command (optional for the last one)
+        //Example: else if ((cmd.Equals("ipconfig")) || (cmd.Equals("ifconfig")) || (cmd.Equals("netconf"))) {
 
         /// <summary>
         /// Empty constructor. (Good for debug)
@@ -104,6 +109,10 @@ namespace Aura_OS.Shell.cmdIntr
             {
                 FileSystem.Vol.c_Vol();
             }
+            else if (cmd.StartsWith("run "))
+            {
+                FileSystem.Run.c_Run(cmd);
+            }
 
             #endregion FileSystem
 
@@ -121,19 +130,35 @@ namespace Aura_OS.Shell.cmdIntr
             {
                 Settings.Settings.c_Settings(cmd);
             }
+            else if (cmd.StartsWith("passwd "))
+            {
+                Settings.Passwd.c_Passwd(cmd);
+            }
+            else if (cmd.Equals("passwd"))
+            {
+                Settings.Passwd.c_Passwd(Kernel.userLogged);
+            }
 
             #endregion Settings
 
             #region System Infomation
 
-                else if (cmd.Equals("systeminfo"))
-                {
-                    SystemInfomation.SystemInfomation.c_SystemInfomation();
-                }
-                else if ((cmd.Equals("ver")) || (cmd.Equals("version")))
-                {
-                    SystemInfomation.Version.c_Version();
-                }
+            else if (cmd.Equals("systeminfo"))
+            {
+                SystemInfomation.SystemInfomation.c_SystemInfomation();
+            }
+            else if ((cmd.Equals("ver")) || (cmd.Equals("version")))
+            {
+                SystemInfomation.Version.c_Version();
+            }
+            else if ((cmd.Equals("ipconfig")) || (cmd.Equals("ifconfig")) || (cmd.Equals("netconf")))
+            {
+                SystemInfomation.IPConfig.c_IPConfig();
+            }
+            else if ((cmd.Equals("time")) || (cmd.Equals("date")))
+            {
+                SystemInfomation.Time.c_Time();
+            }
 
             #endregion System Infomation
 
@@ -144,21 +169,47 @@ namespace Aura_OS.Shell.cmdIntr
                 Tests.Crash.c_Crash();
             }
 
-            else if (cmd.StartsWith("xml "))
+            else if (cmd.Equals("crashcpu"))
             {
-                Util.xml.CmdXmlParser.c_CmdXmlParser(cmd, 0, 4);
+                int value = 1;
+                value = value - 1;
+                int result = 1 / value; //Division by 0
             }
+
+            //else if (cmd.StartsWith("xml "))
+            //{
+            //    Util.xml.CmdXmlParser.c_CmdXmlParser(cmd, 0, 4);
+            //}
+
 
             #endregion Tests
 
-            #region Util
+            #region Tools
+
+            else if (cmd.Equals("snake"))
+            {
+                Tools.Snake.c_Snake();
+            }
+            else if (cmd.StartsWith("md5"))
+            {
+                Tools.MD5.c_MD5(cmd);
+            }
+
+            #endregion
+
+            #region Util           
+
+            else if (cmd.StartsWith("export"))
+            {
+                Util.EnvVar.c_Export(cmd);
+            }
 
             else
             {
                 Util.CmdNotFound.c_CmdNotFound();
             }
 
-        #endregion Util
+            #endregion Util
 
         }
     }
