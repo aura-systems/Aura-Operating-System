@@ -206,8 +206,17 @@ namespace Aura_OS.Shell.cmdIntr
 
             else
             {
-                Util.CmdNotFound.c_CmdNotFound();
+                if (cmd.Length <= 0)
+                {
+                    return;
+                }
+                else
+                { 
+                    Util.CmdNotFound.c_CmdNotFound();
+                }                
             }
+
+            Console.WriteLine();
 
             #endregion Util
 
