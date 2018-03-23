@@ -100,6 +100,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Apps\User\KsIL\" />
+    <Folder Include="System\Executables\KsIL\" />
   </ItemGroup>
 </Project>
