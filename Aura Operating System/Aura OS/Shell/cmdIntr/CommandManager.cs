@@ -197,20 +197,6 @@ namespace Aura_OS.Shell.cmdIntr
 
             #endregion
 
-            #region Executables
-
-            else if (cmd.StartsWith("ksil"))
-            {
-                string FilePath = cmd.Remove(0, 5);
-                Executables.KsIL_command.c_KsIL(FilePath);
-            }
-            else if (cmd.EndsWith(".ksil"))
-            {
-                Executables.KsIL_command.c_KsIL(cmd);
-            }
-
-            #endregion
-
             #region Util           
 
             else if (cmd.StartsWith("export"))
