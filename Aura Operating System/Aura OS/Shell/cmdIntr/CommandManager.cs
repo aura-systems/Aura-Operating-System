@@ -194,6 +194,10 @@ namespace Aura_OS.Shell.cmdIntr
             {
                 Tools.MD5.c_MD5(cmd);
             }
+            else if (cmd.StartsWith("ksil"))
+            {
+                Tools.KsIL_command.c_KsIL(cmd);
+            }
 
             #endregion
 
