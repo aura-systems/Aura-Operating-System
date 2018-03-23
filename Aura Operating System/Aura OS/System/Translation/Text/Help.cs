@@ -50,6 +50,7 @@ namespace Aura_OS.System.Translation
                     Console.WriteLine("- md5 (affiche le hash des arguments)");
                     Console.WriteLine("- crash (crash Aura)");
                     Console.WriteLine("- crashcpu (crash CPU)");
+                    Console.WriteLine("- lspci (liste les appareils pci)");
 
                     Console.ReadKey();
 
@@ -87,6 +88,7 @@ namespace Aura_OS.System.Translation
                     Console.WriteLine("- md5 (to display hash of arguments)");
                     Console.WriteLine("- crash (crash Aura)");
                     Console.WriteLine("- crashcpu (crash CPU)");
+                    Console.WriteLine("- lspci (list pci devices)");
 
                     Console.ReadKey();
 
@@ -124,6 +126,7 @@ namespace Aura_OS.System.Translation
                     Console.WriteLine("- md5 (om de hash van argumenten weer te geven)");
                     Console.WriteLine("- crash (crasht Aura)");
                     Console.WriteLine("- crashcpu (crasht CPU)");
+                    Console.WriteLine("- lspci (lijst pci-apparaten)");
 
                     Console.ReadKey();
 

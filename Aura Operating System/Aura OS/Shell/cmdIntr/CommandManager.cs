@@ -204,6 +204,11 @@ namespace Aura_OS.Shell.cmdIntr
                 Util.EnvVar.c_Export(cmd);
             }
 
+            else if (cmd.Equals("lspci"))
+            {
+                Util.Lspci.c_Lspci();
+            }
+
             else
             {
                 Util.CmdNotFound.c_CmdNotFound();
