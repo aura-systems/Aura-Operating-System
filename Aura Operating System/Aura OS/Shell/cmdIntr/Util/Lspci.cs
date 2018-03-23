@@ -5,7 +5,6 @@
 */
 
 using System;
-using L = Aura_OS.System.Translation;
 
 namespace Aura_OS.Shell.cmdIntr.Util
 {
@@ -38,7 +37,7 @@ namespace Aura_OS.Shell.cmdIntr.Util
             int count = 0;
             foreach (Cosmos.HAL.PCIDevice device in Cosmos.HAL.PCI.Devices)
             {
-                Console.WriteLine(device.bus + ":" + device.slot + ":" + device.function + " " + device.VendorID + " " + device.DeviceID);
+                Console.WriteLine(device.bus + ":" + device.slot + ":" + device.function + " " + Cosmos.HAL.PCIDevice.DeviceClass.GetTypeString(device) + ": " + Cosmos.HAL.PCIDevice.DeviceClass.GetDeviceString(device));
                 count++;
                 if (count==19)
                 {
