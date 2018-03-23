@@ -190,6 +190,7 @@ namespace Aura_OS
             }
             else
             {
+
                 Console.ForegroundColor = ConsoleColor.Blue;
                 Console.Write(UserLevel.TypeUser());
 
@@ -209,7 +210,7 @@ namespace Aura_OS
                 Console.Write(current_directory + "~ ");
 
                 Console.ForegroundColor = ConsoleColor.White;
-                
+
             }
         } 
         #endregion
