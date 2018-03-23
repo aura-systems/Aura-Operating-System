@@ -113,6 +113,14 @@ namespace Aura_OS.Shell.cmdIntr
             {
                 FileSystem.Run.c_Run(cmd);
             }
+            else if (cmd.Equals("chdir"))
+            {
+                FileSystem.Chdir.CurrentDirectory();
+            }
+            else if (cmd.StartsWith("chdir "))
+            {
+                FileSystem.Chdir.c_Chdir(cmd);
+            }
 
             #endregion FileSystem
 
@@ -193,6 +201,38 @@ namespace Aura_OS.Shell.cmdIntr
             else if (cmd.StartsWith("md5"))
             {
                 Tools.MD5.c_MD5(cmd);
+            }
+            else if (cmd.Equals("bug"))
+            {
+                Tools.Bug.c_Bug();
+            }
+
+            #endregion
+
+            #region BatchCommands
+
+            else if ((cmd.StartsWith("echo ")) || (cmd.StartsWith("@echo ")))
+            {
+                string value;
+                if (cmd.Contains("@echo"))
+                {
+                    value = cmd.Remove(0, 6);
+                }                
+                else
+                {
+                    value = cmd.Remove(0, 5);
+                }
+
+                if((value == "off") || (value == "on"))
+                {
+                    //we don't have this feature on Aura,
+                    //but we can handle it to prevent to return on or off 
+                    //on the console :-)
+                }
+                else
+                {
+                    Console.WriteLine(value);
+                }
             }
 
             #endregion
