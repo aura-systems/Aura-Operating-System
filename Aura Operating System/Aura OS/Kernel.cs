@@ -15,6 +15,9 @@ using Aura_OS.System;
 using Aura_OS.System.Users;
 using Aura_OS.System.Computer;
 using Aura_OS.System.Utils;
+using System.Collections.Generic;
+using System.Text;
+using Cosmos.System.ExtendedASCII;
 
 #endregion
 
@@ -27,11 +30,10 @@ namespace Aura_OS
 
         Setup setup = new Setup();
         public static bool running;
-        public static string version = "0.4.2";
-        public static string revision = "241120171926";
+        public static string version = "0.4.3";
+        public static string revision = "050120182138";
         public static string current_directory = @"0:\";
         public static string langSelected = "en_US";
-        public static CosmosVFS FS { get; private set; }
         public static string userLogged;
         public static string userLevelLogged;
         public static bool Logged = false;
@@ -41,70 +43,90 @@ namespace Aura_OS
         public static string UserDir = @"0:\Users\" + userLogged + "\\";
         public static bool SystemExists = false;
         public static bool JustInstalled = false;
+        public static CosmosVFS vFS = new CosmosVFS();
+		public static Dictionary<string, string> environmentvariables = new Dictionary<string, string>();
 
         #endregion
 
         #region Before Run
 
+        public static bool ContainsVolumes()
+        {
+            var vols = vFS.GetVolumes();
+            foreach (var vol in vols)
+            {
+                return true;
+            }
+            return false;
+        }
+
         protected override void BeforeRun()
         {
-
-            Console.Clear();
-            Console.ForegroundColor = ConsoleColor.DarkMagenta;
-            Console.Write("Booting Aura...\n");
-            Console.ForegroundColor = ConsoleColor.White;
-
-            #region FileSystem Init
-
-            FS = new CosmosVFS();
-            FS.Initialize();
-            Console.ForegroundColor = ConsoleColor.Green;
-            Console.Write("[OK]");
-            Console.ForegroundColor = ConsoleColor.White;
-            Console.Write(" ");
-            Console.ForegroundColor = ConsoleColor.DarkMagenta;
-            Console.Write("FileSystem Initialized\n");
-            Console.ForegroundColor = ConsoleColor.White;
-
-            #endregion
-
-            #region FileSystem Scan
-            Sys.FileSystem.VFS.VFSManager.RegisterVFS(FS);
-            Console.ForegroundColor = ConsoleColor.Green;
-            Console.Write("[OK]");
-            Console.ForegroundColor = ConsoleColor.White;
-            Console.Write(" ");
-            Console.ForegroundColor = ConsoleColor.DarkMagenta;
-            Console.Write("FileSystem Scanned\n");
-            Console.ForegroundColor = ConsoleColor.White;
-
-            #endregion
-
-            setup.InitSetup();
-
-            if (SystemExists)
+            try
             {
-                if (!JustInstalled)
+                Console.Clear();
+                Encoding.RegisterProvider(CosmosEncodingProvider.Instance);
+                Console.InputEncoding = Encoding.GetEncoding(437);
+                Console.OutputEncoding = Encoding.GetEncoding(437);
+                Console.ForegroundColor = ConsoleColor.DarkMagenta;
+                Console.Write("Booting Aura...\n");
+                Console.ForegroundColor = ConsoleColor.White;
+
+                #region Register Filesystem
+                Sys.FileSystem.VFS.VFSManager.RegisterVFS(vFS);
+                if (ContainsVolumes())
                 {
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    Console.Write("[OK]");
+                    Console.ForegroundColor = ConsoleColor.White;
+                    Console.Write(" ");
+                    Console.ForegroundColor = ConsoleColor.DarkMagenta;
+                    Console.Write("FileSystem Registration\n");
+                    Console.ForegroundColor = ConsoleColor.White;
+                }
+                else
+                {
+                    Console.ForegroundColor = ConsoleColor.DarkRed;
+                    Console.Write("[Error]");
+                    Console.ForegroundColor = ConsoleColor.White;
+                    Console.Write(" ");
+                    Console.ForegroundColor = ConsoleColor.DarkMagenta;
+                    Console.Write("FileSystem Registration\n");
+                    Console.ForegroundColor = ConsoleColor.White;
+                }
+                #endregion
 
-                    Settings.LoadValues();
-                    langSelected = Settings.GetValue("language");
+                setup.InitSetup();
 
-                    #region Language
+                if (SystemExists)
+                {
+                    if (!JustInstalled)
+                    {
 
-                    Lang.Keyboard.Init();
+                        Settings.LoadValues();
+                        langSelected = Settings.GetValue("language");
 
-                    #endregion
+                        #region Language
 
-                    Info.getComputerName();
+                        Lang.Keyboard.Init();
 
+                        #endregion
+
+                        Info.getComputerName();
+
+                        running = true;
+
+                    }
+                }
+                else
+                {
                     running = true;
-
                 }
             }
-            else
+            catch (Exception ex)
             {
-                running = true;
+                running = false;
+                Crash.StopKernel(ex);
             }
         }
 

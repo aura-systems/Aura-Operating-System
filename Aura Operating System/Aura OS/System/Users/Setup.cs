@@ -18,9 +18,7 @@ namespace Aura_OS.System
     {
         private string username;
         private string password;
-        private string lang;
         private string hostname;
-        private string[] Users;
 
         private string FinalUsername;
         private string FinalPassword;
@@ -35,20 +33,21 @@ namespace Aura_OS.System
         /// <returns>"false", if there is not a FS</returns>
         public string FileSystem()
         {
-            try
+            if (Kernel.ContainsVolumes())
             {
                 if (File.Exists(@"0:\System\settings.conf"))
                 {
                     return "true";
-                } else
+                }
+                else
                 {
                     return "continue";
                 }
             }
-            catch
+            else
             {
                 return "false";
-            }            
+            }         
         }
 
         /// <summary>
@@ -166,6 +165,12 @@ namespace Aura_OS.System
                 FinalLang = "fr_FR";
                 Keyboard.Init();
             }
+            else if ((language.Equals("nl_NL")) || language.Equals("nl-NL"))
+            {
+                Kernel.langSelected = "nl_NL";
+                FinalLang = "nl_NL";
+                Keyboard.Init();
+            }
             else
             {
                 RegisterLanguage();
@@ -211,9 +216,15 @@ namespace Aura_OS.System
         /// </summary>
         public void RunWithoutFS() //logged with root without using filesystem
         {
+            RegisterLanguage();
             Kernel.SystemExists = false;
             Kernel.userLogged = "root";
             Kernel.Logged = true;
+            Console.Clear();
+            WelcomeMessage.Display();
+            Text.Display("logged", "root");
+            Text.Display("nofilesystem");
+            Console.WriteLine();
         }
 
         /// <summary>
@@ -283,6 +294,11 @@ namespace Aura_OS.System
             else if ((FinalLang.Equals("fr_FR")) || FinalLang.Equals("fr-FR"))
             {
                 Settings.PutValue("language", "fr_FR");
+                Menu.DispInstallationDialog(60);
+            }
+            else if ((FinalLang.Equals("nl_NL")) || FinalLang.Equals("nl-NL"))
+            {
+                Settings.PutValue("language", "nl_NL");
                 Menu.DispInstallationDialog(60);
             }
 

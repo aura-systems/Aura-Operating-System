@@ -4,7 +4,7 @@
 * PROGRAMMERS:      Valentin Charbonnier <valentinbreiz@gmail.com>
 */
 
-using Cosmos.IL2CPU.API.Attribs;
+using IL2CPU.API.Attribs;
 using static Cosmos.Core.INTs;
 
 namespace Aura_OS.Core

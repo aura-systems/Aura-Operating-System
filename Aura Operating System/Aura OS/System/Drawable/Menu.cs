@@ -44,6 +44,16 @@ namespace Aura_OS.System.Drawable
                         Console.WriteLine("║ Installation en cours...                                     ║");
                         Console.SetCursorPosition(x, y);
                         break;
+
+                    case "nl_NL":
+                        Console.SetCursorPosition(8, 8);
+                        Console.WriteLine("╔══════════════════════════════════════════════════════════════╗");
+                        Console.SetCursorPosition(x, y);
+                        Console.SetCursorPosition(8, 9);
+                        Console.WriteLine("║ Installatie wordt uitgevoerd...                              ║");
+                        Console.SetCursorPosition(x, y);
+
+                        break;
                 }
 
 
@@ -464,7 +474,7 @@ namespace Aura_OS.System.Drawable
         public static string DispLanguageDialog()
         {
             LanguageMenu();
-            string[] item = { "English: en_US", "Français: fr_FR"};
+            string[] item = { "English: en_US", "Français: fr_FR", "Dutch: nl_NL" };
             int language = GenericMenu(item, Langues);
             if (language == 0)
             {
@@ -473,6 +483,10 @@ namespace Aura_OS.System.Drawable
             else if (language == 1)
             {
                 return "fr_FR";
+            }
+            else if (language == 2)
+            {
+                return "nl_NL";
             }
             else
             {

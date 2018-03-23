@@ -89,6 +89,39 @@ namespace Aura_OS.System
                      // }
                     Console.WriteLine(" ");
                     break;
+
+                case "nl_NL":
+                    Logo.Print();
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    Console.WriteLine(" * Documentatie: aura-team.com");
+                    Console.ForegroundColor = ConsoleColor.White;
+
+                    //redo that bullshit code
+                    //if ((Kernel.RootContent == MD5.hash("root") + "|admin") || (Kernel.ComputerName == "Aura-PC"))
+                    //{
+                    //    Console.WriteLine();
+                    //
+                    //    Console.ForegroundColor = ConsoleColor.Green;
+                    //   Text.Display("tips");
+                    //
+                    //   if (Kernel.RootContent == MD5.hash("root") + "|admin")
+                    //   {
+                    //       Console.WriteLine(" ");
+                    //       Console.ForegroundColor = ConsoleColor.Blue;
+                    //       Console.WriteLine("   * Default password for root is 'root'");
+                    //       Console.ForegroundColor = ConsoleColor.White;
+                    //  }
+                    //
+                    //   if (Kernel.ComputerName == "aura-pc")
+                    //  {
+                    //      Console.WriteLine(" ");
+                    //      Console.ForegroundColor = ConsoleColor.Blue;
+                    //      Console.WriteLine("   - Computer name is 'aura-pc', think to change it.");
+                    //      Console.ForegroundColor = ConsoleColor.White;
+                    //  }
+                    // }
+                    Console.WriteLine(" ");
+                    break;
             }
         }
 

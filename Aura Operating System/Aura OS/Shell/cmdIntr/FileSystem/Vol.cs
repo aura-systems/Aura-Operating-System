@@ -32,7 +32,7 @@ namespace Aura_OS.Shell.cmdIntr.FileSystem
         /// </summary>
         public static void c_Vol()
         {
-            var vols = Kernel.FS.GetVolumes();
+            var vols = Kernel.vFS.GetVolumes();
 
             L.Text.Display("volCommand");
 
