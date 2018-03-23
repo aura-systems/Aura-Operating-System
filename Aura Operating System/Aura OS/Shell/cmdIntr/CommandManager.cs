@@ -1,10 +1,12 @@
-﻿/*
+/*
 * PROJECT:          Aura Operating System Development
 * CONTENT:          Command Interpreter - CommandManager
 * PROGRAMMER(S):    John Welsh <djlw78@gmail.com>
 */
 
+using Aura_OS.Apps.User;
 using System;
+using System.IO;
 
 namespace Aura_OS.Shell.cmdIntr
 {
@@ -169,6 +171,16 @@ namespace Aura_OS.Shell.cmdIntr
                 Tests.Crash.c_Crash();
             }
 
+            else if (cmd.StartsWith("print "))
+            {
+                string file = cmd.Remove(0, 6);
+
+                foreach (string line in File.ReadAllLines("0:\\" + file))
+                {
+                    Console.WriteLine(line);
+                }
+            }
+            
             else if (cmd.Equals("crashcpu"))
             {
                 int value = 1;
@@ -180,7 +192,6 @@ namespace Aura_OS.Shell.cmdIntr
             //{
             //    Util.xml.CmdXmlParser.c_CmdXmlParser(cmd, 0, 4);
             //}
-
 
             #endregion Tests
 
