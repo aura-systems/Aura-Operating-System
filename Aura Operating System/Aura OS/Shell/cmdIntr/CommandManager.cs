@@ -63,11 +63,11 @@ namespace Aura_OS.Shell.cmdIntr
             }
             else if (cmd.Equals("cp"))
             {
-                FileSystem.CP.c_CP();
+                FileSystem.CP.c_CP_only();
             }
             else if (cmd.StartsWith("cp "))
             {
-                FileSystem.CP.c_CP();
+                FileSystem.CP.c_CP(cmd);
             }
             else if ((cmd.Equals("dir")) || (cmd.Equals("ls")))
             {
@@ -211,8 +211,17 @@ namespace Aura_OS.Shell.cmdIntr
 
             else
             {
-                Util.CmdNotFound.c_CmdNotFound();
+                if (cmd.Length <= 0)
+                {
+                    return;
+                }
+                else
+                { 
+                    Util.CmdNotFound.c_CmdNotFound();
+                }                
             }
+
+            Console.WriteLine();
 
             #endregion Util
 
