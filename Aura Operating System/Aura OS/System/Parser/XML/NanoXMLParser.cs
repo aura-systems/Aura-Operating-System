@@ -1,4 +1,13 @@
-﻿using System;
+﻿/*
+* PROJECT:          Aura Operating System Development
+* CONTENT:          NANOXML Parser
+* PROGRAMMERS:      Valentin Charbonnier <valentinbreiz@gmail.com>
+*                   John Welsh <djlw78@gmail.com>
+* LICENSE:          LICENSES\NANOXML\LICENSE.md
+*/
+
+
+using System;
 using System.Collections.Generic;
 
 namespace Aura_OS.System.Parser.XML
