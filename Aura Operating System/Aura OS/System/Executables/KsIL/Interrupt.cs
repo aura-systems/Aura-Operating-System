@@ -9,24 +9,6 @@ namespace KsIL
 
         public static List<Interrupt> Default
         {
-
-            get
-            {
-                
-                List<Interrupt> r = new List<Interrupt>
-                {
-                    new Interrupts.Invoke()
-                };
-
-                r.AddRange(DefaultCosmos);
-
-                return r;
-
-            }
-        }
-
-        public static List<Interrupt> DefaultCosmos
-        {
             get
             {
 

@@ -13,7 +13,7 @@ namespace KsIL
         public KsILVM(int _memory)
         {
             
-            Instructions.InterruptInstruction.Interrupts = Interrupt.DefaultCosmos;
+            Instructions.InterruptInstruction.Interrupts = Interrupt.Default;
 
             memory = new Memory(_memory);
             
