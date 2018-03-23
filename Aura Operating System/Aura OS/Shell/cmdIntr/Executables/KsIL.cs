@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Aura_OS.Shell.cmdIntr.Tools
+namespace Aura_OS.Shell.cmdIntr.Executables
 {
     public class KsIL_command
     {

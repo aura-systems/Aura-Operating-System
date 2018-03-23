@@ -194,9 +194,19 @@ namespace Aura_OS.Shell.cmdIntr
             {
                 Tools.MD5.c_MD5(cmd);
             }
+
+            #endregion
+
+            #region Executables
+
             else if (cmd.StartsWith("ksil"))
             {
-                Tools.KsIL_command.c_KsIL(cmd);
+                string FilePath = cmd.Remove(0, 5);
+                Executables.KsIL_command.c_KsIL(FilePath);
+            }
+            else if (cmd.EndsWith(".ksil"))
+            {
+                Executables.KsIL_command.c_KsIL(cmd);
             }
 
             #endregion
