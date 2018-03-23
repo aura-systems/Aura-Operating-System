@@ -102,6 +102,11 @@ namespace Aura_OS.System
             username = text.Remove(middle, text.Length - middle);
             password = text.Remove(0, middle + 6);
 
+            if (username == "root" || password == "root")
+            {
+                RunWithoutFS();
+            }
+
             string tryusername = "";
 
             if (tryusername.StartsWith("user:" + username))
