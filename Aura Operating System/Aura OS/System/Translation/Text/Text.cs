@@ -281,6 +281,9 @@ namespace Aura_OS.System.Translation
                         case "nofilesystem":
                             Console.WriteLine("Aucun volume détecté, le sytème de fichiers est désactivé!");
                             break;
+                        case "notrecognized":
+                            Console.WriteLine("Application non reconnue.");
+                            break;
                     }
                     break;
 
@@ -520,6 +523,9 @@ namespace Aura_OS.System.Translation
                         case "nofilesystem":
                             Console.WriteLine("No volumes are detected, filesystem is disabled!");
                             break;
+                        case "notrecognized":
+                            Console.WriteLine("Unrecognized application.");
+                            break;
                     }
                     break;
 
@@ -758,6 +764,9 @@ namespace Aura_OS.System.Translation
                             break;
                         case "nofilesystem":
                             Console.WriteLine("Er zijn geen volumes gedetecteerd, het bestandssysteem is uitgeschakeld!");
+                            break;
+                        case "notrecognized":
+                            Console.WriteLine("Niet-herkende applicatie.");
                             break;
                     }
                     break;

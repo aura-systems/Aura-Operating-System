@@ -2,6 +2,8 @@
 * PROJECT:          Aura Operating System Development
 * CONTENT:          Command Interpreter - Run Script
 * PROGRAMMER(S):    DA CRUZ Alexy <dacruzalexy@gmail.com>
+*                   Valentin Charbonnier <valentinbreiz@gmail.com>
+*                   zarlo <admin@punksky.xyz>
 */
 
 using System.IO;
@@ -38,7 +40,22 @@ namespace Aura_OS.Shell.cmdIntr.FileSystem
             string file = run.Remove(startIndex, count);
             if (File.Exists(Kernel.current_directory + file))
             {
-                Apps.System.Batch.Execute(file);
+                if (file.EndsWith(".bat") || file.EndsWith(".BAT"))
+                {
+                    Apps.System.Batch.Execute(Kernel.current_directory + file);
+                }
+                else if (file.EndsWith(".ksil") || file.EndsWith(".KSIL"))
+                {
+                    KsIL.KsILVM KsILVM = new KsIL.KsILVM(1024 * 1024);
+
+                    KsILVM.LoadFile(Kernel.current_directory + file);
+
+                    KsILVM.AutoTick();
+                }
+                else
+                {
+                    L.Text.Display("notrecognized");
+                }
             }
             else
             {
