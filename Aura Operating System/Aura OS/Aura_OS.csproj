@@ -7,7 +7,7 @@
   <PropertyGroup>
     <BinFormat>Bin</BinFormat>
     <Profile>VMware</Profile>
-    <DebugEnabled>True</DebugEnabled>
+    <DebugEnabled>False</DebugEnabled>
     <DebugMode>Source</DebugMode>
     <TraceMode>User</TraceMode>
     <EnableGDB>False</EnableGDB>
@@ -85,6 +85,9 @@
     <IntelEdison_OutputPath>bin\Debug\net462\</IntelEdison_OutputPath>
     <IntelEdison_EnableGDB>False</IntelEdison_EnableGDB>
     <IntelEdison_StartCosmosGDB>false</IntelEdison_StartCosmosGDB>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <StackCorruptionDetectionEnabled>False</StackCorruptionDetectionEnabled>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Cosmos.Build" Version="*" NoWarn="NU1604" />

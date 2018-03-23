@@ -18,6 +18,7 @@ using Aura_OS.System.Utils;
 using System.Collections.Generic;
 using System.Text;
 using Cosmos.System.ExtendedASCII;
+using System.IO;
 
 #endregion
 
@@ -43,6 +44,7 @@ namespace Aura_OS
         public static string UserDir = @"0:\Users\" + userLogged + "\\";
         public static bool SystemExists = false;
         public static bool JustInstalled = false;
+        public static bool Contains_Volumes = false;
         public static CosmosVFS vFS = new CosmosVFS();
 		public static Dictionary<string, string> environmentvariables = new Dictionary<string, string>();
 
@@ -65,17 +67,20 @@ namespace Aura_OS
             try
             {
                 Console.Clear();
-                Encoding.RegisterProvider(CosmosEncodingProvider.Instance);
-                Console.InputEncoding = Encoding.GetEncoding(437);
-                Console.OutputEncoding = Encoding.GetEncoding(437);
+                Cosmos.HAL.Global.logs.Add("[Info] Starting Aura Operating System..");
                 Console.ForegroundColor = ConsoleColor.DarkMagenta;
                 Console.Write("Booting Aura...\n");
                 Console.ForegroundColor = ConsoleColor.White;
+                Encoding.RegisterProvider(CosmosEncodingProvider.Instance);
+                Console.InputEncoding = Encoding.GetEncoding(437);
+                Console.OutputEncoding = Encoding.GetEncoding(437);
+                Cosmos.HAL.Global.logs.Add("[ OK ] Encoding 437 initialized");
 
                 #region Register Filesystem
                 Sys.FileSystem.VFS.VFSManager.RegisterVFS(vFS);
                 if (ContainsVolumes())
                 {
+                    Contains_Volumes = true;
                     Console.ForegroundColor = ConsoleColor.Green;
                     Console.Write("[OK]");
                     Console.ForegroundColor = ConsoleColor.White;
@@ -83,6 +88,7 @@ namespace Aura_OS
                     Console.ForegroundColor = ConsoleColor.DarkMagenta;
                     Console.Write("FileSystem Registration\n");
                     Console.ForegroundColor = ConsoleColor.White;
+                    Cosmos.HAL.Global.logs.Add("[ OK ] Filesystem registered");
                 }
                 else
                 {
@@ -93,10 +99,12 @@ namespace Aura_OS
                     Console.ForegroundColor = ConsoleColor.DarkMagenta;
                     Console.Write("FileSystem Registration\n");
                     Console.ForegroundColor = ConsoleColor.White;
+                    Cosmos.HAL.Global.logs.Add("[ Error ] Filesystem not registered");
                 }
                 #endregion
 
                 setup.InitSetup();
+                Cosmos.HAL.Global.logs.Add("[ OK ] Setup initialied");
 
                 if (SystemExists)
                 {
@@ -114,8 +122,10 @@ namespace Aura_OS
 
                         Info.getComputerName();
 
-                        running = true;
+                        Cosmos.HAL.Global.logs.Add("[Info] Running Aura OS!");
+                        File.WriteAllLines(@"0:\System\boot.log", Cosmos.HAL.Global.logs.ToArray());
 
+                        running = true;
                     }
                 }
                 else
