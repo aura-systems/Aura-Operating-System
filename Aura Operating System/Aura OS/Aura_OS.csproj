@@ -99,4 +99,7 @@
       <HintPath>..\..\..\..\..\AppData\Roaming\Cosmos User Kit\Build\IL2CPU\IL2CPU.API.dll</HintPath>
     </Reference>
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Apps\User\KsIL\" />
+  </ItemGroup>
 </Project>
