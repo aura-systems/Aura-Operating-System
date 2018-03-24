@@ -1,6 +1,12 @@
-# Aura Operating System
-## [Official Website (aura-team.com)](http://aura-team.com)
-## Join us on [Slack](https://join.slack.com/t/aura-systems/shared_invite/enQtMjQ2ODgyMjgwNTY2LTFmYWY1ZDljNGNjZjRjODUyZWI2ODY0ZmMxNzljMmJjODI4YjRiZGIzN2JhNjAyNzdhOTI0MTgwNjhjNzQ4ZTM)!
+<p align="center"><img width=60% src="https://image.noelshack.com/fichiers/2018/12/6/1521885466-aura.png"></p>
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+[![Build Status](https://travis-ci.org/aura-systems/Aura-Operating-System.svg?branch=master)](https://travis-ci.org/aura-systems/Aura-Operating-System)
+[![Issues](https://img.shields.io/github/issues/aura-systems/Aura-Operating-System.svg)](https://github.com/aura-systems/Aura-Operating-System/issues)
+[![Pull requests](https://img.shields.io/github/issues-pr/aura-systems/Aura-Operating-System.svg)](https://github.com/aura-systems/Aura-Operating-System/issues)
+[![Slack](https://img.shields.io/badge/join%20us%20on-slack-blue.svg)](https://join.slack.com/t/aura-systems/shared_invite/enQtMjQ2ODgyMjgwNTY2LTFmYWY1ZDljNGNjZjRjODUyZWI2ODY0ZmMxNzljMmJjODI4YjRiZGIzN2JhNjAyNzdhOTI0MTgwNjhjNzQ4ZTM)
+[![Slack](https://img.shields.io/badge/our%20website-aura--team.com-blue.svg)](http://aura-team.com)
+
 A Cosmos based Operating System developped in C# made by Alexy DA CRUZ (GeomTech) and Valentin Charbonnier (valentinbreiz).
 
 ## Current features
@@ -21,19 +27,13 @@ Please read the [Aura Progression](https://github.com/aura-systems/Aura-Operatin
 
 ## Screenshots
 
-Login:
+<p align="center"><img width=60% src="https://image.noelshack.com/fichiers/2017/43/2/1508857711-aura1.png"></p>
 
-![Aura Operating System](https://image.noelshack.com/fichiers/2017/43/2/1508857711-aura1.png)
+<p align="center"><img width=60% src="https://image.noelshack.com/fichiers/2017/47/5/1511551694-1.png"></p>
 
-Shell:
+<p align="center"><img width=60% src="https://image.noelshack.com/fichiers/2017/47/5/1511551696-2.png"></p>
 
-![Aura Operating System](https://image.noelshack.com/fichiers/2017/47/5/1511551694-1.png)
-
-![Aura Operating System](https://image.noelshack.com/fichiers/2017/47/5/1511551696-2.png)
-
-![Aura Operating System](https://image.noelshack.com/fichiers/2017/47/5/1511551820-3.png)
-
-## Want to try Aura?
+## Try Aura
 Download VMWare [at this address](https://my.vmware.com/en/web/vmware/free#desktop_end_user_computing/vmware_workstation_player/12_0). Install and run it.
 
 Now click on "Create a new virtual machine", select the iso file downloaded on [this page](https://github.com/aura-systems/Aura-Operating-System/releases) and click the "Next" button.
@@ -44,7 +44,7 @@ The Virtual File System won't work so go to "C:\Users\username\Documents\Virtual
 
 Now you can select Aura (Other) and click on "Play Virtual Machine".
 
-## How to compile Aura sources ?
+## Compile Aura
 First, clone [our modified version of Cosmos](https://github.com/aura-systems/Cosmos), run the "install-VS2017.bat" file and wait until the installation is done. 
 
 Now clone [this repository](https://github.com/aura-systems/Aura-Operating-System) then inside the folder Aura OS, run Aura OS.sln and select "build" once Visual Studio 2017 has loaded.
