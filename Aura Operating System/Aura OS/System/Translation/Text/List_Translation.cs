@@ -185,7 +185,7 @@ namespace Aura_OS.System.Translation
                     Console.WriteLine("Révision du système:           " + Kernel.revision);
                     Console.WriteLine("Date et heure:                 " + Time.MonthString() + "/" + Time.DayString() + "/" + Time.YearString() + ", " + Time.TimeString(true, true, true));
                     Console.WriteLine("Montant de la RAM:             " + Cosmos.Core.CPU.GetAmountOfRAM() + "MB");
-                    Console.WriteLine("Processeur(s):                 " + Computer.Info.GetNumberOfCPU() + "processeur(s) installé(s).");
+                    Console.WriteLine("Processeur(s):                 " + Computer.Info.GetNumberOfCPU() + " processeur(s) installé(s).");
                     int i = 1;
                     foreach (Processor processor in Computer.CPUInfo.Processors)
                     {
@@ -201,7 +201,7 @@ namespace Aura_OS.System.Translation
                     Console.WriteLine("Operating system revision: " + Kernel.revision);
                     Console.WriteLine("Date and time:             " + Time.MonthString() + "/" + Time.DayString() + "/" + Time.YearString() + ", " + Time.TimeString(true, true, true));
                     Console.WriteLine("Amount of RAM:             " + Cosmos.Core.CPU.GetAmountOfRAM() + "MB");
-                    Console.WriteLine("Processor(s):              " + Computer.Info.GetNumberOfCPU() + "installed processor(s).");
+                    Console.WriteLine("Processor(s):              " + Computer.Info.GetNumberOfCPU() + " installed processor(s).");
                     int j = 1;
                     foreach (Processor processor in Computer.CPUInfo.Processors)
                     {
@@ -217,7 +217,7 @@ namespace Aura_OS.System.Translation
                     Console.WriteLine("Revisie besturingssysteem: " + Kernel.revision);
                     Console.WriteLine("Datum en tijd:             " + Time.MonthString() + "/" + Time.DayString() + "/" + Time.YearString() + ", " + Time.TimeString(true, true, true));
                     Console.WriteLine("Hoeveelheid RAM:           " + Cosmos.Core.CPU.GetAmountOfRAM() + "MB");
-                    Console.WriteLine("Processor(s):              " + Computer.Info.GetNumberOfCPU() + "processor(s) geïnstalleerd.");
+                    Console.WriteLine("Processor(s):              " + Computer.Info.GetNumberOfCPU() + " processor(s) geïnstalleerd.");
                     int k = 1;
                     foreach (Processor processor in Computer.CPUInfo.Processors)
                     {
