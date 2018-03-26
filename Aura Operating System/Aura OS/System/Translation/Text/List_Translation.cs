@@ -9,7 +9,7 @@ using System;
 
 namespace Aura_OS.System.Translation
 {
-    class Help
+    class List_Translation
     {
 
         /// <summary>
@@ -166,6 +166,45 @@ namespace Aura_OS.System.Translation
                     Console.WriteLine("- passuser {gebruiker} {wachtwoord} (om het wachtwoord te veranderen)");
                     Console.WriteLine("- setcomputername (om de naam van de computer te veranderen)");
                     Console.WriteLine("- setlang {lang} (om de systeemtaal aan te passen)");
+                    break;
+            }
+        }
+
+        /// <summary>
+        /// Display help on settings commands.
+        /// </summary>
+        public static void Systeminfo()
+        {
+            switch (Kernel.langSelected)
+            {
+                case "fr_FR":
+                    Console.WriteLine("Nom du PC:                     " + Kernel.ComputerName);
+                    Console.WriteLine("Nom du système d'exploitation: Aura");
+                    Console.WriteLine("Version du système:            " + Kernel.version);
+                    Console.WriteLine("Révision du système:           " + Kernel.revision);
+                    Console.WriteLine("Date et heure:                 " + Time.MonthString() + "/" + Time.DayString() + "/" + Time.YearString() + ", " + Time.TimeString(true, true, true));
+                    Console.WriteLine("Montant de la RAM:             " + Cosmos.Core.CPU.GetAmountOfRAM() + "MB");
+                    Console.WriteLine("Processeur(s):                 " + Computer.Info.GetNumberOfCPU() + "processeur(s) installé(s).");
+                    break;
+
+                case "en_US":
+                    Console.WriteLine("Computer name:             " + Kernel.ComputerName);
+                    Console.WriteLine("Operating system name:     Aura");
+                    Console.WriteLine("Operating system version:  " + Kernel.version);
+                    Console.WriteLine("Operating system revision: " + Kernel.revision);
+                    Console.WriteLine("Date and time:             " + Time.MonthString() + "/" + Time.DayString() + "/" + Time.YearString() + ", " + Time.TimeString(true, true, true));
+                    Console.WriteLine("Amount of RAM:             " + Cosmos.Core.CPU.GetAmountOfRAM() + "MB");
+                    Console.WriteLine("Processor(s):              " + Computer.Info.GetNumberOfCPU() + "installed processor(s).");
+                    break;
+
+                case "nl_NL":
+                    Console.WriteLine("Naam computer:             " + Kernel.ComputerName);
+                    Console.WriteLine("Naam besturingssysteem:    Aura");
+                    Console.WriteLine("Versie besturingssysteem:  " + Kernel.version);
+                    Console.WriteLine("Revisie besturingssysteem: " + Kernel.revision);
+                    Console.WriteLine("Datum en tijd:             " + Time.MonthString() + "/" + Time.DayString() + "/" + Time.YearString() + ", " + Time.TimeString(true, true, true));
+                    Console.WriteLine("Hoeveelheid RAM:           " + Cosmos.Core.CPU.GetAmountOfRAM() + "MB");
+                    Console.WriteLine("Processor(s):              " + Computer.Info.GetNumberOfCPU() + "processor(s) geïnstalleerd.");
                     break;
             }
         }

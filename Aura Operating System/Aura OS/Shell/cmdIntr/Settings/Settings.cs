@@ -34,7 +34,7 @@ namespace Aura_OS.Shell.cmdIntr.Settings
         /// </summary>
         public static void c_Settings()
         {
-            L.Help.Settings();
+            L.List_Translation.Settings();
         }
 
         public static void c_Settings(string settings)
