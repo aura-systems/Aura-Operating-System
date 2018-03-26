@@ -105,7 +105,7 @@ namespace Aura_OS.System.Computer
             int number = 0;
             foreach (var x in ListProcessors)
             {
-                CPUInfo._Processors.Add(x);
+                CPUInfo.Processors.Add(x);
                 number++;
             }
             return number;

@@ -5,6 +5,7 @@
 *                   Valentin Charbonnier <valentinbreiz@gmail.com>
 */
 
+using Cosmos.HAL.PCInformation;
 using System;
 
 namespace Aura_OS.System.Translation
@@ -185,6 +186,12 @@ namespace Aura_OS.System.Translation
                     Console.WriteLine("Date et heure:                 " + Time.MonthString() + "/" + Time.DayString() + "/" + Time.YearString() + ", " + Time.TimeString(true, true, true));
                     Console.WriteLine("Montant de la RAM:             " + Cosmos.Core.CPU.GetAmountOfRAM() + "MB");
                     Console.WriteLine("Processeur(s):                 " + Computer.Info.GetNumberOfCPU() + "processeur(s) installé(s).");
+                    int i = 1;
+                    foreach (Processor processor in Computer.CPUInfo.Processors)
+                    {
+                        Console.WriteLine("[" + i + "] : " + processor.GetBrandName() + (int)processor.Frequency + " Mhz");
+                        i++;
+                    }
                     break;
 
                 case "en_US":
@@ -195,6 +202,12 @@ namespace Aura_OS.System.Translation
                     Console.WriteLine("Date and time:             " + Time.MonthString() + "/" + Time.DayString() + "/" + Time.YearString() + ", " + Time.TimeString(true, true, true));
                     Console.WriteLine("Amount of RAM:             " + Cosmos.Core.CPU.GetAmountOfRAM() + "MB");
                     Console.WriteLine("Processor(s):              " + Computer.Info.GetNumberOfCPU() + "installed processor(s).");
+                    int j = 1;
+                    foreach (Processor processor in Computer.CPUInfo.Processors)
+                    {
+                        Console.WriteLine("[" + j + "] : " + processor.GetBrandName() + (int)processor.Frequency + " Mhz");
+                        j++;
+                    }
                     break;
 
                 case "nl_NL":
@@ -205,6 +218,12 @@ namespace Aura_OS.System.Translation
                     Console.WriteLine("Datum en tijd:             " + Time.MonthString() + "/" + Time.DayString() + "/" + Time.YearString() + ", " + Time.TimeString(true, true, true));
                     Console.WriteLine("Hoeveelheid RAM:           " + Cosmos.Core.CPU.GetAmountOfRAM() + "MB");
                     Console.WriteLine("Processor(s):              " + Computer.Info.GetNumberOfCPU() + "processor(s) geïnstalleerd.");
+                    int k = 1;
+                    foreach (Processor processor in Computer.CPUInfo.Processors)
+                    {
+                        Console.WriteLine("[" + k + "] : " + processor.GetBrandName() + (int)processor.Frequency + " Mhz");
+                        k++;
+                    }
                     break;
             }
         }

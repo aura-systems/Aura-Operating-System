@@ -1,15 +1,16 @@
-﻿using System;
+﻿/*
+* PROJECT:          Aura Operating System Development
+* CONTENT:          CPU Informations
+* PROGRAMMERS:      Valentin Charbonnier <valentinbreiz@gmail.com>
+*/
+
+using Cosmos.HAL.PCInformation;
 using System.Collections.Generic;
-using System.Text;
 
 namespace Aura_OS.System.Computer
 {
-    public class CPUInfo
+    public static class CPUInfo
     {
-        public static List<_Processor_> Processors_ = new List<_Processor_>();
-    }
-
-    internal class _Processor_
-    {
+        public static List<Processor> Processors = new List<Processor>();
     }
 }

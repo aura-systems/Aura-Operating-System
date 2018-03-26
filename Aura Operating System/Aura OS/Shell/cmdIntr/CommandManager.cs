@@ -178,33 +178,10 @@ namespace Aura_OS.Shell.cmdIntr
                 int result = 1 / value; //Division by 0
             }
 
-            else if (cmd.Equals("cpuinfo"))
-            {
-                foreach (var x in ListProcessors)
-                {
-                    Console.WriteLine("vendor_id: " + x.Manufacturer);
-                    Console.WriteLine("cpu family: " + x.Family);
-                    Console.WriteLine("model: " + x.ModelNumber);
-                    Console.WriteLine("stepping: " + x.Stepping);
-                    /*
-                    //returnProc += "model family: " + x.ProcessorFamily + "\n";
-                    //in proc cpu info there is the raw type
-                    returnProc += "cpu MHz: " + x.Speed + "\n";
-                    */
-                    Console.WriteLine("flags count: " + x.Flags.Count);
-                    //Appending brand crashes deleting the entire string
-                    //returnProc += "Brand: " + new String(x.Brand.ToCharArray());
-                    Console.WriteLine("Brand: " + x.GetBrandName());
-                    Console.WriteLine("Frequency: " + x.Frequency);
-                    Console.ReadKey();
-                }
-            }
-
             //else if (cmd.StartsWith("xml "))
             //{
             //    Util.xml.CmdXmlParser.c_CmdXmlParser(cmd, 0, 4);
             //}
-
 
             #endregion Tests
 
