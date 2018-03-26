@@ -67,10 +67,10 @@ namespace Aura_OS.System
             else if(FileSystem() == "continue")
             {
                 RegisterLanguage();
-                RegisterHostname();
                 RegisterUser();
                 if (!noinstallnofs)
                 {
+                    RegisterHostname();
                     Installation();
                 }
             }           
