@@ -12,7 +12,7 @@ using System;
 
 namespace Aura_OS.System.Sound
 {
-    class PCSpeaker
+    public class PCSpeaker
     {
         static IOPort io = new IOPort(0);
         static int PP = 0, D = 0;

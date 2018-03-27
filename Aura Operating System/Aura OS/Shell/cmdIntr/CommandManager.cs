@@ -14,8 +14,6 @@ namespace Aura_OS.Shell.cmdIntr
         //       Windows like command, Linux like command, Aura original command (optional for the last one)
         //Example: else if ((cmd.Equals("ipconfig")) || (cmd.Equals("ifconfig")) || (cmd.Equals("netconf"))) {
 
-        static System.Sound.PCSpeaker speaker = new System.Sound.PCSpeaker();
-
         /// <summary>
         /// Empty constructor. (Good for debug)
         /// </summary>
@@ -180,7 +178,7 @@ namespace Aura_OS.Shell.cmdIntr
 
             else if (cmd.Equals("beep"))
             {
-                speaker.beep();
+                Kernel.speaker.beep();
             }
 
             //else if (cmd.StartsWith("xml "))
