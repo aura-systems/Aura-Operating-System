@@ -184,6 +184,11 @@ namespace Aura_OS.System.Translation
                     Console.WriteLine("Version du système:            " + Kernel.version);
                     Console.WriteLine("Révision du système:           " + Kernel.revision);
                     Console.WriteLine("Date et heure:                 " + Time.MonthString() + "/" + Time.DayString() + "/" + Time.YearString() + ", " + Time.TimeString(true, true, true));
+                    if (Kernel.SystemExists)
+                    {
+                        Console.WriteLine("Date d'installation originale: " + Utils.Settings.GetValue("setuptime"));
+                    }
+                    Console.WriteLine("Heure de démarrage du système: " + Kernel.boottime);
                     Console.WriteLine("Montant de la RAM:             " + Cosmos.Core.CPU.GetAmountOfRAM() + "MB");
                     Console.WriteLine("Processeur(s):                 " + Computer.Info.GetNumberOfCPU() + " processeur(s) installé(s).");
                     int i = 1;
@@ -201,6 +206,11 @@ namespace Aura_OS.System.Translation
                     Console.WriteLine("Operating system version:  " + Kernel.version);
                     Console.WriteLine("Operating system revision: " + Kernel.revision);
                     Console.WriteLine("Date and time:             " + Time.MonthString() + "/" + Time.DayString() + "/" + Time.YearString() + ", " + Time.TimeString(true, true, true));
+                    if (Kernel.SystemExists)
+                    {
+                        Console.WriteLine("Original Install Date:     " + Utils.Settings.GetValue("setuptime"));
+                    }
+                    Console.WriteLine("System Boot Time:          " + Kernel.boottime);
                     Console.WriteLine("Amount of RAM:             " + Cosmos.Core.CPU.GetAmountOfRAM() + "MB");
                     Console.WriteLine("Processor(s):              " + Computer.Info.GetNumberOfCPU() + " installed processor(s).");
                     int j = 1;
@@ -218,6 +228,11 @@ namespace Aura_OS.System.Translation
                     Console.WriteLine("Versie besturingssysteem:  " + Kernel.version);
                     Console.WriteLine("Revisie besturingssysteem: " + Kernel.revision);
                     Console.WriteLine("Datum en tijd:             " + Time.MonthString() + "/" + Time.DayString() + "/" + Time.YearString() + ", " + Time.TimeString(true, true, true));
+                    if (Kernel.SystemExists)
+                    {
+                        Console.WriteLine("Installeer datum:          " + Utils.Settings.GetValue("setuptime"));
+                    }
+                    Console.WriteLine("Starttijd van het systeem: " + Kernel.boottime);
                     Console.WriteLine("Hoeveelheid RAM:           " + Cosmos.Core.CPU.GetAmountOfRAM() + "MB");
                     Console.WriteLine("Processor(s):              " + Computer.Info.GetNumberOfCPU() + " processor(s) geïnstalleerd.");
                     int k = 1;

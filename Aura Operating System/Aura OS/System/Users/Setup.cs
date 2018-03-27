@@ -191,15 +191,6 @@ namespace Aura_OS.System
         }
 
         /// <summary>
-        /// Called to define default colors
-        /// </summary>
-        public void RegisterDefaults()
-        {
-            Settings.PutValue("foregroundcolor","7");
-            Settings.PutValue("backgroundcolor", "0");
-        }
-
-        /// <summary>
         /// Create defaults directories of the system
         /// </summary>
         public void InitDirs()
@@ -320,9 +311,11 @@ namespace Aura_OS.System
 
             Settings.PutValue("hostname", FinalHostname);
 
-            Menu.DispInstallationDialog(80);
+            Menu.DispInstallationDialog(70);
 
-            RegisterDefaults();
+            Settings.PutValue("setuptime", Time.MonthString() + "/" + Time.DayString() + "/" + Time.YearString() + ", " + Time.TimeString(true, true, true));
+
+            Menu.DispInstallationDialog(80);
 
             Settings.PushValues();
             System.Users.Users.PushUsers();
