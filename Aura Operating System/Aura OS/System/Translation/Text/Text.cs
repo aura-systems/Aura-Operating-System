@@ -263,6 +263,9 @@ namespace Aura_OS.System.Translation
                         case "nofilesystem":
                             Console.WriteLine("Aucun volume détecté, le sytème de fichiers est désactivé!");
                             break;
+                        case "time":
+                            Console.WriteLine("L'heure actuelle est :  " + Time.MonthString() + "/" + Time.DayString() + "/" + Time.YearString() + ", " + Time.TimeString(true, true, true));
+                            break;
                     }
                     break;
 
@@ -484,6 +487,9 @@ namespace Aura_OS.System.Translation
                         case "nofilesystem":
                             Console.WriteLine("No volumes are detected, filesystem is disabled!");
                             break;
+                        case "time":
+                            Console.WriteLine("The current time is:  " + Time.MonthString() + "/" + Time.DayString() + "/" + Time.YearString() + ", " + Time.TimeString(true, true, true));
+                            break;
                     }
                     break;
 
@@ -704,6 +710,9 @@ namespace Aura_OS.System.Translation
                             break;
                         case "nofilesystem":
                             Console.WriteLine("Er zijn geen volumes gedetecteerd, het bestandssysteem is uitgeschakeld!");
+                            break;
+                        case "time":
+                            Console.WriteLine("De huidige tijd is:  " + Time.MonthString() + "/" + Time.DayString() + "/" + Time.YearString() + ", " + Time.TimeString(true, true, true));
                             break;
                     }
                     break;

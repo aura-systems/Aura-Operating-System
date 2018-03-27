@@ -30,8 +30,8 @@ namespace Aura_OS
 
         Setup setup = new Setup();
         public static bool running;
-        public static string version = "0.4.3";
-        public static string revision = "230320182309";
+        public static string version = "0.4.4";
+        public static string revision = "280320180010";
         public static string current_directory = @"0:\";
         public static string langSelected = "en_US";
         public static string userLogged;
@@ -44,7 +44,7 @@ namespace Aura_OS
         public static CosmosVFS vFS = new CosmosVFS();
 		public static Dictionary<string, string> environmentvariables = new Dictionary<string, string>();
         public static System.Sound.PCSpeaker speaker = new System.Sound.PCSpeaker();
-        public static string boottime = "0.4.3";
+        public static string boottime = Time.MonthString() + "/" + Time.DayString() + "/" + Time.YearString() + ", " + Time.TimeString(true, true, true);
 
         #endregion
 
