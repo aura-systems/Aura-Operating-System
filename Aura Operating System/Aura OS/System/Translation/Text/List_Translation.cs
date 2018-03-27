@@ -192,6 +192,7 @@ namespace Aura_OS.System.Translation
                         Console.WriteLine("[" + i + "] : " + processor.GetBrandName() + (int)processor.Frequency + " Mhz");
                         i++;
                     }
+                    Computer.CPUInfo.Processors.Clear();
                     break;
 
                 case "en_US":
@@ -208,6 +209,7 @@ namespace Aura_OS.System.Translation
                         Console.WriteLine("[" + j + "] : " + processor.GetBrandName() + (int)processor.Frequency + " Mhz");
                         j++;
                     }
+                    Computer.CPUInfo.Processors.Clear();
                     break;
 
                 case "nl_NL":
@@ -224,6 +226,7 @@ namespace Aura_OS.System.Translation
                         Console.WriteLine("[" + k + "] : " + processor.GetBrandName() + (int)processor.Frequency + " Mhz");
                         k++;
                     }
+                    Computer.CPUInfo.Processors.Clear();
                     break;
             }
         }
