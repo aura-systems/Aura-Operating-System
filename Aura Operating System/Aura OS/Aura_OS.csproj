@@ -3,6 +3,12 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <StackCorruptionDetectionLevel>MethodFooters</StackCorruptionDetectionLevel>
     <IgnoreDebugStubAttribute>False</IgnoreDebugStubAttribute>
+    <VMware_StackCorruptionDetectionLevel>MethodFooters</VMware_StackCorruptionDetectionLevel>
+    <VMware_IgnoreDebugStubAttribute>False</VMware_IgnoreDebugStubAttribute>
+    <PXE_StackCorruptionDetectionLevel>MethodFooters</PXE_StackCorruptionDetectionLevel>
+    <PXE_IgnoreDebugStubAttribute>False</PXE_IgnoreDebugStubAttribute>
+    <ISO_StackCorruptionDetectionLevel>MethodFooters</ISO_StackCorruptionDetectionLevel>
+    <ISO_IgnoreDebugStubAttribute>False</ISO_IgnoreDebugStubAttribute>
   </PropertyGroup>
   <PropertyGroup>
     <BinFormat>Bin</BinFormat>
@@ -26,7 +32,7 @@
     <VMware_DebugMode>Source</VMware_DebugMode>
     <VMware_VisualStudioDebugPort>Pipe: Cosmos\Serial</VMware_VisualStudioDebugPort>
     <VMware_PxeInterface>192.168.68.1</VMware_PxeInterface>
-    <VMware_VMwareEdition>Player</VMware_VMwareEdition>
+    <VMware_VMwareEdition>Workstation</VMware_VMwareEdition>
     <VMware_OutputPath>bin\Debug\net462\</VMware_OutputPath>
     <VMware_EnableGDB>False</VMware_EnableGDB>
     <VMware_StartCosmosGDB>false</VMware_StartCosmosGDB>

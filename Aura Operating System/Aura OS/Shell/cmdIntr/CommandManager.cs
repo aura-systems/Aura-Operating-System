@@ -178,6 +178,11 @@ namespace Aura_OS.Shell.cmdIntr
                 int result = 1 / value; //Division by 0
             }
 
+            else if (cmd.Equals("beep"))
+            {
+                Kernel.speaker.beep();
+            }
+
             //else if (cmd.StartsWith("xml "))
             //{
             //    Util.xml.CmdXmlParser.c_CmdXmlParser(cmd, 0, 4);

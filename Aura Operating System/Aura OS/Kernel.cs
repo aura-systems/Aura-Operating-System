@@ -43,6 +43,7 @@ namespace Aura_OS
         public static bool JustInstalled = false;
         public static CosmosVFS vFS = new CosmosVFS();
 		public static Dictionary<string, string> environmentvariables = new Dictionary<string, string>();
+        public static System.Sound.PCSpeaker speaker = new System.Sound.PCSpeaker();
         public static string boottime = "0.4.3";
 
         #endregion
