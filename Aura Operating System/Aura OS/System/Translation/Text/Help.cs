@@ -51,6 +51,7 @@ namespace Aura_OS.System.Translation
                     Console.WriteLine("- crash (crash Aura)");
                     Console.WriteLine("- crashcpu (crash CPU)");
                     Console.WriteLine("- lspci (liste les appareils pci)");
+                    Console.WriteLine("- beep (beep)");
 
                     Console.ReadKey();
 
@@ -89,6 +90,7 @@ namespace Aura_OS.System.Translation
                     Console.WriteLine("- crash (crash Aura)");
                     Console.WriteLine("- crashcpu (crash CPU)");
                     Console.WriteLine("- lspci (list pci devices)");
+                    Console.WriteLine("- beep (beep)");
 
                     Console.ReadKey();
 
@@ -127,6 +129,7 @@ namespace Aura_OS.System.Translation
                     Console.WriteLine("- crash (crasht Aura)");
                     Console.WriteLine("- crashcpu (crasht CPU)");
                     Console.WriteLine("- lspci (lijst pci-apparaten)");
+                    Console.WriteLine("- beep (beep)");
 
                     Console.ReadKey();
 
