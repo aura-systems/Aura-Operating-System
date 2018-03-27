@@ -44,6 +44,7 @@ namespace Aura_OS
         public static CosmosVFS vFS = new CosmosVFS();
 		public static Dictionary<string, string> environmentvariables = new Dictionary<string, string>();
         public static System.Sound.PCSpeaker speaker = new System.Sound.PCSpeaker();
+        public static string boottime = "0.4.3";
 
         #endregion
 
@@ -121,6 +122,9 @@ namespace Aura_OS
                 {
                     running = true;
                 }
+
+                boottime = Time.MonthString() + "/" + Time.DayString() + "/" + Time.YearString() + ", " + Time.TimeString(true, true, true);
+
             }
             catch (Exception ex)
             {

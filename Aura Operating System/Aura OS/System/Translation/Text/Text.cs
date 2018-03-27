@@ -65,21 +65,6 @@ namespace Aura_OS.System.Translation
                         case "alreadyexist":
                             Console.WriteLine(arg + " existe déjà !");
                             break;
-                        case "Computername":
-                            Console.WriteLine("Nom du PC:                     " + Kernel.ComputerName);
-                            break;
-                        case "OSName":
-                            Console.WriteLine("Nom du système d'exploitation: Aura");
-                            break;
-                        case "OSVersion":
-                            Console.WriteLine("Version du système:            " + Kernel.version);
-                            break;
-                        case "OSRevision":
-                            Console.WriteLine("Révision du système:           " + Kernel.revision);
-                            break;
-                        case "AmountRAM":
-                            Console.WriteLine("Montant de la RAM:             " + Info.GetAmountRAM());
-                            break;
                         case "UnknownCommand":
                             Console.WriteLine("Commande inconnue.");
                             break;
@@ -178,9 +163,6 @@ namespace Aura_OS.System.Translation
                             break;
                         case "mkdir":
                             Console.WriteLine("Entrez le nom du dossier (mkdir dossier).");
-                            break;
-                        case "time":
-                            Console.WriteLine("Date et heure:                 " + Time.MonthString() + "/" + Time.DayString() + "/" + Time.YearString() + ", " + Time.TimeString(true, true, true));
                             break;
                         case "mkdirfilealreadyexist":
                             Console.WriteLine("Le dossier existait déjà, le répertoire \"" + arg + "\" a donc été créé.");
@@ -307,21 +289,6 @@ namespace Aura_OS.System.Translation
                         case "alreadyexist":
                             Console.WriteLine(arg + " already exists!");
                             break;
-                        case "Computername":
-                            Console.WriteLine("Computer name:             " + Kernel.ComputerName);
-                            break;
-                        case "OSName":
-                            Console.WriteLine("Operating system name:     Aura");
-                            break;
-                        case "OSVersion":
-                            Console.WriteLine("Operating system version:  " + Kernel.version);
-                            break;
-                        case "OSRevision":
-                            Console.WriteLine("Operating system revision: " + Kernel.revision);
-                            break;
-                        case "AmountRAM":
-                            Console.WriteLine("Amount of RAM:             " + Cosmos.Core.CPU.GetAmountOfRAM() + "MB");
-                            break;
                         case "UnknownCommand":
                             Console.WriteLine("Unknown command.");
                             break;
@@ -417,9 +384,6 @@ namespace Aura_OS.System.Translation
                             break;
                         case "mkdir":
                             Console.WriteLine("Enter the directory name (mkdir directory).");
-                            break;
-                        case "time":
-                            Console.WriteLine("Date and time:             " + Time.MonthString() + "/" + Time.DayString() + "/" + Time.YearString() + ", " + Time.TimeString(true, true, true));
                             break;
                         case "mkdirfilealreadyexist":
                             Console.WriteLine("That folder existed already, directory \"" + arg + "\" has been created.");
@@ -546,21 +510,6 @@ namespace Aura_OS.System.Translation
                         case "alreadyexist":
                             Console.WriteLine(arg + " bestaat al!");
                             break;
-                        case "Computername":
-                            Console.WriteLine("Naam computer:             " + Kernel.ComputerName);
-                            break;
-                        case "OSName":
-                            Console.WriteLine("Naam besturingssysteem:    Aura");
-                            break;
-                        case "OSVersion":
-                            Console.WriteLine("Versie besturingssysteem:  " + Kernel.version);
-                            break;
-                        case "OSRevision":
-                            Console.WriteLine("Revisie besturingssysteem: " + Kernel.revision);
-                            break;
-                        case "AmountRAM":
-                            Console.WriteLine("Hoeveelheid RAM:           " + Cosmos.Core.CPU.GetAmountOfRAM() + "MB");
-                            break;
                         case "UnknownCommand":
                             Console.WriteLine("Onbekend commando.");
                             break;
@@ -656,9 +605,6 @@ namespace Aura_OS.System.Translation
                             break;
                         case "mkdir":
                             Console.WriteLine("Voer de mapnaam in  (mkdir map).");
-                            break;
-                        case "time":
-                            Console.WriteLine("Datum en tijd:             " + Time.MonthString() + "/" + Time.DayString() + "/" + Time.YearString() + ", " + Time.TimeString(true, true, true));
                             break;
                         case "mkdirfilealreadyexist":
                             Console.WriteLine("Die map bestond al, map \"" + arg + "\" is aangemaakt.");
