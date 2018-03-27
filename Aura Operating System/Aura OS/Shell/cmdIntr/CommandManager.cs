@@ -4,7 +4,9 @@
 * PROGRAMMER(S):    John Welsh <djlw78@gmail.com>
 */
 
+using Cosmos.HAL.PCInformation;
 using System;
+using System.Collections.Generic;
 
 namespace Aura_OS.Shell.cmdIntr
 {
@@ -50,7 +52,7 @@ namespace Aura_OS.Shell.cmdIntr
             }
             else if (cmd.Equals("help"))
             {
-                System.Translation.Help._Help();
+                System.Translation.List_Translation._Help();
             }
 
             #endregion Console
@@ -181,7 +183,6 @@ namespace Aura_OS.Shell.cmdIntr
             //    Util.xml.CmdXmlParser.c_CmdXmlParser(cmd, 0, 4);
             //}
 
-
             #endregion Tests
 
             #region Tools
@@ -227,5 +228,7 @@ namespace Aura_OS.Shell.cmdIntr
             #endregion Util
 
         }
+
+        
     }
 }
