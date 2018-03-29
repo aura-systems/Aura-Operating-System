@@ -11,18 +11,21 @@ A Cosmos based Operating System developped in C# made by Alexy DA CRUZ (GeomTech
 ## Current features
 Please read the [Aura Progression](https://github.com/aura-systems/Aura-Operating-System/projects/4) or our [Roadmap](https://github.com/aura-systems/Aura-Operating-System/projects/3) to know what will be added soon.
 
-* PS2 Keyboard
 * ATA IDE / AHCI Driver
+* FAT32/16/12 + Virtual FileSystem.
 * PCI Device Scan
+* PS2 Keyboard
 * Restart + ACPI Shutdown.
+* Multi languages/Multi users support.
 * Basic command interpreter.
-* FAT32 + Virtual FileSystem.
-* Multilanguage support.
-* Exception with screen of death.
-* Extended ASCII support.
-* Multi users (with MD5 encryption for passwords)
-* Text Editor (Liquid Editor).
-* Get RAM, get time.
+* Exception Handler.
+* VGA Textmode (80x25) + Extended ASCII support.
+
+Work in progress:
+
+* GUI (VBE) - [Pull request](https://github.com/aura-systems/Aura-Operating-System/pull/55)
+* Multitask - [Pull request](https://github.com/aura-systems/Cosmos/pull/40)
+* Networking (PCNETII Driver) - [Branch](https://github.com/aura-systems/Cosmos/tree/test-network)
 
 ## Screenshots
 
