@@ -226,6 +226,24 @@ namespace Aura_OS.System
             {
                 RegisterLanguage();
             }
+            #region Drivers
+
+            Drivers.Syscalls.AuraAPI auraapi_syscalls = new Drivers.Syscalls.AuraAPI(); //Aura API
+
+            for (int i = 0; i < Kernel.Drivers.Count; i++)
+            {
+                if (Kernel.Drivers[i].Init())
+                {
+                    Console.WriteLine(Kernel.Drivers[i].Name + "' loaded sucessfully");
+                }
+                else
+                {
+                    Console.WriteLine("Failure loading module '" + Kernel.Drivers[i].Name + "'");
+                    Console.ReadKey();
+                }
+            }
+
+            #endregion
             Kernel.SystemExists = false;
             Kernel.userLogged = "root";
             Kernel.Logged = true;
@@ -235,8 +253,6 @@ namespace Aura_OS.System
             Text.Display("nofilesystem");
             Console.WriteLine();
         }
-
-        public static List<Driver> Drivers = new List<Driver>();
 
         /// <summary>
         /// Method called to start Aura_OS to run with filesystem and not logged to any user by default
@@ -254,15 +270,15 @@ namespace Aura_OS.System
 
             Drivers.Syscalls.AuraAPI auraapi_syscalls = new Drivers.Syscalls.AuraAPI(); //Aura API
 
-            for (int i = 0; i < Drivers.Count; i++)
+            for (int i = 0; i < Kernel.Drivers.Count; i++)
             {
-                if (Drivers[i].Init())
+                if (Kernel.Drivers[i].Init())
                 {
-                    Console.WriteLine(Drivers[i].Name + "' loaded sucessfully");
+                    Console.WriteLine(Kernel.Drivers[i].Name + "' loaded sucessfully");
                 }
                 else
                 {
-                    Console.WriteLine("Failure loading module '" + Drivers[i].Name + "'");
+                    Console.WriteLine("Failure loading module '" + Kernel.Drivers[i].Name + "'");
                     Console.ReadKey();
                 }
             }
