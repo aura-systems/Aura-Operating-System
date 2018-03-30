@@ -228,6 +228,9 @@ namespace Aura_OS.Apps.User
                 case "en_US":
                     Console.Write("Liquid Editor v" + prgm_version + "                                  ");
                     break;
+                case "nl_NL":
+                    Console.Write("Liquid Editor v" + prgm_version + "                        ");
+                    break;
             }
             Console.ForegroundColor = ConsoleColor.Blue;
             Text.Display("menuliquideditor");

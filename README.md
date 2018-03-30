@@ -1,43 +1,41 @@
-# Aura Operating System
-## [Official Website (aura-team.com)](http://aura-team.com)
-## Join us on [Slack](https://join.slack.com/t/aura-systems/shared_invite/enQtMjQ2ODgyMjgwNTY2LTFmYWY1ZDljNGNjZjRjODUyZWI2ODY0ZmMxNzljMmJjODI4YjRiZGIzN2JhNjAyNzdhOTI0MTgwNjhjNzQ4ZTM)!
-A Cosmos based Operating System developped in C# made by Alexy DA CRUZ (GeomTech) and Valentin Charbonnier (valentinbreiz).
+<p align="center"><img width=60% src="https://image.noelshack.com/fichiers/2018/12/6/1521885466-aura.png"></p>
 
-## Active Contributors
-* [djlw78](https://github.com/djlw78)
-* [valentinbreiz](https://github.com/valentinbreiz)
-* [geomtech](https://github.com/geomtech)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+[![Issues](https://img.shields.io/github/issues/aura-systems/Aura-Operating-System.svg)](https://github.com/aura-systems/Aura-Operating-System/issues)
+[![Pull requests](https://img.shields.io/github/issues-pr/aura-systems/Aura-Operating-System.svg)](https://github.com/aura-systems/Aura-Operating-System/issues)
+[![Slack](https://img.shields.io/badge/join%20us%20on-slack-blue.svg)](https://join.slack.com/t/aura-systems/shared_invite/enQtMjQ2ODgyMjgwNTY2LTFmYWY1ZDljNGNjZjRjODUyZWI2ODY0ZmMxNzljMmJjODI4YjRiZGIzN2JhNjAyNzdhOTI0MTgwNjhjNzQ4ZTM)
+[![Slack](https://img.shields.io/badge/our%20website-aura--team.com-blue.svg)](http://aura-team.com)
+
+A Cosmos based Operating System developped in C# made by Alexy DA CRUZ (GeomTech) and Valentin Charbonnier (valentinbreiz).
 
 ## Current features
 Please read the [Aura Progression](https://github.com/aura-systems/Aura-Operating-System/projects/4) or our [Roadmap](https://github.com/aura-systems/Aura-Operating-System/projects/3) to know what will be added soon.
 
-* Restart.
-* Shutdown.
+* ATA IDE / AHCI Driver.
+* FAT32/16/12 + Virtual FileSystem.
+* PCI Device Scan.
+* PS2 Keyboard.
+* Restart + ACPI Shutdown.
+* Multi languages/Multi users support.
 * Basic command interpreter.
-* Virtual FileSystem.
-* Multilanguage support.
-* Exception with screen of death.
-* Extended ASCII support.
-* Multi users.
-* Secured Users With MD5 Encryption.
-* Text Editor (Liquid Editor).
-* Get RAM, get time.
+* Exception Handler.
+* VGA Textmode (80x25) + Extended ASCII support.
+
+Work in progress:
+
+* GUI (VBE) - [Pull request](https://github.com/aura-systems/Aura-Operating-System/pull/55).
+* Multitask - [Pull request](https://github.com/aura-systems/Cosmos/pull/40).
+* Networking (PCNETII Driver) - [Branch](https://github.com/aura-systems/Cosmos/tree/test-network).
 
 ## Screenshots
 
-Login:
+<p align="center"><img width=60% src="https://image.noelshack.com/fichiers/2017/43/2/1508857711-aura1.png"></p>
 
-![Aura Operating System](https://image.noelshack.com/fichiers/2017/43/2/1508857711-aura1.png)
+<p align="center"><img width=60% src="https://image.noelshack.com/fichiers/2018/13/3/1522190825-aura1.png"></p>
 
-Shell:
+<p align="center"><img width=60% src="https://image.noelshack.com/fichiers/2018/13/3/1522190826-aura2.png"></p>
 
-![Aura Operating System](https://image.noelshack.com/fichiers/2017/47/5/1511551694-1.png)
-
-![Aura Operating System](https://image.noelshack.com/fichiers/2017/47/5/1511551696-2.png)
-
-![Aura Operating System](https://image.noelshack.com/fichiers/2017/47/5/1511551820-3.png)
-
-## Want to try Aura?
+## Try Aura
 Download VMWare [at this address](https://my.vmware.com/en/web/vmware/free#desktop_end_user_computing/vmware_workstation_player/12_0). Install and run it.
 
 Now click on "Create a new virtual machine", select the iso file downloaded on [this page](https://github.com/aura-systems/Aura-Operating-System/releases) and click the "Next" button.
@@ -48,113 +46,9 @@ The Virtual File System won't work so go to "C:\Users\username\Documents\Virtual
 
 Now you can select Aura (Other) and click on "Play Virtual Machine".
 
-## How to compile Aura sources ?
+## Compile Aura
 First, clone [our modified version of Cosmos](https://github.com/aura-systems/Cosmos), run the "install-VS2017.bat" file and wait until the installation is done. 
 
 Now clone [this repository](https://github.com/aura-systems/Aura-Operating-System) then inside the folder Aura OS, run Aura OS.sln and select "build" once Visual Studio 2017 has loaded.
 
 If you have an error like "A project with an Output type of Class Library cannot be started directly", right click on "Aura_OSBoot" and select "Set as startup project", now click again on "build"!
-
-## Commands
-
-Shutdown (to do an ACPI Shutdown) :
-```
-shutdown
-```
-
-Reboot (to do a CPU Reboot) :
-```
-reboot
-```
-
-Clear (to clear the console)
-```
-clear
-```
-
-Echo (to echo some text)
-```
-echo text
-```
-
-Help (to show availables commands)
-```
-help
-```
-
-Cd .. (to navigate to the parent folder)
-```
-cd ..
-```
-
-Cd (to navigate to a folder)
-```
-cd directory
-```
-
-Dir (to list directories and files)
-```
-dir
-```
-
-Mkdir (to create a directory)
-```
-mkdir directory
-```
-
-Rmdir (to remove a directory)
-```
-rmdir directory
-```
-
-Mkfil (to create a file and edit it in Liquid Editor)
-```
-mkfil file.txt
-```
-
-Prfil (to edit a file in Liquid Editor)
-```
-prfil file.txt
-```
-
-Rmfil (to remove a file)
-```
-rmfil file.txt
-```
-
-Vol (to list volumes)
-```
-vol
-```
-
-Systeminfo (to display system informations)
-```
-systeminfo
-```
-
-Ver (to display system version and revision)
-```
-ver
-```
-
-TextColor (to change console foreground color)
-```
-textcolor 1 (choose an ID)
-```
-
-BackgroundColor (to change console background color)
-```
-backgroundcolor 1 (choose an ID)
-```
-
-Logout (to disconnect and change of user)
-```
-logout
-```
-
-Settings (to access to the settings of Aura)
-```
-settings {args}
-```
-
-

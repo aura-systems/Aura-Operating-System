@@ -17,6 +17,8 @@ using Aura_OS.System.Computer;
 using Aura_OS.System.Utils;
 using System.Collections.Generic;
 using Aura_OS.System.Drivers;
+using System.Text;
+using Cosmos.System.ExtendedASCII;
 
 #endregion
 
@@ -29,22 +31,23 @@ namespace Aura_OS
 
         Setup setup = new Setup();
         public static bool running;
-        public static string version = "0.4.3";
-        public static string revision = "050120182138";
+        public static string version = "0.4.4";
+        public static string revision = "280320180010";
         public static string current_directory = @"0:\";
         public static string langSelected = "en_US";
         public static string userLogged;
         public static string userLevelLogged;
         public static bool Logged = false;
         public static string ComputerName = "aura-pc";
-        public static int color = 7;
-        public static string RootContent;
         public static string UserDir = @"0:\Users\" + userLogged + "\\";
         public static bool SystemExists = false;
         public static bool JustInstalled = false;
         public static List<Driver> Drivers = new List<Driver>();
         public static CosmosVFS vFS = new CosmosVFS();
         public static bool Safemode = true;
+		public static Dictionary<string, string> environmentvariables = new Dictionary<string, string>();
+        public static System.Sound.PCSpeaker speaker = new System.Sound.PCSpeaker();
+        public static string boottime = Time.MonthString() + "/" + Time.DayString() + "/" + Time.YearString() + ", " + Time.TimeString(true, true, true);
 
         #endregion
 
@@ -65,6 +68,9 @@ namespace Aura_OS
             try
             {
                 Console.Clear();
+                Encoding.RegisterProvider(CosmosEncodingProvider.Instance);
+                Console.InputEncoding = Encoding.GetEncoding(437);
+                Console.OutputEncoding = Encoding.GetEncoding(437);
                 Console.ForegroundColor = ConsoleColor.DarkMagenta;
                 Console.Write("Booting Aura...\n");
                 Console.ForegroundColor = ConsoleColor.White;
@@ -143,6 +149,9 @@ namespace Aura_OS
                 {
                     running = true;
                 }
+
+                boottime = Time.MonthString() + "/" + Time.DayString() + "/" + Time.YearString() + ", " + Time.TimeString(true, true, true);
+
             }
             catch (Exception ex)
             {
@@ -167,7 +176,7 @@ namespace Aura_OS
 
                         var cmd = Console.ReadLine();
                         Shell.cmdIntr.CommandManager._CommandManger(cmd);
-                        Console.WriteLine();
+                        //Console.WriteLine();
                     }
                     else
                     {
@@ -208,45 +217,12 @@ namespace Aura_OS
                 Console.ForegroundColor = ConsoleColor.Gray;
                 Console.Write("> ");
 
-                if (color == 0)
-                {
-                    Console.ForegroundColor = ConsoleColor.Black;
-                }
-                else if (color == 1)
-                {
-                    Console.ForegroundColor = ConsoleColor.Blue;
-                }
-                else if (color == 2)
-                {
-                    Console.ForegroundColor = ConsoleColor.Green;
-                }
-                else if (color == 3)
-                {
-                    Console.ForegroundColor = ConsoleColor.DarkBlue;
-                }
-                else if (color == 4)
-                {
-                    Console.ForegroundColor = ConsoleColor.Red;
-                }
-                else if (color == 5)
-                {
-                    Console.ForegroundColor = ConsoleColor.Magenta;
-                }
-                else if (color == 6)
-                {
-                    Console.ForegroundColor = ConsoleColor.Yellow;
-                }
-                else if (color == 7)
-                {
-                    Console.ForegroundColor = ConsoleColor.White;
-                }
-                else
-                {
-                    Console.ForegroundColor = ConsoleColor.White;
-                }
+                Console.ForegroundColor = ConsoleColor.White;
+                
             }
             else
             {
+
                 Console.ForegroundColor = ConsoleColor.Blue;
                 Console.Write(UserLevel.TypeUser());
 
@@ -265,66 +241,11 @@ namespace Aura_OS
                 Console.ForegroundColor = ConsoleColor.DarkGray;
                 Console.Write(current_directory + "~ ");
 
-                if (color == 0)
-                {
-                    Console.ForegroundColor = ConsoleColor.Black;
-                }
-                else if (color == 1)
-                {
-                    Console.ForegroundColor = ConsoleColor.Blue;
-                }
-                else if (color == 2)
-                {
-                    Console.ForegroundColor = ConsoleColor.Green;
-                }
-                else if (color == 3)
-                {
-                    Console.ForegroundColor = ConsoleColor.DarkBlue;
-                }
-                else if (color == 4)
-                {
-                    Console.ForegroundColor = ConsoleColor.Red;
-                }
-                else if (color == 5)
-                {
-                    Console.ForegroundColor = ConsoleColor.Magenta;
-                }
-                else if (color == 6)
-                {
-                    Console.ForegroundColor = ConsoleColor.Yellow;
-                }
-                else if (color == 7)
-                {
-                    Console.ForegroundColor = ConsoleColor.White;
-                }
-                else
-                {
-                    Console.ForegroundColor = ConsoleColor.White;
-                }
+                Console.ForegroundColor = ConsoleColor.White;
+
             }
         } 
         #endregion
 
     }
-
-    //public static class exitUtils
-    //{
-    //    [PlugMethod(Assembler = typeof(exitUtilsPlug))]
-    //    public static void Vs8086Mode() { }
-    //}
-    //[Plug(Target = typeof(exitUtils))]
-    //public class exitUtilsPlug : AssemblerMethod// : PlugMethod // : Method
-    //{
-        // public override void AssembleNew(object aAssembler, object aMethodInfo)
-        // {
-        //   XS.Set(XSRegisters.EBX, false, false, 8, true, null XSRegisters.RegisterSize.Byte8);
-        // XS.Set(XSRegisters.EAX, XSRegisters.EBP, sourceDisplacement: 8);
-        //  XS.Call(XSRegisters.EAX);
-        // }
-
-    //    public override void AssembleNew(Assembler aAssembler, object aMethodInfo)
-    //     {//I asked jp2masa
-
-    //     }
-    //}
 }

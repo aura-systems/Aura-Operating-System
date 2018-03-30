@@ -1,17 +1,25 @@
-﻿<Project Sdk="Microsoft.Net.Sdk">
+<Project Sdk="Microsoft.Net.Sdk">
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <StackCorruptionDetectionLevel>MethodFooters</StackCorruptionDetectionLevel>
+    <IgnoreDebugStubAttribute>False</IgnoreDebugStubAttribute>
+    <VMware_StackCorruptionDetectionLevel>MethodFooters</VMware_StackCorruptionDetectionLevel>
+    <VMware_IgnoreDebugStubAttribute>False</VMware_IgnoreDebugStubAttribute>
+    <PXE_StackCorruptionDetectionLevel>MethodFooters</PXE_StackCorruptionDetectionLevel>
+    <PXE_IgnoreDebugStubAttribute>False</PXE_IgnoreDebugStubAttribute>
+    <ISO_StackCorruptionDetectionLevel>MethodFooters</ISO_StackCorruptionDetectionLevel>
+    <ISO_IgnoreDebugStubAttribute>False</ISO_IgnoreDebugStubAttribute>
   </PropertyGroup>
   <PropertyGroup>
-    <BinFormat>elf</BinFormat>
+    <BinFormat>Bin</BinFormat>
     <Profile>VMware</Profile>
     <DebugEnabled>False</DebugEnabled>
     <DebugMode>Source</DebugMode>
     <TraceMode>User</TraceMode>
     <EnableGDB>False</EnableGDB>
     <StartCosmosGDB>false</StartCosmosGDB>
-    <VMWareEdition>Player</VMWareEdition>
-    <OutputPath>bin\Debug\net462\netstandard2.0\</OutputPath>
+    <VMWareEdition>Workstation</VMWareEdition>
+    <OutputPath>bin\Debug\</OutputPath>
     <Description>Use VMware Player or Workstation to deploy and debug.</Description>
     <Deployment>ISO</Deployment>
     <Launch>VMware</Launch>
@@ -24,7 +32,7 @@
     <VMware_DebugMode>Source</VMware_DebugMode>
     <VMware_VisualStudioDebugPort>Pipe: Cosmos\Serial</VMware_VisualStudioDebugPort>
     <VMware_PxeInterface>192.168.68.1</VMware_PxeInterface>
-    <VMware_VMwareEdition>Player</VMware_VMwareEdition>
+    <VMware_VMwareEdition>Workstation</VMware_VMwareEdition>
     <VMware_OutputPath>bin\Debug\net462\</VMware_OutputPath>
     <VMware_EnableGDB>False</VMware_EnableGDB>
     <VMware_StartCosmosGDB>false</VMware_StartCosmosGDB>
@@ -84,9 +92,6 @@
     <IntelEdison_EnableGDB>False</IntelEdison_EnableGDB>
     <IntelEdison_StartCosmosGDB>false</IntelEdison_StartCosmosGDB>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-  </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Cosmos.Build" Version="*" NoWarn="NU1604" />
     <PackageReference Include="Cosmos.Debug.Kernel" Version="1.0.0-*" />
@@ -98,12 +103,6 @@
     </Reference>
     <Reference Include="IL2CPU.API">
       <HintPath>..\..\..\..\..\AppData\Roaming\Cosmos User Kit\Build\IL2CPU\IL2CPU.API.dll</HintPath>
-    </Reference>
-    <Reference Include="XSharp">
-      <HintPath>..\..\..\..\..\AppData\Roaming\Cosmos User Kit\Build\IL2CPU\XSharp.dll</HintPath>
-    </Reference>
-    <Reference Include="XSharp.Assembler">
-      <HintPath>..\..\..\..\..\AppData\Roaming\Cosmos User Kit\Build\IL2CPU\XSharp.Assembler.dll</HintPath>
     </Reference>
   </ItemGroup>
 </Project>

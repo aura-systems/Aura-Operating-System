@@ -34,6 +34,8 @@ namespace Aura_OS.System
                 inner_message = ex.InnerException.Message;
                 Console.WriteLine(inner_message);
             }
+            Console.WriteLine("Aura Version: " + Kernel.version);
+            Console.WriteLine("Aura Revision: " + Kernel.revision);
             Console.WriteLine();
             Console.WriteLine("If this is the first time you've seen this error screen, press any key to restart your computer. If this screen appears again, follow these steps:");
             Console.WriteLine();
@@ -63,6 +65,8 @@ namespace Aura_OS.System
             Console.WriteLine("CPU Exception x" + ctxinterrupt + " occured in Aura Operating System:");
             Console.WriteLine("Exception: " + exception);
             Console.WriteLine("Description: " + description);
+            Console.WriteLine("Aura Version: " + Kernel.version);
+            Console.WriteLine("Aura Revision: " + Kernel.revision);
             if (lastknowaddress != "")
             {
                 Console.WriteLine("Last known address: 0x" + lastknowaddress);
