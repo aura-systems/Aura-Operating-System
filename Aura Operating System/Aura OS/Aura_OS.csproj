@@ -92,12 +92,22 @@
     <IntelEdison_EnableGDB>False</IntelEdison_EnableGDB>
     <IntelEdison_StartCosmosGDB>false</IntelEdison_StartCosmosGDB>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <StackCorruptionDetectionEnabled>False</StackCorruptionDetectionEnabled>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Cosmos.Build" Version="*" NoWarn="NU1604" />
     <PackageReference Include="Cosmos.Debug.Kernel" Version="1.0.0-*" />
     <PackageReference Include="Cosmos.System2" Version="1.0.0-*" />
   </ItemGroup>
   <ItemGroup>
+    <Reference Include="XSharp">
+      <HintPath>..\..\..\..\..\AppData\Roaming\Cosmos User Kit\Build\IL2CPU\XSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="XSharp.Assembler">
+      <HintPath>..\..\..\..\..\AppData\Roaming\Cosmos User Kit\Build\IL2CPU\XSharp.Assembler.dll</HintPath>
+    </Reference>
     <Reference Include="IL2CPU">
       <HintPath>..\..\..\..\..\AppData\Roaming\Cosmos User Kit\Build\IL2CPU\IL2CPU.dll</HintPath>
     </Reference>

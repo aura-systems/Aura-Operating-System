@@ -279,10 +279,12 @@ namespace Aura_OS.System.Translation
                             if (Kernel.Safemode)
                             {
                                 Console.WriteLine("Mode sécurisé:                 Activé");
+                                break;
                             }
                             else
                             {
                                 Console.WriteLine("Mode sécurisé:                 Désactivé");
+                                break;
                             }
                         case "time":
                             Console.WriteLine("L'heure actuelle est :  " + Time.MonthString() + "/" + Time.DayString() + "/" + Time.YearString() + ", " + Time.TimeString(true, true, true));
@@ -524,10 +526,12 @@ namespace Aura_OS.System.Translation
                             if (Kernel.Safemode)
                             {
                                 Console.WriteLine("Safe mode:                 Enabled");
+                                break;
                             }
                             else
                             {
                                 Console.WriteLine("Safe mode:                 Disabled");
+                                break;
                             }
                         case "time":
                             Console.WriteLine("The current time is:  " + Time.MonthString() + "/" + Time.DayString() + "/" + Time.YearString() + ", " + Time.TimeString(true, true, true));
