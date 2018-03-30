@@ -18,18 +18,16 @@ namespace  Aura_OS.System.Executables
 
         public static void LoadProgram(byte[] code)
         {
-            var address = Cosmos.Core.Memory.Old.Heap.MemAlloc((uint)code.Length);
-            byte* ptr = (byte*)address;
-
+            byte* data = (byte*)Cosmos.Core.Memory.Old.Heap.MemAlloc((uint)code.Length);
+            ProgramAddress = (uint)&data[0];
             for (int i = 0; i < code.Length; i++)
             {
-                ptr[i] = code[i];
+                data[i] = code[i];
             }
-
             Caller call = new Caller();
-            call.CallCode(address);
+            call.CallCode((uint)&data[0]);
         }
-
+		
         public class Caller
         {
             [PlugMethod(Assembler = typeof(CallerPlug))]

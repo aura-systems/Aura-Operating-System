@@ -6,7 +6,6 @@
 */
 
 using Aura_OS.System.Executables;
-using Cosmos.Debug.Kernel;
 using System;
 using System.IO;
 using L = Aura_OS.System.Translation;
@@ -31,8 +30,6 @@ namespace Aura_OS.Shell.cmdIntr.FileSystem
         /// </summary>
         public Run() { }
 
-        public static readonly Debugger mDebugger = new Debugger("System", "Run");
-
         /// <summary>
         /// c = command, c_Run
         /// </summary>
@@ -53,8 +50,6 @@ namespace Aura_OS.Shell.cmdIntr.FileSystem
                     else if (file.EndsWith(".aexe") || file.EndsWith(".AEXE"))
                     {
                         byte[] filearray = File.ReadAllBytes(Kernel.current_directory + file);
-                        Console.WriteLine(filearray.Length);
-                        Console.ReadKey();
                         PlainBinaryProgram.LoadProgram(filearray);
                     }
                     //else if (file.EndsWith(".exe") || file.EndsWith(".EXE"))
