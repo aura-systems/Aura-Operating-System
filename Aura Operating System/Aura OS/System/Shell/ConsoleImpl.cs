@@ -24,7 +24,7 @@ namespace Aura_OS.System.Shell
 
         private static Console GetConsole()
         {
-            return Kernel.mFallbackConsole;
+            return Kernel.AConsole;
         }
 
         public static ConsoleColor get_BackgroundColor()

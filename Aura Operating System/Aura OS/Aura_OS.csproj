@@ -13,7 +13,7 @@
   <PropertyGroup>
     <BinFormat>Bin</BinFormat>
     <Profile>VMware</Profile>
-    <DebugEnabled>False</DebugEnabled>
+    <DebugEnabled>True</DebugEnabled>
     <DebugMode>Source</DebugMode>
     <TraceMode>User</TraceMode>
     <EnableGDB>False</EnableGDB>
@@ -47,7 +47,7 @@
     <ISO_OutputPath>bin\Debug\netstandard2.0\</ISO_OutputPath>
     <ISO_EnableGDB>False</ISO_EnableGDB>
     <ISO_StartCosmosGDB>false</ISO_StartCosmosGDB>
-    <StackCorruptionDetectionEnabled>False</StackCorruptionDetectionEnabled>
+    <StackCorruptionDetectionEnabled>True</StackCorruptionDetectionEnabled>
     <ISO_StackCorruptionDetectionEnabled>True</ISO_StackCorruptionDetectionEnabled>
     <VMware_StackCorruptionDetectionEnabled>True</VMware_StackCorruptionDetectionEnabled>
     <Bochs_StackCorruptionDetectionEnabled>True</Bochs_StackCorruptionDetectionEnabled>

@@ -21,11 +21,14 @@ namespace Aura_OS.System.Shell
 
         public string Name;
 
-        public abstract  int X { get; set; }
-        public abstract  int Y { get; set; }
+        public abstract int X { get; set; }
+        public abstract int Y { get; set; }
 
-        public abstract  int Cols { get; }
-        public abstract  int Rows { get; }
+        public abstract int Width { get; }
+        public abstract int Height { get; }
+
+        public abstract int Cols { get; }
+        public abstract int Rows { get; }
 
         public abstract void Clear();
 

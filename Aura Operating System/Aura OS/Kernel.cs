@@ -46,8 +46,8 @@ namespace Aura_OS
 		public static Dictionary<string, string> environmentvariables = new Dictionary<string, string>();
         public static System.Sound.PCSpeaker speaker = new System.Sound.PCSpeaker();
         public static string boottime = Time.MonthString() + "/" + Time.DayString() + "/" + Time.YearString() + ", " + Time.TimeString(true, true, true);
-        public static System.Shell.Console mFallbackConsole;
-        //public static Debugger debugger = new Debugger("Aura", "Kernel.cs");
+        public static System.Shell.Console AConsole;
+        public static Debugger debugger = new Debugger("Aura", "Kernel.cs");
 
         #endregion
 
@@ -68,24 +68,23 @@ namespace Aura_OS
             try
             {
 
-                //Console detection VGA / SVGAII / VBE ...
-
                 switch (Video.GetVideo())
                 {
                     case "VGATextmode":
                         //debugger.Send("Current console: VGATextmode");
-                        mFallbackConsole = new System.Shell.VGA.VGAConsole(null);
+                        AConsole = new System.Shell.VGA.VGAConsole(null);
                         break;
                     case "SVGA":
                         break;
                     case "SVGAII":
+                        AConsole = new System.Shell.SVGAII.VMWareSVGAConsole();
                         break;
                     case "VBE":
                         break;
                     case "VESA":
                         break;
                     default:
-                        mFallbackConsole = new System.Shell.VGA.VGAConsole(null);
+                        AConsole = new System.Shell.VGA.VGAConsole(null);
                         break;
                 }
 
@@ -96,7 +95,6 @@ namespace Aura_OS
                 Console.ForegroundColor = ConsoleColor.DarkMagenta;
                 Console.Write("Booting Aura...\n");
                 Console.ForegroundColor = ConsoleColor.White;
-
                 #region Register Filesystem
                 Sys.FileSystem.VFS.VFSManager.RegisterVFS(vFS);
                 if (ContainsVolumes())

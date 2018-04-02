@@ -201,7 +201,7 @@ namespace Aura_OS.System.Translation
                         i++;
                     }
                     Computer.CPUInfo.Processors.Clear();
-                    Console.WriteLine("Mode de la console:            " + Kernel.mFallbackConsole.Name);
+                    Console.WriteLine("Mode de la console:            " + Kernel.AConsole.Name);
                     break;
 
                 case "en_US":
@@ -224,7 +224,7 @@ namespace Aura_OS.System.Translation
                         j++;
                     }
                     Computer.CPUInfo.Processors.Clear();
-                    Console.WriteLine("Console mode:              " + Kernel.mFallbackConsole.Name);
+                    Console.WriteLine("Console mode:              " + Kernel.AConsole.Name);
                     break;
 
                 case "nl_NL":
@@ -247,7 +247,7 @@ namespace Aura_OS.System.Translation
                         k++;
                     }
                     Computer.CPUInfo.Processors.Clear();
-                    Console.WriteLine("Consolewijze:              " + Kernel.mFallbackConsole.Name);
+                    Console.WriteLine("Consolewijze:              " + Kernel.AConsole.Name);
                     break;
             }
         }

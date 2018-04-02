@@ -182,5 +182,16 @@ namespace Aura_OS.System.Shell.VGA
             get { return mText.GetCursorVisible(); }
             set { mText.SetCursorVisible(value); }
         }
+
+        public override int Width
+        {
+            get { return 80; }
+        }
+
+        public override int Height
+        {
+            get { return 25; }
+        }
+
     }
 }

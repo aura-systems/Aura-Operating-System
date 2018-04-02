@@ -11,7 +11,14 @@ namespace Aura_OS.System
         public static string GetVideo()
         {
             // TO DO: Detect video card
-            return "VGATextmode";
+            if (Cosmos.HAL.PCI.GetDevice(Cosmos.HAL.VendorID.VMWare, Cosmos.HAL.DeviceID.SVGAIIAdapter) != null)
+            {
+                return "SVGAII";
+            }
+            else
+            {
+                return "VGATextmode";
+            }
         }
     }
 }
