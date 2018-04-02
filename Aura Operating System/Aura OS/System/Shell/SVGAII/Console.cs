@@ -82,6 +82,8 @@ namespace Aura_OS.System.Shell.SVGAII
         public override void Clear()
         {
             graphics.Clear();
+            mX = 0;
+            mY = 0;
         }
 
         public override void Write(byte[] aText)
