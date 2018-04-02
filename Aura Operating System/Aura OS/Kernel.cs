@@ -50,6 +50,8 @@ namespace Aura_OS
 
         #region Before Run
 
+        public static System.Shell.Console mFallbackConsole; 
+
         public static bool ContainsVolumes()
         {
             var vols = vFS.GetVolumes();
@@ -64,6 +66,27 @@ namespace Aura_OS
         {
             try
             {
+
+                //Console detection VGA / SVGAII / VBE ...
+
+                switch (Video.GetVideo())
+                {
+                    case "VGATextmode":
+                        mFallbackConsole = new System.Shell.VGA.VGAConsole(null);
+                        break;
+                    case "SVGA":
+                        break;
+                    case "SVGAII":
+                        break;
+                    case "VBE":
+                        break;
+                    case "VESA":
+                        break;
+                    default:
+                        mFallbackConsole = new System.Shell.VGA.VGAConsole(null);
+                        break;
+                }
+
                 Console.Clear();
                 Encoding.RegisterProvider(CosmosEncodingProvider.Instance);
                 Console.InputEncoding = Encoding.GetEncoding(437);

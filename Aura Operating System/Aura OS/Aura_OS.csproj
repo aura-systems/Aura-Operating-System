@@ -105,4 +105,9 @@
       <HintPath>..\..\..\..\..\AppData\Roaming\Cosmos User Kit\Build\IL2CPU\IL2CPU.API.dll</HintPath>
     </Reference>
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="System\Shell\SVGA\" />
+    <Folder Include="System\Shell\SVGAII\" />
+    <Folder Include="System\Shell\VBE\" />
+  </ItemGroup>
 </Project>
