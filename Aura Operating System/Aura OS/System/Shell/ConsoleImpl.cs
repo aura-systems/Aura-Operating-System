@@ -464,6 +464,10 @@ namespace Aura_OS.System.Shell
 
                         currentCount--;
                     }
+                    else
+                    {
+                        Kernel.speaker.beep();
+                    }
                     continue;
                 }
                 else if (current.Key == ConsoleKeyEx.LeftArrow)
