@@ -4,6 +4,7 @@
 * PROGRAMMER(S):    John Welsh <djlw78@gmail.com>
 */
 
+using Aura_OS.System.Utils;
 using Cosmos.HAL.PCInformation;
 using System;
 using System.Collections.Generic;
@@ -227,6 +228,8 @@ namespace Aura_OS.Shell.cmdIntr
                     Util.CmdNotFound.c_CmdNotFound();
                 }                
             }
+
+            CommandsHistory.Add(cmd); //adding last command to the commands history   
 
             Console.WriteLine();
 
