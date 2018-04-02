@@ -8,12 +8,10 @@
 using System;
 using System.Runtime.CompilerServices;
 using Cosmos.HAL;
-using IL2CPU.API.Attribs;
 
 namespace Aura_OS.System.Shell.VGA
 {
 
-    [Plug(Target = typeof(Cosmos.System.Console))]
     class VGAConsole : Console
     {
         private const byte LineFeed = (byte)'\n';

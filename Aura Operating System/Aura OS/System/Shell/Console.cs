@@ -5,9 +5,12 @@
 */
 
 using System;
+using IL2CPU.API.Attribs;
 
 namespace Aura_OS.System.Shell
 {
+
+    [Plug(Target = typeof(Cosmos.System.Console))]
     public abstract class Console
     {
 
@@ -35,5 +38,6 @@ namespace Aura_OS.System.Shell
         public abstract int CursorSize { get; set; }
 
         public abstract bool CursorVisible { get; set; }
+
     }
 }
