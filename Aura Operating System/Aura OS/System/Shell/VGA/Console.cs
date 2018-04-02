@@ -1,8 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿/*
+* PROJECT:          Aura Operating System Development
+* CONTENT:          VGA Console
+* PROGRAMMERS:      Valentin Charbonnier <valentinbreiz@gmail.com>
+*                   https://github.com/CosmosOS/Cosmos/blob/master/source/Cosmos.System2/Console.cs
+*/
+
+using System;
 using System.Runtime.CompilerServices;
-using System.Text;
 using Cosmos.HAL;
 using IL2CPU.API.Attribs;
 
@@ -54,6 +58,7 @@ namespace Aura_OS.System.Shell.VGA
         public VGAConsole(TextScreenBase textScreen)
         {
             Name = "VGA Textmode Class";
+            Kernel.debugger.Send("VGA Textmode Class");
             if (textScreen == null)
             {
                 mText = new TextScreen();

@@ -1,7 +1,10 @@
-﻿using Cosmos.HAL;
+﻿/*
+* PROJECT:          Aura Operating System Development
+* CONTENT:          Consoles
+* PROGRAMMERS:      Valentin Charbonnier <valentinbreiz@gmail.com>
+*/
+
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Aura_OS.System.Shell
 {

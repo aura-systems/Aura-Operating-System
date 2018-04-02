@@ -1,4 +1,11 @@
-﻿using System;
+﻿/*
+* PROJECT:          Aura Operating System Development
+* CONTENT:          .NET Console Implementation
+* PROGRAMMERS:      Valentin Charbonnier <valentinbreiz@gmail.com>
+*                   https://github.com/CosmosOS/Cosmos/blob/master/source/Cosmos.System2_Plugs/System/ConsoleImpl.cs
+*/
+
+using System;
 using System.Collections.Generic;
 using System.Text;
 using Cosmos.System;
@@ -336,6 +343,7 @@ namespace Aura_OS.System.Shell
         //TODO: Console uses TextWriter - intercept and plug it instead
         public static void Clear()
         {
+            Kernel.debugger.Send("Clear console!!!!");
             var xConsole = GetConsole();
             if (xConsole == null)
             {

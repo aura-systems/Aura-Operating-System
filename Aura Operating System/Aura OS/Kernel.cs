@@ -18,6 +18,7 @@ using Aura_OS.System.Utils;
 using System.Collections.Generic;
 using System.Text;
 using Cosmos.System.ExtendedASCII;
+using Cosmos.Debug.Kernel;
 
 #endregion
 
@@ -45,12 +46,12 @@ namespace Aura_OS
 		public static Dictionary<string, string> environmentvariables = new Dictionary<string, string>();
         public static System.Sound.PCSpeaker speaker = new System.Sound.PCSpeaker();
         public static string boottime = Time.MonthString() + "/" + Time.DayString() + "/" + Time.YearString() + ", " + Time.TimeString(true, true, true);
+        public static System.Shell.Console mFallbackConsole;
+        public static Debugger debugger = new Debugger("Aura", "Kernel.cs");
 
         #endregion
 
         #region Before Run
-
-        public static System.Shell.Console mFallbackConsole; 
 
         public static bool ContainsVolumes()
         {
@@ -72,6 +73,7 @@ namespace Aura_OS
                 switch (Video.GetVideo())
                 {
                     case "VGATextmode":
+                        debugger.Send("Current console: VGATextmode");
                         mFallbackConsole = new System.Shell.VGA.VGAConsole(null);
                         break;
                     case "SVGA":
