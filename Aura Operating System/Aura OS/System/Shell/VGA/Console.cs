@@ -55,8 +55,8 @@ namespace Aura_OS.System.Shell.VGA
 
         public VGAConsole(TextScreenBase textScreen)
         {
-            Name = "VGA Textmode Class";
-            Kernel.debugger.Send("VGA Textmode Class");
+            Name = "VGA Textmode";
+            //Kernel.debugger.Send("VGA Textmode Class");
             if (textScreen == null)
             {
                 mText = new TextScreen();

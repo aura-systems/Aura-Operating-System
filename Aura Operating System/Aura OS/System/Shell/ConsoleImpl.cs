@@ -343,7 +343,7 @@ namespace Aura_OS.System.Shell
         //TODO: Console uses TextWriter - intercept and plug it instead
         public static void Clear()
         {
-            Kernel.debugger.Send("Clear console!!!!");
+            //Kernel.debugger.Send("Clear console!!!!");
             var xConsole = GetConsole();
             if (xConsole == null)
             {

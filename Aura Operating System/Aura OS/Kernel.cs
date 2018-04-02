@@ -47,7 +47,7 @@ namespace Aura_OS
         public static System.Sound.PCSpeaker speaker = new System.Sound.PCSpeaker();
         public static string boottime = Time.MonthString() + "/" + Time.DayString() + "/" + Time.YearString() + ", " + Time.TimeString(true, true, true);
         public static System.Shell.Console mFallbackConsole;
-        public static Debugger debugger = new Debugger("Aura", "Kernel.cs");
+        //public static Debugger debugger = new Debugger("Aura", "Kernel.cs");
 
         #endregion
 
@@ -73,7 +73,7 @@ namespace Aura_OS
                 switch (Video.GetVideo())
                 {
                     case "VGATextmode":
-                        debugger.Send("Current console: VGATextmode");
+                        //debugger.Send("Current console: VGATextmode");
                         mFallbackConsole = new System.Shell.VGA.VGAConsole(null);
                         break;
                     case "SVGA":
