@@ -168,11 +168,14 @@ namespace Aura_OS
                 {
                     if (Logged) //If logged
                     {
-                        BeforeCommand();                  
+                        BeforeCommand();
+
+                        Sys.Console.writecommand = true;
 
                         var cmd = Console.ReadLine();
                         Shell.cmdIntr.CommandManager._CommandManger(cmd);
                         //Console.WriteLine();
+
                     }
                     else
                     {
@@ -193,7 +196,7 @@ namespace Aura_OS
         /// <summary>
         /// Display the line before the user input and set the console color.
         /// </summary>
-        private static void BeforeCommand()
+        public static void BeforeCommand()
         {
             if (current_directory == @"0:\")
             {

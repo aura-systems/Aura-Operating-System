@@ -6,10 +6,12 @@ namespace Aura_OS.System.Utils
 {
     class CommandsHistory
     {
+        public static int CHIndex = 0;
+
         public static void Add(string cmd)
         {
             Cosmos.System.Console.commands.Add(cmd);
-            Cosmos.System.Console.commandindex++;
+            CommandsHistory.CHIndex = Cosmos.System.Console.commands.Count - 1;
         }
 
         public static void ClearCurrentConsoleLine()

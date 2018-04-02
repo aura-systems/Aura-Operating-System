@@ -8,9 +8,11 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using Aura_OS.System.Utils;
 using Cosmos.System;
 using IL2CPU.API;
 using IL2CPU.API.Attribs;
+using Sys = System;
 
 namespace Aura_OS.System.Shell
 {
@@ -492,13 +494,17 @@ namespace Aura_OS.System.Shell
                 }
                 else if (current.Key == ConsoleKeyEx.UpArrow) //COMMAND HISTORY UP
                 {
+
                     if (Cosmos.System.Console.writecommand) //IF SHELL
                     {
+                        CommandsHistory.ClearCurrentConsoleLine();
+                        //faut essayer de supprimer l'ancienne commande
+                        Kernel.BeforeCommand();
                         //if(Cosmos.System.Console.commandindex < 50)
                         //{
-                        chars.Clear(); //remove chars if there were something
-                        Cosmos.System.Console.commandindex--;
-                        Command = Cosmos.System.Console.commands[Cosmos.System.Console.commandindex];
+                        //chars.Clear(); //remove chars if there were something                        
+                        Command = Cosmos.System.Console.commands[CommandsHistory.CHIndex];
+                        CommandsHistory.CHIndex = CommandsHistory.CHIndex - 1;
 
                         foreach (char chr in Command)
                         {
@@ -535,7 +541,8 @@ namespace Aura_OS.System.Shell
 
                                 GetConsole().X -= (chars.Count - currentCount) - 1;
                                 currentCount++;
-                            }
+                            }                            
+                            
                         }
                         //}                        
                     }
