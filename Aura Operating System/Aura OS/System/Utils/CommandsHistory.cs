@@ -22,15 +22,5 @@ namespace Aura_OS.System.Utils
             Console.SetCursorPosition(0, Console.CursorTop - 1);
         }
 
-        public static void GetNewestCommand() //DOWN ARROW
-        {
-
-        }
-
-        public static void GetOlderCommand() //UP ARROW
-        {
-
-        }
-
     }
 }

@@ -5,6 +5,7 @@
 *                   Valentin Charbonnier <valentinbreiz@gmail.com>
 */
 
+using Shell = Aura_OS.System.Shell;
 using Cosmos.HAL.PCInformation;
 using System;
 
@@ -41,8 +42,12 @@ namespace Aura_OS.System.Translation
                     Console.WriteLine("- ver (pour afficher la version système)");
                     Console.WriteLine("- settings {args} (permet d'accéder aux paramètres)");
                     Console.WriteLine("- logout (permet de se déconnecter)");
+                    
+                    if(Shell.KeyboardShortcuts.Close())
+                    {
+                        return;
+                    }
 
-                    Console.ReadKey(); //page 2
                     Console.WriteLine();
                     Console.WriteLine("Commandes disponibles (2/2):");
                     Console.WriteLine("- time (récupère la date et l'heure)");
@@ -79,8 +84,11 @@ namespace Aura_OS.System.Translation
                     Console.WriteLine("- ver (to display system version)");
                     Console.WriteLine("- settings {args} (access to settings)");
                     Console.WriteLine("- logout (to disconnect)");
-                    
-                    Console.ReadKey(); //page 2 (19 elements per page)
+
+                    if (Shell.KeyboardShortcuts.Close())
+                    {
+                        return;
+                    }
 
                     Console.WriteLine();
                     Console.WriteLine("Available commands (2/2):");
@@ -119,7 +127,11 @@ namespace Aura_OS.System.Translation
                     Console.WriteLine("- settings {argumenten} (toegang tot instellingen)");
                     Console.WriteLine("- logout (om los te koppelen)");
 
-                    Console.ReadKey(); //page 2 (19 elements per page)
+                    if (Shell.KeyboardShortcuts.Close())
+                    {
+                        return;
+                    }
+                    //page 2 (19 elements per page)
 
                     Console.WriteLine();
                     Console.WriteLine("Mogelijke commando's (2/2):");

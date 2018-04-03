@@ -439,10 +439,13 @@ namespace Aura_OS.System.Shell
                 return null;
             }
             List<char> chars = new List<char>(32);
-            KeyEvent current;
+            KeyEvent current;          
+            
             int currentCount = 0;
 
-            string Command;
+            bool firstdown = false;
+
+            //string Command;
 
             while ((current = KeyboardManager.ReadKey()).Key != ConsoleKeyEx.Enter)
             {
@@ -492,59 +495,133 @@ namespace Aura_OS.System.Shell
                     }
                     continue;
                 }
+                else if (current.Key == ConsoleKeyEx.C && KeyboardManager.ControlPressed)
+                {
+                    CommandsHistory.ClearCurrentConsoleLine();
+                    currentCount = 0;
+                    chars.Clear();
+
+                    Kernel.BeforeCommand();
+                    return "test";
+                }
                 else if (current.Key == ConsoleKeyEx.UpArrow) //COMMAND HISTORY UP
                 {
-
                     if (Cosmos.System.Console.writecommand) //IF SHELL
                     {
-                        CommandsHistory.ClearCurrentConsoleLine();
-                        //faut essayer de supprimer l'ancienne commande
-                        Kernel.BeforeCommand();
-                        //if(Cosmos.System.Console.commandindex < 50)
-                        //{
-                        //chars.Clear(); //remove chars if there were something                        
-                        Command = Cosmos.System.Console.commands[CommandsHistory.CHIndex];
-                        CommandsHistory.CHIndex = CommandsHistory.CHIndex - 1;
-
-                        foreach (char chr in Command)
+                        if (CommandsHistory.CHIndex >= 0)
                         {
-                            if (currentCount == chars.Count)
-                            {
-                                chars.Add(chr);
-                                Write(chr);
-                                currentCount++;
-                            }
-                            else
-                            {
-                                //Insert the new character in the correct location
-                                //For some reason, List.Insert() doesn't work properly
-                                //so the character has to be inserted manually
-                                List<char> temp = new List<char>();
+                            CommandsHistory.ClearCurrentConsoleLine();
+                            currentCount = 0;
+                            chars.Clear();
 
-                                for (int x = 0; x < chars.Count; x++)
+                            Kernel.BeforeCommand();
+
+                            string Command = Cosmos.System.Console.commands[CommandsHistory.CHIndex];
+                            CommandsHistory.CHIndex = CommandsHistory.CHIndex - 1;
+
+                            foreach (char chr in Command)
+                            {
+                                if (currentCount == chars.Count)
                                 {
-                                    if (x == currentCount)
+                                    chars.Add(chr);
+                                    Write(chr);
+                                    currentCount++;
+                                }
+                                else
+                                {
+                                    //Insert the new character in the correct location
+                                    //For some reason, List.Insert() doesn't work properly
+                                    //so the character has to be inserted manually
+                                    List<char> temp = new List<char>();
+
+                                    for (int x = 0; x < chars.Count; x++)
                                     {
-                                        temp.Add(chr);
+                                        if (x == currentCount)
+                                        {
+                                            temp.Add(chr);
+                                        }
+
+                                        temp.Add(chars[x]);
                                     }
 
-                                    temp.Add(chars[x]);
+                                    chars = temp;
+
+                                    //Shift the characters to the right
+                                    for (int x = currentCount; x < chars.Count; x++)
+                                    {
+                                        Write(chars[x]);
+                                    }
+
+                                    Kernel.AConsole.X -= (chars.Count - currentCount) - 1;
+                                    currentCount++;
                                 }
 
-                                chars = temp;
-
-                                //Shift the characters to the right
-                                for (int x = currentCount; x < chars.Count; x++)
-                                {
-                                    Write(chars[x]);
-                                }
-
-                                GetConsole().X -= (chars.Count - currentCount) - 1;
-                                currentCount++;
-                            }                            
-                            
+                            }
                         }
-                        //}                        
+                    }
+                    continue;
+                }
+                else if (current.Key == ConsoleKeyEx.DownArrow) //COMMAND HISTORY UP
+                {
+                    if (Cosmos.System.Console.writecommand) //IF SHELL
+                    {
+                        if (CommandsHistory.CHIndex < Cosmos.System.Console.commands.Count - 1)
+                        {
+                            CommandsHistory.ClearCurrentConsoleLine();
+                            currentCount = 0;
+                            chars.Clear();
+
+                            Kernel.BeforeCommand();
+                                                        
+                            CommandsHistory.CHIndex = CommandsHistory.CHIndex + 1;
+
+                            if (!firstdown)
+                            {
+                                CommandsHistory.CHIndex = CommandsHistory.CHIndex + 1;
+                                firstdown = true;
+                            }
+
+                            string Command = Cosmos.System.Console.commands[CommandsHistory.CHIndex];
+
+                            foreach (char chr in Command)
+                            {
+                                if (currentCount == chars.Count)
+                                {
+                                    chars.Add(chr);
+                                    Write(chr);
+                                    currentCount++;
+                                }
+                                else
+                                {
+                                    //Insert the new character in the correct location
+                                    //For some reason, List.Insert() doesn't work properly
+                                    //so the character has to be inserted manually
+                                    List<char> temp = new List<char>();
+
+                                    for (int x = 0; x < chars.Count; x++)
+                                    {
+                                        if (x == currentCount)
+                                        {
+                                            temp.Add(chr);
+                                        }
+
+                                        temp.Add(chars[x]);
+                                    }
+
+                                    chars = temp;
+
+                                    //Shift the characters to the right
+                                    for (int x = currentCount; x < chars.Count; x++)
+                                    {
+                                        Write(chars[x]);
+                                    }
+
+                                    Kernel.AConsole.X -= (chars.Count - currentCount) - 1;
+                                    currentCount++;
+                                }
+
+                            }
+                        }
                     }
                     continue;
                 }

@@ -219,8 +219,7 @@ namespace Aura_OS.Shell.cmdIntr
             else
             {
                 if (cmd.Length <= 0)
-                {
-                    Console.WriteLine();
+                {                    
                     return;
                 }
                 else
