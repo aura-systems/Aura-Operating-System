@@ -80,6 +80,7 @@ namespace Aura_OS
                         AConsole = new System.Shell.SVGAII.VMWareSVGAConsole();
                         break;
                     case "VBE":
+                        AConsole = new System.Shell.VBE.VBEConsole();
                         break;
                     case "VESA":
                         break;

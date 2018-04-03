@@ -12,30 +12,88 @@ namespace Aura_OS.System.Shell.VBE
 {
     class VBEConsole : Console
     {
-        public override int X { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-        public override int Y { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
-        public override int Width => throw new NotImplementedException();
+        Graphics graphics;
 
-        public override int Height => throw new NotImplementedException();
+        public VBEConsole()
+        {
+            Name = "VBE";
+            graphics = new Graphics();
+        }
 
-        public override int Cols => throw new NotImplementedException();
+        protected int mX = 0;
+        public override int X
+        {
+            get { return mX; }
+            set
+            {
+                mX = value;
+            }
+        }
 
-        public override int Rows => throw new NotImplementedException();
 
-        public override ConsoleColor Foreground { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-        public override ConsoleColor Background { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        protected int mY = 0;
+        public override int Y
+        {
+            get { return mY; }
+            set
+            {
+                mY = value;
+            }
+        }
+
+        public override int Width
+        {
+            get { return 80; }
+        }
+
+        public override int Height
+        {
+            get { return 25; }
+        }
+
+        public override int Cols
+        {
+            get { return 80; }
+        }
+
+        public override int Rows
+        {
+            get { return 25; }
+        }
+
+        public static uint foreground = (byte)ConsoleColor.White;
+
+        public override ConsoleColor Foreground
+        {
+            get { return (ConsoleColor)foreground; }
+            set { foreground = (byte)global::System.Console.ForegroundColor; }
+        }
+
+        public static uint background = (byte)ConsoleColor.Black;
+
+        public override ConsoleColor Background
+        {
+            get { return (ConsoleColor)background; }
+            set { background = (byte)global::System.Console.BackgroundColor; }
+        }
+
         public override int CursorSize { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
         public override bool CursorVisible { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
         public override void Clear()
         {
-            throw new NotImplementedException();
+            graphics.Clear();
+            mX = 0;
+            mY = 0;
         }
 
         public override void Write(byte[] aText)
         {
-            throw new NotImplementedException();
+            foreach (byte ch in aText)
+            {
+                graphics.WriteByte(ch);
+            }
         }
     }
 }
