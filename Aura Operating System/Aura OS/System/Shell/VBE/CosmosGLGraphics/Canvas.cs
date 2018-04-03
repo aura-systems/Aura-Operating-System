@@ -1,8 +1,11 @@
-﻿using Aura_OS.Core;
+﻿/*
+* PROJECT:          Aura Operating System Development
+* CONTENT:          VBE Canvas
+* PROGRAMMERS:      Valentin Charbonnier <valentinbreiz@gmail.com>
+*/
+
+using Aura_OS.Core;
 using Cosmos.Core.Memory.Old;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Aura_OS.System.Shell.VBE.CosmosGLGraphics
 {

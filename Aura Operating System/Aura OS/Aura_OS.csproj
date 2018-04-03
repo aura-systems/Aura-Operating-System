@@ -114,7 +114,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="System\Shell\SVGA\" />
     <Folder Include="System\Shell\SVGAII\" />
   </ItemGroup>
 </Project>

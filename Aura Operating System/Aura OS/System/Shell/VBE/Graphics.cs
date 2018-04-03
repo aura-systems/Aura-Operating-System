@@ -1,8 +1,8 @@
-﻿using Aura_OS.Core;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using Cosmos.Core.Memory.Old;
+﻿/*
+* PROJECT:          Aura Operating System Development
+* CONTENT:          VBE Graphics
+* PROGRAMMERS:      Valentin Charbonnier <valentinbreiz@gmail.com>
+*/
 
 namespace Aura_OS.System.Shell.VBE
 {
@@ -26,12 +26,12 @@ namespace Aura_OS.System.Shell.VBE
             pallete[6] = 0x808000; // DarkYellow
             pallete[7] = 0xC0C0C0; // Gray
             pallete[8] = 0x808080; // DarkGray
-            pallete[9] = 0x0000FF; // Blue
-            pallete[10] = 0x00FF00; // Green
+            pallete[9] = 0x5555FF; // Blue
+            pallete[10] = 0x55FF55; // Green
             pallete[11] = 0x00FFFF; // Cyan
-            pallete[12] = 0xFF0000; // Red
+            pallete[12] = 0xFF5555; // Red
             pallete[13] = 0xFF00FF; // Magenta
-            pallete[14] = 0xFFFF00; // Yellow
+            pallete[14] = 0xFFFF55; // Yellow
             pallete[15] = 0xFFFFFF; //White
             font = Read_font();
 

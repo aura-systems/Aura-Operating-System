@@ -25,12 +25,12 @@ namespace Aura_OS.System.Shell.SVGAII
             pallete[6] = 0x808000; // DarkYellow
             pallete[7] = 0xC0C0C0; // Gray
             pallete[8] = 0x808080; // DarkGray
-            pallete[9] = 0x0000FF; // Blue
-            pallete[10] = 0x00FF00; // Green
+            pallete[9] = 0x5555FF; // Blue
+            pallete[10] = 0x55FF55; // Green
             pallete[11] = 0x00FFFF; // Cyan
-            pallete[12] = 0xFF0000; // Red
+            pallete[12] = 0xFF5555; // Red
             pallete[13] = 0xFF00FF; // Magenta
-            pallete[14] = 0xFFFF00; // Yellow
+            pallete[14] = 0xFFFF55; // Yellow
             pallete[15] = 0xFFFFFF; //White
             font = Read_font();
             svga = new VMWareSVGAII();
@@ -82,7 +82,6 @@ namespace Aura_OS.System.Shell.SVGAII
                         svga.SetPixel((ushort)((9 * (Kernel.AConsole.X)) + (9 - cx)), (ushort)((16 * (Kernel.AConsole.Y)) + cy), pallete[VMWareSVGAConsole.foreground]);
                     else
                         svga.SetPixel((ushort)((9 * (Kernel.AConsole.X)) + (9 - cx)), (ushort)((16 * (Kernel.AConsole.Y)) + cy), 0);
-
                 }
             }
         }

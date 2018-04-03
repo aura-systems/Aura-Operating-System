@@ -1,6 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿/*
+* PROJECT:          Aura Operating System Development
+* CONTENT:          Colors
+* PROGRAMMERS:      Valentin Charbonnier <valentinbreiz@gmail.com>
+*/
 
 namespace Aura_OS.System.Shell.VBE.CosmosGLGraphics
 {
