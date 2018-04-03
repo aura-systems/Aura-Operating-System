@@ -83,7 +83,7 @@ namespace Aura_OS.System.Shell.VBE
 
         public override void Clear()
         {
-            graphics.Clear();
+            graphics.Clear(0x000000);
             mX = 0;
             mY = 0;
         }
@@ -94,6 +94,7 @@ namespace Aura_OS.System.Shell.VBE
             {
                 graphics.WriteByte(ch);
             }
+            graphics.Canvas.WriteToScreen();
         }
     }
 }

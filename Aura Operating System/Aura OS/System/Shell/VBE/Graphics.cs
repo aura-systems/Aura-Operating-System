@@ -1,14 +1,17 @@
-﻿using System;
+﻿using Aura_OS.Core;
+using System;
 using System.Collections.Generic;
 using System.Text;
+using Cosmos.Core.Memory.Old;
 
 namespace Aura_OS.System.Shell.VBE
 {
-    class Graphics
+    unsafe class Graphics
     {
 
-        public VbeScreen Display { get; set; }
-        public static Surface _surface;
+        public VbeScreen Screen = new VbeScreen();
+        public CosmosGLGraphics.Canvas Canvas = new CosmosGLGraphics.Canvas(800, 600);
+
         private static uint[] pallete = new uint[16];
         private static byte[] font;
 
@@ -31,14 +34,14 @@ namespace Aura_OS.System.Shell.VBE
             pallete[14] = 0xFFFF00; // Yellow
             pallete[15] = 0xFFFFFF; //White
             font = Read_font();
-            Display = new VbeScreen();
-            Display.SetMode(VbeScreen.ScreenSize.Size800X600, VbeScreen.Bpp.Bpp32);
 
-            _surface = new Surface(800, 600);
-            _surface.Clear(0xFFFFFF);
+            Screen.SetMode(VbeScreen.ScreenSize.Size800X600, VbeScreen.Bpp.Bpp32);
+            Screen.Clear(CosmosGLGraphics.Colors.Blue);
 
-            _surface.PushLayer();
-            _surface.Clear(0xFFFFFF);
+            Canvas.Clear((uint)CosmosGLGraphics.Colors.Black.ToHex());
+
+            Canvas.WriteToScreen();
+
         }
 
         private byte[] Read_font()
@@ -52,13 +55,12 @@ namespace Aura_OS.System.Shell.VBE
             return font;
         }
 
-        public void Clear()
+        internal void Clear(int c)
         {
-            _surface.Clear(0xFFFFFF);
-            _surface.FlushToDisplay();
+            Canvas.Clear((uint)c);
         }
 
-        private static void drawChar(char c)
+        private void drawChar(char c)
         {
             int p = 16 * c;
 
@@ -67,13 +69,12 @@ namespace Aura_OS.System.Shell.VBE
                 for (byte cx = 0; cx < 8; cx++)
                 {
                     if (getb(font[p + cy], cx + 1))
-                        _surface.FillRectangle((ushort)((9 * (Kernel.AConsole.X)) + (9 - cx)), (ushort)((16 * (Kernel.AConsole.Y)) + cy), 1, 1, pallete[VBEConsole.foreground]);
+                        Canvas.SetPixel((ushort)((9 * (Kernel.AConsole.X)) + (9 - cx)), (ushort)((16 * (Kernel.AConsole.Y)) + cy), pallete[VBEConsole.foreground]);
                     else
-                        _surface.FillRectangle((ushort)((9 * (Kernel.AConsole.X)) + (9 - cx)), (ushort)((16 * (Kernel.AConsole.Y)) + cy), 1, 1, 0);
+                        Canvas.SetPixel((ushort)((9 * (Kernel.AConsole.X)) + (9 - cx)), (ushort)((16 * (Kernel.AConsole.Y)) + cy), 0);
 
                 }
             }
-            _surface.FlushToDisplay();
         }
 
         private static bool getb(byte byteToConvert, int bitToReturn)

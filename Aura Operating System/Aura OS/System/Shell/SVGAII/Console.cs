@@ -92,6 +92,7 @@ namespace Aura_OS.System.Shell.SVGAII
             {
                 graphics.WriteByte(ch);
             }
+            graphics.Update(0, 0, 800, 600);
         }
 
         public void DrawImage(ushort X, ushort Y, ushort Length, ushort height, uint[] data)

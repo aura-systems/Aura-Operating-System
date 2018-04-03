@@ -4,13 +4,14 @@
 * PROGRAMMERS:      Myvar
 */
 
+using Aura_OS.Core;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace Aura_OS.System.Shell.VBE
 {
-    public class VbeScreen
+    public unsafe class VbeScreen
     {
         /// <summary>
         /// Driver for Setting vbe modes and ploting/getting pixels
@@ -113,12 +114,94 @@ namespace Aura_OS.System.Shell.VBE
 
         #endregion
 
+        #region Drawing
+        //used to convert from rgb to hex color
+        private uint GetIntFromRbg(byte red, byte green, byte blue)
+        {
+            uint x;
+            x = (blue);
+            x += (uint)(green << 8);
+            x += (uint)(red << 16);
+            return x;
+        }
+
         public void Disable()
         {
             _vbe.vbe_disable();
         }
 
+        public void Clear(CosmosGLGraphics.Color color)
+        {
+            Clear((uint)color.ToHex());
+        }
 
+        /// <summary>
+        /// Clear the screen with a given color
+        /// </summary>
+        /// <param name="color">The color in hex</param>
+        public void Clear(uint color)
+        {
+            CosmosGLGraphics.Color c = new CosmosGLGraphics.Color((int)color);
+            Memory.Memset((uint*)0xE0000000, (uint)color, (uint)(ScreenWidth * ScreenHeight));
+        }
+        /// <summary>
+        /// Clear the screen with a given color
+        /// </summary>
+        /// <param name="red">Red value max is 255</param>
+        /// <param name="green">Green value max is 255</param>
+        /// <param name="blue">Blue value max is 255</param>
+        public void Clear(byte red, byte green, byte blue)
+        {
+            Clear(GetIntFromRbg(red, green, blue));
+        }
+
+        public void SetBuffer(byte[] buffer)
+        {
+            _vbe.set_vram(buffer);
+        }
+
+        /// <summary>
+        /// Set a pixel at a given point to the give color
+        /// </summary>
+        /// <param name="x">X coordinate</param>
+        /// <param name="y">Y coordinate</param>
+        /// <param name="color">Color in hex</param>
+        public void SetPixel(uint x, uint y, uint color)
+        {
+            byte* where = (byte*)(0xE0000000 + (x * ((uint)ScreenBpp / 8) + y * (uint)(ScreenWidth * ((uint)ScreenBpp / 8))));
+            where[0] = (byte)(color & 255);              // BLUE
+            where[0 + 1] = (byte)((color >> 8) & 255);   // GREEN
+            where[0 + 2] = (byte)((color >> 16) & 255);  // RED
+        }
+
+        /// <summary>
+        /// Set a pixel at a given point to the give color
+        /// </summary>
+        /// <param name="x">X coordinate</param>
+        /// <param name="y">Y coordinate</param>
+        /// <param name="red">Red value max is 255</param>
+        /// <param name="green">Green value max is 255</param>
+        /// <param name="blue">Blue value max is 255</param>
+        public void SetPixel(uint x, uint y, byte red, byte green, byte blue)
+        {
+            SetPixel(x, y, GetIntFromRbg(red, green, blue));
+        }
+        #endregion
+
+        #region Reading
+
+        /// <summary>
+        /// Get a pixel's color at the given point
+        /// </summary>
+        /// <param name="x">X coordinate</param>
+        /// <param name="y"></param>
+        /// <returns>Returns the color in hex</returns>
+        public uint GetPixel(uint x, uint y)
+        {
+            uint where = x * ((uint)ScreenBpp / 8) + y * (uint)(ScreenWidth * ((uint)ScreenBpp / 8));
+            return GetIntFromRbg(_vbe.get_vram(where + 2), _vbe.get_vram(where + 1), _vbe.get_vram(where));
+        }
+        #endregion
 
     }
 }

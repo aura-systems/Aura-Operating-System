@@ -11,7 +11,7 @@ namespace Aura_OS.System.Shell.SVGAII
     class Graphics
     {
         private static byte[] font;
-        static VMWareSVGAII svga;
+        public static VMWareSVGAII svga;
         private static uint[] pallete = new uint[16];
 
         public Graphics()
@@ -85,7 +85,6 @@ namespace Aura_OS.System.Shell.SVGAII
 
                 }
             }
-            svga.Update(0, 0, 800, 600);
         }
 
         private static bool getb(byte byteToConvert, int bitToReturn)
@@ -111,6 +110,11 @@ namespace Aura_OS.System.Shell.SVGAII
                 Kernel.AConsole.X = 0;
                 Kernel.AConsole.Y++;
             }
+        }
+
+        public void Update(int x, int y, int h, int w)
+        {
+            svga.Update(0, 0, 800, 600);
         }
 
     }
