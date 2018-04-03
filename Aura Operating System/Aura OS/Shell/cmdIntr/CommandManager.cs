@@ -50,14 +50,15 @@ namespace Aura_OS.Shell.cmdIntr
             Register("logout");
             Register("passwd");
             Register("settings");
-            Register("settings adduser");
-            Register("settings remuser");
-            Register("settings passuser");
-            Register("settings setcomputername");
-            Register("settings setlang");
-            Register("settings setlang en_US");
-            Register("settings setlang fr_FR");
-            Register("settings setlang nl_NL");
+            //TO-DO Make a fix.
+            //Register("settings adduser");
+            //Register("settings remuser");
+            //Register("settings passuser");
+            //Register("settings setcomputername");
+            //Register("settings setlang");
+            //Register("settings setlang en_US");
+            //Register("settings setlang fr_FR");
+            //Register("settings setlang nl_NL");
             Register("systeminfo");
             Register("version");
             Register("ipconfig");
