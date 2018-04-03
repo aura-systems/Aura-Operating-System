@@ -15,6 +15,10 @@ namespace Aura_OS.System
             {
                 return "SVGAII";
             }
+            else if (Cosmos.HAL.PCI.GetDevice(Cosmos.HAL.VendorID.Bochs, Cosmos.HAL.DeviceID.BGA) != null)
+            {
+                return "VBE";
+            }
             else
             {
                 return "VGATextmode";
