@@ -21,6 +21,9 @@ namespace Aura_OS.Shell.cmdIntr
         /// Empty constructor. (Good for debug)
         /// </summary>
         public CommandManager() { }
+
+        public static List<String> CMDs = new List<string>();       
+
         /// <summary>
         /// Shell Interpreter
         /// </summary>
@@ -170,6 +173,13 @@ namespace Aura_OS.Shell.cmdIntr
             else if (cmd.Equals("crash"))
             {
                 Tests.Crash.c_Crash();
+            }
+
+            else if (cmd.Equals("cmd"))
+            {
+                CMDs.Add("ipconfig");
+                CMDs.Add("netconf");
+                CMDs.Add("help");
             }
 
             else if (cmd.Equals("crashcpu"))
