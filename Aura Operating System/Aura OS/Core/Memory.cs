@@ -9,7 +9,7 @@ using Cosmos.Core.Memory.Old;
 using IL2CPU.API.Attribs;
 using XSharp.Assembler;
 
-namespace CosmosGL.Core
+namespace Aura_OS.Core
 {
     public static unsafe class Memory
     {

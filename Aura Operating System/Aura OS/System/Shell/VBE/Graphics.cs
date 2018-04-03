@@ -1,18 +1,19 @@
 ﻿/*
 * PROJECT:          Aura Operating System Development
-* CONTENT:          SVGAII Graphics
+* CONTENT:          VBE Graphics
 * PROGRAMMERS:      Valentin Charbonnier <valentinbreiz@gmail.com>
 */
 
-using Cosmos.HAL.Drivers.PCI.Video;
-
-namespace Aura_OS.System.Shell.SVGAII
+namespace Aura_OS.System.Shell.VBE
 {
-    class Graphics
+    unsafe class Graphics
     {
-        private static byte[] font;
-        public static VMWareSVGAII svga;
+
+        public VbeScreen Screen = new VbeScreen();
+        public CosmosGLGraphics.Canvas Canvas = new CosmosGLGraphics.Canvas(800, 600);
+
         private static uint[] pallete = new uint[16];
+        private static byte[] font;
 
         public Graphics()
         {
@@ -33,9 +34,14 @@ namespace Aura_OS.System.Shell.SVGAII
             pallete[14] = 0xFFFF55; // Yellow
             pallete[15] = 0xFFFFFF; //White
             font = Read_font();
-            svga = new VMWareSVGAII();
-            svga.SetMode(800, 600);
-            svga.Clear(0);
+
+            Screen.SetMode(VbeScreen.ScreenSize.Size800X600, VbeScreen.Bpp.Bpp32);
+            Screen.Clear(CosmosGLGraphics.Colors.Blue);
+
+            Canvas.Clear((uint)CosmosGLGraphics.Colors.Black.ToHex());
+
+            Canvas.WriteToScreen();
+
         }
 
         private byte[] Read_font()
@@ -49,28 +55,12 @@ namespace Aura_OS.System.Shell.SVGAII
             return font;
         }
 
-        public void Clear()
+        internal void Clear(int c)
         {
-            svga.Clear(0x000000);
-            svga.Update(0, 0, 800, 600);
+            Canvas.Clear((uint)c);
         }
 
-        public void DrawImage(ushort X, ushort Y, ushort Length, ushort height, uint[] data)
-        {
-            int p = 0;
-            Kernel.AConsole.Y += height / 15;
-            for (ushort x = 0; x < Length; x++)
-            {
-                for (ushort y = 0; y < height; y++)
-                {
-                    if (y < (height - 2) || x != (Kernel.AConsole.Width - 2))
-                        svga.SetPixel((ushort)(X + x), (ushort)(Y + y), data[p]);
-                    p++;
-                }
-            }
-        }
-
-        private static void drawChar(char c)
+        private void drawChar(char c)
         {
             int p = 16 * c;
 
@@ -79,9 +69,10 @@ namespace Aura_OS.System.Shell.SVGAII
                 for (byte cx = 0; cx < 8; cx++)
                 {
                     if (getb(font[p + cy], cx + 1))
-                        svga.SetPixel((ushort)((9 * (Kernel.AConsole.X)) + (9 - cx)), (ushort)((16 * (Kernel.AConsole.Y)) + cy), pallete[VMWareSVGAConsole.foreground]);
+                        Canvas.SetPixel((ushort)((9 * (Kernel.AConsole.X)) + (9 - cx)), (ushort)((16 * (Kernel.AConsole.Y)) + cy), pallete[VBEConsole.foreground]);
                     else
-                        svga.SetPixel((ushort)((9 * (Kernel.AConsole.X)) + (9 - cx)), (ushort)((16 * (Kernel.AConsole.Y)) + cy), 0);
+                        Canvas.SetPixel((ushort)((9 * (Kernel.AConsole.X)) + (9 - cx)), (ushort)((16 * (Kernel.AConsole.Y)) + cy), 0);
+
                 }
             }
         }
@@ -110,11 +101,5 @@ namespace Aura_OS.System.Shell.SVGAII
                 Kernel.AConsole.Y++;
             }
         }
-
-        public void Update(int x, int y, int h, int w)
-        {
-            svga.Update(0, 0, 800, 600);
-        }
-
     }
 }
