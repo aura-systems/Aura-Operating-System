@@ -454,6 +454,7 @@ namespace Aura_OS.System.Shell
                 //Check for "special" keys
                 if (current.Key == ConsoleKeyEx.Backspace) // Backspace
                 {
+                    CMDToComplete = "";
                     if (currentCount > 0)
                     {
                         int curCharTemp = GetConsole().X;
@@ -509,11 +510,12 @@ namespace Aura_OS.System.Shell
                     {
                         index++;
                         if (c.StartsWith(CMDToComplete))
-                        {
-                            Kernel.BeforeCommand();
+                        {                            
                             CommandsHistory.ClearCurrentConsoleLine();
                             currentCount = 0;
                             chars.Clear();
+
+                            Kernel.BeforeCommand();
 
                             foreach (char chr in c)
                             {
@@ -527,6 +529,7 @@ namespace Aura_OS.System.Shell
                 }
                 else if (current.Key == ConsoleKeyEx.C && KeyboardManager.ControlPressed)
                 {
+                    CMDToComplete = "";
                     if (Cosmos.System.Console.writecommand)
                     {
                         CommandsHistory.ClearCurrentConsoleLine();
@@ -540,6 +543,7 @@ namespace Aura_OS.System.Shell
                 {
                     if (Cosmos.System.Console.writecommand) //IF SHELL
                     {
+                        CMDToComplete = "";
                         if (CommandsHistory.CHIndex >= 0)
                         {
                             CommandsHistory.ClearCurrentConsoleLine();
@@ -597,6 +601,7 @@ namespace Aura_OS.System.Shell
                 {
                     if (Cosmos.System.Console.writecommand) //IF SHELL
                     {
+                        CMDToComplete = "";
                         if (CommandsHistory.CHIndex < Cosmos.System.Console.commands.Count - 1)
                         {
                             CommandsHistory.ClearCurrentConsoleLine();

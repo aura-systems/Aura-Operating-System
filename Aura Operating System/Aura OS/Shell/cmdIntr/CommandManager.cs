@@ -24,6 +24,46 @@ namespace Aura_OS.Shell.cmdIntr
 
         public static List<String> CMDs = new List<string>();       
 
+        private static void Register(string cmd)
+        {
+            CMDs.Add(cmd);
+        }
+
+        public static void RegisterAllCommands()
+        {
+            Register("shutdown");
+            Register("rebooot");
+            Register("clear");
+            Register("echo");
+            Register("help");
+            Register("cd");
+            Register("cp");
+            Register("dir");
+            Register("ls");
+            Register("mkdir");
+            Register("rmdir");
+            Register("rmfil");
+            Register("mkfil");
+            Register("edit");
+            Register("vol");
+            Register("run");
+            Register("logout");
+            Register("passwd");
+            Register("settings");
+            Register("systeminfo");
+            Register("version");
+            Register("ipconfig");
+            Register("ifconfig");
+            Register("netconf");
+            Register("time");
+            Register("date");
+            Register("beep");
+            Register("snake");
+            Register("md5");
+            Register("export");
+            Register("lspci");
+        }
+
         /// <summary>
         /// Shell Interpreter
         /// </summary>
