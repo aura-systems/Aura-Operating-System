@@ -21,6 +21,58 @@ namespace Aura_OS.Shell.cmdIntr
         /// Empty constructor. (Good for debug)
         /// </summary>
         public CommandManager() { }
+
+        public static List<String> CMDs = new List<string>();       
+
+        private static void Register(string cmd)
+        {
+            CMDs.Add(cmd);
+        }
+
+        public static void RegisterAllCommands()
+        {
+            Register("shutdown");
+            Register("rebooot");
+            Register("clear");
+            Register("echo");
+            Register("help");
+            Register("cd");
+            Register("cp");
+            Register("dir");
+            Register("ls");
+            Register("mkdir");
+            Register("rmdir");
+            Register("rmfil");
+            Register("mkfil");
+            Register("edit");
+            Register("vol");
+            Register("run");
+            Register("logout");
+            Register("passwd");
+            Register("settings");
+            //TO-DO Make a fix.
+            //Register("settings adduser");
+            //Register("settings remuser");
+            //Register("settings passuser");
+            //Register("settings setcomputername");
+            //Register("settings setlang");
+            //Register("settings setlang en_US");
+            //Register("settings setlang fr_FR");
+            //Register("settings setlang nl_NL");
+            Register("systeminfo");
+            Register("version");
+            Register("ipconfig");
+            Register("ifconfig");
+            Register("netconf");
+            Register("time");
+            Register("date");
+            Register("beep");
+            Register("snake");
+            Register("md5");
+            Register("export");
+            Register("lspci");
+        }
+
         /// <summary>
         /// Shell Interpreter
         /// </summary>
@@ -170,6 +222,13 @@ namespace Aura_OS.Shell.cmdIntr
             else if (cmd.Equals("crash"))
             {
                 Tests.Crash.c_Crash();
+            }
+
+            else if (cmd.Equals("cmd"))
+            {
+                CMDs.Add("ipconfig");
+                CMDs.Add("netconf");
+                CMDs.Add("help");
             }
 
             else if (cmd.Equals("crashcpu"))

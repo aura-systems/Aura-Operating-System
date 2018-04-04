@@ -67,6 +67,7 @@ namespace Aura_OS
         {
             try
             {
+                Shell.cmdIntr.CommandManager.RegisterAllCommands();
 
                 switch (Video.GetVideo())
                 {

@@ -8,6 +8,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using Aura_OS.Shell.cmdIntr;
 using Aura_OS.System.Utils;
 using Cosmos.System;
 using IL2CPU.API;
@@ -16,7 +17,7 @@ using Sys = System;
 
 namespace Aura_OS.System.Shell
 {
-    [Plug(Target = typeof (global::System.Console))]
+    [Plug(Target = typeof(global::System.Console))]
     public static class ConsoleImpl
     {
         private static ConsoleColor mForeground = ConsoleColor.White;
@@ -418,11 +419,11 @@ namespace Aura_OS.System.Shell
             }
 
             //TODO: Plug HasFlag and use the next 3 lines instead of the 3 following lines
-            
+
             //bool xShift = key.Modifiers.HasFlag(ConsoleModifiers.Shift);
             //bool xAlt = key.Modifiers.HasFlag(ConsoleModifiers.Alt);
             //bool xControl = key.Modifiers.HasFlag(ConsoleModifiers.Control);
-            
+
             bool xShift = (key.Modifiers & ConsoleModifiers.Shift) == ConsoleModifiers.Shift;
             bool xAlt = (key.Modifiers & ConsoleModifiers.Alt) == ConsoleModifiers.Alt;
             bool xControl = (key.Modifiers & ConsoleModifiers.Control) == ConsoleModifiers.Control;
@@ -439,13 +440,13 @@ namespace Aura_OS.System.Shell
                 return null;
             }
             List<char> chars = new List<char>(32);
-            KeyEvent current;          
-            
+            KeyEvent current;
+
             int currentCount = 0;
 
             bool firstdown = false;
 
-            //string Command;
+            string CMDToComplete = "";
 
             while ((current = KeyboardManager.ReadKey()).Key != ConsoleKeyEx.Enter)
             {
@@ -453,6 +454,7 @@ namespace Aura_OS.System.Shell
                 //Check for "special" keys
                 if (current.Key == ConsoleKeyEx.Backspace) // Backspace
                 {
+                    CMDToComplete = "";
                     if (currentCount > 0)
                     {
                         int curCharTemp = GetConsole().X;
@@ -495,19 +497,53 @@ namespace Aura_OS.System.Shell
                     }
                     continue;
                 }
+                else if (current.Key == ConsoleKeyEx.Tab)
+                {                    
+                    int index = -1;
+
+                    foreach (char ch in chars)
+                    {
+                        CMDToComplete = CMDToComplete + ch.ToString();
+                    }                    
+
+                    foreach (string c in CommandManager.CMDs)
+                    {
+                        index++;
+                        if (c.StartsWith(CMDToComplete))
+                        {                            
+                            CommandsHistory.ClearCurrentConsoleLine();
+                            currentCount = 0;
+                            chars.Clear();
+
+                            Kernel.BeforeCommand();
+
+                            foreach (char chr in c)
+                            {
+                                chars.Add(chr);
+                                Write(chr);
+                                currentCount++;
+                            }
+                        }
+                    }
+                    continue;
+                }
                 else if (current.Key == ConsoleKeyEx.C && KeyboardManager.ControlPressed)
                 {
-                    CommandsHistory.ClearCurrentConsoleLine();
-                    currentCount = 0;
-                    chars.Clear();
+                    CMDToComplete = "";
+                    if (Cosmos.System.Console.writecommand)
+                    {
+                        CommandsHistory.ClearCurrentConsoleLine();
+                        currentCount = 0;
+                        chars.Clear();
 
-                    Kernel.BeforeCommand();
-                    return "test";
+                        Kernel.BeforeCommand();
+                    }
                 }
                 else if (current.Key == ConsoleKeyEx.UpArrow) //COMMAND HISTORY UP
                 {
                     if (Cosmos.System.Console.writecommand) //IF SHELL
                     {
+                        CMDToComplete = "";
                         if (CommandsHistory.CHIndex >= 0)
                         {
                             CommandsHistory.ClearCurrentConsoleLine();
@@ -565,6 +601,7 @@ namespace Aura_OS.System.Shell
                 {
                     if (Cosmos.System.Console.writecommand) //IF SHELL
                     {
+                        CMDToComplete = "";
                         if (CommandsHistory.CHIndex < Cosmos.System.Console.commands.Count - 1)
                         {
                             CommandsHistory.ClearCurrentConsoleLine();
@@ -572,7 +609,7 @@ namespace Aura_OS.System.Shell
                             chars.Clear();
 
                             Kernel.BeforeCommand();
-                                                        
+
                             CommandsHistory.CHIndex = CommandsHistory.CHIndex + 1;
 
                             if (!firstdown)
@@ -795,9 +832,9 @@ namespace Aura_OS.System.Shell
         //    Write(aByte.ToString());
         //}
 
-#endregion
+        #endregion
 
-#region WriteLine
+        #region WriteLine
 
         public static void WriteLine() => Write(Environment.NewLine);
 
@@ -843,7 +880,7 @@ namespace Aura_OS.System.Shell
             WriteLine();
         }
 
-#endregion
+        #endregion
 
     }
 }
