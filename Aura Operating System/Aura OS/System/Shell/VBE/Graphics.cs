@@ -60,6 +60,21 @@ namespace Aura_OS.System.Shell.VBE
             Canvas.Clear((uint)c);
         }
 
+        public void DrawImage(ushort X, ushort Y, ushort Length, ushort height, uint[] data)
+        {
+            int p = 0;
+            Kernel.AConsole.Y += height / 15;
+            for (ushort x = 0; x < Length; x++)
+            {
+                for (ushort y = 0; y < height; y++)
+                {
+                    if (y < (height - 2) || x != (Kernel.AConsole.Width - 2))
+                        Canvas.SetPixel((ushort)(X + x), (ushort)(Y + y), data[p]);
+                    p++;
+                }
+            }
+        }
+
         private void drawChar(char c)
         {
             int p = 16 * c;

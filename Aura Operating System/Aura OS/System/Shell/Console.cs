@@ -42,5 +42,7 @@ namespace Aura_OS.System.Shell
 
         public abstract bool CursorVisible { get; set; }
 
+        public abstract void DrawImage(ushort X, ushort Y, ushort Length, ushort height, uint[] data);
+
     }
 }

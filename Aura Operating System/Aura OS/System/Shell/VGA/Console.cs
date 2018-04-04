@@ -153,6 +153,11 @@ namespace Aura_OS.System.Shell.VGA
             }
         }
 
+        public override void DrawImage(ushort X, ushort Y, ushort Length, ushort height, uint[] data)
+        {
+            throw new NotImplementedException();
+        }
+
         public override ConsoleColor Foreground
         {
             get { return (ConsoleColor)(mText.GetColor() ^ (byte)((byte)Background << 4)); }

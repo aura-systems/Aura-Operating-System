@@ -95,7 +95,7 @@ namespace Aura_OS.System.Shell.SVGAII
             graphics.Update(0, 0, 800, 600);
         }
 
-        public void DrawImage(ushort X, ushort Y, ushort Length, ushort height, uint[] data)
+        public override void DrawImage(ushort X, ushort Y, ushort Length, ushort height, uint[] data)
         {
             graphics.DrawImage(X, Y, Length, height, data);
         }

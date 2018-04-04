@@ -94,5 +94,10 @@ namespace Aura_OS.System.Shell.VBE
             }
             graphics.Canvas.WriteToScreen();
         }
+
+        public override void DrawImage(ushort X, ushort Y, ushort Length, ushort height, uint[] data)
+        {
+            graphics.DrawImage(X, Y, Length, height, data);
+        }
     }
 }
