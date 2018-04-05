@@ -108,6 +108,11 @@ namespace Aura_OS.System.Shell.VBE
             {
                 Kernel.AConsole.Y++;
                 Kernel.AConsole.X = -1;
+                if (Kernel.AConsole.Y == Kernel.AConsole.Rows)
+                {
+                    ScrollUp();
+                    Kernel.AConsole.Y--;
+                }
             }
             Kernel.AConsole.X++;
             if (Kernel.AConsole.X > 80)
@@ -115,6 +120,11 @@ namespace Aura_OS.System.Shell.VBE
                 Kernel.AConsole.X = 0;
                 Kernel.AConsole.Y++;
             }
+        }
+
+        private void ScrollUp()
+        {
+            Canvas.ScrollUp();
         }
     }
 }
