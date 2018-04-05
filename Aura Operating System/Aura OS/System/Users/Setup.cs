@@ -244,7 +244,7 @@ namespace Aura_OS.System
             Kernel.SystemExists = true;
             Kernel.userLogged = username;
             Kernel.JustInstalled = true;
-            Kernel.running = true;
+            Kernel.Logged = true;
 
             Console.Clear();
 
@@ -253,7 +253,10 @@ namespace Aura_OS.System
 
             Console.WriteLine();
 
-            Kernel.Logged = true;
+            Cosmos.HAL.Global.logs.Add("[ OK ] Running Aura OS!");
+            File.WriteAllLines(@"0:\System\boot.log", Cosmos.HAL.Global.logs.ToArray());
+
+            Kernel.running = true;
         }
 
         /// <summary>
@@ -271,6 +274,7 @@ namespace Aura_OS.System
 
             File.Create(@"0:\System\settings.conf");
             File.Create(@"0:\System\passwd");
+            File.Create(@"0:\System\boot.log");
 
             Menu.DispInstallationDialog(15);
 

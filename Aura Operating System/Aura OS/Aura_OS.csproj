@@ -92,6 +92,9 @@
     <IntelEdison_EnableGDB>False</IntelEdison_EnableGDB>
     <IntelEdison_StartCosmosGDB>false</IntelEdison_StartCosmosGDB>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <StackCorruptionDetectionEnabled>False</StackCorruptionDetectionEnabled>
+  </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Cosmos.Build" Version="*" NoWarn="NU1604" />
     <PackageReference Include="Cosmos.Debug.Kernel" Version="1.0.0-*" />
