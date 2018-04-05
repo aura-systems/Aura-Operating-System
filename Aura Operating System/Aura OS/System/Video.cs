@@ -10,10 +10,10 @@ namespace Aura_OS.System
     {
         public static string GetVideo()
         {
-            // TO DO: Detect video card
+            // TO DO: Scroll console in SVGAII
             if (Cosmos.HAL.PCI.GetDevice(Cosmos.HAL.VendorID.VMWare, Cosmos.HAL.DeviceID.SVGAIIAdapter) != null)
             {
-                return "SVGAII";
+                return "VGATextmode";
             }
             else if (Cosmos.HAL.PCI.GetDevice(Cosmos.HAL.VendorID.Bochs, Cosmos.HAL.DeviceID.BGA) != null || Cosmos.HAL.PCI.GetDevice(Cosmos.HAL.VendorID.VirtualBox, Cosmos.HAL.DeviceID.VBVGA) != null)
             {
