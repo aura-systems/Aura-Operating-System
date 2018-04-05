@@ -19,7 +19,7 @@ Please read the [Aura Progression](https://github.com/aura-systems/Aura-Operatin
 * Multi languages/Multi users support.
 * Basic command interpreter.
 * Exception Handler.
-* VGA Textmode (80x25) + Extended ASCII support.
+* Console in VGA Textmode (80x25) / SVGAII Graphics mode / VBE Graphics mode + Extended ASCII support.
 
 Work in progress:
 
