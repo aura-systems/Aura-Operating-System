@@ -4,12 +4,14 @@
 * PROGRAMMERS:      Valentin Charbonnier <valentinbreiz@gmail.com>
 */
 
+using System;
+
 namespace Aura_OS.System.Shell.VBE
 {
     unsafe class Graphics
     {
 
-        public VbeScreen Screen = new VbeScreen();
+        public static VbeScreen Screen = new VbeScreen();
         public CosmosGLGraphics.Canvas Canvas = new CosmosGLGraphics.Canvas(800, 600);
 
         private static uint[] pallete = new uint[16];
@@ -53,6 +55,11 @@ namespace Aura_OS.System.Shell.VBE
 
             };
             return font;
+        }
+
+        internal void Disable()
+        {
+            Screen.Disable();
         }
 
         internal void Clear(int c)

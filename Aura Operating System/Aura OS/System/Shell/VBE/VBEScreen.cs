@@ -13,7 +13,7 @@ namespace Aura_OS.System.Shell.VBE
         /// <summary>
         /// Driver for Setting vbe modes and ploting/getting pixels
         /// </summary>
-        private VbeDriver _vbe = new VbeDriver();
+        public static VbeDriver _vbe = new VbeDriver();
 
         /// <summary>
         /// The current Width of the screen in pixels

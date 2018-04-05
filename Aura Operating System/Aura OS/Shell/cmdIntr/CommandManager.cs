@@ -6,6 +6,7 @@
 
 using Aura_OS.System.Utils;
 using Cosmos.HAL.PCInformation;
+using Cosmos.System.Graphics;
 using System;
 using System.Collections.Generic;
 
@@ -241,6 +242,13 @@ namespace Aura_OS.Shell.cmdIntr
             else if (cmd.Equals("beep"))
             {
                 Kernel.speaker.beep();
+            }
+
+            else if (cmd.Equals("textmode"))
+            {
+                System.Shell.VBE.Graphics graphics = new System.Shell.VBE.Graphics();
+                graphics.Disable();
+                VGAScreen.SetTextMode(VGAScreen.TextSize.Size80x25);
             }
 
             //else if (cmd.StartsWith("xml "))
