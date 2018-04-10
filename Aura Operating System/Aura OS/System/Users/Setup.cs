@@ -232,6 +232,7 @@ namespace Aura_OS.System
             Text.Display("logged", "root");
             Text.Display("nofilesystem");
             Console.WriteLine();
+            Kernel.running = true;
         }
 
         /// <summary>
