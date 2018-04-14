@@ -23,7 +23,8 @@ namespace Aura_OS.System.Compression
         private bool IsZIPFile()
         {
             Byte[] zip = FileHeader();
-            if ((zip[0] == 80) && (zip[1] == 75) && (zip[2] == 3) && (zip[3] == 4))
+            if ((zip[0] == 80) && (zip[1] == 75) && (((zip[2] == 3) && (zip[3] == 4)) || ((zip[2] == 5) && (zip[6] == 6)))) //80 75 3 4 or 80 75 5 6 
+                                                                                                                            //(first for a zip file and second for an empty zip file)
             {
                 return true;
             }
@@ -44,12 +45,10 @@ namespace Aura_OS.System.Compression
         {
             Byte[] zip = FileHeader();
             List<Byte> bname = new List<Byte>();            
-            int lenght = zip[26];
+            int lenght = zip[26] + zip[27]; //13 + 0 = 13
             Console.WriteLine(lenght);
-            Console.WriteLine(zip[30]);
-            for (int i = 30; i < lenght; i++){
+            for (int i = 30; i < 30+lenght; i++){
                 bname.Add(zip[i]);
-                Console.WriteLine(zip[i]);
             }
             return Encoding.ASCII.GetString(bname.ToArray());
         }
@@ -63,6 +62,7 @@ namespace Aura_OS.System.Compression
                 //{
                 //    Console.WriteLine(FileName());
                 //}
+                Console.WriteLine();
                 Console.WriteLine(FileName());
             }
         }
