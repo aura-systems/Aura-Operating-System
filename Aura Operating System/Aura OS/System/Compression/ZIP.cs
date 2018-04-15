@@ -47,11 +47,13 @@ namespace Aura_OS.System.Compression
             Byte[] zip = FileHeader();
             List<Byte> bname = new List<Byte>();            
             int lenght = zip[26] + zip[27]; //13 + 0 = 13
-            pointer = pointer + lenght;
             Console.WriteLine("zip> filename lenght: " + lenght);
             for (int i = 30; i < 30+lenght; i++){
                 bname.Add(zip[i]);
+                pointer = i;
+                Console.WriteLine("zip> byte 0x" + pointer + " " + zip[i]);
             }
+            pointer = pointer + 1;
             return Encoding.ASCII.GetString(bname.ToArray());
         }
 
@@ -70,7 +72,7 @@ namespace Aura_OS.System.Compression
                 Console.WriteLine(FileName());
                 Console.WriteLine();
                 Console.WriteLine();
-                Console.WriteLine("zip> byte 0x43" + zip[43]);
+                Console.WriteLine("zip> byte 0x" + pointer + " " + zip[pointer]);
             }
         }
     }
