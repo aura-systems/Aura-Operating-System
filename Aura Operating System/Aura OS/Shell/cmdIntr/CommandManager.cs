@@ -63,6 +63,7 @@ namespace Aura_OS.Shell.cmdIntr
             Register("md5");
             Register("export");
             Register("lspci");
+            Register("about");
         }
 
         /// <summary>
@@ -270,6 +271,11 @@ namespace Aura_OS.Shell.cmdIntr
             }
 
             else if (cmd.Equals("lspci"))
+            {
+                Util.Lspci.c_Lspci();
+            }
+
+            else if (cmd.Equals("about"))
             {
                 Util.Lspci.c_Lspci();
             }

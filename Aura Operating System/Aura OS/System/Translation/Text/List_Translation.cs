@@ -264,5 +264,47 @@ namespace Aura_OS.System.Translation
             }
         }
 
+        public static void About()
+        {
+            switch (Kernel.langSelected)
+            {
+                case "fr_FR":
+                    Console.WriteLine("À Propos d'Aura OS:");
+                    Console.WriteLine("Aura Team créé par Valentin CHARBONNIER et Alexy DA CRUZ.");
+                    Console.WriteLine();
+                    Console.WriteLine("Contributeurs:");
+                    Console.WriteLine("- djlw78");
+                    Console.WriteLine("- Og-Rok");
+                    Console.WriteLine();
+                    Console.WriteLine("Merci aussi aux contributeurs de Cosmos.");
+                    Console.WriteLine("https://github.com/aura-systems/Aura-Operating-System");
+                    break;
+
+                case "en_US":
+                    Console.WriteLine("About Aura OS:");
+                    Console.WriteLine("Aura Team created by Valentin CHARBONNIER and Alexy DA CRUZ.");
+                    Console.WriteLine();
+                    Console.WriteLine("Contributors:");
+                    Console.WriteLine("- djlw78");
+                    Console.WriteLine("- Og-Rok");
+                    Console.WriteLine();
+                    Console.WriteLine("Thanks also to the Cosmos contributors.");
+                    Console.WriteLine("https://github.com/aura-systems/Aura-Operating-System");
+                    break;
+
+                case "nl_NL":
+                    Console.WriteLine("Over Aura OS:");
+                    Console.WriteLine("Aura Team opgericht door Valentin CHARBONNIER en Alexy DA CRUZ.");
+                    Console.WriteLine();
+                    Console.WriteLine("Bijdragers:");
+                    Console.WriteLine("- djlw78");
+                    Console.WriteLine("- Og-Rok");
+                    Console.WriteLine();
+                    Console.WriteLine("Dank ook aan de Cosmos donateurs.");
+                    Console.WriteLine("https://github.com/aura-systems/Aura-Operating-System");
+                    break;
+            }
+        }
+
     }
 }
