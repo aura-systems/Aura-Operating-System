@@ -8,6 +8,7 @@ namespace Aura_OS.System.Compression
     class ZIP
     {
         private string ZIPFile;
+        int pointer = 0;
 
         public ZIP(string filename)
         {
@@ -31,7 +32,7 @@ namespace Aura_OS.System.Compression
             return false;
         }
 
-        private bool IsVersionNeeded()
+        private bool IsVersion()
         {
             Byte[] zip = FileHeader();
             if ((zip[4] == 10) && (zip[5] == 00))
@@ -46,7 +47,8 @@ namespace Aura_OS.System.Compression
             Byte[] zip = FileHeader();
             List<Byte> bname = new List<Byte>();            
             int lenght = zip[26] + zip[27]; //13 + 0 = 13
-            Console.WriteLine(lenght);
+            pointer = pointer + lenght;
+            Console.WriteLine("zip> filename lenght: " + lenght);
             for (int i = 30; i < 30+lenght; i++){
                 bname.Add(zip[i]);
             }
@@ -58,12 +60,17 @@ namespace Aura_OS.System.Compression
             Byte[] zip = FileHeader();
             if (IsZIPFile()) //if it's a zip file
             {
-                //if (IsVersionNeeded()) //if the zip file is supported
-                //{
-                //    Console.WriteLine(FileName());
-                //}
+                if (IsVersion()) //if the zip file is supported
+                {
+                    Console.ForegroundColor = ConsoleColor.Green;                    
+                    Console.WriteLine("Good version: executing zip file...");
+                    Console.ForegroundColor = ConsoleColor.White;
+                }
                 Console.WriteLine();
                 Console.WriteLine(FileName());
+                Console.WriteLine();
+                Console.WriteLine();
+                Console.WriteLine("zip> byte 0x43" + zip[43]);
             }
         }
     }
