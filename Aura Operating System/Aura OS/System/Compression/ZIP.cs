@@ -52,8 +52,8 @@ namespace Aura_OS.System.Compression
             //get their names
             string signature = "";
             int pointer = 0;
-
-            foreach (Byte file in zip)
+            Byte[] test = new Byte[] { 0x50, 0x4b, 0x03, 0x04, 0xa, 0x0, 0x8, 0x50, 0x4b, 0x03, 0x04, 0xa, 0x0, 0x8 };
+            foreach (Byte file in test)
             {
                 pointer = pointer + 1;
 
