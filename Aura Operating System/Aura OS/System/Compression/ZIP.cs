@@ -42,10 +42,15 @@ namespace Aura_OS.System.Compression
             return false;
         }
 
-        private string FileName()
+        private string ListFiles()
         {
             Byte[] zip = FileHeader();
-            List<Byte> bname = new List<Byte>();            
+            List<Byte> bname = new List<Byte>();
+            
+            //detect all 80 75 3 4
+            //register their positions
+            //get their names
+
             int lenght = zip[26] + zip[27]; //13 + 0 = 13
             Console.WriteLine("zip> filename lenght: " + lenght);
             for (int i = 30; i < 30+lenght; i++){
@@ -69,7 +74,7 @@ namespace Aura_OS.System.Compression
                     Console.ForegroundColor = ConsoleColor.White;
                 }
                 Console.WriteLine();
-                Console.WriteLine(FileName());
+                Console.WriteLine(ListFiles());
                 Console.WriteLine();
                 Console.WriteLine();
                 Console.WriteLine("zip> byte 0x" + pointer + " " + zip[pointer]);
