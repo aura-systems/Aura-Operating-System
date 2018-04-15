@@ -46,19 +46,52 @@ namespace Aura_OS.System.Compression
         {
             Byte[] zip = FileHeader();
             List<Byte> bname = new List<Byte>();
-            
+
             //detect all 80 75 3 4
             //register their positions
             //get their names
+            string signature = "";
+            int pointer = 0;
 
-            int lenght = zip[26] + zip[27]; //13 + 0 = 13
-            Console.WriteLine("zip> filename lenght: " + lenght);
-            for (int i = 30; i < 30+lenght; i++){
-                bname.Add(zip[i]);
-                pointer = i;
-                Console.WriteLine("zip> byte 0x" + pointer + " " + zip[i]);
+            foreach (Byte file in zip)
+            {
+                pointer = pointer + 1;
+
+                if (file == 80)
+                {
+                    signature = signature + 80;
+                    Console.WriteLine("stop " + pointer);
+                    Console.WriteLine("file detected!");
+                    continue;
+                }
+
+                if (file == 75)
+                {
+                    signature = signature + 75;
+                    continue;
+                }
+
+                if (file == 3)
+                {
+                    signature = signature + 3;
+                    continue;
+                }
+
+                if (file == 4)
+                {
+                    signature = signature + 4;
+                    continue;
+                }
             }
-            pointer = pointer + 1;
+
+            //int lenght = zip[26] + zip[27]; //13 + 0 = 13
+            //Console.WriteLine("zip> filename lenght: " + lenght);
+            //for (int i = 30; i < 30+lenght; i++){
+            //    bname.Add(zip[i]);
+            //    pointer = i;
+            //    Console.WriteLine("zip> byte 0x" + pointer + " " + zip[i]);
+            //}
+            //pointer = pointer + 1;
             return Encoding.ASCII.GetString(bname.ToArray());
         }
 
