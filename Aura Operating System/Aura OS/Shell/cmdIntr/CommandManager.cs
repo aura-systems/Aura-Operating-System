@@ -277,7 +277,7 @@ namespace Aura_OS.Shell.cmdIntr
 
             else if (cmd.Equals("about"))
             {
-                Util.Lspci.c_Lspci();
+                Util.About.c_About();
             }
 
             else
