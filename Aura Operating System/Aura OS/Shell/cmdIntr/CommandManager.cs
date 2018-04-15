@@ -187,6 +187,11 @@ namespace Aura_OS.Shell.cmdIntr
                 Kernel.speaker.beep();
             }
 
+            else if (cmd.Equals("play"))
+            {
+                Kernel.speaker.playmusic();
+            }
+
             //else if (cmd.StartsWith("xml "))
             //{
             //    Util.xml.CmdXmlParser.c_CmdXmlParser(cmd, 0, 4);
