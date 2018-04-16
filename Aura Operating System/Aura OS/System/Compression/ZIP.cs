@@ -53,35 +53,12 @@ namespace Aura_OS.System.Compression
             //register their positions
             //get their names
             string signature = "";
-            int pointer = 0;
+            int pointer = -4;
 
             foreach (Byte file in test)
             {
                 pointer = pointer + 1;
-
-                if (file == 80)
-                {
-                    signature = signature + 80;
-                    continue;
-                }
-
-                if (file == 75)
-                {
-                    signature = signature + 75;
-                    continue;
-                }
-
-                if (file == 3)
-                {
-                    signature = signature + 3;
-                    continue;
-                }
-
-                if (file == 4)
-                {
-                    signature = signature + 4;
-                    continue;
-                }
+                signature = signature + file;
 
                 if (signature.Contains("807534"))
                 {
