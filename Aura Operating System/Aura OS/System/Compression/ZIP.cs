@@ -8,7 +8,7 @@ namespace Aura_OS.System.Compression
     class ZIP
     {
         private string ZIPFile;
-        int pointer = -4;
+        int pointer = 0;
 
         public ZIP(string filename)
         {
@@ -42,30 +42,47 @@ namespace Aura_OS.System.Compression
             return false;
         }
 
-        private void ListFiles()
+        private string ListFiles()
         {
             Byte[] zip = FileHeader();
             List<Byte> bname = new List<Byte>();
-            List<int> files = new List<int>();
 
             //detect all 80 75 3 4
             //register their positions
             //get their names
             string signature = "";
-
-
-            for(int i = 0; i < zip.Length; i++)
+            int pointer = 0;
+            Byte[] test = new Byte[] { 0x50, 0x4b, 0x03, 0x04, 0xa, 0x0, 0x8, 0x50, 0x4b, 0x03, 0x04, 0xa, 0x0, 0x8 };
+            foreach (Byte file in test)
             {
-                signature = signature + zip[i];
-                if (signature.Contains("807534"))
+                pointer = pointer + 1;
+
+                if (file == 80)
                 {
-                    files.Add(pointer);
-                    signature = "";
+                    signature = signature + 80;
+                    Console.WriteLine("stop " + pointer);
+                    Console.WriteLine("file detected!");
+                    continue;
+                }
+
+                if (file == 75)
+                {
+                    signature = signature + 75;
+                    continue;
+                }
+
+                if (file == 3)
+                {
+                    signature = signature + 3;
+                    continue;
+                }
+
+                if (file == 4)
+                {
+                    signature = signature + 4;
                     continue;
                 }
             }
-            
-            Console.WriteLine("files detected!" + files.Count);
 
             //int lenght = zip[26] + zip[27]; //13 + 0 = 13
             //Console.WriteLine("zip> filename lenght: " + lenght);
@@ -75,6 +92,7 @@ namespace Aura_OS.System.Compression
             //    Console.WriteLine("zip> byte 0x" + pointer + " " + zip[i]);
             //}
             //pointer = pointer + 1;
+            return Encoding.ASCII.GetString(bname.ToArray());
         }
 
         public void Open()
@@ -89,7 +107,7 @@ namespace Aura_OS.System.Compression
                     Console.ForegroundColor = ConsoleColor.White;
                 }
                 Console.WriteLine();
-                ListFiles();
+                Console.WriteLine(ListFiles());
                 Console.WriteLine();
                 Console.WriteLine();
                 Console.WriteLine("zip> byte 0x" + pointer + " " + zip[pointer]);
