@@ -42,17 +42,19 @@ namespace Aura_OS.System.Compression
             return false;
         }
 
-        private string ListFiles()
+        private void ListFiles()
         {
             Byte[] zip = FileHeader();
+            Byte[] test = zip;
             List<Byte> bname = new List<Byte>();
+            List<string> signatures = new List<string>();
 
             //detect all 80 75 3 4
             //register their positions
             //get their names
             string signature = "";
             int pointer = 0;
-            Byte[] test = new Byte[] { 0x50, 0x4b, 0x03, 0x04, 0xa, 0x0, 0x8, 0x50, 0x4b, 0x03, 0x04, 0xa, 0x0, 0x8 };
+
             foreach (Byte file in test)
             {
                 pointer = pointer + 1;
@@ -60,8 +62,6 @@ namespace Aura_OS.System.Compression
                 if (file == 80)
                 {
                     signature = signature + 80;
-                    Console.WriteLine("stop " + pointer);
-                    Console.WriteLine("file detected!");
                     continue;
                 }
 
@@ -82,6 +82,17 @@ namespace Aura_OS.System.Compression
                     signature = signature + 4;
                     continue;
                 }
+
+                if (signature.Contains("807534"))
+                {
+                    signature = "";
+                    signatures.Add("1 file found > " + pointer);
+                }
+            }
+
+            foreach (string sign in signatures)
+            {
+                Console.WriteLine(sign);
             }
 
             //int lenght = zip[26] + zip[27]; //13 + 0 = 13
@@ -92,7 +103,6 @@ namespace Aura_OS.System.Compression
             //    Console.WriteLine("zip> byte 0x" + pointer + " " + zip[i]);
             //}
             //pointer = pointer + 1;
-            return Encoding.ASCII.GetString(bname.ToArray());
         }
 
         public void Open()
@@ -106,11 +116,7 @@ namespace Aura_OS.System.Compression
                     Console.WriteLine("Good version: executing zip file...");
                     Console.ForegroundColor = ConsoleColor.White;
                 }
-                Console.WriteLine();
-                Console.WriteLine(ListFiles());
-                Console.WriteLine();
-                Console.WriteLine();
-                Console.WriteLine("zip> byte 0x" + pointer + " " + zip[pointer]);
+                ListFiles();
             }
         }
     }
