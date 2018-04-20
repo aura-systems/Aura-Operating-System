@@ -60,6 +60,34 @@ namespace Aura_OS.System.Compression
             return count;
         }
 
+        public void ListFiles()
+        {
+            Byte[] zip = FileHeader();
+            List<Byte> Files = new List<Byte>();
+            int a = 0;
+            int filenamesize = 0;
+            int pointer = 0;
+
+
+            foreach (Byte file in zip)
+            {
+                if ((zip[a] == 80) && (zip[a + 1] == 75) && (((zip[a + 2] == 3) && (zip[a + 3] == 4))))
+                {
+                    filenamesize = zip[a + 26]; // 8 - 12
+                    Console.WriteLine(filenamesize);
+                    pointer = filenamesize + 30;
+                    for (int i = 30; i < pointer; i++)
+                    {
+                        Files.Add(zip[i]);
+                    }
+                    filenamesize = 0;
+                }
+                a++;
+            }
+            Console.WriteLine(Encoding.ASCII.GetString(Files.ToArray()));
+
+        }
+
         public void Open()
         {
             Byte[] zip = FileHeader();
@@ -72,6 +100,7 @@ namespace Aura_OS.System.Compression
                     Console.ForegroundColor = ConsoleColor.White;
                 }
                 Console.WriteLine("zip > There is " + Count() + " file(s) in the zip archive.");
+                ListFiles();
             }
         }
     }
