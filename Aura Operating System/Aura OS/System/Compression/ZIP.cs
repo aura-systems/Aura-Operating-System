@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Aura_OS.System.Security;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
@@ -94,6 +95,12 @@ namespace Aura_OS.System.Compression
 
         }
 
+        public uint ZipHash()
+        {
+            Byte[] zip = FileHeader();
+            return CRC_32.Crc32Algorithm.Compute(zip);
+        }
+
         public void Open()
         {
             Byte[] zip = FileHeader();
@@ -106,6 +113,8 @@ namespace Aura_OS.System.Compression
                     Console.ForegroundColor = ConsoleColor.White;
                 }
                 Console.WriteLine("zip > There is " + Count() + " file(s) in the zip archive.");
+                Console.WriteLine();
+                Console.WriteLine("zip > CRC_32= " + ZipHash().ToString());
                 Console.WriteLine();
                 ListFiles();
             }
