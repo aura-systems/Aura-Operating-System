@@ -5,6 +5,7 @@
 */
 
 using System;
+using Aura_OS.System.Shell.VBE.CosmosGLGraphics;
 using IL2CPU.API.Attribs;
 
 namespace Aura_OS.System.Shell
@@ -42,7 +43,7 @@ namespace Aura_OS.System.Shell
 
         public abstract bool CursorVisible { get; set; }
 
-        public abstract void DrawImage(ushort X, ushort Y, ushort Length, ushort height, uint[] data);
+        public abstract void DrawImage(ushort X, ushort Y, ushort Length, ushort height, Image image);
 
     }
 }

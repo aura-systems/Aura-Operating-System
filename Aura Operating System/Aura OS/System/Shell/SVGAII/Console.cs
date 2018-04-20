@@ -4,6 +4,7 @@
 * PROGRAMMERS:      Valentin Charbonnier <valentinbreiz@gmail.com>
 */
 
+using Aura_OS.System.Shell.VBE.CosmosGLGraphics;
 using System;
 
 namespace Aura_OS.System.Shell.SVGAII
@@ -95,9 +96,9 @@ namespace Aura_OS.System.Shell.SVGAII
             graphics.Update(0, 0, 800, 600);
         }
 
-        public override void DrawImage(ushort X, ushort Y, ushort Length, ushort height, uint[] data)
+        public override void DrawImage(ushort X, ushort Y, ushort Length, ushort height, Image image)
         {
-            graphics.DrawImage(X, Y, Length, height, data);
+            graphics.DrawImage(X, Y, Length, height, image);
         }
 
     }

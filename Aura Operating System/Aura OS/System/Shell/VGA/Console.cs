@@ -7,6 +7,7 @@
 
 using System;
 using System.Runtime.CompilerServices;
+using Aura_OS.System.Shell.VBE.CosmosGLGraphics;
 using Cosmos.HAL;
 
 namespace Aura_OS.System.Shell.VGA
@@ -153,7 +154,7 @@ namespace Aura_OS.System.Shell.VGA
             }
         }
 
-        public override void DrawImage(ushort X, ushort Y, ushort Length, ushort height, uint[] data)
+        public override void DrawImage(ushort X, ushort Y, ushort Length, ushort height, Image image)
         {
             throw new NotImplementedException();
         }

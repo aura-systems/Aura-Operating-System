@@ -4,6 +4,7 @@
 * PROGRAMMERS:      Valentin Charbonnier <valentinbreiz@gmail.com>
 */
 
+using Aura_OS.System.Shell.VBE.CosmosGLGraphics;
 using Cosmos.HAL.Drivers.PCI.Video;
 
 namespace Aura_OS.System.Shell.SVGAII
@@ -55,7 +56,7 @@ namespace Aura_OS.System.Shell.SVGAII
             svga.Update(0, 0, 800, 600);
         }
 
-        public void DrawImage(ushort X, ushort Y, ushort Length, ushort height, uint[] data)
+        public void DrawImage(ushort X, ushort Y, ushort Length, ushort height, Image image)
         {
             int p = 0;
             Kernel.AConsole.Y += height / 15;
@@ -64,7 +65,7 @@ namespace Aura_OS.System.Shell.SVGAII
                 for (ushort y = 0; y < height; y++)
                 {
                     if (y < (height - 2) || x != (Kernel.AConsole.Width - 2))
-                        svga.SetPixel((ushort)(X + x), (ushort)(Y + y), data[p]);
+                        svga.SetPixel((ushort)(X + x), (ushort)(Y + y), (ushort)image.GetPixel(x, y));
                     p++;
                 }
             }

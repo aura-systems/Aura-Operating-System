@@ -4,6 +4,7 @@
 * PROGRAMMERS:      Valentin Charbonnier <valentinbreiz@gmail.com>
 */
 
+using Aura_OS.System.Shell.VBE.CosmosGLGraphics;
 using System;
 
 namespace Aura_OS.System.Shell.VBE
@@ -67,7 +68,7 @@ namespace Aura_OS.System.Shell.VBE
             Canvas.Clear((uint)c);
         }
 
-        public void DrawImage(ushort X, ushort Y, ushort Length, ushort height, uint[] data)
+        public void DrawImage(ushort X, ushort Y, ushort Length, ushort height, Image image)
         {
             int p = 0;
             Kernel.AConsole.Y += height / 15;
@@ -76,7 +77,7 @@ namespace Aura_OS.System.Shell.VBE
                 for (ushort y = 0; y < height; y++)
                 {
                     if (y < (height - 2) || x != (Kernel.AConsole.Width - 2))
-                        Canvas.SetPixel((ushort)(X + x), (ushort)(Y + y), data[p]);
+                        Canvas.SetPixel((ushort)(X + x), (ushort)(Y + y), image.GetPixel(x, y));
                     p++;
                 }
             }
