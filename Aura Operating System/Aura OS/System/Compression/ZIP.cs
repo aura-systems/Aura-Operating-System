@@ -74,17 +74,24 @@ namespace Aura_OS.System.Compression
                 if ((zip[a] == 80) && (zip[a + 1] == 75) && (((zip[a + 2] == 3) && (zip[a + 3] == 4))))
                 {
                     filenamesize = zip[a + 26]; // 8 - 12
-                    Console.WriteLine(filenamesize);
+                    //Console.WriteLine(filenamesize);
                     pointer = filenamesize + 30;
                     for (int i = 30; i < pointer; i++)
                     {
-                        Files.Add(zip[i]);
+                        Files.Add(zip[a + i]);
                     }
+                    Files.Add(0x21); //separator !
                     filenamesize = 0;
                 }
                 a++;
             }
-            Console.WriteLine(Encoding.ASCII.GetString(Files.ToArray()));
+            string names = Encoding.ASCII.GetString(Files.ToArray());
+            string[] files = names.Split('!');
+
+            for (int i = 1; i < files.Length; i++)
+            {
+                Console.WriteLine("zip > [" + i + "] " + files[i]);
+            }
 
         }
 
