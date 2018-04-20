@@ -1,4 +1,4 @@
-<p align="center"><img width=60% src="https://image.noelshack.com/fichiers/2018/12/6/1521885466-aura.png"></p>
+<p align="center"><img width=60% src="http://aura-team.com/assets/img/aurabanner.png"></p>
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 [![Issues](https://img.shields.io/github/issues/aura-systems/Aura-Operating-System.svg)](https://github.com/aura-systems/Aura-Operating-System/issues)
