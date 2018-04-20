@@ -13,7 +13,7 @@ namespace Aura_OS.System
             // TO DO: Scroll console in SVGAII
             if (Cosmos.HAL.PCI.GetDevice(Cosmos.HAL.VendorID.VMWare, Cosmos.HAL.DeviceID.SVGAIIAdapter) != null)
             {
-                return "VGATextmode";
+                return "SVGAII";
             }
             else if (Cosmos.HAL.PCI.GetDevice(Cosmos.HAL.VendorID.Bochs, Cosmos.HAL.DeviceID.BGA) != null || Cosmos.HAL.PCI.GetDevice(Cosmos.HAL.VendorID.VirtualBox, Cosmos.HAL.DeviceID.VBVGA) != null)
             {

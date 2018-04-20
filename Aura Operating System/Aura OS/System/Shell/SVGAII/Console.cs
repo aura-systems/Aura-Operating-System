@@ -48,7 +48,7 @@ namespace Aura_OS.System.Shell.SVGAII
 
         public override int Height
         {
-            get { return 25; }
+            get { return 37; }
         }
 
         public override int Cols
@@ -58,7 +58,7 @@ namespace Aura_OS.System.Shell.SVGAII
 
         public override int Rows
         {
-            get { return 25; }
+            get { return 37; }
         }
 
         public static uint foreground = (byte)ConsoleColor.White;

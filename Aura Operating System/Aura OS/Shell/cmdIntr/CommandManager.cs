@@ -4,7 +4,9 @@
 * PROGRAMMER(S):    John Welsh <djlw78@gmail.com>
 */
 
+using Aura_OS.System.Utils;
 using System;
+using System.Collections.Generic;
 
 namespace Aura_OS.Shell.cmdIntr
 {

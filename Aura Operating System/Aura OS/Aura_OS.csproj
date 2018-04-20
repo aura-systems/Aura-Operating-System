@@ -9,20 +9,22 @@
     <PXE_IgnoreDebugStubAttribute>False</PXE_IgnoreDebugStubAttribute>
     <ISO_StackCorruptionDetectionLevel>MethodFooters</ISO_StackCorruptionDetectionLevel>
     <ISO_IgnoreDebugStubAttribute>False</ISO_IgnoreDebugStubAttribute>
+    <RuntimeIdentifier>cosmos</RuntimeIdentifier>
+    <SelfContained>True</SelfContained>
   </PropertyGroup>
   <PropertyGroup>
     <BinFormat>Bin</BinFormat>
-    <Profile>ISO</Profile>
+    <Profile>VMware</Profile>
     <DebugEnabled>True</DebugEnabled>
     <DebugMode>Source</DebugMode>
     <TraceMode>User</TraceMode>
     <EnableGDB>False</EnableGDB>
     <StartCosmosGDB>false</StartCosmosGDB>
-    <VMWareEdition>Player</VMWareEdition>
+    <VMWareEdition>Workstation</VMWareEdition>
     <OutputPath>bin\Debug\</OutputPath>
-    <Description>Creates a bootable ISO image which can be burned to a DVD. After running the selected project, an explorer window will open containing the ISO file. The ISO file can then be burned to a CD or DVD and used to boot a physical or virtual system.</Description>
+    <Description>Use VMware Player or Workstation to deploy and debug.</Description>
     <Deployment>ISO</Deployment>
-    <Launch>None</Launch>
+    <Launch>VMware</Launch>
     <VisualStudioDebugPort>Pipe: Cosmos\Serial</VisualStudioDebugPort>
     <PxeInterface>192.168.68.1</PxeInterface>
     <VMware_Description>Use VMware Player or Workstation to deploy and debug.</VMware_Description>
@@ -48,7 +50,7 @@
     <ISO_EnableGDB>False</ISO_EnableGDB>
     <ISO_StartCosmosGDB>false</ISO_StartCosmosGDB>
     <StackCorruptionDetectionEnabled>True</StackCorruptionDetectionEnabled>
-    <ISO_StackCorruptionDetectionEnabled>True</ISO_StackCorruptionDetectionEnabled>
+    <ISO_StackCorruptionDetectionEnabled>False</ISO_StackCorruptionDetectionEnabled>
     <VMware_StackCorruptionDetectionEnabled>True</VMware_StackCorruptionDetectionEnabled>
     <Bochs_StackCorruptionDetectionEnabled>True</Bochs_StackCorruptionDetectionEnabled>
     <Bochs_Description>Use Bochs emulator to deploy and debug.</Bochs_Description>
@@ -94,7 +96,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <DebugEnabled>False</DebugEnabled>
-    <StackCorruptionDetectionEnabled>False</StackCorruptionDetectionEnabled>
+    <StackCorruptionDetectionEnabled>True</StackCorruptionDetectionEnabled>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
