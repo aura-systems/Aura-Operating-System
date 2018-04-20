@@ -4,11 +4,6 @@
 * PROGRAMMERS:      Myvar
 */
 
-using System;
-using System.Collections.Generic;
-using System.Text;
-
-
 namespace Aura_OS.HAL.Drivers
 {
     public class VbeDriver
