@@ -128,7 +128,7 @@ namespace Aura_OS.System
                         if ((password.Length >= 6) && (password.Length <= 40))
                         {
                             //good
-                            password = MD5.hash(password);
+                            password = Sha256.hash(password);
                             FinalUsername = username;
                             FinalPassword = password;
                         }
@@ -283,7 +283,7 @@ namespace Aura_OS.System
 
             Menu.DispInstallationDialog(30);
 
-            System.Users.Users.PutUser("user:root", MD5.hash("root") + ":admin");
+            System.Users.Users.PutUser("user:root", Sha256.hash("root") + ":admin");
 
             Menu.DispInstallationDialog(40);
 
