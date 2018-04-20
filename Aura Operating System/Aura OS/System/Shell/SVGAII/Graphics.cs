@@ -103,6 +103,11 @@ namespace Aura_OS.System.Shell.SVGAII
             {
                 Kernel.AConsole.Y++;
                 Kernel.AConsole.X = -1;
+                if (Kernel.AConsole.Y == Kernel.AConsole.Rows)
+                {
+                    ScrollUp();
+                    Kernel.AConsole.Y--;
+                }
             }
             Kernel.AConsole.X++;
             if (Kernel.AConsole.X > 80)
@@ -117,5 +122,9 @@ namespace Aura_OS.System.Shell.SVGAII
             svga.Update(0, 0, 800, 600);
         }
 
+        private void ScrollUp()
+        {
+            svga.ScrollUp();
+        }
     }
 }

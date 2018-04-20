@@ -72,10 +72,10 @@ namespace Aura_OS
                 switch (Video.GetVideo())
                 {
                     case "VGATextmode":
-                        //debugger.Send("Current console: VGATextmode");
                         AConsole = new System.Shell.VGA.VGAConsole(null);
                         break;
                     case "SVGA":
+                        // TO DO ?
                         break;
                     case "SVGAII":
                         AConsole = new System.Shell.SVGAII.VMWareSVGAConsole();
@@ -84,6 +84,7 @@ namespace Aura_OS
                         AConsole = new System.Shell.VBE.VBEConsole();
                         break;
                     case "VESA":
+                        // TO DO ...
                         break;
                     default:
                         AConsole = new System.Shell.VGA.VGAConsole(null);
