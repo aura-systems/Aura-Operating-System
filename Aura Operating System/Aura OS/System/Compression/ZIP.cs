@@ -68,7 +68,6 @@ namespace Aura_OS.System.Compression
             int filenamesize = 0;
             int pointer = 0;
 
-
             foreach (Byte file in zip)
             {
                 if ((zip[a] == 80) && (zip[a + 1] == 75) && (((zip[a + 2] == 3) && (zip[a + 3] == 4))))
@@ -107,6 +106,7 @@ namespace Aura_OS.System.Compression
                     Console.ForegroundColor = ConsoleColor.White;
                 }
                 Console.WriteLine("zip > There is " + Count() + " file(s) in the zip archive.");
+                Console.WriteLine();
                 ListFiles();
             }
         }
