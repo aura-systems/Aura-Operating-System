@@ -4,13 +4,7 @@
 * PROGRAMMER(S):    John Welsh <djlw78@gmail.com>
 */
 
-using Cosmos.HAL.PCInformation;
 using System;
-using System.Collections.Generic;
-using Cosmos.HAL;
-using Cosmos.System.Network;
-using System;
-using IPv4 = Cosmos.System.Network.IPv4;
 
 namespace Aura_OS.Shell.cmdIntr
 {
@@ -208,6 +202,10 @@ namespace Aura_OS.Shell.cmdIntr
             else if (cmd.StartsWith("md5"))
             {
                 Tools.MD5.c_MD5(cmd);
+            }
+            else if (cmd.StartsWith("sha256"))
+            {
+                Tools.SHA256.c_SHA256(cmd);
             }
 
             #endregion

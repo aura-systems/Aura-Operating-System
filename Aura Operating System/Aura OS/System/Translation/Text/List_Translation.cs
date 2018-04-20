@@ -49,6 +49,7 @@ namespace Aura_OS.System.Translation
                     Console.WriteLine("- ipconfig (affiche les informations réseau)");
                     Console.WriteLine("- snake (lance le jeu Snake)");
                     Console.WriteLine("- md5 (affiche le hash des arguments)");
+                    Console.WriteLine("- sha256 (affiche le hash des arguments)");
                     Console.WriteLine("- crash (crash Aura)");
                     Console.WriteLine("- crashcpu (crash CPU)");
                     Console.WriteLine("- lspci (liste les appareils pci)");
@@ -88,6 +89,7 @@ namespace Aura_OS.System.Translation
                     Console.WriteLine("- ipconfig (to get network information)");
                     Console.WriteLine("- snake (launch the game Snake)");
                     Console.WriteLine("- md5 (to display hash of arguments)");
+                    Console.WriteLine("- sha256 (to display hash of arguments)");
                     Console.WriteLine("- crash (crash Aura)");
                     Console.WriteLine("- crashcpu (crash CPU)");
                     Console.WriteLine("- lspci (list pci devices)");
@@ -127,6 +129,7 @@ namespace Aura_OS.System.Translation
                     Console.WriteLine("- ipconfig (om netwerk informatie te verkrijgen)");
                     Console.WriteLine("- snake (start het spel Snake)");
                     Console.WriteLine("- md5 (om de hash van argumenten weer te geven)");
+                    Console.WriteLine("- sha256 (om de hash van argumenten weer te geven)");
                     Console.WriteLine("- crash (crasht Aura)");
                     Console.WriteLine("- crashcpu (crasht CPU)");
                     Console.WriteLine("- lspci (lijst pci-apparaten)");

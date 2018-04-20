@@ -224,6 +224,9 @@ namespace Aura_OS.System.Translation
                         case "md5":
                             Console.WriteLine("Voici le résultat en MD5.");
                             break;
+                        case "SHA256":
+                            Console.WriteLine("Voici le résultat en SHA256.");
+                            break;
                         case "user:existalready":
                             Console.WriteLine($"{arg} existe déjà !");
                             break;
@@ -448,6 +451,9 @@ namespace Aura_OS.System.Translation
                         case "md5":
                             Console.WriteLine("This is the result in MD5.");
                             break;
+                        case "SHA256":
+                            Console.WriteLine("This is the result in SHA256.");
+                            break;
                         case "user:existalready":
                             Console.WriteLine($"{arg} exist already !");
                             break;
@@ -671,6 +677,9 @@ namespace Aura_OS.System.Translation
                             break;
                         case "md5":
                             Console.WriteLine("Dit is het resultaat in MD5.");
+                            break;
+                        case "SHA256":
+                            Console.WriteLine("Dit is het resultaat in SHA256.");
                             break;
                         case "user:existalready":
                             Console.WriteLine($"{arg} bestaat al !");
