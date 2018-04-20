@@ -5,6 +5,7 @@
 */
 
 using Aura_OS.Core;
+using Aura_OS.HAL.Drivers;
 
 namespace Aura_OS.System.Shell.VBE
 {
