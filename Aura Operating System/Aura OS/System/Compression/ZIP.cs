@@ -45,26 +45,15 @@ namespace Aura_OS.System.Compression
         private void ListFiles()
         {
             Byte[] zip = FileHeader();
-            List<string> signatures = new List<string>();
-
-            string signature = "";
-            int pointer = -4;
-
+            List<string> signatures = new List<string>();            
+            int a = 0;
             foreach (Byte file in zip)
             {
-                pointer = pointer + 1;
-                signature = signature + file;
-
-                if (signature.Contains("807534"))
+                if ((zip[a] == 80) && (zip[a + 1] == 75) && (((zip[a + 2] == 3) && (zip[a + 3] == 4))))
                 {
-                    signature = "";
-                    signatures.Add("1 file found > " + pointer);
+                    Console.WriteLine("1 file found FOREACH > " + a);
                 }
-            }
-
-            foreach (string sign in signatures)
-            {
-                Console.WriteLine(sign);
+                a++;
             }
         }
 
