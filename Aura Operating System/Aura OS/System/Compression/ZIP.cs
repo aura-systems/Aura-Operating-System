@@ -32,15 +32,15 @@ namespace Aura_OS.System.Compression
             return false;
         }
 
-        private bool IsVersion()
-        {
-            Byte[] zip = FileHeader();
-            if ((zip[4] == 10) && (zip[5] == 00))
-            {
-                return true;
-            }
-            return false;
-        }
+        //private bool IsVersion()
+        //{
+        //    Byte[] zip = FileHeader();
+        //    if ((zip[4] == 10) && (zip[5] == 00))
+        //    {
+        //        return true;
+        //    }
+        //    return false;
+        //}
 
         public int Count()
         {
@@ -60,10 +60,11 @@ namespace Aura_OS.System.Compression
             return count;
         }
 
-        public void ListFiles()
+        public List<string> ListFiles()
         {
             Byte[] zip = FileHeader();
             List<Byte> Files = new List<Byte>();
+            List<string> Names = new List<string>();
             int a = 0;
             int filenamesize = 0;
             int pointer = 0;
@@ -89,8 +90,11 @@ namespace Aura_OS.System.Compression
 
             for (int i = 0; i < files.Length - 1; i++)
             {
-                Console.WriteLine("zip > [" + i + "] " + files[i]);
+                Names.Add(files[i]);
+                //Console.WriteLine("zip > [" + i + "] " + files[i]);
             }
+
+            return Names;
 
         }
 
@@ -109,17 +113,17 @@ namespace Aura_OS.System.Compression
             Byte[] zip = FileHeader();
             if (IsZIPFile()) //if it's a zip file
             {
-                if (IsVersion()) //if the zip file is supported
-                {
-                    Console.ForegroundColor = ConsoleColor.Green;                    
-                    Console.WriteLine("Good version: executing zip file...");
-                    Console.ForegroundColor = ConsoleColor.White;
-                }
+                //if (IsVersion()) //if the zip file is supported
+                //{
+                //    Console.ForegroundColor = ConsoleColor.Green;                    
+                //    Console.WriteLine("Good version: executing zip file...");
+                //    Console.ForegroundColor = ConsoleColor.White;
+                //}
                 Console.WriteLine("zip > There is " + Count() + " file(s) in the zip archive.");
                 Console.WriteLine();
                 //Console.WriteLine("zip > CRC_32= " + ZipHash().ToString());
                 Console.WriteLine();
-                ListFiles();
+                //ListFiles();
             }
         }
     }
