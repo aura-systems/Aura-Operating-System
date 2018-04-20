@@ -74,6 +74,7 @@ namespace Aura_OS.System.Compression
                 if ((zip[a] == 80) && (zip[a + 1] == 75) && (((zip[a + 2] == 3) && (zip[a + 3] == 4))))
                 {
                     filenamesize = zip[a + 26]; // 8 - 12
+                    //filenamesize = filenamesize + zip[a + 27]; //2 bytes
                     //Console.WriteLine(filenamesize);
                     pointer = filenamesize + 30;
                     for (int i = 30; i < pointer; i++)
@@ -95,7 +96,6 @@ namespace Aura_OS.System.Compression
             }
 
             return Names;
-
         }
 
         private uint ZipHash(Byte[] file)
@@ -108,22 +108,47 @@ namespace Aura_OS.System.Compression
             throw new NotImplementedException();
         }
 
+        private int FileNameLenght()
+        {
+            Byte[] zip = FileHeader();
+            int a = 0;
+            int filenamesize = 0;
+            filenamesize = zip[a + 26]; // 8 - 12
+            filenamesize = filenamesize + zip[a + 27]; //2 bytes
+            Console.WriteLine(filenamesize);
+            return filenamesize;
+        }
+
+        private int ExtraFieldLenght(int pointer)
+        {
+            Byte[] zip = FileHeader();
+            int extrafield = 0;
+            extrafield = zip[pointer + 28];
+            extrafield = extrafield + zip[pointer + 29];
+            Console.WriteLine(extrafield);
+            return extrafield;
+        }
+
+        private Byte[] CompressedFiles()
+        {
+            Byte[] zip = FileHeader();
+
+            return null;
+
+        }
+
         public void Open()
         {
             Byte[] zip = FileHeader();
             if (IsZIPFile()) //if it's a zip file
             {
-                //if (IsVersion()) //if the zip file is supported
-                //{
-                //    Console.ForegroundColor = ConsoleColor.Green;                    
-                //    Console.WriteLine("Good version: executing zip file...");
-                //    Console.ForegroundColor = ConsoleColor.White;
-                //}
                 Console.WriteLine("zip > There is " + Count() + " file(s) in the zip archive.");
                 Console.WriteLine();
                 //Console.WriteLine("zip > CRC_32= " + ZipHash().ToString());
                 Console.WriteLine();
                 //ListFiles();
+                FileNameLenght();
+                ExtraFieldLenght(FileNameLenght() + 31);
             }
         }
     }
