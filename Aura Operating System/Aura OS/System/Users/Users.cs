@@ -56,7 +56,7 @@ namespace Aura_OS.System.Users
         {
             try
             {
-                password = MD5.hash(password);
+                password = Sha256.hash(password);
                 LoadUsers();
                 if (GetUser("user").StartsWith(username))
                 {
@@ -169,7 +169,7 @@ namespace Aura_OS.System.Users
             }
             if (exists)
             {
-                password = MD5.hash(password);
+                password = Sha256.hash(password);
 
                 usersfile[index] = "user:" + username + ":" + password + "|" + Kernel.userLevelLogged;
 

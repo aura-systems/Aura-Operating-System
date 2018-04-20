@@ -25,7 +25,7 @@ namespace Aura_OS.System.Users
             int middle = text.IndexOf("//////");
             string user = text.Remove(middle, text.Length - middle);
             string pass = text.Remove(0, middle + 6);
-            string md5psw = MD5.hash(pass);
+            string Sha256psw = Sha256.hash(pass);
             string type;
 
             Users.LoadUsers();
@@ -39,7 +39,7 @@ namespace Aura_OS.System.Users
                 type = UserLevel.StandardUser();
             }
 
-            if (Users.GetUser("user:" + user).Contains(md5psw))
+            if (Users.GetUser("user:" + user).Contains(Sha256psw))
             {
                 Start(user);
             }
