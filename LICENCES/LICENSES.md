@@ -8,3 +8,6 @@ Open source project used in Aura Operating System:
 
 ### MD5
 - License file: [LICENSE.MD](https://github.com/aura-systems/Aura-Operating-System/blob/master/LICENCES/MD5/LICENSE.md)
+
+### SHA256
+- License file: [LICENSE.MD](https://github.com/aura-systems/Aura-Operating-System/blob/master/LICENCES/SHA256/LICENSE.md)
