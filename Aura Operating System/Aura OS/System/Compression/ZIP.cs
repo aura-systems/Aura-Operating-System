@@ -117,7 +117,7 @@ namespace Aura_OS.System.Compression
                 }
                 Console.WriteLine("zip > There is " + Count() + " file(s) in the zip archive.");
                 Console.WriteLine();
-                Console.WriteLine("zip > CRC_32= " + ZipHash().ToString());
+                //Console.WriteLine("zip > CRC_32= " + ZipHash().ToString());
                 Console.WriteLine();
                 ListFiles();
             }
