@@ -9,7 +9,6 @@ namespace Aura_OS.System.Compression
     class ZIP
     {
         private string ZIPFile;
-        int pointer = 0;
 
         public ZIP(string filename)
         {
@@ -95,10 +94,14 @@ namespace Aura_OS.System.Compression
 
         }
 
-        public uint ZipHash()
+        private uint ZipHash(Byte[] file)
         {
-            Byte[] zip = FileHeader();
-            return CRC_32.Crc32Algorithm.Compute(zip);
+            return CRC_32.Crc32Algorithm.Compute(file);
+        }
+
+        public bool Integrity()
+        {
+            throw new NotImplementedException();
         }
 
         public void Open()
