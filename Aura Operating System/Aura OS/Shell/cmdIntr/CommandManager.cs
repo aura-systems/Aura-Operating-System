@@ -9,6 +9,10 @@ using Cosmos.HAL.PCInformation;
 using Cosmos.System.Graphics;
 using System;
 using System.Collections.Generic;
+using Cosmos.HAL;
+using Cosmos.System.Network;
+using System;
+using IPv4 = Cosmos.System.Network.IPv4;
 
 namespace Aura_OS.Shell.cmdIntr
 {
@@ -236,11 +240,16 @@ namespace Aura_OS.Shell.cmdIntr
                 Kernel.speaker.beep();
             }
 
-            else if (cmd.Equals("textmode"))
+            else if (cmd.Equals("textmode")) //TODO
             {
-                System.Shell.VBE.Graphics graphics = new System.Shell.VBE.Graphics();
-                graphics.Disable();
-                VGAScreen.SetTextMode(VGAScreen.TextSize.Size80x25);
+                //System.Shell.VBE.Graphics graphics = new System.Shell.VBE.Graphics();
+                //graphics.Disable();
+                //VGAScreen.SetTextMode(VGAScreen.TextSize.Size80x25);
+            }
+          
+            else if (cmd.Equals("play"))
+            {
+                Kernel.speaker.playmusic();
             }
 
             //else if (cmd.StartsWith("xml "))
@@ -301,6 +310,5 @@ namespace Aura_OS.Shell.cmdIntr
 
         }
 
-        
     }
 }

@@ -109,11 +109,8 @@
     <Reference Include="IL2CPU.API">
       <HintPath>..\..\..\..\..\AppData\Roaming\Cosmos User Kit\Build\IL2CPU\IL2CPU.API.dll</HintPath>
     </Reference>
-  <Reference Include="XSharp.Assembler">
+    <Reference Include="XSharp.Assembler">
       <HintPath>..\..\..\..\..\AppData\Roaming\Cosmos User Kit\Build\IL2CPU\XSharp.Assembler.dll</HintPath>
     </Reference>
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="System\Shell\SVGAII\" />
   </ItemGroup>
 </Project>

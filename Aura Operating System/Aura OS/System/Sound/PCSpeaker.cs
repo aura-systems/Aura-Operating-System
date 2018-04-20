@@ -4,6 +4,10 @@
 * PROGRAMMER(S):    Valentin Charbonnier <valentinbreiz@gmail.com>
 *                   https://wiki.osdev.org/Sound
 *                   https://github.com/ApolloHub/AIC-Framework for notes.
+*                   
+*                   https://www.flutetunes.com/tuner/ to find notes from frequency
+*                   http://www.szynalski.com/tone-generator/ to find frequency from notes
+*                   http://www.bpm-calculator.com to find ms from bpm
 */
 
 using Cosmos.Core;
@@ -68,6 +72,114 @@ namespace Aura_OS.System.Sound
             nosound();
         }
 
+        public void playmusic()
+        {
+
+            // 432ms = 139bpm Lost Woods original rhythm
+            play(Notes.F5, 432);
+            play(Notes.A5, 432);
+            play(Notes.B5, 432);
+            play(Notes.F5, 432);
+            play(Notes.A5, 432);
+            play(Notes.B5, 432);
+
+            play(Notes.F5, 432);
+            play(Notes.A5, 432);
+            play(Notes.B5, 432);
+            play(Notes.E6, 432);
+            play(Notes.D6, 432);
+            play(Notes.B5, 432);
+            play(Notes.C6, 432);
+
+            play(Notes.B5, 432);
+            play(Notes.G5, 432);
+            play(Notes.E5, 432);
+            play(Notes.D5, 432);
+            play(Notes.E5, 432);
+            play(Notes.G5, 432);
+            play(Notes.E5, 432);
+
+            play(Notes.F5, 432);
+            play(Notes.A5, 432);
+            play(Notes.B5, 432);
+            play(Notes.F5, 432);
+            play(Notes.A5, 432);
+            play(Notes.B5, 432);
+
+            play(Notes.F5, 432);
+            play(Notes.A5, 432);
+            play(Notes.B5, 432);
+            play(Notes.E6, 432);
+            play(Notes.D6, 432);
+            play(Notes.B5, 432);
+            play(Notes.C6, 432);
+            play(Notes.E6, 432);
+            play(Notes.B5, 432);
+            play(Notes.G5, 432);
+            play(Notes.B5, 432);
+
+            play(Notes.G5, 432);
+            play(Notes.D5, 432);
+            play(Notes.E5, 432);
+            play(Notes.D5, 432);
+            play(Notes.E5, 432);
+            play(Notes.F5, 432);
+            play(Notes.G5, 432);
+            play(Notes.A5, 432);
+            play(Notes.B5, 432);
+
+            play(Notes.C6, 432);
+            play(Notes.B5, 432);
+            play(Notes.E5, 432);
+            play(Notes.D5, 432);
+            play(Notes.E5, 432);
+            play(Notes.F5, 432);
+            play(Notes.G5, 432);
+            play(Notes.A5, 432);
+            play(Notes.B5, 432);
+
+            play(Notes.C6, 432);
+            play(Notes.D6, 432);
+            play(Notes.E6, 432);
+            play(Notes.D5, 432);
+            play(Notes.E5, 432);
+            play(Notes.F5, 432);
+            play(Notes.G5, 432);
+            play(Notes.A5, 432);
+            play(Notes.B5, 432);
+
+            play(Notes.C6, 432);
+            play(Notes.B5, 432);
+            play(Notes.E5, 432);
+            play(Notes.D5, 432);
+            play(Notes.C6, 432);
+            play(Notes.F5, 432);
+            play(Notes.E5, 432);
+            play(Notes.G5, 432);
+            play(Notes.F5, 432);
+            play(Notes.A5, 432);
+            play(Notes.G5, 432);
+
+            play(Notes.B5, 432);
+            play(Notes.A5, 432);
+            play(Notes.C6, 432);
+            play(Notes.B5, 432);
+            play(Notes.D6, 432);
+            play(Notes.C6, 432);
+            play(Notes.E6, 432);
+            play(Notes.F6, 432);
+            play(Notes.D6, 432);
+            play(Notes.E6, 432);
+            
+        }
+
+        public void play(uint note, uint time)
+        {
+            play_sound(note);
+            pit.Wait(time);
+            nosound();
+        }
+
         public struct Notes
         {
             public static uint A0 = 28; // Exactly 27.500
@@ -125,6 +237,32 @@ namespace Aura_OS.System.Sound
             public static uint A4 = 440; // Exactly 440.000hz | Concert Pitch
             public static uint AS4 = 466;
             public static uint B4 = 494;
+
+            public static uint C5 = 523;
+            public static uint CS5 = 554;
+            public static uint D5 = 587;
+            public static uint DS5 = 622;
+            public static uint E5 = 659;
+            public static uint F5 = 698;
+            public static uint FS5 = 739;
+            public static uint G5 = 783;
+            public static uint GS5 = 830;
+            public static uint A5 = 880; // Exactly 880.000hz
+            public static uint AS5 = 932;
+            public static uint B5 = 987;
+
+            public static uint C6 = 1046;
+            public static uint CS6 = 1108;
+            public static uint D6 = 1174;
+            public static uint DS6 = 1244;
+            public static uint E6 = 1318;
+            public static uint F6 = 1396;
+            public static uint FS6 = 1479;
+            public static uint G6 = 1567;
+            public static uint GS6 = 1661;
+            public static uint A6 = 1760; // Exactly 1760.000hz
+            public static uint AS6 = 1864;
+            public static uint B6 = 1975;
         }
     }
 }
