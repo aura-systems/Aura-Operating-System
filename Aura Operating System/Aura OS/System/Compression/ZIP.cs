@@ -88,7 +88,7 @@ namespace Aura_OS.System.Compression
             string names = Encoding.ASCII.GetString(Files.ToArray());
             string[] files = names.Split('!');
 
-            for (int i = 1; i < files.Length; i++)
+            for (int i = 0; i < files.Length - 1; i++)
             {
                 Console.WriteLine("zip > [" + i + "] " + files[i]);
             }
