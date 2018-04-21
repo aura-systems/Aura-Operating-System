@@ -325,7 +325,7 @@ namespace Aura_OS.System.Translation
                     Console.WriteLine("Data e ora:                      " + Time.MonthString() + "/" + Time.DayString() + "/" + Time.YearString() + ", " + Time.TimeString(true, true, true));
                     if (Kernel.SystemExists)
                     {
-                        Console.WriteLine("Data Installazione Sistema:  " + Utils.Settings.GetValue("setuptime"));
+                        Console.WriteLine("Data Installazione Sistema:      " + Utils.Settings.GetValue("setuptime"));
                     }
                     Console.WriteLine("System Boot Time:                " + Kernel.boottime);
                     Console.WriteLine("Dimensione Ram:                  " + Cosmos.Core.CPU.GetAmountOfRAM() + "MB");
