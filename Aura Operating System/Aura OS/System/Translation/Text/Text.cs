@@ -771,7 +771,7 @@ namespace Aura_OS.System.Translation
                             Console.WriteLine("Scegli la tua lingua:");
                             break;
                         case "chooseyourusername":
-                            Console.WriteLine("Scegli un nome utente per il tuo account Aurora:");
+                            Console.WriteLine("Scegli un nome utente per il tuo account Aura:");
                             break;
                         case "alreadyuser":
                             Console.WriteLine("Questo utente esiste già!");
@@ -1049,7 +1049,7 @@ namespace Aura_OS.System.Translation
                     switch (ToTranslate)
                     {
                         case "setup":
-                            string text = Drawable.Menu.DispLoginForm("Creazione account Aurora.");
+                            string text = Drawable.Menu.DispLoginForm("Creazione account Aura.");
                             return text;
                         case "alreadyuser":
                             Drawable.Menu.DispErrorDialog("Questo utente esiste già!");
