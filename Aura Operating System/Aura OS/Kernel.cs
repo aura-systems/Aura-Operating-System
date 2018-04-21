@@ -47,7 +47,7 @@ namespace Aura_OS
         public static HAL.PCSpeaker speaker = new HAL.PCSpeaker();
         public static string boottime = Time.MonthString() + "/" + Time.DayString() + "/" + Time.YearString() + ", " + Time.TimeString(true, true, true);
         public static System.Shell.Console AConsole;
-        public static string Consolemode;
+        public static string Consolemode = "VGATextmode";
 
         #endregion
 
@@ -69,27 +69,7 @@ namespace Aura_OS
             {
                 Shell.cmdIntr.CommandManager.RegisterAllCommands();
 
-                switch (Video.GetVideo())
-                {
-                    case "VGATextmode":
-                        AConsole = new System.Shell.VGA.VGAConsole(null);
-                        break;
-                    case "SVGA":
-                        // TO DO ?
-                        break;
-                    case "SVGAII":
-                        AConsole = new System.Shell.SVGAII.VMWareSVGAConsole();
-                        break;
-                    case "VBE":
-                        AConsole = new System.Shell.VBE.VBEConsole();
-                        break;
-                    case "VESA":
-                        // TO DO ...
-                        break;
-                    default:
-                        AConsole = new System.Shell.VGA.VGAConsole(null);
-                        break;
-                }
+                AConsole = new System.Shell.VGA.VGAConsole(null);
 
                 Console.Clear();
                 Encoding.RegisterProvider(CosmosEncodingProvider.Instance);
