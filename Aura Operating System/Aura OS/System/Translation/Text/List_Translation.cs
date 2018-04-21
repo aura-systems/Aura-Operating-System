@@ -334,7 +334,7 @@ namespace Aura_OS.System.Translation
                     foreach (Processor processor in Computer.CPUInfo.Processors)
                     {
                         Console.WriteLine("[" + h + "] : " + processor.GetBrandName() + (int)processor.Frequency + " Mhz");
-                        j++;
+                        h++;
                     }
                     Computer.CPUInfo.Processors.Clear();
                     break;
