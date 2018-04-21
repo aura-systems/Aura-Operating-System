@@ -316,6 +316,28 @@ namespace Aura_OS.System.Translation
                     Computer.CPUInfo.Processors.Clear();
                     Console.WriteLine("Consolewijze:              " + Kernel.AConsole.Name);
                     break;
+
+                case "it_IT":
+                    Console.WriteLine("Nome del computer:               " + Kernel.ComputerName);
+                    Console.WriteLine("Nome del sistema operativo:      Aura");
+                    Console.WriteLine("Versione del sistema operativo:  " + Kernel.version);
+                    Console.WriteLine("Revisione del sistema operativo: " + Kernel.revision);
+                    Console.WriteLine("Data e ora:                      " + Time.MonthString() + "/" + Time.DayString() + "/" + Time.YearString() + ", " + Time.TimeString(true, true, true));
+                    if (Kernel.SystemExists)
+                    {
+                        Console.WriteLine("Data Installazione Sistema:  " + Utils.Settings.GetValue("setuptime"));
+                    }
+                    Console.WriteLine("System Boot Time:                " + Kernel.boottime);
+                    Console.WriteLine("Dimensione Ram:                  " + Cosmos.Core.CPU.GetAmountOfRAM() + "MB");
+                    Console.WriteLine("Processor(s):                    " + Computer.Info.GetNumberOfCPU() + " installed processor(s).");
+                    int h = 1;
+                    foreach (Processor processor in Computer.CPUInfo.Processors)
+                    {
+                        Console.WriteLine("[" + h + "] : " + processor.GetBrandName() + (int)processor.Frequency + " Mhz");
+                        j++;
+                    }
+                    Computer.CPUInfo.Processors.Clear();
+                    break;
             }
         }
 
@@ -358,30 +380,19 @@ namespace Aura_OS.System.Translation
                     Console.WriteLine("Dank ook aan de Cosmos donateurs.");
                     Console.WriteLine("https://github.com/aura-systems/Aura-Operating-System");
                     break;
-                    
+
                 case "it_IT":
-                    Console.WriteLine("Nome del computer:               " + Kernel.ComputerName);
-                    Console.WriteLine("Nome del sistema operativo:      Aura");
-                    Console.WriteLine("Versione del sistema operativo:  " + Kernel.version);
-                    Console.WriteLine("Revisione del sistema operativo: " + Kernel.revision);
-                    Console.WriteLine("Data e ora:                      " + Time.MonthString() + "/" + Time.DayString() + "/" + Time.YearString() + ", " + Time.TimeString(true, true, true));
-                    if (Kernel.SystemExists)
-                    {
-                        Console.WriteLine("Data Installazione Sistema:  " + Utils.Settings.GetValue("setuptime"));
-                    }
-                    Console.WriteLine("System Boot Time:                " + Kernel.boottime);
-                    Console.WriteLine("Dimensione Ram:                  " + Cosmos.Core.CPU.GetAmountOfRAM() + "MB");
-                    Console.WriteLine("Processor(s):                    " + Computer.Info.GetNumberOfCPU() + " installed processor(s).");
-                    int j = 1;
-                    foreach (Processor processor in Computer.CPUInfo.Processors)
-                    {
-                        Console.WriteLine("[" + j + "] : " + processor.GetBrandName() + (int)processor.Frequency + " Mhz");
-                        j++;
-                    }
-                    Computer.CPUInfo.Processors.Clear();
+                    Console.WriteLine("Informazioni su Aura OS:");
+                    Console.WriteLine("Aura Team creato da Valentin CHARBONNIER e Alexy DA CRUZ.");
+                    Console.WriteLine();
+                    Console.WriteLine("Collaboratori:");
+                    Console.WriteLine("- djlw78");
+                    Console.WriteLine("- Og-Rok");
+                    Console.WriteLine();
+                    Console.WriteLine("Grazie anche ai collaboratori di Cosmos.");
+                    Console.WriteLine("https://github.com/aura-systems/Aura-Operating-System");
                     break;
 
-                    
             }
         }
 
