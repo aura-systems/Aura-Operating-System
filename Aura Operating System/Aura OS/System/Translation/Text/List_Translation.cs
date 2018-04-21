@@ -237,6 +237,7 @@ namespace Aura_OS.System.Translation
                     Console.WriteLine("- passuser {user} {pass} (per cambiare la password)");
                     Console.WriteLine("- setcomputername (per cambiare il nome del computer)");
                     Console.WriteLine("- setlang {lang} (per cambiare la lingua di sistema)");
+                    break;
             }
         }
 

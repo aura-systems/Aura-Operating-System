@@ -99,7 +99,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <DebugEnabled>False</DebugEnabled>
-    <StackCorruptionDetectionEnabled>True</StackCorruptionDetectionEnabled>
+    <StackCorruptionDetectionEnabled>False</StackCorruptionDetectionEnabled>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
