@@ -131,7 +131,7 @@ namespace Aura_OS.System.Shell.VBE
             }
         }
 
-        private void ScrollUp()
+        public void ScrollUp()
         {
             Canvas.ScrollUp();
         }

@@ -13,6 +13,10 @@ namespace Aura_OS.System.Shell.VBE
     {
 
         Graphics graphics;
+        private const byte LineFeed = (byte)'\n';
+        private const byte CarriageReturn = (byte)'\r';
+        private const byte Tab = (byte)'\t';
+        private const byte Space = (byte)' ';
 
         public VBEConsole()
         {
@@ -91,9 +95,50 @@ namespace Aura_OS.System.Shell.VBE
         {
             foreach (byte ch in aText)
             {
-                graphics.WriteByte(ch);
+                switch (ch)
+                {
+                    case LineFeed:
+                        DoLineFeed();
+                        break;
+
+                    case CarriageReturn:
+                        DoCarriageReturn();
+                        break;
+
+                    case Tab:
+                        DoTab();
+                        break;
+
+                    default:
+                        graphics.WriteByte(ch);
+                        break;
+                }
             }
             graphics.Canvas.WriteToScreen();
+        }
+
+        private void DoTab()
+        {
+            graphics.WriteByte(Space);
+            graphics.WriteByte(Space);
+            graphics.WriteByte(Space);
+            graphics.WriteByte(Space);
+        }
+
+        private void DoLineFeed()
+        {
+            mY++;
+            mX = 0;
+            if (mY == Rows)
+            {
+                graphics.ScrollUp();
+                mY--;
+            }
+        }
+
+        private void DoCarriageReturn()
+        {
+            mX = 0;
         }
 
         public override void DrawImage(ushort X, ushort Y, ushort Length, ushort height, Image image)

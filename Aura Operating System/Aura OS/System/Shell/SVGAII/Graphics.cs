@@ -128,7 +128,7 @@ namespace Aura_OS.System.Shell.SVGAII
             svga.Update(0, 0, 800, 600);
         }
 
-        private void ScrollUp()
+        public void ScrollUp()
         {
             svga.ScrollUp();
         }

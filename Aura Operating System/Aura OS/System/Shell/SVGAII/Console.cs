@@ -13,6 +13,10 @@ namespace Aura_OS.System.Shell.SVGAII
     {
 
         Graphics graphics;
+        private const byte LineFeed = (byte)'\n';
+        private const byte CarriageReturn = (byte)'\r';
+        private const byte Tab = (byte)'\t';
+        private const byte Space = (byte)' ';
 
         public VMWareSVGAConsole()
         {
@@ -91,9 +95,50 @@ namespace Aura_OS.System.Shell.SVGAII
         {
             foreach (byte ch in aText)
             {
-                graphics.WriteByte(ch);
+                switch (ch)
+                {
+                    case LineFeed:
+                        DoLineFeed();
+                        break;
+
+                    case CarriageReturn:
+                        DoCarriageReturn();
+                        break;
+
+                    case Tab:
+                        DoTab();
+                        break;
+
+                    default:
+                        graphics.WriteByte(ch);
+                        break;
+                }
             }
             graphics.Update(0, 0, 800, 600);
+        }
+
+        private void DoTab()
+        {
+            graphics.WriteByte(Space);
+            graphics.WriteByte(Space);
+            graphics.WriteByte(Space);
+            graphics.WriteByte(Space);
+        }
+
+        private void DoLineFeed()
+        {
+            mY++;
+            mX = 0;
+            if (mY == Rows)
+            {
+                graphics.ScrollUp();
+                mY--;
+            }
+        }
+
+        private void DoCarriageReturn()
+        {
+            mX = 0;
         }
 
         public override void DrawImage(ushort X, ushort Y, ushort Length, ushort height, Image image)
