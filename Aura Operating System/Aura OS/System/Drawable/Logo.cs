@@ -54,6 +54,18 @@ namespace Aura_OS.System
  ╚═╝  ╚═╝ ╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═╝ v{ Kernel.version }
 ");
                     break;
+
+                case "it_IT":
+                    Console.ForegroundColor = ConsoleColor.White;
+                    Console.WriteLine($@"
+  █████╗ ██╗   ██╗██████╗  █████╗
+ ██╔══██╗██║   ██║██╔══██╗██╔══██╗
+ ███████║██║   ██║██████╔╝███████║ 
+ ██╔══██║██║   ██║██╔══██╗██╔══██║ 
+ ██║  ██║╚██████╔╝██║  ██║██║  ██║ creato da Aura Team
+ ╚═╝  ╚═╝ ╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═╝ v{ Kernel.version }
+");
+                    break;
             }
         }
 

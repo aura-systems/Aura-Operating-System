@@ -34,8 +34,8 @@ namespace Aura_OS.System.Drawable
                         Console.SetCursorPosition(8, 9);
                         Console.WriteLine("║ Installation in Progress...                                  ║");
                         Console.SetCursorPosition(x, y);
-
                         break;
+
                     case "fr_FR":
                         Console.SetCursorPosition(8, 8);
                         Console.WriteLine("╔══════════════════════════════════════════════════════════════╗");
@@ -52,7 +52,15 @@ namespace Aura_OS.System.Drawable
                         Console.SetCursorPosition(8, 9);
                         Console.WriteLine("║ Installatie wordt uitgevoerd...                              ║");
                         Console.SetCursorPosition(x, y);
+                        break;
 
+                    case "it_IT":
+                        Console.SetCursorPosition(8, 8);
+                        Console.WriteLine("╔══════════════════════════════════════════════════════════════╗");
+                        Console.SetCursorPosition(x, y);
+                        Console.SetCursorPosition(8, 9);
+                        Console.WriteLine("║ Installazione in corso...                                    ║");
+                        Console.SetCursorPosition(x, y);
                         break;
                 }
 
@@ -474,7 +482,7 @@ namespace Aura_OS.System.Drawable
         public static string DispLanguageDialog()
         {
             LanguageMenu();
-            string[] item = { "English: en_US", "Français: fr_FR", "Dutch: nl_NL" };
+            string[] item = { "English: en_US", "Français: fr_FR", "Dutch: nl_NL", "Italia: it_IT" };
             int language = GenericMenu(item, Langues);
             if (language == 0)
             {
@@ -487,6 +495,10 @@ namespace Aura_OS.System.Drawable
             else if (language == 2)
             {
                 return "nl_NL";
+            }
+            else if (language == 3)
+            {
+                return "it_IT";
             }
             else
             {

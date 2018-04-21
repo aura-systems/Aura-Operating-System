@@ -184,6 +184,12 @@ namespace Aura_OS.System
                 FinalLang = "nl_NL";
                 Keyboard.Init();
             }
+            else if ((language.Equals("it_IT")) || language.Equals("it-IT"))
+            {
+                Kernel.langSelected = "it_IT";
+                FinalLang = "it_IT";
+                Keyboard.Init();
+            }
             else
             {
                 RegisterLanguage();
@@ -348,6 +354,11 @@ namespace Aura_OS.System
             else if ((FinalLang.Equals("nl_NL")) || FinalLang.Equals("nl-NL"))
             {
                 Settings.PutValue("language", "nl_NL");
+                Menu.DispInstallationDialog(60);
+            }
+            else if ((FinalLang.Equals("it_IT")) || FinalLang.Equals("it-IT"))
+            {
+                Settings.PutValue("language", "it_IT");
                 Menu.DispInstallationDialog(60);
             }
 

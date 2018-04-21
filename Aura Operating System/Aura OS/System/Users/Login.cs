@@ -59,6 +59,7 @@ namespace Aura_OS.System.Users
             string title_fr = "Connexion à votre compte Aura.";
             string title_en = "Login to your Aura account.";
             string title_nl = "Log in op je Aura account.";
+            string title_it = "Accedi al tuo Aura account.";
 
             switch (Kernel.langSelected)
             {
@@ -68,6 +69,8 @@ namespace Aura_OS.System.Users
                     return title_fr;
                 case "nl_NL":
                     return title_nl;
+                case "it_IT":
+                    return title_it;
             }
 
             return title_en; //default
