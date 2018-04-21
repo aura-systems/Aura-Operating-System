@@ -4,7 +4,9 @@
 * PROGRAMMER(S):    John Welsh <djlw78@gmail.com>
 */
 
+using Aura_OS.System.Utils;
 using System;
+using System.Collections.Generic;
 
 namespace Aura_OS.Shell.cmdIntr
 {
@@ -18,6 +20,50 @@ namespace Aura_OS.Shell.cmdIntr
         /// Empty constructor. (Good for debug)
         /// </summary>
         public CommandManager() { }
+
+        public static List<String> CMDs = new List<string>();       
+
+        private static void Register(string cmd)
+        {
+            CMDs.Add(cmd);
+        }
+
+        public static void RegisterAllCommands()
+        {
+            Register("shutdown");
+            Register("rebooot");
+            Register("clear");
+            Register("echo");
+            Register("help");
+            Register("cd");
+            Register("cp");
+            Register("dir");
+            Register("ls");
+            Register("mkdir");
+            Register("rmdir");
+            Register("rmfil");
+            Register("mkfil");
+            Register("edit");
+            Register("vol");
+            Register("run");
+            Register("logout");
+            Register("passwd");
+            Register("settings");
+            Register("systeminfo");
+            Register("version");
+            Register("ipconfig");
+            Register("ifconfig");
+            Register("netconf");
+            Register("time");
+            Register("date");
+            Register("beep");
+            Register("snake");
+            Register("md5");
+            Register("export");
+            Register("lspci");
+            Register("about");
+        }
+
         /// <summary>
         /// Shell Interpreter
         /// </summary>
@@ -169,6 +215,13 @@ namespace Aura_OS.Shell.cmdIntr
                 Tests.Crash.c_Crash();
             }
 
+            else if (cmd.Equals("cmd"))
+            {
+                CMDs.Add("ipconfig");
+                CMDs.Add("netconf");
+                CMDs.Add("help");
+            }
+
             else if (cmd.Equals("crashcpu"))
             {
                 int value = 1;
@@ -180,7 +233,7 @@ namespace Aura_OS.Shell.cmdIntr
             {
                 Kernel.speaker.beep();
             }
-
+          
             else if (cmd.Equals("play"))
             {
                 Kernel.speaker.playmusic();
@@ -222,6 +275,11 @@ namespace Aura_OS.Shell.cmdIntr
                 Util.Lspci.c_Lspci();
             }
 
+            else if (cmd.Equals("about"))
+            {
+                Util.About.c_About();
+            }
+
             else
             {
                 if (cmd.Length <= 0)
@@ -234,6 +292,8 @@ namespace Aura_OS.Shell.cmdIntr
                     Util.CmdNotFound.c_CmdNotFound();
                 }                
             }
+
+            CommandsHistory.Add(cmd); //adding last command to the commands history   
 
             Console.WriteLine();
 

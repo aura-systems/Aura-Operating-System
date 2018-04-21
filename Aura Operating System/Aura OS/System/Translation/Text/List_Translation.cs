@@ -5,6 +5,7 @@
 *                   Valentin Charbonnier <valentinbreiz@gmail.com>
 */
 
+using Shell = Aura_OS.System.Shell;
 using Cosmos.HAL.PCInformation;
 using System;
 
@@ -41,8 +42,12 @@ namespace Aura_OS.System.Translation
                     Console.WriteLine("- ver (pour afficher la version système)");
                     Console.WriteLine("- settings {args} (permet d'accéder aux paramètres)");
                     Console.WriteLine("- logout (permet de se déconnecter)");
+                    
+                    if(Shell.KeyboardShortcuts.Close())
+                    {
+                        return;
+                    }
 
-                    Console.ReadKey(); //page 2
                     Console.WriteLine();
                     Console.WriteLine("Commandes disponibles (2/2):");
                     Console.WriteLine("- time (récupère la date et l'heure)");
@@ -80,8 +85,11 @@ namespace Aura_OS.System.Translation
                     Console.WriteLine("- ver (to display system version)");
                     Console.WriteLine("- settings {args} (access to settings)");
                     Console.WriteLine("- logout (to disconnect)");
-                    
-                    Console.ReadKey(); //page 2 (19 elements per page)
+
+                    if (Shell.KeyboardShortcuts.Close())
+                    {
+                        return;
+                    }
 
                     Console.WriteLine();
                     Console.WriteLine("Available commands (2/2):");
@@ -121,7 +129,11 @@ namespace Aura_OS.System.Translation
                     Console.WriteLine("- settings {argumenten} (toegang tot instellingen)");
                     Console.WriteLine("- logout (om los te koppelen)");
 
-                    Console.ReadKey(); //page 2 (19 elements per page)
+                    if (Shell.KeyboardShortcuts.Close())
+                    {
+                        return;
+                    }
+                    //page 2 (19 elements per page)
 
                     Console.WriteLine();
                     Console.WriteLine("Mogelijke commando's (2/2):");
@@ -195,6 +207,7 @@ namespace Aura_OS.System.Translation
                     Console.WriteLine("- passuser {user} {pass} (pour changer le mot de passe)");
                     Console.WriteLine("- setcomputername (pour changer le nom de l'ordinateur)");
                     Console.WriteLine("- setlang {lang} (pour changer la langue du système)");
+                    Console.WriteLine("- consolemode {mode} (pour changer le mode video de la console)");
                     break;
 
                 case "en_US":
@@ -204,6 +217,7 @@ namespace Aura_OS.System.Translation
                     Console.WriteLine("- passuser {user} {pass} (to change password)");
                     Console.WriteLine("- setcomputername (to change the computer name)");
                     Console.WriteLine("- setlang {lang} (to change the system language)");
+                    Console.WriteLine("- consolemode {mode} (to change the video mode of the console)");
                     break;
 
                 case "nl_NL":
@@ -213,6 +227,7 @@ namespace Aura_OS.System.Translation
                     Console.WriteLine("- passuser {gebruiker} {wachtwoord} (om het wachtwoord te veranderen)");
                     Console.WriteLine("- setcomputername (om de naam van de computer te veranderen)");
                     Console.WriteLine("- setlang {lang} (om de systeemtaal aan te passen)");
+                    Console.WriteLine("- consolemode {mode} (om de videomodus van de console te wijzigen)");
                     break;
                     
                 case "it_IT":
@@ -252,6 +267,7 @@ namespace Aura_OS.System.Translation
                         i++;
                     }
                     Computer.CPUInfo.Processors.Clear();
+                    Console.WriteLine("Mode de la console:            " + Kernel.AConsole.Name);
                     break;
 
                 case "en_US":
@@ -274,6 +290,7 @@ namespace Aura_OS.System.Translation
                         j++;
                     }
                     Computer.CPUInfo.Processors.Clear();
+                    Console.WriteLine("Console mode:              " + Kernel.AConsole.Name);
                     break;
 
                 case "nl_NL":
@@ -296,6 +313,49 @@ namespace Aura_OS.System.Translation
                         k++;
                     }
                     Computer.CPUInfo.Processors.Clear();
+                    Console.WriteLine("Consolewijze:              " + Kernel.AConsole.Name);
+                    break;
+            }
+        }
+
+        public static void About()
+        {
+            switch (Kernel.langSelected)
+            {
+                case "fr_FR":
+                    Console.WriteLine("À Propos d'Aura OS:");
+                    Console.WriteLine("Aura Team créé par Valentin CHARBONNIER et Alexy DA CRUZ.");
+                    Console.WriteLine();
+                    Console.WriteLine("Contributeurs:");
+                    Console.WriteLine("- djlw78");
+                    Console.WriteLine("- Og-Rok");
+                    Console.WriteLine();
+                    Console.WriteLine("Merci aussi aux contributeurs de Cosmos.");
+                    Console.WriteLine("https://github.com/aura-systems/Aura-Operating-System");
+                    break;
+
+                case "en_US":
+                    Console.WriteLine("About Aura OS:");
+                    Console.WriteLine("Aura Team created by Valentin CHARBONNIER and Alexy DA CRUZ.");
+                    Console.WriteLine();
+                    Console.WriteLine("Contributors:");
+                    Console.WriteLine("- djlw78");
+                    Console.WriteLine("- Og-Rok");
+                    Console.WriteLine();
+                    Console.WriteLine("Thanks also to the Cosmos contributors.");
+                    Console.WriteLine("https://github.com/aura-systems/Aura-Operating-System");
+                    break;
+
+                case "nl_NL":
+                    Console.WriteLine("Over Aura OS:");
+                    Console.WriteLine("Aura Team opgericht door Valentin CHARBONNIER en Alexy DA CRUZ.");
+                    Console.WriteLine();
+                    Console.WriteLine("Bijdragers:");
+                    Console.WriteLine("- djlw78");
+                    Console.WriteLine("- Og-Rok");
+                    Console.WriteLine();
+                    Console.WriteLine("Dank ook aan de Cosmos donateurs.");
+                    Console.WriteLine("https://github.com/aura-systems/Aura-Operating-System");
                     break;
                     
                 case "it_IT":

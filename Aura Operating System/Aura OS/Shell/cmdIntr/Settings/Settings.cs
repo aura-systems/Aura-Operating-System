@@ -5,7 +5,6 @@
 */
 
 using System;
-using System.IO;
 using L = Aura_OS.System.Translation;
 using Aura_OS.System.Computer;
 
@@ -53,6 +52,11 @@ namespace Aura_OS.Shell.cmdIntr.Settings
                 else if (cmdargs[1].Equals("setlang"))
                 {
                     L.Text.Display("availablelanguage");
+                }
+
+                else if (cmdargs[1].Equals("consolemode"))
+                {
+                    L.Text.Display("consolemode");
                 }
 
                 else if (cmdargs[1].Equals("remuser"))
@@ -112,6 +116,39 @@ namespace Aura_OS.Shell.cmdIntr.Settings
                     }
                 }
 
+                else if (cmdargs[1].Equals("consolemode"))
+                {
+                    if ((cmdargs[2].Equals("textmode")))
+                    {
+                        Kernel.AConsole.DisableGraphicMode();
+                        Kernel.Consolemode = "VGATextmode";
+                    }
+                    else if ((cmdargs[2].Equals("graphicmode")))
+                    {
+                        switch (System.Video.GetVideo())
+                        {
+                            case "SVGAII":
+                                Kernel.AConsole.Clear();
+                                Kernel.AConsole = new System.Shell.SVGAII.VMWareSVGAConsole();
+                                Kernel.Consolemode = "SVGAII";
+                                break;
+                            case "VBE":
+                                Kernel.AConsole.Clear();
+                                Kernel.AConsole = new System.Shell.VBE.VBEConsole();
+                                Kernel.Consolemode = "VBE";
+                                break;
+                            default:
+                                L.Text.Display("nographicmode");
+                                break;
+                        }
+                    }
+                    else
+                    {
+                        L.Text.Display("unknownmode");
+                        L.Text.Display("consolemode");
+                    }
+                }
+
                 else if (cmdargs[1].Equals("adduser"))
                 {
                     L.Text.Display("adduser");
@@ -141,6 +178,11 @@ namespace Aura_OS.Shell.cmdIntr.Settings
                 else if (cmdargs[1].Equals("setlang"))
                 {
                     L.Text.Display("availablelanguage");
+                }
+
+                else if (cmdargs[1].Equals("consolemode"))
+                {
+                    L.Text.Display("consolemode");
                 }
 
                 else if (cmdargs[1].Equals("remuser"))

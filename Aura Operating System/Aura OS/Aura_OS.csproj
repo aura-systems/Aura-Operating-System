@@ -9,11 +9,16 @@
     <PXE_IgnoreDebugStubAttribute>False</PXE_IgnoreDebugStubAttribute>
     <ISO_StackCorruptionDetectionLevel>MethodFooters</ISO_StackCorruptionDetectionLevel>
     <ISO_IgnoreDebugStubAttribute>False</ISO_IgnoreDebugStubAttribute>
+    <RuntimeIdentifier>cosmos</RuntimeIdentifier>
+    <SelfContained>True</SelfContained>
+    <Bochs_StackCorruptionDetectionLevel>MethodFooters</Bochs_StackCorruptionDetectionLevel>
+    <Bochs_Name>Aura_OSBoot</Bochs_Name>
+    <Bochs_IgnoreDebugStubAttribute>False</Bochs_IgnoreDebugStubAttribute>
   </PropertyGroup>
   <PropertyGroup>
     <BinFormat>Bin</BinFormat>
     <Profile>VMware</Profile>
-    <DebugEnabled>False</DebugEnabled>
+    <DebugEnabled>True</DebugEnabled>
     <DebugMode>Source</DebugMode>
     <TraceMode>User</TraceMode>
     <EnableGDB>False</EnableGDB>
@@ -48,7 +53,7 @@
     <ISO_EnableGDB>False</ISO_EnableGDB>
     <ISO_StartCosmosGDB>false</ISO_StartCosmosGDB>
     <StackCorruptionDetectionEnabled>True</StackCorruptionDetectionEnabled>
-    <ISO_StackCorruptionDetectionEnabled>True</ISO_StackCorruptionDetectionEnabled>
+    <ISO_StackCorruptionDetectionEnabled>False</ISO_StackCorruptionDetectionEnabled>
     <VMware_StackCorruptionDetectionEnabled>True</VMware_StackCorruptionDetectionEnabled>
     <Bochs_StackCorruptionDetectionEnabled>True</Bochs_StackCorruptionDetectionEnabled>
     <Bochs_Description>Use Bochs emulator to deploy and debug.</Bochs_Description>
@@ -93,6 +98,8 @@
     <IntelEdison_StartCosmosGDB>false</IntelEdison_StartCosmosGDB>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DebugEnabled>False</DebugEnabled>
+    <StackCorruptionDetectionEnabled>True</StackCorruptionDetectionEnabled>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>

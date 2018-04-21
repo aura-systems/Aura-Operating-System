@@ -105,6 +105,28 @@ namespace Aura_OS.System.Users
 
             Console.Clear();
 
+            switch (Video.GetVideo())
+            {
+                case "VGATextmode":
+                    Kernel.AConsole = new System.Shell.VGA.VGAConsole(null);
+                    break;
+                case "SVGA":
+                    // TO DO ?
+                    break;
+                case "SVGAII":
+                    Kernel.AConsole = new System.Shell.SVGAII.VMWareSVGAConsole();
+                    break;
+                case "VBE":
+                    Kernel.AConsole = new System.Shell.VBE.VBEConsole();
+                    break;
+                case "VESA":
+                    // TO DO ...
+                    break;
+                default:
+                    Kernel.AConsole = new System.Shell.VGA.VGAConsole(null);
+                    break;
+            }
+
             WelcomeMessage.Display();
             Text.Display("logged", username);
 

@@ -71,8 +71,20 @@ namespace Aura_OS.System.Translation
                         case "unknownlanguage":
                             Console.WriteLine("Langue inconnue.");
                             break;
+                        case "unknownmode":
+                            Console.WriteLine("Mode inconnu.");
+                            break;
+                        case "alreadyintextmode":
+                            Console.WriteLine("Vous êtes déjà en textmode!");
+                            break;
+                        case "nographicmode":
+                            Console.WriteLine("Aucun mode graphique n'est encore supporté pour votre machine.");
+                            break;
                         case "availablelanguage":
                             Console.WriteLine("Langues disponibles: en-US fr-FR nl-NL it-IT");
+                            break;
+                        case "consolemode":
+                            Console.WriteLine("Modes disponibles: textmode graphicmode");
                             break;
                         case "unknowncolor":
                             Console.WriteLine("Couleur inconnue.");
@@ -301,8 +313,20 @@ namespace Aura_OS.System.Translation
                         case "unknownlanguage":
                             Console.WriteLine("Unknown language.");
                             break;
+                        case "unknownmode":
+                            Console.WriteLine("Unknown mode.");
+                            break;
+                        case "alreadyintextmode":
+                            Console.WriteLine("You already are in textmode!");
+                            break;
+                        case "nographicmode":
+                            Console.WriteLine("No graphics mode is supported for your machine yet.");
+                            break;
                         case "availablelanguage":
                             Console.WriteLine("Available languages: en-US fr-FR nl-NL it-IT");
+                            break;
+                        case "consolemode":
+                            Console.WriteLine("Available modes: textmode graphicmode");
                             break;
                         case "unknowncolor":
                             Console.WriteLine("Unknown colour.");
@@ -528,8 +552,20 @@ namespace Aura_OS.System.Translation
                         case "unknownlanguage":
                             Console.WriteLine("Onbekende taal.");
                             break;
+                        case "unknownmode":
+                            Console.WriteLine("Onbekende modus.");
+                            break;
+                        case "alreadyintextmode":
+                            Console.WriteLine("U bent al in tekstmodus!");
+                            break;
+                        case "nographicmode":
+                            Console.WriteLine("Er wordt nog geen grafische modus ondersteund voor uw apparaat.");
+                            break;
                         case "availablelanguage":
                             Console.WriteLine("Beschikbare talen: en-US fr-FR nl-NL it-IT");
+                            break;
+                        case "consolemode":
+                            Console.WriteLine("Beschikbare modi: textmode graphicmode");
                             break;
                         case "unknowncolor":
                             Console.WriteLine("Onbekende kleur.");

@@ -18,6 +18,7 @@ using Aura_OS.System.Utils;
 using System.Collections.Generic;
 using System.Text;
 using Cosmos.System.ExtendedASCII;
+using Cosmos.Debug.Kernel;
 
 #endregion
 
@@ -43,8 +44,10 @@ namespace Aura_OS
         public static bool JustInstalled = false;
         public static CosmosVFS vFS = new CosmosVFS();
 		public static Dictionary<string, string> environmentvariables = new Dictionary<string, string>();
-        public static System.Sound.PCSpeaker speaker = new System.Sound.PCSpeaker();
+        public static HAL.PCSpeaker speaker = new HAL.PCSpeaker();
         public static string boottime = Time.MonthString() + "/" + Time.DayString() + "/" + Time.YearString() + ", " + Time.TimeString(true, true, true);
+        public static System.Shell.Console AConsole;
+        public static string Consolemode = "VGATextmode";
 
         #endregion
 
@@ -64,6 +67,10 @@ namespace Aura_OS
         {
             try
             {
+                Shell.cmdIntr.CommandManager.RegisterAllCommands();
+
+                AConsole = new System.Shell.VGA.VGAConsole(null);
+
                 Console.Clear();
                 Encoding.RegisterProvider(CosmosEncodingProvider.Instance);
                 Console.InputEncoding = Encoding.GetEncoding(437);
@@ -71,7 +78,6 @@ namespace Aura_OS
                 Console.ForegroundColor = ConsoleColor.DarkMagenta;
                 Console.Write("Booting Aura...\n");
                 Console.ForegroundColor = ConsoleColor.White;
-
                 #region Register Filesystem
                 Sys.FileSystem.VFS.VFSManager.RegisterVFS(vFS);
                 if (ContainsVolumes())
@@ -145,11 +151,14 @@ namespace Aura_OS
                 {
                     if (Logged) //If logged
                     {
-                        BeforeCommand();                  
+                        BeforeCommand();
+
+                        Sys.Console.writecommand = true;
 
                         var cmd = Console.ReadLine();
                         Shell.cmdIntr.CommandManager._CommandManger(cmd);
                         //Console.WriteLine();
+
                     }
                     else
                     {
@@ -170,7 +179,7 @@ namespace Aura_OS
         /// <summary>
         /// Display the line before the user input and set the console color.
         /// </summary>
-        private static void BeforeCommand()
+        public static void BeforeCommand()
         {
             if (current_directory == @"0:\")
             {
