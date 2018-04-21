@@ -138,6 +138,45 @@ namespace Aura_OS.System.Translation
                     Console.ReadKey();
 
                     break;
+                    case "it_IT":
+                    Console.WriteLine("Comandi disponibili (1/2):");
+                    Console.WriteLine("- shutdown (per eseguire un ACPI shutdown)");
+                    Console.WriteLine("- reboot (per riavviare la CPU)");
+                    Console.WriteLine("- clear (per pulire la console)");
+                    Console.WriteLine("- cd .. (per navigare la cartella principale)");
+                    Console.WriteLine("- cd (per accedere and una cartella)");
+                    Console.WriteLine("- dir (per elencare le cartelle ed i files)");
+                    Console.WriteLine("- ls (per elencare le cartelle ed i file)");
+                    Console.WriteLine("- cp (per copiare un file in un' altra destinazione)");
+                    Console.WriteLine("- mkdir (per creare una cartella)");
+                    Console.WriteLine("- rmdir (per eliminare una cartella))");
+                    Console.WriteLine("- mkfil (per creare un file)");
+                    Console.WriteLine("- rmfil (per eliminare un file)");
+                    Console.WriteLine("- edit (per modificare un file)");
+                    Console.WriteLine("- vol (per elencare i volumi)");
+                    Console.WriteLine("- echo (per eseguire l'echo di  un testo)");
+                    Console.WriteLine("- systeminfo (per visualizzare le informazioni di sistema)");
+                    Console.WriteLine("- ver (per visualizzare la versione del sistema)");
+                    Console.WriteLine("- settings {args} (accedi ai settaggi)");
+                    Console.WriteLine("- logout (per disconnetterti)");
+                    
+                    Console.ReadKey(); //page 2 (19 elements per page)
+
+                    Console.WriteLine();
+                    Console.WriteLine("Comandi disponibili (2/2):");
+                    Console.WriteLine("- time (per visualizzare data e ora)");
+                    Console.WriteLine("- ipconfig (per visualizzare le informazioni di rete)");
+                    Console.WriteLine("- snake (avvia il gioco Snake)");
+                    Console.WriteLine("- md5 (per visualizzare l'hash degli argomenti)");
+                    Console.WriteLine("- sha256 (per visualizzare l'hash degli argomenti)");
+                    Console.WriteLine("- crash (crash Aura)");
+                    Console.WriteLine("- crashcpu (crash CPU)");
+                    Console.WriteLine("- lspci (elenco dispositivi PCI)");
+                    Console.WriteLine("- beep (beep)");
+
+                    Console.ReadKey();
+
+                    break;
             }
         }
 
@@ -174,6 +213,13 @@ namespace Aura_OS.System.Translation
                     Console.WriteLine("- setcomputername (om de naam van de computer te veranderen)");
                     Console.WriteLine("- setlang {lang} (om de systeemtaal aan te passen)");
                     break;
+                case "it_IT":
+                    Console.WriteLine("Comandi disponibili:");
+                    Console.WriteLine("- adduser {user} {pass} (per creare un account)");
+                    Console.WriteLine("- remuser {user} (per rimuovere un account)");
+                    Console.WriteLine("- passuser {user} {pass} (per cambiare la password)");
+                    Console.WriteLine("- setcomputername (per cambiare il nome del computer)");
+                    Console.WriteLine("- setlang {lang} (per cambiare la lingua di sistema)");
             }
         }
 
@@ -249,6 +295,29 @@ namespace Aura_OS.System.Translation
                     }
                     Computer.CPUInfo.Processors.Clear();
                     break;
+                case "it_IT":
+                    Console.WriteLine("Nome del computer:             " + Kernel.ComputerName);
+                    Console.WriteLine("Nome del sistema operativo:     Aura");
+                    Console.WriteLine("Versione del sistema operativo:  " + Kernel.version);
+                    Console.WriteLine("Revisione del sistema operativo: " + Kernel.revision);
+                    Console.WriteLine("Data e ora:             " + Time.MonthString() + "/" + Time.DayString() + "/" + Time.YearString() + ", " + Time.TimeString(true, true, true));
+                    if (Kernel.SystemExists)
+                    {
+                        Console.WriteLine("Data Installazione Sistema:     " + Utils.Settings.GetValue("setuptime"));
+                    }
+                    Console.WriteLine("System Boot Time:          " + Kernel.boottime);
+                    Console.WriteLine("Dimensione Ram:             " + Cosmos.Core.CPU.GetAmountOfRAM() + "MB");
+                    Console.WriteLine("Processor(s):              " + Computer.Info.GetNumberOfCPU() + " installed processor(s).");
+                    int j = 1;
+                    foreach (Processor processor in Computer.CPUInfo.Processors)
+                    {
+                        Console.WriteLine("[" + j + "] : " + processor.GetBrandName() + (int)processor.Frequency + " Mhz");
+                        j++;
+                    }
+                    Computer.CPUInfo.Processors.Clear();
+                    break;
+
+                    
             }
         }
 
