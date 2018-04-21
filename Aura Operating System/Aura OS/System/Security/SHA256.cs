@@ -33,7 +33,19 @@ namespace Aura_OS.System.Security
         {
             var hash = new Sha256();
             hash.AddData(value, 0, (uint)value.Length);
-            return Utils.Conversion.Hex(hash.GetHash());
+            string toreturn = Utils.Conversion.Hex(hash.GetHash());
+
+            //Clear variables
+            H[0] = 0x6A09E667;
+            H[1] = 0xBB67AE85;
+            H[2] = 0x3C6EF372;
+            H[3] = 0xA54FF53A;
+            H[4] = 0x510E527F;
+            H[5] = 0x9B05688C;
+            H[6] = 0x1F83D9AB;
+            H[7] = 0x5BE0CD19;
+
+            return toreturn;
 
         }
 

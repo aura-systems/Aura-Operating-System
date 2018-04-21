@@ -33,17 +33,14 @@ namespace Aura_OS.System
 
                 case "en_US":
                     Console.ForegroundColor = ConsoleColor.White;
-
-                    Console.WriteLine();
-                    Console.WriteLine("                    Aura Operating System");
-                    Console.WriteLine("                    v" + Kernel.version);
-
-                    Image image = Image.FromBytes(System.Logo.aurappm, "ppm");
-                    Kernel.AConsole.DrawImage(0, 0, 100, 100, image);
-
-                    
-
-
+                    Console.WriteLine($@"
+  █████╗ ██╗   ██╗██████╗  █████╗
+ ██╔══██╗██║   ██║██╔══██╗██╔══██╗
+ ███████║██║   ██║██████╔╝███████║
+ ██╔══██║██║   ██║██╔══██╗██╔══██║ 
+ ██║  ██║╚██████╔╝██║  ██║██║  ██║ created by Aura Team
+ ╚═╝  ╚═╝ ╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═╝ v{ Kernel.version }
+");
                     break;
 
                 case "nl_NL":
