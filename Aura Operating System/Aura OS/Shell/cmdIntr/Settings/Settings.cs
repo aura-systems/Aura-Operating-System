@@ -121,6 +121,7 @@ namespace Aura_OS.Shell.cmdIntr.Settings
                     if ((cmdargs[2].Equals("textmode")))
                     {
                         Kernel.AConsole.DisableGraphicMode();
+                        Kernel.Consolemode = "VGATextmode";
                     }
                     else if ((cmdargs[2].Equals("graphicmode")))
                     {
@@ -129,10 +130,12 @@ namespace Aura_OS.Shell.cmdIntr.Settings
                             case "SVGAII":
                                 Kernel.AConsole.Clear();
                                 Kernel.AConsole = new System.Shell.SVGAII.VMWareSVGAConsole();
+                                Kernel.Consolemode = "SVGAII";
                                 break;
                             case "VBE":
                                 Kernel.AConsole.Clear();
                                 Kernel.AConsole = new System.Shell.VBE.VBEConsole();
+                                Kernel.Consolemode = "VBE";
                                 break;
                             default:
                                 L.Text.Display("nographicmode");
