@@ -138,6 +138,7 @@ namespace Aura_OS.System.Translation
                     Console.ReadKey();
 
                     break;
+                    
                     case "it_IT":
                     Console.WriteLine("Comandi disponibili (1/2):");
                     Console.WriteLine("- shutdown (per eseguire un ACPI shutdown)");
@@ -213,6 +214,7 @@ namespace Aura_OS.System.Translation
                     Console.WriteLine("- setcomputername (om de naam van de computer te veranderen)");
                     Console.WriteLine("- setlang {lang} (om de systeemtaal aan te passen)");
                     break;
+                    
                 case "it_IT":
                     Console.WriteLine("Comandi disponibili:");
                     Console.WriteLine("- adduser {user} {pass} (per creare un account)");
@@ -295,19 +297,20 @@ namespace Aura_OS.System.Translation
                     }
                     Computer.CPUInfo.Processors.Clear();
                     break;
+                    
                 case "it_IT":
-                    Console.WriteLine("Nome del computer:             " + Kernel.ComputerName);
-                    Console.WriteLine("Nome del sistema operativo:     Aura");
+                    Console.WriteLine("Nome del computer:               " + Kernel.ComputerName);
+                    Console.WriteLine("Nome del sistema operativo:      Aura");
                     Console.WriteLine("Versione del sistema operativo:  " + Kernel.version);
                     Console.WriteLine("Revisione del sistema operativo: " + Kernel.revision);
-                    Console.WriteLine("Data e ora:             " + Time.MonthString() + "/" + Time.DayString() + "/" + Time.YearString() + ", " + Time.TimeString(true, true, true));
+                    Console.WriteLine("Data e ora:                      " + Time.MonthString() + "/" + Time.DayString() + "/" + Time.YearString() + ", " + Time.TimeString(true, true, true));
                     if (Kernel.SystemExists)
                     {
-                        Console.WriteLine("Data Installazione Sistema:     " + Utils.Settings.GetValue("setuptime"));
+                        Console.WriteLine("Data Installazione Sistema:  " + Utils.Settings.GetValue("setuptime"));
                     }
-                    Console.WriteLine("System Boot Time:          " + Kernel.boottime);
-                    Console.WriteLine("Dimensione Ram:             " + Cosmos.Core.CPU.GetAmountOfRAM() + "MB");
-                    Console.WriteLine("Processor(s):              " + Computer.Info.GetNumberOfCPU() + " installed processor(s).");
+                    Console.WriteLine("System Boot Time:                " + Kernel.boottime);
+                    Console.WriteLine("Dimensione Ram:                  " + Cosmos.Core.CPU.GetAmountOfRAM() + "MB");
+                    Console.WriteLine("Processor(s):                    " + Computer.Info.GetNumberOfCPU() + " installed processor(s).");
                     int j = 1;
                     foreach (Processor processor in Computer.CPUInfo.Processors)
                     {
