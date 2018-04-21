@@ -233,13 +233,6 @@ namespace Aura_OS.Shell.cmdIntr
             {
                 Kernel.speaker.beep();
             }
-
-            else if (cmd.Equals("textmode")) //TODO
-            {
-                //System.Shell.VBE.Graphics graphics = new System.Shell.VBE.Graphics();
-                //graphics.Disable();
-                //VGAScreen.SetTextMode(VGAScreen.TextSize.Size80x25);
-            }
           
             else if (cmd.Equals("play"))
             {

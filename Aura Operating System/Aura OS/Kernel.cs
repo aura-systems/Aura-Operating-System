@@ -47,7 +47,6 @@ namespace Aura_OS
         public static HAL.PCSpeaker speaker = new HAL.PCSpeaker();
         public static string boottime = Time.MonthString() + "/" + Time.DayString() + "/" + Time.YearString() + ", " + Time.TimeString(true, true, true);
         public static System.Shell.Console AConsole;
-        public static Debugger debugger = new Debugger("Aura", "Kernel.cs");
 
         #endregion
 

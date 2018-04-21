@@ -100,5 +100,13 @@ namespace Aura_OS.System.Shell.VBE
         {
             graphics.DrawImage(X, Y, Length, height, image);
         }
+
+        public override void DisableGraphicMode()
+        {
+            graphics.Disable();
+            Kernel.AConsole = new VGA.VGAConsole(null);
+            Kernel.AConsole.Clear();
+        }
+
     }
 }

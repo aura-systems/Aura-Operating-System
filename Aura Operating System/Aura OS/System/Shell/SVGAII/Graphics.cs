@@ -4,6 +4,7 @@
 * PROGRAMMERS:      Valentin Charbonnier <valentinbreiz@gmail.com>
 */
 
+using System;
 using Aura_OS.System.Shell.VBE.CosmosGLGraphics;
 using Cosmos.HAL.Drivers.PCI.Video;
 
@@ -48,6 +49,11 @@ namespace Aura_OS.System.Shell.SVGAII
 
             };
             return font;
+        }
+
+        public void Disable()
+        {
+            svga.Disable();
         }
 
         public void Clear()

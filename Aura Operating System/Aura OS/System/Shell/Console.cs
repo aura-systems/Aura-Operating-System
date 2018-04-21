@@ -45,5 +45,7 @@ namespace Aura_OS.System.Shell
 
         public abstract void DrawImage(ushort X, ushort Y, ushort Length, ushort height, Image image);
 
+        public abstract void DisableGraphicMode();
+
     }
 }

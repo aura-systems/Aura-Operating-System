@@ -167,6 +167,7 @@ namespace Aura_OS.System.Translation
                     Console.WriteLine("- passuser {user} {pass} (pour changer le mot de passe)");
                     Console.WriteLine("- setcomputername (pour changer le nom de l'ordinateur)");
                     Console.WriteLine("- setlang {lang} (pour changer la langue du système)");
+                    Console.WriteLine("- consolemode {mode} (pour changer le mode video de la console)");
                     break;
 
                 case "en_US":
@@ -176,6 +177,7 @@ namespace Aura_OS.System.Translation
                     Console.WriteLine("- passuser {user} {pass} (to change password)");
                     Console.WriteLine("- setcomputername (to change the computer name)");
                     Console.WriteLine("- setlang {lang} (to change the system language)");
+                    Console.WriteLine("- consolemode {mode} (to change the video mode of the console)");
                     break;
 
                 case "nl_NL":
@@ -185,6 +187,7 @@ namespace Aura_OS.System.Translation
                     Console.WriteLine("- passuser {gebruiker} {wachtwoord} (om het wachtwoord te veranderen)");
                     Console.WriteLine("- setcomputername (om de naam van de computer te veranderen)");
                     Console.WriteLine("- setlang {lang} (om de systeemtaal aan te passen)");
+                    Console.WriteLine("- consolemode {mode} (om de videomodus van de console te wijzigen)");
                     break;
             }
         }

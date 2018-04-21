@@ -71,8 +71,14 @@ namespace Aura_OS.System.Translation
                         case "unknownlanguage":
                             Console.WriteLine("Langue inconnue.");
                             break;
+                        case "unknownmode":
+                            Console.WriteLine("Mode inconnu.");
+                            break;
                         case "availablelanguage":
                             Console.WriteLine("Langues disponibles: en_US fr_FR nl_NL");
+                            break;
+                        case "consolemode":
+                            Console.WriteLine("Modes disponibles: textmode graphicmode");
                             break;
                         case "unknowncolor":
                             Console.WriteLine("Couleur inconnue.");
@@ -301,8 +307,14 @@ namespace Aura_OS.System.Translation
                         case "unknownlanguage":
                             Console.WriteLine("Unknown language.");
                             break;
+                        case "unknownmode":
+                            Console.WriteLine("Unknown mode.");
+                            break;
                         case "availablelanguage":
                             Console.WriteLine("Available languages: en-US fr-FR nl-NL");
+                            break;
+                        case "consolemode":
+                            Console.WriteLine("Available modes: textmode graphicmode");
                             break;
                         case "unknowncolor":
                             Console.WriteLine("Unknown colour.");
@@ -528,8 +540,14 @@ namespace Aura_OS.System.Translation
                         case "unknownlanguage":
                             Console.WriteLine("Onbekende taal.");
                             break;
+                        case "unknownmode":
+                            Console.WriteLine("Onbekende modus.");
+                            break;
                         case "availablelanguage":
                             Console.WriteLine("Beschikbare talen: en-US fr-FR nl-NL");
+                            break;
+                        case "consolemode":
+                            Console.WriteLine("Beschikbare modi: textmode graphicmode");
                             break;
                         case "unknowncolor":
                             Console.WriteLine("Onbekende kleur.");

@@ -55,6 +55,11 @@ namespace Aura_OS.Shell.cmdIntr.Settings
                     L.Text.Display("availablelanguage");
                 }
 
+                else if (cmdargs[1].Equals("consolemode"))
+                {
+                    L.Text.Display("consolemode");
+                }
+
                 else if (cmdargs[1].Equals("remuser"))
                 {
                     L.Text.Display("remuser");
@@ -112,6 +117,34 @@ namespace Aura_OS.Shell.cmdIntr.Settings
                     }
                 }
 
+                else if (cmdargs[1].Equals("consolemode"))
+                {
+                    if ((cmdargs[2].Equals("textmode")))
+                    {
+                        Kernel.AConsole.DisableGraphicMode();
+                    }
+                    else if ((cmdargs[2].Equals("graphicmode")))
+                    {
+                        Kernel.AConsole.Clear();
+                        switch (System.Video.GetVideo())
+                        {
+                            case "SVGAII":
+                                Kernel.AConsole = new System.Shell.SVGAII.VMWareSVGAConsole();
+                                break;
+                            case "VBE":
+                                Kernel.AConsole = new System.Shell.VBE.VBEConsole();
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                    else
+                    {
+                        L.Text.Display("unknownmode");
+                        L.Text.Display("consolemode");
+                    }
+                }
+
                 else if (cmdargs[1].Equals("adduser"))
                 {
                     L.Text.Display("adduser");
@@ -141,6 +174,11 @@ namespace Aura_OS.Shell.cmdIntr.Settings
                 else if (cmdargs[1].Equals("setlang"))
                 {
                     L.Text.Display("availablelanguage");
+                }
+
+                else if (cmdargs[1].Equals("consolemode"))
+                {
+                    L.Text.Display("consolemode");
                 }
 
                 else if (cmdargs[1].Equals("remuser"))
