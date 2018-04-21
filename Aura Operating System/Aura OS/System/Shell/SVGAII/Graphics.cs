@@ -116,7 +116,7 @@ namespace Aura_OS.System.Shell.SVGAII
                 }
             }
             Kernel.AConsole.X++;
-            if (Kernel.AConsole.X > 80)
+            if (Kernel.AConsole.X > 87)
             {
                 Kernel.AConsole.X = 0;
                 Kernel.AConsole.Y++;

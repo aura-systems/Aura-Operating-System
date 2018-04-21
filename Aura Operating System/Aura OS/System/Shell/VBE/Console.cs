@@ -47,7 +47,7 @@ namespace Aura_OS.System.Shell.VBE
 
         public override int Width
         {
-            get { return 80; }
+            get { return 87; }
         }
 
         public override int Height
@@ -57,7 +57,7 @@ namespace Aura_OS.System.Shell.VBE
 
         public override int Cols
         {
-            get { return 80; }
+            get { return 87; }
         }
 
         public override int Rows
