@@ -725,6 +725,7 @@ namespace Aura_OS.System.Translation
                             break;
                     }
                     break;
+                    
                 case "it_IT":
 
                     switch (ToTranslate)
@@ -950,6 +951,7 @@ namespace Aura_OS.System.Translation
                             Console.WriteLine("Data e ora attuali sono: " + Time.MonthString() + "/" + Time.DayString() + "/" + Time.YearString() + ", " + Time.TimeString(true, true, true));
                             break;
                     }
+                    
                     break;
             }
         }
@@ -1041,6 +1043,7 @@ namespace Aura_OS.System.Translation
                             return text2;
                     }
                     break;
+                    
                 case "it_IT":
 
                     switch (ToTranslate)
@@ -1068,6 +1071,7 @@ namespace Aura_OS.System.Translation
                             return text2;
                     }
                     break;
+                    
             }
             return "";
         }
