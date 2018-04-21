@@ -9,6 +9,7 @@ using System;
 using System.Runtime.CompilerServices;
 using Aura_OS.System.Shell.VBE.CosmosGLGraphics;
 using Cosmos.HAL;
+using L = Aura_OS.System.Translation;
 
 namespace Aura_OS.System.Shell.VGA
 {
@@ -161,7 +162,7 @@ namespace Aura_OS.System.Shell.VGA
 
         public override void DisableGraphicMode()
         {
-            throw new NotImplementedException();
+            L.Text.Display("alreadyintextmode");
         }
 
         public override ConsoleColor Foreground

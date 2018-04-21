@@ -74,6 +74,12 @@ namespace Aura_OS.System.Translation
                         case "unknownmode":
                             Console.WriteLine("Mode inconnu.");
                             break;
+                        case "alreadyintextmode":
+                            Console.WriteLine("Vous êtes déjà en textmode!");
+                            break;
+                        case "nographicmode":
+                            Console.WriteLine("Aucun mode graphique n'est encore supporté pour votre machine.");
+                            break;
                         case "availablelanguage":
                             Console.WriteLine("Langues disponibles: en_US fr_FR nl_NL");
                             break;
@@ -310,6 +316,12 @@ namespace Aura_OS.System.Translation
                         case "unknownmode":
                             Console.WriteLine("Unknown mode.");
                             break;
+                        case "alreadyintextmode":
+                            Console.WriteLine("You already are in textmode!");
+                            break;
+                        case "nographicmode":
+                            Console.WriteLine("No graphics mode is supported for your machine yet.");
+                            break;
                         case "availablelanguage":
                             Console.WriteLine("Available languages: en-US fr-FR nl-NL");
                             break;
@@ -542,6 +554,12 @@ namespace Aura_OS.System.Translation
                             break;
                         case "unknownmode":
                             Console.WriteLine("Onbekende modus.");
+                            break;
+                        case "alreadyintextmode":
+                            Console.WriteLine("U bent al in tekstmodus!");
+                            break;
+                        case "nographicmode":
+                            Console.WriteLine("Er wordt nog geen grafische modus ondersteund voor uw apparaat.");
                             break;
                         case "availablelanguage":
                             Console.WriteLine("Beschikbare talen: en-US fr-FR nl-NL");

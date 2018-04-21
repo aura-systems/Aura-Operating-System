@@ -5,7 +5,6 @@
 */
 
 using System;
-using System.IO;
 using L = Aura_OS.System.Translation;
 using Aura_OS.System.Computer;
 
@@ -125,16 +124,18 @@ namespace Aura_OS.Shell.cmdIntr.Settings
                     }
                     else if ((cmdargs[2].Equals("graphicmode")))
                     {
-                        Kernel.AConsole.Clear();
                         switch (System.Video.GetVideo())
                         {
                             case "SVGAII":
+                                Kernel.AConsole.Clear();
                                 Kernel.AConsole = new System.Shell.SVGAII.VMWareSVGAConsole();
                                 break;
                             case "VBE":
+                                Kernel.AConsole.Clear();
                                 Kernel.AConsole = new System.Shell.VBE.VBEConsole();
                                 break;
                             default:
+                                L.Text.Display("nographicmode");
                                 break;
                         }
                     }
