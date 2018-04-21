@@ -19,7 +19,7 @@ namespace Aura_OS.System
         public static void StopKernel(Exception ex)
         {
 
-            if (Kernel.Consolemode != "VGATextmode")
+            if (Kernel.Consolemode != "VGATextmode" || (Kernel.Consolemode != "VBE")) // Virtualbox can't return to textmode :/
             {
                 Kernel.AConsole.DisableGraphicMode();
                 Kernel.Consolemode = "VGATextmode";
@@ -64,7 +64,7 @@ namespace Aura_OS.System
         public static void StopKernel(string exception, string description, string lastknowaddress, string ctxinterrupt)
         {
 
-            if (Kernel.Consolemode != "VGATextmode")
+            if (Kernel.Consolemode != "VGATextmode" || (Kernel.Consolemode != "VBE")) // Virtualbox can't return to textmode :/
             {
                 Kernel.AConsole.DisableGraphicMode();
                 Kernel.Consolemode = "VGATextmode";
