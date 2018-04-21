@@ -72,7 +72,7 @@ namespace Aura_OS.System.Translation
                             Console.WriteLine("Langue inconnue.");
                             break;
                         case "availablelanguage":
-                            Console.WriteLine("Langues disponibles: en_US fr_FR nl_NL");
+                            Console.WriteLine("Langues disponibles: en-US fr-FR nl-NL it-IT");
                             break;
                         case "unknowncolor":
                             Console.WriteLine("Couleur inconnue.");
@@ -302,7 +302,7 @@ namespace Aura_OS.System.Translation
                             Console.WriteLine("Unknown language.");
                             break;
                         case "availablelanguage":
-                            Console.WriteLine("Available languages: en-US fr-FR nl-NL");
+                            Console.WriteLine("Available languages: en-US fr-FR nl-NL it-IT");
                             break;
                         case "unknowncolor":
                             Console.WriteLine("Unknown colour.");
@@ -529,7 +529,7 @@ namespace Aura_OS.System.Translation
                             Console.WriteLine("Onbekende taal.");
                             break;
                         case "availablelanguage":
-                            Console.WriteLine("Beschikbare talen: en-US fr-FR nl-NL");
+                            Console.WriteLine("Beschikbare talen: en-US fr-FR nl-NL it-IT");
                             break;
                         case "unknowncolor":
                             Console.WriteLine("Onbekende kleur.");
@@ -725,6 +725,232 @@ namespace Aura_OS.System.Translation
                             break;
                     }
                     break;
+                case "it_IT":
+
+                    switch (ToTranslate)
+                    {
+
+                        case "shutdown":
+                            Console.WriteLine("Arresto in corso...");
+                            break;
+                        case "keyboard":
+                            Console.WriteLine("Inizializzazione Tastiera IT...");
+                            break;
+                        case "restart":
+                            Console.WriteLine("Riavviando...");
+                            break;
+                        case "directorydoesntexist":
+                            Console.WriteLine("Questa cartella non esiste!");
+                            break;
+                        case "doesnotexist":
+                            Console.WriteLine(arg + " non esiste!");
+                            break;
+                        case "alreadyexist":
+                            Console.WriteLine(arg + " esiste già!");
+                            break;
+                        case "UnknownCommand":
+                            Console.WriteLine("Comando sconosciuto.");
+                            break;
+                        case "unknownlanguage":
+                            Console.WriteLine("Lingua sconosciuta.");
+                            break;
+                        case "availablelanguage":
+                            Console.WriteLine("Lingue disponibili: en-US fr-FR nl-NL it-IT");
+                            break;
+                        case "unknowncolor":
+                            Console.WriteLine("Colore sconosciuto.");
+                            break;
+                        case "logged":
+                            Console.WriteLine("Hai eseguito accesso come " + arg + ".");
+                            break;
+                        case "unknownuser":
+                            Console.WriteLine("Utente sconosciuto.");
+                            break;
+                        case "languageask":
+                            Console.WriteLine("Scegli la tua lingua:");
+                            break;
+                        case "chooseyourusername":
+                            Console.WriteLine("Scegli un nome utente per il tuo account Aurora:");
+                            break;
+                        case "alreadyuser":
+                            Console.WriteLine("Questo utente esiste già!");
+                            break;
+                        case "passuser":
+                            Console.WriteLine("Scegli una password per " + arg);
+                            break;
+                        case "setupcmd":
+                            Console.WriteLine("Vuoi veramente reiniziallizare il computer ? Tutti i file saranno cancellati. [o/n]");
+                            break;
+                        case "user":
+                            Console.Write("Login > ");
+                            break;
+                        case "passwd":
+                            Console.Write("Password > ");
+                            break;
+                        case "charmin":
+                            Console.Write("L'username deve essere lungo dai 4 ai 20 caratteri e contenere testo alfanumerico.");
+                            break;
+                        case "pswcharmin":
+                            Console.Write("La password deve essere lunga dai 6 ai 40 caratteri e contenere testo alfanumerico.");
+                            break;
+                        case "errorwhileusercreating":
+                            Console.Write("C'è stato un errore durante la creazione dell'account utente.");
+                            break;
+                        case "whattypeuser":
+                            Console.Write("Quale deve essere il livello dell'utente ?");
+                            break;
+                        case "mkfil":
+                            Console.WriteLine("Inserisci il nome del file (mkfil file.txt).");
+                            break;
+                        case "doesnotexit":
+                            Console.WriteLine("Questo file non esiste.");
+                            break;
+                        case "wrongpassword":
+                            Console.WriteLine("Password sbagliata.");
+                            break;
+                        case "liquideditor":
+                            Console.WriteLine("Liquid Editor v" + arg + " by TheCool1James & valentinbreiz                             ");
+                            break;
+                        case "filename":
+                            Console.Write("File name : ");
+                            break;
+                        case "saved":
+                            Console.WriteLine("'" + arg + "' e' stato salvato in '" + arg2 + "' !");
+                            break;
+                        case "menuliquideditor":
+                            Console.Write("[F1]Salva  [F2]Nuovo  [ESC]Esci\n");
+                            break;
+                        case "list":
+                            Console.WriteLine(" List: " + arg + "\n");
+                            break;
+                        case "line":
+                            Console.WriteLine(" Linea: " + arg + "\n");
+                            break;
+                        case "askcomputername":
+                            Console.WriteLine("Scegli il nome del computer :");
+                            break;
+                        case "computernameincorrect":
+                            Console.WriteLine("Il nome del computer non è corretto, la lunghezza del nome del computer deve essere di 1-20 caratteri.");
+                            break;
+                        case "computernamename":
+                            Console.Write("Nome computer > ");
+                            break;
+                        case "computernamesuccess":
+                            Console.Write("Il nuovo nome del computer è stato salvato!");
+                            break;
+                        case "tips":
+                            Console.WriteLine(" * Suggerimenti :");
+                            break;
+                        case "mkdir":
+                            Console.WriteLine("Inserisci il nome della cartella (mkdir cartella).");
+                            break;
+                        case "mkdirfilealreadyexist":
+                            Console.WriteLine("Questa cartella esiste già, la cartella \"" + arg + "\" è stata creata.");
+                            break;
+                        case "mkdirunsupporteddot":
+                            Console.WriteLine("Non ci possono essere punti nel nome della cartella.");
+                            break;
+                        case "invalidargument":
+                            Console.WriteLine("Questo argomento non è valido.");
+                            break;
+                        case "filecopied":
+                            Console.WriteLine("File Copiato.");
+                            break;
+                        case "filealreadyexist":
+                            Console.WriteLine("Questo file esiste già.");
+                            break;
+                        case "docpoover":
+                            Console.WriteLine("Esegui 'cp -o fileOrigine fileDestinazione' per sovrascrivere il file.");
+                            break;
+                        case "sourcefiledoesntexist":
+                            Console.WriteLine("Il file d'origine non esiste.");
+                            break;
+                        case "usagecp":
+                            Console.WriteLine("Utilizzo: cp {args} fileOrigine fileDestinazionee");
+                            break;
+                        case "emptyarg":
+                            Console.WriteLine("Argomento Sconosciuto.");
+                            break;
+                        case "about":
+                            Console.ForegroundColor = ConsoleColor.White;
+                            Console.WriteLine("Aura [Versione " + Kernel.version + "-" + Kernel.revision + "]");
+                            Console.WriteLine("Creato da Alexy DA CRUZ e Valentin CHARBONNIER.");
+                            Console.WriteLine();
+                            Console.ForegroundColor = ConsoleColor.Green;
+                            Console.WriteLine("Sito web: aura-team.com");
+                            Console.ForegroundColor = ConsoleColor.White;
+                            break;
+                        case "errorthisisafile":
+                            Console.WriteLine("Questo è un file.");
+                            break;
+                        case "volCommand":
+                            Console.WriteLine();
+                            Console.WriteLine("  Volume ###\tFormat\tSize");
+                            Console.WriteLine("  ----------\t------\t--------");
+                            break;
+                        case "NetworkInProgress":
+                            Console.WriteLine("Stiamo lavorando sulla rete, perciò");
+                            Console.WriteLine("questa funzione è attualmente in alpha.");
+                            Console.WriteLine("Puoi visitare la  roadmap su aura-team.com per");
+                            Console.WriteLine("vedere i progressi riguardo questa parte.");
+                            Console.WriteLine();
+                            break;
+                        case "MAC":
+                            Console.WriteLine("Indirizzo MAC: " + Core.Network.PhysicalAddress());
+                            break;
+                        case "notavalidscript":
+                            Console.WriteLine("Questo non è uno script valido.");
+                            break;
+                        case "md5":
+                            Console.WriteLine("Questo è il risultato in MD5.");
+                            break;
+                        case "SHA256":
+                            Console.WriteLine("Questo è il risultato in SHA256.");
+                            break;
+                        case "user:existalready":
+                            Console.WriteLine($"{arg} esiste già !");
+                            break;
+                        case "user:hasbeencreated":
+                            Console.WriteLine($"{arg} è stato creato !");
+                            break;
+                        case "user:personaldirectories":
+                            Console.WriteLine($"La cartella personale di {arg} è stata creata !");
+                            break;
+                        case "user:doesntexist":
+                            Console.WriteLine($"{arg} non esiste !");
+                            break;
+                        case "user:hasbeenremoved":
+                            Console.WriteLine($"{arg} è stato rimosso !");
+                            break;
+                        case "user:passwordhasbeenchanged":
+                            Console.WriteLine($"La password è stata modificata !");
+                            break;
+                        case "passwd:newpass":
+                            Console.Write($"Inserisci la nuova password: ");
+                            break;
+                        case "passwd:retype":
+                            Console.Write($"Inserisci nuovamente la nuova password: ");
+                            break;
+                        case "passwd:updated":
+                            Console.WriteLine($"passwd: password aggiornata correttamente.");
+                            break;
+                        case "adduser":
+                            Console.WriteLine($"Prova: settings adduser user pass");
+                            break;
+                        case "_passuser":
+                            Console.WriteLine($"Prova: settings passuser user pass");
+                            break;
+                        case "remuser":
+                            Console.WriteLine($"Prova: settings remuser user");
+                            break;
+                        case "nofilesystem":
+                            Console.WriteLine("Nessun volume identificato , il filesystem è disattivato!");
+                            break;
+                        case "time":
+                            Console.WriteLine("Data e ora attuali sono: " + Time.MonthString() + "/" + Time.DayString() + "/" + Time.YearString() + ", " + Time.TimeString(true, true, true));
+                            break;
+                    }
+                    break;
             }
         }
 
@@ -812,6 +1038,33 @@ namespace Aura_OS.System.Translation
                             break;
                         case "computernamedialog":
                             string text2 = Drawable.Menu.DispComputernameDialog("║ Kies de naam van de computer:", "║ Naam computer: ");
+                            return text2;
+                    }
+                    break;
+                case "it_IT":
+
+                    switch (ToTranslate)
+                    {
+                        case "setup":
+                            string text = Drawable.Menu.DispLoginForm("Creazione account Aurora.");
+                            return text;
+                        case "alreadyuser":
+                            Drawable.Menu.DispErrorDialog("Questo utente esiste già!");
+                            break;
+                        case "error1":
+                            Drawable.Menu.DispErrorDialog("Errore durante la creazione dell' utente!");
+                            break;
+                        case "error2":
+                            Drawable.Menu.DispErrorDialog("Questa password è troppo corta!");
+                            break;
+                        case "error3":
+                            Drawable.Menu.DispErrorDialog("Questo nickname è troppo corto!");
+                            break;
+                        case "errorcomputer":
+                            Drawable.Menu.DispErrorDialog("Il nome computer deve essere lungo da 1 a 20 caratteri.");
+                            break;
+                        case "computernamedialog":
+                            string text2 = Drawable.Menu.DispComputernameDialog("║ Scegli il nome del computer:", "║ Nome computer: ");
                             return text2;
                     }
                     break;
