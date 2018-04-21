@@ -498,34 +498,37 @@ namespace Aura_OS.System.Shell
                     continue;
                 }
                 else if (current.Key == ConsoleKeyEx.Tab)
-                {                    
-                    int index = -1;
-
-                    foreach (char ch in chars)
+                {   
+                    if (currentCount >= 1)
                     {
-                        CMDToComplete = CMDToComplete + ch.ToString();
-                    }                    
+                        int index = -1;
 
-                    foreach (string c in CommandManager.CMDs)
-                    {
-                        index++;
-                        if (c.StartsWith(CMDToComplete))
-                        {                            
-                            CommandsHistory.ClearCurrentConsoleLine();
-                            currentCount = 0;
-                            chars.Clear();
+                        foreach (char ch in chars)
+                        {
+                            CMDToComplete = CMDToComplete + ch.ToString();
+                        }                    
 
-                            Kernel.BeforeCommand();
+                        foreach (string c in CommandManager.CMDs)
+                        {
+                            index++;
+                            if (c.StartsWith(CMDToComplete))
+                            {                            
+                                CommandsHistory.ClearCurrentConsoleLine();
+                                currentCount = 0;
+                                chars.Clear();
 
-                            foreach (char chr in c)
-                            {
-                                chars.Add(chr);
-                                Write(chr);
-                                currentCount++;
+                                Kernel.BeforeCommand();
+
+                                foreach (char chr in c)
+                                {
+                                    chars.Add(chr);
+                                    Write(chr);
+                                    currentCount++;
+                                }
                             }
                         }
+                        continue;
                     }
-                    continue;
                 }
                 else if (current.Key == ConsoleKeyEx.C && KeyboardManager.ControlPressed)
                 {

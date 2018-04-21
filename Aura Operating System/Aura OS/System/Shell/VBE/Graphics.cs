@@ -60,6 +60,7 @@ namespace Aura_OS.System.Shell.VBE
 
         internal void Disable()
         {
+            Canvas.Clear(0xffffff);
             Screen.Disable();
         }
 

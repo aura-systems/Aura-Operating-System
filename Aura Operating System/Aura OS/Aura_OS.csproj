@@ -11,6 +11,9 @@
     <ISO_IgnoreDebugStubAttribute>False</ISO_IgnoreDebugStubAttribute>
     <RuntimeIdentifier>cosmos</RuntimeIdentifier>
     <SelfContained>True</SelfContained>
+    <Bochs_StackCorruptionDetectionLevel>MethodFooters</Bochs_StackCorruptionDetectionLevel>
+    <Bochs_Name>Aura_OSBoot</Bochs_Name>
+    <Bochs_IgnoreDebugStubAttribute>False</Bochs_IgnoreDebugStubAttribute>
   </PropertyGroup>
   <PropertyGroup>
     <BinFormat>Bin</BinFormat>
