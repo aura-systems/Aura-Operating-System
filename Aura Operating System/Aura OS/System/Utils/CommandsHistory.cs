@@ -19,7 +19,14 @@ namespace Aura_OS.System.Utils
             int currentLineCursor = Console.CursorTop;
             Console.SetCursorPosition(0, Console.CursorTop);
             Console.Write(new string(' ', Console.WindowWidth));
-            Console.SetCursorPosition(0, Console.CursorTop);
+            if (Kernel.Consolemode != "VGATextmode")
+            {
+                Console.SetCursorPosition(0, Console.CursorTop);
+            }
+            else
+            {
+                Console.SetCursorPosition(0, Console.CursorTop - 1);
+            }
         }
 
     }
