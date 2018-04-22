@@ -19,6 +19,7 @@ using System.Collections.Generic;
 using System.Text;
 using Cosmos.System.ExtendedASCII;
 using Cosmos.Debug.Kernel;
+using Aura_OS.Core;
 
 #endregion
 
@@ -48,6 +49,7 @@ namespace Aura_OS
         public static string boottime = Time.MonthString() + "/" + Time.DayString() + "/" + Time.YearString() + ", " + Time.TimeString(true, true, true);
         public static System.Shell.Console AConsole;
         public static string Consolemode = "VGATextmode";
+        public static MemoryManager MemMon;
 
         #endregion
 
