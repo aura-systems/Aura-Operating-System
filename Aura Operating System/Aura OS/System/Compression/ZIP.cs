@@ -15,7 +15,7 @@ namespace Aura_OS.System.Compression
             ZIPFile = filename;
         }
 
-        private Byte[] BinaryContent()
+        private Byte[] FileHeader()
         {
             Byte[] zip = File.ReadAllBytes(ZIPFile);
             return zip;            
@@ -23,7 +23,7 @@ namespace Aura_OS.System.Compression
 
         private bool IsZIPFile()
         {
-            Byte[] zip = BinaryContent();
+            Byte[] zip = FileHeader();
             if ((zip[0] == 80) && (zip[1] == 75) && (((zip[2] == 3) && (zip[3] == 4)) || ((zip[2] == 5) && (zip[6] == 6)))) //80 75 3 4 or 80 75 5 6 
                                                                                                                             //(first for a zip file and second for an empty zip file)
             {
@@ -34,7 +34,7 @@ namespace Aura_OS.System.Compression
 
         //private bool IsVersion()
         //{
-        //    Byte[] zip = BinaryContent();
+        //    Byte[] zip = FileHeader();
         //    if ((zip[4] == 10) && (zip[5] == 00))
         //    {
         //        return true;
@@ -44,7 +44,7 @@ namespace Aura_OS.System.Compression
 
         public int Count()
         {
-            Byte[] zip = BinaryContent();
+            Byte[] zip = FileHeader();
             List<string> signatures = new List<string>();            
             int a = 0;
             int count = 0;
@@ -62,11 +62,10 @@ namespace Aura_OS.System.Compression
 
         public List<string> ListFiles()
         {
-            Byte[] zip = BinaryContent();
+            Byte[] zip = FileHeader();
             List<Byte> Files = new List<Byte>();
             List<string> Names = new List<string>();
             int a = 0;
-            int b = 0;
             int filenamesize = 0;
             int pointer = 0;
 
@@ -84,20 +83,6 @@ namespace Aura_OS.System.Compression
                     }
                     Files.Add(0x21); //separator !
                     filenamesize = 0;
-                    FileStart().Add(a);
-                    b = a - 1;
-                    if(b > 0)
-                    {
-                        FileEnd().Add(b);
-                    }
-                }
-                else if ((zip[a] == 80) && (zip[a + 1] == 75) && (((zip[a + 2] == 1) && (zip[a + 3] == 2))))
-                {
-                    b = a - 1;
-                    if (b > 0)
-                    {
-                        FileEnd().Add(b);
-                    }
                 }
                 a++;
             }
@@ -113,18 +98,6 @@ namespace Aura_OS.System.Compression
             return Names;
         }
 
-        private List<int> FileStart()
-        {
-            List<int> list = FileStart();
-            return list;
-        }
-
-        private List<int> FileEnd()
-        {
-            List<int> list = FileEnd();
-            return list;
-        }
-
         private uint ZipHash(Byte[] file)
         {
             return CRC_32.Crc32Algorithm.Compute(file);
@@ -137,18 +110,18 @@ namespace Aura_OS.System.Compression
 
         private int FileNameLenght()
         {
-            Byte[] zip = BinaryContent();
+            Byte[] zip = FileHeader();
             int a = 0;
             int filenamesize = 0;
             filenamesize = zip[a + 26]; // 8 - 12
             filenamesize = filenamesize + zip[a + 27]; //2 bytes
-            
+            Console.WriteLine(filenamesize);
             return filenamesize;
         }
 
         private int ExtraFieldLenght(int pointer)
         {
-            Byte[] zip = BinaryContent();
+            Byte[] zip = FileHeader();
             int extrafield = 0;
             extrafield = zip[pointer + 28];
             extrafield = extrafield + zip[pointer + 29];
@@ -158,7 +131,7 @@ namespace Aura_OS.System.Compression
 
         private Byte[] CompressedFiles()
         {
-            Byte[] zip = BinaryContent();
+            Byte[] zip = FileHeader();
 
             return null;
 
@@ -166,25 +139,16 @@ namespace Aura_OS.System.Compression
 
         public void Open()
         {
-            Byte[] zip = BinaryContent();
+            Byte[] zip = FileHeader();
             if (IsZIPFile()) //if it's a zip file
             {
                 Console.WriteLine("zip > There is " + Count() + " file(s) in the zip archive.");
                 Console.WriteLine();
                 //Console.WriteLine("zip > CRC_32= " + ZipHash().ToString());
-
-                foreach (string file in ListFiles())
-                {
-                    Console.WriteLine("o: " + file);
-                }
-
-                foreach (int file in FileEnd())
-                {
-                    Console.WriteLine("o: " + file);
-                }
+                Console.WriteLine();
                 //ListFiles();
-                Console.WriteLine(FileNameLenght() + 30);
-                ExtraFieldLenght(0);
+                FileNameLenght();
+                ExtraFieldLenght(FileNameLenght() + 31);
             }
         }
     }
