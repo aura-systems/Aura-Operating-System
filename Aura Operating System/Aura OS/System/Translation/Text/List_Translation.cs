@@ -261,7 +261,7 @@ namespace Aura_OS.System.Translation
                     Console.WriteLine("Heure de démarrage du système: " + Kernel.boottime);
                     Console.WriteLine("Mémoire totale:                " + Core.MemoryManager.TotalMemory + "MB");
                     Console.WriteLine("Mémoire utilisée:              " + Core.MemoryManager.GetUsedMemory() + "MB");
-                    Console.WriteLine("Mémoire restante:              " + Kernel.MemMon.FreeMemory + "MB");
+                    Console.WriteLine("Mémoire restante:              " + Core.MemoryManager.GetFreeMemory() + "MB");
                     Console.WriteLine("Processeur(s):                 " + Computer.Info.GetNumberOfCPU() + " processeur(s) installé(s).");
                     int i = 1;
                     foreach (Processor processor in Computer.CPUInfo.Processors)
@@ -286,7 +286,7 @@ namespace Aura_OS.System.Translation
                     Console.WriteLine("System Boot Time:          " + Kernel.boottime);
                     Console.WriteLine("Total memory:              " + Core.MemoryManager.TotalMemory + "MB");
                     Console.WriteLine("Used memory:               " + Core.MemoryManager.GetUsedMemory() + "MB");
-                    Console.WriteLine("Free memory:               " + Kernel.MemMon.FreeMemory + "MB");
+                    Console.WriteLine("Free memory:               " + Core.MemoryManager.GetFreeMemory() + "MB");
                     Console.WriteLine("Processor(s):              " + Computer.Info.GetNumberOfCPU() + " installed processor(s).");
                     int j = 1;
                     foreach (Processor processor in Computer.CPUInfo.Processors)
@@ -311,7 +311,7 @@ namespace Aura_OS.System.Translation
                     Console.WriteLine("Starttijd van het systeem: " + Kernel.boottime);
                     Console.WriteLine("Totaal geheugen:           " + Core.MemoryManager.TotalMemory + "MB");
                     Console.WriteLine("Gebruikt geheugen:         " + Core.MemoryManager.GetUsedMemory() + "MB");
-                    Console.WriteLine("Gratis geheugen:           " + Kernel.MemMon.FreeMemory + "MB");
+                    Console.WriteLine("Gratis geheugen:           " + Core.MemoryManager.GetFreeMemory() + "MB");
                     Console.WriteLine("Processor(s):              " + Computer.Info.GetNumberOfCPU() + " processor(s) geïnstalleerd.");
                     int k = 1;
                     foreach (Processor processor in Computer.CPUInfo.Processors)
@@ -336,7 +336,7 @@ namespace Aura_OS.System.Translation
                     Console.WriteLine("System Boot Time:                " + Kernel.boottime);
                     Console.WriteLine("Memoria totale:                  " + Core.MemoryManager.TotalMemory + "MB");
                     Console.WriteLine("Memoria utilizzata:              " + Core.MemoryManager.GetUsedMemory() + "MB");
-                    Console.WriteLine("Memoria libera:                  " + Kernel.MemMon.FreeMemory + "MB");
+                    Console.WriteLine("Memoria libera:                  " + Core.MemoryManager.GetFreeMemory() + "MB");
                     Console.WriteLine("Processor(s):                    " + Computer.Info.GetNumberOfCPU() + " installed processor(s).");
                     int h = 1;
                     foreach (Processor processor in Computer.CPUInfo.Processors)

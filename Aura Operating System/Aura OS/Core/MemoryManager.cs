@@ -5,6 +5,7 @@
 *                   Valentin Charbonnier <valentinbreiz@gmail.com>
 */
 
+using System;
 using Cosmos.Core;
 
 namespace Aura_OS.Core
@@ -36,6 +37,11 @@ namespace Aura_OS.Core
         public MemoryManager()
         {
             this.Monitor();
+        }
+
+        public static uint GetFreeMemory()
+        {
+            return TotalMemory - GetUsedMemory();
         }
     }
 }
