@@ -26,7 +26,10 @@ namespace Aura_OS.System.Utils
             //reset of config in memory if there is "something"
             file = reset;
             //load
-            file = File.ReadAllLines(@"0:\System\settings.conf");
+            if (Kernel.SystemExists)
+            {
+                file = File.ReadAllLines(@"0:\System\settings.conf");
+            }
         }
 
         /// <summary>
