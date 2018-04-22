@@ -108,26 +108,56 @@ namespace Aura_OS.System.Users
 
             Console.Clear();
 
-            switch (Video.GetVideo())
+            Utils.Settings.LoadValues();
+            string consolemode = Utils.Settings.GetValue("consolemode");
+
+            if (consolemode == "null")
             {
-                case "VGATextmode":
-                    Kernel.AConsole = new System.Shell.VGA.VGAConsole(null);
-                    break;
-                case "SVGA":
-                    // TO DO ?
-                    break;
-                case "SVGAII":
-                    Kernel.AConsole = new System.Shell.SVGAII.VMWareSVGAConsole();
-                    break;
-                case "VBE":
-                    Kernel.AConsole = new System.Shell.VBE.VBEConsole();
-                    break;
-                case "VESA":
-                    // TO DO ...
-                    break;
-                default:
-                    Kernel.AConsole = new System.Shell.VGA.VGAConsole(null);
-                    break;
+                switch (Video.GetVideo())
+                {
+                    case "VGATextmode":
+                        Kernel.AConsole = new System.Shell.VGA.VGAConsole(null);
+                        break;
+                    case "SVGA":
+                        // TO DO ?
+                        break;
+                    case "SVGAII":
+                        Kernel.AConsole = new System.Shell.SVGAII.VMWareSVGAConsole();
+                        break;
+                    case "VBE":
+                        Kernel.AConsole = new System.Shell.VBE.VBEConsole();
+                        break;
+                    case "VESA":
+                        // TO DO ...
+                        break;
+                    default:
+                        Kernel.AConsole = new System.Shell.VGA.VGAConsole(null);
+                        break;
+                }
+            }
+            else
+            {
+                switch (consolemode)
+                {
+                    case "VGATextmode":
+                        Kernel.AConsole = new System.Shell.VGA.VGAConsole(null);
+                        break;
+                    case "SVGA":
+                        // TO DO ?
+                        break;
+                    case "SVGAII":
+                        Kernel.AConsole = new System.Shell.SVGAII.VMWareSVGAConsole();
+                        break;
+                    case "VBE":
+                        Kernel.AConsole = new System.Shell.VBE.VBEConsole();
+                        break;
+                    case "VESA":
+                        // TO DO ...
+                        break;
+                    default:
+                        Kernel.AConsole = new System.Shell.VGA.VGAConsole(null);
+                        break;
+                }
             }
 
             WelcomeMessage.Display();

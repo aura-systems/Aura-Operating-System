@@ -34,7 +34,10 @@ namespace Aura_OS.System.Utils
         /// </summary>
         public static void PushValues()
         {
-            File.WriteAllLines(@"0:\System\settings.conf", file);
+            if (Kernel.SystemExists)
+            {
+                File.WriteAllLines(@"0:\System\settings.conf", file);
+            }
         }
 
         /// <summary>

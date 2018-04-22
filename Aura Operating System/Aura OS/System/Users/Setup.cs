@@ -269,7 +269,6 @@ namespace Aura_OS.System
         {
             Console.Clear();
 
-            Kernel.SystemExists = true;
             Kernel.userLogged = username;
             Kernel.JustInstalled = true;
             Kernel.running = true;
@@ -368,7 +367,11 @@ namespace Aura_OS.System
 
             Settings.PutValue("setuptime", Time.MonthString() + "/" + Time.DayString() + "/" + Time.YearString() + ", " + Time.TimeString(true, true, true));
 
+            Settings.PutValue("consolemode", "null");
+
             Menu.DispInstallationDialog(80);
+
+            Kernel.SystemExists = true;
 
             Settings.PushValues();
             System.Users.Users.PushUsers();
