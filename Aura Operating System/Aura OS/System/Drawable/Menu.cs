@@ -482,7 +482,7 @@ namespace Aura_OS.System.Drawable
         public static string DispLanguageDialog()
         {
             LanguageMenu();
-            string[] item = { "English: en_US", "Français: fr_FR", "Dutch: nl_NL", "Italia: it_IT" };
+            string[] item = { "English: en_US", "Français: fr_FR", "Dutch: nl_NL", "Italiano: it_IT" };
             int language = GenericMenu(item, Langues);
             if (language == 0)
             {
