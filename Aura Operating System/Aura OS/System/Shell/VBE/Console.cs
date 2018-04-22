@@ -57,12 +57,12 @@ namespace Aura_OS.System.Shell.VBE
 
         public override int Cols
         {
-            get { return 87; }
+            get { return 37; }
         }
 
         public override int Rows
         {
-            get { return 37; }
+            get { return 87; }
         }
 
         public static uint foreground = (byte)ConsoleColor.White;
@@ -97,13 +97,6 @@ namespace Aura_OS.System.Shell.VBE
             {
                 switch (ch)
                 {
-                    case LineFeed:
-                        DoLineFeed();
-                        break;
-
-                    case CarriageReturn:
-                        DoCarriageReturn();
-                        break;
 
                     case Tab:
                         DoTab();
@@ -123,22 +116,6 @@ namespace Aura_OS.System.Shell.VBE
             graphics.WriteByte(Space);
             graphics.WriteByte(Space);
             graphics.WriteByte(Space);
-        }
-
-        private void DoLineFeed()
-        {
-            mY++;
-            mX = 0;
-            if (mY == Rows)
-            {
-                graphics.ScrollUp();
-                mY--;
-            }
-        }
-
-        private void DoCarriageReturn()
-        {
-            mX = 0;
         }
 
         public override void DrawImage(ushort X, ushort Y, ushort Length, ushort height, Image image)

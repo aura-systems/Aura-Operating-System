@@ -112,22 +112,37 @@ namespace Aura_OS.System.Shell.VBE
         {
             char c = (char)ch;
             if (c != 0 && c != '\n' && c != '\r')
+            {
                 drawChar((c));
+            }
             else if (c == '\n')
             {
                 Kernel.AConsole.Y++;
                 Kernel.AConsole.X = -1;
-                if (Kernel.AConsole.Y == Kernel.AConsole.Rows)
+
+                if (Kernel.AConsole.Y == Kernel.AConsole.Cols)
                 {
                     ScrollUp();
                     Kernel.AConsole.Y--;
                 }
             }
-            Kernel.AConsole.X++;
-            if (Kernel.AConsole.X > 87)
+
+            if (Kernel.AConsole.X == Kernel.AConsole.Rows)
             {
+                if (Kernel.AConsole.Y == Kernel.AConsole.Cols - 1)
+                {
+                    ScrollUp();
+                }
+                else
+                {
+                    Kernel.AConsole.Y++;
+                }
+
                 Kernel.AConsole.X = 0;
-                Kernel.AConsole.Y++;
+            }
+            else
+            {
+                Kernel.AConsole.X++;
             }
         }
 

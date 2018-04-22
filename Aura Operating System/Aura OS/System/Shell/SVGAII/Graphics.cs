@@ -6,6 +6,7 @@
 
 using System;
 using Aura_OS.System.Shell.VBE.CosmosGLGraphics;
+using Cosmos.Debug.Kernel;
 using Cosmos.HAL.Drivers.PCI.Video;
 
 namespace Aura_OS.System.Shell.SVGAII
@@ -15,7 +16,7 @@ namespace Aura_OS.System.Shell.SVGAII
         private static byte[] font;
         public static VMWareSVGAII svga;
         private static uint[] pallete = new uint[16];
-
+        
         public Graphics()
         {
             pallete[0] = 0x000000; // Black
@@ -77,7 +78,7 @@ namespace Aura_OS.System.Shell.SVGAII
             }
         }
 
-        private static void drawChar(char c)
+        public void drawChar(char c)
         {
             int p = 16 * c;
 
@@ -104,22 +105,37 @@ namespace Aura_OS.System.Shell.SVGAII
         {
             char c = (char)ch;
             if (c != 0 && c != '\n' && c != '\r')
+            {
                 drawChar((c));
+            }
             else if (c == '\n')
             {
                 Kernel.AConsole.Y++;
                 Kernel.AConsole.X = -1;
-                if (Kernel.AConsole.Y == Kernel.AConsole.Rows)
+
+                if (Kernel.AConsole.Y == Kernel.AConsole.Cols)
                 {
                     ScrollUp();
                     Kernel.AConsole.Y--;
                 }
             }
-            Kernel.AConsole.X++;
-            if (Kernel.AConsole.X > 87)
+            
+            if (Kernel.AConsole.X == Kernel.AConsole.Rows)
             {
+                if (Kernel.AConsole.Y == Kernel.AConsole.Cols - 1)
+                {
+                    ScrollUp();
+                }
+                else
+                {
+                    Kernel.AConsole.Y++;
+                }
+                
                 Kernel.AConsole.X = 0;
-                Kernel.AConsole.Y++;
+            }
+            else
+            {
+                Kernel.AConsole.X++;
             }
         }
 
