@@ -115,7 +115,6 @@ namespace Aura_OS.System.Compression
             int filenamesize = 0;
             filenamesize = zip[a + 26]; // 8 - 12
             filenamesize = filenamesize + zip[a + 27]; //2 bytes
-            Console.WriteLine(filenamesize);
             return filenamesize;
         }
 
@@ -125,7 +124,6 @@ namespace Aura_OS.System.Compression
             int extrafield = 0;
             extrafield = zip[pointer + 28];
             extrafield = extrafield + zip[pointer + 29];
-            Console.WriteLine(extrafield);
             return extrafield;
         }
 
@@ -151,6 +149,7 @@ namespace Aura_OS.System.Compression
                 FileNameLenght();
                 Console.Write("extrafieldlenght: ");
                 ExtraFieldLenght(0);
+                Console.WriteLine("File starting at: " + (30 + FileNameLenght() + ExtraFieldLenght(0)));
             }
         }
     }
