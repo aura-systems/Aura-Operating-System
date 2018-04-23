@@ -4,14 +4,7 @@
 * PROGRAMMER(S):    John Welsh <djlw78@gmail.com>
 */
 
-using Cosmos.HAL.PCInformation;
 using System;
-using System.Collections.Generic;
-using Cosmos.HAL;
-using Cosmos.System.Network;
-using IPv4 = Cosmos.System.Network.IPv4;
-using System.IO;
-using Aura_OS.System.Compression;
 
 namespace Aura_OS.Shell.cmdIntr
 {
