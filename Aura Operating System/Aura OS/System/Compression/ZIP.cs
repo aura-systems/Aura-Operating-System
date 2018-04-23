@@ -147,8 +147,10 @@ namespace Aura_OS.System.Compression
                 //Console.WriteLine("zip > CRC_32= " + ZipHash().ToString());
                 Console.WriteLine();
                 //ListFiles();
+                Console.Write("filenamelenght: ");
                 FileNameLenght();
-                ExtraFieldLenght(FileNameLenght() + 31);
+                Console.Write("extrafieldlenght: ");
+                ExtraFieldLenght(0);
             }
         }
     }
