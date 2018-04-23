@@ -15,7 +15,7 @@ namespace Aura_OS.System.Compression
             ZIPFile = filename;
         }
 
-        private Byte[] FileHeader()
+        private Byte[] BinaryContent()
         {
             Byte[] zip = File.ReadAllBytes(ZIPFile);
             return zip;            
@@ -23,7 +23,7 @@ namespace Aura_OS.System.Compression
 
         private bool IsZIPFile()
         {
-            Byte[] zip = FileHeader();
+            Byte[] zip = BinaryContent();
             if ((zip[0] == 80) && (zip[1] == 75) && (((zip[2] == 3) && (zip[3] == 4)) || ((zip[2] == 5) && (zip[6] == 6)))) //80 75 3 4 or 80 75 5 6 
                                                                                                                             //(first for a zip file and second for an empty zip file)
             {
@@ -34,7 +34,7 @@ namespace Aura_OS.System.Compression
 
         //private bool IsVersion()
         //{
-        //    Byte[] zip = FileHeader();
+        //    Byte[] zip = BinaryContent();
         //    if ((zip[4] == 10) && (zip[5] == 00))
         //    {
         //        return true;
@@ -44,7 +44,7 @@ namespace Aura_OS.System.Compression
 
         public int Count()
         {
-            Byte[] zip = FileHeader();
+            Byte[] zip = BinaryContent();
             List<string> signatures = new List<string>();            
             int a = 0;
             int count = 0;
@@ -62,7 +62,7 @@ namespace Aura_OS.System.Compression
 
         public List<string> ListFiles()
         {
-            Byte[] zip = FileHeader();
+            Byte[] zip = BinaryContent();
             List<Byte> Files = new List<Byte>();
             List<string> Names = new List<string>();
             int a = 0;
@@ -110,7 +110,7 @@ namespace Aura_OS.System.Compression
 
         private int FileNameLenght()
         {
-            Byte[] zip = FileHeader();
+            Byte[] zip = BinaryContent();
             int a = 0;
             int filenamesize = 0;
             filenamesize = zip[a + 26]; // 8 - 12
@@ -121,7 +121,7 @@ namespace Aura_OS.System.Compression
 
         private int ExtraFieldLenght(int pointer)
         {
-            Byte[] zip = FileHeader();
+            Byte[] zip = BinaryContent();
             int extrafield = 0;
             extrafield = zip[pointer + 28];
             extrafield = extrafield + zip[pointer + 29];
@@ -131,7 +131,7 @@ namespace Aura_OS.System.Compression
 
         private Byte[] CompressedFiles()
         {
-            Byte[] zip = FileHeader();
+            Byte[] zip = BinaryContent();
 
             return null;
 
@@ -139,7 +139,7 @@ namespace Aura_OS.System.Compression
 
         public void Open()
         {
-            Byte[] zip = FileHeader();
+            Byte[] zip = BinaryContent();
             if (IsZIPFile()) //if it's a zip file
             {
                 Console.WriteLine("zip > There is " + Count() + " file(s) in the zip archive.");
