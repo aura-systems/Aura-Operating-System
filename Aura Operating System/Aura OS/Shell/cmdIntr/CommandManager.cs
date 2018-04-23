@@ -120,6 +120,10 @@ namespace Aura_OS.Shell.cmdIntr
             {
                 FileSystem.Run.c_Run(cmd);
             }
+            else if (cmd.StartsWith("zip "))
+            {
+                FileSystem.ZIP.c_ZIP(cmd);
+            }
 
             #endregion FileSystem
 
@@ -186,12 +190,6 @@ namespace Aura_OS.Shell.cmdIntr
             else if (cmd.Equals("beep"))
             {
                 Kernel.speaker.beep();
-            }
-
-            else if (cmd.Equals("zip"))
-            {
-                ZIP zip = new ZIP(@"0:\zip.zip");
-                zip.Open();
             }
 
             //else if (cmd.StartsWith("xml "))

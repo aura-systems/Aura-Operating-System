@@ -11,7 +11,7 @@ namespace Aura_OS.System.Compression
         /// </summary>
         /// <param name="compressed">deflated input data</param>
         /// <returns>uncompressed output</returns>
-        public static List<byte> Inflate(IList<byte> compressed)
+        public static List<byte> Inflate(List<byte> compressed)
         {
             return new Deflate { In = compressed }.Inflate();
         }
@@ -67,7 +67,7 @@ namespace Aura_OS.System.Compression
         private Huffman Length;
 
         private int InPos;
-        private IList<byte> In;
+        private List<byte> In;
 
         private static void InitDefaults()
         {

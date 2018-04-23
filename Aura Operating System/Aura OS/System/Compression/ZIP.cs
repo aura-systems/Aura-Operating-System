@@ -21,7 +21,7 @@ namespace Aura_OS.System.Compression
         private Byte[] BinaryContent()
         {
             Byte[] zip = File.ReadAllBytes(ZIPFile);
-            return zip;            
+            return zip;
         }
 
         private bool IsZIPFile()
@@ -38,7 +38,7 @@ namespace Aura_OS.System.Compression
         public int Count()
         {
             Byte[] zip = BinaryContent();
-            List<string> signatures = new List<string>();            
+            List<string> signatures = new List<string>();
             int a = 0;
             int count = 0;
             foreach (Byte file in zip)
@@ -53,7 +53,7 @@ namespace Aura_OS.System.Compression
             return count;
         }
 
-        public List<string> ListFiles()
+        public void ListFiles()
         {
             Byte[] zip = BinaryContent();
             List<Byte> Files = new List<Byte>();
@@ -64,7 +64,7 @@ namespace Aura_OS.System.Compression
             int pointer = 0;
 
             foreach (Byte file in zip)
-            {                
+            {
                 if ((zip[a] == 80) && (zip[a + 1] == 75) && (((zip[a + 2] == 3) && (zip[a + 3] == 4))))
                 {
                     b = a - 1;
@@ -89,8 +89,8 @@ namespace Aura_OS.System.Compression
 
                 if ((zip[a] == 80) && (zip[a + 1] == 75) && (((zip[a + 2] == 1) && (zip[a + 3] == 2))))
                 {
-                    FileEnds.Add(a - 1);                   
-                    
+                    FileEnds.Add(a - 1);
+
                 }
 
                 a++;
@@ -103,8 +103,7 @@ namespace Aura_OS.System.Compression
                 Names.Add(files[i]);
                 //Console.WriteLine("zip > [" + i + "] " + files[i]);
             }
-
-            return Names;
+            
         }
 
         private uint ZipHash(Byte[] file)
@@ -124,6 +123,21 @@ namespace Aura_OS.System.Compression
             filenamesize = zip[a + 26]; // 8 - 12
             filenamesize = filenamesize + zip[a + 27]; //2 bytes
             return filenamesize;
+        }
+
+        private string FileName(int pointer)
+        {
+            Byte[] zip = BinaryContent();
+            List<byte> Filename = new List<byte>();
+            List<String> Letters = new List<string>();
+            int length = FileNameLenght(pointer);
+            int fileheadersize = 30 + length;
+            for (int i = 30; i < fileheadersize; i++)
+            {
+                Filename.Add(zip[pointer + i]);
+            }
+            string name = Encoding.ASCII.GetString(Filename.ToArray());
+            return name;
         }
 
         private int ExtraFieldLenght(int pointer)
@@ -148,15 +162,28 @@ namespace Aura_OS.System.Compression
             return CompressedData;
         }
 
-        List<byte> uncompresseddata = new List<byte>();
-
-        private void DeflateFunction()
+        private int FileStartingAt(int fileheader)
         {
-            uncompresseddata = Deflate.Inflate(CompressedFiles(1981, 1987));
+            return fileheader + FileNameLenght(fileheader) + ExtraFieldLenght(fileheader) + 30;
+        }
+
+        private List<byte> DeflateArray(int start, int end)
+        {
+            var buf = new List<byte>();
+            buf = CompressedFiles(start, end); //1981, 1987
+            var data = Deflate.Inflate(buf);
+            Console.WriteLine(data);
+
+            return data;
+        }
+
+        private string ZIPFilename()
+        {
+            return ZIPFile.Remove(ZIPFile.Length - 4, 4);            
         }
 
         int i = 0;
-        public void Open()
+        public void ExtractFiles()
         {
             Byte[] zip = BinaryContent();
             if (IsZIPFile()) //if it's a zip file
@@ -164,31 +191,28 @@ namespace Aura_OS.System.Compression
                 Console.WriteLine("zip > There is " + Count() + " file(s) in the zip archive.");
                 Console.WriteLine();
                 //Console.WriteLine("zip > CRC_32= " + ZipHash().ToString());
-                Console.WriteLine();
-                //ListFiles();
-                foreach (var item in ListFiles())
+                ListFiles();
+                try
                 {
-                    debug = 0;
+                    Directory.CreateDirectory(Kernel.current_directory + ZIPFilename());
+                    foreach (int pointer in FileHeaders)
+                    {
+                        //Console.WriteLine("fileheader pointer: " + pointer);
+                        //Console.WriteLine("filenamelength: " + FileNameLenght(pointer));
+                        //Console.WriteLine("extrafieldlength: " + ExtraFieldLenght(pointer));
+                        //Console.WriteLine("file's start: " + FileStartingAt(pointer));
+                        //Console.WriteLine("file's end: " +  FileEnds[i]);
+                        //Console.WriteLine();                        
+                        File.WriteAllBytes("0:\\" + ZIPFilename() + "\\" + FileName(pointer), DeflateArray(FileStartingAt(pointer), FileEnds[i]).ToArray());
+                        i = i + 1;
+                    }
+                    Console.WriteLine("All files has been extracted.");
                 }
-                foreach (int pointer in FileHeaders)
+                catch (Exception)
                 {
-                    Console.WriteLine("fileheader pointer: " + pointer);
-                    Console.WriteLine("filenamelength: " + FileNameLenght(pointer));
-                    Console.WriteLine("extrafieldlength: " + ExtraFieldLenght(pointer));
-                    Console.WriteLine("file's start: " + (pointer + FileNameLenght(pointer) + ExtraFieldLenght(pointer) + 30));
-                    Console.WriteLine("file's end: " +  FileEnds[i]);
-                    Console.WriteLine();
-                    i = i + 1;
+                    Console.WriteLine("Error during extraction.");
                 }
-
-                DeflateFunction();
-
-                foreach (int item in uncompresseddata)
-                {
-                    Console.WriteLine("---- UNCOMPRESSED DATA  ----- ");
-                    Console.Write(item + " ");
-                    Console.WriteLine();
-                }
+                
             }
         }
     }
