@@ -1,4 +1,10 @@
-﻿using Aura_OS.System.Security;
+﻿/*
+* PROJECT:          Aura Operating System Development
+* CONTENT:          ZIP - Extracting class
+* PROGRAMMER(S):    Alexy DA CRUZ <dacruzalexy@gmail.com>
+*/
+
+using Aura_OS.System.Security;
 using System;
 using System.Collections.Generic;
 using System.IO;

@@ -1,4 +1,12 @@
-﻿using System;
+﻿/*
+* PROJECT:          Aura Operating System Development
+* CONTENT:          ZIP - Deflate class
+* PROGRAMMER(S):    Alexy DA CRUZ <dacruzalexy@gmail.com>
+*                   Tammo Hinrichs <kb@kebby.org>
+*                   Sean Barrett <sean+github@nothings.org>
+*/
+
+using System;
 using System.Collections.Generic;
 using System.Text;
 

@@ -1,6 +1,6 @@
 ﻿/*
 * PROJECT:          Aura Operating System Development
-* CONTENT:          Command Interpreter - ZIP Script
+* CONTENT:          Command Interpreter - ZIP Command
 * PROGRAMMER(S):    DA CRUZ Alexy <dacruzalexy@gmail.com>
 */
 
