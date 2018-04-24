@@ -15,13 +15,16 @@ namespace Aura_OS.System.Compression
     class ZIP
     {
         private string ZIPFile;
-        private List<int> FileHeaders = new List<int>();
-        private List<int> FileEnds = new List<int>();
-        int debug;
+        private List<int> FileHeaders;
+        private List<int> FileEnds;
+        int i;
 
         public ZIP(string filename)
         {
             ZIPFile = filename;
+            FileHeaders = new List<int>();
+            FileEnds = new List<int>();
+            i = 0;
         }
 
         private Byte[] BinaryContent()
@@ -187,7 +190,6 @@ namespace Aura_OS.System.Compression
             return ZIPFile.Remove(ZIPFile.Length - 4, 4);
         }
 
-        int i = 0;
         public void ExtractFiles()
         {
             Byte[] zip = BinaryContent();
