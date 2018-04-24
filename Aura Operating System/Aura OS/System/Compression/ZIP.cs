@@ -109,7 +109,7 @@ namespace Aura_OS.System.Compression
                 Names.Add(files[i]);
                 //Console.WriteLine("zip > [" + i + "] " + files[i]);
             }
-            
+
         }
 
         private uint ZipHash(Byte[] file)
@@ -178,14 +178,13 @@ namespace Aura_OS.System.Compression
             var buf = new List<byte>();
             buf = CompressedFiles(start, end); //1981, 1987
             var data = Deflate.Inflate(buf);
-            Console.WriteLine(data);
 
             return data;
         }
 
         private string ZIPFilename()
         {
-            return ZIPFile.Remove(ZIPFile.Length - 4, 4);            
+            return ZIPFile.Remove(ZIPFile.Length - 4, 4);
         }
 
         int i = 0;
@@ -198,27 +197,24 @@ namespace Aura_OS.System.Compression
                 Console.WriteLine();
                 //Console.WriteLine("zip > CRC_32= " + ZipHash().ToString());
                 ListFiles();
-                try
+                Console.WriteLine(ZIPFilename());
+                Directory.CreateDirectory(ZIPFilename());
+                foreach (int pointer in FileHeaders)
                 {
-                    Directory.CreateDirectory(Kernel.current_directory + ZIPFilename());
-                    foreach (int pointer in FileHeaders)
-                    {
-                        //Console.WriteLine("fileheader pointer: " + pointer);
-                        //Console.WriteLine("filenamelength: " + FileNameLenght(pointer));
-                        //Console.WriteLine("extrafieldlength: " + ExtraFieldLenght(pointer));
-                        //Console.WriteLine("file's start: " + FileStartingAt(pointer));
-                        //Console.WriteLine("file's end: " +  FileEnds[i]);
-                        //Console.WriteLine();                        
-                        File.WriteAllBytes("0:\\" + ZIPFilename() + "\\" + FileName(pointer), DeflateArray(FileStartingAt(pointer), FileEnds[i]).ToArray());
-                        i = i + 1;
-                    }
-                    Console.WriteLine("All files has been extracted.");
+                    Console.WriteLine("fileheader pointer: " + pointer);
+                    Console.WriteLine("filenamelength: " + FileNameLenght(pointer));
+                    Console.WriteLine("extrafieldlength: " + ExtraFieldLenght(pointer));
+                    Console.WriteLine("file's start: " + FileStartingAt(pointer));
+                    Console.WriteLine("file's end: " + FileEnds[i]);
+                    Console.WriteLine();
+                    byte[] filetoextract = DeflateArray(FileStartingAt(pointer), FileEnds[i]).ToArray();
+                    string filewrite = ZIPFilename() + "\\" + FileName(pointer);
+                    Console.WriteLine(filewrite);
+                    File.WriteAllBytes(filewrite, filetoextract);
+                    i = i + 1;
                 }
-                catch (Exception)
-                {
-                    Console.WriteLine("Error during extraction.");
-                }
-                
+                Console.WriteLine("All files has been extracted.");
+
             }
         }
     }
