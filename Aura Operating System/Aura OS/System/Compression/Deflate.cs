@@ -12,6 +12,16 @@ using System.Text;
 
 namespace Aura_OS.System.Compression
 {
+    /// <summary>
+    /// public domain zlib decode    
+    /// original: v0.2  Sean Barrett 2006-11-18
+    /// ported to C# by Tammo Hinrichs, 2012-08-02
+    /// adapted for Aura OS by Alexy Da Cruz, 2018-04-23
+    /// simple implementation
+    /// - all input must be provided in an upfront buffer
+    /// - all output is written to a single output buffer
+    /// - Warning: This is SLOW. It's no miracle .NET as well as Mono implement DeflateStream natively.
+    /// </summary>
     class Deflate
     {
         /// <summary>
