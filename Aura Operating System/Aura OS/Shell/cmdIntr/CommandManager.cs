@@ -260,11 +260,13 @@ namespace Aura_OS.Shell.cmdIntr
                 Core.MultiBoot.Header* header = (Core.MultiBoot.Header*)Core.GetMBI.GetMBIAddress();
 
                 Console.WriteLine("Memupper: " + header->mem_upper.ToString());
+                Core.VBE.ModeInfo* ModeInfo = (Core.VBE.ModeInfo*)header->vbe_mode_info;
 
-                Console.WriteLine("Vbe Mode: " + header->vbe_mode.ToString());
+                Console.WriteLine("VBE Pointer: " + ModeInfo->physbase.ToString());
 
-                Console.WriteLine("Vbe Interface Lenght: " + header->vbe_interface_len.ToString());
-
+                Console.WriteLine("VBE Bpp: " + ModeInfo->bpp.ToString());
+                Console.WriteLine("VBE ResX: " + ModeInfo->resolutionX.ToString());
+                Console.WriteLine("VBE ResY: " + ModeInfo->resolutionY.ToString());
                 //Core.VBE.MultiBoot.Header* Header = Core.VBE.MultiBoot.Header*)
                 //Core.VBE.ModeInfo* ModeInfo = (Core.VBE.ModeInfo*) Header;
 
