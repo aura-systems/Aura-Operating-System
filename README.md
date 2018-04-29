@@ -21,6 +21,8 @@ Please read the [Aura Progression](https://github.com/aura-systems/Aura-Operatin
 * Exception Handler.
 * Console in VGA Textmode (80x25) / SVGAII Graphics mode / VBE Graphics mode + Extended ASCII support.
 
+Aura's kernel: https://github.com/aura-systems/Cosmos.
+
 Work in progress:
 
 * VBE VESA Console - [Pull request](https://github.com/aura-systems/Aura-Operating-System/pull/71).
