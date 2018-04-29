@@ -249,7 +249,7 @@ namespace Aura_OS.System
                     Kernel.AConsole = new System.Shell.VBE.VBEConsole();
                     break;
                 case "VESA":
-                    // TO DO ...
+                    Kernel.AConsole = new System.Shell.VESAVBE.VESAVBEConsole();
                     break;
                 default:
                     Kernel.AConsole = new System.Shell.VGA.VGAConsole(null);
@@ -289,7 +289,7 @@ namespace Aura_OS.System
                     Kernel.AConsole = new System.Shell.VBE.VBEConsole();
                     break;
                 case "VESA":
-                    // TO DO ...
+                    Kernel.AConsole = new System.Shell.VESAVBE.VESAVBEConsole();
                     break;
                 default:
                     Kernel.AConsole = new System.Shell.VGA.VGAConsole(null);

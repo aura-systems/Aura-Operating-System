@@ -1,8 +1,10 @@
-﻿using IL2CPU.API.Attribs;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using XSharp;
+﻿/*
+* PROJECT:          Aura Operating System Development
+* CONTENT:          Get multiboot info structure
+* PROGRAMMERS:      Valentin Charbonnier <valentinbreiz@gmail.com>
+*/
+
+using IL2CPU.API.Attribs;
 using XSharp.Assembler;
 using CPUx86 = XSharp.Assembler.x86;
 

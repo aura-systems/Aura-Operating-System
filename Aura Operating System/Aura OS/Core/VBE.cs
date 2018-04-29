@@ -1,31 +1,31 @@
-﻿using System;
-using System.Collections.Generic;
+﻿/*
+* PROJECT:          Aura Operating System Development
+* CONTENT:          VBE Controller Informations + VBE Mode Info
+* PROGRAMMERS:      Valentin Charbonnier <valentinbreiz@gmail.com>
+*                   https://wiki.osdev.org/User:Omarrx024/VESA_Tutorial
+*/
+
 using System.Runtime.InteropServices;
-using System.Text;
 
 namespace Aura_OS.Core
 {
     public unsafe static class VBE
     {
 
-        [StructLayout(LayoutKind.Explicit, Size = 51)]
+        [StructLayout(LayoutKind.Explicit, Size = 6)]
+        public struct ControllerInfo
+        {
+            [FieldOffset(0)]
+            public uint vbeSignature;
+            [FieldOffset(4)]
+            public ushort vbeVersion;
+        }
+
+        [StructLayout(LayoutKind.Explicit, Size = 256)]
         public struct ModeInfo
         {
             [FieldOffset(0)]
             public ushort attributes; // deprecated, only bit 7 should be of interest to you, and it indicates the mode supports a linear frame buffer.
-            public const int VESA_ATTR_HWSUPPORT = 0x01;
-            public const int VESA_ATTR_TTY = 0x04;
-            public const int VESA_ATTR_COLOR = 0x08;
-            public const int VESA_ATTR_GRAPHICS = 0x10;
-            public const int VESA_ATTR_NOTVGA = 0x20;
-            public const int VESA_ATTR_NOTWINDOW = 0x40;
-            public const int VESA_ATTR_LINEARFB = 0x80;
-            public const int VESA_ATTR_DOUBLESCAN = 0x100;
-            public const int VESA_ATTR_INTERLACE = 0x200;
-            public const int VESA_ATTR_TRIPLEBUF = 0x400;
-            public const int VESA_ATTR_STEREO = 0x800;
-            public const int VESA_ATTR_DUALDISP = 0x1000;
-
             [FieldOffset(2)]
             public byte window_a; // deprecated
             [FieldOffset(3)]

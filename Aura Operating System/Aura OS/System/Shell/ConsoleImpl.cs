@@ -11,9 +11,7 @@ using System.Text;
 using Aura_OS.Shell.cmdIntr;
 using Aura_OS.System.Utils;
 using Cosmos.System;
-using IL2CPU.API;
 using IL2CPU.API.Attribs;
-using Sys = System;
 
 namespace Aura_OS.System.Shell
 {

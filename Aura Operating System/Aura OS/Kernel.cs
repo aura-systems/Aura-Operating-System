@@ -71,15 +71,21 @@ namespace Aura_OS
             {
                 Shell.cmdIntr.CommandManager.RegisterAllCommands();
 
-                AConsole = new System.Shell.VGA.VGAConsole(null);
+                //AConsole = new System.Shell.VGA.VGAConsole(null);
+                AConsole = new System.Shell.VESAVBE.VESAVBEConsole();
 
                 Console.Clear();
+
                 Encoding.RegisterProvider(CosmosEncodingProvider.Instance);
                 Console.InputEncoding = Encoding.GetEncoding(437);
                 Console.OutputEncoding = Encoding.GetEncoding(437);
+
                 Console.ForegroundColor = ConsoleColor.DarkMagenta;
+
                 Console.Write("Booting Aura...\n");
+
                 Console.ForegroundColor = ConsoleColor.White;
+
                 #region Register Filesystem
                 Sys.FileSystem.VFS.VFSManager.RegisterVFS(vFS);
                 if (ContainsVolumes())

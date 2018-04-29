@@ -1,7 +1,7 @@
 ﻿/*
 * PROJECT:          Aura Operating System Development
 * CONTENT:          Memory class
-* PROGRAMMERS:      Myvar
+* PROGRAMMERS:      Myvar (part of CosmosGL)
 */
 
 using System.Collections.Generic;

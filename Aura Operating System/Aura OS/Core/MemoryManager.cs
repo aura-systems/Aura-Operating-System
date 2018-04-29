@@ -5,7 +5,6 @@
 *                   Valentin Charbonnier <valentinbreiz@gmail.com>
 */
 
-using System;
 using Cosmos.Core;
 
 namespace Aura_OS.Core

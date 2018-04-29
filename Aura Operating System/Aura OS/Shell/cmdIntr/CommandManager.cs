@@ -28,11 +28,6 @@ namespace Aura_OS.Shell.cmdIntr
             CMDs.Add(cmd);
         }
 
-        static int depthVESA;
-        static int widthVESA;
-        static int heightVESA;
-        static byte* vga_mem;
-
         public static void RegisterAllCommands()
         {
             Register("shutdown");
@@ -67,16 +62,6 @@ namespace Aura_OS.Shell.cmdIntr
             Register("export");
             Register("lspci");
             Register("about");
-        }
-
-        static void putPixel_VESA(int x, int y, int RGB)
-        {
-            int offset = x * (depthVESA / 8) + y * (widthVESA * (depthVESA / 8));
-
-            vga_mem[offset + 0] = (byte)(RGB & 0xff);
-            vga_mem[offset + 1] = (byte)((RGB >> 8) & 0xff);
-            vga_mem[offset + 2] = (byte)((RGB >> 16) & 0xff);
-
         }
 
         /// <summary>
@@ -252,29 +237,6 @@ namespace Aura_OS.Shell.cmdIntr
             else if (cmd.Equals("play"))
             {
                 Kernel.speaker.playmusic();
-            }
-
-            else if (cmd.Equals("vesa"))
-            {
-
-                Core.MultiBoot.Header* header = (Core.MultiBoot.Header*)Core.GetMBI.GetMBIAddress();
-
-                Console.WriteLine("Memupper: " + header->mem_upper.ToString());
-                Core.VBE.ModeInfo* ModeInfo = (Core.VBE.ModeInfo*)header->vbe_mode_info;
-
-                Console.WriteLine("VBE Pointer: " + ModeInfo->framebuffer.ToString());
-
-                Console.WriteLine("VBE Bpp: " + ModeInfo->bpp.ToString());
-                Console.WriteLine("VBE ResX: " + ModeInfo->width.ToString());
-                Console.WriteLine("VBE ResY: " + ModeInfo->height.ToString());
-                //Core.VBE.MultiBoot.Header* Header = Core.VBE.MultiBoot.Header*)
-                //Core.VBE.ModeInfo* ModeInfo = (Core.VBE.ModeInfo*) Header;
-
-                //widthVESA = ModeInfo->resolutionX;
-                //depthVESA = ModeInfo->bpp;
-                //vga_mem = (byte*)ModeInfo->physbase;
-                //putPixel_VESA(10, 10, 0xFFFFFF);
-
             }
 
             //else if (cmd.StartsWith("xml "))

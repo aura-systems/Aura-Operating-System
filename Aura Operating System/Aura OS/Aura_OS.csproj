@@ -14,20 +14,22 @@
     <Bochs_StackCorruptionDetectionLevel>MethodFooters</Bochs_StackCorruptionDetectionLevel>
     <Bochs_Name>Aura_OSBoot</Bochs_Name>
     <Bochs_IgnoreDebugStubAttribute>False</Bochs_IgnoreDebugStubAttribute>
+    <IntelEdison_StackCorruptionDetectionLevel>MethodFooters</IntelEdison_StackCorruptionDetectionLevel>
+    <IntelEdison_IgnoreDebugStubAttribute>False</IntelEdison_IgnoreDebugStubAttribute>
   </PropertyGroup>
   <PropertyGroup>
     <BinFormat>Bin</BinFormat>
-    <Profile>VMware</Profile>
+    <Profile>Bochs</Profile>
     <DebugEnabled>True</DebugEnabled>
     <DebugMode>Source</DebugMode>
     <TraceMode>User</TraceMode>
     <EnableGDB>False</EnableGDB>
     <StartCosmosGDB>false</StartCosmosGDB>
-    <VMWareEdition>Workstation</VMWareEdition>
+    <VMWareEdition>Player</VMWareEdition>
     <OutputPath>bin\Debug\</OutputPath>
-    <Description>Use VMware Player or Workstation to deploy and debug.</Description>
+    <Description>Use Bochs emulator to deploy and debug.</Description>
     <Deployment>ISO</Deployment>
-    <Launch>VMware</Launch>
+    <Launch>Bochs</Launch>
     <VisualStudioDebugPort>Pipe: Cosmos\Serial</VisualStudioDebugPort>
     <PxeInterface>192.168.68.1</PxeInterface>
     <VMware_Description>Use VMware Player or Workstation to deploy and debug.</VMware_Description>
@@ -54,7 +56,7 @@
     <ISO_StartCosmosGDB>false</ISO_StartCosmosGDB>
     <StackCorruptionDetectionEnabled>True</StackCorruptionDetectionEnabled>
     <ISO_StackCorruptionDetectionEnabled>False</ISO_StackCorruptionDetectionEnabled>
-    <VMware_StackCorruptionDetectionEnabled>True</VMware_StackCorruptionDetectionEnabled>
+    <VMware_StackCorruptionDetectionEnabled>False</VMware_StackCorruptionDetectionEnabled>
     <Bochs_StackCorruptionDetectionEnabled>True</Bochs_StackCorruptionDetectionEnabled>
     <Bochs_Description>Use Bochs emulator to deploy and debug.</Bochs_Description>
     <Bochs_Deployment>ISO</Bochs_Deployment>
@@ -99,7 +101,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <DebugEnabled>False</DebugEnabled>
-    <StackCorruptionDetectionEnabled>False</StackCorruptionDetectionEnabled>
+    <StackCorruptionDetectionEnabled>True</StackCorruptionDetectionEnabled>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
