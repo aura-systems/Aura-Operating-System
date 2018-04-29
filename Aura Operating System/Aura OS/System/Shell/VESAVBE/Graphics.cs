@@ -22,7 +22,10 @@ namespace Aura_OS.System.Shell.VESAVBE
         public static int depthVESA;
         public static int widthVESA;
         public static int heightVESA;
+        public static string VESAMode = "Unkown Mode? How!?";
         public static byte* vga_mem;
+
+        public static uint vbepointer;
 
         public Graphics()
         {
@@ -94,6 +97,25 @@ namespace Aura_OS.System.Shell.VESAVBE
             widthVESA = ModeInfo->width;
             depthVESA = ModeInfo->bpp;
             vga_mem = (byte*)ModeInfo->framebuffer;
+
+            vbepointer = ModeInfo->framebuffer;
+
+            if (widthVESA.Equals(1280) &&  heightVESA.Equals(768))
+            {
+                VESAVBEConsole.mRows = (int)ConsoleMode.Mode1280x768.Rows;
+                VESAVBEConsole.mWidth = (int)ConsoleMode.Mode1280x768.Rows;
+                VESAVBEConsole.mCols = (int)ConsoleMode.Mode1280x768.Cols;
+                VESAVBEConsole.mHeight = (int)ConsoleMode.Mode1280x768.Cols;
+                VESAMode = "Mode1280x768";
+            }
+            else if (widthVESA.Equals(1600) && heightVESA.Equals(1200))
+            {
+                VESAVBEConsole.mRows = (int)ConsoleMode.Mode1600x1200.Rows;
+                VESAVBEConsole.mWidth = (int)ConsoleMode.Mode1600x1200.Rows;
+                VESAVBEConsole.mCols = (int)ConsoleMode.Mode1600x1200.Cols;
+                VESAVBEConsole.mHeight = (int)ConsoleMode.Mode1600x1200.Cols;
+                VESAMode = "Mode1600x1200";
+            }
 
             canvas = new Driver.VESACanvas(widthVESA, heightVESA);
         }
@@ -200,6 +222,7 @@ namespace Aura_OS.System.Shell.VESAVBE
         public void ScrollUp()
         {
             canvas.ScrollUp();
+            canvas.WriteToScreen();
         }
     }
 }

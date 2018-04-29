@@ -48,24 +48,28 @@ namespace Aura_OS.System.Shell.VESAVBE
             }
         }
 
+        public static int mWidth = 110;
         public override int Width
         {
-            get { return 110; } //141
+            get { return mWidth; } //141
         }
 
+        public static int mHeight = 48;
         public override int Height
         {
-            get { return 48; } //48
+            get { return mHeight; } //48 Perfert for y = 768
         }
 
+        public static int mCols = 48;
         public override int Cols
         {
-            get { return 48; } //48
+            get { return mCols; } //48
         }
 
+        public static int mRows = 110;
         public override int Rows
         {
-            get { return 110; } //141
+            get { return mRows; } //141
         }
 
         public static uint foreground = (byte)ConsoleColor.White;
@@ -110,7 +114,7 @@ namespace Aura_OS.System.Shell.VESAVBE
                         break;
                 }
             }
-            Driver.VESACanvas.WriteToScreen();
+            //Driver.VESACanvas.WriteToScreen();
         }
 
         private void DoTab()

@@ -17,7 +17,7 @@ namespace Aura_OS.System.Shell
 
         public Console()
         {
-            
+
         }
 
         public string Name;
@@ -46,6 +46,35 @@ namespace Aura_OS.System.Shell
         public abstract void DrawImage(ushort X, ushort Y, ushort Length, ushort height, Image image);
 
         public abstract void DisableGraphicMode();
+
+    }
+
+    public static class ConsoleMode
+    {
+
+        public enum Mode1280x768
+        {
+            Rows = 141,
+            Cols = 48
+        };
+
+        public enum Mode1366x768
+        {
+            Rows = 150,
+            Cols = 48
+        };
+
+        public enum Mode1600x1200
+        {
+            Rows = 176,
+            Cols = 75
+        };
+
+        public enum Mode1920x1080
+        {
+            Rows = 141, // Not good value
+            Cols = 48 // Not good value
+        };
 
     }
 }

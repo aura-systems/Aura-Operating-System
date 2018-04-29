@@ -239,6 +239,15 @@ namespace Aura_OS.Shell.cmdIntr
                 Kernel.speaker.playmusic();
             }
 
+            else if (cmd.Equals("vbeinfo"))
+            {
+                Console.WriteLine("BPP: " + System.Shell.VESAVBE.Graphics.depthVESA);
+                Console.WriteLine("Height: " + System.Shell.VESAVBE.Graphics.heightVESA);
+                Console.WriteLine("Width: " + System.Shell.VESAVBE.Graphics.widthVESA);
+                Console.WriteLine("VBE Pointer: " + System.Shell.VESAVBE.Graphics.vbepointer);
+                Console.WriteLine("VBE Mode: " + System.Shell.VESAVBE.Graphics.VESAMode);
+            }
+
             //else if (cmd.StartsWith("xml "))
             //{
             //    Util.xml.CmdXmlParser.c_CmdXmlParser(cmd, 0, 4);
