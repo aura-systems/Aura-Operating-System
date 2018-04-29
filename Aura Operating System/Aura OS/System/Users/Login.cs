@@ -124,9 +124,6 @@ namespace Aura_OS.System.Users
                     case "SVGAII":
                         Kernel.AConsole = new System.Shell.SVGAII.VMWareSVGAConsole();
                         break;
-                    case "VBE":
-                        Kernel.AConsole = new System.Shell.VBE.VBEConsole();
-                        break;
                     case "VESA":
                         Kernel.AConsole = new System.Shell.VESAVBE.VESAVBEConsole();
                         break;
@@ -147,9 +144,6 @@ namespace Aura_OS.System.Users
                         break;
                     case "SVGAII":
                         Kernel.AConsole = new System.Shell.SVGAII.VMWareSVGAConsole();
-                        break;
-                    case "VBE":
-                        Kernel.AConsole = new System.Shell.VBE.VBEConsole();
                         break;
                     case "VESA":
                         Kernel.AConsole = new System.Shell.VESAVBE.VESAVBEConsole();

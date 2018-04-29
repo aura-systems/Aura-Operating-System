@@ -7,7 +7,7 @@
 
 using System;
 using System.Runtime.CompilerServices;
-using Aura_OS.System.Shell.VBE.CosmosGLGraphics;
+using Aura_OS.System.Graphics;
 using Cosmos.HAL;
 using L = Aura_OS.System.Translation;
 

@@ -6,7 +6,7 @@
 
 
 using System;
-using Aura_OS.System.Shell.VBE.CosmosGLGraphics;
+using Aura_OS.System.Graphics;
 
 namespace Aura_OS.System.Shell.VESAVBE
 {

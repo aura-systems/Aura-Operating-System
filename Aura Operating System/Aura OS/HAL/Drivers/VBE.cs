@@ -6,11 +6,12 @@
 
 
 using Aura_OS.Core;
+using Aura_OS.System.Shell.VESAVBE;
 using Cosmos.Core.Memory.Old;
 
-namespace Aura_OS.System.Shell.VESAVBE.Driver
+namespace Aura_OS.HAL.Drivers
 {
-    unsafe class VESACanvas
+    unsafe class VBE
     {
 
         //public static void SetPixel(int x, int y, int RGB)
@@ -27,7 +28,7 @@ namespace Aura_OS.System.Shell.VESAVBE.Driver
         public static int Height { get; set; }
         public int len;
 
-        public VESACanvas(int width, int height)
+        public VBE(int width, int height)
         {
             Width = width;
             Height = height;

@@ -138,14 +138,6 @@ namespace Aura_OS.Shell.cmdIntr.Settings
                                 System.Utils.Settings.EditValue("consolemode", "SVGAII");
                                 System.Utils.Settings.PushValues();
                                 break;
-                            case "VBE":
-                                Kernel.AConsole.Clear();
-                                Kernel.AConsole = new System.Shell.VBE.VBEConsole();
-                                Kernel.Consolemode = "VBE";
-                                System.Utils.Settings.LoadValues();
-                                System.Utils.Settings.EditValue("consolemode", "VBE");
-                                System.Utils.Settings.PushValues();
-                                break;
                             default:
                                 L.Text.Display("nographicmode");
                                 break;

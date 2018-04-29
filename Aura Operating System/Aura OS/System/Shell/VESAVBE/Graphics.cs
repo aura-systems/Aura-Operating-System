@@ -4,7 +4,8 @@
 * PROGRAMMERS:      Valentin Charbonnier <valentinbreiz@gmail.com>
 */
 
-using Aura_OS.System.Shell.VBE.CosmosGLGraphics;
+using Aura_OS.HAL.Drivers;
+using Aura_OS.System.Graphics;
 
 namespace Aura_OS.System.Shell.VESAVBE
 {
@@ -13,7 +14,7 @@ namespace Aura_OS.System.Shell.VESAVBE
 
         //public static VbeScreen Screen = new VbeScreen();
 
-        public Driver.VESACanvas canvas;
+        public VBE canvas;
 
         private static byte[] font;
         //public static VESACanvas vesa;
@@ -133,7 +134,7 @@ namespace Aura_OS.System.Shell.VESAVBE
                 VESAMode = "Mode1360x768";
             }
 
-            canvas = new Driver.VESACanvas(widthVESA, heightVESA);
+            canvas = new VBE(widthVESA, heightVESA);
         }
 
         private byte[] Read_font()
@@ -160,15 +161,13 @@ namespace Aura_OS.System.Shell.VESAVBE
 
         public void DrawImage(ushort X, ushort Y, ushort Length, ushort height, Image image)
         {
-            int p = 0;
-            Kernel.AConsole.Y += height / 15;
-            for (ushort x = 0; x < Length; x++)
+            int z = 0;
+            for (int p = Y; p < Y + image.Height; p++)
             {
-                for (ushort y = 0; y < height; y++)
+                for (int i = X; i < X + image.Width; i++)
                 {
-                    if (y < (height - 2) || x != (Kernel.AConsole.Width - 2))
-                        //Driver.VESACanvas.SetPixel((ushort)(X + x), (ushort)(Y + y), image.GetPixel(x, y));
-                    p++;
+                    canvas.SetPixel(i, p, (uint)image.Map[z]);
+                    z++;
                 }
             }
         }
