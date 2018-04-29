@@ -13,7 +13,7 @@ namespace Aura_OS.System.Shell.VESAVBE
 
         //public static VbeScreen Screen = new VbeScreen();
 
-        public Driver.VESACanvas canvas = new Driver.VESACanvas(1280, 768);
+        public Driver.VESACanvas canvas;
 
         private static byte[] font;
         //public static VESACanvas vesa;
@@ -95,6 +95,7 @@ namespace Aura_OS.System.Shell.VESAVBE
             depthVESA = ModeInfo->bpp;
             vga_mem = (byte*)ModeInfo->framebuffer;
 
+            canvas = new Driver.VESACanvas(widthVESA, heightVESA);
         }
 
         private byte[] Read_font()

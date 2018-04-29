@@ -50,22 +50,22 @@ namespace Aura_OS.System.Shell.VESAVBE
 
         public override int Width
         {
-            get { return 87; } //141
+            get { return 110; } //141
         }
 
         public override int Height
         {
-            get { return 37; } //48
+            get { return 48; } //48
         }
 
         public override int Cols
         {
-            get { return 37; } //48
+            get { return 48; } //48
         }
 
         public override int Rows
         {
-            get { return 87; } //141
+            get { return 110; } //141
         }
 
         public static uint foreground = (byte)ConsoleColor.White;

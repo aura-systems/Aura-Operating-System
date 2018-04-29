@@ -23,53 +23,55 @@ namespace Aura_OS.System.Shell.VESAVBE.Driver
         //
         //}
 
+        public static int Width { get; set; }
+        public static int Height { get; set; }
+
         public VESACanvas(int width, int height)
         {
-            Graphics.widthVESA = width;
-            Graphics.heightVESA = height;
+            Width = width;
+            Height = height;
 
-            _buffer = (uint*)Heap.MemAlloc((uint)(Graphics.widthVESA * Graphics.heightVESA * 4));
+            _buffer = (uint*)Heap.MemAlloc((uint)(Width * Height * 4));
         }
 
         private static uint* _buffer;
 
         public void SetPixel(int x, int y, uint c)
         {
-            _buffer[x + (y * Graphics.widthVESA)] = c;
+            _buffer[x + (y * Width)] = c;
         }
 
         internal void Clear(uint c)
         {
-            Memory.Memset(_buffer, c, (uint)(Graphics.widthVESA * Graphics.heightVESA));
+            Memory.Memset(_buffer, c, (uint)(Width * Height));
         }
 
         internal static void WriteToScreen()
         {
-            Memory.Memcpy((uint*)Graphics.vga_mem, _buffer, Graphics.widthVESA * Graphics.heightVESA);
+            Memory.Memcpy((uint*)Graphics.vga_mem, _buffer, Width * Height);
         }
 
         public void ScrollUp()
         {
 
-            for (int i = 0; i < Graphics.heightVESA; i++)
+            for (int i = 0; i < Height; i++)
             {
-                for (int m = 0; m < Graphics.widthVESA; m++)
+                for (int m = 0; m < Width; m++)
                 {
-                    _buffer[i * Graphics.widthVESA + m] = _buffer[(i + 16) * Graphics.widthVESA + m];
+                    _buffer[i * Width + m] = _buffer[(i + 16) * Width + m];
 
                 }
             }
 
-            for (int i = Graphics.heightVESA - 16; i < Graphics.heightVESA; i++)
+            for (int i = Height - 16; i < Height; i++)
             {
-                for (int m = 0; m < Graphics.widthVESA; m++)
+                for (int m = 0; m < Width; m++)
                 {
-                    _buffer[i * Graphics.widthVESA + m] = 0x00;
+                    _buffer[i * Width + m] = 0x00;
 
                 }
             }
-
-
         }
+
     }
 }
