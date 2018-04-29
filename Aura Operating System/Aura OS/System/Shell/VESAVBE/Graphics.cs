@@ -116,6 +116,22 @@ namespace Aura_OS.System.Shell.VESAVBE
                 VESAVBEConsole.mHeight = (int)ConsoleMode.Mode1600x1200.Cols;
                 VESAMode = "Mode1600x1200";
             }
+            else if (widthVESA.Equals(1152) && heightVESA.Equals(864))
+            {
+                VESAVBEConsole.mRows = (int)ConsoleMode.Mode1152x864.Rows;
+                VESAVBEConsole.mWidth = (int)ConsoleMode.Mode1152x864.Rows;
+                VESAVBEConsole.mCols = (int)ConsoleMode.Mode1152x864.Cols;
+                VESAVBEConsole.mHeight = (int)ConsoleMode.Mode1152x864.Cols;
+                VESAMode = "Mode1152x864";
+            }
+            else if (widthVESA.Equals(1360) && heightVESA.Equals(768))
+            {
+                VESAVBEConsole.mRows = (int)ConsoleMode.Mode1360x768.Rows;
+                VESAVBEConsole.mWidth = (int)ConsoleMode.Mode1360x768.Rows;
+                VESAVBEConsole.mCols = (int)ConsoleMode.Mode1360x768.Cols;
+                VESAVBEConsole.mHeight = (int)ConsoleMode.Mode1360x768.Cols;
+                VESAMode = "Mode1360x768";
+            }
 
             canvas = new Driver.VESACanvas(widthVESA, heightVESA);
         }
