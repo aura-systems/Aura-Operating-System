@@ -23,9 +23,10 @@ namespace Aura_OS.System
             //}
             //else
             //{
-                Kernel.Consolemode = "VESA";
-                return "VESA";
             //}
+
+            Kernel.Consolemode = "VESA";
+            return "VESA";
         }
     }
 }
