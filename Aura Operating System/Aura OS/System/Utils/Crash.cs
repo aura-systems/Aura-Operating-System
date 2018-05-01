@@ -19,12 +19,6 @@ namespace Aura_OS.System
         public static void StopKernel(Exception ex)
         {
 
-            if (Kernel.Consolemode != "VGATextmode" || (Kernel.Consolemode != "VBE")) // Virtualbox can't return to textmode :/
-            {
-                Kernel.AConsole.DisableGraphicMode();
-                Kernel.Consolemode = "VGATextmode";
-            }
-
             Kernel.running = false;
 
             string ex_message = ex.Message;
@@ -32,7 +26,10 @@ namespace Aura_OS.System
 
             Console.BackgroundColor = ConsoleColor.Red;
 
-            Console.Clear();
+            Shell.VESAVBE.Graphics.canvas.Clear(0xAA0000);
+
+            Kernel.AConsole.X = 0;
+            Kernel.AConsole.Y = 0;
 
             Console.WriteLine("An error occured in Aura Operating System:");
             Console.WriteLine(ex);
@@ -64,17 +61,14 @@ namespace Aura_OS.System
         public static void StopKernel(string exception, string description, string lastknowaddress, string ctxinterrupt)
         {
 
-            if (Kernel.Consolemode != "VGATextmode" || (Kernel.Consolemode != "VBE")) // Virtualbox can't return to textmode :/
-            {
-                Kernel.AConsole.DisableGraphicMode();
-                Kernel.Consolemode = "VGATextmode";
-            }
-
             Kernel.running = false;
 
             Console.BackgroundColor = ConsoleColor.Red;
 
-            Console.Clear();
+            Shell.VESAVBE.Graphics.canvas.Clear(0xAA0000);
+
+            Kernel.AConsole.X = 0;
+            Kernel.AConsole.Y = 0;
 
             Console.WriteLine("CPU Exception x" + ctxinterrupt + " occured in Aura Operating System:");
             Console.WriteLine("Exception: " + exception);

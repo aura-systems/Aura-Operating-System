@@ -272,7 +272,7 @@ namespace Aura_OS.System.Shell
                 // for now:
                 return 25;
             }
-            return GetConsole().Rows;
+            return GetConsole().Cols;
         }
 
         public static void set_WindowHeight(int value)
@@ -310,7 +310,7 @@ namespace Aura_OS.System.Shell
                 // for now:
                 return 85;
             }
-            return GetConsole().Cols;
+            return GetConsole().Rows;
         }
 
         public static void set_WindowWidth(int value)

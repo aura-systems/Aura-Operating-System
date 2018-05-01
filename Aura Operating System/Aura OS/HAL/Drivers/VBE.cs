@@ -38,17 +38,31 @@ namespace Aura_OS.HAL.Drivers
 
         private static uint* _buffer;
 
-        public void SetPixel(int x, int y, uint c)
+        public void SetPixel(int x, int y, uint c, bool background)
         {
+            if (background)
+            {
+                if (c != 0x00)
+                {
+                    _buffer[x + (y * Width)] = c;
 
-            _buffer[x + (y * Width)] = c;
+                    int offset = x * (Graphics.depthVESA / 8) + y * (Graphics.widthVESA * (Graphics.depthVESA / 8));
+                    //
+                    Graphics.vga_mem[offset + 0] = (byte)(c & 0xff);
+                    Graphics.vga_mem[offset + 1] = (byte)((c >> 8) & 0xff);
+                    Graphics.vga_mem[offset + 2] = (byte)((c >> 16) & 0xff);
+                }
+            }
+            else
+            {
+                _buffer[x + (y * Width)] = c;
 
-            int offset = x * (Graphics.depthVESA / 8) + y * (Graphics.widthVESA * (Graphics.depthVESA / 8));
-            //
-            Graphics.vga_mem[offset + 0] = (byte)(c & 0xff);
-            Graphics.vga_mem[offset + 1] = (byte)((c >> 8) & 0xff);
-            Graphics.vga_mem[offset + 2] = (byte)((c >> 16) & 0xff);
-            
+                int offset = x * (Graphics.depthVESA / 8) + y * (Graphics.widthVESA * (Graphics.depthVESA / 8));
+                //
+                Graphics.vga_mem[offset + 0] = (byte)(c & 0xff);
+                Graphics.vga_mem[offset + 1] = (byte)((c >> 8) & 0xff);
+                Graphics.vga_mem[offset + 2] = (byte)((c >> 16) & 0xff);
+            }
         }
 
         internal void Clear(uint c)
