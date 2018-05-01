@@ -38,13 +38,6 @@ namespace Aura_OS.Shell.cmdIntr.Settings
             Directory.SetCurrentDirectory(Kernel.current_directory);
             Kernel.current_directory = @"0:\";
             Console.Clear();
-
-            if (Kernel.Consolemode != "VGATextmode" || (Kernel.Consolemode != "VBE")) // Virtualbox can't return to textmode :/
-            {
-                Kernel.AConsole.DisableGraphicMode();
-                Kernel.Consolemode = "VGATextmode";
-            }
-
         }
     }
 }

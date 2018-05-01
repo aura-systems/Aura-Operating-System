@@ -112,7 +112,6 @@ namespace Aura_OS.System.Shell.VESAVBE
                         break;
                 }
             }
-            //Driver.VESACanvas.WriteToScreen();
         }
 
         private void DoTab()
@@ -126,13 +125,6 @@ namespace Aura_OS.System.Shell.VESAVBE
         public override void DrawImage(ushort X, ushort Y, ushort Length, ushort height, Image image)
         {
             graphics.DrawImage(X, Y, Length, height, image);
-        }
-
-        public override void DisableGraphicMode()
-        {
-            //graphics.Disable();
-            //Kernel.AConsole = new VGA.VGAConsole(null);
-            //Kernel.AConsole.Clear();
         }
 
     }

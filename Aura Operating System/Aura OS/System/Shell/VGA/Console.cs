@@ -160,11 +160,6 @@ namespace Aura_OS.System.Shell.VGA
             throw new NotImplementedException();
         }
 
-        public override void DisableGraphicMode()
-        {
-            L.Text.Display("alreadyintextmode");
-        }
-
         public override ConsoleColor Foreground
         {
             get { return (ConsoleColor)(mText.GetColor() ^ (byte)((byte)Background << 4)); }

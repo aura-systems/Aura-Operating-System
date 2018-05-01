@@ -52,7 +52,6 @@ namespace Aura_OS.System.Shell.VESAVBE
             Core.MultiBoot.Header* header = (Core.MultiBoot.Header*)Core.GetMBI.GetMBIAddress();
 
             //Kernel.debugger.Send("Multiboot upper: " + header->mem_upper.ToString());
-            //Console.WriteLine("Multiboot bootloader name: " + header->boo.ToString());
 
             Core.VBE.ModeInfo* ModeInfo = (Core.VBE.ModeInfo*)header->vbeModeInfo;
             Core.VBE.ControllerInfo* ControllerInfo = (Core.VBE.ControllerInfo*)header->vbeControlInfo;
@@ -147,12 +146,6 @@ namespace Aura_OS.System.Shell.VESAVBE
 
             };
             return font;
-        }
-
-        internal void Disable()
-        {
-            canvas.Clear(0xffffff);
-            //Screen.Disable();
         }
 
         internal void Clear(int c)

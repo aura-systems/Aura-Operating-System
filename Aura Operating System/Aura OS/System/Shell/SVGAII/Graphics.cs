@@ -2,7 +2,7 @@
 * PROJECT:          Aura Operating System Development
 * CONTENT:          SVGAII Graphics
 * PROGRAMMERS:      Valentin Charbonnier <valentinbreiz@gmail.com>
-*/
+
 
 using Aura_OS.System.Graphics;
 using Cosmos.HAL.Drivers.PCI.Video;
@@ -148,3 +148,5 @@ namespace Aura_OS.System.Shell.SVGAII
         }
     }
 }
+
+*/
