@@ -50,6 +50,12 @@ namespace Aura_OS.System.Shell
     public static class ConsoleMode
     {
 
+        public enum Mode800x600
+        {
+            Rows = 87,
+            Cols = 37
+        };
+
         public enum Mode1152x864
         {
             Rows = 127,

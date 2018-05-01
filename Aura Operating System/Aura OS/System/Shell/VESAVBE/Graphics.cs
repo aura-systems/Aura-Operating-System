@@ -132,6 +132,14 @@ namespace Aura_OS.System.Shell.VESAVBE
                 VESAVBEConsole.mHeight = (int)ConsoleMode.Mode1360x768.Cols;
                 VESAMode = "Mode1360x768";
             }
+            else if (widthVESA.Equals(800) && heightVESA.Equals(600))
+            {
+                VESAVBEConsole.mRows = (int)ConsoleMode.Mode800x600.Rows;
+                VESAVBEConsole.mWidth = (int)ConsoleMode.Mode800x600.Rows;
+                VESAVBEConsole.mCols = (int)ConsoleMode.Mode800x600.Cols;
+                VESAVBEConsole.mHeight = (int)ConsoleMode.Mode800x600.Cols;
+                VESAMode = "Mode800x600";
+            }
 
             canvas = new VBE(widthVESA, heightVESA);
         }
