@@ -31,7 +31,8 @@ namespace Aura_OS.Shell.cmdIntr
         public static void RegisterAllCommands()
         {
             Register("shutdown");
-            Register("rebooot");
+            Register("reboot");
+            Register("sha256");
             Register("clear");
             Register("echo");
             Register("help");
