@@ -26,7 +26,8 @@ namespace Aura_OS.System.Shell.VESAVBE
         public static int heightVESA;
         public static string VESAMode = "Unkown Mode? How!?";
         public static byte* vga_mem;
-
+        public static string ssignature;
+        public static string sversion;
         public static uint vbepointer;
 
         public Graphics()
@@ -59,9 +60,7 @@ namespace Aura_OS.System.Shell.VESAVBE
             //debugger.Send("VBE Signature: " + ControllerInfo->vbeSignature.ToString());
 
             ushort version = ControllerInfo->vbeVersion;
-            string sversion;
             uint signature = ControllerInfo->vbeSignature;
-            string ssignature;
 
             if (signature == 0x41534556) // VESA in Hex
             {

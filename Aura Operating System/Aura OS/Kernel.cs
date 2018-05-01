@@ -86,6 +86,15 @@ namespace Aura_OS
 
                 Console.ForegroundColor = ConsoleColor.White;
 
+                Console.WriteLine("VBE Informations:");
+                Console.WriteLine("VBE Version: " + System.Shell.VESAVBE.Graphics.sversion);
+                Console.WriteLine("VBE Signature: " + System.Shell.VESAVBE.Graphics.ssignature);
+                Console.WriteLine("BPP: " + System.Shell.VESAVBE.Graphics.depthVESA);
+                Console.WriteLine("Height: " + System.Shell.VESAVBE.Graphics.heightVESA);
+                Console.WriteLine("Width: " + System.Shell.VESAVBE.Graphics.widthVESA);
+                Console.WriteLine("VBE Pointer: " + System.Shell.VESAVBE.Graphics.vbepointer);
+                Console.WriteLine("VBE Mode: " + System.Shell.VESAVBE.Graphics.VESAMode);
+
                 #region Register Filesystem
                 Sys.FileSystem.VFS.VFSManager.RegisterVFS(vFS);
                 if (ContainsVolumes())
