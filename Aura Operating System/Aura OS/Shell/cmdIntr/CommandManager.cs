@@ -258,7 +258,7 @@ namespace Aura_OS.Shell.cmdIntr
                 Console.WriteLine("OEM Software Rev: " + System.Shell.VESAVBE.Graphics.oemSoftwareRev);
                 Console.WriteLine("OEM Vendor Name Pointer: 0x" + Conversion.DecToHex((int)System.Shell.VESAVBE.Graphics.oemVendorNamePtr));
                 Console.WriteLine("OEM Product Name Pointer: 0x" + Conversion.DecToHex((int)System.Shell.VESAVBE.Graphics.oemProductNamePtr));
-                Console.WriteLine("OEM Product Rev: " + System.Shell.VESAVBE.Graphics.oemProductRevPtr);
+                Console.WriteLine("OEM Product Rev Pointer: 0x" + Conversion.DecToHex((int)System.Shell.VESAVBE.Graphics.oemProductRevPtr));
             }
 
             //else if (cmd.StartsWith("xml "))
