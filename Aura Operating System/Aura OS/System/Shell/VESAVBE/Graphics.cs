@@ -7,6 +7,7 @@
 using Aura_OS.HAL.Drivers;
 using Aura_OS.System.Graphics;
 using System;
+using System.Collections.Generic;
 
 namespace Aura_OS.System.Shell.VESAVBE
 {
@@ -39,6 +40,20 @@ namespace Aura_OS.System.Shell.VESAVBE
         public static uint oemVendorNamePtr;
         public static uint oemProductNamePtr;
         public static uint oemProductRevPtr;
+
+        public static List<ushort> modelist = new List<ushort>();
+
+        void* FP_TO_LINEAR(void* seg, void* off) {
+            return ((void*)((((ushort)(seg)) << 4) + ((ushort)(off))));
+        }
+
+        void* FP_SEG(void* fp) {
+            return ((void*)((uint)(fp) >> 16));
+        }
+
+        void* FP_OFF(void* fp) {
+            return ((void*)(((uint)fp) & 0xffff));
+        }
 
         public Graphics()
         {
@@ -81,7 +96,11 @@ namespace Aura_OS.System.Shell.VESAVBE
                 ssignature = "Unknown Signature";
             }
 
-            if (version == 0x200)
+            if (version == 0x102)
+            {
+                sversion = "1.2";
+            }
+            else if (version == 0x200)
             {
                 sversion = "2.0";
             }
@@ -103,6 +122,15 @@ namespace Aura_OS.System.Shell.VESAVBE
             oemVendorNamePtr = ControllerInfo->oemVendorNamePtr;
             oemProductNamePtr = ControllerInfo->oemProductNamePtr;
             oemProductRevPtr = ControllerInfo->oemProductRevPtr;
+
+
+            ushort* mode_ptr = (ushort*)FP_TO_LINEAR(FP_SEG((void*)videoModePtr), FP_OFF((void*)videoModePtr));
+
+            for (int i = 0; mode_ptr[i] != 0xFFFF; ++i)
+            {
+                modelist.Add(mode_ptr[i]);
+                mode_ptr += 2;
+            }
 
             //Kernel.debugger.Send("VBE Signature: " + ssignature);
             //Kernel.debugger.Send("VBE Version: " + sversion);

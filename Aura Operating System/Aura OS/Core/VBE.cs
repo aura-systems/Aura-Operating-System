@@ -3,6 +3,7 @@
 * CONTENT:          VBE Controller Informations + VBE Mode Info
 * PROGRAMMERS:      Valentin Charbonnier <valentinbreiz@gmail.com>
 *                   https://wiki.osdev.org/User:Omarrx024/VESA_Tutorial
+*                   http://www.phatcode.net/res/221/files/vbe20.pdf
 */
 
 using System.Runtime.InteropServices;

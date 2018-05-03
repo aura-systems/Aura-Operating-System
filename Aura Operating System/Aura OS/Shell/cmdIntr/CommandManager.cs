@@ -261,6 +261,15 @@ namespace Aura_OS.Shell.cmdIntr
                 Console.WriteLine("OEM Product Rev Pointer: 0x" + Conversion.DecToHex((int)System.Shell.VESAVBE.Graphics.oemProductRevPtr));
             }
 
+            else if (cmd.Equals("vbemodes"))
+            {
+                Console.WriteLine("[VBE Mode List]");
+                foreach (ushort mode in System.Shell.VESAVBE.Graphics.modelist)
+                {
+                    Console.WriteLine("Mode:" + Conversion.DecToHex(mode));
+                }
+            }
+
             //else if (cmd.StartsWith("xml "))
             //{
             //    Util.xml.CmdXmlParser.c_CmdXmlParser(cmd, 0, 4);
