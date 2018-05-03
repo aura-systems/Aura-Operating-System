@@ -241,11 +241,24 @@ namespace Aura_OS.Shell.cmdIntr
 
             else if (cmd.Equals("vbeinfo"))
             {
+                Console.WriteLine("[VBE Mode Information]");
                 Console.WriteLine("BPP: " + System.Shell.VESAVBE.Graphics.depthVESA);
                 Console.WriteLine("Height: " + System.Shell.VESAVBE.Graphics.heightVESA);
                 Console.WriteLine("Width: " + System.Shell.VESAVBE.Graphics.widthVESA);
-                Console.WriteLine("VBE Pointer: " + System.Shell.VESAVBE.Graphics.vbepointer);
+                Console.WriteLine("VBE Pointer: 0x" + Conversion.DecToHex((int)System.Shell.VESAVBE.Graphics.vbepointer));
                 Console.WriteLine("VBE Mode: " + System.Shell.VESAVBE.Graphics.VESAMode);
+                Console.WriteLine("[VBE Controller Information]");
+                Console.WriteLine("VBE Version: " + System.Shell.VESAVBE.Graphics.sversion);
+                Console.WriteLine("VBE Signature: " + System.Shell.VESAVBE.Graphics.ssignature);
+                Console.WriteLine("OEM String Pointer: 0x" + Conversion.DecToHex((int)System.Shell.VESAVBE.Graphics.oemStringPtr));
+                Console.WriteLine("Capabilites: " + System.Shell.VESAVBE.Graphics.capabilities);
+                Console.WriteLine("Video Mode Pointer: 0x" + Conversion.DecToHex((int)System.Shell.VESAVBE.Graphics.videoModePtr));
+                Console.WriteLine("Total Memory: " + System.Shell.VESAVBE.Graphics.totalmemory);
+
+                Console.WriteLine("OEM Software Rev: " + System.Shell.VESAVBE.Graphics.oemSoftwareRev);
+                Console.WriteLine("OEM Vendor Name Pointer: 0x" + Conversion.DecToHex((int)System.Shell.VESAVBE.Graphics.oemVendorNamePtr));
+                Console.WriteLine("OEM Product Name Pointer: 0x" + Conversion.DecToHex((int)System.Shell.VESAVBE.Graphics.oemProductNamePtr));
+                Console.WriteLine("OEM Product Rev: " + System.Shell.VESAVBE.Graphics.oemProductRevPtr);
             }
 
             //else if (cmd.StartsWith("xml "))

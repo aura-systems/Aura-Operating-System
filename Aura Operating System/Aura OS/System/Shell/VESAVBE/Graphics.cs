@@ -30,6 +30,16 @@ namespace Aura_OS.System.Shell.VESAVBE
         public static string sversion;
         public static uint vbepointer;
 
+        public static uint oemStringPtr;
+        public static uint capabilities;
+        public static uint videoModePtr;
+        public static uint totalmemory;
+
+        public static uint oemSoftwareRev;
+        public static uint oemVendorNamePtr;
+        public static uint oemProductNamePtr;
+        public static uint oemProductRevPtr;
+
         public Graphics()
         {
             pallete[0] = 0x000000; // Black
@@ -83,6 +93,16 @@ namespace Aura_OS.System.Shell.VESAVBE
             {
                 sversion = "Unknwon version";
             }
+
+            oemStringPtr = ControllerInfo->oemStringPtr;
+            capabilities = ControllerInfo->capabilities;
+            videoModePtr = ControllerInfo->videoModePtr;
+            totalmemory = ControllerInfo->totalmemory;
+
+            oemSoftwareRev = ControllerInfo->oemSoftwareRev;
+            oemVendorNamePtr = ControllerInfo->oemVendorNamePtr;
+            oemProductNamePtr = ControllerInfo->oemProductNamePtr;
+            oemProductRevPtr = ControllerInfo->oemProductRevPtr;
 
             //Kernel.debugger.Send("VBE Signature: " + ssignature);
             //Kernel.debugger.Send("VBE Version: " + sversion);

@@ -12,13 +12,30 @@ namespace Aura_OS.Core
     public unsafe static class VBE
     {
 
-        [StructLayout(LayoutKind.Explicit, Size = 6)]
+        [StructLayout(LayoutKind.Explicit, Size = 36)]
         public struct ControllerInfo
         {
             [FieldOffset(0)]
             public uint vbeSignature;
             [FieldOffset(4)]
             public ushort vbeVersion;
+            [FieldOffset(6)]
+            public uint oemStringPtr;
+            [FieldOffset(10)]
+            public uint capabilities;
+            [FieldOffset(14)]
+            public uint videoModePtr;
+            [FieldOffset(18)]
+            public ushort totalmemory;
+            [FieldOffset(20)]
+
+            public ushort oemSoftwareRev;
+            [FieldOffset(24)]
+            public uint oemVendorNamePtr;
+            [FieldOffset(28)]
+            public uint oemProductNamePtr;
+            [FieldOffset(32)]
+            public uint oemProductRevPtr;
         }
 
         [StructLayout(LayoutKind.Explicit, Size = 256)]
