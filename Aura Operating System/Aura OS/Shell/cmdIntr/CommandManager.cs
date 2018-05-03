@@ -264,9 +264,105 @@ namespace Aura_OS.Shell.cmdIntr
             else if (cmd.Equals("vbemodes"))
             {
                 Console.WriteLine("[VBE Mode List]");
-                foreach (ushort mode in System.Shell.VESAVBE.Graphics.modelist)
+                foreach (uint mode in System.Shell.VESAVBE.Graphics.modelist)
                 {
-                    Console.WriteLine("Mode:" + Conversion.DecToHex(mode));
+                    switch (mode)
+                    {
+                        case 0x100:
+                            Console.WriteLine("Mode: 0x" + Conversion.DecToHex((int)mode) + " - 640x400x256");
+                            break;
+                        case 0x101:
+                            Console.WriteLine("Mode: 0x" + Conversion.DecToHex((int)mode) + " - 640x480x256");
+                            break;
+                        case 0x102:
+                            Console.WriteLine("Mode: 0x" + Conversion.DecToHex((int)mode) + " - 800x600x16");
+                            break;
+                        case 0x103:
+                            Console.WriteLine("Mode: 0x" + Conversion.DecToHex((int)mode) + " - 800x600x256");
+                            break;
+                        case 0x104:
+                            Console.WriteLine("Mode: 0x" + Conversion.DecToHex((int)mode) + " - 1024x768x16");
+                            break;
+                        case 0x105:
+                            Console.WriteLine("Mode: 0x" + Conversion.DecToHex((int)mode) + " - 1024x768x256");
+                            break;
+                        case 0x106:
+                            Console.WriteLine("Mode: 0x" + Conversion.DecToHex((int)mode) + " - 1280x1024x16");
+                            break;
+                        case 0x107:
+                            Console.WriteLine("Mode: 0x" + Conversion.DecToHex((int)mode) + " - 1280x1024x256");
+                            break;
+                        case 0x108:
+                            Console.WriteLine("Mode: 0x" + Conversion.DecToHex((int)mode) + " - 80x60 text");
+                            break;
+                        case 0x109:
+                            Console.WriteLine("Mode: 0x" + Conversion.DecToHex((int)mode) + " - 132x25 text");
+                            break;
+                        case 0x10A:
+                            Console.WriteLine("Mode: 0x" + Conversion.DecToHex((int)mode) + " - 132x43 text");
+                            break;
+                        case 0x10B:
+                            Console.WriteLine("Mode: 0x" + Conversion.DecToHex((int)mode) + " - 132x50 text");
+                            break;
+                        case 0x10C:
+                            Console.WriteLine("Mode: 0x" + Conversion.DecToHex((int)mode) + " - 132x60 text");
+                            break;
+
+                        //VBE v1.2+
+                        case 0x10D:
+                            Console.WriteLine("Mode: 0x" + Conversion.DecToHex((int)mode) + " - 320x200 32k");
+                            break;
+                        case 0x10E:
+                            Console.WriteLine("Mode: 0x" + Conversion.DecToHex((int)mode) + " - 320x200 64k");
+                            break;
+                        case 0x10F:
+                            Console.WriteLine("Mode: 0x" + Conversion.DecToHex((int)mode) + " - 320x200 16M");
+                            break;
+                        case 0x110:
+                            Console.WriteLine("Mode: 0x" + Conversion.DecToHex((int)mode) + " - 640x480 32k");
+                            break;
+                        case 0x111:
+                            Console.WriteLine("Mode: 0x" + Conversion.DecToHex((int)mode) + " - 640x480 64k");
+                            break;
+                        case 0x112:
+                            Console.WriteLine("Mode: 0x" + Conversion.DecToHex((int)mode) + " - 640x480 16M");
+                            break;
+                        case 0x113:
+                            Console.WriteLine("Mode: 0x" + Conversion.DecToHex((int)mode) + " - 800x600 32k");
+                            break;
+                        case 0x114:
+                            Console.WriteLine("Mode: 0x" + Conversion.DecToHex((int)mode) + " - 800x600 64k");
+                            break;
+                        case 0x115:
+                            Console.WriteLine("Mode: 0x" + Conversion.DecToHex((int)mode) + " - 800x600 16M");
+                            break;
+                        case 0x116:
+                            Console.WriteLine("Mode: 0x" + Conversion.DecToHex((int)mode) + " - 1024x768 32k");
+                            break;
+                        case 0x117:
+                            Console.WriteLine("Mode: 0x" + Conversion.DecToHex((int)mode) + " - 1024x768 64k");
+                            break;
+                        case 0x118:
+                            Console.WriteLine("Mode: 0x" + Conversion.DecToHex((int)mode) + " - 1024x768 16M");
+                            break;
+                        case 0x119:
+                            Console.WriteLine("Mode: 0x" + Conversion.DecToHex((int)mode) + " - 1280x1024 32k");
+                            break;
+                        case 0x11A:
+                            Console.WriteLine("Mode: 0x" + Conversion.DecToHex((int)mode) + " - 1280x1024 64k");
+                            break;
+                        case 0x11B:
+                            Console.WriteLine("Mode: 0x" + Conversion.DecToHex((int)mode) + " - 1280x1024 16M");
+                            break;
+
+                        case 0x81FF:
+                            Console.WriteLine("Mode: 0x" + Conversion.DecToHex((int)mode) + " - Special Mode");
+                            break;
+
+                        default:
+                            Console.WriteLine("Mode: 0x" + Conversion.DecToHex((int)mode) + " - Unkown mode");
+                            break;
+                    }
                 }
             }
 
