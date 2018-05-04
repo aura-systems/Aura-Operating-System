@@ -4,7 +4,6 @@
 * PROGRAMMERS:      Valentin Charbonnier <valentinbreiz@gmail.com>
 */
 
-
 using Aura_OS.Core;
 using Aura_OS.System.Shell.VESAVBE;
 using Cosmos.Core.Memory.Old;

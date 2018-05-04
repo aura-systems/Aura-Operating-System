@@ -72,52 +72,35 @@ namespace Aura_OS
                 Shell.cmdIntr.CommandManager.RegisterAllCommands();
 
                 //AConsole = new System.Shell.VGA.VGAConsole(null);
-                AConsole = new System.Shell.VESAVBE.VESAVBEConsole();
-
-                Console.Clear();
 
                 Encoding.RegisterProvider(CosmosEncodingProvider.Instance);
                 Console.InputEncoding = Encoding.GetEncoding(437);
                 Console.OutputEncoding = Encoding.GetEncoding(437);
 
-                Console.ForegroundColor = ConsoleColor.DarkMagenta;
+                CustomConsole.WriteLineInfo("Booting Aura Operating System...");
 
-                Console.Write("Booting Aura...\n");
-
-                Console.ForegroundColor = ConsoleColor.White;
-
-                Console.WriteLine("VBE Informations:");
-                Console.WriteLine("VBE Version: " + System.Shell.VESAVBE.Graphics.sversion);
-                Console.WriteLine("VBE Signature: " + System.Shell.VESAVBE.Graphics.ssignature);
-                Console.WriteLine("BPP: " + System.Shell.VESAVBE.Graphics.depthVESA);
-                Console.WriteLine("Height: " + System.Shell.VESAVBE.Graphics.heightVESA);
-                Console.WriteLine("Width: " + System.Shell.VESAVBE.Graphics.widthVESA);
-                Console.WriteLine("VBE Pointer: " + System.Shell.VESAVBE.Graphics.vbepointer);
-                Console.WriteLine("VBE Mode: " + System.Shell.VESAVBE.Graphics.VESAMode);
+                CustomConsole.WriteLineInfo("VBE Informations:");
+                CustomConsole.WriteLineInfo("VBE Version: " + System.Shell.VESAVBE.Graphics.sversion);
+                CustomConsole.WriteLineInfo("VBE Signature: " + System.Shell.VESAVBE.Graphics.ssignature);
+                CustomConsole.WriteLineInfo("BPP: " + System.Shell.VESAVBE.Graphics.depthVESA);
+                CustomConsole.WriteLineInfo("Height: " + System.Shell.VESAVBE.Graphics.heightVESA);
+                CustomConsole.WriteLineInfo("Width: " + System.Shell.VESAVBE.Graphics.widthVESA);
+                CustomConsole.WriteLineInfo("VBE Pointer: " + System.Shell.VESAVBE.Graphics.vbepointer);
+                CustomConsole.WriteLineInfo("VBE Mode: " + System.Shell.VESAVBE.Graphics.VESAMode);
 
                 #region Register Filesystem
                 Sys.FileSystem.VFS.VFSManager.RegisterVFS(vFS);
                 if (ContainsVolumes())
                 {
-                    Console.ForegroundColor = ConsoleColor.Green;
-                    Console.Write("[OK]");
-                    Console.ForegroundColor = ConsoleColor.White;
-                    Console.Write(" ");
-                    Console.ForegroundColor = ConsoleColor.DarkMagenta;
-                    Console.Write("FileSystem Registration\n");
-                    Console.ForegroundColor = ConsoleColor.White;
+                    CustomConsole.WriteLineOK("FileSystem Registration");
                 }
                 else
                 {
-                    Console.ForegroundColor = ConsoleColor.DarkRed;
-                    Console.Write("[Error]");
-                    Console.ForegroundColor = ConsoleColor.White;
-                    Console.Write(" ");
-                    Console.ForegroundColor = ConsoleColor.DarkMagenta;
-                    Console.Write("FileSystem Registration\n");
-                    Console.ForegroundColor = ConsoleColor.White;
+                    CustomConsole.WriteLineError("FileSystem Registration");
                 }
                 #endregion
+
+                CustomConsole.WriteLineOK("Aura successfully started!");
 
                 setup.InitSetup();
 

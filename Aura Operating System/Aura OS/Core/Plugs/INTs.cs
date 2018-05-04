@@ -10,6 +10,7 @@ using static Cosmos.Core.INTs;
 
 namespace Aura_OS.Core
 {
+
     [Plug(Target = typeof(Cosmos.Core.INTs))]
 
     public class INTs

@@ -7,6 +7,7 @@
 using Aura_OS.System.Utils;
 using System;
 using System.Collections.Generic;
+using System.Text;
 
 namespace Aura_OS.Shell.cmdIntr
 {
@@ -258,14 +259,22 @@ namespace Aura_OS.Shell.cmdIntr
                 Console.WriteLine("OEM Software Rev: " + System.Shell.VESAVBE.Graphics.oemSoftwareRev);
                 Console.WriteLine("OEM Vendor Name Pointer: 0x" + Conversion.DecToHex((int)System.Shell.VESAVBE.Graphics.oemVendorNamePtr));
                 Console.WriteLine("OEM Product Name Pointer: 0x" + Conversion.DecToHex((int)System.Shell.VESAVBE.Graphics.oemProductNamePtr));
+                //Console.WriteLine("OEM Product Name: " + System.Shell.VESAVBE.Graphics.ProductName);
                 Console.WriteLine("OEM Product Rev Pointer: 0x" + Conversion.DecToHex((int)System.Shell.VESAVBE.Graphics.oemProductRevPtr));
             }
 
             else if (cmd.Equals("vbemodes"))
             {
                 Console.WriteLine("[VBE Mode List]");
+                int counter = 0;
                 foreach (uint mode in System.Shell.VESAVBE.Graphics.modelist)
                 {
+                    counter++;
+                    if (counter == 19)
+                    {
+                        Console.ReadKey();
+                        counter = 0;
+                    }
                     switch (mode)
                     {
                         case 0x100:
