@@ -10,12 +10,15 @@ using Cosmos.HAL;
 using Cosmos.Core;
 using Aura_OS.System;
 
-namespace Aura_OS.Core.Plugs
+namespace Aura_OS.HAL.Plugs
 {
 
     [Plug(Target = typeof(Cosmos.HAL.Global))]
     public static class Global
     {
+
+        static public PIT PIT = new PIT();
+
         static public void Init(TextScreenBase textScreen)
         {
 
