@@ -58,7 +58,7 @@ namespace Aura_OS.System.Shell.VESAVBE
         public Graphics()
         {
             pallete[0] = 0x000000; // Black
-            pallete[1] = 0x000080; // Darkblue
+            pallete[1] = 0x0000AB; // Darkblue
             pallete[2] = 0x008000; // DarkGreen
             pallete[3] = 0x008080; // DarkCyan
             pallete[4] = 0x800000; // DarkRed
@@ -66,7 +66,7 @@ namespace Aura_OS.System.Shell.VESAVBE
             pallete[6] = 0x808000; // DarkYellow
             pallete[7] = 0xC0C0C0; // Gray
             pallete[8] = 0x808080; // DarkGray
-            pallete[9] = 0x0000AB; // Blue
+            pallete[9] = 0x5353FF; // Blue
             pallete[10] = 0x55FF55; // Green
             pallete[11] = 0x00FFFF; // Cyan
             pallete[12] = 0xAA0000; // Red

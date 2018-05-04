@@ -23,7 +23,7 @@ namespace Aura_OS.System.Drawable
             {
                 Console.Clear();
 
-                Console.BackgroundColor = ConsoleColor.Blue;
+                Console.BackgroundColor = ConsoleColor.DarkBlue;
 
                 switch (Kernel.langSelected)
                 {
@@ -331,7 +331,7 @@ namespace Aura_OS.System.Drawable
             int x = (Kernel.AConsole.Width / 2) - (64 / 2);
             int y = (Kernel.AConsole.Height / 2) - (10 / 2);
 
-            Console.BackgroundColor = ConsoleColor.Blue;
+            Console.BackgroundColor = ConsoleColor.DarkBlue;
 
             Console.SetCursorPosition(x, y);
             Console.WriteLine("╔══════════════════════════════════════════════════════════════╗");
@@ -429,7 +429,7 @@ namespace Aura_OS.System.Drawable
             int x = (Kernel.AConsole.Width / 2) - (64 / 2);
             int y = (Kernel.AConsole.Height / 2) - (10 / 2);
 
-            Console.BackgroundColor = ConsoleColor.Blue;
+            Console.BackgroundColor = ConsoleColor.DarkBlue;
 
             Console.SetCursorPosition(x, y);
             Console.WriteLine("╔══════════════════════════════════════════════════════════════╗");
@@ -516,7 +516,7 @@ namespace Aura_OS.System.Drawable
 
         static void Langues()
         {
-            Console.BackgroundColor = ConsoleColor.Blue;
+            Console.BackgroundColor = ConsoleColor.DarkBlue;
 
             Console.SetCursorPosition(x_ + 2, y_ + 3);
             Console.WriteLine(" ");
@@ -546,7 +546,7 @@ namespace Aura_OS.System.Drawable
         {
             Console.Clear();
 
-            Console.BackgroundColor = ConsoleColor.Blue;
+            Console.BackgroundColor = ConsoleColor.DarkBlue;
 
             Console.SetCursorPosition(x, y);
             Console.WriteLine("╔══════════════════════════════════════════════════════════════╗");
@@ -601,7 +601,7 @@ namespace Aura_OS.System.Drawable
                 counter = counter + 1;
                 if (currentitem == c)
                 {
-                    Console.BackgroundColor = ConsoleColor.Blue;
+                    Console.BackgroundColor = ConsoleColor.DarkBlue;
                     Console.SetCursorPosition(x + 2, counter);
                     Console.Write("* ");
                     Console.WriteLine(items[c]);
@@ -610,7 +610,7 @@ namespace Aura_OS.System.Drawable
                 }
                 else
                 {
-                    Console.BackgroundColor = ConsoleColor.Blue;
+                    Console.BackgroundColor = ConsoleColor.DarkBlue;
                     Console.SetCursorPosition(x + 2, counter);
                     Console.WriteLine("  " + items[c]);
                     Console.SetCursorPosition(x_lang, y_lang);
@@ -636,7 +636,7 @@ namespace Aura_OS.System.Drawable
                         counter = counter + 1;
                         if (currentitem == c)
                         {
-                            Console.BackgroundColor = ConsoleColor.Blue;
+                            Console.BackgroundColor = ConsoleColor.DarkBlue;
                             Console.SetCursorPosition(x + 2, counter);
                             Console.WriteLine("*");
                             Console.SetCursorPosition(x_lang, y_lang);
@@ -644,7 +644,7 @@ namespace Aura_OS.System.Drawable
                         }
                         else
                         {
-                            Console.BackgroundColor = ConsoleColor.Blue;
+                            Console.BackgroundColor = ConsoleColor.DarkBlue;
                             Console.SetCursorPosition(x + 2, counter);
                             Console.WriteLine(" ");
                             Console.SetCursorPosition(x_lang, y_lang);
@@ -665,7 +665,7 @@ namespace Aura_OS.System.Drawable
                         counter = counter + 1;
                         if (currentitem == c)
                         {
-                            Console.BackgroundColor = ConsoleColor.Blue;
+                            Console.BackgroundColor = ConsoleColor.DarkBlue;
                             Console.SetCursorPosition(x + 2, counter);
                             Console.Write("* ");
                             Console.WriteLine(items[c]);
@@ -674,7 +674,7 @@ namespace Aura_OS.System.Drawable
                         }
                         else
                         {
-                            Console.BackgroundColor = ConsoleColor.Blue;
+                            Console.BackgroundColor = ConsoleColor.DarkBlue;
                             Console.SetCursorPosition(x + 2, counter);
                             Console.WriteLine("  " + items[c]);
                             Console.SetCursorPosition(x_lang, y_lang);
