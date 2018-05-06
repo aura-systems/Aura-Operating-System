@@ -240,6 +240,57 @@ namespace Aura_OS.Shell.cmdIntr
                 Kernel.speaker.playmusic();
             }
 
+            else if (cmd.Equals("net"))
+            {
+                Console.WriteLine("Finding network devices...");
+
+                Cosmos.HAL.Drivers.PCI.Network.AMDPCNetII xNic;
+
+                Cosmos.HAL.PCIDevice xNicDev = Cosmos.HAL.PCI.GetDevice(Cosmos.HAL.VendorID.AMD, Cosmos.HAL.DeviceID.PCNETII);
+                if (xNicDev == null)
+                {
+                    Console.WriteLine("PCIDevice not found!!");
+                    return;
+                }
+
+                Console.WriteLine("Found AMD PCNetII NIC on PCI " + xNicDev.bus + ":" + xNicDev.slot + ":" + xNicDev.function);
+                Console.WriteLine("NIC IRQ: " + xNicDev.InterruptLine);
+
+                xNic = new Cosmos.HAL.Drivers.PCI.Network.AMDPCNetII(xNicDev);
+
+                Console.WriteLine("NIC MAC Address: " + xNic.MACAddress.ToString());
+
+                Cosmos.System.Network.NetworkStack.Init();
+                xNic.Enable();
+
+                Cosmos.System.Network.NetworkStack.ConfigIP(xNic, new Cosmos.System.Network.IPv4.Config(new Cosmos.System.Network.IPv4.Address(192, 168, 1, 70), new Cosmos.System.Network.IPv4.Address(255, 255, 255, 0)));
+
+                var xClient = new Cosmos.System.Network.UdpClient(4242);
+                xClient.Connect(new Cosmos.System.Network.IPv4.Address(192, 168, 1, 12), 4242);
+                xClient.Send(new byte[]
+                             {
+                         1,
+                         2,
+                        3,
+                        4,
+                        5,
+                        6,
+                        7,
+                        8,
+                        9,
+                        0xAA,
+                        0xBB,
+                       0xCC,
+                        0xDD,
+                         0xEE,
+                       0xFF
+                           });
+
+
+                Cosmos.System.Network.NetworkStack.Update();
+
+            }
+
             //else if (cmd.StartsWith("xml "))
             //{
             //    Util.xml.CmdXmlParser.c_CmdXmlParser(cmd, 0, 4);
