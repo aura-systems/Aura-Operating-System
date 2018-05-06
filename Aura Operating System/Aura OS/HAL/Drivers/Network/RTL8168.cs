@@ -6,13 +6,20 @@
 
 using Aura_OS.Core;
 using Aura_OS.System.Utils;
+using Cosmos.Core;
 using Cosmos.HAL;
+using Cosmos.HAL.Network;
 using System;
+using System.Collections.Generic;
+using static Cosmos.Core.INTs;
 
 namespace Aura_OS.HAL.Drivers.Network
 {
-    class RTL8168
+    unsafe class RTL8168
     {
+
+        protected PCIDevice pciCard;
+        public static MACAddress mac;
 
         static uint rl8168_io_base_addr = 0;
         static uint RL_MAC_OFFSET = 0x00;
@@ -28,14 +35,21 @@ namespace Aura_OS.HAL.Drivers.Network
 
             rl8168_io_base_addr = device.BaseAddressBar[0].BaseAddress;
 
+            device.Claimed = true;
+            device.EnableDevice();
+
             Read_Mac();
 
-            string macaddress = Conversion.DecToHex(device_mac[0])  + ":" + Conversion.DecToHex(device_mac[1]) + ":" + Conversion.DecToHex(device_mac[2]) + ":" +
-               Conversion.DecToHex(device_mac[3]) + ":" + Conversion.DecToHex(device_mac[4]) + ":" + Conversion.DecToHex(device_mac[5]);
+            mac = new MACAddress(device_mac);
+            Console.WriteLine("MAC OK!");
 
-            Console.WriteLine("Network Card MAC Address: " + macaddress); 
 
-            return;
+            SetIrqHandler(device.InterruptLine, HandleNetworkInterrupt);
+        }
+
+        static void HandleNetworkInterrupt(ref IRQContext aContext)
+        {
+            Console.WriteLine("RTL8168 IRQ raised!");
         }
 
         static void Read_Mac()
