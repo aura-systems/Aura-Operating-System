@@ -30,9 +30,10 @@ namespace Aura_OS.HAL.Drivers.Network
 
             Read_Mac();
 
-            Console.WriteLine("Network Card MAC Address: %02x:%02x:%02x:%02x:%02x:%02x",
-               Conversion.DecToHex(device_mac[0]), Conversion.DecToHex(device_mac[1]), Conversion.DecToHex(device_mac[2]),
-               Conversion.DecToHex(device_mac[3]), Conversion.DecToHex(device_mac[4]), Conversion.DecToHex(device_mac[5]));
+            string macaddress = Conversion.DecToHex(device_mac[0])  + ":" + Conversion.DecToHex(device_mac[1]) + ":" + Conversion.DecToHex(device_mac[2]) + ":" +
+               Conversion.DecToHex(device_mac[3]) + ":" + Conversion.DecToHex(device_mac[4]) + ":" + Conversion.DecToHex(device_mac[5]);
+
+            Console.WriteLine("Network Card MAC Address: " + macaddress); 
 
             return;
         }
