@@ -240,6 +240,22 @@ namespace Aura_OS.Shell.cmdIntr
                 Kernel.speaker.playmusic();
             }
 
+            else if (cmd.Equals("rtltest"))
+            {
+                Cosmos.HAL.PCIDevice xNicDev = Cosmos.HAL.PCI.GetDevice((Cosmos.HAL.VendorID)0x10ec, (Cosmos.HAL.DeviceID)0x8168);
+                if (xNicDev == null)
+                {
+                    Console.WriteLine("PCIDevice not found!!");
+                    return;
+                }
+
+                Console.WriteLine("Found RTL8168 NIC on PCI " + xNicDev.bus + ":" + xNicDev.slot + ":" + xNicDev.function);
+                Console.WriteLine("NIC IRQ: " + xNicDev.InterruptLine);
+
+                HAL.Drivers.Network.RTL8168.Init(xNicDev);
+
+            }
+
             else if (cmd.Equals("net"))
             {
                 Console.WriteLine("Finding network devices...");

@@ -14,12 +14,12 @@ namespace Aura_OS.HAL.Drivers.Network
     class RTL8168
     {
 
-        uint rl8168_io_base_addr = 0;
-        uint RL_MAC_OFFSET = 0x00;
+        static uint rl8168_io_base_addr = 0;
+        static uint RL_MAC_OFFSET = 0x00;
 
-        byte[] device_mac = new byte[6];
+        static byte[] device_mac = new byte[6];
 
-        public void Init(PCIDevice device)
+        public static void Init(PCIDevice device)
         {
             if (device == null)
             {
@@ -37,7 +37,7 @@ namespace Aura_OS.HAL.Drivers.Network
             return;
         }
 
-        void Read_Mac()
+        static void Read_Mac()
         {
             for (int i = 0; i < 6; i++)
                 device_mac[i] = Ports.inb((ushort)(rl8168_io_base_addr + RL_MAC_OFFSET + i));
