@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.Net.Sdk">
+﻿<Project Sdk="Microsoft.Net.Sdk">
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <StackCorruptionDetectionLevel>MethodFooters</StackCorruptionDetectionLevel>
@@ -117,5 +117,8 @@
     <Reference Include="XSharp.Assembler">
       <HintPath>..\..\..\..\..\AppData\Roaming\Cosmos User Kit\Build\IL2CPU\XSharp.Assembler.dll</HintPath>
     </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="System\Network\ARPPacket\" />
   </ItemGroup>
 </Project>
