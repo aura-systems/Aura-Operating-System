@@ -265,7 +265,7 @@ namespace Aura_OS.Shell.cmdIntr
 
                 HAL.Drivers.Network.RTL8139 xNic;
 
-                Cosmos.HAL.PCIDevice xNicDev = Cosmos.HAL.PCI.GetDevice((Cosmos.HAL.VendorID)0x10ec, (Cosmos.HAL.DeviceID)0x8139));
+                Cosmos.HAL.PCIDevice xNicDev = Cosmos.HAL.PCI.GetDevice((Cosmos.HAL.VendorID)0x10ec, (Cosmos.HAL.DeviceID)0x8139);
                 if (xNicDev == null)
                 {
                     Console.WriteLine("PCIDevice not found!!");
