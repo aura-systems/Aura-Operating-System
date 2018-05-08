@@ -12,6 +12,7 @@ using Cosmos.HAL.Network;
 using System;
 using System.Collections.Generic;
 using static Cosmos.Core.INTs;
+using static Cosmos.Core.Memory.Old.Heap;
 
 namespace Aura_OS.HAL.Drivers.Network
 {
@@ -91,50 +92,6 @@ namespace Aura_OS.HAL.Drivers.Network
 
             device.Claimed = true;
             device.EnableDevice();
-
-            rtl8168b_device* netcard;
-            cdi_mem_area* buf;
-
-            buf = (cdi_mem_area*)(Cosmos.Core.Memory.Old.Heap.MemAlloc((uint)(sizeof(rtl8168b_device))));
-
-            netcard = (rtl8168b_device*)(buf->vaddr);
-
-            //Reset card
-            Ports.outw((ushort)(BaseAddress + 0xE0), (1 << 6));
-            Ports.outb((ushort)(BaseAddress + 0x37), (1 << 4));
-
-            while ((Ports.inb((ushort)(BaseAddress + 0x37)) & (1 << 4)) == (1 << 4)) ;
-
-            Ports.outw((ushort)(BaseAddress + 0xDA), 1518);
-            Ports.outw((ushort)(BaseAddress + 0xEC), 0x0c);
-
-            //Rx/Tx activation
-            Ports.outb((ushort)(BaseAddress + 0x37), (1 << 3) | (1 << 2));
-
-            //Read mac address
-            Read_Mac();
-            mac = new MACAddress(device_mac);
-
-            //Setup interrupts
-            Ports.outw((ushort)(BaseAddress + 0x3E), 0x4fff);
-            Ports.outw((ushort)(BaseAddress + 0x3C), 0x0025);
-
-            //Initialize PHY
-            Ports.outd((ushort)(BaseAddress + 0x60), unchecked((byte)((1 << 31) | (0x00 << 16) | (1 << 15))));
-
-            while ((Ports.ind((ushort)(BaseAddress + 0x60)) & (1 << 31)) != 0) ;
-
-            do
-            {
-                Ports.outw((ushort)(BaseAddress + 0x62), 0x00);
-
-                while (((Ports.inb((ushort)(BaseAddress + 0x63)) >> 7)) == 0);
-            } while ((Ports.inw((ushort)(BaseAddress + 0x60)) & (1 << 15)) != 0);
-
-            Ports.outd((ushort)(BaseAddress + 0x60), unchecked((byte)((1 << 31) | (0x00 << 16) | (1 << 12))));
-
-            while ((Ports.ind((ushort)(BaseAddress + 0x60)) & (1 << 31)) != 0) ;
-
 
         }
 
