@@ -280,6 +280,36 @@ namespace Aura_OS.Shell.cmdIntr
 
                 Console.WriteLine("Done!");
 
+                Cosmos.System.Network.NetworkStack.ConfigIP(xNic, new Cosmos.System.Network.IPv4.Config(new Cosmos.System.Network.IPv4.Address(192, 168, 1, 70), new Cosmos.System.Network.IPv4.Address(255, 255, 255, 0)));
+
+                //test here
+
+                //byte[] padata;
+                //var xClient = new Cosmos.System.Network.EthernetPacket(padata);
+                
+                //xClient.Connect(new Cosmos.System.Network.IPv4.Address(192, 168, 1, 12), 4242);
+                //xClient.Send(new byte[]
+                //             {
+                //         1,
+                //         2,
+                //        3,
+                //        4,
+                //        5,
+                //        6,
+                //        7,
+                //        8,
+                //        9,
+                //        0xAA,
+                //        0xBB,
+                //       0xCC,
+                //        0xDD,
+                //         0xEE,
+                //       0xFF
+                //           });
+
+
+                Cosmos.System.Network.NetworkStack.Update();
+
             }
 
             //else if (cmd.StartsWith("xml "))
