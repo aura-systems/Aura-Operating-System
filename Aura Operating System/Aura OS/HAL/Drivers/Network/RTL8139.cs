@@ -119,12 +119,12 @@ namespace Aura_OS.HAL.Drivers.Network
         protected UInt32 RBStartRegister
         {
             get { return Ports.ind((ushort)(BaseAddress + 0x30)); }
-            set { Ports.outb((ushort)(BaseAddress + 0x30), (byte)value); }
+            set { Ports.outd((ushort)(BaseAddress + 0x30), (byte)value); }
         }
         internal UInt32 RecvConfigRegister
         {
             get { return Ports.ind((ushort)(BaseAddress + 0x44)); }
-            set { Ports.outb((ushort)(BaseAddress + 0x44), (byte)value); }
+            set { Ports.outd((ushort)(BaseAddress + 0x44), (byte)value); }
         }
         internal UInt16 CurAddressPointerReadRegister
         {
@@ -151,18 +151,18 @@ namespace Aura_OS.HAL.Drivers.Network
         internal byte CommandRegister
         {
             get { return Ports.inb((ushort)(BaseAddress + 0x37)); }
-            set { Ports.outw((ushort)(BaseAddress + 0x37), value); }
+            set { Ports.outb((ushort)(BaseAddress + 0x37), value); }
         }
         protected byte MediaStatusRegister
         {
             get { return Ports.inb((ushort)(BaseAddress + 0x58)); }
-            set { Ports.outw((ushort)(BaseAddress + 0x58), value); }
+            set { Ports.outb((ushort)(BaseAddress + 0x58), value); }
         }
 
         protected byte Config1Register
         {
             get { return Ports.inb((ushort)(BaseAddress + 0x52)); }
-            set { Ports.outw((ushort)(BaseAddress + 0x52), value); }
+            set { Ports.outb((ushort)(BaseAddress + 0x52), value); }
         }
 
         internal UInt32 TransmitConfigRegister
