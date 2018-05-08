@@ -1,111 +1,121 @@
-﻿/*
-* PROJECT:          Aura Operating System Development
-* CONTENT:          RTL8168 driver
-* PROGRAMMERS:      Valentin Charbonnier <valentinbreiz@gmail.com>
-*/
-
-using Aura_OS.Core;
-using Aura_OS.System.Utils;
-using Cosmos.Core;
-using Cosmos.HAL;
-using Cosmos.HAL.Network;
+﻿
 using System;
 using System.Collections.Generic;
+using System.Text;
+using Aura_OS.Core;
+using Cosmos.Core;
+using Cosmos.Core.IOGroup.Network;
+using Cosmos.HAL;
+using Cosmos.HAL.Network;
 using static Cosmos.Core.INTs;
-using static Cosmos.Core.Memory.Old.Heap;
 
 namespace Aura_OS.HAL.Drivers.Network
 {
-    unsafe class RTL8168
+    public class RTL8168 : NetworkDevice
     {
-
         protected PCIDevice pciCard;
-        public static MACAddress mac;
+        protected AMDPCNetIIIOGroup io;
+        protected MACAddress mac;
+        protected bool mInitDone;
 
-        static uint BaseAddress = 0;
-        static uint RL_MAC_OFFSET = 0x00;
+        protected ManagedMemoryBlock rxBuffer;
+        protected int rxBufferOffset;
+        protected UInt16 capr;
 
-        static byte[] device_mac = new byte[6];
+        protected Queue<byte[]> mRecvBuffer;
+        protected Queue<byte[]> mTransmitBuffer;
+        private int mNextTXDesc;
 
-        public struct cdi_mem_area
-        {
-            public uint size;
-            public void* vaddr;
-            public cdi_mem_sg_list paddr;
+        const UInt16 RxBufferSize = 32768;
+        uint BaseAddress;
 
-            public cdi_mem_osdep osdep;
-        };
-
-        public struct cdi_mem_sg_list
-        {
-            public uint num;
-            public cdi_mem_sg_item* items;
-        };
-
-        public struct cdi_mem_sg_item
-        {
-            public ushort start;
-            public uint size;
-        }
-
-        public struct cdi_mem_osdep
-        {
-        }
-
-
-        public struct rtl8168b_device
-        {
-
-            public int tx_index;
-            public int rx_index;
-
-            public cdi_mem_area* tx_buffer_area;
-            public cdi_mem_area* rx_buffer_area;
-
-            public rtl8168b_descriptor* tx_buffer;
-            public rtl8168b_descriptor* rx_buffer;
-
-            public uint tx_buffer_phys;
-            public uint rx_buffer_phys;
-
-            public cdi_mem_area* rx_area;
-        }
-
-        public struct rtl8168b_descriptor
-        {
-            public uint command;
-            public uint vlan;
-            public ulong address;
-        }
-
-
-        public static void Init(PCIDevice device)
+        public RTL8168(PCIDevice device)
         {
             if (device == null)
             {
-                throw new ArgumentException("PCI Device is null. Unable to get RTL8168 card");
+                throw new ArgumentException("PCI Device is null. Unable to get Realtek 8168 card");
             }
+            pciCard = device;
+
+            // We are handling this device
+            pciCard.Claimed = true;
+
+            BaseAddress = this.pciCard.BaseAddressBar[0].BaseAddress;
 
             SetIrqHandler(device.InterruptLine, HandleNetworkInterrupt);
 
-            BaseAddress = device.BaseAddressBar[0].BaseAddress;
+            // Enable the card
+            pciCard.EnableDevice();
 
-            device.Claimed = true;
-            device.EnableDevice();
+            // Get the MAC Address
+            byte[] eeprom_mac = new byte[6];
+            for (uint b = 0; b < 6; b++)
+            {
+                eeprom_mac[b] = Ports.inb((ushort)(BaseAddress + b));
+            }
+
+            this.mac = new MACAddress(eeprom_mac);
 
         }
 
-        static void HandleNetworkInterrupt(ref IRQContext aContext)
+        protected void HandleNetworkInterrupt(ref IRQContext aContext)
         {
             Console.WriteLine("RTL8168 IRQ raised!");
         }
 
-        static void Read_Mac()
+
+        #region Network Device Implementation
+        public override MACAddress MACAddress
         {
-            for (int i = 0; i < 6; i++)
-                device_mac[i] = Ports.inb((ushort)(BaseAddress + RL_MAC_OFFSET + i));
-            return;
+            get { return this.mac; }
         }
+
+        public override bool Enable()
+        {
+            return true;
+        }
+
+        public override bool Ready
+        {
+            get { return true; }
+        }
+
+        public override bool QueueBytes(byte[] buffer, int offset, int length)
+        {
+            return true;
+        }
+
+        public override bool ReceiveBytes(byte[] buffer, int offset, int max)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override byte[] ReceivePacket()
+        {
+            return new byte[] { };
+        }
+
+        public override int BytesAvailable()
+        {
+            return 0;
+        }
+
+        public override bool IsSendBufferFull()
+        {
+            return false;
+        }
+
+        public override bool IsReceiveBufferFull()
+        {
+            return false;
+        }
+
+        public string Name
+        {
+            get { return "Realtek 8139 Chipset NIC"; }
+        }
+
+        #endregion
 
     }
 }
