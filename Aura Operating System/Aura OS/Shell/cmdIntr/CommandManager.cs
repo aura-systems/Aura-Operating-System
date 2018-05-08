@@ -240,8 +240,12 @@ namespace Aura_OS.Shell.cmdIntr
                 Kernel.speaker.playmusic();
             }
 
-            else if (cmd.Equals("rtltest"))
+            else if (cmd.Equals("8168test"))
             {
+                Console.WriteLine("Finding RTL8168 nic...");
+
+                HAL.Drivers.Network.RTL8168 xNic;
+
                 Cosmos.HAL.PCIDevice xNicDev = Cosmos.HAL.PCI.GetDevice((Cosmos.HAL.VendorID)0x10ec, (Cosmos.HAL.DeviceID)0x8168);
                 if (xNicDev == null)
                 {
@@ -252,13 +256,43 @@ namespace Aura_OS.Shell.cmdIntr
                 Console.WriteLine("Found RTL8168 NIC on PCI " + xNicDev.bus + ":" + xNicDev.slot + ":" + xNicDev.function);
                 Console.WriteLine("NIC IRQ: " + xNicDev.InterruptLine);
 
-                HAL.Drivers.Network.RTL8168.Init(xNicDev);
-                Console.WriteLine("Network Card MAC Address: " + HAL.Drivers.Network.RTL8168.mac.ToString());
+                xNic = new HAL.Drivers.Network.RTL8168(xNicDev);
+
+                Console.WriteLine("NIC MAC Address: " + xNic.MACAddress.ToString());
+
+                xNic.Enable();
+
+                Console.WriteLine("Done!");
+            }
+
+            else if (cmd.Equals("8139test"))
+            {
+                Console.WriteLine("Finding RTL8139 nic...");
+
+                HAL.Drivers.Network.RTL8139 xNic;
+
+                Cosmos.HAL.PCIDevice xNicDev = Cosmos.HAL.PCI.GetDevice((Cosmos.HAL.VendorID)0x10ec, (Cosmos.HAL.DeviceID)0x8139);
+                if (xNicDev == null)
+                {
+                    Console.WriteLine("PCIDevice not found!!");
+                    return;
+                }
+
+                Console.WriteLine("Found RTL8139 NIC on PCI " + xNicDev.bus + ":" + xNicDev.slot + ":" + xNicDev.function);
+                Console.WriteLine("NIC IRQ: " + xNicDev.InterruptLine);
+
+                xNic = new HAL.Drivers.Network.RTL8139(xNicDev);
+
+                Console.WriteLine("NIC MAC Address: " + xNic.MACAddress.ToString());
+
+                xNic.Enable();
+
+                Console.WriteLine("Done!");
             }
 
             else if (cmd.Equals("net"))
             {
-                Console.WriteLine("Finding network devices...");
+                Console.WriteLine("Finding PCNETII nic...");
 
                 HAL.Drivers.Network.AMDPCNetII xNic;
 
