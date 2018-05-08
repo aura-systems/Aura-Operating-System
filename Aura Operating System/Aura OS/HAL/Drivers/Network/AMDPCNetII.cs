@@ -106,7 +106,7 @@ namespace Aura_OS.HAL.Drivers.Network
         {
             UInt32 cur_status = StatusRegister;
 
-            //Console.WriteLine("AMD PCNet IRQ raised!");
+            Console.WriteLine("AMD PCNet IRQ raised!");
             if ((cur_status & 0x100) != 0)
             {
                 mInitDone = true;
