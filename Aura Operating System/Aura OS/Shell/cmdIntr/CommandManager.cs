@@ -310,17 +310,21 @@ namespace Aura_OS.Shell.cmdIntr
 
                 Console.WriteLine("NIC MAC Address: " + xNic.MACAddress.ToString());
 
+                System.Network.NetworkStack.Init();
                 xNic.Enable();
 
                 Console.WriteLine("Done!");
 
-                Cosmos.System.Network.NetworkStack.ConfigIP(xNic, new Cosmos.System.Network.IPv4.Config(new Cosmos.System.Network.IPv4.Address(192, 168, 1, 70), new Cosmos.System.Network.IPv4.Address(255, 255, 255, 0)));
+                System.Network.NetworkStack.ConfigIP(xNic, new System.Network.IPV4.Config(new System.Network.IPV4.Address(192, 168, 1, 70), new System.Network.IPV4.Address(255, 255, 255, 0)));
+
+                var xClient = new System.Network.IPV4.UDP.UdpClient(4242);
+                xClient.Connect(new System.Network.IPV4.Address(192, 168, 1, 12), 4242);
 
                 //test here
 
                 //byte[] padata;
                 //var xClient = new Cosmos.System.Network.EthernetPacket(padata);
-                
+
                 //xClient.Connect(new Cosmos.System.Network.IPv4.Address(192, 168, 1, 12), 4242);
                 //xClient.Send(new byte[]
                 //             {

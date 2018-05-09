@@ -118,7 +118,4 @@
       <HintPath>..\..\..\..\..\AppData\Roaming\Cosmos User Kit\Build\IL2CPU\XSharp.Assembler.dll</HintPath>
     </Reference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="System\Network\ARPPacket\" />
-  </ItemGroup>
 </Project>

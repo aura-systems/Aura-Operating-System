@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using Net = Cosmos.System.Network;
-using HALNet = Cosmos.HAL.Network;
 
 namespace Aura_OS.System.Network
 {
-    class ARPPacket
+    /*class ARP
     {
         public void Request(Net.IPv4.Address IPSrc, Net.IPv4.Address IPDest, HALNet.MACAddress MACSrc)
         {
@@ -20,4 +18,5 @@ namespace Aura_OS.System.Network
                             IPDestByte[1], IPDestByte[2], IPDestByte[3]};
         }
     }
+    */
 }
