@@ -22,11 +22,9 @@ namespace Aura_OS.System.Network.IPV4
 
         protected override void initFields()
         {
-            Sys.Console.WriteLine("ARPPacket_Ethernet.initFields() called");
             base.initFields();
             mSenderMAC = new MACAddress(mRawData, 22);
             mSenderIP = new Address(mRawData, 28);
-            global::System.Console.WriteLine("SenderIP created");
             if (SenderIP == null)
             {
                 global::System.Console.WriteLine("But its already null again");

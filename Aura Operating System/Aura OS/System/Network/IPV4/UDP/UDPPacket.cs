@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 using Sys = System;
 
 namespace Aura_OS.System.Network.IPV4.UDP
@@ -14,7 +15,7 @@ namespace Aura_OS.System.Network.IPV4.UDP
         {
             UDPPacket udp_packet = new UDPPacket(packetData);
             Console.WriteLine("Received UDP packet from " + udp_packet.SourceIP.ToString() + ":" + udp_packet.SourcePort.ToString());
-            Console.WriteLine("Content: " + udp_packet.UDP_Data.ToString());
+            Console.WriteLine("Content: " + Encoding.ASCII.GetString(udp_packet.UDP_Data));
             UdpClient receiver = UdpClient.Client(udp_packet.DestinationPort);
             if (receiver != null)
             {
