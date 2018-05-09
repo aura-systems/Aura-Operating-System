@@ -28,7 +28,7 @@ Work in progress:
 * VBE VESA Console - [Pull request](https://github.com/aura-systems/Aura-Operating-System/pull/71).
 * GUI (VBE) - [Pull request](https://github.com/aura-systems/Aura-Operating-System/pull/55).
 * Multitask - [Pull request](https://github.com/aura-systems/Cosmos/pull/40).
-* Networking (PCNETII Driver) - [Branch](https://github.com/aura-systems/Cosmos/tree/test-network).
+* Networking - [Pull Request](https://github.com/aura-systems/Aura-Operating-System/pull/72).
 
 ## Screenshots
 
