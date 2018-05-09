@@ -118,7 +118,7 @@ namespace Aura_OS.System.Network.IPV4.UDP
             byte[] data = packet.UDP_Data;
             IPV4.EndPoint source = new IPV4.EndPoint(packet.SourceIP, packet.SourcePort);
 
-            Console.WriteLine("Received " + data.Length + " bytes data from " + source.ToString());
+            //Console.WriteLine("Received " + data.Length + " bytes data from " + source.ToString());
 
             this.rxBuffer.Enqueue(new DataGram(data, source));
         }
