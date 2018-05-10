@@ -11,6 +11,7 @@ namespace Aura_OS.System.Network.IPV4
 
         internal static void ICMPHandler(byte[] packetData)
         {
+            Kernel.debugger.Send("ICMP Handler called");
             ICMPPacket icmp_packet = new ICMPPacket(packetData);
             switch (icmp_packet.ICMP_Type)
             {
@@ -130,9 +131,9 @@ namespace Aura_OS.System.Network.IPV4
         internal ICMPEchoRequest(Address source, Address dest, UInt16 id, UInt16 sequence)
             : base(source, dest, 8, 0, id, sequence, 40)
         {
-            for (byte b = 8; b < this.ICMP_DataLength; b++)
+            for (int b = 8; b < this.ICMP_DataLength; b++)
             {
-                mRawData[this.dataOffset + b] = b;
+                mRawData[this.dataOffset + b] = (byte)b;
             }
 
             mRawData[this.dataOffset + 2] = 0x00;

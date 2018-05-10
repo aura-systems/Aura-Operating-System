@@ -326,6 +326,10 @@ namespace Aura_OS.Shell.cmdIntr
             {
                 Tools.SHA256.c_SHA256(cmd);
             }
+            else if (cmd.StartsWith("ping"))
+            {
+                Network.Ping.c_Ping(cmd);
+            }
 
             #endregion
 
