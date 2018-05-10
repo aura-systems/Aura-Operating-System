@@ -3,6 +3,7 @@ using Sys = System;
 using Aura_OS.HAL.Drivers.Network;
 using Aura_OS.System.Network.ARP;
 using Aura_OS.System.Network.IPV4;
+using System.Collections.Generic;
 
 namespace Aura_OS.System.Network
 {
@@ -11,14 +12,14 @@ namespace Aura_OS.System.Network
     /// </summary>
     public static class NetworkStack
     {
-        internal static TempDictionary<HAL.Drivers.Network.NetworkDevice> AddressMap { get; private set; }
+        internal static TempDictionary<NetworkDevice> AddressMap { get; private set; }
 
         /// <summary>
         /// Initialize the Network Stack to prepare it for operation
         /// </summary>
         public static void Init()
         {
-            AddressMap = new TempDictionary<HAL.Drivers.Network.NetworkDevice>();
+            AddressMap = new TempDictionary<NetworkDevice>();
 
             // VMT Scanner issue workaround
             ARPPacket.VMTInclude();
@@ -40,6 +41,8 @@ namespace Aura_OS.System.Network
         /// Mask and Default Gateway for the device</param>
         public static void ConfigIP(NetworkDevice nic, IPV4.Config config)
         {
+            NetworkConfig.Add(nic, config);
+            Console.WriteLine("Config added in dictionnary");
             AddressMap.Add(config.IPAddress.Hash, nic);
             IPV4.Config.Add(config);
             nic.DataReceived = HandlePacket;

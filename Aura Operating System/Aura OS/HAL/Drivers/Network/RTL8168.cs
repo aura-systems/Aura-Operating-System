@@ -29,6 +29,10 @@ namespace Aura_OS.HAL.Drivers.Network
         const UInt16 RxBufferSize = 32768;
         uint BaseAddress;
 
+        public override CardType CardType => CardType.Ethernet;
+
+        public override string Name => "RTL8168";
+
         public RTL8168(PCIDevice device)
         {
             if (device == null)
@@ -108,11 +112,6 @@ namespace Aura_OS.HAL.Drivers.Network
         public override bool IsReceiveBufferFull()
         {
             return false;
-        }
-
-        public string Name
-        {
-            get { return "Realtek 8139 Chipset NIC"; }
         }
 
         #endregion
