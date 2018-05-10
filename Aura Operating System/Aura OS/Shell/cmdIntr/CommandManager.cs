@@ -293,58 +293,16 @@ namespace Aura_OS.Shell.cmdIntr
 
             else if (cmd.Equals("net"))
             {
-                Console.WriteLine("Finding PCNETII nic...");
-
-                HAL.Drivers.Network.AMDPCNetII xNic;
-
-                Cosmos.HAL.PCIDevice xNicDev = Cosmos.HAL.PCI.GetDevice(Cosmos.HAL.VendorID.AMD, Cosmos.HAL.DeviceID.PCNETII);
-                if (xNicDev == null)
-                {
-                    Console.WriteLine("PCIDevice not found!!");
-                    return;
-                }
-
-                Console.WriteLine("Found AMD PCNetII NIC on PCI " + xNicDev.bus + ":" + xNicDev.slot + ":" + xNicDev.function);
-                Console.WriteLine("NIC IRQ: " + xNicDev.InterruptLine);
-
-                xNic = new HAL.Drivers.Network.AMDPCNetII(xNicDev);
-
-                Console.WriteLine("NIC MAC Address: " + xNic.MACAddress.ToString());
-
-                System.Network.NetworkStack.Init();
-                xNic.Enable();
-
-                Console.WriteLine("Done!");
-
-                System.Network.NetworkStack.ConfigIP(xNic, new System.Network.IPV4.Config(new System.Network.IPV4.Address(192, 168, 1, 70), new System.Network.IPV4.Address(255, 255, 255, 0)));
-
                 var xClient = new System.Network.IPV4.UDP.UdpClient(4242);
                 xClient.Connect(new System.Network.IPV4.Address(192, 168, 1, 12), 4242);
                 xClient.Send(Encoding.ASCII.GetBytes("Hello from Aura Operating System!"));
-
-                System.Network.NetworkStack.Update();
-                
             }
 
             else if (cmd.Equals("discover"))
             {
-                HAL.Drivers.Network.AMDPCNetII xNic;
-                Cosmos.HAL.PCIDevice xNicDev = Cosmos.HAL.PCI.GetDevice(Cosmos.HAL.VendorID.AMD, Cosmos.HAL.DeviceID.PCNETII);
-                if (xNicDev == null)
-                {
-                    return;
-                }
-                xNic = new HAL.Drivers.Network.AMDPCNetII(xNicDev);
-                System.Network.NetworkStack.Init();
-                xNic.Enable();
-
-                System.Network.NetworkStack.ConfigIP(xNic, new System.Network.IPV4.Config(new System.Network.IPV4.Address(192, 168, 1, 70), new System.Network.IPV4.Address(255, 255, 255, 0)));
-
                 var xClient = new System.Network.IPV4.UDP.UdpClient(68);
                 xClient.Connect(new System.Network.IPV4.Address(255,255,255,255), 67);
-                xClient.Send(System.Network.DHCP.DHCP.Discover(xNic.MACAddress.bytes));
-
-                System.Network.NetworkStack.Update();
+                //xClient.Send(System.Network.DHCP.DHCP.Discover(xNic.MACAddress.bytes));
             }
 
             //else if (cmd.StartsWith("xml "))

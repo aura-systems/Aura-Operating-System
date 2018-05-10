@@ -80,6 +80,7 @@ namespace Aura_OS.System.Network.IPV4.UDP
             }
 
             Send(data, this.destination, this.destinationPort);
+            NetworkStack.Update();
         }
 
         public void Send(byte[] data, IPV4.Address dest, Int32 destPort)

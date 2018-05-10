@@ -104,6 +104,9 @@ namespace Aura_OS
                 }
                 #endregion
 
+                //Networking init
+                NetworkInit.Init();
+
                 setup.InitSetup();
 
                 if (SystemExists)
