@@ -291,12 +291,20 @@ namespace Aura_OS.Shell.cmdIntr
                 Console.WriteLine("Done!");
             }
 
-            else if (cmd.Equals("net"))
+            else if (cmd.Equals("udp"))
             {
                 var xClient = new System.Network.IPV4.UDP.UdpClient(4242);
                 xClient.Connect(new System.Network.IPV4.Address(192, 168, 1, 12), 4242);
                 xClient.Send(Encoding.ASCII.GetBytes("Hello from Aura Operating System!"));
             }
+
+            else if (cmd.Equals("tcp"))
+            {
+                var xClient = new System.Network.IPV4.TCP.TCPClient(4343);
+                xClient.Connect(new System.Network.IPV4.Address(192, 168, 1, 12), 4343);
+                xClient.Send(Encoding.ASCII.GetBytes("Hello from Aura Operating System!"));
+            }
+
 
             else if (cmd.Equals("discover"))
             {
