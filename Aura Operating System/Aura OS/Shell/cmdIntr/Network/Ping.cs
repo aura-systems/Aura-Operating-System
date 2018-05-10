@@ -44,10 +44,11 @@ namespace Aura_OS.Shell.cmdIntr.Network
             Address source = Config.FindNetwork(destination);
 
             int _deltaT = 0;
-            int second = 0;
+            int second;
 
             for (int i = 0; i<4; i++)
             {
+                second = 0;
                 Console.WriteLine("Sending ping to " + destination.ToString() + "...");
 
                 ICMPEchoRequest request = new ICMPEchoRequest(source, destination, 0x0001, 0x50);
