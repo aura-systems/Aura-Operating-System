@@ -21,10 +21,10 @@ namespace Aura_OS.System.Network
             AddressMap = new TempDictionary<HAL.Drivers.Network.NetworkDevice>();
 
             // VMT Scanner issue workaround
-            //Cosmos.System.Network.ARP.ARPPacket.VMTInclude();
+            ARPPacket.VMTInclude();
             ARPPacket_Ethernet.VMTInclude();
-            //Cosmos.System.Network.IPv4.ARPReply_Ethernet.VMTInclude();
-            //Cosmos.System.Network.IPv4.ARPRequest_Ethernet.VMTInclude();
+            ARPReply_Ethernet.VMTInclude();
+            ARPRequest_Ethernet.VMTInclude();
             //Cosmos.System.Network.IPv4.ICMPPacket.VMTInclude();
             //Cosmos.System.Network.IPv4.ICMPEchoReply.VMTInclude();
             //Cosmos.System.Network.IPv4.ICMPEchoRequest.VMTInclude();

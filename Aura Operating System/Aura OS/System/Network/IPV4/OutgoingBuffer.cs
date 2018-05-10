@@ -4,12 +4,12 @@ using Cosmos.Debug.Kernel;
 using Aura_OS.HAL.Drivers.Network;
 using Aura_OS.HAL;
 using Aura_OS.System.Network.ARP;
+using System;
 
 namespace Aura_OS.System.Network.IPV4
 {
     internal static class OutgoingBuffer
     {
-        internal static Debugger mDebugger = new Debugger("System", "Networking");
 
         private class BufferEntry
         {
@@ -49,29 +49,61 @@ namespace Aura_OS.System.Network.IPV4
         internal static void Send()
         {
             ensureQueueExists();
-            if (queue.Count < 1)
-            {
-                return;
-            }
+            int _deltaT = 0;
+            int second = 0;
 
-            //foreach (BufferEntry entry in queue)
-            for (int e = 0; e < queue.Count; e++)
+            while (!(queue.Count < 1))
             {
-                BufferEntry entry = queue[e];
-                if (entry.Status == BufferEntry.EntryStatus.ADDED)
+
+                if (_deltaT != Cosmos.HAL.RTC.Second)
                 {
-                    if (Config.IsLocalAddress(entry.Packet.DestinationIP) == false)
+                    second++;
+                    _deltaT = Cosmos.HAL.RTC.Second;
+                }
+
+                if (second >= 15)
+                {
+                    Console.WriteLine("No response in 15 secondes...");
+                    break;
+                }
+
+                //foreach (BufferEntry entry in queue)
+                for (int e = 0; e < queue.Count; e++)
+                {
+                    BufferEntry entry = queue[e];
+                    if (entry.Status == BufferEntry.EntryStatus.ADDED)
                     {
-                        entry.nextHop = Config.FindRoute(entry.Packet.DestinationIP);
-                        if (entry.nextHop == null)
+                        if (Config.IsLocalAddress(entry.Packet.DestinationIP) == false)
                         {
-                            entry.Status = BufferEntry.EntryStatus.DONE;
+                            entry.nextHop = Config.FindRoute(entry.Packet.DestinationIP);
+                            if (entry.nextHop == null)
+                            {
+                                entry.Status = BufferEntry.EntryStatus.DONE;
+                                continue;
+                            }
+
+                            if (ARPCache.Contains(entry.nextHop) == true)
+                            {
+                                entry.Packet.DestinationMAC = ARPCache.Resolve(entry.nextHop);
+
+                                entry.NIC.QueueBytes(entry.Packet.RawData);
+
+                                entry.Status = BufferEntry.EntryStatus.DONE;
+                            }
+                            else
+                            {
+                                ARPRequest_Ethernet arp_request = new ARPRequest_Ethernet(entry.NIC.MACAddress, entry.Packet.SourceIP,
+                                    MACAddress.Broadcast, entry.nextHop, MACAddress.None);
+
+                                entry.NIC.QueueBytes(arp_request.RawData);
+
+                                entry.Status = BufferEntry.EntryStatus.ROUTE_ARP_SENT;
+                            }
                             continue;
                         }
-
-                        if (ARPCache.Contains(entry.nextHop) == true)
+                        if (ARPCache.Contains(entry.Packet.DestinationIP) == true)
                         {
-                            entry.Packet.DestinationMAC = ARPCache.Resolve(entry.nextHop);
+                            entry.Packet.DestinationMAC = ARPCache.Resolve(entry.Packet.DestinationIP);
 
                             entry.NIC.QueueBytes(entry.Packet.RawData);
 
@@ -80,54 +112,33 @@ namespace Aura_OS.System.Network.IPV4
                         else
                         {
                             ARPRequest_Ethernet arp_request = new ARPRequest_Ethernet(entry.NIC.MACAddress, entry.Packet.SourceIP,
-                                MACAddress.Broadcast, entry.nextHop, MACAddress.None);
+                                MACAddress.Broadcast, entry.Packet.DestinationIP, MACAddress.None);
 
                             entry.NIC.QueueBytes(arp_request.RawData);
 
-                            entry.Status = BufferEntry.EntryStatus.ROUTE_ARP_SENT;
+                            entry.Status = BufferEntry.EntryStatus.ARP_SENT;
                         }
-                        continue;
                     }
-
-                    if (ARPCache.Contains(entry.Packet.DestinationIP) == true)
+                    else if (entry.Status == BufferEntry.EntryStatus.JUST_SEND)
                     {
-                        entry.Packet.DestinationMAC = ARPCache.Resolve(entry.Packet.DestinationIP);
-
                         entry.NIC.QueueBytes(entry.Packet.RawData);
 
                         entry.Status = BufferEntry.EntryStatus.DONE;
                     }
+                }
+                int i = 0;
+                while (i < queue.Count)
+                {
+                    if (queue[i].Status == BufferEntry.EntryStatus.DONE)
+                    {
+                        queue.RemoveAt(i);
+                    }
                     else
                     {
-                        ARPRequest_Ethernet arp_request = new ARPRequest_Ethernet(entry.NIC.MACAddress, entry.Packet.SourceIP,
-                            MACAddress.Broadcast, entry.Packet.DestinationIP, MACAddress.None);
-
-                        entry.NIC.QueueBytes(arp_request.RawData);
-
-                        entry.Status = BufferEntry.EntryStatus.ARP_SENT;
+                        i++;
                     }
                 }
-                else if (entry.Status == BufferEntry.EntryStatus.JUST_SEND)
-                {
-                    entry.NIC.QueueBytes(entry.Packet.RawData);
-
-                    entry.Status = BufferEntry.EntryStatus.DONE;
-                }
             }
-
-            int i = 0;
-            while (i < queue.Count)
-            {
-                if (queue[i].Status == BufferEntry.EntryStatus.DONE)
-                {
-                    queue.RemoveAt(i);
-                }
-                else
-                {
-                    i++;
-                }
-            }
-            mDebugger.SendInternal($"Number of packages in queue: {i}");
         }
 
         internal static void ARPCache_Update(ARPReply_Ethernet arp_reply)
@@ -145,7 +156,7 @@ namespace Aura_OS.System.Network.IPV4
                     {
                         entry.Packet.DestinationMAC = arp_reply.SenderMAC;
 
-                        entry.Status = BufferEntry.EntryStatus.DONE;
+                        entry.Status = BufferEntry.EntryStatus.JUST_SEND;
                     }
                 }
                 else if (entry.Status == BufferEntry.EntryStatus.ROUTE_ARP_SENT)
