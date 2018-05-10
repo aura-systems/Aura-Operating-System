@@ -288,18 +288,10 @@ namespace Aura_OS.HAL.Drivers.Network
 
         #region Helper Functions
 
-        Debugger debugger = new Debugger("", "");
 
         [DebugStub(Off = true)]
         protected bool SendBytes(ref byte[] aData)
         {
-
-            foreach (byte data in aData)
-            {
-                debugger.Send(data.ToString());
-            }
-            
-
             int txd = mNextTXDesc++;
             if (mNextTXDesc >= 16)
             {

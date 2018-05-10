@@ -48,9 +48,9 @@ namespace Aura_OS.System.Network.ARP
                 if ((arp_packet.HardwareType == 1) && (arp_packet.ProtocolType == 0x0800))
                 {
                     IPV4.ARPReply_Ethernet arp_reply = new IPV4.ARPReply_Ethernet(packetData);
-                    //Sys.Console.WriteLine("Received ARP Reply");
-                    //Sys.Console.WriteLine(arp_reply.ToString());
-                    //Sys.Console.WriteLine("ARP Reply Recvd from " + arp_reply.SenderIP.ToString());
+                    //Console.WriteLine("Received ARP Reply");
+                    //Console.WriteLine(arp_reply.ToString());
+                    //Console.WriteLine("ARP Reply Recvd from " + arp_reply.SenderIP.ToString());
                     ARPCache.Update(arp_reply.SenderIP, arp_reply.SenderMAC);
 
                     IPV4.OutgoingBuffer.ARPCache_Update(arp_reply);

@@ -318,13 +318,12 @@ namespace Aura_OS.Shell.cmdIntr
 
                 System.Network.NetworkStack.ConfigIP(xNic, new System.Network.IPV4.Config(new System.Network.IPV4.Address(192, 168, 1, 70), new System.Network.IPV4.Address(255, 255, 255, 0)));
 
-                //var xClient = new System.Network.IPV4.UDP.UdpClient(4242);
-                //xClient.Connect(new System.Network.IPV4.Address(192, 168, 1, 73), 4242);
-                //xClient.Send(Encoding.ASCII.GetBytes("Hello from Aura Operating System!"));
+                var xClient = new System.Network.IPV4.UDP.UdpClient(4242);
+                xClient.Connect(new System.Network.IPV4.Address(192, 168, 1, 12), 4242);
+                xClient.Send(Encoding.ASCII.GetBytes("Hello from Aura Operating System!"));
 
-                //System.Network.NetworkStack.Update();
-
-
+                System.Network.NetworkStack.Update();
+                
             }
 
             else if (cmd.Equals("discover"))

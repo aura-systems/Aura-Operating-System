@@ -21,13 +21,13 @@ namespace Aura_OS.System.Network
             AddressMap = new TempDictionary<HAL.Drivers.Network.NetworkDevice>();
 
             // VMT Scanner issue workaround
-            //Cosmos.System.Network.ARP.ARPPacket.VMTInclude();
+            ARPPacket.VMTInclude();
             ARPPacket_Ethernet.VMTInclude();
-            //Cosmos.System.Network.IPv4.ARPReply_Ethernet.VMTInclude();
-            //Cosmos.System.Network.IPv4.ARPRequest_Ethernet.VMTInclude();
-            //Cosmos.System.Network.IPv4.ICMPPacket.VMTInclude();
-            //Cosmos.System.Network.IPv4.ICMPEchoReply.VMTInclude();
-            //Cosmos.System.Network.IPv4.ICMPEchoRequest.VMTInclude();
+            ARPReply_Ethernet.VMTInclude();
+            ARPRequest_Ethernet.VMTInclude();
+            ICMPPacket.VMTInclude();
+            ICMPEchoReply.VMTInclude();
+            ICMPEchoRequest.VMTInclude();
             IPV4.UDP.UDPPacket.VMTInclude();
         }
 
@@ -60,7 +60,6 @@ namespace Aura_OS.System.Network
             switch (etherType)
             {
                 case 0x0806:
-                    Console.WriteLine("Type: ARP Packet");
                     ARPPacket.ARPHandler(packetData);
                     break;
                 case 0x0800:
