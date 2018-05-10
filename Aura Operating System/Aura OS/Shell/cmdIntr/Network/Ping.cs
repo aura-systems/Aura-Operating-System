@@ -39,17 +39,48 @@ namespace Aura_OS.Shell.cmdIntr.Network
         public static void c_Ping(string arg, short startIndex = 0, short count = 5)
         {
             string str = arg.Remove(startIndex, count);
-            Console.WriteLine("'" + str + "'");
-            Console.ReadKey();
-            //Address destination = Address.Parse(str);
-            Address destination = new Address(192, 168, 1, 12);
-            Console.WriteLine(destination.ToString());
+            string[] items = str.Split('.');
+            Address destination = new Address((byte)(Int32.Parse(items[0])), (byte)(Int32.Parse(items[1])), (byte)(Int32.Parse(items[2])), (byte)(Int32.Parse(items[3])));
             Address source = Config.FindNetwork(destination);
-            Console.WriteLine(source.ToString());
-            ICMPEchoRequest request = new ICMPEchoRequest(source, destination, 0x0001, 0x50);
-            OutgoingBuffer.AddPacket(request);
-            NetworkStack.Update();
-            Kernel.debugger.Send("Ping done");
+
+            int _deltaT = 0;
+            int second = 0;
+
+            for (int i = 0; i<4; i++)
+            {
+                Console.WriteLine("Sending ping to " + destination.ToString() + "...");
+
+                ICMPEchoRequest request = new ICMPEchoRequest(source, destination, 0x0001, 0x50);
+                OutgoingBuffer.AddPacket(request);
+                NetworkStack.Update();
+
+                while (true)
+                {
+
+                    if (ICMPPacket.recvd_reply != null)
+                    {
+                        //if (ICMPPacket.recvd_reply.SourceIP == destination)
+                        //{
+                            Console.WriteLine("Reply received from " + ICMPPacket.recvd_reply.SourceIP.ToString() + " in " + second + " secondes!");
+                            ICMPPacket.recvd_reply = null;
+                            break;
+                        //}
+                    }
+
+                    if (second >= 5)
+                    {
+                        Console.WriteLine("Unable to reach the destination host.");
+                        break;
+                    }
+
+                    if (_deltaT != Cosmos.HAL.RTC.Second)
+                    {
+                        second++;
+                        _deltaT = Cosmos.HAL.RTC.Second;
+                    }
+                }
+            }
+
         }
 
     }

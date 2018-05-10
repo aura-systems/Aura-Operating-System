@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Aura_OS.HAL;
 using Aura_OS.System.Network.ARP;
+using Aura_OS.System.Network.IPV4.TCP;
 using Aura_OS.System.Network.IPV4.UDP;
 
 namespace Aura_OS.System.Network.IPV4
@@ -47,8 +48,7 @@ namespace Aura_OS.System.Network.IPV4
                         ICMPPacket.ICMPHandler(packetData);
                         break;
                     case 6:
-                        //    IPv4_TCPHandler(packetData);
-                        Kernel.debugger.Send("Type: IPV4 TCP Packet");
+                        TCPPacket.TCPHandler(packetData);
                         break;
                     case 17:
                         UDPPacket.UDPHandler(packetData);

@@ -8,6 +8,7 @@ namespace Aura_OS.System.Network.IPV4
         protected byte icmpType;
         protected byte icmpCode;
         protected UInt16 icmpCRC;
+        public static ICMPEchoReply recvd_reply;
 
         internal static void ICMPHandler(byte[] packetData)
         {
@@ -16,7 +17,7 @@ namespace Aura_OS.System.Network.IPV4
             switch (icmp_packet.ICMP_Type)
             {
                 case 0:
-                    ICMPEchoReply recvd_reply = new ICMPEchoReply(packetData);
+                    recvd_reply = new ICMPEchoReply(packetData);
                     Kernel.debugger.Send("Received ICMP Echo reply from " + recvd_reply.SourceIP.ToString());
                     break;
                 case 8:
