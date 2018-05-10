@@ -40,46 +40,61 @@ namespace Aura_OS.Shell.cmdIntr.Network
         {
             string str = arg.Remove(startIndex, count);
             string[] items = str.Split('.');
-            Address destination = new Address((byte)(Int32.Parse(items[0])), (byte)(Int32.Parse(items[1])), (byte)(Int32.Parse(items[2])), (byte)(Int32.Parse(items[3])));
-            Address source = Config.FindNetwork(destination);
 
-            int _deltaT = 0;
-            int second;
-
-            for (int i = 0; i<4; i++)
+            if (items.Length == 4)
             {
-                second = 0;
-                Console.WriteLine("Sending ping to " + destination.ToString() + "...");
-
-                ICMPEchoRequest request = new ICMPEchoRequest(source, destination, 0x0001, 0x50);
-                OutgoingBuffer.AddPacket(request);
-                NetworkStack.Update();
-
-                while (true)
+                try
                 {
+                    Address destination = new Address((byte)(Int32.Parse(items[0])), (byte)(Int32.Parse(items[1])), (byte)(Int32.Parse(items[2])), (byte)(Int32.Parse(items[3])));
+                    Address source = Config.FindNetwork(destination);
 
-                    if (ICMPPacket.recvd_reply != null)
-                    {
-                        //if (ICMPPacket.recvd_reply.SourceIP == destination)
-                        //{
-                            Console.WriteLine("Reply received from " + ICMPPacket.recvd_reply.SourceIP.ToString() + " in " + second + " secondes!");
-                            ICMPPacket.recvd_reply = null;
-                            break;
-                        //}
-                    }
+                    int _deltaT = 0;
+                    int second;
 
-                    if (second >= 5)
+                    for (int i = 0; i < 4; i++)
                     {
-                        Console.WriteLine("Unable to reach the destination host.");
-                        break;
-                    }
+                        second = 0;
+                        Console.WriteLine("Sending ping to " + destination.ToString() + "...");
 
-                    if (_deltaT != Cosmos.HAL.RTC.Second)
-                    {
-                        second++;
-                        _deltaT = Cosmos.HAL.RTC.Second;
+                        ICMPEchoRequest request = new ICMPEchoRequest(source, destination, 0x0001, 0x50);
+                        OutgoingBuffer.AddPacket(request);
+                        NetworkStack.Update();
+
+                        while (true)
+                        {
+
+                            if (ICMPPacket.recvd_reply != null)
+                            {
+                                //if (ICMPPacket.recvd_reply.SourceIP == destination)
+                                //{
+                                Console.WriteLine("Reply received from " + ICMPPacket.recvd_reply.SourceIP.ToString() + " in " + second + " secondes!");
+                                ICMPPacket.recvd_reply = null;
+                                break;
+                                //}
+                            }
+
+                            if (second >= 5)
+                            {
+                                Console.WriteLine("Unable to reach the destination host.");
+                                break;
+                            }
+
+                            if (_deltaT != Cosmos.HAL.RTC.Second)
+                            {
+                                second++;
+                                _deltaT = Cosmos.HAL.RTC.Second;
+                            }
+                        }
                     }
                 }
+                catch
+                {
+                    Console.WriteLine("It is not a correct IP address!");
+                }
+            }
+            else
+            {
+                Console.WriteLine("It is not an IP address!");
             }
 
         }
