@@ -33,7 +33,7 @@ namespace Aura_OS.System.Network.ARP
 
                     if (NetworkStack.AddressMap.ContainsKey(arp_request.TargetIP.Hash) == true)
                     {
-                        //Sys.Console.WriteLine("ARP Request Recvd from " + arp_request.SenderIP.ToString());
+                        Kernel.debugger.Send("ARP Request Recvd from " + arp_request.SenderIP.ToString());
                         NetworkDevice nic = NetworkStack.AddressMap[arp_request.TargetIP.Hash];
 
                         IPV4.ARPReply_Ethernet reply =
@@ -48,9 +48,9 @@ namespace Aura_OS.System.Network.ARP
                 if ((arp_packet.HardwareType == 1) && (arp_packet.ProtocolType == 0x0800))
                 {
                     IPV4.ARPReply_Ethernet arp_reply = new IPV4.ARPReply_Ethernet(packetData);
-                    //Console.WriteLine("Received ARP Reply");
-                    //Console.WriteLine(arp_reply.ToString());
-                    //Console.WriteLine("ARP Reply Recvd from " + arp_reply.SenderIP.ToString());
+                    Kernel.debugger.Send("Received ARP Reply");
+                    Kernel.debugger.Send(arp_reply.ToString());
+                    Kernel.debugger.Send("ARP Reply Recvd from " + arp_reply.SenderIP.ToString());
                     ARPCache.Update(arp_reply.SenderIP, arp_reply.SenderMAC);
 
                     IPV4.OutgoingBuffer.ARPCache_Update(arp_reply);

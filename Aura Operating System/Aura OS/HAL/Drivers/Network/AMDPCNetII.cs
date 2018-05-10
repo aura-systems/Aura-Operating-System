@@ -224,6 +224,10 @@ namespace Aura_OS.HAL.Drivers.Network
             get { return mInitDone; }
         }
 
+        public override CardType CardType => CardType.Ethernet;
+
+        public override string Name => "PCNETII";
+
         public override bool Enable()
         {
             StatusRegister = 0x43;

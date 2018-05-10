@@ -3,9 +3,9 @@ using Sys = System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Aura_OS.System.Network.IPV4.UDP
+namespace Aura_OS.System.Network.IPV4.TCP
 {
-    public class UdpClient
+    public class TCPClient
     {
         // TODO: Once we support more than just IPv4, we really need to base all the IPv4 classes on abstract classes
         // that represent the required functionality, then we can generalize the stack to be independent from IPv4 or IPv6
@@ -21,7 +21,7 @@ namespace Aura_OS.System.Network.IPV4.UDP
             }
         }
 
-        private static TempDictionary<UdpClient> clients;
+        private static TempDictionary<TCPClient> clients;
 
         protected Int32 localPort;
         protected IPV4.Address destination;
@@ -29,12 +29,12 @@ namespace Aura_OS.System.Network.IPV4.UDP
 
         private Queue<DataGram> rxBuffer;
 
-        static UdpClient()
+        static TCPClient()
         {
-            clients = new TempDictionary<UdpClient>();
+            clients = new TempDictionary<TCPClient>();
         }
 
-        internal static UdpClient Client(ushort destPort)
+        internal static TCPClient Client(ushort destPort)
         {
             if (clients.ContainsKey((UInt32)destPort) == true)
             {
@@ -44,22 +44,22 @@ namespace Aura_OS.System.Network.IPV4.UDP
             return null;
         }
 
-        public UdpClient()
+        public TCPClient()
             :this(0)
         { }
 
-        public UdpClient(Int32 localPort)
+        public TCPClient(Int32 localPort)
         {
             this.rxBuffer = new Queue<DataGram>(8);
 
             this.localPort = localPort;
             if (localPort > 0)
             {
-                UdpClient.clients.Add((UInt32)localPort, this);
+                TCPClient.clients.Add((UInt32)localPort, this);
             }
         }
 
-        public UdpClient(IPV4.Address dest, Int32 destPort)
+        public TCPClient(IPV4.Address dest, Int32 destPort)
             : this(0)
         {
             this.destination = dest;
@@ -87,7 +87,7 @@ namespace Aura_OS.System.Network.IPV4.UDP
         public void Send(byte[] data, IPV4.Address dest, Int32 destPort)
         {
             IPV4.Address source = IPV4.Config.FindNetwork(dest);
-            IPV4.UDP.UDPPacket packet = new IPV4.UDP.UDPPacket(source, dest, (UInt16)this.localPort, (UInt16)destPort, data);
+            IPV4.TCP.TCPPacket packet = new IPV4.TCP.TCPPacket(source, dest, (UInt16)this.localPort, (UInt16)destPort, data, 0x10F41EE2, 0xEF93E62E, 0x50, 0x18, 0x0100, 0xBE74, 0x0000);
 
             Console.WriteLine("Sending " + packet.ToString());
             IPV4.OutgoingBuffer.AddPacket(packet);
@@ -95,9 +95,9 @@ namespace Aura_OS.System.Network.IPV4.UDP
 
         public void Close()
         {
-            if (UdpClient.clients.ContainsKey((UInt32)this.localPort) == true)
+            if (TCPClient.clients.ContainsKey((UInt32)this.localPort) == true)
             {
-                UdpClient.clients.Remove((UInt32)this.localPort);
+                TCPClient.clients.Remove((UInt32)this.localPort);
             }
         }
 
@@ -115,12 +115,12 @@ namespace Aura_OS.System.Network.IPV4.UDP
             return packet.data;
         }
 
-        internal void receiveData(IPV4.UDP.UDPPacket packet)
+        internal void receiveData(IPV4.TCP.TCPPacket packet)
         {
-            byte[] data = packet.UDP_Data;
+            byte[] data = packet.TCP_Data;
             IPV4.EndPoint source = new IPV4.EndPoint(packet.SourceIP, packet.SourcePort);
 
-            Console.WriteLine("\nReceived UDP Packet (" + data.Length + "bytes) from " + source.ToString());
+            Console.WriteLine("\nReceived TCP Packet (" + data.Length + "bytes) from " + source.ToString());
             Console.WriteLine("Content: " + Encoding.ASCII.GetString(data));
 
             this.rxBuffer.Enqueue(new DataGram(data, source));

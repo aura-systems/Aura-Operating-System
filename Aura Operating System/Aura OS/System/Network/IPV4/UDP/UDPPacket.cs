@@ -14,12 +14,12 @@ namespace Aura_OS.System.Network.IPV4.UDP
         internal static void UDPHandler(byte[] packetData)
         {
             UDPPacket udp_packet = new UDPPacket(packetData);
-            Console.WriteLine("Received UDP packet from " + udp_packet.SourceIP.ToString() + ":" + udp_packet.SourcePort.ToString());
-            Console.WriteLine("Content: " + Encoding.ASCII.GetString(udp_packet.UDP_Data));
+            Kernel.debugger.Send("Received UDP packet from " + udp_packet.SourceIP.ToString() + ":" + udp_packet.SourcePort.ToString());
+            Kernel.debugger.Send("Content: " + Encoding.ASCII.GetString(udp_packet.UDP_Data));
             UdpClient receiver = UdpClient.Client(udp_packet.DestinationPort);
             if (receiver != null)
             {
-                Sys.Console.WriteLine("UDP Packet is for registered client");
+                Kernel.debugger.Send("UDP Packet is for registered client");
                 receiver.receiveData(udp_packet);
             //    DataReceived dlgt = udpClients[udp_packet.DestinationPort];
             //    if (dlgt != null)

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Aura_OS.HAL;
 using Aura_OS.System.Network.ARP;
+using Aura_OS.System.Network.IPV4.TCP;
 using Aura_OS.System.Network.IPV4.UDP;
 
 namespace Aura_OS.System.Network.IPV4
@@ -34,7 +35,7 @@ namespace Aura_OS.System.Network.IPV4
             //Sys.Console.WriteLine(ip_packet.ToString());
             if (ip_packet.SourceIP == null)
             {
-                global::System.Console.WriteLine("SourceIP null in IPv4Handler!");
+                Console.WriteLine("SourceIP null in IPv4Handler!");
             }
             ARPCache.Update(ip_packet.SourceIP, ip_packet.SourceMAC);
 
@@ -50,8 +51,7 @@ namespace Aura_OS.System.Network.IPV4
                         DHCP.DHCPPacket.DHCPHandler(packetData);
                         break;
                     case 6:
-                        //    IPv4_TCPHandler(packetData);
-                        Console.WriteLine("Type: IPV4 TCP Packet");
+                        TCPPacket.TCPHandler(packetData);
                         break;
                     case 17:
                         UDPPacket.UDPHandler(packetData);

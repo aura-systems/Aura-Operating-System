@@ -7,6 +7,12 @@ namespace Aura_OS.HAL.Drivers.Network
 {
     public delegate void DataReceivedHandler(byte[] packetData);
 
+    public enum CardType
+    {
+        Ethernet,
+        Wireless
+    }
+
     public abstract class NetworkDevice
     {
         public static List<NetworkDevice> Devices { get; private set; }
@@ -24,7 +30,17 @@ namespace Aura_OS.HAL.Drivers.Network
             Devices.Add(this);
         }
 
+        public abstract CardType CardType
+        {
+            get;
+        }
+
         public abstract MACAddress MACAddress
+        {
+            get;
+        }
+
+        public abstract string Name
         {
             get;
         }

@@ -227,9 +227,6 @@ namespace Aura_OS.System.Translation
                             Console.WriteLine("voir la progression du projet sur ce domaine.");
                             Console.WriteLine();
                             break;
-                        case "MAC":
-                            Console.WriteLine("Addresse Physique (MAC): " + Core.Network.PhysicalAddress());
-                            break;
                         case "notavalidscript":
                             Console.WriteLine("Ce fichier n'est pas un script valide.");
                             break;
@@ -466,12 +463,6 @@ namespace Aura_OS.System.Translation
                             Console.WriteLine("see the progression on this part.");
                             Console.WriteLine();
                             break;
-                        case "MAC":
-                            Console.WriteLine("MAC Address: " + Core.Network.PhysicalAddress());
-                            break;
-                        case "notavalidscript":
-                            Console.WriteLine("This file is not a valid script.");
-                            break;
                         case "md5":
                             Console.WriteLine("This is the result in MD5.");
                             break;
@@ -705,14 +696,8 @@ namespace Aura_OS.System.Translation
                             Console.WriteLine("de vooruitgang te zien van dit onderdeel.");
                             Console.WriteLine();
                             break;
-                        case "MAC":
-                            Console.WriteLine("MAC Adres: " + Core.Network.PhysicalAddress());
-                            break;
                         case "notavalidscript":
                             Console.WriteLine("Dit bestand is geen geldig script.");
-                            break;
-                        case "md5":
-                            Console.WriteLine("Dit is het resultaat in MD5.");
                             break;
                         case "SHA256":
                             Console.WriteLine("Dit is het resultaat in SHA256.");
@@ -931,9 +916,6 @@ namespace Aura_OS.System.Translation
                             Console.WriteLine("Puoi visitare la  roadmap su aura-team.com per");
                             Console.WriteLine("vedere i progressi riguardo questa parte.");
                             Console.WriteLine();
-                            break;
-                        case "MAC":
-                            Console.WriteLine("Indirizzo MAC: " + Core.Network.PhysicalAddress());
                             break;
                         case "notavalidscript":
                             Console.WriteLine("Questo non è uno script valido.");

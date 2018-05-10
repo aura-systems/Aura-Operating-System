@@ -98,7 +98,7 @@
     <IntelEdison_StartCosmosGDB>false</IntelEdison_StartCosmosGDB>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DebugEnabled>False</DebugEnabled>
+    <DebugEnabled>True</DebugEnabled>
     <StackCorruptionDetectionEnabled>False</StackCorruptionDetectionEnabled>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>

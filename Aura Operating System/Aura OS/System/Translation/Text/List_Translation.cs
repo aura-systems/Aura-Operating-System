@@ -8,6 +8,7 @@
 using Shell = Aura_OS.System.Shell;
 using Cosmos.HAL.PCInformation;
 using System;
+using Aura_OS.System.Network;
 
 namespace Aura_OS.System.Translation
 {
@@ -349,6 +350,9 @@ namespace Aura_OS.System.Translation
             }
         }
 
+        /// <summary>
+        /// Display informations about Aura OS
+        /// </summary>
         public static void About()
         {
             switch (Kernel.langSelected)
@@ -399,6 +403,104 @@ namespace Aura_OS.System.Translation
                     Console.WriteLine();
                     Console.WriteLine("Grazie anche ai collaboratori di Cosmos.");
                     Console.WriteLine("https://github.com/aura-systems/Aura-Operating-System");
+                    break;
+
+            }
+        }
+
+        /// <summary>
+        /// Display IP Configuration and MAC Address
+        /// </summary>
+        public static void Ipconfig()
+        {
+            switch (Kernel.langSelected)
+            {
+                case "fr_FR":
+                    int counter = 0;
+                    foreach (HAL.Drivers.Network.NetworkDevice device in NetworkConfig.Keys)
+                    {
+                        switch (device.CardType)
+                        {
+                            case HAL.Drivers.Network.CardType.Ethernet:
+                                Console.WriteLine("Carte Ethernet " + counter + " - " + device.Name);
+                                break;
+                            case HAL.Drivers.Network.CardType.Wireless:
+                                Console.WriteLine("Carte réseau sans fil " + counter + " :");
+                                break;
+                        }
+                        Console.WriteLine("Adresse MAC           : " + device.MACAddress.ToString());
+                        Console.WriteLine("Adresse IP            : " + NetworkConfig.Values[counter].IPAddress.ToString());
+                        Console.WriteLine("Masque de sous-réseau : " + NetworkConfig.Values[counter].SubnetMask.ToString());
+                        Console.WriteLine("Passerelle par défaut : " + NetworkConfig.Values[counter].DefaultGateway.ToString());
+                        counter++;
+                    }
+                    counter = 0;
+                    break;
+
+                case "en_US":
+                    int counter1 = 0;
+                    foreach (HAL.Drivers.Network.NetworkDevice device in NetworkConfig.Keys)
+                    {
+                        switch (device.CardType)
+                        {
+                            case HAL.Drivers.Network.CardType.Ethernet:
+                                Console.WriteLine("Ethernet Card  " + counter1 + " - " + device.Name);
+                                break;
+                            case HAL.Drivers.Network.CardType.Wireless:
+                                Console.WriteLine("Wireless Card " + counter1 + " - " + device.Name);
+                                break;
+                        }
+                        Console.WriteLine("MAC Address     : " + device.MACAddress.ToString());
+                        Console.WriteLine("IP Address      : " + NetworkConfig.Values[counter1].IPAddress.ToString());
+                        Console.WriteLine("Subnet mask     : " + NetworkConfig.Values[counter1].SubnetMask.ToString());
+                        Console.WriteLine("Default Gateway : " + NetworkConfig.Values[counter1].DefaultGateway.ToString());
+                        counter1++;
+                    }
+                    counter1 = 0;
+                    break;
+
+                case "nl_NL":
+                    int counter2 = 0;
+                    foreach (HAL.Drivers.Network.NetworkDevice device in NetworkConfig.Keys)
+                    {
+                        switch (device.CardType)
+                        {
+                            case HAL.Drivers.Network.CardType.Ethernet:
+                                Console.WriteLine("Ethernetkaart " + counter2 + " - " + device.Name);
+                                break;
+                            case HAL.Drivers.Network.CardType.Wireless:
+                                Console.WriteLine("Draadloze Netwerkkaart " + counter2 + " :");
+                                break;
+                        }
+                        Console.WriteLine("MAC-adres        : " + device.MACAddress.ToString());
+                        Console.WriteLine("IP-adres         : " + NetworkConfig.Values[counter2].IPAddress.ToString());
+                        Console.WriteLine("Subnetmasker     : " + NetworkConfig.Values[counter2].SubnetMask.ToString());
+                        Console.WriteLine("Standaardgateway : " + NetworkConfig.Values[counter2].DefaultGateway.ToString());
+                        counter2++;
+                    }
+                    counter2 = 0;
+                    break;
+
+                case "it_IT":
+                    int counter3 = 0;
+                    foreach (HAL.Drivers.Network.NetworkDevice device in NetworkConfig.Keys)
+                    {
+                        switch (device.CardType)
+                        {
+                            case HAL.Drivers.Network.CardType.Ethernet:
+                                Console.WriteLine("Scheda Ethernet " + counter3 + " - " + device.Name);
+                                break;
+                            case HAL.Drivers.Network.CardType.Wireless:
+                                Console.WriteLine("Scheda di rete senza fili " + counter3 + " :");
+                                break;
+                        }
+                        Console.WriteLine("Indirizzo MAC         : " + device.MACAddress.ToString());
+                        Console.WriteLine("Indirizzo IP          : " + NetworkConfig.Values[counter3].IPAddress.ToString());
+                        Console.WriteLine("Maschera di sottorete : " + NetworkConfig.Values[counter3].SubnetMask.ToString());
+                        Console.WriteLine("Gateway predefinito   : " + NetworkConfig.Values[counter3].DefaultGateway.ToString());
+                        counter3++;
+                    }
+                    counter3 = 0;
                     break;
 
             }

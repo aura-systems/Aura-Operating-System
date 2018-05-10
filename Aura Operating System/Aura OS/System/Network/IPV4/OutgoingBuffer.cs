@@ -61,9 +61,9 @@ namespace Aura_OS.System.Network.IPV4
                     _deltaT = Cosmos.HAL.RTC.Second;
                 }
 
-                if (second >= 15)
+                if (second >= 4)
                 {
-                    Console.WriteLine("No response in 15 secondes...");
+                    Console.WriteLine("No response in 4 secondes...");
                     break;
                 }
 
