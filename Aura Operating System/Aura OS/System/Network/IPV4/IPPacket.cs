@@ -46,6 +46,9 @@ namespace Aura_OS.System.Network.IPV4
                     case 1:
                         ICMPPacket.ICMPHandler(packetData);
                         break;
+                    case 2:
+                        DHCP.DHCPPacket.DHCPHandler(packetData);
+                        break;
                     case 6:
                         //    IPv4_TCPHandler(packetData);
                         Console.WriteLine("Type: IPV4 TCP Packet");
