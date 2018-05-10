@@ -34,7 +34,7 @@ namespace Aura_OS.System.Network.IPV4
             //Sys.Console.WriteLine(ip_packet.ToString());
             if (ip_packet.SourceIP == null)
             {
-                global::System.Console.WriteLine("SourceIP null in IPv4Handler!");
+                Console.WriteLine("SourceIP null in IPv4Handler!");
             }
             ARPCache.Update(ip_packet.SourceIP, ip_packet.SourceMAC);
 
@@ -48,7 +48,7 @@ namespace Aura_OS.System.Network.IPV4
                         break;
                     case 6:
                         //    IPv4_TCPHandler(packetData);
-                        Console.WriteLine("Type: IPV4 TCP Packet");
+                        Kernel.debugger.Send("Type: IPV4 TCP Packet");
                         break;
                     case 17:
                         UDPPacket.UDPHandler(packetData);

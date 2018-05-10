@@ -50,14 +50,13 @@ namespace Aura_OS.System.Network
 
         internal static void HandlePacket(byte[] packetData)
         {
-            Console.Write("Packet Received Length=");
+            Kernel.debugger.Send("Packet Received Length=");
             if (packetData == null)
             {
-                Sys.Console.WriteLine("null");
+                Console.WriteLine("Error packet data null");
                 return;
             }
-            Sys.Console.WriteLine(packetData.Length);
-            //Sys.Console.WriteLine(BitConverter.ToString(packetData));
+            Kernel.debugger.Send(packetData.Length.ToString());
 
             UInt16 etherType = (UInt16)((packetData[12] << 8) | packetData[13]);
             switch (etherType)

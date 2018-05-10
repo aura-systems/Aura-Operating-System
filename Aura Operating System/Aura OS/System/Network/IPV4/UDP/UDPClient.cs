@@ -1,6 +1,7 @@
 ﻿using System;
 using Sys = System;
 using System.Collections.Generic;
+using System.Text;
 
 namespace Aura_OS.System.Network.IPV4.UDP
 {
@@ -119,7 +120,8 @@ namespace Aura_OS.System.Network.IPV4.UDP
             byte[] data = packet.UDP_Data;
             IPV4.EndPoint source = new IPV4.EndPoint(packet.SourceIP, packet.SourcePort);
 
-            //Console.WriteLine("Received " + data.Length + " bytes data from " + source.ToString());
+            Console.WriteLine("\nReceived UDP Packet (" + data.Length + "bytes) from " + source.ToString());
+            Console.WriteLine("Content: " + Encoding.ASCII.GetString(data));
 
             this.rxBuffer.Enqueue(new DataGram(data, source));
         }
