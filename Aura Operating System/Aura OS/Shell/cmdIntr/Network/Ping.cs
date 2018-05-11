@@ -41,6 +41,14 @@ namespace Aura_OS.Shell.cmdIntr.Network
             string str = arg.Remove(startIndex, count);
             string[] items = str.Split('.');
 
+            String IPdest = "";
+
+            int PacketSent = 0;
+            int PacketReceived = 0;
+            int PacketLost = 0;
+
+            int PercentLoss = 0;
+
             if (items.Length == 4)
             {
                 try
@@ -48,17 +56,23 @@ namespace Aura_OS.Shell.cmdIntr.Network
                     Address destination = new Address((byte)(Int32.Parse(items[0])), (byte)(Int32.Parse(items[1])), (byte)(Int32.Parse(items[2])), (byte)(Int32.Parse(items[3])));
                     Address source = Config.FindNetwork(destination);
 
+                    IPdest = destination.ToString();
+
                     int _deltaT = 0;
                     int second;
+
+                    Console.WriteLine("Sending ping to " + destination.ToString());
 
                     for (int i = 0; i < 4; i++)
                     {
                         second = 0;
-                        Console.WriteLine("Sending ping to " + destination.ToString() + "...");
+                        //Console.WriteLine("Sending ping to " + destination.ToString() + "...");
 
                         ICMPEchoRequest request = new ICMPEchoRequest(source, destination, 0x0001, 0x50);
                         OutgoingBuffer.AddPacket(request);
                         NetworkStack.Update();
+
+                        PacketSent++;
 
                         while (true)
                         {
@@ -67,7 +81,18 @@ namespace Aura_OS.Shell.cmdIntr.Network
                             {
                                 //if (ICMPPacket.recvd_reply.SourceIP == destination)
                                 //{
-                                Console.WriteLine("Reply received from " + ICMPPacket.recvd_reply.SourceIP.ToString() + " in " + second + " secondes!");
+                                
+                                if (second < 1)
+                                {
+                                    Console.WriteLine("Reply received from " + ICMPPacket.recvd_reply.SourceIP.ToString() + " time < 1s");                                    
+                                }
+                                else if (second > 1)
+                                {
+                                    Console.WriteLine("Reply received from " + ICMPPacket.recvd_reply.SourceIP.ToString() + " time < " + second + "s");
+                                }
+
+                                PacketReceived++;
+
                                 ICMPPacket.recvd_reply = null;
                                 break;
                                 //}
@@ -75,7 +100,8 @@ namespace Aura_OS.Shell.cmdIntr.Network
 
                             if (second >= 5)
                             {
-                                Console.WriteLine("Unable to reach the destination host.");
+                                Console.WriteLine("Destination host unreachable.");
+                                PacketLost++;
                                 break;
                             }
 
@@ -90,6 +116,11 @@ namespace Aura_OS.Shell.cmdIntr.Network
                 catch
                 {
                     Console.WriteLine("It is not a correct IP address!");
+                }
+                finally
+                {
+                    Console.WriteLine("Ping statistics for " + IPdest +":");
+                    Console.WriteLine("    Packets: Sent = " + PacketSent + ", Received = " + PacketReceived + ", Lost = " + PacketLost + "(" + PercentLoss + " loss)");
                 }
             }
             else
