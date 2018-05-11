@@ -157,12 +157,26 @@ namespace Aura_OS.System.Network.DHCP
             mRawData[this.dataOffset + 37] = srcMAC.bytes[1];
             mRawData[this.dataOffset + 38] = srcMAC.bytes[2];
             mRawData[this.dataOffset + 39] = srcMAC.bytes[3];
+            mRawData[this.dataOffset + 40] = srcMAC.bytes[4];
+            mRawData[this.dataOffset + 41] = srcMAC.bytes[5];
 
             //Client hardware address padding & Server hostname & Boot file name
-            //for(int i=40; i < 106; i++)
-            //{
-            //    mRawData[this.dataOffset + i] = 0; //only 0 because its not given
-            //}
+            for (int i = 42; i < 244; i++)
+            {
+                mRawData[this.dataOffset + i] = 0; //only 0 because its not given
+            }
+
+            //Magic cookie: DHCP
+            mRawData[this.dataOffset + 245] = 0x63;
+            mRawData[this.dataOffset + 246] = 0x82;
+            mRawData[this.dataOffset + 247] = 0x53;
+            mRawData[this.dataOffset + 248] = 0x63;
+
+            //Option (53) DHCP Message Type
+            mRawData[this.dataOffset + 249] = 0x35; //35 = 53
+            mRawData[this.dataOffset + 249] = 1; //Length
+            mRawData[this.dataOffset + 249] = 1; //DHCP Discover
+
 
             for (int b = 0; b < data.Length; b++)
             {
