@@ -21,6 +21,8 @@ namespace Aura_OS.System.Network.IPV4.TCP
             }
         }
 
+        internal static List<ulong> Connections = new List<ulong>();
+
         private static TempDictionary<TCPClient> clients;
 
         protected Int32 localPort;
@@ -68,6 +70,7 @@ namespace Aura_OS.System.Network.IPV4.TCP
 
         public void Connect(IPV4.Address dest, Int32 destPort)
         {
+            Connections.Add((ulong)(dest.Hash + destPort + localPort));
             this.destination = dest;
             this.destinationPort = destPort;
         }
