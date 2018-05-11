@@ -79,7 +79,7 @@ namespace Aura_OS.System.Network.IPV4.TCP
 
                     connection.sequencenumber = (uint)tcp_packet.sequencenumber++;
 
-                    connection.Checksum = (ushort)tcp_packet.Checksum;
+                    connection.Checksum = tcp_packet.CalcTCPCRC(20);
 
                     connection.Send(false);
 
@@ -213,6 +213,30 @@ namespace Aura_OS.System.Network.IPV4.TCP
 
                 return data;
             }
+        }
+
+        protected UInt16 CalcTCPCRC(UInt16 offset, UInt16 length)
+        {
+            return CalcTCPCRC(this.RawData, offset, length);
+        }
+
+        protected static UInt16 CalcTCPCRC(byte[] buffer, UInt16 offset, int length)
+        {
+            UInt32 crc = 0;
+
+            for (UInt16 w = offset; w < offset + length; w += 2)
+            {
+                crc += (UInt16)((buffer[w] << 8) | buffer[w + 1]);
+            }
+
+            crc = (~((crc & 0xFFFF) + (crc >> 16)));
+
+            return (UInt16)crc;
+        }
+
+        protected UInt16 CalcTCPCRC(UInt16 headerLength)
+        {
+            return CalcOcCRC(20, headerLength);
         }
 
         public override string ToString()
