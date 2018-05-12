@@ -20,19 +20,85 @@ namespace Aura_OS.System.Network.IPV4.UDP
         internal static void UDPHandler(byte[] packetData)
         {
             UDPPacket udp_packet = new UDPPacket(packetData);
+
             Kernel.debugger.Send("Received UDP packet from " + udp_packet.SourceIP.ToString() + ":" + udp_packet.SourcePort.ToString());
-            Kernel.debugger.Send("Content: " + Encoding.ASCII.GetString(udp_packet.UDP_Data));
-            UdpClient receiver = UdpClient.Client(udp_packet.DestinationPort);
-            if (receiver != null)
+
+            if (CheckCRC(udp_packet.udpCRC, udp_packet))
             {
-                Kernel.debugger.Send("UDP Packet is for registered client");
-                receiver.receiveData(udp_packet);
-            //    DataReceived dlgt = udpClients[udp_packet.DestinationPort];
-            //    if (dlgt != null)
-            //    {
-            //        dlgt(new IPv4EndPoint(udp_packet.SourceIP, udp_packet.SourcePort), udp_packet.UDP_Data);
-            //    }
+                Kernel.debugger.Send("Content: " + Encoding.ASCII.GetString(udp_packet.UDP_Data));
+                UdpClient receiver = UdpClient.Client(udp_packet.DestinationPort);
+                if (receiver != null)
+                {
+                    Kernel.debugger.Send("UDP Packet is for registered client");
+                    receiver.receiveData(udp_packet);
+                }
             }
+            else
+            {
+                Kernel.debugger.Send("But checksum Incorrect... Packet Passed.");
+            }
+        }
+
+        public static bool CheckCRC(ushort udpCRC, UDPPacket packet)
+        {
+            byte[] header = new byte[18 + packet.UDP_Data.Length];
+
+            header[0] = packet.sourceIP.address[0];
+            header[1] = packet.sourceIP.address[1];
+            header[2] = packet.sourceIP.address[2];
+            header[3] = packet.sourceIP.address[3];
+
+            header[4] = packet.destIP.address[0];
+            header[5] = packet.destIP.address[1];
+            header[6] = packet.destIP.address[2];
+            header[7] = packet.destIP.address[3];
+
+            header[8] = 0x00;
+
+            header[9] = 0x11;
+
+            header[10] = (byte)((packet.udpLen >> 8) & 0xFF);
+            header[11] = (byte)((packet.udpLen >> 0) & 0xFF);
+
+            header[12] = (byte)((packet.sourcePort >> 8) & 0xFF);
+            header[13] = (byte)((packet.sourcePort >> 0) & 0xFF);
+
+            header[14] = (byte)((packet.destPort >> 8) & 0xFF);
+            header[15] = (byte)((packet.destPort >> 0) & 0xFF);
+
+            header[16] = (byte)((packet.udpLen >> 8) & 0xFF);
+            header[17] = (byte)((packet.udpLen >> 0) & 0xFF);
+
+            for (int i = 0; i < packet.UDP_Data.Length; i++)
+            {
+                header[18 + i] = packet.UDP_Data[i];
+            }
+
+            UInt16 calculatedcrc = Check(header, 0, header.Length);
+            Kernel.debugger.Send("Calculated: 0x" + Utils.Conversion.DecToHex(calculatedcrc));
+            Kernel.debugger.Send("Received:  0x" + Utils.Conversion.DecToHex(packet.udpCRC));
+            if (calculatedcrc == packet.udpCRC)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        protected static UInt16 Check(byte[] buffer, UInt16 offset, int length)
+        {
+            UInt32 crc = 0;
+
+            for (UInt16 w = offset; w < offset + length; w += 2)
+            {
+                crc += (UInt16)((buffer[w] << 8) | buffer[w + 1]);
+            }
+
+            crc = (~((crc & 0xFFFF) + (crc >> 16)));
+            return (UInt16)crc;
+            
         }
 
         /// <summary>
