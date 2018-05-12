@@ -118,9 +118,12 @@ namespace Aura_OS.Shell.cmdIntr.Network
                     Console.WriteLine("It is not a correct IP address!");
                 }
                 finally
-                {
+                {                    
+                    PercentLoss = 25 * PacketLost;
+
+                    Console.WriteLine();
                     Console.WriteLine("Ping statistics for " + IPdest +":");
-                    Console.WriteLine("    Packets: Sent = " + PacketSent + ", Received = " + PacketReceived + ", Lost = " + PacketLost + "(" + PercentLoss + " loss)");
+                    Console.WriteLine("    Packets: Sent = " + PacketSent + ", Received = " + PacketReceived + ", Lost = " + PacketLost + "(" + PercentLoss + "% loss)");
                 }
             }
             else
