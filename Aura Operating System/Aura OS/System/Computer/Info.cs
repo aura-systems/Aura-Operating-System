@@ -6,6 +6,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Text;
 using Aura_OS.System.Translation;
 using Aura_OS.System.Utils;
 using Cosmos.HAL.PCInformation;
@@ -32,6 +33,16 @@ namespace Aura_OS.System.Computer
             {
                 return "aura-pc";
             }
+        }
+
+        public static byte[] getHostname()
+        {
+            return Encoding.ASCII.GetBytes(getComputerName());
+        }
+
+        public static int HostnameLength()
+        {
+            return getHostname().Length;
         }
 
         /// <summary>
