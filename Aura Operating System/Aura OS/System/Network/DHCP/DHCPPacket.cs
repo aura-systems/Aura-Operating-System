@@ -174,8 +174,35 @@ namespace Aura_OS.System.Network.DHCP
 
             //Option (53) DHCP Message Type
             mRawData[this.dataOffset + 249] = 0x35; //35 = 53
-            mRawData[this.dataOffset + 249] = 1; //Length
-            mRawData[this.dataOffset + 249] = 1; //DHCP Discover
+            mRawData[this.dataOffset + 250] = 1; //Length
+            mRawData[this.dataOffset + 251] = 1; //DHCP Discover
+
+            //Option (61) Client identifier
+            mRawData[this.dataOffset + 252] = 7;
+            mRawData[this.dataOffset + 253] = 1;
+            mRawData[this.dataOffset + 254] = srcMAC.bytes[0];
+            mRawData[this.dataOffset + 255] = srcMAC.bytes[1];
+            mRawData[this.dataOffset + 256] = srcMAC.bytes[2];
+            mRawData[this.dataOffset + 257] = srcMAC.bytes[3];
+            mRawData[this.dataOffset + 258] = srcMAC.bytes[4];
+            mRawData[this.dataOffset + 259] = srcMAC.bytes[5];
+
+            //Option (50) Requested IP Address            
+            mRawData[this.dataOffset + 260] = 4;
+            mRawData[this.dataOffset + 261] = source.ToByteArray()[0];
+            mRawData[this.dataOffset + 262] = source.ToByteArray()[1];
+            mRawData[this.dataOffset + 263] = source.ToByteArray()[2];
+            mRawData[this.dataOffset + 264] = source.ToByteArray()[3];
+
+            //Option (12) Host name            
+            mRawData[this.dataOffset + 265] = (byte) Computer.Info.HostnameLength();
+            int a = 0;
+            for (int i = 266; i < (266 + Computer.Info.HostnameLength() - 1); i++)
+            {
+                mRawData[this.dataOffset + i] = Computer.Info.getHostname()[a];
+                a++;
+            }
+            
 
 
             for (int b = 0; b < data.Length; b++)
