@@ -1,5 +1,11 @@
-﻿using System;
-using Sys = System;
+﻿/*
+* PROJECT:          Aura Operating System Development
+* CONTENT:          ICMP Packet (to ping for exemple)
+* PROGRAMMERS:      Valentin Charbonnier <valentinbreiz@gmail.com>
+*                   Port of Cosmos Code.
+*/
+
+using System;
 
 namespace Aura_OS.System.Network.IPV4
 {

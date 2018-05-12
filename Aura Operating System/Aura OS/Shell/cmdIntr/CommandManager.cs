@@ -302,7 +302,7 @@ namespace Aura_OS.Shell.cmdIntr
             {
                 var xClient = new System.Network.IPV4.TCP.TCPClient(4343);
                 xClient.Connect(new System.Network.IPV4.Address(192, 168, 1, 12), 4343);
-                xClient.Send(Encoding.ASCII.GetBytes("Hello from Aura Operating System!"));
+                //xClient.Send(Encoding.ASCII.GetBytes("Hello from Aura Operating System!"));
             }
 
 

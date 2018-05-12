@@ -1,11 +1,16 @@
-﻿using System;
+﻿/*
+* PROJECT:          Aura Operating System Development
+* CONTENT:          AMD PCNETII / PCNETIII Driver
+* PROGRAMMERS:      Valentin Charbonnier <valentinbreiz@gmail.com>
+*                   Port of Cosmos Code.
+*/
+
+using System;
 using System.Collections.Generic;
 using Cosmos.Common;
 using Cosmos.Core;
 using Cosmos.Core.IOGroup.Network;
-using Cosmos.Debug.Kernel;
 using Cosmos.HAL;
-using Cosmos.HAL.Network;
 using IL2CPU.API.Attribs;
 
 namespace Aura_OS.HAL.Drivers.Network

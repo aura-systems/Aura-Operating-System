@@ -1,6 +1,11 @@
-﻿using System.Collections.Generic;
+﻿/*
+* PROJECT:          Aura Operating System Development
+* CONTENT:          To send packets
+* PROGRAMMERS:      Valentin Charbonnier <valentinbreiz@gmail.com>
+*                   Port of Cosmos Code.
+*/
 
-using Cosmos.Debug.Kernel;
+using System.Collections.Generic;
 using Aura_OS.HAL.Drivers.Network;
 using Aura_OS.HAL;
 using Aura_OS.System.Network.ARP;

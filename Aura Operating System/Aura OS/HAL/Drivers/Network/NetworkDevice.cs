@@ -1,4 +1,11 @@
-﻿using System;
+﻿/*
+* PROJECT:          Aura Operating System Development
+* CONTENT:          Abstract Network Device Class
+* PROGRAMMERS:      Valentin Charbonnier <valentinbreiz@gmail.com>
+*                   Port of Cosmos Code.
+*/
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;

@@ -1,5 +1,10 @@
-﻿using System;
-using Sys = System;
+﻿/*
+* PROJECT:          Aura Operating System Development
+* CONTENT:          TCP Client
+* PROGRAMMERS:      Valentin Charbonnier <valentinbreiz@gmail.com>
+*/
+
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -20,6 +25,8 @@ namespace Aura_OS.System.Network.IPV4.TCP
                 this.source = src;
             }
         }
+
+        internal static List<ulong> Connections = new List<ulong>();
 
         private static TempDictionary<TCPClient> clients;
 
@@ -68,6 +75,7 @@ namespace Aura_OS.System.Network.IPV4.TCP
 
         public void Connect(IPV4.Address dest, Int32 destPort)
         {
+            Connections.Add((ulong)(dest.Hash + destPort + localPort));
             this.destination = dest;
             this.destinationPort = destPort;
         }

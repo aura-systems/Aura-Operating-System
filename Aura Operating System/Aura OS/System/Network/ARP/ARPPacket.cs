@@ -1,6 +1,12 @@
-﻿using System;
+﻿/*
+* PROJECT:          Aura Operating System Development
+* CONTENT:          ARP Packet
+* PROGRAMMERS:      Valentin Charbonnier <valentinbreiz@gmail.com>
+*                   Port of Cosmos Code.
+*/
+
+using System;
 using Aura_OS.HAL;
-using Sys = System;
 using Aura_OS.HAL.Drivers.Network;
 
 namespace Aura_OS.System.Network.ARP

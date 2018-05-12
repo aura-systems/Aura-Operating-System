@@ -1,4 +1,11 @@
-﻿using System.Collections.Generic;
+﻿/*
+* PROJECT:          Aura Operating System Development
+* CONTENT:          List of all IPs / Utils
+* PROGRAMMERS:      Valentin Charbonnier <valentinbreiz@gmail.com>
+*                   Port of Cosmos Code.
+*/
+
+using System.Collections.Generic;
 using System;
 
 namespace Aura_OS.System.Network.IPV4

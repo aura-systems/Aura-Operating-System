@@ -1,4 +1,11 @@
-﻿using System;
+﻿/*
+* PROJECT:          Aura Operating System Development
+* CONTENT:          An other dictionnary class
+* PROGRAMMERS:      Valentin Charbonnier <valentinbreiz@gmail.com>
+*                   Port of Cosmos Code.
+*/
+
+using System;
 using System.Collections.Generic;
 
 namespace Aura_OS.System.Network

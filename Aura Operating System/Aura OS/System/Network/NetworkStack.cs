@@ -1,9 +1,14 @@
-﻿using System;
-using Sys = System;
+﻿/*
+* PROJECT:          Aura Operating System Development
+* CONTENT:          Network Intialization + Packet Handler
+* PROGRAMMERS:      Valentin Charbonnier <valentinbreiz@gmail.com>
+*                   Port of Cosmos Code.
+*/
+
+using System;
 using Aura_OS.HAL.Drivers.Network;
 using Aura_OS.System.Network.ARP;
 using Aura_OS.System.Network.IPV4;
-using System.Collections.Generic;
 
 namespace Aura_OS.System.Network
 {
