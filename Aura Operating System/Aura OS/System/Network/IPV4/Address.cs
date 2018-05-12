@@ -1,4 +1,11 @@
-﻿using System;
+﻿/*
+* PROJECT:          Aura Operating System Development
+* CONTENT:          IP Address
+* PROGRAMMERS:      Valentin Charbonnier <valentinbreiz@gmail.com>
+*                   Port of Cosmos Code.
+*/
+
+using System;
 
 namespace Aura_OS.System.Network.IPV4
 {

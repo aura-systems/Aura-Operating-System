@@ -1,7 +1,12 @@
-﻿using System;
+﻿/*
+* PROJECT:          Aura Operating System Development
+* CONTENT:          Network dictionary
+* PROGRAMMERS:      Valentin Charbonnier <valentinbreiz@gmail.com>
+*/
+
+using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Text;
 using Aura_OS.HAL.Drivers.Network;
 using Aura_OS.System.Network.IPV4;
 

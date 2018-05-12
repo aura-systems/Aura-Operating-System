@@ -1,12 +1,15 @@
-﻿
+﻿/*
+* PROJECT:          Aura Operating System Development
+* CONTENT:          RTL8168 Driver
+* PROGRAMMERS:      Valentin Charbonnier <valentinbreiz@gmail.com>
+*/
+
 using System;
 using System.Collections.Generic;
-using System.Text;
 using Aura_OS.Core;
 using Cosmos.Core;
 using Cosmos.Core.IOGroup.Network;
 using Cosmos.HAL;
-using Cosmos.HAL.Network;
 using static Cosmos.Core.INTs;
 
 namespace Aura_OS.HAL.Drivers.Network

@@ -1,5 +1,10 @@
-﻿using System;
-using Sys = System;
+﻿/*
+* PROJECT:          Aura Operating System Development
+* CONTENT:          TCP Client
+* PROGRAMMERS:      Valentin Charbonnier <valentinbreiz@gmail.com>
+*/
+
+using System;
 using System.Collections.Generic;
 using System.Text;
 

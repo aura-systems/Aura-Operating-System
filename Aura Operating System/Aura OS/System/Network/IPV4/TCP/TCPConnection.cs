@@ -1,6 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿/*
+* PROJECT:          Aura Operating System Development
+* CONTENT:          TCP Connection
+* PROGRAMMERS:      Valentin Charbonnier <valentinbreiz@gmail.com>
+*/
+
+using System;
 
 namespace Aura_OS.System.Network.IPV4.TCP
 {

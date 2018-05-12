@@ -1,5 +1,11 @@
-﻿using System;
-using System.Linq;
+﻿/*
+* PROJECT:          Aura Operating System Development
+* CONTENT:          MAC Address
+* PROGRAMMERS:      Valentin Charbonnier <valentinbreiz@gmail.com>
+*                   Port of Cosmos Code.
+*/
+
+using System;
 
 namespace Aura_OS.HAL
 {

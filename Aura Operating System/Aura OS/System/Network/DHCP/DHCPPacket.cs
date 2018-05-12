@@ -1,4 +1,10 @@
-﻿using System;
+﻿/*
+* PROJECT:          Aura Operating System Development
+* CONTENT:          DHCP (For local network discovering)
+* PROGRAMMERS:      Alexy DA CRUZ <dacruzalexy@gmail.com>
+*/
+
+using System;
 using System.Collections.Generic;
 using System.Text;
 

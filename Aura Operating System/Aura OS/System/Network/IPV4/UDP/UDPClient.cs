@@ -1,5 +1,11 @@
-﻿using System;
-using Sys = System;
+﻿/*
+* PROJECT:          Aura Operating System Development
+* CONTENT:          UDP Client
+* PROGRAMMERS:      Valentin Charbonnier <valentinbreiz@gmail.com>
+*                   Port of Cosmos Code.
+*/
+
+using System;
 using System.Collections.Generic;
 using System.Text;
 
