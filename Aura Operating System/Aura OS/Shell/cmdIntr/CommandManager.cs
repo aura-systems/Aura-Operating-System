@@ -308,9 +308,9 @@ namespace Aura_OS.Shell.cmdIntr
 
             else if (cmd.Equals("discover"))
             {
-                var xClient = new System.Network.IPV4.UDP.UdpClient(68);
-                xClient.Connect(new System.Network.IPV4.Address(255,255,255,255), 67);
-                //xClient.Send(System.Network.DHCP.DHCP.Discover(xNic.MACAddress.bytes));
+                System.Network.DHCP.DHCPPacket request = new System.Network.DHCP.DHCPPacket(new System.Network.IPV4.Address(0,0,0,0), new System.Network.IPV4.Address(0, 0, 0, 0), 68, 67,)
+                System.Network.IPV4.OutgoingBuffer.AddPacket(request);
+                System.Network.NetworkStack.Update();
             }
 
             //else if (cmd.StartsWith("xml "))
