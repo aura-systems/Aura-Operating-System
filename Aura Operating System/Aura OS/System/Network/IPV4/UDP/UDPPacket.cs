@@ -23,7 +23,7 @@ namespace Aura_OS.System.Network.IPV4.UDP
 
             Kernel.debugger.Send("Received UDP packet from " + udp_packet.SourceIP.ToString() + ":" + udp_packet.SourcePort.ToString());
 
-            if (CheckCRC(udp_packet.udpCRC, udp_packet))
+            if (CheckCRC(udp_packet))
             {
                 Kernel.debugger.Send("Content: " + Encoding.ASCII.GetString(udp_packet.UDP_Data));
                 UdpClient receiver = UdpClient.Client(udp_packet.DestinationPort);
@@ -77,7 +77,7 @@ namespace Aura_OS.System.Network.IPV4.UDP
             return header;
         }
 
-        public static bool CheckCRC(ushort udpCRC, UDPPacket packet)
+        public static bool CheckCRC(UDPPacket packet)
         {
             byte[] header = MakeHeader(packet.sourceIP.address, packet.destIP.address, packet.udpLen, packet.sourcePort, packet.destPort, packet.UDP_Data);
             UInt16 calculatedcrc = Check(header, 0, header.Length);
