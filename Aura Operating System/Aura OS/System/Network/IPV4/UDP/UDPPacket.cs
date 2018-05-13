@@ -39,41 +39,47 @@ namespace Aura_OS.System.Network.IPV4.UDP
             }
         }
 
-        public static bool CheckCRC(ushort udpCRC, UDPPacket packet)
+        public static byte[] MakeHeader(byte[] sourceIP, byte[] destIP, UInt16 udpLen, UInt16 sourcePort, UInt16 destPort, byte[] UDP_Data)
         {
-            byte[] header = new byte[18 + packet.UDP_Data.Length];
+            byte[] header = new byte[18 + UDP_Data.Length];
 
-            header[0] = packet.sourceIP.address[0];
-            header[1] = packet.sourceIP.address[1];
-            header[2] = packet.sourceIP.address[2];
-            header[3] = packet.sourceIP.address[3];
+            header[0] = sourceIP[0];
+            header[1] = sourceIP[1];
+            header[2] = sourceIP[2];
+            header[3] = sourceIP[3];
 
-            header[4] = packet.destIP.address[0];
-            header[5] = packet.destIP.address[1];
-            header[6] = packet.destIP.address[2];
-            header[7] = packet.destIP.address[3];
+            header[4] = destIP[0];
+            header[5] = destIP[1];
+            header[6] = destIP[2];
+            header[7] = destIP[3];
 
             header[8] = 0x00;
 
             header[9] = 0x11;
 
-            header[10] = (byte)((packet.udpLen >> 8) & 0xFF);
-            header[11] = (byte)((packet.udpLen >> 0) & 0xFF);
+            header[10] = (byte)((udpLen >> 8) & 0xFF);
+            header[11] = (byte)((udpLen >> 0) & 0xFF);
 
-            header[12] = (byte)((packet.sourcePort >> 8) & 0xFF);
-            header[13] = (byte)((packet.sourcePort >> 0) & 0xFF);
+            header[12] = (byte)((sourcePort >> 8) & 0xFF);
+            header[13] = (byte)((sourcePort >> 0) & 0xFF);
 
-            header[14] = (byte)((packet.destPort >> 8) & 0xFF);
-            header[15] = (byte)((packet.destPort >> 0) & 0xFF);
+            header[14] = (byte)((destPort >> 8) & 0xFF);
+            header[15] = (byte)((destPort >> 0) & 0xFF);
 
-            header[16] = (byte)((packet.udpLen >> 8) & 0xFF);
-            header[17] = (byte)((packet.udpLen >> 0) & 0xFF);
+            header[16] = (byte)((udpLen >> 8) & 0xFF);
+            header[17] = (byte)((udpLen >> 0) & 0xFF);
 
-            for (int i = 0; i < packet.UDP_Data.Length; i++)
+            for (int i = 0; i < UDP_Data.Length; i++)
             {
-                header[18 + i] = packet.UDP_Data[i];
+                header[18 + i] = UDP_Data[i];
             }
 
+            return header;
+        }
+
+        public static bool CheckCRC(ushort udpCRC, UDPPacket packet)
+        {
+            byte[] header = MakeHeader(packet.sourceIP.address, packet.destIP.address, packet.udpLen, packet.sourcePort, packet.destPort, packet.UDP_Data);
             UInt16 calculatedcrc = Check(header, 0, header.Length);
             Kernel.debugger.Send("Calculated: 0x" + Utils.Conversion.DecToHex(calculatedcrc));
             Kernel.debugger.Send("Received:  0x" + Utils.Conversion.DecToHex(packet.udpCRC));
@@ -125,10 +131,16 @@ namespace Aura_OS.System.Network.IPV4.UDP
             mRawData[this.dataOffset + 2] = (byte)((destPort >> 8) & 0xFF);
             mRawData[this.dataOffset + 3] = (byte)((destPort >> 0) & 0xFF);
             udpLen = (UInt16)(data.Length + 8);
+            
             mRawData[this.dataOffset + 4] = (byte)((udpLen >> 8) & 0xFF);
             mRawData[this.dataOffset + 5] = (byte)((udpLen >> 0) & 0xFF);
-            mRawData[this.dataOffset + 6] = 0;
-            mRawData[this.dataOffset + 7] = 0;
+
+            byte[] header = MakeHeader(source.address, dest.address, udpLen, srcPort, destPort, data);
+            UInt16 calculatedcrc = Check(header, 0, header.Length);
+
+            mRawData[this.dataOffset + 6] = (byte)((calculatedcrc >> 8) & 0xFF);
+            mRawData[this.dataOffset + 7] = (byte)((calculatedcrc >> 0) & 0xFF);
+
             for (int b = 0; b < data.Length; b++)
             {
                 mRawData[this.dataOffset + 8 + b] = data[b];
