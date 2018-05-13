@@ -208,8 +208,44 @@ namespace Aura_OS.System.Network.DHCP
                 mRawData[this.dataOffset + i] = Computer.Info.getHostname()[a];
                 a++;
             }
-            
 
+            int lgh = 266 + Computer.Info.HostnameLength();
+
+            //Option (60) Vendor class identifier
+            mRawData[this.dataOffset + lgh + 1] = 8;
+            mRawData[this.dataOffset + lgh + 2] = 0x4d;
+            mRawData[this.dataOffset + lgh + 3] = 0x53;
+            mRawData[this.dataOffset + lgh + 4] = 0x46;
+            mRawData[this.dataOffset + lgh + 5] = 0x54;
+            mRawData[this.dataOffset + lgh + 6] = 0x20;
+            mRawData[this.dataOffset + lgh + 7] = 0x35;
+            mRawData[this.dataOffset + lgh + 8] = 0x2e;
+            mRawData[this.dataOffset + lgh + 9] = 0x30;
+
+            //Option (55) Parameter Request List
+            mRawData[this.dataOffset + lgh + 9] = 0x37;
+            mRawData[this.dataOffset + lgh + 10] = 0x0e;
+            mRawData[this.dataOffset + lgh + 11] = 0x01;
+            mRawData[this.dataOffset + lgh + 12] = 0x03;
+            mRawData[this.dataOffset + lgh + 13] = 0x06;
+            mRawData[this.dataOffset + lgh + 14] = 0x0f;
+            mRawData[this.dataOffset + lgh + 15] = 0x1f;
+            mRawData[this.dataOffset + lgh + 16] = 0x21;
+            mRawData[this.dataOffset + lgh + 17] = 0x2b;
+            mRawData[this.dataOffset + lgh + 18] = 0x2c;
+            mRawData[this.dataOffset + lgh + 19] = 0x2e;
+            mRawData[this.dataOffset + lgh + 20] = 0x2f;
+            mRawData[this.dataOffset + lgh + 21] = 0x77;
+            mRawData[this.dataOffset + lgh + 22] = 0x79;
+            mRawData[this.dataOffset + lgh + 23] = 0xf9;
+            mRawData[this.dataOffset + lgh + 24] = 0xfc;
+
+            //End
+            mRawData[this.dataOffset + lgh + 25] = 0xff;
+            for (int i = 26; i < (26 + 9); i++)
+            {
+                mRawData[this.dataOffset + i] = 0;
+            }
 
             for (int b = 0; b < data.Length; b++)
             {
