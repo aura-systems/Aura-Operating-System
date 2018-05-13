@@ -51,6 +51,13 @@ namespace Aura_OS.System.Network.IPV4
             queue.Add(new BufferEntry(nic, packet));
         }
 
+        internal static void AddPacket(IPPacket packet, NetworkDevice device)
+        {
+            ensureQueueExists();            
+            packet.SourceMAC = device.MACAddress;
+            queue.Add(new BufferEntry(device, packet));
+        }
+
         internal static void Send()
         {
             ensureQueueExists();

@@ -294,7 +294,7 @@ namespace Aura_OS.Shell.cmdIntr
             else if (cmd.Equals("udp"))
             {
                 var xClient = new System.Network.IPV4.UDP.UdpClient(4242);
-                xClient.Connect(new System.Network.IPV4.Address(192, 168, 1, 12), 4242);
+                xClient.Connect(new System.Network.IPV4.Address(255,255,255,255), 4242);
                 xClient.Send(Encoding.ASCII.GetBytes("Hello from Aura Operating System!"));
             }
 
@@ -308,8 +308,21 @@ namespace Aura_OS.Shell.cmdIntr
 
             else if (cmd.Equals("discover"))
             {
-                System.Network.DHCP.DHCPPacket request = new System.Network.DHCP.DHCPPacket(new System.Network.IPV4.Address(0, 0, 0, 0), new System.Network.IPV4.Address(0, 0, 0, 0), 68, 67);
-                System.Network.IPV4.OutgoingBuffer.AddPacket(request);
+                //                byte[] mac = { 0x00,0x0C, 0x29,0x7C, 0x85,0x28};                
+                HAL.MACAddress mac = new HAL.MACAddress(new byte[] { 0, 0, 0, 0, 0, 0 }, 0);
+                foreach (HAL.Drivers.Network.NetworkDevice device in HAL.Drivers.Network.NetworkDevice.Devices)
+                {
+                    mac = device.MACAddress;
+                }
+                System.Network.DHCP.DHCPDiscoverRequest request = new System.Network.DHCP.DHCPDiscoverRequest(new System.Network.IPV4.Address(0, 0, 0, 0), new System.Network.IPV4.Address(0, 0, 0, 0), 68, 67, mac);
+                byte[] data = request.DHCPData;
+                //System.Network.IPV4.OutgoingBuffer.AddPacket(request);
+                //System.Network.NetworkStack.Update();
+
+                System.Network.IPV4.UDP.UDPPacket packet = new System.Network.IPV4.UDP.UDPPacket(new System.Network.IPV4.Address(0, 0, 0, 0), new System.Network.IPV4.Address(255,255,255,255), 68, 67, data);          
+
+                Console.WriteLine("Sending " + packet.ToString());
+                System.Network.IPV4.OutgoingBuffer.AddPacket(packet);
                 System.Network.NetworkStack.Update();
             }
 
