@@ -22,7 +22,7 @@ namespace Aura_OS.Shell.cmdIntr
         /// </summary>
         public CommandManager() { }
 
-        public static List<String> CMDs = new List<string>();       
+        public static List<String> CMDs = new List<string>();
 
         private static void Register(string cmd)
         {
@@ -294,7 +294,7 @@ namespace Aura_OS.Shell.cmdIntr
             else if (cmd.Equals("udp"))
             {
                 var xClient = new System.Network.IPV4.UDP.UdpClient(4242);
-                xClient.Connect(new System.Network.IPV4.Address(255,255,255,255), 4242);
+                xClient.Connect(new System.Network.IPV4.Address(255, 255, 255, 255), 4242);
                 xClient.Send(Encoding.ASCII.GetBytes("Hello from Aura Operating System!"));
             }
 
@@ -310,19 +310,23 @@ namespace Aura_OS.Shell.cmdIntr
             {
                 //                byte[] mac = { 0x00,0x0C, 0x29,0x7C, 0x85,0x28};                
                 HAL.MACAddress mac = new HAL.MACAddress(new byte[] { 0, 0, 0, 0, 0, 0 }, 0);
-                foreach (HAL.Drivers.Network.NetworkDevice device in HAL.Drivers.Network.NetworkDevice.Devices)
-                {
-                    mac = device.MACAddress;
-                    int a = 296 + System.Computer.Info.HostnameLength();
-                    ushort b = (ushort)a;
-                    System.Network.DHCP.DHCPDiscoverRequest request = new System.Network.DHCP.DHCPDiscoverRequest(mac, b);
-                    Console.WriteLine("Sending " + request.ToString());
-                    //ENVOYER DATA => request.Trame.ToArray();
-                    //System.Network.IPV4.OutgoingBuffer.AddPacket()
-                    System.Network.NetworkStack.Update();
-                }
-                
-                
+
+                HAL.Drivers.Network.AMDPCNetII xNic;
+
+                Cosmos.HAL.PCIDevice xNicDev = Cosmos.HAL.PCI.GetDevice(Cosmos.HAL.VendorID.AMD, Cosmos.HAL.DeviceID.PCNETII);
+                xNic = new HAL.Drivers.Network.AMDPCNetII(xNicDev);
+
+                mac = xNic.MACAddress;
+                int a = 296 + System.Computer.Info.HostnameLength();
+                ushort b = (ushort)a;
+                System.Network.DHCP.DHCPDiscoverRequest request = new System.Network.DHCP.DHCPDiscoverRequest(mac, b);
+                //ENVOYER DATA => request.Trame.Packet();
+                System.Network.IPV4.OutgoingBuffer.AddPacket(request.Packet(), xNic);
+                //System.Network.IPV4.OutgoingBuffer.AddPacket()
+                System.Network.NetworkStack.Update();
+
+
+
             }
 
             //else if (cmd.StartsWith("xml "))

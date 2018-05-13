@@ -20,17 +20,28 @@ namespace Aura_OS.System.Network.DHCP
         public byte[] UDPData;
         protected UInt16 udpCRC;
         protected UInt16 fragmentID;
-        protected UInt16 fragmentOffset;
         protected UInt16 ipCRC;
 
         public List<byte> Trame = new List<byte>();
 
         public byte[] Packet()
         {
-            Trame.AddRange(EthernetData);
-            Trame.AddRange(IPData);
-            Trame.AddRange(UDPData);
-            Trame.AddRange(DHCPData);
+            foreach (byte octet in EthernetData)
+            {
+                Trame.Add(octet);
+            }
+            foreach (byte octet in IPData)
+            {
+                Trame.Add(octet);
+            }
+            foreach (byte octet in UDPData)
+            {
+                Trame.Add(octet);
+            }
+            foreach (byte octet in DHCPData)
+            {
+                Trame.Add(octet);
+            }
 
             return Trame.ToArray();
         }
