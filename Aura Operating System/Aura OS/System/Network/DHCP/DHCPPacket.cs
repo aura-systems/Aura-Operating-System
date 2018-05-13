@@ -63,8 +63,8 @@ namespace Aura_OS.System.Network.DHCP
             : base(rawData)
         { }
 
-        public DHCPPacket(IPV4.Address source, IPV4.Address dest, UInt16 srcPort, UInt16 destPort, byte[] data)
-            : base((UInt16)(data.Length + 8), 2, source, dest)
+        public DHCPPacket(IPV4.Address source, IPV4.Address dest, UInt16 srcPort, UInt16 destPort)
+            : base(0, 2, source, dest)
         {
             //User Datagram Protocol
             //Source port
@@ -75,21 +75,14 @@ namespace Aura_OS.System.Network.DHCP
             mRawData[this.dataOffset + 2] = (byte)((destPort >> 8) & 0xFF);
             mRawData[this.dataOffset + 3] = (byte)((destPort >> 0) & 0xFF);
             
-            //Length
-            dhcpLen = (UInt16)(data.Length + 8);
-            mRawData[this.dataOffset + 4] = (byte)((dhcpLen >> 8) & 0xFF);
-            mRawData[this.dataOffset + 5] = (byte)((dhcpLen >> 0) & 0xFF);
+            ////Length
+            //dhcpLen = (UInt16)(data.Length + 8);
+            //mRawData[this.dataOffset + 4] = (byte)((dhcpLen >> 8) & 0xFF);
+            //mRawData[this.dataOffset + 5] = (byte)((dhcpLen >> 0) & 0xFF);
             
             //Checksum
             mRawData[this.dataOffset + 6] = 0;
             mRawData[this.dataOffset + 7] = 0;
-
-            for (int b = 0; b < data.Length; b++)
-            {
-                mRawData[this.dataOffset + 8 + b] = data[b];
-            }
-
-            initFields();
         }
 
         protected override void initFields()
@@ -106,8 +99,17 @@ namespace Aura_OS.System.Network.DHCP
 
     internal class DHCPDiscoverRequest : DHCPPacket
     {
-        public DHCPDiscoverRequest(IPV4.Address source, IPV4.Address dest, UInt16 srcPort, UInt16 destPort, byte[] data)
-            : base(new IPV4.Address(0,0,0,0), new IPV4.Address(255, 255, 255, 255), 68, 67, data)
+        internal DHCPDiscoverRequest()
+            : base()
+        { }
+
+        internal DHCPDiscoverRequest(byte[] rawData)
+            : base(rawData)
+        {
+        }
+
+        public DHCPDiscoverRequest(IPV4.Address source, IPV4.Address dest, UInt16 srcPort, UInt16 destPort)
+            : base(new IPV4.Address(0,0,0,0), new IPV4.Address(255, 255, 255, 255), 68, 67)
         {
             source = new IPV4.Address(0, 0, 0, 0);
             //Bootstrap Protocol
@@ -247,12 +249,28 @@ namespace Aura_OS.System.Network.DHCP
                 mRawData[this.dataOffset + lgh + i] = 0;
             }
 
-            for (int b = 0; b < data.Length; b++)
-            {
-                mRawData[this.dataOffset + 8 + b] = data[b];
-            }
+            //Length
+            dhcpLen = (ushort) (8 + 296 + Computer.Info.HostnameLength());
+            mRawData[this.dataOffset + 4] = (byte)((dhcpLen >> 8) & 0xFF);
+            mRawData[this.dataOffset + 5] = (byte)((dhcpLen >> 0) & 0xFF);
+        }
 
-            initFields();
+        /// <summary>
+        /// Work around to make VMT scanner include the initFields method
+        /// </summary>
+        public new static void VMTInclude()
+        {
+            new DHCPDiscoverRequest();
+        }
+
+        protected override void initFields()
+        {
+            base.initFields();
+        }
+
+        public override string ToString()
+        {
+            return "DHCP Request Src=" + sourceIP + ", Dest=" + destIP;
         }
 
 
