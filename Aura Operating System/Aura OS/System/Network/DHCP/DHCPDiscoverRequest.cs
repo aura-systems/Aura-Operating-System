@@ -14,20 +14,87 @@ namespace Aura_OS.System.Network.DHCP
     {
         int xID;
 
-        internal DHCPDiscoverRequest()
-            : base()
-        { }
+        public byte[] DHCPData;
+        public byte[] EthernetData;
+        public byte[] IPData;
+        public byte[] UDPData;
+        protected UInt16 udpCRC;
+        protected UInt16 fragmentID;
+        protected UInt16 fragmentOffset;
+        protected UInt16 ipCRC;
 
-        internal DHCPDiscoverRequest(byte[] rawData)
+        public List<byte> Trame = new List<byte>();
+
+        public byte[] Packet()
         {
+            Trame.AddRange(EthernetData);
+            Trame.AddRange(IPData);
+            Trame.AddRange(UDPData);
+            Trame.AddRange(DHCPData);
+
+            return Trame.ToArray();
         }
 
-        public byte[] DHCPData;
-
-        public DHCPDiscoverRequest(IPV4.Address source, IPV4.Address dest, UInt16 srcPort, UInt16 destPort, HAL.MACAddress srcMAC)
+        public DHCPDiscoverRequest(HAL.MACAddress srcMAC, UInt16 datalength)
         {
+            //ETHII
+            byte[] EthernetData = new byte[14];
+
+            //BROADCAST MAC
+            EthernetData[0] = 0xff;
+            EthernetData[1] = 0xff;
+            EthernetData[2] = 0xff;
+            EthernetData[3] = 0xff;
+            EthernetData[4] = 0xff;
+            EthernetData[5] = 0xff;
+
+            //SRC MAC
+            for(int i = 0; i < srcMAC.bytes.Length - 1; i++)
+            {
+                EthernetData[6 + i] = srcMAC.bytes[i];
+            }
+
+            EthernetData[13] = 0x08;
+            EthernetData[14] = 0x00;
+
+            byte[] IPData = new byte[20];
+            byte lghIP = (byte)(20 + 14 + 296 + Computer.Info.HostnameLength());
+            ipCRC = CalcIPCRC(20);
+
+            IPData[0] = 0x45;
+            IPData[1] = 0x00;
+            IPData[2] = (byte)((lghIP >> 8) & 0xFF);
+            IPData[3] = (byte)((lghIP >> 0) & 0xFF);
+            IPData[4] = (byte)((fragmentID >> 8) & 0xFF); 
+            IPData[5] = (byte)((fragmentID >> 0) & 0xFF);
+            IPData[1] = 0x00;
+            IPData[1] = 128;
+            IPData[1] = 17;
+            IPData[1] = (byte)((ipCRC >> 8) & 0xFF);
+            IPData[1] = (byte)((ipCRC >> 0) & 0xFF);
+            IPData[1] = 0x00;
+            IPData[1] = 0x00;
+            IPData[1] = 0x00;
+            IPData[1] = 0x00;
+            IPData[1] = 255;
+            IPData[1] = 255;
+            IPData[1] = 255;
+            IPData[1] = 255;
+
+            byte[] UDPData = new byte[8];
+            byte lghUDP = (byte)(8 + 20 + 14 + 296 + Computer.Info.HostnameLength());
+            udpCRC = CalcIPCRC(8);
+
+            UDPData[0] = 68;
+            UDPData[1] = 67;
+
+            UDPData[2] = (byte)((lghUDP >> 8) & 0xFF);
+            UDPData[3] = (byte)((lghUDP >> 0) & 0xFF);
+
+            UDPData[4] = (byte)((udpCRC >> 8) & 0xFF);
+            UDPData[5] = (byte)((udpCRC >> 0) & 0xFF);
+
             DHCPData = new byte[296 + Computer.Info.HostnameLength()];
-            source = new IPV4.Address(0, 0, 0, 0);
             //Bootstrap Protocol
             //Message type
             DHCPData[0] = 0x01;
@@ -169,12 +236,28 @@ namespace Aura_OS.System.Network.DHCP
             }
         }
 
-        /// <summary>
-        /// Work around to make VMT scanner include the initFields method
-        /// </summary>
-        public new static void VMTInclude()
+        protected UInt16 CalcOcCRC(UInt16 offset, UInt16 length)
         {
-            new DHCPDiscoverRequest();
+            return CalcOcCRC(this.Trame.ToArray(), offset, length);
+        }
+
+        protected static UInt16 CalcOcCRC(byte[] buffer, UInt16 offset, int length)
+        {
+            UInt32 crc = 0;
+
+            for (UInt16 w = offset; w < offset + length; w += 2)
+            {
+                crc += (UInt16)((buffer[w] << 8) | buffer[w + 1]);
+            }
+
+            crc = (~((crc & 0xFFFF) + (crc >> 16)));
+
+            return (UInt16)crc;
+        }
+
+        protected UInt16 CalcIPCRC(UInt16 headerLength)
+        {
+            return CalcOcCRC(14, headerLength);
         }
     }
 }

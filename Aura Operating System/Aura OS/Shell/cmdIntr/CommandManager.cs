@@ -313,17 +313,16 @@ namespace Aura_OS.Shell.cmdIntr
                 foreach (HAL.Drivers.Network.NetworkDevice device in HAL.Drivers.Network.NetworkDevice.Devices)
                 {
                     mac = device.MACAddress;
+                    int a = 296 + System.Computer.Info.HostnameLength();
+                    ushort b = (ushort)a;
+                    System.Network.DHCP.DHCPDiscoverRequest request = new System.Network.DHCP.DHCPDiscoverRequest(mac, b);
+                    Console.WriteLine("Sending " + request.ToString());
+                    //ENVOYER DATA => request.Trame.ToArray();
+                    //System.Network.IPV4.OutgoingBuffer.AddPacket()
+                    System.Network.NetworkStack.Update();
                 }
-                System.Network.DHCP.DHCPDiscoverRequest request = new System.Network.DHCP.DHCPDiscoverRequest(new System.Network.IPV4.Address(0, 0, 0, 0), new System.Network.IPV4.Address(0, 0, 0, 0), 68, 67, mac);
-                byte[] data = request.DHCPData;
-                //System.Network.IPV4.OutgoingBuffer.AddPacket(request);
-                //System.Network.NetworkStack.Update();
-
-                System.Network.IPV4.UDP.UDPPacket packet = new System.Network.IPV4.UDP.UDPPacket(new System.Network.IPV4.Address(0, 0, 0, 0), new System.Network.IPV4.Address(255,255,255,255), 68, 67, data);          
-
-                Console.WriteLine("Sending " + packet.ToString());
-                System.Network.IPV4.OutgoingBuffer.AddPacket(packet);
-                System.Network.NetworkStack.Update();
+                
+                
             }
 
             //else if (cmd.StartsWith("xml "))
