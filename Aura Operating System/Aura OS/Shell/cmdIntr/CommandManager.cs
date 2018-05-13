@@ -321,7 +321,7 @@ namespace Aura_OS.Shell.cmdIntr
                 ushort b = (ushort)a;
                 System.Network.DHCP.DHCPDiscoverRequest request = new System.Network.DHCP.DHCPDiscoverRequest(mac, b);
                 //ENVOYER DATA => request.Trame.Packet();
-                System.Network.IPV4.OutgoingBuffer.AddPacket(request.Packet(), xNic);
+                //System.Network.IPV4.OutgoingBuffer.AddPacket(request.Packet(), xNic);
                 //System.Network.IPV4.OutgoingBuffer.AddPacket()
                 System.Network.NetworkStack.Update();
 
