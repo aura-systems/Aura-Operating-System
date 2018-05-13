@@ -64,7 +64,7 @@ namespace Aura_OS.System.Network.IPV4
         }
 
         internal ICMPPacket(Address source, Address dest, byte type, byte code, UInt16 id, UInt16 seq, UInt16 icmpDataSize)
-            : base(icmpDataSize, 1, source, dest)
+            : base(icmpDataSize, 1, source, dest, 0x00)
         {
             mRawData[this.dataOffset] = type;
             mRawData[this.dataOffset + 1] = code;
