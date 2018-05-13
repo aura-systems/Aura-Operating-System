@@ -308,7 +308,7 @@ namespace Aura_OS.Shell.cmdIntr
 
             else if (cmd.Equals("discover"))
             {
-                System.Network.DHCP.DHCPPacket request = new System.Network.DHCP.DHCPPacket(new System.Network.IPV4.Address(0,0,0,0), new System.Network.IPV4.Address(0, 0, 0, 0), 68, 67,)
+                System.Network.DHCP.DHCPPacket request = new System.Network.DHCP.DHCPPacket(new System.Network.IPV4.Address(0, 0, 0, 0), new System.Network.IPV4.Address(0, 0, 0, 0), 68, 67);
                 System.Network.IPV4.OutgoingBuffer.AddPacket(request);
                 System.Network.NetworkStack.Update();
             }
