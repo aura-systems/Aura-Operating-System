@@ -244,7 +244,7 @@ namespace Aura_OS.System.Network.DHCP
             mRawData[this.dataOffset + lgh + 25] = 0xff;
             for (int i = 26; i < (26 + 9); i++)
             {
-                mRawData[this.dataOffset + i] = 0;
+                mRawData[this.dataOffset + lgh + i] = 0;
             }
 
             for (int b = 0; b < data.Length; b++)
