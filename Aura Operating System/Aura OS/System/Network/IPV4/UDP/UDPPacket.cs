@@ -124,7 +124,7 @@ namespace Aura_OS.System.Network.IPV4.UDP
         {}
 
         public UDPPacket(Address source, Address dest, UInt16 srcPort, UInt16 destPort, byte[] data)
-            : base((UInt16)(data.Length + 8), 17, source, dest)
+            : base((UInt16)(data.Length + 8), 17, source, dest, 0x00)
         {
             mRawData[this.dataOffset + 0] = (byte)((srcPort >> 8) & 0xFF);
             mRawData[this.dataOffset + 1] = (byte)((srcPort >> 0) & 0xFF);

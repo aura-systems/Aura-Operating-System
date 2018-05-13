@@ -33,7 +33,6 @@ namespace Aura_OS.System.Network.IPV4
 
         internal static void IPv4Handler(byte[] packetData)
         {
-
             IPPacket ip_packet = new IPPacket(packetData);
             //Sys.Console.WriteLine("Received IP Packet");
             //Sys.Console.WriteLine(ip_packet.ToString());
@@ -98,24 +97,25 @@ namespace Aura_OS.System.Network.IPV4
             dataOffset = (UInt16)(14 + HeaderLength);
         }
 
-        protected IPPacket(UInt16 dataLength, byte protocol, Address source, Address dest)
-            : this(MACAddress.None, MACAddress.None, dataLength, protocol, source, dest)
+        protected IPPacket(UInt16 dataLength, byte protocol, Address source, Address dest, byte Flags)
+            : this(MACAddress.None, MACAddress.None, dataLength, protocol, source, dest, Flags)
         { }
 
         private IPPacket(MACAddress srcMAC, MACAddress destMAC, UInt16 dataLength, byte protocol,
-            Address source, Address dest)
+            Address source, Address dest, byte Flags)
             : base(destMAC, srcMAC, 0x0800, dataLength + 14 + 20)
         {
             mRawData[14] = 0x45;
             mRawData[15] = 0;
             ipLength = (UInt16)(dataLength + 20);
             ipHeaderLength = 5;
+
             mRawData[16] = (byte)((ipLength >> 8) & 0xFF);
             mRawData[17] = (byte)((ipLength >> 0) & 0xFF);
             fragmentID = NextIPFragmentID;
             mRawData[18] = (byte)((fragmentID >> 8) & 0xFF);
             mRawData[19] = (byte)((fragmentID >> 0) & 0xFF);
-            mRawData[20] = 0x00;
+            mRawData[20] = Flags;
             mRawData[21] = 0x00;
             mRawData[22] = 0x80;
             mRawData[23] = protocol;

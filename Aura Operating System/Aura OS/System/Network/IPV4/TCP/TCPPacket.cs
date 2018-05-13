@@ -19,7 +19,13 @@ namespace Aura_OS.System.Network.IPV4.TCP
 
         internal static void TCPHandler(byte[] packetData)
         {
-            
+            Kernel.debugger.Send("TCPHandler!");
+            foreach (byte bytes in packetData)
+            {
+                Kernel.debugger.Send("0x" + Utils.Conversion.DecToHex(bytes));
+            }
+            Kernel.debugger.Send("TCPHandler!");
+
             bool SYN = (packetData[47] & (1 << 1)) != 0;
             bool ACK = (packetData[47] & (1 << 4)) != 0;
             bool FIN = (packetData[47] & (1 << 0)) != 0;
@@ -30,7 +36,6 @@ namespace Aura_OS.System.Network.IPV4.TCP
             Kernel.debugger.Send("Received TCP packet from " + tcp_packet.SourceIP.ToString() + ":" + tcp_packet.SourcePort.ToString());
             Kernel.debugger.Send(tcp_packet.tcpLen.ToString());
 
-
             if (CheckCRC(tcp_packet))
             {
                 Kernel.debugger.Send("Checksum correct!");
@@ -40,14 +45,14 @@ namespace Aura_OS.System.Network.IPV4.TCP
                 Kernel.debugger.Send("Checksum incorrect!");
             }
 
-            if (tcp_packet.TCP_DataLength >= 1)
-            {
-                Kernel.debugger.Send("Content: ");
-                foreach (byte bytes in tcp_packet.TCP_Data)
-                {
-                    Kernel.debugger.Send("0x" + Utils.Conversion.DecToHex(bytes));
-                }
-            }
+            //if (tcp_packet.TCP_DataLength >= 1)
+            //{
+            //    Kernel.debugger.Send("Content: ");
+            //    foreach (byte bytes in tcp_packet.TCP_Data)
+            //    {
+            //        Kernel.debugger.Send("0x" + Utils.Conversion.DecToHex(bytes));
+            //    }
+            //}
 
             ulong CID = tcp_packet.SourceIP.Hash + tcp_packet.sourcePort + tcp_packet.destPort;
 
@@ -96,7 +101,7 @@ namespace Aura_OS.System.Network.IPV4.TCP
 
                     connection.sequencenumber++;
 
-                    connection.acknowledgmentnb = 2380;
+                    connection.acknowledgmentnb = 6527;
 
                     connection.WSValue = 1024;
 
@@ -119,6 +124,11 @@ namespace Aura_OS.System.Network.IPV4.TCP
                 Kernel.debugger.Send("Hum?");
                 return;
             }
+            else if (RST)
+            {
+                Kernel.debugger.Send("Connection aborted by host.");
+                return;
+            }
 
         }
 
@@ -136,19 +146,35 @@ namespace Aura_OS.System.Network.IPV4.TCP
 
         public TCPPacket(byte[] rawData)
             : base(rawData)
-        {}
-
-        public TCPPacket(Address source, Address dest, UInt16 srcPort, UInt16 destPort, byte[] data, int sequencenumber, int acknowledgmentnb, UInt16 Headerlenght, UInt16 Flags, UInt16 WSValue, UInt16 UrgentPointer)
-            : base((UInt16)(data.Length + 20), 0x06, source, dest)
         {
-            Kernel.debugger.Send("Creading TCP Packet.");
+        }
+
+        public TCPPacket(Address source, Address dest, UInt16 srcPort, UInt16 destPort, byte[] data, int sequencenumber, int acknowledgmentnb, UInt16 Headerlenght, UInt16 Flags, UInt16 WSValue, UInt16 UrgentPointer, bool nodata, bool Sync)
+            : base((UInt16)(20 + 4), 0x06, source, dest, 0x40)
+        {
+            Kernel.debugger.Send("Creating TCP Packet.");
             mRawData[this.dataOffset + 0] = (byte)((srcPort >> 8) & 0xFF);
             mRawData[this.dataOffset + 1] = (byte)((srcPort >> 0) & 0xFF);
 
             mRawData[this.dataOffset + 2] = (byte)((destPort >> 8) & 0xFF);
             mRawData[this.dataOffset + 3] = (byte)((destPort >> 0) & 0xFF);
 
-            tcpLen = (UInt16)(data.Length + 20);
+            if (!nodata)
+            {
+                tcpLen = (UInt16)(data.Length + 20);
+            }
+            else
+            {
+                if (Sync)
+                {
+                    tcpLen = (UInt16)(20 + 4);
+                }
+                else
+                {
+                    tcpLen = (UInt16)(data.Length +20);
+                }
+            }
+                
 
             //sequencenumber
             mRawData[this.dataOffset + 4] = (byte)((sequencenumber >> 24) & 0xFF);
@@ -172,23 +198,58 @@ namespace Aura_OS.System.Network.IPV4.TCP
             mRawData[this.dataOffset + 14] = (byte)((WSValue >> 8) & 0xFF);
             mRawData[this.dataOffset + 15] = (byte)((WSValue >> 0) & 0xFF);
 
-
-            byte[] header = MakeHeader(source.address, dest.address, tcpLen, srcPort, destPort, sequencenumber, acknowledgmentnb, Headerlenght, Flags, WSValue, UrgentPointer, data);
-            UInt16 calculatedcrc = Check(header, 0, header.Length);
-
             //Checksum
-            mRawData[this.dataOffset + 16] = (byte)((calculatedcrc >> 8) & 0xFF);
-            mRawData[this.dataOffset + 17] = (byte)((calculatedcrc >> 0) & 0xFF);
+            mRawData[this.dataOffset + 16] = 0x00;
+            mRawData[this.dataOffset + 17] = 0x00;
 
             //Urgent Pointer
             mRawData[this.dataOffset + 18] = (byte)((UrgentPointer >> 8) & 0xFF);
             mRawData[this.dataOffset + 19] = (byte)((UrgentPointer >> 0) & 0xFF);
 
-            for (int b = 0; b < data.Length - 20; b++)
+            if (Sync)
             {
-                mRawData[this.dataOffset + 20 + b] = data[b];
+                //Header lenght
+                Headerlenght = 0x60;
+                mRawData[this.dataOffset + 12] = (byte)((Headerlenght >> 0) & 0xFF);
+
+                byte[] options = new byte[4];
+                options[0] = 0x02;
+                options[1] = 0x04;
+                options[2] = 0x05;
+                options[3] = 0xb4;
+
+                for (int b = 0; b < options.Length; b++)
+                {
+                    mRawData[this.dataOffset + 20 + b] = options[b];
+                }
+
+                byte[] header = MakeHeader(source.address, dest.address, tcpLen, srcPort, destPort, sequencenumber, acknowledgmentnb, Headerlenght, Flags, WSValue, UrgentPointer, options, false);
+                UInt16 calculatedcrc = Check(header, 0, header.Length);
+
+                Kernel.debugger.Send("Calculated CRC: 0x" + Utils.Conversion.DecToHex(calculatedcrc));
+
+                mRawData[this.dataOffset + 16] = (byte)((calculatedcrc >> 8) & 0xFF);
+                mRawData[this.dataOffset + 17] = (byte)((calculatedcrc >> 0) & 0xFF);
             }
-            
+            else
+            {
+                byte[] header = MakeHeader(source.address, dest.address, tcpLen, srcPort, destPort, sequencenumber, acknowledgmentnb, Headerlenght, Flags, WSValue, UrgentPointer, data, false);
+                UInt16 calculatedcrc = Check(header, 0, header.Length);
+
+                mRawData[this.dataOffset + 16] = (byte)((calculatedcrc >> 8) & 0xFF);
+                mRawData[this.dataOffset + 17] = (byte)((calculatedcrc >> 0) & 0xFF);
+            }
+
+            if (!nodata)
+            {
+                Kernel.debugger.Send("NO DATA.");
+                for (int b = 0; b < data.Length - 20; b++)
+                {
+                    mRawData[this.dataOffset + 20 + b] = data[b];
+                }
+            }
+
+
             initFields();
             Kernel.debugger.Send("TCP Packet finished.");
         }
@@ -206,7 +267,9 @@ namespace Aura_OS.System.Network.IPV4.TCP
             WSValue = (UInt16)((mRawData[dataOffset + 14] << 8) | mRawData[dataOffset + 15]);
             Checksum = (UInt16)((mRawData[dataOffset + 16] << 8) | mRawData[dataOffset + 17]);
             UrgentPointer = (UInt16)((mRawData[dataOffset + 18] << 8) | mRawData[dataOffset + 19]);
-            tcpLen = (UInt16)(mRawData.Length - 34 + 2);
+            Kernel.debugger.Send("mRawData.Length: " + mRawData.Length.ToString()); //-4
+            tcpLen = (UInt16)(mRawData.Length - (34)); //34 TCP Begin 54TCP end
+            Kernel.debugger.Send("tcpLen.Length: " + tcpLen.ToString());
         }
 
         internal UInt16 DestinationPort
@@ -240,11 +303,23 @@ namespace Aura_OS.System.Network.IPV4.TCP
             }
         }
 
-        public static byte[] MakeHeader(byte[] sourceIP, byte[] destIP, UInt16 tcpLen, UInt16 sourcePort, UInt16 destPort, int sequencenumber, int acknowledgmentnb, int Headerlenght, int Flags, int WSValue, int UrgentPointer, byte[] TCP_Data)
+        public static byte[] MakeHeader(byte[] sourceIP, byte[] destIP, UInt16 tcpLen, UInt16 sourcePort, UInt16 destPort, int sequencenumber, int acknowledgmentnb, int Headerlenght, int Flags, int WSValue, int UrgentPointer, byte[] TCP_Data, bool nodata)
         {
 
-            byte[] header = new byte[30 + TCP_Data.Length];
+            byte[] header;
 
+            if (!nodata)
+            {
+                Kernel.debugger.Send("nodata = false");
+                Kernel.debugger.Send(TCP_Data.Length.ToString());
+                header = new byte[30 + TCP_Data.Length];
+            }
+            else
+            {
+                Kernel.debugger.Send("nodata = true");
+                header = new byte[30];
+            }
+            
             header[0] = sourceIP[0];
             header[1] = sourceIP[1];
             header[2] = sourceIP[2];
@@ -294,10 +369,14 @@ namespace Aura_OS.System.Network.IPV4.TCP
             header[28] = (byte)((UrgentPointer >> 8) & 0xFF);
             header[29] = (byte)((UrgentPointer >> 0) & 0xFF);
 
-            for (int i = 0; i < TCP_Data.Length; i++)
+            if (!nodata)
             {
-                header[30 + i] = TCP_Data[i];
+                for (int i = 0; i < TCP_Data.Length; i++)
+                {
+                    header[30 + i] = TCP_Data[i];
+                }
             }
+            
 
             return header;
         }
@@ -305,14 +384,14 @@ namespace Aura_OS.System.Network.IPV4.TCP
         public static bool CheckCRC(TCPPacket packet)
         {
 
-            byte[] header = MakeHeader(packet.sourceIP.address, packet.destIP.address, packet.tcpLen, packet.sourcePort, packet.destPort, packet.sequencenumber, packet.acknowledgmentnb, packet.Headerlenght, packet.Flags, packet.WSValue, packet.UrgentPointer, packet.TCP_Data);
+            byte[] header = MakeHeader(packet.sourceIP.address, packet.destIP.address, packet.tcpLen, packet.sourcePort, packet.destPort, packet.sequencenumber, packet.acknowledgmentnb, packet.Headerlenght, packet.Flags, packet.WSValue, packet.UrgentPointer, packet.TCP_Data, false);
             UInt16 calculatedcrc = Check(header, 0, header.Length);
             Kernel.debugger.Send("tcpLen: " + packet.tcpLen.ToString());
             Kernel.debugger.Send("Header bytes begin");
-            foreach (byte bytes in header)
-            {
-                Kernel.debugger.Send("0x" + Utils.Conversion.DecToHex(bytes));
-            }
+            //foreach (byte bytes in header)
+            //{
+            //    Kernel.debugger.Send("0x" + Utils.Conversion.DecToHex(bytes));
+            //}
             Kernel.debugger.Send("Header bytes end");
             Kernel.debugger.Send("Calculated: 0x" + Utils.Conversion.DecToHex(calculatedcrc));
             Kernel.debugger.Send("Received:  0x" + Utils.Conversion.DecToHex(packet.Checksum));

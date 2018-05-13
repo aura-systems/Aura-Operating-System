@@ -344,6 +344,10 @@ namespace Aura_OS.HAL.Drivers.Network
                 if ((status & 0x80000000) == 0)
                 {
                     recv_size = (UInt16)(mRxDescriptor[xOffset + 0] & 0xFFF);
+
+                    if (recv_size > 64) // remove checksum
+                        recv_size -= 4;
+
                     recv_data = new byte[recv_size];
                     for (uint b = 0; b < recv_size; b++)
                     {
