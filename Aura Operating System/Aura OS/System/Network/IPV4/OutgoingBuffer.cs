@@ -18,7 +18,7 @@ namespace Aura_OS.System.Network.IPV4
 
         private class BufferEntry
         {
-            public enum EntryStatus { ADDED, ARP_SENT, ROUTE_ARP_SENT, JUST_SEND, DONE, DHCP_DISCOVER };
+            public enum EntryStatus { ADDED, ARP_SENT, ROUTE_ARP_SENT, JUST_SEND, DONE, DHCP_REQUEST };
 
             public NetworkDevice NIC;
             public IPPacket Packet;
@@ -29,7 +29,7 @@ namespace Aura_OS.System.Network.IPV4
             {
                 this.NIC = nic;
                 this.Packet = packet;
-                this.Status = EntryStatus.DHCP_DISCOVER;
+                this.Status = EntryStatus.DHCP_REQUEST;
             }
         }
 
