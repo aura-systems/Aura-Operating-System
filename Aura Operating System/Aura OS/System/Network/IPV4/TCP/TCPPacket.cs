@@ -18,6 +18,8 @@ namespace Aura_OS.System.Network.IPV4.TCP
         protected UInt16 tcpCRC;
         ulong sequencenumber; ulong acknowledgmentnb; int Headerlenght; int Flags; int WSValue; int Checksum; int UrgentPointer;
 
+        static int datalen = 0;
+
         internal static void TCPHandler(byte[] packetData)
         {
 
@@ -28,8 +30,7 @@ namespace Aura_OS.System.Network.IPV4.TCP
             bool RST = (packetData[47] & (1 << 2)) != 0;
 
             TCPPacket tcp_packet = new TCPPacket(packetData);
-            Kernel.debugger.Send("Received TCP packet from " + tcp_packet.SourceIP.ToString() + ":" + tcp_packet.SourcePort.ToString());
-            Kernel.debugger.Send(tcp_packet.tcpLen.ToString());
+            Kernel.debugger.Send("Received TCP packet from " + tcp_packet.SourceIP.ToString() + ":" + tcp_packet.SourcePort.ToString() + " Len:" + tcp_packet.tcpLen.ToString());
 
             if (CheckCRC(tcp_packet))
             {
@@ -64,8 +65,6 @@ namespace Aura_OS.System.Network.IPV4.TCP
                 connection.localPort = tcp_packet.destPort;
                 connection.destPort = tcp_packet.sourcePort;
 
-                connection.sequencenumber++;
-
                 connection.acknowledgmentnb = tcp_packet.sequencenumber + 1;
 
                 connection.WSValue = 1024;
@@ -73,6 +72,8 @@ namespace Aura_OS.System.Network.IPV4.TCP
                 connection.sequencenumber = 3455719727;
 
                 connection.Checksum = 0x0000;
+
+                connection.Flags = 0x12;
 
                 connection.Send(false);
 
@@ -84,17 +85,39 @@ namespace Aura_OS.System.Network.IPV4.TCP
             else if ((FIN || RST) && ACK)
             {
                 Kernel.debugger.Send("FLAG: FIN, ACK, Disconnected by host!!!");
+
+                connection.dest = tcp_packet.sourceIP;
+                connection.source = tcp_packet.destIP;
+
+                connection.localPort = tcp_packet.destPort;
+                connection.destPort = tcp_packet.sourcePort;
+
+                connection.acknowledgmentnb = tcp_packet.sequencenumber;
+
+                connection.WSValue = 1024;
+
+                connection.sequencenumber = tcp_packet.acknowledgmentnb;
+
+                connection.Checksum = 0x0000;
+
+                connection.Flags = 0x10;
+
+                connection.Send(false);
+
+                connection.Flags = 0x11;
+
+                connection.Send(false);
                 return;
             }
             else if (PSH && ACK)
             {
                 Kernel.debugger.Send("FLAG: PSH, ACK, Data received!? :D");
                 TCPClient receiver = TCPClient.Client(tcp_packet.DestinationPort);
-                if (receiver != null)
-                {
-                    Kernel.debugger.Send("TCP Packet is for registered client");
-                    receiver.receiveData(tcp_packet);
-                }
+                //if (receiver != null)
+                //{
+                Console.WriteLine("\nReceived TCP Packet (" + tcp_packet.TCP_Data.Length + "bytes) from " + tcp_packet.sourceIP.ToString() + ":" + tcp_packet.sourcePort.ToString());
+                Console.WriteLine("Content: " + Encoding.ASCII.GetString(tcp_packet.TCP_Data));
+                //}
 
                 connection.dest = tcp_packet.sourceIP;
                 connection.source = tcp_packet.destIP;
@@ -110,6 +133,8 @@ namespace Aura_OS.System.Network.IPV4.TCP
 
                 connection.Checksum = 0x0000;
 
+                connection.Flags = 0x10;
+
                 connection.Send(false);
 
                 return;
@@ -118,6 +143,10 @@ namespace Aura_OS.System.Network.IPV4.TCP
             {
                 Kernel.debugger.Send("FLAG: RST, Connection aborted by host.");
                 return;
+            }
+            else
+            {
+                Kernel.debugger.Send("What is going wrong? D:");
             }
 
         }
@@ -257,9 +286,7 @@ namespace Aura_OS.System.Network.IPV4.TCP
             WSValue = (UInt16)((mRawData[dataOffset + 14] << 8) | mRawData[dataOffset + 15]);
             Checksum = (UInt16)((mRawData[dataOffset + 16] << 8) | mRawData[dataOffset + 17]);
             UrgentPointer = (UInt16)((mRawData[dataOffset + 18] << 8) | mRawData[dataOffset + 19]);
-            Kernel.debugger.Send("mRawData.Length: " + mRawData.Length.ToString()); //-4
             tcpLen = (UInt16)(mRawData.Length - (34)); //34 TCP Begin 54TCP end
-            Kernel.debugger.Send("tcpLen.Length: " + tcpLen.ToString());
         }
 
         internal UInt16 DestinationPort
@@ -300,13 +327,10 @@ namespace Aura_OS.System.Network.IPV4.TCP
 
             if (!nodata)
             {
-                Kernel.debugger.Send("nodata = false");
-                Kernel.debugger.Send(TCP_Data.Length.ToString());
                 header = new byte[30 + TCP_Data.Length];
             }
             else
             {
-                Kernel.debugger.Send("nodata = true");
                 header = new byte[30];
             }
             
@@ -373,16 +397,12 @@ namespace Aura_OS.System.Network.IPV4.TCP
 
         public static bool CheckCRC(TCPPacket packet)
         {
-
             byte[] header = MakeHeader(packet.sourceIP.address, packet.destIP.address, packet.tcpLen, packet.sourcePort, packet.destPort, (uint)packet.sequencenumber, (uint)packet.acknowledgmentnb, packet.Headerlenght, packet.Flags, packet.WSValue, packet.UrgentPointer, packet.TCP_Data, false);
             UInt16 calculatedcrc = Check(header, 0, header.Length);
-            Kernel.debugger.Send("tcpLen: " + packet.tcpLen.ToString());
-            Kernel.debugger.Send("Header bytes begin");
             //foreach (byte bytes in header)
             //{
             //    Kernel.debugger.Send("0x" + Utils.Conversion.DecToHex(bytes));
             //}
-            Kernel.debugger.Send("Header bytes end");
             Kernel.debugger.Send("Calculated: 0x" + Utils.Conversion.DecToHex(calculatedcrc));
             Kernel.debugger.Send("Received:  0x" + Utils.Conversion.DecToHex(packet.Checksum));
             if (calculatedcrc == packet.Checksum)

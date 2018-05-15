@@ -27,11 +27,9 @@ namespace Aura_OS.System.Network.IPV4.TCP
             }
             else
             {
-                Kernel.debugger.Send("Starting response... 2");
-                TCPPacket packet = new TCPPacket(source, dest, localPort, destPort, data, sequencenumber, acknowledgmentnb, 0x50, 0x12, WSValue, 0x0000, true, true);
+                TCPPacket packet = new TCPPacket(source, dest, localPort, destPort, data, sequencenumber, acknowledgmentnb, 0x50, Flags, WSValue, 0x0000, true, true);
                 OutgoingBuffer.AddPacket(packet);
                 NetworkStack.Update();
-                Kernel.debugger.Send("Response sent! 2");
             }
         }
 
