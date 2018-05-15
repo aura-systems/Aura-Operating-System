@@ -29,7 +29,15 @@ namespace Aura_OS.System.Network.IPV4
             {
                 this.NIC = nic;
                 this.Packet = packet;
-                this.Status = EntryStatus.DHCP_REQUEST;
+
+                if(Packet.DestinationIP == Address.Broadcast)
+                {
+                    this.Status = EntryStatus.DHCP_REQUEST;
+                }
+                else
+                {
+                    this.Status = EntryStatus.ADDED;
+                }                
             }
         }
 
