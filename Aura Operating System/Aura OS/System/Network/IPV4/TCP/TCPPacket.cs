@@ -5,6 +5,7 @@
 */
 
 using System;
+using System.Text;
 
 namespace Aura_OS.System.Network.IPV4.TCP
 {
@@ -15,16 +16,10 @@ namespace Aura_OS.System.Network.IPV4.TCP
         protected UInt16 destPort;
         protected UInt16 tcpLen;
         protected UInt16 tcpCRC;
-        int sequencenumber; int acknowledgmentnb; int Headerlenght; int Flags; int WSValue; int Checksum; int UrgentPointer;
+        ulong sequencenumber; ulong acknowledgmentnb; int Headerlenght; int Flags; int WSValue; int Checksum; int UrgentPointer;
 
         internal static void TCPHandler(byte[] packetData)
         {
-            Kernel.debugger.Send("TCPHandler!");
-            foreach (byte bytes in packetData)
-            {
-                Kernel.debugger.Send("0x" + Utils.Conversion.DecToHex(bytes));
-            }
-            Kernel.debugger.Send("TCPHandler!");
 
             bool SYN = (packetData[47] & (1 << 1)) != 0;
             bool ACK = (packetData[47] & (1 << 4)) != 0;
@@ -60,73 +55,68 @@ namespace Aura_OS.System.Network.IPV4.TCP
 
             if (SYN && !ACK)
             {
-                Kernel.debugger.Send("New connection");
 
-                if (TCPClient.Connections.Contains(CID))
-                {
+                Kernel.debugger.Send("FLAG: SYN, New connection");
 
-                    Kernel.debugger.Send("Connection already exists");
+                connection.dest = tcp_packet.sourceIP;
+                connection.source = tcp_packet.destIP;
 
-                    connection.dest = tcp_packet.sourceIP;
-                    connection.source = tcp_packet.destIP;
+                connection.localPort = tcp_packet.destPort;
+                connection.destPort = tcp_packet.sourcePort;
 
-                    connection.localPort = tcp_packet.destPort;
-                    connection.destPort = tcp_packet.sourcePort;
+                connection.sequencenumber++;
 
-                    connection.sequencenumber++;
+                connection.acknowledgmentnb = tcp_packet.sequencenumber + 1;
 
-                    connection.isClosing = true;
+                connection.WSValue = 1024;
 
-                    connection.sequencenumber = tcp_packet.sequencenumber++;
+                connection.sequencenumber = 3455719727;
 
-                    connection.Checksum = (ushort)tcp_packet.Checksum;
+                connection.Checksum = 0x0000;
 
-                    connection.Send(true);
-
-                    TCPClient.Connections.Remove(CID);
-
-                    Kernel.debugger.Send("Removed.");
-
-                }
-                else
-                {
-
-                    Kernel.debugger.Send("Starting response...");
-
-                    connection.dest = tcp_packet.sourceIP;
-                    connection.source = tcp_packet.destIP;
-
-                    connection.localPort = tcp_packet.destPort;
-                    connection.destPort = tcp_packet.sourcePort;
-
-                    connection.sequencenumber++;
-
-                    connection.acknowledgmentnb = 6527;
-
-                    connection.WSValue = 1024;
-
-                    connection.sequencenumber = tcp_packet.sequencenumber++;
-
-                    connection.Checksum = 0x0000;
-
-                    connection.Send(false);
-
-                    Kernel.debugger.Send("Response sent!");
-                }
+                connection.Send(false);
 
             }
             else if (TCPClient.Connections.Contains(CID) && (ACK || FIN || PSH || RST))
             {
-                Kernel.debugger.Send("Connection exists");
+                Kernel.debugger.Send("FLAG: Connection exists");
             }
             else if ((FIN || RST) && ACK)
             {
-                Kernel.debugger.Send("Hum?");
+                Kernel.debugger.Send("FLAG: FIN, ACK, Disconnected by host!!!");
+                return;
+            }
+            else if (PSH && ACK)
+            {
+                Kernel.debugger.Send("FLAG: PSH, ACK, Data received!? :D");
+                TCPClient receiver = TCPClient.Client(tcp_packet.DestinationPort);
+                if (receiver != null)
+                {
+                    Kernel.debugger.Send("TCP Packet is for registered client");
+                    receiver.receiveData(tcp_packet);
+                }
+
+                connection.dest = tcp_packet.sourceIP;
+                connection.source = tcp_packet.destIP;
+
+                connection.localPort = tcp_packet.destPort;
+                connection.destPort = tcp_packet.sourcePort;
+
+                connection.acknowledgmentnb = tcp_packet.sequencenumber + (ulong)tcp_packet.TCP_Data.Length;
+
+                connection.WSValue = 1024;
+
+                connection.sequencenumber = tcp_packet.acknowledgmentnb;
+
+                connection.Checksum = 0x0000;
+
+                connection.Send(false);
+
                 return;
             }
             else if (RST)
             {
-                Kernel.debugger.Send("Connection aborted by host.");
+                Kernel.debugger.Send("FLAG: RST, Connection aborted by host.");
                 return;
             }
 
@@ -149,7 +139,7 @@ namespace Aura_OS.System.Network.IPV4.TCP
         {
         }
 
-        public TCPPacket(Address source, Address dest, UInt16 srcPort, UInt16 destPort, byte[] data, int sequencenumber, int acknowledgmentnb, UInt16 Headerlenght, UInt16 Flags, UInt16 WSValue, UInt16 UrgentPointer, bool nodata, bool Sync)
+        public TCPPacket(Address source, Address dest, UInt16 srcPort, UInt16 destPort, byte[] data, ulong sequencenumber, ulong acknowledgmentnb, UInt16 Headerlenght, UInt16 Flags, UInt16 WSValue, UInt16 UrgentPointer, bool nodata, bool Sync)
             : base((UInt16)(20 + 4), 0x06, source, dest, 0x40)
         {
             Kernel.debugger.Send("Creating TCP Packet.");
@@ -260,8 +250,8 @@ namespace Aura_OS.System.Network.IPV4.TCP
 
             sourcePort = (UInt16)((mRawData[dataOffset] << 8) | mRawData[dataOffset + 1]);
             destPort = (UInt16)((mRawData[dataOffset + 2] << 8) | mRawData[dataOffset + 3]);
-            sequencenumber = (mRawData[dataOffset + 4] << 24) | (mRawData[dataOffset + 5] << 16) | (mRawData[dataOffset + 6] << 8) | mRawData[dataOffset + 7];
-            acknowledgmentnb = (mRawData[dataOffset + 8] << 24) | (mRawData[dataOffset + 9] << 16) | (mRawData[dataOffset + 10] << 8) | mRawData[dataOffset + 11];
+            sequencenumber = (uint)((mRawData[dataOffset + 4] << 24) | (mRawData[dataOffset + 5] << 16) | (mRawData[dataOffset + 6] << 8) | mRawData[dataOffset + 7]);
+            acknowledgmentnb = (uint)((mRawData[dataOffset + 8] << 24) | (mRawData[dataOffset + 9] << 16) | (mRawData[dataOffset + 10] << 8) | mRawData[dataOffset + 11]);
             Headerlenght = mRawData[dataOffset + 12];
             Flags = mRawData[dataOffset + 13];
             WSValue = (UInt16)((mRawData[dataOffset + 14] << 8) | mRawData[dataOffset + 15]);
@@ -303,7 +293,7 @@ namespace Aura_OS.System.Network.IPV4.TCP
             }
         }
 
-        public static byte[] MakeHeader(byte[] sourceIP, byte[] destIP, UInt16 tcpLen, UInt16 sourcePort, UInt16 destPort, int sequencenumber, int acknowledgmentnb, int Headerlenght, int Flags, int WSValue, int UrgentPointer, byte[] TCP_Data, bool nodata)
+        public static byte[] MakeHeader(byte[] sourceIP, byte[] destIP, UInt16 tcpLen, UInt16 sourcePort, UInt16 destPort, ulong sequencenumber, ulong acknowledgmentnb, int Headerlenght, int Flags, int WSValue, int UrgentPointer, byte[] TCP_Data, bool nodata)
         {
 
             byte[] header;
@@ -384,7 +374,7 @@ namespace Aura_OS.System.Network.IPV4.TCP
         public static bool CheckCRC(TCPPacket packet)
         {
 
-            byte[] header = MakeHeader(packet.sourceIP.address, packet.destIP.address, packet.tcpLen, packet.sourcePort, packet.destPort, packet.sequencenumber, packet.acknowledgmentnb, packet.Headerlenght, packet.Flags, packet.WSValue, packet.UrgentPointer, packet.TCP_Data, false);
+            byte[] header = MakeHeader(packet.sourceIP.address, packet.destIP.address, packet.tcpLen, packet.sourcePort, packet.destPort, (uint)packet.sequencenumber, (uint)packet.acknowledgmentnb, packet.Headerlenght, packet.Flags, packet.WSValue, packet.UrgentPointer, packet.TCP_Data, false);
             UInt16 calculatedcrc = Check(header, 0, header.Length);
             Kernel.debugger.Send("tcpLen: " + packet.tcpLen.ToString());
             Kernel.debugger.Send("Header bytes begin");

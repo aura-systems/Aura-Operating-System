@@ -11,7 +11,7 @@ namespace Aura_OS.System.Network.IPV4.TCP
     public class TCPConnection
     {
 
-        public Address source; public Address dest; public UInt16 destPort; public byte[] data = { 0x00 }; public int sequencenumber; public int acknowledgmentnb; public UInt16 Headerlenght; public UInt16 Flags; public UInt16 WSValue; public UInt16 Checksum; public UInt16 UrgentPointer = 0x00;
+        public Address source; public Address dest; public UInt16 destPort; public byte[] data = { 0x00 }; public ulong sequencenumber; public ulong acknowledgmentnb; public UInt16 Headerlenght; public UInt16 Flags; public UInt16 WSValue; public UInt16 Checksum; public UInt16 UrgentPointer = 0x00;
         public UInt16 localPort;
 
         public bool isClosing = false;
