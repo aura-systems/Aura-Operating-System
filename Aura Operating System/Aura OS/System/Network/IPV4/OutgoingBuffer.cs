@@ -18,7 +18,7 @@ namespace Aura_OS.System.Network.IPV4
 
         private class BufferEntry
         {
-            public enum EntryStatus { ADDED, ARP_SENT, ROUTE_ARP_SENT, JUST_SEND, DONE };
+            public enum EntryStatus { ADDED, ARP_SENT, ROUTE_ARP_SENT, JUST_SEND, DONE, DHCP_DISCOVER };
 
             public NetworkDevice NIC;
             public IPPacket Packet;
@@ -29,7 +29,7 @@ namespace Aura_OS.System.Network.IPV4
             {
                 this.NIC = nic;
                 this.Packet = packet;
-                this.Status = EntryStatus.ADDED;
+                this.Status = EntryStatus.DHCP_DISCOVER;
             }
         }
 
@@ -53,7 +53,7 @@ namespace Aura_OS.System.Network.IPV4
 
         internal static void AddPacket(IPPacket packet, NetworkDevice device)
         {
-            ensureQueueExists();            
+            ensureQueueExists();
             packet.SourceMAC = device.MACAddress;
             queue.Add(new BufferEntry(device, packet));
         }
@@ -130,6 +130,13 @@ namespace Aura_OS.System.Network.IPV4
 
                             entry.Status = BufferEntry.EntryStatus.ARP_SENT;
                         }
+                    }
+                    else if (entry.Status == BufferEntry.EntryStatus.DHCP_DISCOVER)
+                    {
+                        entry.NIC.QueueBytes(entry.Packet.RawData);
+
+                        entry.Status = BufferEntry.EntryStatus.DONE;
+
                     }
                     else if (entry.Status == BufferEntry.EntryStatus.JUST_SEND)
                     {
