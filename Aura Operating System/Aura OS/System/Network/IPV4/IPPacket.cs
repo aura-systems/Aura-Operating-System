@@ -101,7 +101,7 @@ namespace Aura_OS.System.Network.IPV4
             : this(MACAddress.None, MACAddress.None, dataLength, protocol, source, dest, Flags)
         { }
 
-        private IPPacket(MACAddress srcMAC, MACAddress destMAC, UInt16 dataLength, byte protocol,
+        public IPPacket(MACAddress srcMAC, MACAddress destMAC, UInt16 dataLength, byte protocol,
             Address source, Address dest, byte Flags)
             : base(destMAC, srcMAC, 0x0800, dataLength + 14 + 20)
         {

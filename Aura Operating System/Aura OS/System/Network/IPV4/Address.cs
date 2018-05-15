@@ -19,6 +19,7 @@ namespace Aura_OS.System.Network.IPV4
         /// Predefined 0.0.0.0 address
         /// </summary>
         public static Address Zero = new Address(0, 0, 0, 0);
+        public static Address Broadcast = new Address(255,255,255,255);
 
         internal byte[] address = new byte[4];
 
