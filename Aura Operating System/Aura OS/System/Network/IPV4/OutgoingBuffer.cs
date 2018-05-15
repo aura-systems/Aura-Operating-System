@@ -131,7 +131,7 @@ namespace Aura_OS.System.Network.IPV4
                             entry.Status = BufferEntry.EntryStatus.ARP_SENT;
                         }
                     }
-                    else if (entry.Status == BufferEntry.EntryStatus.DHCP_DISCOVER)
+                    else if (entry.Status == BufferEntry.EntryStatus.DHCP_REQUEST)
                     {
                         entry.NIC.QueueBytes(entry.Packet.RawData);
 
