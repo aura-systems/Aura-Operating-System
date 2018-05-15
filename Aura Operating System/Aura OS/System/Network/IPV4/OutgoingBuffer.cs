@@ -30,7 +30,7 @@ namespace Aura_OS.System.Network.IPV4
                 this.NIC = nic;
                 this.Packet = packet;
 
-                if(Packet.DestinationIP == Address.Broadcast)
+                if(Packet.DestinationIP.IsBroadcastAddress())
                 {
                     this.Status = EntryStatus.DHCP_REQUEST;
                 }
