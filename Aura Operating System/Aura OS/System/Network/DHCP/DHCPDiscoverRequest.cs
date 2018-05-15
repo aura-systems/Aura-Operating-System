@@ -1,274 +1,278 @@
-﻿/*
-* PROJECT:          Aura Operating System Development
-* CONTENT:          DHCP (For local network discovering)
-* PROGRAMMERS:      Alexy DA CRUZ <dacruzalexy@gmail.com>
-*/
+﻿///*
+//* PROJECT:          Aura Operating System Development
+//* CONTENT:          DHCP (For local network discovering)
+//* PROGRAMMERS:      Alexy DA CRUZ <dacruzalexy@gmail.com>
+//*/
 
-using System;
-using System.Collections.Generic;
-using System.Text;
+//using System;
+//using System.Collections.Generic;
+//using System.Text;
 
-namespace Aura_OS.System.Network.DHCP
-{
-    internal class DHCPDiscoverRequest
-    {
-        int xID;
+//namespace Aura_OS.System.Network.DHCP
+//{
+//    internal class DHCPPacket : IPV4.IPPacket
+//    {
+//        protected byte dhcpType;
+//        protected UInt16 dhcpLen;
+//        protected int xID;
 
-        public byte[] DHCPData;
-        public byte[] EthernetData;
-        public byte[] IPData;
-        public byte[] UDPData;
-        protected UInt16 udpCRC;
-        protected UInt16 fragmentID;
-        protected UInt16 ipCRC;
+//        //internal static void DHCPHandler(byte[] packetData)
+//        //{
+//        //    DHCPPacket dhcp_packet = new DHCPPacket(packetData);
+//        //    Console.WriteLine("Received DHCP packet from " + dhcp_packet.SourceIP.ToString());
+//        //    Console.WriteLine("Content: " + Encoding.ASCII.GetString(dhcp_packet.mRawData));
 
-        public List<byte> Trame = new List<byte>();
+//        //    //Request or reply ?
+//        //    switch (dhcp_packet.DHCP_Type)
+//        //    {
+//        //        case 0x01:
+//        //            //Boot Request (1)
 
-        public byte[] Packet()
-        {
-            foreach (byte octet in EthernetData)
-            {
-                Trame.Add(octet);
-            }
-            foreach (byte octet in IPData)
-            {
-                Trame.Add(octet);
-            }
-            foreach (byte octet in UDPData)
-            {
-                Trame.Add(octet);
-            }
-            foreach (byte octet in DHCPData)
-            {
-                Trame.Add(octet);
-            }
+//        //            break;
 
-            return Trame.ToArray();
-        }
+//        //        case 0x02:
+//        //            //Boot Reply (2)
 
-        public DHCPDiscoverRequest(HAL.MACAddress srcMAC, UInt16 datalength)
-        {
-            //ETHII
-            byte[] EthernetData = new byte[14];
+//        //            break;
+//        //    }
+//        //}
 
-            //BROADCAST MAC
-            EthernetData[0] = 0xff;
-            EthernetData[1] = 0xff;
-            EthernetData[2] = 0xff;
-            EthernetData[3] = 0xff;
-            EthernetData[4] = 0xff;
-            EthernetData[5] = 0xff;
+//        internal byte DHCP_Type
+//        {
+//            get { return this.dhcpType; }
+//        }
 
-            //SRC MAC
-            for(int i = 0; i < srcMAC.bytes.Length - 1; i++)
-            {
-                EthernetData[6 + i] = srcMAC.bytes[i];
-            }
+//        internal int Transaction_ID
+//        {
+//            get { return this.xID; }
+//        }
 
-            EthernetData[13] = 0x08;
-            EthernetData[14] = 0x00;
+//        /// <summary>
+//        /// Work around to make VMT scanner include the initFields method
+//        /// </summary>
+//        public static void VMTInclude()
+//        {
+//            new DHCPPacket();
+//        }
 
-            byte[] IPData = new byte[20];
-            byte lghIP = (byte)(20 + 14 + 296 + Computer.Info.HostnameLength());
-            ipCRC = CalcIPCRC(20);
+//        internal DHCPPacket()
+//            : base()
+//        { }
 
-            IPData[0] = 0x45;
-            IPData[1] = 0x00;
-            IPData[2] = (byte)((lghIP >> 8) & 0xFF);
-            IPData[3] = (byte)((lghIP >> 0) & 0xFF);
-            IPData[4] = (byte)((fragmentID >> 8) & 0xFF); 
-            IPData[5] = (byte)((fragmentID >> 0) & 0xFF);
-            IPData[1] = 0x00;
-            IPData[1] = 128;
-            IPData[1] = 17;
-            IPData[1] = (byte)((ipCRC >> 8) & 0xFF);
-            IPData[1] = (byte)((ipCRC >> 0) & 0xFF);
-            IPData[1] = 0x00;
-            IPData[1] = 0x00;
-            IPData[1] = 0x00;
-            IPData[1] = 0x00;
-            IPData[1] = 255;
-            IPData[1] = 255;
-            IPData[1] = 255;
-            IPData[1] = 255;
+//        public DHCPPacket(byte[] rawData)
+//            : base(rawData)
+//        { }
 
-            byte[] UDPData = new byte[8];
-            byte lghUDP = (byte)(8 + 20 + 14 + 296 + Computer.Info.HostnameLength());
-            udpCRC = CalcIPCRC(8);
+//        public DHCPPacket(IPV4.Address source, IPV4.Address dest, UInt16 srcPort, UInt16 destPort)
+//            : base(0, 2, source, dest)
+//        {
+//            //User Datagram Protocol
+//            //Source port
+//            mRawData[this.dataOffset + 0] = (byte)((srcPort >> 8) & 0xFF);
+//            mRawData[this.dataOffset + 1] = (byte)((srcPort >> 0) & 0xFF);
 
-            UDPData[0] = 68;
-            UDPData[1] = 67;
+//            //Destination port
+//            mRawData[this.dataOffset + 2] = (byte)((destPort >> 8) & 0xFF);
+//            mRawData[this.dataOffset + 3] = (byte)((destPort >> 0) & 0xFF);
 
-            UDPData[2] = (byte)((lghUDP >> 8) & 0xFF);
-            UDPData[3] = (byte)((lghUDP >> 0) & 0xFF);
+//            //Length
+//            dhcpLen = (UInt16)(data.Length + 8);
+//            mRawData[this.dataOffset + 4] = (byte)((dhcpLen >> 8) & 0xFF);
+//            mRawData[this.dataOffset + 5] = (byte)((dhcpLen >> 0) & 0xFF);
 
-            UDPData[4] = (byte)((udpCRC >> 8) & 0xFF);
-            UDPData[5] = (byte)((udpCRC >> 0) & 0xFF);
+//            //Checksum
+//            mRawData[this.dataOffset + 6] = 0;
+//            mRawData[this.dataOffset + 7] = 0;
+//        }
 
-            DHCPData = new byte[296 + Computer.Info.HostnameLength()];
-            //Bootstrap Protocol
-            //Message type
-            DHCPData[0] = 0x01;
+//        protected override void initFields()
+//        {
+//            base.initFields();
+//            dhcpType = mRawData[dataOffset + 8]; //DHCP TYPE = Request or Reply
+//        }
 
-            DHCPData[1] = 0x01;
-            DHCPData[2] = 6;
-            DHCPData[3] = 0;
+//        public override string ToString()
+//        {
+//            return "DHCP Packet Src=" + sourceIP + ", Dest=" + destIP + ", Type=" + dhcpType;
+//        }
+//    }
 
-            //Transaction ID (xID)
-            Random rnd = new Random();
-            xID = rnd.Next(0, Int32.MaxValue);
-            DHCPData[4] = (byte)((xID >> 24) & 0xFF);
-            DHCPData[5] = (byte)((xID >> 16) & 0xFF);
-            DHCPData[6] = (byte)((xID >> 8) & 0xFF);
-            DHCPData[7] = (byte)((xID >> 0) & 0xFF);
+//    internal class DHCPDiscoverRequest : DHCPPacket
+//    {
+//        internal DHCPDiscoverRequest()
+//            : base()
+//        { }
 
-            //Seconds elapsed
-            DHCPData[8] = 0;
-            DHCPData[9] = 0;
+//        internal DHCPDiscoverRequest(byte[] rawData)
+//            : base(rawData)
+//        {
+//        }
 
-            //Bootp flags
-            DHCPData[10] = 0;
-            DHCPData[11] = 0;
+//        public DHCPDiscoverRequest(IPV4.Address source, IPV4.Address dest, UInt16 srcPort, UInt16 destPort)
+//            : base(new IPV4.Address(0, 0, 0, 0), new IPV4.Address(255, 255, 255, 255), 68, 67)
+//        {
+//            source = new IPV4.Address(0, 0, 0, 0);
+//            //Bootstrap Protocol
+//            //Message type
+//            mRawData[this.dataOffset + 8] = 0x01;
 
-            //Client IP address 0.0.0.0
-            DHCPData[12] = 0;
-            DHCPData[13] = 0;
-            DHCPData[14] = 0;
-            DHCPData[15] = 0;
+//            mRawData[this.dataOffset + 9] = 0x01;
+//            mRawData[this.dataOffset + 10] = 6;
+//            mRawData[this.dataOffset + 11] = 0;
 
-            //Your (client) IP address 0.0.0.0
-            DHCPData[16] = 0;
-            DHCPData[17] = 0;
-            DHCPData[18] = 0;
-            DHCPData[19] = 0;
+//            //Transaction ID (xID)
+//            Random rnd = new Random();
+//            xID = rnd.Next(0, Int32.MaxValue);
+//            mRawData[this.dataOffset + 12] = (byte)((xID >> 24) & 0xFF);
+//            mRawData[this.dataOffset + 13] = (byte)((xID >> 16) & 0xFF);
+//            mRawData[this.dataOffset + 14] = (byte)((xID >> 8) & 0xFF);
+//            mRawData[this.dataOffset + 15] = (byte)((xID >> 0) & 0xFF);
 
-            //Next server IP address 0.0.0.0
-            DHCPData[20] = 0;
-            DHCPData[21] = 0;
-            DHCPData[22] = 0;
-            DHCPData[23] = 0;
+//            //Seconds elapsed
+//            mRawData[this.dataOffset + 16] = 0;
+//            mRawData[this.dataOffset + 17] = 0;
 
-            //Relay agent IP address 0.0.0.0
-            DHCPData[24] = 0;
-            DHCPData[25] = 0;
-            DHCPData[26] = 0;
-            DHCPData[27] = 0;
+//            //Bootp flags
+//            mRawData[this.dataOffset + 18] = 0;
+//            mRawData[this.dataOffset + 19] = 0;
 
-            //Client MAC address
-            DHCPData[28] = srcMAC.bytes[0];
-            DHCPData[29] = srcMAC.bytes[1];
-            DHCPData[30] = srcMAC.bytes[2];
-            DHCPData[31] = srcMAC.bytes[3];
-            DHCPData[32] = srcMAC.bytes[4];
-            DHCPData[33] = srcMAC.bytes[5];
+//            //Client IP address 0.0.0.0
+//            mRawData[this.dataOffset + 20] = source.ToByteArray()[0];
+//            mRawData[this.dataOffset + 21] = source.ToByteArray()[1];
+//            mRawData[this.dataOffset + 22] = source.ToByteArray()[2];
+//            mRawData[this.dataOffset + 23] = source.ToByteArray()[3];
 
-            //Client hardware address padding & Server hostname & Boot file name
-            for (int i = 34; i < 236; i++)
-            {
-                DHCPData[i] = 0; //only 0 because its not given
-            }
+//            //Your (client) IP address 0.0.0.0
+//            mRawData[this.dataOffset + 24] = source.ToByteArray()[0];
+//            mRawData[this.dataOffset + 25] = source.ToByteArray()[1];
+//            mRawData[this.dataOffset + 26] = source.ToByteArray()[2];
+//            mRawData[this.dataOffset + 27] = source.ToByteArray()[3];
 
-            //Magic cookie: DHCP
-            DHCPData[237] = 0x63;
-            DHCPData[238] = 0x82;
-            DHCPData[239] = 0x53;
-            DHCPData[240] = 0x63;
+//            //Next server IP address 0.0.0.0
+//            mRawData[this.dataOffset + 28] = 0;
+//            mRawData[this.dataOffset + 29] = 0;
+//            mRawData[this.dataOffset + 30] = 0;
+//            mRawData[this.dataOffset + 31] = 0;
 
-            //Option (53) DHCP Message Type
-            DHCPData[241] = 0x35; //35 = 53
-            DHCPData[242] = 1; //Length
-            DHCPData[243] = 1; //DHCP Discover
+//            //Relay agent IP address 0.0.0.0
+//            mRawData[this.dataOffset + 32] = 0;
+//            mRawData[this.dataOffset + 33] = 0;
+//            mRawData[this.dataOffset + 34] = 0;
+//            mRawData[this.dataOffset + 35] = 0;
 
-            //Option (61) Client identifier
-            DHCPData[244] = 7;
-            DHCPData[245] = 1;
-            DHCPData[246] = srcMAC.bytes[0];
-            DHCPData[247] = srcMAC.bytes[1];
-            DHCPData[248] = srcMAC.bytes[2];
-            DHCPData[249] = srcMAC.bytes[3];
-            DHCPData[250] = srcMAC.bytes[4];
-            DHCPData[251] = srcMAC.bytes[5];
+//            //Client MAC address
+//            mRawData[this.dataOffset + 36] = srcMAC.bytes[0];
+//            mRawData[this.dataOffset + 37] = srcMAC.bytes[1];
+//            mRawData[this.dataOffset + 38] = srcMAC.bytes[2];
+//            mRawData[this.dataOffset + 39] = srcMAC.bytes[3];
+//            mRawData[this.dataOffset + 40] = srcMAC.bytes[4];
+//            mRawData[this.dataOffset + 41] = srcMAC.bytes[5];
 
-            //Option (50) Requested IP Address             
-            DHCPData[252] = 50;
-            DHCPData[253] = 4;
-            DHCPData[254] = 0;
-            DHCPData[255] = 0;
-            DHCPData[256] = 0;
-            DHCPData[257] = 0;
+//            //Client hardware address padding & Server hostname & Boot file name
+//            for (int i = 42; i < 244; i++)
+//            {
+//                mRawData[this.dataOffset + i] = 0; //only 0 because its not given
+//            }
 
-            //Option (12) Host name            
-            DHCPData[258] = 12;
-            DHCPData[259] = (byte) Computer.Info.HostnameLength();
-            int a = 0;
-            for (int i = 260; i < (260 + Computer.Info.HostnameLength() - 1); i++)
-            {
-                DHCPData[i] = Computer.Info.getHostname()[a];
-                a++;
-            }
+//            //Magic cookie: DHCP
+//            mRawData[this.dataOffset + 245] = 0x63;
+//            mRawData[this.dataOffset + 246] = 0x82;
+//            mRawData[this.dataOffset + 247] = 0x53;
+//            mRawData[this.dataOffset + 248] = 0x63;
 
-            int lgh = 259 + Computer.Info.HostnameLength();
+//            //Option (53) DHCP Message Type
+//            mRawData[this.dataOffset + 249] = 0x35; //35 = 53
+//            mRawData[this.dataOffset + 250] = 1; //Length
+//            mRawData[this.dataOffset + 251] = 1; //DHCP Discover
 
-            //Option (60) Vendor class identifier
-            DHCPData[lgh + 0] = 60;
-            DHCPData[lgh + 1] = 8;
-            DHCPData[lgh + 2] = 0x4d;
-            DHCPData[lgh + 3] = 0x53;
-            DHCPData[lgh + 4] = 0x46;
-            DHCPData[lgh + 5] = 0x54;
-            DHCPData[lgh + 6] = 0x20;
-            DHCPData[lgh + 7] = 0x35;
-            DHCPData[lgh + 8] = 0x2e;
-            DHCPData[lgh + 9] = 0x30;
+//            //Option (61) Client identifier
+//            mRawData[this.dataOffset + 252] = 7;
+//            mRawData[this.dataOffset + 253] = 1;
+//            mRawData[this.dataOffset + 254] = srcMAC.bytes[0];
+//            mRawData[this.dataOffset + 255] = srcMAC.bytes[1];
+//            mRawData[this.dataOffset + 256] = srcMAC.bytes[2];
+//            mRawData[this.dataOffset + 257] = srcMAC.bytes[3];
+//            mRawData[this.dataOffset + 258] = srcMAC.bytes[4];
+//            mRawData[this.dataOffset + 259] = srcMAC.bytes[5];
 
-            //Option (55) Parameter Request List
-            DHCPData[lgh + 9] = 0x37; //55
-            DHCPData[lgh + 10] = 0x0e;
-            DHCPData[lgh + 11] = 0x01;
-            DHCPData[lgh + 12] = 0x03;
-            DHCPData[lgh + 13] = 0x06;
-            DHCPData[lgh + 14] = 0x0f;
-            DHCPData[lgh + 15] = 0x1f;
-            DHCPData[lgh + 16] = 0x21;
-            DHCPData[lgh + 17] = 0x2b;
-            DHCPData[lgh + 18] = 0x2c;
-            DHCPData[lgh + 19] = 0x2e;
-            DHCPData[lgh + 20] = 0x2f;
-            DHCPData[lgh + 21] = 0x77;
-            DHCPData[lgh + 22] = 0x79;
-            DHCPData[lgh + 23] = 0xf9;
-            DHCPData[lgh + 24] = 0xfc;
+//            //Option (50) Requested IP Address            
+//            mRawData[this.dataOffset + 260] = 4;
+//            mRawData[this.dataOffset + 261] = source.ToByteArray()[0];
+//            mRawData[this.dataOffset + 262] = source.ToByteArray()[1];
+//            mRawData[this.dataOffset + 263] = source.ToByteArray()[2];
+//            mRawData[this.dataOffset + 264] = source.ToByteArray()[3];
 
-            //End
-            DHCPData[lgh + 25] = 0xff;
-            for (int i = 26; i < (26 + 9); i++)
-            {
-                DHCPData[lgh + i] = 0;
-            }
-        }
+//            //Option (12) Host name            
+//            mRawData[this.dataOffset + 265] = (byte)Computer.Info.HostnameLength();
+//            int a = 0;
+//            for (int i = 266; i < (266 + Computer.Info.HostnameLength() - 1); i++)
+//            {
+//                mRawData[this.dataOffset + i] = Computer.Info.getHostname()[a];
+//                a++;
+//            }
 
-        protected UInt16 CalcOcCRC(UInt16 offset, UInt16 length)
-        {
-            return CalcOcCRC(this.Trame.ToArray(), offset, length);
-        }
+//            int lgh = 266 + Computer.Info.HostnameLength();
 
-        protected static UInt16 CalcOcCRC(byte[] buffer, UInt16 offset, int length)
-        {
-            UInt32 crc = 0;
+//            //Option (60) Vendor class identifier
+//            mRawData[this.dataOffset + lgh + 1] = 8;
+//            mRawData[this.dataOffset + lgh + 2] = 0x4d;
+//            mRawData[this.dataOffset + lgh + 3] = 0x53;
+//            mRawData[this.dataOffset + lgh + 4] = 0x46;
+//            mRawData[this.dataOffset + lgh + 5] = 0x54;
+//            mRawData[this.dataOffset + lgh + 6] = 0x20;
+//            mRawData[this.dataOffset + lgh + 7] = 0x35;
+//            mRawData[this.dataOffset + lgh + 8] = 0x2e;
+//            mRawData[this.dataOffset + lgh + 9] = 0x30;
 
-            for (UInt16 w = offset; w < offset + length; w += 2)
-            {
-                crc += (UInt16)((buffer[w] << 8) | buffer[w + 1]);
-            }
+//            //Option (55) Parameter Request List
+//            mRawData[this.dataOffset + lgh + 9] = 0x37;
+//            mRawData[this.dataOffset + lgh + 10] = 0x0e;
+//            mRawData[this.dataOffset + lgh + 11] = 0x01;
+//            mRawData[this.dataOffset + lgh + 12] = 0x03;
+//            mRawData[this.dataOffset + lgh + 13] = 0x06;
+//            mRawData[this.dataOffset + lgh + 14] = 0x0f;
+//            mRawData[this.dataOffset + lgh + 15] = 0x1f;
+//            mRawData[this.dataOffset + lgh + 16] = 0x21;
+//            mRawData[this.dataOffset + lgh + 17] = 0x2b;
+//            mRawData[this.dataOffset + lgh + 18] = 0x2c;
+//            mRawData[this.dataOffset + lgh + 19] = 0x2e;
+//            mRawData[this.dataOffset + lgh + 20] = 0x2f;
+//            mRawData[this.dataOffset + lgh + 21] = 0x77;
+//            mRawData[this.dataOffset + lgh + 22] = 0x79;
+//            mRawData[this.dataOffset + lgh + 23] = 0xf9;
+//            mRawData[this.dataOffset + lgh + 24] = 0xfc;
 
-            crc = (~((crc & 0xFFFF) + (crc >> 16)));
+//            //End
+//            mRawData[this.dataOffset + lgh + 25] = 0xff;
+//            for (int i = 26; i < (26 + 9); i++)
+//            {
+//                mRawData[this.dataOffset + lgh + i] = 0;
+//            }
 
-            return (UInt16)crc;
-        }
+//            //Length
+//            dhcpLen = (ushort)(8 + 296 + Computer.Info.HostnameLength());
+//            mRawData[this.dataOffset + 4] = (byte)((dhcpLen >> 8) & 0xFF);
+//            mRawData[this.dataOffset + 5] = (byte)((dhcpLen >> 0) & 0xFF);
+//        }
 
-        protected UInt16 CalcIPCRC(UInt16 headerLength)
-        {
-            return CalcOcCRC(14, headerLength);
-        }
-    }
-}
+//        /// <summary>
+//        /// Work around to make VMT scanner include the initFields method
+//        /// </summary>
+//        public new static void VMTInclude()
+//        {
+//            new DHCPDiscoverRequest();
+//        }
+
+//        protected override void initFields()
+//        {
+//            base.initFields();
+//        }
+
+//        public override string ToString()
+//        {
+//            return "DHCP Request Src=" + sourceIP + ", Dest=" + destIP;
+//        }
+
+
+//    }
+//}

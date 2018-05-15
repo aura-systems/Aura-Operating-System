@@ -36,6 +36,8 @@ namespace Aura_OS.System.Network
             ICMPEchoRequest.VMTInclude();
             IPV4.UDP.UDPPacket.VMTInclude();
             IPV4.TCP.TCPPacket.VMTInclude();
+            //DHCP.DHCPPacket.VMTInclude();
+            //DHCP.DHCPDiscoverRequest.VMTInclude();
         }
 
         /// <summary>
