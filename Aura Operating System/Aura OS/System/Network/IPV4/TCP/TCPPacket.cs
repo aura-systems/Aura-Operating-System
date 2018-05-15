@@ -92,7 +92,7 @@ namespace Aura_OS.System.Network.IPV4.TCP
                 connection.localPort = tcp_packet.destPort;
                 connection.destPort = tcp_packet.sourcePort;
 
-                connection.acknowledgmentnb = tcp_packet.sequencenumber;
+                connection.acknowledgmentnb = tcp_packet.sequencenumber + 1;
 
                 connection.WSValue = 1024;
 
