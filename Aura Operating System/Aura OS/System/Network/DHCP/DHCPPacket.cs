@@ -24,7 +24,7 @@ namespace Aura_OS.System.Network.DHCP
         public static int PacketSize { get; set; }
 
         public DHCPPacket(MACAddress src, Address source, Address requested)
-            : base(src, MACAddress.Broadcast, 264, 0x11, source, Address.Broadcast, 0x00)
+            : base(src, MACAddress.Broadcast, 291, 0x11, source, Address.Broadcast, 0x00)
         {
             //UDP
 
@@ -37,7 +37,7 @@ namespace Aura_OS.System.Network.DHCP
             mRawData[dataOffset + 3] = 0x43;
 
             //Length
-            PacketSize = 248 + 8;
+            PacketSize = 271;
             mRawData[dataOffset + 4] = (byte)((PacketSize >> 8) & 0xFF);
             mRawData[dataOffset + 5] = (byte)((PacketSize >> 0) & 0xFF);
 
@@ -71,7 +71,6 @@ namespace Aura_OS.System.Network.DHCP
         public DHCPDiscover(MACAddress src, Address source, Address requested_ip)
             : base(src, source, requested_ip)
         {
-            //248
             //Request
             mRawData[dataOffset + 8] = 0x01;
 
@@ -128,26 +127,35 @@ namespace Aura_OS.System.Network.DHCP
 
             //Requested IP Address
             mRawData[dataOffset + 251] = 0x32;
-            mRawData[dataOffset + 252] = 0x04;
+            mRawData[dataOffset + 252] = 4;
 
-            mRawData[dataOffset + 253] = requested_ip.address[0];
-            mRawData[dataOffset + 254] = requested_ip.address[1];
-            mRawData[dataOffset + 255] = requested_ip.address[2];
-            mRawData[dataOffset + 256] = requested_ip.address[3];
+            //mRawData[dataOffset + 253] = requested_ip.address[0];
+            //mRawData[dataOffset + 254] = requested_ip.address[1];
+            //mRawData[dataOffset + 255] = requested_ip.address[2];
+            //mRawData[dataOffset + 256] = requested_ip.address[3];
+
+            mRawData[dataOffset + 253] = 192;
+            mRawData[dataOffset + 254] = 168;
+            mRawData[dataOffset + 255] = 1;
+            mRawData[dataOffset + 256] = 100;
 
             //Parameters start here
             mRawData[dataOffset + 257] = 0x37;
-
-            //Parameters length
-            mRawData[dataOffset + 258] = 0x04;
+            mRawData[dataOffset + 258] = 4;
 
             //Parameters
             mRawData[dataOffset + 259] = 0x01;
             mRawData[dataOffset + 260] = 0x03;
-            mRawData[dataOffset + 261] = 0x15;
+            mRawData[dataOffset + 261] = 0x0f;
             mRawData[dataOffset + 262] = 0x06;
 
             mRawData[dataOffset + 263] = 0xff; //ENDMARK
+            
+            //Fill 0
+            for (int i = 264; i < 272; i++)
+            {
+                mRawData[dataOffset + i] = 0x00;
+            }
 
             initFields();
         }
