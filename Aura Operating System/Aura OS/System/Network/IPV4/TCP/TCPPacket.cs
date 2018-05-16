@@ -118,7 +118,7 @@ namespace Aura_OS.System.Network.IPV4.TCP
 
                     connection.Send();
 
-                    //connection.Close();
+                    connection.Close();
 
                     return;
                 }
@@ -192,7 +192,7 @@ namespace Aura_OS.System.Network.IPV4.TCP
 
                 connection.Send();
 
-                //connection.Close();
+                connection.Close();
 
                 return;
             }

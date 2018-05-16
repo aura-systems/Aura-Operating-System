@@ -26,7 +26,10 @@ namespace Aura_OS.System.Network.IPV4.TCP
 
             public void Close()
             {
-                Connections.Remove(cid);
+                if (Connections.ContainsKey(cid) == true)
+                {
+                    Connections.Remove((UInt32)cid);
+                }
             }
 
             internal bool IsOpen
