@@ -23,12 +23,6 @@ namespace Aura_OS.System.Network.IPV4.TCP
         internal static void TCPHandler(byte[] packetData)
         {
 
-            bool SYN = (packetData[47] & (1 << 1)) != 0;
-            bool ACK = (packetData[47] & (1 << 4)) != 0;
-            bool FIN = (packetData[47] & (1 << 0)) != 0;
-            bool PSH = (packetData[47] & (1 << 3)) != 0;
-            bool RST = (packetData[47] & (1 << 2)) != 0;
-
             TCPPacket tcp_packet = new TCPPacket(packetData);
 
             if (packetData.Length == 64 && tcp_packet.ipLength < 50)
@@ -47,12 +41,29 @@ namespace Aura_OS.System.Network.IPV4.TCP
 
             if (CheckCRC(tcp_packet))
             {
+
+                bool SYN = (packetData[47] & (1 << 1)) != 0;
+                bool ACK = (packetData[47] & (1 << 4)) != 0;
+                bool FIN = (packetData[47] & (1 << 0)) != 0;
+                bool PSH = (packetData[47] & (1 << 3)) != 0;
+                bool RST = (packetData[47] & (1 << 2)) != 0;
+
                 ulong CID = tcp_packet.SourceIP.Hash + tcp_packet.sourcePort + tcp_packet.destPort;
+                Kernel.debugger.Send("Connection ID:" + CID.ToString());
 
-                TCPConnection connection = new TCPConnection();
+                TCPConnection.Connection connection = new TCPConnection.Connection();
 
-                if (SYN && !ACK)
+                if (SYN && !ACK && connection.IsOpen == false)
                 {
+
+                    if (TCPConnection.Connections.ContainsKey((uint)CID))
+                    {
+                        return;
+                    }
+                    else
+                    {
+                        TCPConnection.Connections.Add((uint)CID, connection);
+                    }
 
                     Kernel.debugger.Send("FLAG: SYN, New connection");
 
@@ -72,14 +83,11 @@ namespace Aura_OS.System.Network.IPV4.TCP
 
                     connection.Flags = 0x12;
 
-                    connection.Send(false);
+                    connection.Send();
 
+                    connection.IsOpen = true;
                 }
-                else if (TCPClient.Connections.Contains(CID) && (ACK || FIN || PSH || RST))
-                {
-                    Kernel.debugger.Send("FLAG: Connection exists");
-                }
-                else if ((FIN || RST) && ACK)
+                else if ((FIN || RST) && ACK && connection.IsOpen)
                 {
                     Kernel.debugger.Send("FLAG: FIN, ACK, Disconnected by host!!!");
 
@@ -99,14 +107,14 @@ namespace Aura_OS.System.Network.IPV4.TCP
 
                     connection.Flags = 0x10;
 
-                    connection.Send(false);
+                    connection.Send();
 
                     connection.Flags = 0x11;
 
-                    connection.Send(false);
+                    connection.Send();
                     return;
                 }
-                else if (PSH && ACK)
+                else if (PSH && ACK && connection.IsOpen == true)
                 {
                     Kernel.debugger.Send("FLAG: PSH, ACK, Data received!? :D");
                     TCPClient receiver = TCPClient.Client(tcp_packet.DestinationPort);
@@ -131,7 +139,11 @@ namespace Aura_OS.System.Network.IPV4.TCP
 
                     connection.Flags = 0x10;
 
-                    connection.Send(false);
+                    connection.Send();
+
+                    connection.IsOpen = false;
+
+                    TCPConnection.Connections.Remove((uint)CID);
 
                     return;
                 }
@@ -154,7 +166,7 @@ namespace Aura_OS.System.Network.IPV4.TCP
             {
                 Kernel.debugger.Send("But checksum incorrect... Packet Passed.");
 
-                TCPConnection connection = new TCPConnection();
+                TCPConnection.Connection connection = new TCPConnection.Connection();
 
                 connection.dest = tcp_packet.sourceIP;
                 connection.source = tcp_packet.destIP;
@@ -172,7 +184,9 @@ namespace Aura_OS.System.Network.IPV4.TCP
 
                 connection.Flags = 0x04;
 
-                connection.Send(false);
+                connection.Send();
+
+                TCPConnection.Connections.Remove(0);
             }
         }
 
