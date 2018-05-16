@@ -45,6 +45,7 @@ namespace Aura_OS.System.Network.IPV4.TCP
         {
             if (clients.ContainsKey((UInt32)destPort) == true)
             {
+                Kernel.debugger.Send("Client exists for port" + destPort);
                 return clients[(UInt32)destPort];
             }
 
@@ -75,7 +76,6 @@ namespace Aura_OS.System.Network.IPV4.TCP
 
         public void Connect(IPV4.Address dest, Int32 destPort)
         {
-            Connections.Add((ulong)(dest.Hash + destPort + localPort));
             this.destination = dest;
             this.destinationPort = destPort;
         }

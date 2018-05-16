@@ -110,9 +110,10 @@ namespace Aura_OS.System.Network.IPV4.TCP
                 {
                     Kernel.debugger.Send("FLAG: PSH, ACK, Data received!? :D");
                     TCPClient receiver = TCPClient.Client(tcp_packet.DestinationPort);
-
-                    Console.WriteLine("\nReceived TCP Packet (" + tcp_packet.TCP_Data.Length + "bytes) from " + tcp_packet.sourceIP.ToString() + ":" + tcp_packet.sourcePort.ToString());
-                    Console.WriteLine("Content: '" + Encoding.ASCII.GetString(tcp_packet.TCP_Data) + "'");
+                    if (receiver != null)
+                    {
+                        receiver.receiveData(tcp_packet);
+                    }
 
                     connection.dest = tcp_packet.sourceIP;
                     connection.source = tcp_packet.destIP;

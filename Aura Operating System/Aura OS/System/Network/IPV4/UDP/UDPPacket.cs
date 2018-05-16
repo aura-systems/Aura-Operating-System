@@ -29,7 +29,6 @@ namespace Aura_OS.System.Network.IPV4.UDP
                 UdpClient receiver = UdpClient.Client(udp_packet.DestinationPort);
                 if (receiver != null)
                 {
-                    Kernel.debugger.Send("UDP Packet is for registered client");
                     receiver.receiveData(udp_packet);
                 }
             }
