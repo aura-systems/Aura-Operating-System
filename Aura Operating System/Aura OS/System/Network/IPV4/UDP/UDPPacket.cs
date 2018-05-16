@@ -23,6 +23,15 @@ namespace Aura_OS.System.Network.IPV4.UDP
 
             Kernel.debugger.Send("Received UDP packet from " + udp_packet.SourceIP.ToString() + ":" + udp_packet.SourcePort.ToString());
 
+            //if (udp_packet.DestinationIP.IsBroadcastAddress())
+            //{
+            //    //Broadcasting
+            //    if (DHCP.DHCPPacket.IsDHCPPacket(udp_packet.mRawData))
+            //    {
+            //        Kernel.debugger.Send("DHCP Offer detected!");
+            //    }
+            //}
+
             if (CheckCRC(udp_packet))
             {
                 Kernel.debugger.Send("Content: " + Encoding.ASCII.GetString(udp_packet.UDP_Data));
