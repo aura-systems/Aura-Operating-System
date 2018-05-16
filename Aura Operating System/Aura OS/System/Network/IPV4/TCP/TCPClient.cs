@@ -94,10 +94,10 @@ namespace Aura_OS.System.Network.IPV4.TCP
 
         public void Send(byte[] data, IPV4.Address dest, Int32 destPort)
         {
-            IPV4.Address source = IPV4.Config.FindNetwork(dest);
-            //IPV4.TCP.TCPPacket packet = new IPV4.TCP.TCPPacket(source, dest, (UInt16)this.localPort, (UInt16)destPort, data, 0x10F41EE2, (int)0xEF93E62E, 0x50, 0x18, 0x0100, 0x0000);
+            //IPV4.Address source = IPV4.Config.FindNetwork(dest);
+            //TCPPacket packet = new TCPPacket(source, dest, localPort, destPort, data, sequencenumber, acknowledgmentnb, 0x50, Flags, WSValue, 0x0000, true, true);
 
-            //Console.WriteLine("Sending " + packet.ToString());
+           // Console.WriteLine("Sending " + packet.ToString());
             //IPV4.OutgoingBuffer.AddPacket(packet);
         }
 
