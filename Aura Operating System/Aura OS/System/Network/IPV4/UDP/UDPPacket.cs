@@ -35,7 +35,7 @@ namespace Aura_OS.System.Network.IPV4.UDP
             }
             else
             {
-                Kernel.debugger.Send("But checksum Incorrect... Packet Passed.");
+                Kernel.debugger.Send("But checksum incorrect... Packet Passed.");
             }
         }
 
