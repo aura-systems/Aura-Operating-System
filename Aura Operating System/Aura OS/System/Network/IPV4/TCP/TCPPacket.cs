@@ -48,21 +48,65 @@ namespace Aura_OS.System.Network.IPV4.TCP
                 bool PSH = (packetData[47] & (1 << 3)) != 0;
                 bool RST = (packetData[47] & (1 << 2)) != 0;
 
+                if (SYN == true)
+                {
+                    Kernel.debugger.Send("Flag: SYN");
+                }
+                if (ACK == true)
+                {
+                    Kernel.debugger.Send("Flag: ACK");
+                }
+                if (FIN == true)
+                {
+                    Kernel.debugger.Send("Flag: FIN");
+                }
+                if (PSH == true)
+                {
+                    Kernel.debugger.Send("Flag: PSH");
+                }
+                if (RST == true)
+                {
+                    Kernel.debugger.Send("Flag: RST");
+                }
+
                 ulong CID = tcp_packet.SourceIP.Hash + tcp_packet.sourcePort + tcp_packet.destPort;
                 Kernel.debugger.Send("Connection ID:" + CID.ToString());
+                Kernel.debugger.Send("Connection FLAG:" + Utils.Conversion.DecToHex(tcp_packet.Flags));
+                if (TCPConnection.Connections.ContainsKey((uint)CID))
+                {
+                    Kernel.debugger.Send("Connection exists!");
+                    Kernel.debugger.Send("Connection is open:");
+                    if (TCPConnection.Connections[(uint)CID].IsOpen)
+                    {
+                        Kernel.debugger.Send("true");
+                    }
+                    else if (TCPConnection.Connections[(uint)CID].IsOpen == false)
+                    {
+                        Kernel.debugger.Send("false");
+                    }
+                    else
+                    {
+                        Kernel.debugger.Send("What the hell!?");
+                    }
+                }
+                else
+                {
+                    Kernel.debugger.Send("Connection does not exist!");
+                }
 
-                TCPConnection.Connection connection = new TCPConnection.Connection();
+                TCPConnection.Connection connection = new TCPConnection.Connection(1);
 
-                if (SYN && !ACK && connection.IsOpen == false)
+                if (SYN && !ACK)
                 {
 
                     if (TCPConnection.Connections.ContainsKey((uint)CID))
                     {
+                        TCPConnection.Connections.Remove((uint)CID);
                         return;
                     }
                     else
                     {
-                        TCPConnection.Connections.Add((uint)CID, connection);
+                        connection = new TCPConnection.Connection((uint)CID);
                     }
 
                     Kernel.debugger.Send("FLAG: SYN, New connection");
@@ -87,7 +131,8 @@ namespace Aura_OS.System.Network.IPV4.TCP
 
                     connection.IsOpen = true;
                 }
-                else if ((FIN || RST) && ACK && connection.IsOpen)
+                //else if ((FIN || RST) && ACK  && TCPConnection.Connections[(uint)CID].IsOpen)
+                else if (FIN || RST)
                 {
                     Kernel.debugger.Send("FLAG: FIN, ACK, Disconnected by host!!!");
 
@@ -114,7 +159,8 @@ namespace Aura_OS.System.Network.IPV4.TCP
                     connection.Send();
                     return;
                 }
-                else if (PSH && ACK && connection.IsOpen == true)
+                //else if (PSH && ACK && TCPConnection.Connections[(uint)CID].IsOpen)
+                else if (PSH && ACK)
                 {
                     Kernel.debugger.Send("FLAG: PSH, ACK, Data received!? :D");
                     TCPClient receiver = TCPClient.Client(tcp_packet.DestinationPort);
@@ -143,7 +189,7 @@ namespace Aura_OS.System.Network.IPV4.TCP
 
                     connection.IsOpen = false;
 
-                    TCPConnection.Connections.Remove((uint)CID);
+                    connection.Close();
 
                     return;
                 }
@@ -152,6 +198,7 @@ namespace Aura_OS.System.Network.IPV4.TCP
                     Kernel.debugger.Send("FLAG: RST, Connection aborted by host.");
                     return;
                 }
+                //else if (ACK && TCPConnection.Connections[(uint)CID].IsOpen)
                 else if (ACK)
                 {
                     Kernel.debugger.Send("FLAG: ACK");
@@ -160,13 +207,14 @@ namespace Aura_OS.System.Network.IPV4.TCP
                 else
                 {
                     Kernel.debugger.Send("What is going wrong? D:");
+                    return;
                 }
             }
             else
             {
-                Kernel.debugger.Send("But checksum incorrect... Packet Passed.");
+                Kernel.debugger.Send("But checksum is incorrect... Packet Passed.");
 
-                TCPConnection.Connection connection = new TCPConnection.Connection();
+                TCPConnection.Connection connection = new TCPConnection.Connection(1);
 
                 connection.dest = tcp_packet.sourceIP;
                 connection.source = tcp_packet.destIP;
@@ -186,7 +234,7 @@ namespace Aura_OS.System.Network.IPV4.TCP
 
                 connection.Send();
 
-                TCPConnection.Connections.Remove(0);
+                TCPConnection.Connections.Remove(1);
             }
         }
 

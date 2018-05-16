@@ -17,15 +17,21 @@ namespace Aura_OS.System.Network.IPV4.TCP
         internal class Connection
         {
 
+            public Connection(uint CID)
+            {
+                Connections.Add(CID, this);
+            }
+
             public Address source; public Address dest; public UInt16 destPort; public byte[] data = { 0x00 }; public ulong sequencenumber; public ulong acknowledgmentnb; public UInt16 Headerlenght; public UInt16 Flags; public UInt16 WSValue; public UInt16 Checksum; public UInt16 UrgentPointer = 0x00;
             public UInt16 localPort;
 
             internal bool isClosing = false;
             private bool isOpen = false;
+            private uint cid;
 
             public void Close()
             {
-                
+                Connections.Remove((uint)cid);
             }
 
             internal bool IsOpen
@@ -41,7 +47,11 @@ namespace Aura_OS.System.Network.IPV4.TCP
             {
                 get
                 {
-                    return 0;
+                    return cid;
+                }
+                set
+                {
+                    cid = (uint)value;
                 }
             }
 
