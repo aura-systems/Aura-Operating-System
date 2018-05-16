@@ -21,6 +21,14 @@ namespace Aura_OS.System.Network.DHCP
             : base(rawData)
         { }
 
+        public static void DHCPHandler(byte[] packetData)
+        {
+            DHCPPacket dhcp_packet = new DHCPPacket(packetData);
+
+            Kernel.debugger.Send("Received DHCP packet from " + dhcp_packet.SourceIP.ToString());
+            Console.WriteLine("DHCP Offer received!");
+        }
+
         public static int PacketSize { get; set; }
 
         public DHCPPacket(MACAddress src, Address source, Address requested)
@@ -46,6 +54,16 @@ namespace Aura_OS.System.Network.DHCP
             mRawData[dataOffset + 7] = 0x00;
 
             initFields();
+        }
+
+        public static bool IsDHCPPacket(byte[] dhcpPacket)
+        {
+            Console.WriteLine("Broadcasting Packet detected!");
+            if ((dhcpPacket[277] == 0x63) && (dhcpPacket[278] == 0x82) && (dhcpPacket[279] == 0x53) && (dhcpPacket[280] == 0x63)) //Magic cookie: DHCP
+            {
+                return true;
+            }
+            return false;
         }
         
         public override string ToString()

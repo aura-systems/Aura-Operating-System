@@ -50,9 +50,6 @@ namespace Aura_OS.System.Network.IPV4
                     case 1:
                         ICMPPacket.ICMPHandler(packetData);
                         break;
-                    case 2:
-//                        DHCP.D.DHCPHandler(packetData);
-                        break;
                     case 6:
                         TCPPacket.TCPHandler(packetData);
                         break;
