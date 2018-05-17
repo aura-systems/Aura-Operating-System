@@ -102,6 +102,8 @@ namespace Aura_OS.System.Network.DHCP
                 mRawData[dataOffset + i] = 0x00;
             }
 
+            DHCPSent("DISCOVER_SENT");
+
             initFields();
         }
     }

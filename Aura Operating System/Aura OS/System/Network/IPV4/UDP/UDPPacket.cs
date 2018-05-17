@@ -17,6 +17,8 @@ namespace Aura_OS.System.Network.IPV4.UDP
         protected UInt16 udpLen;
         protected UInt16 udpCRC;
 
+        public static string DHCP;
+
         internal static void UDPHandler(byte[] packetData)
         {
             UDPPacket udp_packet = new UDPPacket(packetData);
@@ -30,7 +32,15 @@ namespace Aura_OS.System.Network.IPV4.UDP
             //    {
             //        Kernel.debugger.Send("DHCP Offer detected!");
             //    }
-            //}
+            //}            
+
+            if(DHCP == "DISCOVER_SENT")
+            {
+                if (Network.DHCP.DHCPPacket.IsDHCPPacket(udp_packet.mRawData))
+                {
+                    Console.WriteLine("DHCP Offer detected!"); //todo
+                }
+            }
 
             if (CheckCRC(udp_packet))
             {
