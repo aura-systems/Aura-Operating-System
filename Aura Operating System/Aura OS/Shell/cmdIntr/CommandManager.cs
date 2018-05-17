@@ -309,9 +309,10 @@ namespace Aura_OS.Shell.cmdIntr
             {
                 byte[] macb = { 0x00, 0x0C, 0x29, 0x7C, 0x85, 0x28 };
                 HAL.MACAddress mac = new HAL.MACAddress(macb);
-                System.Network.DHCP.DHCPDiscover dhcp_discover = new System.Network.DHCP.DHCPDiscover(mac, System.Network.IPV4.Address.Zero, new System.Network.IPV4.Address(192,168,1,100));
+                //System.Network.DHCP.DHCPDiscover dhcp_discover = new System.Network.DHCP.DHCPDiscover(mac, System.Network.IPV4.Address.Zero, new System.Network.IPV4.Address(192,168,1,100));
+                System.Network.DHCP.DHCPRequest dhcp_request = new System.Network.DHCP.DHCPRequest(mac, System.Network.IPV4.Address.Zero, new System.Network.IPV4.Address(192, 168, 1, 100), new System.Network.IPV4.Address(192, 168, 1, 254));
 
-                System.Network.IPV4.OutgoingBuffer.AddPacket(dhcp_discover);
+                System.Network.IPV4.OutgoingBuffer.AddPacket(dhcp_request);
                 System.Network.NetworkStack.Update();
             }
 
