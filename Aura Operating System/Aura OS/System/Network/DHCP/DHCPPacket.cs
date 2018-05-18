@@ -21,11 +21,6 @@ namespace Aura_OS.System.Network.DHCP
             : base(rawData)
         { }
 
-        public static void DHCPSent(string parameter)
-        {
-            IPV4.UDP.UDPPacket.DHCP = parameter;
-        }
-
         public static void DHCPHandler(byte[] packetData)
         {
             DHCPPacket dhcp_packet = new DHCPPacket(packetData);
@@ -65,7 +60,7 @@ namespace Aura_OS.System.Network.DHCP
         {
             if ((dhcpPacket[278] == 0x63) && (dhcpPacket[279] == 0x82) && (dhcpPacket[280] == 0x53) && (dhcpPacket[281] == 0x63)) //Magic cookie: DHCP
             {
-                IPV4.UDP.UDPPacket.DHCP = null;
+                Console.WriteLine("IsDHCPPacket: Magic cookie detected");
                 return true;
             }
             return false;
