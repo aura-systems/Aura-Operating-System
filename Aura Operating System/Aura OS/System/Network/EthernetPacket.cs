@@ -21,7 +21,7 @@ namespace Aura_OS.System.Network
         protected EthernetPacket()
         { }
 
-        protected EthernetPacket(byte[] rawData)
+        public EthernetPacket(byte[] rawData)
         {
             mRawData = rawData;
             initFields();
