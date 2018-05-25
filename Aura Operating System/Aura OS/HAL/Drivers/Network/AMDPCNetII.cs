@@ -343,7 +343,7 @@ namespace Aura_OS.HAL.Drivers.Network
                 status = mRxDescriptor.Read32(xOffset + 4);
                 if ((status & 0x80000000) == 0)
                 {
-                    recv_size = (UInt16)(mRxDescriptor[xOffset + 0] & 0xFFF);
+                    recv_size = (UInt16)(mRxDescriptor.Read32(xOffset + 0) & 0xFFF);
 
                     if (recv_size > 64) // remove checksum
                         recv_size -= 4;
