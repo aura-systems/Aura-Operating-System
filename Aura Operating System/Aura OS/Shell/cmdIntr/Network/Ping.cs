@@ -86,9 +86,9 @@ namespace Aura_OS.Shell.cmdIntr.Network
                                 {
                                     Console.WriteLine("Reply received from " + ICMPPacket.recvd_reply.SourceIP.ToString() + " time < 1s");                                    
                                 }
-                                else if (second > 1)
+                                else if (second >= 1)
                                 {
-                                    Console.WriteLine("Reply received from " + ICMPPacket.recvd_reply.SourceIP.ToString() + " time < " + second + "s");
+                                    Console.WriteLine("Reply received from " + ICMPPacket.recvd_reply.SourceIP.ToString() + " time " + second + "s");
                                 }
 
                                 PacketReceived++;

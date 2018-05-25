@@ -63,7 +63,7 @@ namespace Aura_OS.System.Network
             //    return;
             //}
             EthernetPacket ethernet = new EthernetPacket(packetData);           
-            Console.WriteLine("Received Ethernet Packet : Src - " + ethernet.SourceMAC.ToString());
+           // Console.WriteLine("Received Ethernet Packet : Src - " + ethernet.SourceMAC.ToString());
 
             UInt16 etherType = (UInt16)((packetData[12] << 8) | packetData[13]);
             switch (etherType)
