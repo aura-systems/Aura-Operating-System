@@ -67,6 +67,12 @@ namespace Aura_OS.System.Shell
             Rows = 138,
             Cols = 48
         };
+		
+		 public enum Mode1280x800
+        {
+            Rows = 140,
+            Cols = 48
+        };
 
         public enum Mode1360x768
         {

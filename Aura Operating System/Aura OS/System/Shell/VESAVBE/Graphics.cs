@@ -156,6 +156,14 @@ namespace Aura_OS.System.Shell.VESAVBE
                 VESAVBEConsole.mHeight = (int)ConsoleMode.Mode1280x768.Cols;
                 VESAMode = "Mode1280x768";
             }
+			else if (widthVESA.Equals(1280) &&  heightVESA.Equals(800))
+            {
+                VESAVBEConsole.mRows = (int)ConsoleMode.Mode1280x800.Rows;
+                VESAVBEConsole.mWidth = (int)ConsoleMode.Mode1280x800.Rows;
+                VESAVBEConsole.mCols = (int)ConsoleMode.Mode1280x800.Cols;
+                VESAVBEConsole.mHeight = (int)ConsoleMode.Mode1280x800.Cols;
+                VESAMode = "Mode1280x800";
+            }
             else if (widthVESA.Equals(1600) && heightVESA.Equals(1200))
             {
                 VESAVBEConsole.mRows = (int)ConsoleMode.Mode1600x1200.Rows;
