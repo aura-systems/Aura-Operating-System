@@ -78,6 +78,42 @@ namespace Aura_OS.System.Network.IPV4.TCP
         {
             this.destination = dest;
             this.destinationPort = destPort;
+
+            TCPConnection.Connection connection = new TCPConnection.Connection();
+            Address source = Config.FindNetwork(dest);
+
+            ulong CID = (ulong)(dest.Hash + this.localPort + destPort);
+
+            TCPConnection.Connections.Add((uint)CID, connection);
+
+            connection.CID = CID;
+
+            Kernel.debugger.Send(CID.ToString());
+
+            connection.dest = dest;
+            connection.source = source;
+
+            connection.localPort = (ushort)localPort;
+            connection.destPort = (ushort)destPort;
+
+            connection.acknowledgmentnb = 0x0000;
+
+            connection.WSValue = 1024;
+
+            connection.sequencenumber = 3455719727;
+
+            connection.Checksum = 0x0000;
+
+            connection.Flags = 0x02;
+
+            connection.Send(false);
+
+            while (!connection.IsOpen)
+            {
+
+            }
+
+            Kernel.debugger.Send("Connected!!");
         }
 
         public void Send(byte[] data)
@@ -92,13 +128,39 @@ namespace Aura_OS.System.Network.IPV4.TCP
             NetworkStack.Update();
         }
 
+        public static ulong lastack = 0x00;
+        public static ulong lastsn = 0x00;
+
+        public bool IsConnected { get; internal set; }
+
         public void Send(byte[] data, IPV4.Address dest, Int32 destPort)
         {
-            //IPV4.Address source = IPV4.Config.FindNetwork(dest);
-            //TCPPacket packet = new TCPPacket(source, dest, localPort, destPort, data, sequencenumber, acknowledgmentnb, 0x50, Flags, WSValue, 0x0000, true, true);
+            IPV4.Address source = IPV4.Config.FindNetwork(dest);
 
-           // Console.WriteLine("Sending " + packet.ToString());
-            //IPV4.OutgoingBuffer.AddPacket(packet);
+            TCPConnection.Connection connection = new TCPConnection.Connection();
+
+            connection.dest = dest;
+            connection.source = source;
+
+            connection.localPort = (ushort)localPort;
+            connection.destPort = (ushort)destPort;
+
+            connection.acknowledgmentnb = lastack;
+
+            connection.WSValue = 1024;
+
+            connection.sequencenumber = lastsn;
+
+            connection.Checksum = 0x0000;
+
+            connection.Flags = 0x18;
+
+            connection.data = data;
+
+            connection.Send(true);
+
+            Console.WriteLine("Sending " + "TCP Packet Src=" + source + ":" + localPort + ", Dest=" + dest + ":" + destPort + ", DataLen=" + data.Length);
+
         }
 
         public void Close()

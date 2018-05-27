@@ -49,11 +49,13 @@ namespace Aura_OS.System.Network.IPV4.TCP
                 bool RST = (packetData[47] & (1 << 2)) != 0;
 
                 ulong CID = tcp_packet.SourceIP.Hash + tcp_packet.sourcePort + tcp_packet.destPort;
-                
+
                 TCPConnection.Connection connection = new TCPConnection.Connection();
 
                 if (SYN && !ACK)
                 {
+
+                    Kernel.debugger.Send("FLAG: SYN, New connection");
 
                     if (TCPConnection.Connections.ContainsKey((uint)CID))
                     {
@@ -65,8 +67,6 @@ namespace Aura_OS.System.Network.IPV4.TCP
                     }
 
                     TCPConnection.Connections.Add((uint)CID, connection);
-
-                    Kernel.debugger.Send("FLAG: SYN, New connection");
 
                     connection.CID = CID;
 
@@ -86,13 +86,38 @@ namespace Aura_OS.System.Network.IPV4.TCP
 
                     connection.Flags = 0x12;
 
-                    connection.Send();
+                    connection.Send(false);
 
                     connection.IsOpen = true;
 
                     return;
                 }
-                else if ((FIN || RST) && ACK  && TCPConnection.Connections[(uint)CID].IsOpen)
+                else if (SYN && ACK)
+                {
+                    connection.dest = tcp_packet.sourceIP;
+                    connection.source = tcp_packet.destIP;
+
+                    connection.localPort = tcp_packet.destPort;
+                    connection.destPort = tcp_packet.sourcePort;
+
+                    connection.acknowledgmentnb = tcp_packet.sequencenumber + 1;
+
+                    connection.WSValue = 1024;
+
+                    connection.sequencenumber = tcp_packet.acknowledgmentnb;
+
+                    connection.Checksum = 0x0000;
+
+                    connection.Flags = 0x10;
+
+                    connection.Send(false);
+
+                    TCPClient.lastack = tcp_packet.sequencenumber + 1;
+                    TCPClient.lastsn = tcp_packet.acknowledgmentnb;
+
+                    TCPConnection.Connections[(uint)CID].IsOpen = true;
+                }
+                else if ((FIN || RST) && ACK && TCPConnection.Connections[(uint)CID].IsOpen)
                 {
                     Kernel.debugger.Send("FLAG: FIN, ACK, Disconnected by host!!!");
 
@@ -112,11 +137,11 @@ namespace Aura_OS.System.Network.IPV4.TCP
 
                     connection.Flags = 0x10;
 
-                    connection.Send();
+                    connection.Send(false);
 
                     connection.Flags = 0x11;
 
-                    connection.Send();
+                    connection.Send(false);
 
                     connection.Close();
 
@@ -147,10 +172,15 @@ namespace Aura_OS.System.Network.IPV4.TCP
 
                     connection.Flags = 0x10;
 
-                    connection.Send();
+                    connection.Send(false);
 
                     connection.IsOpen = false;
 
+                    return;
+                }
+                else if (RST && ACK)
+                {
+                    Kernel.debugger.Send("FLAG: RST, ACK, Port not listening on remote machine?");
                     return;
                 }
                 else if (RST)
@@ -190,7 +220,7 @@ namespace Aura_OS.System.Network.IPV4.TCP
 
                 connection.Flags = 0x04;
 
-                connection.Send();
+                connection.Send(false);
 
                 connection.Close();
 
@@ -216,7 +246,7 @@ namespace Aura_OS.System.Network.IPV4.TCP
         }
 
         public TCPPacket(Address source, Address dest, UInt16 srcPort, UInt16 destPort, byte[] data, ulong sequencenumber, ulong acknowledgmentnb, UInt16 Headerlenght, UInt16 Flags, UInt16 WSValue, UInt16 UrgentPointer, bool nodata, bool Sync)
-            : base((UInt16)(20 + 4), 0x06, source, dest, 0x40)
+            : base((UInt16)(20 + data.Length), 0x06, source, dest, 0x40)
         {
             mRawData[this.dataOffset + 0] = (byte)((srcPort >> 8) & 0xFF);
             mRawData[this.dataOffset + 1] = (byte)((srcPort >> 0) & 0xFF);
@@ -305,7 +335,7 @@ namespace Aura_OS.System.Network.IPV4.TCP
 
             if (!nodata)
             {
-                for (int b = 0; b < data.Length - 20; b++)
+                for (int b = 0; b < data.Length; b++)
                 {
                     mRawData[this.dataOffset + 20 + b] = data[b];
                 }
