@@ -82,8 +82,6 @@ namespace Aura_OS.Core
             }
         }
 
-        #endregion
-
         /*
          * Becuse we the building cosmos heap does not have a Free, we need to make our own heap
          * In the hopes of saving time it will be a block style allocation system
