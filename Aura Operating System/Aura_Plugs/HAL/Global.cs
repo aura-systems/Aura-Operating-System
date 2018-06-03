@@ -10,7 +10,7 @@ using Cosmos.HAL;
 using Cosmos.Core;
 using Aura_OS.System;
 
-namespace Aura_OS.HAL.Plugs
+namespace Aura_Plugs.HAL
 {
 
     [Plug(Target = typeof(Cosmos.HAL.Global))]
@@ -24,7 +24,7 @@ namespace Aura_OS.HAL.Plugs
 
             Cosmos.Core.Global.Init();
 
-            Console.WriteLine("[Aura Operating System v" + Kernel.version + " - Made by valentinbreiz and geomtech]");
+            Console.WriteLine("[Aura Operating System v" + Aura_OS.Kernel.version + " - Made by valentinbreiz and geomtech]");
             CustomConsole.WriteLineInfo("Starting Cosmos kernel...");
 
             PCI.Setup();
@@ -33,12 +33,12 @@ namespace Aura_OS.HAL.Plugs
             ACPI.Start();
             CustomConsole.WriteLineOK("ACPI Initialization");
 
-            Cosmos.HAL.BlockDevice.IDE.InitDriver();
+           // Cosmos.HAL.BlockDevice.IDE.InitDriver();
             CustomConsole.WriteLineOK("IDE Driver Initialization");
 
-            Cosmos.HAL.BlockDevice.AHCI.InitDriver();
+            //Cosmos.HAL.BlockDevice.AHCI.InitDriver();
             CustomConsole.WriteLineOK("AHCI Driver Initialization");
-            
+
             CustomConsole.WriteLineOK("Kernel successfully initialized!");
 
         }

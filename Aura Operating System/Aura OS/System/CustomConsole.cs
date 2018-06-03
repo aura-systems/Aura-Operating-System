@@ -10,7 +10,7 @@ using System.Text;
 
 namespace Aura_OS.System
 {
-    class CustomConsole
+    public class CustomConsole
     {
         public static void WriteLineInfo(string text)
         {

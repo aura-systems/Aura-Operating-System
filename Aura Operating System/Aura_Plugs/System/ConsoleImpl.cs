@@ -12,11 +12,8 @@ using Aura_OS.Shell.cmdIntr;
 using Aura_OS.System.Utils;
 using Cosmos.System;
 using IL2CPU.API.Attribs;
-<<<<<<< HEAD:Aura Operating System/Aura OS/System/Shell/ConsoleImpl.cs
-=======
 using Sys = System;
 using Aura_OS;
->>>>>>> master:Aura Operating System/Aura_Plugs/ConsoleImpl.cs
 
 namespace Aura_Plugs
 {

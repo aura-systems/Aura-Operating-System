@@ -6,6 +6,7 @@
 
 using IL2CPU.API.Attribs;
 using Cosmos.HAL;
+using Aura_OS;
 
 namespace Aura_OS.System.Plugs
 {
@@ -16,7 +17,7 @@ namespace Aura_OS.System.Plugs
         public static void Init(TextScreenBase textScreen)
         {
             Kernel.AConsole = new Shell.VESAVBE.VESAVBEConsole();
-            HAL.Plugs.Global.Init(textScreen);
+            Aura_Plugs.HAL.Global.Init(textScreen);
             Cosmos.System.Global.NumLock = false;
             Cosmos.System.Global.CapsLock = false;
             Cosmos.System.Global.ScrollLock = false;

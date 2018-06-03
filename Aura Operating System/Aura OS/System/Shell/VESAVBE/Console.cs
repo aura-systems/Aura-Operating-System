@@ -10,7 +10,7 @@ using Aura_OS.System.Graphics;
 
 namespace Aura_OS.System.Shell.VESAVBE
 {
-    class VESAVBEConsole : Console
+    public class VESAVBEConsole : Console
     {
 
         Graphics graphics;
