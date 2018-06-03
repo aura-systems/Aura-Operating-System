@@ -85,7 +85,7 @@ namespace Aura_OS
                 CustomConsole.WriteLineInfo("BPP: " + System.Shell.VESAVBE.Graphics.depthVESA);
                 CustomConsole.WriteLineInfo("Height: " + System.Shell.VESAVBE.Graphics.heightVESA);
                 CustomConsole.WriteLineInfo("Width: " + System.Shell.VESAVBE.Graphics.widthVESA);
-                CustomConsole.WriteLineInfo("VBE Pointer: " + System.Shell.VESAVBE.Graphics.vbepointer);
+                CustomConsole.WriteLineInfo("VBE Pointer: 0x" + Conversion.DecToHex((int)System.Shell.VESAVBE.Graphics.vbepointer));
                 CustomConsole.WriteLineInfo("VBE Mode: " + System.Shell.VESAVBE.Graphics.VESAMode);
 
                 #region Register Filesystem

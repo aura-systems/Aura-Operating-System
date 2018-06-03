@@ -7,7 +7,6 @@
 using Aura_OS.System.Utils;
 using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace Aura_OS.Shell.cmdIntr
 {
