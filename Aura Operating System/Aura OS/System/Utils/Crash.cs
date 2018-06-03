@@ -9,7 +9,7 @@ using Sys = Cosmos.System;
 
 namespace Aura_OS.System
 {
-    class Crash
+    public class Crash
     {
 
         /// <summary>

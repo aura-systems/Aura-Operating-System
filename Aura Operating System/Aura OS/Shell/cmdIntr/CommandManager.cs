@@ -11,7 +11,8 @@ using System.Text;
 
 namespace Aura_OS.Shell.cmdIntr
 {
-    unsafe class CommandManager
+
+    public unsafe class CommandManager
     {
         //TO-DO: Do for all commands:
         //       Windows like command, Linux like command, Aura original command (optional for the last one)
@@ -32,7 +33,8 @@ namespace Aura_OS.Shell.cmdIntr
         public static void RegisterAllCommands()
         {
             Register("shutdown");
-            Register("rebooot");
+            Register("reboot");
+            Register("sha256");
             Register("clear");
             Register("echo");
             Register("help");
