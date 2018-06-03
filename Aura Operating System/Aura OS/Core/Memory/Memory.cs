@@ -13,6 +13,64 @@ namespace Aura_OS.Core
 {
     public static unsafe class Memory
     {
+
+        #region SSEMemCpy
+
+        [PlugMethod(Assembler = typeof(AsmSSEEnable))]
+        public static void SSEEnable()
+        {
+        }
+
+        public class AsmSSEEnable : AssemblerMethod
+        {
+            public override void AssembleNew(Assembler aAssembler, object aMethodInfo)
+            {
+                new LiteralAssemblerCode("mov eax, 0x600");
+                new LiteralAssemblerCode("mov cr4, eax");
+                new LiteralAssemblerCode("mov eax, cr0");
+                new LiteralAssemblerCode("and eax, 0xFFFFFFFB");
+                new LiteralAssemblerCode("or eax, 2");
+                new LiteralAssemblerCode("mov cr0, eax");
+            }
+        }
+
+        [PlugMethod(Assembler = typeof(AsmSSEMemcpy))]
+        public static void SSEMemcpy(uint* dst, uint* src, int len)
+        {
+        }
+
+        public class AsmSSEMemcpy : AssemblerMethod
+        {
+            public override void AssembleNew(Assembler aAssembler, object aMethodInfo)
+            {
+                new LiteralAssemblerCode("mov edi, [esp + 4]");
+                new LiteralAssemblerCode("mov esi, [esp + 8]");
+                new LiteralAssemblerCode("mov ecx, [esp + 12]");
+                new LiteralAssemblerCode("mov ecx, [esp+8]");
+                new LiteralAssemblerCode(".loop:");
+                new LiteralAssemblerCode("movdqu xmm0, [esi]");
+                new LiteralAssemblerCode("movdqu xmm1, [esi + 0x10]");
+                new LiteralAssemblerCode("movdqu xmm2, [esi + 0x20]");
+                new LiteralAssemblerCode("movdqu xmm3, [esi + 0x30]");
+                new LiteralAssemblerCode("movdqu xmm4, [esi + 0x40]");
+                new LiteralAssemblerCode("movdqu xmm5, [esi + 0x50]");
+                new LiteralAssemblerCode("movdqu xmm6, [esi + 0x60]");
+                new LiteralAssemblerCode("movdqu xmm7, [esi + 0x70]");
+                new LiteralAssemblerCode("movdqu [edi], xmm0");
+                new LiteralAssemblerCode("movdqu [edi + 0x10], xmm1");
+                new LiteralAssemblerCode("movdqu [edi + 0x20], xmm2");
+                new LiteralAssemblerCode("movdqu [edi + 0x30], xmm3");
+                new LiteralAssemblerCode("movdqu [edi + 0x40], xmm4");
+                new LiteralAssemblerCode("movdqu [edi + 0x50], xmm5");
+                new LiteralAssemblerCode("movdqu [edi + 0x60], xmm6");
+                new LiteralAssemblerCode("movdqu [edi + 0x70], xmm7");
+                new LiteralAssemblerCode("add esi, 128");
+                new LiteralAssemblerCode("add edi, 128");
+                new LiteralAssemblerCode("loop .loop");
+            }
+        }
+        #endregion
+
         #region MemCpy
 
         [PlugMethod(Assembler = typeof(AsmCopyBytes))]
