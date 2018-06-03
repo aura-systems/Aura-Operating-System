@@ -7,7 +7,7 @@
 using IL2CPU.API.Attribs;
 using static Cosmos.Core.INTs;
 
-namespace Aura_OS.Core
+namespace Aura_Plugs
 {
     [Plug(Target = typeof(Cosmos.Core.INTs))]
 
@@ -35,7 +35,7 @@ namespace Aura_OS.Core
                 lastsknowaddress = lastsknowaddress + xHex[(int)(lastKnownAddressValue & 0xF)];
             }
 
-            System.Crash.StopKernel(aName, aDescription, lastsknowaddress, ctxinterrupt);
+            Aura_OS.System.Crash.StopKernel(aName, aDescription, lastsknowaddress, ctxinterrupt);
         }
     }
 }

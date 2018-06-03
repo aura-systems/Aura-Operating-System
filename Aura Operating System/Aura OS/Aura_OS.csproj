@@ -118,4 +118,7 @@
       <HintPath>..\..\..\..\..\AppData\Roaming\Cosmos User Kit\Build\IL2CPU\XSharp.Assembler.dll</HintPath>
     </Reference>
   </ItemGroup>
+  <ItemGroup>
+    <PlugsReference Include="$(MSBuildProjectDirectory)\..\Aura_Plugs\bin\Debug\netstandard2.0\Aura_Plugs.dll" />
+  </ItemGroup>
 </Project>

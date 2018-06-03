@@ -10,7 +10,7 @@ using System.Collections.Generic;
 
 namespace Aura_OS.Shell.cmdIntr
 {
-    class CommandManager
+    public class CommandManager
     {
         //TO-DO: Do for all commands:
         //       Windows like command, Linux like command, Aura original command (optional for the last one)
