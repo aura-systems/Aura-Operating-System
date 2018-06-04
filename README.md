@@ -31,11 +31,11 @@ Work in progress:
 
 ## Screenshots
 
-<p align="center"><img width=50% src="https://raw.githubusercontent.com/aura-systems/Aura-Operating-System/master/ARTWORK/aura2.png"></p>
+<p align="center"><img width=60% src="https://raw.githubusercontent.com/aura-systems/Aura-Operating-System/master/ARTWORK/aura2.png"></p>
 
-<p align="center"><img width=50% src="https://raw.githubusercontent.com/aura-systems/Aura-Operating-System/master/ARTWORK/aura3.png"></p>
+<p align="center"><img width=60% src="https://raw.githubusercontent.com/aura-systems/Aura-Operating-System/master/ARTWORK/aura3.png"></p>
 
-<p align="center"><img width=50% src="https://raw.githubusercontent.com/aura-systems/Aura-Operating-System/master/ARTWORK/aura1.png"></p>
+<p align="center"><img width=60% src="https://raw.githubusercontent.com/aura-systems/Aura-Operating-System/master/ARTWORK/aura1.png"></p>
 
 ## Try Aura
 Download VMWare [at this address](https://my.vmware.com/en/web/vmware/free#desktop_end_user_computing/vmware_workstation_player/12_0). Install and run it.
