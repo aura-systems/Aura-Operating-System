@@ -88,12 +88,6 @@ namespace Aura_OS
                 CustomConsole.WriteLineInfo("VBE Pointer: 0x" + Conversion.DecToHex((int)System.Shell.VESAVBE.Graphics.vbepointer));
                 CustomConsole.WriteLineInfo("VBE Mode: " + System.Shell.VESAVBE.Graphics.VESAMode);
 
-                Cosmos.HAL.BlockDevice.IDE.InitDriver();
-                CustomConsole.WriteLineOK("IDE Driver Initialization");
-
-                Cosmos.HAL.BlockDevice.AHCI.InitDriver();
-                CustomConsole.WriteLineOK("AHCI Driver Initialization");
-
                 #region Register Filesystem
                 Sys.FileSystem.VFS.VFSManager.RegisterVFS(vFS);
                 if (ContainsVolumes())
