@@ -10,6 +10,7 @@ namespace Aura_OS.System
     {
         public static string GetVideo()
         {
+
             // TO DO: Scroll console in SVGAII
             //if (Cosmos.HAL.PCI.GetDevice(Cosmos.HAL.VendorID.VMWare, Cosmos.HAL.DeviceID.SVGAIIAdapter) != null)
             //{
@@ -27,6 +28,7 @@ namespace Aura_OS.System
 
             Kernel.Consolemode = "VESA";
             return "VESA";
+
         }
     }
 }

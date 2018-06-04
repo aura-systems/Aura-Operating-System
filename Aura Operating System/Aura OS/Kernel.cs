@@ -50,6 +50,7 @@ namespace Aura_OS
         public static System.Shell.Console AConsole;
         public static string Consolemode = "VGATextmode";
         public static MemoryManager MemMon;
+        public static Debugger debugger = new Debugger("Aura Operating System", "Kernel");
 
         #endregion
 
@@ -100,6 +101,8 @@ namespace Aura_OS
                 }
                 #endregion
 
+                NetworkInit.Init();
+              
                 CustomConsole.WriteLineOK("Aura successfully started!");
 
                 setup.InitSetup();

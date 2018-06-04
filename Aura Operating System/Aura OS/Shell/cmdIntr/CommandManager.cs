@@ -7,6 +7,7 @@
 using Aura_OS.System.Utils;
 using System;
 using System.Collections.Generic;
+using System.Text;
 
 namespace Aura_OS.Shell.cmdIntr
 {
@@ -22,7 +23,7 @@ namespace Aura_OS.Shell.cmdIntr
         /// </summary>
         public CommandManager() { }
 
-        public static List<String> CMDs = new List<string>();       
+        public static List<String> CMDs = new List<string>();
 
         private static void Register(string cmd)
         {
@@ -235,7 +236,7 @@ namespace Aura_OS.Shell.cmdIntr
             {
                 Kernel.speaker.beep();
             }
-          
+
             else if (cmd.Equals("play"))
             {
                 Kernel.speaker.playmusic();
@@ -376,6 +377,102 @@ namespace Aura_OS.Shell.cmdIntr
                 }
             }
 
+            else if (cmd.Equals("8168test"))
+            {
+                Console.WriteLine("Finding RTL8168 nic...");
+
+                HAL.Drivers.Network.RTL8168 xNic;
+
+                Cosmos.HAL.PCIDevice xNicDev = Cosmos.HAL.PCI.GetDevice((Cosmos.HAL.VendorID)0x10ec, (Cosmos.HAL.DeviceID)0x8168);
+                if (xNicDev == null)
+                {
+                    Console.WriteLine("PCIDevice not found!!");
+                    return;
+                }
+
+                Console.WriteLine("Found RTL8168 NIC on PCI " + xNicDev.bus + ":" + xNicDev.slot + ":" + xNicDev.function);
+                Console.WriteLine("NIC IRQ: " + xNicDev.InterruptLine);
+
+                xNic = new HAL.Drivers.Network.RTL8168(xNicDev);
+
+                Console.WriteLine("NIC MAC Address: " + xNic.MACAddress.ToString());
+
+                xNic.Enable();
+
+                Console.WriteLine("Done!");
+            }
+
+            else if (cmd.Equals("8139test"))
+            {
+                Console.WriteLine("Finding RTL8139 nic...");
+
+                HAL.Drivers.Network.RTL8139 xNic;
+
+                Cosmos.HAL.PCIDevice xNicDev = Cosmos.HAL.PCI.GetDevice((Cosmos.HAL.VendorID)0x10ec, (Cosmos.HAL.DeviceID)0x8139);
+                if (xNicDev == null)
+                {
+                    Console.WriteLine("PCIDevice not found!!");
+                    return;
+                }
+
+                Console.WriteLine("Found RTL8139 NIC on PCI " + xNicDev.bus + ":" + xNicDev.slot + ":" + xNicDev.function);
+                Console.WriteLine("NIC IRQ: " + xNicDev.InterruptLine);
+
+                xNic = new HAL.Drivers.Network.RTL8139(xNicDev);
+
+                Console.WriteLine("NIC MAC Address: " + xNic.MACAddress.ToString());
+
+                xNic.Enable();
+
+                Console.WriteLine("Done!");
+            }
+
+            else if (cmd.Equals("udp"))
+            {
+                var xClient = new System.Network.IPV4.UDP.UdpClient(4242);
+                xClient.Connect(new System.Network.IPV4.Address(192,168,1,12), 4242);
+                xClient.Send(Encoding.ASCII.GetBytes("Hello from Aura Operating System!"));
+            }
+
+            else if (cmd.Equals("tcp"))
+            {
+                var xClient = new System.Network.IPV4.TCP.TCPClient(4343);
+                xClient.Connect(new System.Network.IPV4.Address(192, 168, 1, 12), 9020);
+                xClient.Send(Encoding.ASCII.GetBytes("Hello from Aura Operating System!"));
+            }
+
+            else if (cmd.Equals("dhcp"))
+            {
+                byte[] macb = { 0x00, 0x0C, 0x29, 0x7C, 0x85, 0x28 };
+                HAL.MACAddress mac = new HAL.MACAddress(macb);
+                System.Network.DHCP.DHCPDiscover dhcp_discover = new System.Network.DHCP.DHCPDiscover(mac, System.Network.IPV4.Address.Zero, new System.Network.IPV4.Address(192,168,1,100));
+                //System.Network.DHCP.DHCPRequest dhcp_request = new System.Network.DHCP.DHCPRequest(mac, System.Network.IPV4.Address.Zero, new System.Network.IPV4.Address(192, 168, 1, 100), new System.Network.IPV4.Address(192, 168, 1, 254));
+
+                System.Network.IPV4.OutgoingBuffer.AddPacket(dhcp_discover);
+                System.Network.NetworkStack.Update();
+            }
+
+            else if (cmd.Equals("haship"))
+            {
+                Console.WriteLine(new HAL.MACAddress(new byte[] { 00, 01, 02, 03, 04, 05 }).Hash);
+                Console.WriteLine(new System.Network.IPV4.Address(192, 168, 1, 12).Hash);
+            }
+
+            //else if (cmd.Equals("discover"))
+            //{
+            //    //byte[] mac = { 0x00,0x0C, 0x29,0x7C, 0x85,0x28};                
+            //    foreach (HAL.Drivers.Network.NetworkDevice device in HAL.Drivers.Network.NetworkDevice.Devices)
+            //    {                    
+            //        int a = 296 + System.Computer.Info.HostnameLength();
+            //        ushort b = (ushort)a;
+            //        Console.WriteLine("SRC MAC: " + device.MACAddress.ToString());
+            //        System.Network.DHCP.DHCPDiscoverRequest request = new System.Network.DHCP.DHCPDiscoverRequest(device.MACAddress, b);
+            //        Console.WriteLine("Sending DHCP Discover packet...");
+            //        request.Send(device);
+            //        System.Network.NetworkStack.Update();
+            //    }              
+            //}
+
             //else if (cmd.StartsWith("xml "))
             //{
             //    Util.xml.CmdXmlParser.c_CmdXmlParser(cmd, 0, 4);
@@ -396,6 +493,10 @@ namespace Aura_OS.Shell.cmdIntr
             else if (cmd.StartsWith("sha256"))
             {
                 Tools.SHA256.c_SHA256(cmd);
+            }
+            else if (cmd.StartsWith("ping"))
+            {
+                Network.Ping.c_Ping(cmd);
             }
 
             #endregion
@@ -425,9 +526,9 @@ namespace Aura_OS.Shell.cmdIntr
                     return;
                 }
                 else
-                { 
+                {
                     Util.CmdNotFound.c_CmdNotFound();
-                }                
+                }
             }
 
             CommandsHistory.Add(cmd); //adding last command to the commands history   
