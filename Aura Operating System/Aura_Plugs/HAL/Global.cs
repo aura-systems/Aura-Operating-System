@@ -33,6 +33,12 @@ namespace Aura_Plugs.HAL
             ACPI.Start();
             CustomConsole.WriteLineOK("ACPI Initialization");
 
+            Cosmos.HAL.BlockDevice.IDE.InitDriver();
+            CustomConsole.WriteLineOK("IDE Driver Initialization");
+
+            Cosmos.HAL.BlockDevice.AHCI.InitDriver();
+            CustomConsole.WriteLineOK("AHCI Driver Initialization");
+
             CustomConsole.WriteLineOK("Kernel successfully initialized!");
 
         }
