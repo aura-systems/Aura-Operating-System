@@ -25,18 +25,17 @@ Aura's kernel: https://github.com/aura-systems/Cosmos.
 
 Work in progress:
 
-* VBE VESA Console - [Pull request](https://github.com/aura-systems/Aura-Operating-System/pull/71).
 * GUI (VBE) - [Pull request](https://github.com/aura-systems/Aura-Operating-System/pull/55).
 * Multitask - [Pull request](https://github.com/aura-systems/Cosmos/pull/40).
 * Networking - [Pull Request](https://github.com/aura-systems/Aura-Operating-System/pull/72).
 
 ## Screenshots
 
-<p align="center"><img width=60% src="https://raw.githubusercontent.com/aura-systems/Aura-Operating-System/master/ARTWORK/aura1.png"></p>
+<p align="center"><img width=50% src="https://raw.githubusercontent.com/aura-systems/Aura-Operating-System/master/ARTWORK/aura2.png"></p>
 
-<p align="center"><img width=60% src="https://raw.githubusercontent.com/aura-systems/Aura-Operating-System/master/ARTWORK/aura2.png"></p>
+<p align="center"><img width=50% src="https://raw.githubusercontent.com/aura-systems/Aura-Operating-System/master/ARTWORK/aura3.png"></p>
 
-<p align="center"><img width=60% src="https://raw.githubusercontent.com/aura-systems/Aura-Operating-System/master/ARTWORK/aura3.png"></p>
+<p align="center"><img width=50% src="https://raw.githubusercontent.com/aura-systems/Aura-Operating-System/master/ARTWORK/aura1.png"></p>
 
 ## Try Aura
 Download VMWare [at this address](https://my.vmware.com/en/web/vmware/free#desktop_end_user_computing/vmware_workstation_player/12_0). Install and run it.
