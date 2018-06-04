@@ -1,27 +1,64 @@
 ﻿/*
 * PROJECT:          Aura Operating System Development
-* CONTENT:          VBE Graphics
+* CONTENT:          VBE VESA Graphics
 * PROGRAMMERS:      Valentin Charbonnier <valentinbreiz@gmail.com>
 */
 
-using Aura_OS.System.Shell.VBE.CosmosGLGraphics;
+using Aura_OS.HAL.Drivers;
+using Aura_OS.System.Graphics;
 using System;
+using System.Collections.Generic;
 
-namespace Aura_OS.System.Shell.VBE
+namespace Aura_OS.System.Shell.VESAVBE
 {
     unsafe class Graphics
     {
 
-        public static VbeScreen Screen = new VbeScreen();
-        public CosmosGLGraphics.Canvas Canvas = new CosmosGLGraphics.Canvas(800, 600);
+        //public static VbeScreen Screen = new VbeScreen();
 
-        private static uint[] pallete = new uint[16];
+        public static VBE canvas;
+
         private static byte[] font;
+        //public static VESACanvas vesa;
+        private static uint[] pallete = new uint[16];
+
+        public static int depthVESA;
+        public static int widthVESA;
+        public static int heightVESA;
+        public static string VESAMode = "Unkown Mode? How!?";
+        public static byte* vga_mem;
+        public static string ssignature;
+        public static string sversion;
+        public static uint vbepointer;
+
+        public static uint oemStringPtr;
+        public static uint capabilities;
+        public static uint videoModePtr;
+        public static uint totalmemory;
+
+        public static uint oemSoftwareRev;
+        public static uint oemVendorNamePtr;
+        public static uint oemProductNamePtr;
+        public static uint oemProductRevPtr;
+
+        public static List<ushort> modelist = new List<ushort>();
+
+        void* FP_TO_LINEAR(void* seg, void* off) {
+            return ((void*)((((ushort)(seg)) << 4) + ((ushort)(off))));
+        }
+
+        void* FP_SEG(void* fp) {
+            return ((void*)((uint)(fp) >> 16));
+        }
+
+        void* FP_OFF(void* fp) {
+            return ((void*)(((uint)fp) & 0xffff));
+        }
 
         public Graphics()
         {
             pallete[0] = 0x000000; // Black
-            pallete[1] = 0x000080; // Darkblue
+            pallete[1] = 0x0000AB; // Darkblue
             pallete[2] = 0x008000; // DarkGreen
             pallete[3] = 0x008080; // DarkCyan
             pallete[4] = 0x800000; // DarkRed
@@ -29,22 +66,138 @@ namespace Aura_OS.System.Shell.VBE
             pallete[6] = 0x808000; // DarkYellow
             pallete[7] = 0xC0C0C0; // Gray
             pallete[8] = 0x808080; // DarkGray
-            pallete[9] = 0x5555FF; // Blue
+            pallete[9] = 0x5353FF; // Blue
             pallete[10] = 0x55FF55; // Green
             pallete[11] = 0x00FFFF; // Cyan
-            pallete[12] = 0xFF5555; // Red
+            pallete[12] = 0xAA0000; // Red
             pallete[13] = 0xFF00FF; // Magenta
             pallete[14] = 0xFFFF55; // Yellow
             pallete[15] = 0xFFFFFF; //White
             font = Read_font();
 
-            Screen.SetMode(VbeScreen.ScreenSize.Size800X600, VbeScreen.Bpp.Bpp32);
-            Screen.Clear(CosmosGLGraphics.Colors.Blue);
+            Core.MultiBoot.Header* header = (Core.MultiBoot.Header*)Core.GetMBI.GetMBIAddress();
 
-            Canvas.Clear((uint)CosmosGLGraphics.Colors.Black.ToHex());
+            //Kernel.debugger.Send("Multiboot upper: " + header->mem_upper.ToString());
 
-            Canvas.WriteToScreen();
+            Core.VBE.ModeInfo* ModeInfo = (Core.VBE.ModeInfo*)header->vbeModeInfo;
+            Core.VBE.ControllerInfo* ControllerInfo = (Core.VBE.ControllerInfo*)header->vbeControlInfo;
 
+            //debugger.Send("VBE Signature: " + ControllerInfo->vbeSignature.ToString());
+
+            ushort version = ControllerInfo->vbeVersion;
+            uint signature = ControllerInfo->vbeSignature;
+
+            if (signature == 0x41534556) // VESA in Hex
+            {
+                ssignature = "VESA";
+            }
+            else
+            {
+                ssignature = "Unknown Signature";
+            }
+
+            if (version == 0x102)
+            {
+                sversion = "1.2";
+            }
+            else if (version == 0x200)
+            {
+                sversion = "2.0";
+            }
+            else if (version == 0x300)
+            {
+                sversion = "3.0";
+            }
+            else
+            {
+                sversion = "Unknwon version";
+            }
+
+            oemStringPtr = ControllerInfo->oemStringPtr;
+            capabilities = ControllerInfo->capabilities;
+            videoModePtr = ControllerInfo->videoModePtr;
+            totalmemory = ControllerInfo->totalmemory;
+
+            oemSoftwareRev = ControllerInfo->oemSoftwareRev;
+            oemVendorNamePtr = ControllerInfo->oemVendorNamePtr;
+            oemProductNamePtr = ControllerInfo->oemProductNamePtr;
+            oemProductRevPtr = ControllerInfo->oemProductRevPtr;
+
+
+            ushort* mode_ptr = (ushort*)FP_TO_LINEAR(FP_SEG((void*)videoModePtr), FP_OFF((void*)videoModePtr));
+
+            for (int i = 0; mode_ptr[i] != 0xFFFF; ++i)
+            {
+                modelist.Add(mode_ptr[i]);
+                mode_ptr += 2;
+            }
+
+            //Kernel.debugger.Send("VBE Signature: " + ssignature);
+            //Kernel.debugger.Send("VBE Version: " + sversion);
+
+            //Kernel.debugger.Send("VBE Pointer: " + ModeInfo->framebuffer.ToString());
+
+            //Kernel.debugger.Send("VBE Bpp: " + ModeInfo->bpp.ToString());
+            //Kernel.debugger.Send("VBE ResX: " + ModeInfo->width.ToString());
+            //Kernel.debugger.Send("VBE ResY: " + ModeInfo->height.ToString());
+
+            heightVESA = ModeInfo->height;
+            widthVESA = ModeInfo->width;
+            depthVESA = ModeInfo->bpp;
+            vga_mem = (byte*)ModeInfo->framebuffer;
+
+            vbepointer = ModeInfo->framebuffer;
+
+            if (widthVESA.Equals(1280) &&  heightVESA.Equals(768))
+            {
+                VESAVBEConsole.mRows = (int)ConsoleMode.Mode1280x768.Rows;
+                VESAVBEConsole.mWidth = (int)ConsoleMode.Mode1280x768.Rows;
+                VESAVBEConsole.mCols = (int)ConsoleMode.Mode1280x768.Cols;
+                VESAVBEConsole.mHeight = (int)ConsoleMode.Mode1280x768.Cols;
+                VESAMode = "Mode1280x768";
+            }
+			else if (widthVESA.Equals(1280) &&  heightVESA.Equals(800))
+            {
+                VESAVBEConsole.mRows = (int)ConsoleMode.Mode1280x800.Rows;
+                VESAVBEConsole.mWidth = (int)ConsoleMode.Mode1280x800.Rows;
+                VESAVBEConsole.mCols = (int)ConsoleMode.Mode1280x800.Cols;
+                VESAVBEConsole.mHeight = (int)ConsoleMode.Mode1280x800.Cols;
+                VESAMode = "Mode1280x800";
+            }
+            else if (widthVESA.Equals(1600) && heightVESA.Equals(1200))
+            {
+                VESAVBEConsole.mRows = (int)ConsoleMode.Mode1600x1200.Rows;
+                VESAVBEConsole.mWidth = (int)ConsoleMode.Mode1600x1200.Rows;
+                VESAVBEConsole.mCols = (int)ConsoleMode.Mode1600x1200.Cols;
+                VESAVBEConsole.mHeight = (int)ConsoleMode.Mode1600x1200.Cols;
+                VESAMode = "Mode1600x1200";
+            }
+            else if (widthVESA.Equals(1152) && heightVESA.Equals(864))
+            {
+                VESAVBEConsole.mRows = (int)ConsoleMode.Mode1152x864.Rows;
+                VESAVBEConsole.mWidth = (int)ConsoleMode.Mode1152x864.Rows;
+                VESAVBEConsole.mCols = (int)ConsoleMode.Mode1152x864.Cols;
+                VESAVBEConsole.mHeight = (int)ConsoleMode.Mode1152x864.Cols;
+                VESAMode = "Mode1152x864";
+            }
+            else if (widthVESA.Equals(1360) && heightVESA.Equals(768))
+            {
+                VESAVBEConsole.mRows = (int)ConsoleMode.Mode1360x768.Rows;
+                VESAVBEConsole.mWidth = (int)ConsoleMode.Mode1360x768.Rows;
+                VESAVBEConsole.mCols = (int)ConsoleMode.Mode1360x768.Cols;
+                VESAVBEConsole.mHeight = (int)ConsoleMode.Mode1360x768.Cols;
+                VESAMode = "Mode1360x768";
+            }
+            else if (widthVESA.Equals(800) && heightVESA.Equals(600))
+            {
+                VESAVBEConsole.mRows = (int)ConsoleMode.Mode800x600.Rows;
+                VESAVBEConsole.mWidth = (int)ConsoleMode.Mode800x600.Rows;
+                VESAVBEConsole.mCols = (int)ConsoleMode.Mode800x600.Cols;
+                VESAVBEConsole.mHeight = (int)ConsoleMode.Mode800x600.Cols;
+                VESAMode = "Mode800x600";
+            }
+
+            canvas = new VBE(widthVESA, heightVESA);
         }
 
         private byte[] Read_font()
@@ -58,28 +211,20 @@ namespace Aura_OS.System.Shell.VBE
             return font;
         }
 
-        internal void Disable()
-        {
-            Canvas.Clear(0xffffff);
-            Screen.Disable();
-        }
-
         internal void Clear(int c)
         {
-            Canvas.Clear((uint)c);
+            canvas.Clear((uint)c);
         }
 
         public void DrawImage(ushort X, ushort Y, ushort Length, ushort height, Image image)
         {
-            int p = 0;
-            Kernel.AConsole.Y += height / 15;
-            for (ushort x = 0; x < Length; x++)
+            int z = 0;
+            for (int p = Y; p < Y + image.Height; p++)
             {
-                for (ushort y = 0; y < height; y++)
+                for (int i = X; i < X + image.Width; i++)
                 {
-                    if (y < (height - 2) || x != (Kernel.AConsole.Width - 2))
-                        Canvas.SetPixel((ushort)(X + x), (ushort)(Y + y), image.GetPixel(x, y));
-                    p++;
+                    canvas.SetPixel(i, p, (uint)image.Map[z], false);
+                    z++;
                 }
             }
         }
@@ -88,15 +233,45 @@ namespace Aura_OS.System.Shell.VBE
         {
             int p = 16 * c;
 
-            for (int cy = 0; cy < 16; cy++)
+            if(Kernel.AConsole.Background != ConsoleColor.Black)
             {
-                for (byte cx = 0; cx < 8; cx++)
+                for (int cy = 0; cy < 16; cy++)
                 {
-                    if (getb(font[p + cy], cx + 1))
-                        Canvas.SetPixel((ushort)((9 * (Kernel.AConsole.X)) + (9 - cx)), (ushort)((16 * (Kernel.AConsole.Y)) + cy), pallete[VBEConsole.foreground]);
-                    else
-                        Canvas.SetPixel((ushort)((9 * (Kernel.AConsole.X)) + (9 - cx)), (ushort)((16 * (Kernel.AConsole.Y)) + cy), 0);
-
+                    for (byte cx = 0; cx < 9; cx++)
+                    {
+                        canvas.SetPixel((ushort)((9 * (Kernel.AConsole.X)) + (9 - cx)), (ushort)((16 * (Kernel.AConsole.Y)) + cy), (pallete[(int)Kernel.AConsole.Background]), true);
+                    }
+                }
+                for (int cy = 0; cy < 16; cy++)
+                {
+                    for (byte cx = 0; cx < 8; cx++)
+                    {
+                        if (getb(font[p + cy], cx + 1))
+                        {
+                            canvas.SetPixel((ushort)((9 * (Kernel.AConsole.X)) + (9 - cx)), (ushort)((16 * (Kernel.AConsole.Y)) + cy), (pallete[VESAVBEConsole.foreground]), true);
+                        }
+                        else
+                        {
+                            canvas.SetPixel((ushort)((9 * (Kernel.AConsole.X)) + (9 - cx)), (ushort)((16 * (Kernel.AConsole.Y)) + cy), 0, true);
+                        }
+                    }
+                }
+            }
+            else
+            {
+                for (int cy = 0; cy < 16; cy++)
+                {
+                    for (byte cx = 0; cx < 8; cx++)
+                    {
+                        if (getb(font[p + cy], cx + 1))
+                        {
+                            canvas.SetPixel((ushort)((9 * (Kernel.AConsole.X)) + (9 - cx)), (ushort)((16 * (Kernel.AConsole.Y)) + cy), (pallete[VESAVBEConsole.foreground]), false);
+                        }
+                        else
+                        {
+                            canvas.SetPixel((ushort)((9 * (Kernel.AConsole.X)) + (9 - cx)), (ushort)((16 * (Kernel.AConsole.Y)) + cy), 0, false);
+                        }
+                    }
                 }
             }
         }
@@ -148,7 +323,8 @@ namespace Aura_OS.System.Shell.VBE
 
         public void ScrollUp()
         {
-            Canvas.ScrollUp();
+            canvas.ScrollUp();
+            canvas.WriteToScreen();
         }
     }
 }

@@ -2,10 +2,9 @@
 * PROJECT:          Aura Operating System Development
 * CONTENT:          SVGAII Console
 * PROGRAMMERS:      Valentin Charbonnier <valentinbreiz@gmail.com>
-*/
 
-using Aura_OS.System.Shell.VBE.CosmosGLGraphics;
-using Cosmos.Debug.Kernel;
+
+using Aura_OS.System.Graphics;
 using System;
 
 namespace Aura_OS.System.Shell.SVGAII
@@ -135,3 +134,5 @@ namespace Aura_OS.System.Shell.SVGAII
 
     }
 }
+
+*/

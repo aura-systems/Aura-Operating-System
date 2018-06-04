@@ -7,7 +7,7 @@
 
 using System;
 using System.Runtime.CompilerServices;
-using Aura_OS.System.Shell.VBE.CosmosGLGraphics;
+using Aura_OS.System.Graphics;
 using Cosmos.HAL;
 using L = Aura_OS.System.Translation;
 
@@ -158,11 +158,6 @@ namespace Aura_OS.System.Shell.VGA
         public override void DrawImage(ushort X, ushort Y, ushort Length, ushort height, Image image)
         {
             throw new NotImplementedException();
-        }
-
-        public override void DisableGraphicMode()
-        {
-            L.Text.Display("alreadyintextmode");
         }
 
         public override ConsoleColor Foreground

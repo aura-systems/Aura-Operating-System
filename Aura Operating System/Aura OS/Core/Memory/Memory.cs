@@ -1,7 +1,7 @@
 ﻿/*
 * PROJECT:          Aura Operating System Development
 * CONTENT:          Memory class
-* PROGRAMMERS:      Myvar
+* PROGRAMMERS:      Myvar (part of CosmosGL)
 */
 
 using System.Collections.Generic;
@@ -13,7 +13,6 @@ namespace Aura_OS.Core
 {
     public static unsafe class Memory
     {
-        #region MemCpy
 
         [PlugMethod(Assembler = typeof(AsmCopyBytes))]
         public static void Memcpy(byte* dst, byte* src, int len)
@@ -82,8 +81,6 @@ namespace Aura_OS.Core
                 new LiteralAssemblerCode("rep stosd");
             }
         }
-
-        #endregion
 
         /*
          * Becuse we the building cosmos heap does not have a Free, we need to make our own heap

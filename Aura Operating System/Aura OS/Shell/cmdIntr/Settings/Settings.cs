@@ -54,11 +54,6 @@ namespace Aura_OS.Shell.cmdIntr.Settings
                     L.Text.Display("availablelanguage");
                 }
 
-                else if (cmdargs[1].Equals("consolemode"))
-                {
-                    L.Text.Display("consolemode");
-                }
-
                 else if (cmdargs[1].Equals("remuser"))
                 {
                     L.Text.Display("remuser");
@@ -114,49 +109,7 @@ namespace Aura_OS.Shell.cmdIntr.Settings
                         L.Text.Display("unknownlanguage");
                         L.Text.Display("availablelanguage");
                     }
-                }
-
-                else if (cmdargs[1].Equals("consolemode"))
-                {
-                    if ((cmdargs[2].Equals("textmode")))
-                    {
-                        Kernel.AConsole.DisableGraphicMode();
-                        Kernel.Consolemode = "VGATextmode";
-                        System.Utils.Settings.LoadValues();
-                        System.Utils.Settings.EditValue("consolemode", "VGATextmode");
-                        System.Utils.Settings.PushValues();
-                    }
-                    else if ((cmdargs[2].Equals("graphicmode")))
-                    {
-                        switch (System.Video.GetVideo())
-                        {
-                            case "SVGAII":
-                                Kernel.AConsole.Clear();
-                                Kernel.AConsole = new System.Shell.SVGAII.VMWareSVGAConsole();
-                                Kernel.Consolemode = "SVGAII";
-                                System.Utils.Settings.LoadValues();
-                                System.Utils.Settings.EditValue("consolemode", "SVGAII");
-                                System.Utils.Settings.PushValues();
-                                break;
-                            case "VBE":
-                                Kernel.AConsole.Clear();
-                                Kernel.AConsole = new System.Shell.VBE.VBEConsole();
-                                Kernel.Consolemode = "VBE";
-                                System.Utils.Settings.LoadValues();
-                                System.Utils.Settings.EditValue("consolemode", "VBE");
-                                System.Utils.Settings.PushValues();
-                                break;
-                            default:
-                                L.Text.Display("nographicmode");
-                                break;
-                        }
-                    }
-                    else
-                    {
-                        L.Text.Display("unknownmode");
-                        L.Text.Display("consolemode");
-                    }
-                }
+                }                
 
                 else if (cmdargs[1].Equals("adduser"))
                 {
@@ -187,11 +140,6 @@ namespace Aura_OS.Shell.cmdIntr.Settings
                 else if (cmdargs[1].Equals("setlang"))
                 {
                     L.Text.Display("availablelanguage");
-                }
-
-                else if (cmdargs[1].Equals("consolemode"))
-                {
-                    L.Text.Display("consolemode");
                 }
 
                 else if (cmdargs[1].Equals("remuser"))

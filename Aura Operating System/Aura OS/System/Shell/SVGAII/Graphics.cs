@@ -2,11 +2,9 @@
 * PROJECT:          Aura Operating System Development
 * CONTENT:          SVGAII Graphics
 * PROGRAMMERS:      Valentin Charbonnier <valentinbreiz@gmail.com>
-*/
 
-using System;
-using Aura_OS.System.Shell.VBE.CosmosGLGraphics;
-using Cosmos.Debug.Kernel;
+
+using Aura_OS.System.Graphics;
 using Cosmos.HAL.Drivers.PCI.Video;
 
 namespace Aura_OS.System.Shell.SVGAII
@@ -72,7 +70,7 @@ namespace Aura_OS.System.Shell.SVGAII
                 for (ushort y = 0; y < height; y++)
                 {
                     if (y < (height - 2) || x != (Kernel.AConsole.Width - 2))
-                        svga.SetPixel((ushort)(X + x), (ushort)(Y + y), (ushort)image.GetPixel(x, y));
+                        //svga.SetPixel((ushort)(X + x), (ushort)(Y + y), (ushort)image.GetPixel(x, y));
                     p++;
                 }
             }
@@ -150,3 +148,5 @@ namespace Aura_OS.System.Shell.SVGAII
         }
     }
 }
+
+*/

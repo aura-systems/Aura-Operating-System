@@ -1,15 +1,16 @@
 ﻿/*
 * PROJECT:          Aura Operating System Development
-* CONTENT:          VBE Console
+* CONTENT:          VBE VESA Console
 * PROGRAMMERS:      Valentin Charbonnier <valentinbreiz@gmail.com>
 */
 
-using Aura_OS.System.Shell.VBE.CosmosGLGraphics;
-using System;
 
-namespace Aura_OS.System.Shell.VBE
+using System;
+using Aura_OS.System.Graphics;
+
+namespace Aura_OS.System.Shell.VESAVBE
 {
-    class VBEConsole : Console
+    public class VESAVBEConsole : Console
     {
 
         Graphics graphics;
@@ -18,9 +19,9 @@ namespace Aura_OS.System.Shell.VBE
         private const byte Tab = (byte)'\t';
         private const byte Space = (byte)' ';
 
-        public VBEConsole()
+        public VESAVBEConsole()
         {
-            Name = "VBE";
+            Name = "VESA";
             graphics = new Graphics();
         }
 
@@ -45,24 +46,28 @@ namespace Aura_OS.System.Shell.VBE
             }
         }
 
+        public static int mWidth = 110;
         public override int Width
         {
-            get { return 87; }
+            get { return mWidth; } //141
         }
 
+        public static int mHeight = 48;
         public override int Height
         {
-            get { return 37; }
+            get { return mHeight; } //48 Perfert for y = 768
         }
 
+        public static int mCols = 48;
         public override int Cols
         {
-            get { return 37; }
+            get { return mCols; } //48
         }
 
+        public static int mRows = 110;
         public override int Rows
         {
-            get { return 87; }
+            get { return mRows; } //141
         }
 
         public static uint foreground = (byte)ConsoleColor.White;
@@ -86,7 +91,7 @@ namespace Aura_OS.System.Shell.VBE
 
         public override void Clear()
         {
-            graphics.Clear(0x000000);
+            graphics.Clear(0x00);
             mX = 0;
             mY = 0;
         }
@@ -107,7 +112,6 @@ namespace Aura_OS.System.Shell.VBE
                         break;
                 }
             }
-            graphics.Canvas.WriteToScreen();
         }
 
         private void DoTab()
@@ -121,13 +125,6 @@ namespace Aura_OS.System.Shell.VBE
         public override void DrawImage(ushort X, ushort Y, ushort Length, ushort height, Image image)
         {
             graphics.DrawImage(X, Y, Length, height, image);
-        }
-
-        public override void DisableGraphicMode()
-        {
-            graphics.Disable();
-            Kernel.AConsole = new VGA.VGAConsole(null);
-            Kernel.AConsole.Clear();
         }
 
     }

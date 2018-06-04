@@ -63,12 +63,10 @@ namespace Aura_OS.HAL
             Outb(0x61, (byte)tmp);
         }
 
-        PIT pit = new PIT();
-
         public void beep()
         {
             play_sound(Notes.A4);
-            pit.Wait(10);
+            Cosmos.HAL.Global.PIT.Wait(10);
             nosound();
         }
 
@@ -176,7 +174,7 @@ namespace Aura_OS.HAL
         public void play(uint note, uint time)
         {
             play_sound(note);
-            pit.Wait(time);
+            Cosmos.HAL.Global.PIT.Wait(time);
             nosound();
         }
 

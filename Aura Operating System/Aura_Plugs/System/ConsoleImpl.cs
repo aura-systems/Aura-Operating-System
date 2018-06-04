@@ -11,7 +11,6 @@ using System.Text;
 using Aura_OS.Shell.cmdIntr;
 using Aura_OS.System.Utils;
 using Cosmos.System;
-using IL2CPU.API;
 using IL2CPU.API.Attribs;
 using Sys = System;
 using Aura_OS;
@@ -275,7 +274,7 @@ namespace Aura_Plugs
                 // for now:
                 return 25;
             }
-            return GetConsole().Rows;
+            return GetConsole().Cols;
         }
 
         public static void set_WindowHeight(int value)
@@ -313,7 +312,7 @@ namespace Aura_Plugs
                 // for now:
                 return 85;
             }
-            return GetConsole().Cols;
+            return GetConsole().Rows;
         }
 
         public static void set_WindowWidth(int value)
