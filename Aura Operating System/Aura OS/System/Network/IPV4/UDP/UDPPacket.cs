@@ -30,8 +30,8 @@ namespace Aura_OS.System.Network.IPV4.UDP
             
                 if(udp_packet.SourcePort == 68) 
                 {
-                        Network.DHCP.DHCPPacket.DHCPHandler(packetData);
-                        break;
+                    Network.DHCP.DHCPPacket.DHCPHandler(packetData);
+                    return;
                 }
 
                 Kernel.debugger.Send("Content: " + Encoding.ASCII.GetString(udp_packet.UDP_Data));
