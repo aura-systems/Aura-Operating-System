@@ -11,3 +11,6 @@ Open source project used in Aura Operating System:
 
 ### SHA256
 - License file: [LICENSE.MD](https://github.com/aura-systems/Aura-Operating-System/blob/master/LICENCES/SHA256/LICENSE.md)
+
+### Cosmos
+- License file: [LICENSE.MD](https://github.com/aura-systems/Aura-Operating-System/blob/master/LICENCES/COSMOS/LICENSE.md)
