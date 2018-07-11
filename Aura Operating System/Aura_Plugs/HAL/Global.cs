@@ -39,6 +39,9 @@ namespace Aura_Plugs.HAL
             Cosmos.HAL.BlockDevice.AHCI.InitDriver();
             CustomConsole.WriteLineOK("AHCI Driver Initialization");
 
+            Cosmos.HAL.Global.PS2Controller.Initialize();
+            CustomConsole.WriteLineOK("PS/2 Controller Initialization");
+
             CustomConsole.WriteLineOK("Kernel successfully initialized!");
 
         }
