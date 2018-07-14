@@ -18,6 +18,7 @@ namespace Aura_OS.System
             Console.Write("[Info] ");
             Console.ForegroundColor = ConsoleColor.White;
             Console.Write(text + "\n");
+            Cosmos.HAL.CustomConsole.logs.Add("[Info] " + text);
         }
         public static void WriteLineOK(string text)
         {
@@ -25,6 +26,7 @@ namespace Aura_OS.System
             Console.Write("[OK] ");
             Console.ForegroundColor = ConsoleColor.White;
             Console.Write(text + "\n");
+            Cosmos.HAL.CustomConsole.logs.Add("[OK] " + text);
         }
         public static void WriteLineError(string text)
         {
@@ -32,6 +34,7 @@ namespace Aura_OS.System
             Console.Write("[Error] ");
             Console.ForegroundColor = ConsoleColor.White;
             Console.Write(text + "\n");
+            Cosmos.HAL.CustomConsole.logs.Add("[Error] " + text);
         }
     }
 }

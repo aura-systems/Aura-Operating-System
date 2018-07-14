@@ -48,7 +48,6 @@ namespace Aura_OS.System.Network
         public static void ConfigIP(NetworkDevice nic, IPV4.Config config)
         {
             NetworkConfig.Add(nic, config);
-            Console.WriteLine("Config added in dictionnary");
             AddressMap.Add(config.IPAddress.Hash, nic);
             IPV4.Config.Add(config);
             nic.DataReceived = HandlePacket;

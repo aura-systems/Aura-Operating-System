@@ -51,9 +51,7 @@ namespace Aura_OS.System.Network
         public static void Add(NetworkDevice key, Config value)
         {
             Keys.Add(key);
-            Console.WriteLine("Key added, lenght= " + Keys.Count);
             Values.Add(value);
-            Console.WriteLine("Value added, lenght= " + Values.Count);
         }
 
         public static NetworkDevice[] GetKeys()
