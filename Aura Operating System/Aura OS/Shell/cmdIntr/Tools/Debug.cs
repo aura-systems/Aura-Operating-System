@@ -1,7 +1,7 @@
 ﻿/*
 * PROJECT:          Aura Operating System Development
-* CONTENT:          Command Interpreter - Settings
-* PROGRAMMER(S):    John Welsh <djlw78@gmail.com>
+* CONTENT:          Debug command (For now only VBE informations)
+* PROGRAMMER(S):    Valentin Charbonnier <valentinbreiz@gmail.com>
 */
 
 using System;
