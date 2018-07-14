@@ -25,24 +25,24 @@ namespace Aura_Plugs.HAL
             Cosmos.Core.Global.Init();
 
             Console.WriteLine("[Aura Operating System v" + Aura_OS.Kernel.version + " - Made by valentinbreiz and geomtech]");
-            CustomConsole.WriteLineInfo("Starting Cosmos kernel...");
+            Aura_OS.System.CustomConsole.WriteLineInfo("Starting Cosmos kernel...");
 
             PCI.Setup();
-            CustomConsole.WriteLineOK("PCI Devices Scan");
+            Aura_OS.System.CustomConsole.WriteLineOK("PCI Devices Scan");
 
             ACPI.Start();
-            CustomConsole.WriteLineOK("ACPI Initialization");
+            Aura_OS.System.CustomConsole.WriteLineOK("ACPI Initialization");
 
             Cosmos.HAL.BlockDevice.IDE.InitDriver();
-            CustomConsole.WriteLineOK("IDE Driver Initialization");
+            Aura_OS.System.CustomConsole.WriteLineOK("IDE Driver Initialization");
 
             Cosmos.HAL.BlockDevice.AHCI.InitDriver();
-            CustomConsole.WriteLineOK("AHCI Driver Initialization");
+            Aura_OS.System.CustomConsole.WriteLineOK("AHCI Driver Initialization");
 
             Cosmos.HAL.Global.PS2Controller.Initialize();
-            CustomConsole.WriteLineOK("PS/2 Controller Initialization");
+            Aura_OS.System.CustomConsole.WriteLineOK("PS/2 Controller Initialization");
 
-            CustomConsole.WriteLineOK("Kernel successfully initialized!");
+            Aura_OS.System.CustomConsole.WriteLineOK("Kernel successfully initialized!");
 
         }
     }
