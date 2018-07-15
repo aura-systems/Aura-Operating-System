@@ -17,7 +17,7 @@ namespace Aura_Plugs.HAL
     public static class Global
     {
 
-        static public PIT PIT = new PIT();
+        //static public PIT PIT = new PIT();
 
         static public void Init(TextScreenBase textScreen)
         {

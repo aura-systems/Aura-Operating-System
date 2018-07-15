@@ -235,12 +235,12 @@ namespace Aura_OS.Shell.cmdIntr
 
             else if (cmd.Equals("beep"))
             {
-                Kernel.speaker.beep();
+                //Kernel.speaker.beep();
             }
 
             else if (cmd.Equals("play"))
             {
-                Kernel.speaker.playmusic();
+                //Kernel.speaker.playmusic();
             }
 
             else if (cmd.Equals("8168test"))

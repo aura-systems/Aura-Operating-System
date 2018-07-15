@@ -475,7 +475,7 @@ namespace Aura_Plugs
                     }
                     else
                     {
-                        Aura_OS.Kernel.speaker.beep();
+                        //Aura_OS.Kernel.speaker.beep();
                     }
                     continue;
                 }
