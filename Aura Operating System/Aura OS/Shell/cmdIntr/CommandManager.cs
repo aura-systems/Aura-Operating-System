@@ -324,6 +324,13 @@ namespace Aura_OS.Shell.cmdIntr
                 Console.WriteLine(new System.Network.IPV4.Address(192, 168, 1, 12).Hash);
             }
 
+            else if (cmd.Equals("debuggertest"))
+            {
+                Apps.System.Debugger debugger = new Apps.System.Debugger(new System.Network.IPV4.Address(192, 168, 1, 21), 4224);
+                debugger.Send("Test!!!");
+                debugger.Send("I'm send thought Aura's debugger :D");
+            }
+
             //else if (cmd.Equals("discover"))
             //{
             //    //byte[] mac = { 0x00,0x0C, 0x29,0x7C, 0x85,0x28};                
