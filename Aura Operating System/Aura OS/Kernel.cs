@@ -20,6 +20,7 @@ using System.Text;
 using Cosmos.System.ExtendedASCII;
 using Cosmos.Debug.Kernel;
 using Aura_OS.Core;
+using Cosmos.HAL;
 
 #endregion
 
@@ -45,7 +46,7 @@ namespace Aura_OS
         public static bool JustInstalled = false;
         public static CosmosVFS vFS = new CosmosVFS();
 		public static Dictionary<string, string> environmentvariables = new Dictionary<string, string>();
-        public static HAL.PCSpeaker speaker = new HAL.PCSpeaker();
+        //public static HAL.PCSpeaker speaker = new HAL.PCSpeaker();
         public static string boottime = Time.MonthString() + "/" + Time.DayString() + "/" + Time.YearString() + ", " + Time.TimeString(true, true, true);
         public static System.Shell.Console AConsole;
         public static string Consolemode = "VGATextmode";
@@ -78,30 +79,30 @@ namespace Aura_OS
                 Console.InputEncoding = Encoding.GetEncoding(437);
                 Console.OutputEncoding = Encoding.GetEncoding(437);
 
-                CustomConsole.WriteLineInfo("Booting Aura Operating System...");
+                System.CustomConsole.WriteLineInfo("Booting Aura Operating System...");
 
-                CustomConsole.WriteLineInfo("VBE Informations:");
-                CustomConsole.WriteLineInfo("VBE Version: " + System.Shell.VESAVBE.Graphics.sversion);
-                CustomConsole.WriteLineInfo("VBE Signature: " + System.Shell.VESAVBE.Graphics.ssignature);
-                CustomConsole.WriteLineInfo("BPP: " + System.Shell.VESAVBE.Graphics.depthVESA);
-                CustomConsole.WriteLineInfo("Height: " + System.Shell.VESAVBE.Graphics.heightVESA);
-                CustomConsole.WriteLineInfo("Width: " + System.Shell.VESAVBE.Graphics.widthVESA);
+                System.CustomConsole.WriteLineInfo("VBE Informations:");
+                System.CustomConsole.WriteLineInfo("VBE Version: " + System.Shell.VESAVBE.Graphics.sversion);
+                System.CustomConsole.WriteLineInfo("VBE Signature: " + System.Shell.VESAVBE.Graphics.ssignature);
+                System.CustomConsole.WriteLineInfo("BPP: " + System.Shell.VESAVBE.Graphics.depthVESA);
+                System.CustomConsole.WriteLineInfo("Height: " + System.Shell.VESAVBE.Graphics.heightVESA);
+                System.CustomConsole.WriteLineInfo("Width: " + System.Shell.VESAVBE.Graphics.widthVESA);
 
                 #region Register Filesystem
                 Sys.FileSystem.VFS.VFSManager.RegisterVFS(vFS);
                 if (ContainsVolumes())
                 {
-                    CustomConsole.WriteLineOK("FileSystem Registration");
+                    System.CustomConsole.WriteLineOK("FileSystem Registration");
                 }
                 else
                 {
-                    CustomConsole.WriteLineError("FileSystem Registration");
+                    System.CustomConsole.WriteLineError("FileSystem Registration");
                 }
                 #endregion
 
                 NetworkInit.Init();
-              
-                CustomConsole.WriteLineOK("Aura successfully started!");
+
+                System.CustomConsole.WriteLineOK("Aura successfully started!");
 
                 setup.InitSetup();
 
@@ -148,15 +149,20 @@ namespace Aura_OS
         {
             try
             {
+
+                Sys.Thread TBAR = new Sys.Thread(TaskBar);
+
                 while (running)
                 {
                     if (Logged) //If logged
                     {
+                        TBAR.Start();
                         BeforeCommand();
 
                         Sys.Console.writecommand = true;
 
                         var cmd = Console.ReadLine();
+                        TBAR.Stop();
                         Shell.cmdIntr.CommandManager._CommandManger(cmd);
                         //Console.WriteLine();
 
@@ -172,6 +178,31 @@ namespace Aura_OS
                 running = false;
                 Crash.StopKernel(ex);
             }
+        }
+
+        int _deltaT = 0;
+
+        private void TaskBar()
+        {
+
+            int oldx = 0;
+            int oldy = 0;
+
+            while (true)
+            {
+                if (_deltaT != RTC.Second)
+                {
+                    oldx = AConsole.X;
+                    oldy = AConsole.Y;
+                    _deltaT = RTC.Second;
+                    AConsole.X = AConsole.Width - 8;
+                    AConsole.Y = 0;
+                    AConsole.Write(Encoding.ASCII.GetBytes(Time.TimeString(true, true, true)));
+                    AConsole.X = oldx;
+                    AConsole.Y = oldy;
+                }
+            }
+            
         }
 
         #endregion
