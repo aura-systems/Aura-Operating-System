@@ -151,17 +151,18 @@ namespace Aura_OS
             {
 
                 Sys.Thread TBAR = new Sys.Thread(TaskBar);
-                TBAR.Start();
 
                 while (running)
                 {
                     if (Logged) //If logged
                     {
+                        TBAR.Start();
                         BeforeCommand();
 
                         Sys.Console.writecommand = true;
 
                         var cmd = Console.ReadLine();
+                        TBAR.Stop();
                         Shell.cmdIntr.CommandManager._CommandManger(cmd);
                         //Console.WriteLine();
 
