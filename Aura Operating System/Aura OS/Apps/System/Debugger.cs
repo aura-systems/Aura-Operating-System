@@ -12,21 +12,35 @@ using System.Text;
 
 namespace Aura_OS.Apps.System
 {
-    class Debugger
+    public class Debugger
     {
 
         UdpClient xClient;
 
+        public bool enabled = false;
+
+        int port;
+        public Address ip;
+
         public Debugger(Address IP, int Port)
         {
-            xClient = new UdpClient(Port);
-            xClient.Connect(IP, Port);
+            ip = IP;
+            port = Port;
+        }
+
+        public void Start()
+        {
+            xClient = new UdpClient(port);
+            xClient.Connect(ip, port);
             Send("--- Aura Debugger v0.1 ---");
         }
 
         public void Send(string message)
         {
-            xClient.Send(Encoding.ASCII.GetBytes("[" + Aura_OS.System.Time.TimeString(true,true,true) + "] - " + message));
+            if (enabled)
+            {
+                xClient.Send(Encoding.ASCII.GetBytes("[" + Aura_OS.System.Time.TimeString(true, true, true) + "] - " + message));
+            }
         }
     }
 }

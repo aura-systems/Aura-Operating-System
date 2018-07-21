@@ -18,8 +18,9 @@ using Aura_OS.System.Utils;
 using System.Collections.Generic;
 using System.Text;
 using Cosmos.System.ExtendedASCII;
-using Cosmos.Debug.Kernel;
 using Aura_OS.Core;
+using Aura_OS.Apps.System;
+using Aura_OS.System.Network.IPV4;
 
 #endregion
 
@@ -50,7 +51,8 @@ namespace Aura_OS
         public static System.Shell.Console AConsole;
         public static string Consolemode = "VGATextmode";
         public static MemoryManager MemMon;
-        public static Debugger debugger = new Debugger("Aura Operating System", "Kernel");
+
+        public static Debugger debugger;
 
         #endregion
 
