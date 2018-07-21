@@ -19,14 +19,14 @@ namespace Aura_OS.Apps.System
 
         public Debugger(Address IP, int Port)
         {
-            xClient = new UdpClient(4242);
-            xClient.Connect(new Address(192, 168, 1, 12), 4242);
+            xClient = new UdpClient(Port);
+            xClient.Connect(IP, Port);
             Send("--- Aura Debugger v0.1 ---");
         }
 
         public void Send(string message)
         {
-            xClient.Send(Encoding.ASCII.GetBytes("[" + Aura_OS.System.Time.TimeString(true,true,true) + "]" + message));
+            xClient.Send(Encoding.ASCII.GetBytes("[" + Aura_OS.System.Time.TimeString(true,true,true) + "] - " + message));
         }
     }
 }
