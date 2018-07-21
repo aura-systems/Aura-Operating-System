@@ -83,7 +83,7 @@ namespace Aura_OS.System.Network.IPV4
 
                 if (second >= 4)
                 {
-                    Console.WriteLine("No response in 4 secondes...");
+                    Kernel.debugger.Send("No response in 4 secondes...");
                     break;
                 }
 

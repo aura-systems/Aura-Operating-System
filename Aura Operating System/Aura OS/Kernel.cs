@@ -52,7 +52,7 @@ namespace Aura_OS
         public static string Consolemode = "VGATextmode";
         public static MemoryManager MemMon;
 
-        public static Debugger debugger;
+        public static Debugger debugger = new Debugger(new Address(192,  168,1 ,21), 4224);
 
         #endregion
 

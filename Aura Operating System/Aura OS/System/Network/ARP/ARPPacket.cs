@@ -31,7 +31,7 @@ namespace Aura_OS.System.Network.ARP
                     IPV4.ARPRequest_Ethernet arp_request = new IPV4.ARPRequest_Ethernet(packetData);
                     if (arp_request.SenderIP == null)
                     {
-                        global::System.Console.WriteLine("SenderIP null in ARPHandler!");
+                        Kernel.debugger.Send("SenderIP null in ARPHandler!");
                     }
                     arp_request = new IPV4.ARPRequest_Ethernet(packetData);
                     
