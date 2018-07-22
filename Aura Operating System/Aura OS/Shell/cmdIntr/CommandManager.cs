@@ -235,12 +235,12 @@ namespace Aura_OS.Shell.cmdIntr
 
             else if (cmd.Equals("beep"))
             {
-                Kernel.speaker.beep();
+                //Kernel.speaker.beep();
             }
 
             else if (cmd.Equals("play"))
             {
-                Kernel.speaker.playmusic();
+                //Kernel.speaker.playmusic();
             }
 
             else if (cmd.Equals("8168test"))
@@ -344,6 +344,14 @@ namespace Aura_OS.Shell.cmdIntr
             //    Util.xml.CmdXmlParser.c_CmdXmlParser(cmd, 0, 4);
             //}
 
+            else if (cmd.Equals("testtask"))
+            {
+                Cosmos.System.Thread ANETSTACK = new Cosmos.System.Thread(ANETSTACKINIT);
+                ANETSTACK.Start();
+            }
+
+
+
             #endregion Tests
 
             #region Tools
@@ -411,6 +419,17 @@ namespace Aura_OS.Shell.cmdIntr
 
             #endregion Util
 
+        }
+
+        static void ANETSTACKINIT()
+        {
+            while(true)
+            {
+                for (int i=0; i < 50000000; i++)
+                {
+                }
+                Console.WriteLine("thread");
+            }
         }
 
     }
