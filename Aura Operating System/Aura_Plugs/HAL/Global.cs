@@ -17,7 +17,7 @@ namespace Aura_Plugs.HAL
     public static class Global
     {
 
-        static public PIT PIT = new PIT();
+        //static public PIT PIT = new PIT();
 
         static public void Init(TextScreenBase textScreen)
         {
@@ -41,6 +41,9 @@ namespace Aura_Plugs.HAL
 
             Cosmos.HAL.Global.PS2Controller.Initialize();
             Aura_OS.System.CustomConsole.WriteLineOK("PS/2 Controller Initialization");
+
+            Cosmos.Core.Processing.ProcessorScheduler.Initialize();
+            Aura_OS.System.CustomConsole.WriteLineOK("Processor Scheduler Initialization");
 
             Aura_OS.System.CustomConsole.WriteLineOK("Kernel successfully initialized!");
 
