@@ -130,9 +130,10 @@ namespace Aura_OS.Shell.cmdIntr.Settings
                 {
                     if ((cmdargs[2].Equals("enable")))
                     {
+                        Console.WriteLine("Starting debugger at: " + Kernel.debugger.ip.ToString() + ":4224");
                         Kernel.debugger.enabled = true;
                         Kernel.debugger.Start();
-                        Console.WriteLine("Debugger enabled at: " + Kernel.debugger.ip.ToString() + ":4224");
+                        Console.WriteLine("Debugger started!");
                     }
                     else if (cmdargs[2].Equals("disable"))
                     {

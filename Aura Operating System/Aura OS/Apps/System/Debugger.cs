@@ -32,7 +32,10 @@ namespace Aura_OS.Apps.System
         {
             xClient = new UdpClient(port);
             xClient.Connect(ip, port);
-            Send("--- Aura Debugger v0.1 ---");
+            if (enabled)
+            {
+                Send("--- Aura Debugger v0.1 ---");
+            }
         }
 
         public void Send(string message)
