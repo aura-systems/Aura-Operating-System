@@ -71,7 +71,7 @@ namespace Aura_OS.Shell.cmdIntr.Settings
 
                 else if (cmdargs[1].Equals("debugger"))
                 {
-                    Console.WriteLine("Available commands: enable disable setip");
+                    Apps.System.DebuggerSettings.RegisterSetting();
                 }
             }
             else if (cmdargs.Length == 3 ) //One arg
@@ -125,31 +125,6 @@ namespace Aura_OS.Shell.cmdIntr.Settings
                 {
                     L.Text.Display("_passuser");
                 }
-
-                else if (cmdargs[1].Equals("debugger"))
-                {
-                    if ((cmdargs[2].Equals("enable")))
-                    {
-                        Console.WriteLine("Starting debugger at: " + Kernel.debugger.ip.ToString() + ":4224");
-                        Kernel.debugger.enabled = true;
-                        Kernel.debugger.Start();
-                        Console.WriteLine("Debugger started!");
-                    }
-                    else if (cmdargs[2].Equals("disable"))
-                    {
-                        Kernel.debugger.enabled = false;
-                        Console.WriteLine("Debugger disabled!");
-                    }
-                    else if (cmdargs[2].Equals("setip"))
-                    {
-                        Console.WriteLine("You must set an ip address!");
-                        Console.WriteLine("Like: settings debugger setip 000.000.0.0");
-                    }
-                    else
-                    {
-                        L.Text.Display("UnknownCommand");
-                    }
-                }
             }
             else if (cmdargs.Length == 4) //Two args
             {
@@ -176,20 +151,6 @@ namespace Aura_OS.Shell.cmdIntr.Settings
                 {
                     L.Text.Display("remuser");
                 }
-
-                else if (cmdargs[1].Equals("debugger"))
-                {
-                    if (cmdargs[2].Equals("setip"))
-                    {
-                        Kernel.debugger = new Apps.System.Debugger(System.Network.IPV4.Address.Parse(cmdargs[3]), 4224);
-                        Kernel.debugger.Start();
-                    }
-                    else
-                    {
-                        L.Text.Display("UnknownCommand");
-                    }
-                }
-
             }
 
             //else if (cmdargs[1].Equals("textcolor"))
