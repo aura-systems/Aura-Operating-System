@@ -74,6 +74,12 @@ namespace Aura_OS.System.Utils
         /// </summary>
         public static string GetValue(string parameter)
         {
+
+            if (file == null)
+            {
+                return "null";
+            }
+
             string value = "null";
 
             foreach (string line in file)

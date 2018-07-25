@@ -87,7 +87,6 @@ namespace Aura_OS.System.Network.IPV4.UDP
             }
 
             Send(data, this.destination, this.destinationPort);
-            Apps.System.Debugger.debugger.Send("Update network stack!");
             NetworkStack.Update();
         }
 

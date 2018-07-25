@@ -148,6 +148,13 @@ namespace Aura_OS.System.Users
                 }
             }
 
+            string debugger = Utils.Settings.GetValue("debugger");
+
+            if (debugger == "on")
+            {
+                Kernel.debugger.enabled = true;
+            }
+    
             WelcomeMessage.Display();
             Text.Display("logged", username);
 

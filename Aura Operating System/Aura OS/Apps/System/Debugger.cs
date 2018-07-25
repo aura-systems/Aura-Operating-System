@@ -7,7 +7,7 @@
 using Aura_OS.System.Network.IPV4;
 using Aura_OS.System.Network.IPV4.UDP;
 using System;
-using System.Collections.Generic;
+using Aura_OS.System;
 using System.Text;
 
 namespace Aura_OS.Apps.System
@@ -68,7 +68,18 @@ namespace Aura_OS.Apps.System
         /// </summary>
         public static void RegisterSetting()
         {
-            string result = DispSettingsDialog();
+
+            string result;
+
+            if (Kernel.debugger.enabled)
+            {
+                result = DispSettingsDialog(true);
+            }
+            else
+            {
+                result = DispSettingsDialog(false);
+            }
+            
 
             if (result.Equals("on"))
             {
@@ -92,14 +103,14 @@ namespace Aura_OS.Apps.System
         /// <summary>
         /// Display settings dialog
         /// </summary>
-        public static string DispSettingsDialog()
+        public static string DispSettingsDialog(bool enabled)
         {
             int x = (Kernel.AConsole.Width / 2) - (64 / 2);
             int y = (Kernel.AConsole.Height / 2) - (10 / 2);
             x_ = x;
             y_ = y;
-            SettingMenu(x, y);
-            string[] item = { "on", "off" };
+            SettingMenu(x, y, enabled);
+            string[] item = { "Enable", "Disable" };
             int language = Aura_OS.System.Drawable.Menu.GenericMenu(item, Settings, x, y);
             if (language == 0)
             {
@@ -118,7 +129,7 @@ namespace Aura_OS.Apps.System
         static int x_lang = Console.CursorLeft;
         static int y_lang = Console.CursorTop;
 
-        static void SettingMenu(int x, int y)
+        static void SettingMenu(int x, int y, bool enabled)
         {
             Console.Clear();
 
@@ -128,7 +139,14 @@ namespace Aura_OS.Apps.System
             Console.WriteLine("╔══════════════════════════════════════════════════════════════╗");
             Console.SetCursorPosition(x_lang, y_lang);
             Console.SetCursorPosition(x, y + 1);
-            Console.WriteLine("║ Enable or disable UDP debugger:                              ║");
+            if (enabled)
+            {
+                Console.WriteLine("║ Enable or disable UDP debugger: (currently enabled)          ║");
+            }
+            else
+            {
+                Console.WriteLine("║ Enable or disable UDP debugger: (currently disabled)         ║");
+            }
             Console.SetCursorPosition(x_lang, y_lang);
             Console.SetCursorPosition(x, y + 2);
             Console.WriteLine("╠══════════════════════════════════════════════════════════════╣");
