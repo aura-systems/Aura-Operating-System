@@ -79,7 +79,6 @@ namespace Aura_OS.Apps.System
             {
                 result = DispSettingsDialog(false);
             }
-            
 
             if (result.Equals("on"))
             {
