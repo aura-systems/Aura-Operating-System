@@ -57,8 +57,6 @@ namespace Aura_OS.HAL.Drivers.Network
             get;
         }
 
-        //public DataReceivedHandler DataReceived;
-
         public virtual bool QueueBytes(byte[] buffer)
         {
             return QueueBytes(buffer, 0, buffer.Length);

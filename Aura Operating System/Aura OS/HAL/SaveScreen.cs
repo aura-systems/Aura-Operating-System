@@ -13,14 +13,22 @@ namespace Aura_OS.HAL
     {
 
         static uint* lastbuffer;
+        static int lastX;
+        static int lastY;
 
         public static void SaveCurrentScreen()
         {
             Memory.Memcpy(lastbuffer, Drivers.VBE._buffer, Drivers.VBE.len);
+            lastX = Kernel.AConsole.X;
+            lastY = Kernel.AConsole.Y;
         }
 
         public static void PushLastScreen()
         {
+            Kernel.AConsole.X = lastX;
+            Kernel.AConsole.Y = lastY;
+            lastX = 0;
+            lastY = 0;
             Memory.Memcpy((uint*)Graphics.vga_mem, lastbuffer, Drivers.VBE.len);
             lastbuffer = null;
         }

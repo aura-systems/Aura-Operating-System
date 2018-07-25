@@ -344,14 +344,6 @@ namespace Aura_OS.Shell.cmdIntr
             //    Util.xml.CmdXmlParser.c_CmdXmlParser(cmd, 0, 4);
             //}
 
-            else if (cmd.Equals("testtask"))
-            {
-                Cosmos.System.Thread ANETSTACK = new Cosmos.System.Thread(ANETSTACKINIT);
-                ANETSTACK.Start();
-            }
-
-
-
             #endregion Tests
 
             #region Tools
