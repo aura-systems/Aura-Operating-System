@@ -422,9 +422,12 @@ namespace Aura_OS.System.Drawable
         /// <summary>
         /// Display the computer name dialog
         /// </summary>
-        public static string DispComputernameDialog(string title, string input)
+        public static string DispDialogOneArg(string title, string input)
         {
             Console.Clear();
+
+            title = "║ " + title;
+            input = "║ " + input;
 
             int x = (Kernel.AConsole.Width / 2) - (64 / 2);
             int y = (Kernel.AConsole.Height / 2) - (10 / 2);

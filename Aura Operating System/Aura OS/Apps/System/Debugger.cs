@@ -96,7 +96,7 @@ namespace Aura_OS.Apps.System
             }
             else if (result.Equals("changeip"))
             {
-                string ip = Aura_OS.System.Drawable.Menu.DispComputernameDialog("Change IP address (currently " + Kernel.debugger.ip.ToString() +")", "IP Address: ");
+                string ip = Aura_OS.System.Drawable.Menu.DispDialogOneArg("Change IP address (currently " + Kernel.debugger.ip.ToString() +")", "IP Address: ");
 
                 if (Aura_OS.System.Utils.Misc.IsIpv4Address(ip))
                 {
