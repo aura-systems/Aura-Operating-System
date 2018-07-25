@@ -8,7 +8,7 @@ clone_folder: c:\Aura_OS
 build_script:
 - cmd: |
     rem %APPVEYOR_BUILD_FOLDER%
-    msbuild "\Aura Operating System\Aura OS.sln" /t:Restore;Build /p:Platform="Any CPU" /p:Configuration=Debug /maxcpucount /verbosity:normal /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
+    msbuild "Aura Operating System\Aura OS.sln" /t:Restore;Build /p:Platform="Any CPU" /p:Configuration=Debug /maxcpucount /verbosity:normal /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
 
 #test: off
 #  assemblies:
