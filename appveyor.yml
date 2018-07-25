@@ -5,9 +5,33 @@ platform: Any CPU
 shallow_clone: true
 clone_folder: c:\Aura_OS
 
+init:
+- cmd: |
+    git clone https://github.com/aura-systems/Cosmos.git c:\Cosmos --depth 1
+    git clone https://github.com/aura-systems/XSharp.git c:\XSharp --depth 1
+    git clone https://github.com/aura-systems/IL2CPU.git c:\IL2CPU --depth 1
+    
 build_script:
 - cmd: |
     rem %APPVEYOR_BUILD_FOLDER%
+    msbuild "Cosmos\Builder.sln" /t:Restore;Build /p:Platform="Any CPU" /p:Configuration=Debug /maxcpucount /verbosity:normal /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
+    msbuild "Cosmos\Build.sln" /t:Restore;Build /p:Platform="Any CPU" /p:Configuration=Debug /p:OutputPath="%APPVEYOR_BUILD_FOLDER%\Build\VSIP" /p:DeployExtension=false /maxcpucount /verbosity:normal /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
+    msbuild "Cosmos\Test.sln" /t:Restore;Build /p:Platform="Any CPU" /p:Configuration=Debug /maxcpucount /verbosity:normal /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
+    dotnet publish IL2CPU\source\IL2CPU -r win7-x86 -o "c:\CosmosRun\Build\IL2CPU\"
+    xcopy /Y "Cosmos\Build\VSIP\Cosmos.Debug.Kernel.*" "c:\CosmosRun\Kernel\"
+    xcopy /Y "Cosmos\Build\VSIP\Cosmos.Core.*" "c:\CosmosRun\Kernel\"
+    xcopy /Y "Cosmos\Build\VSIP\Cosmos.HAL.*" "c:\CosmosRun\Kernel\"
+    xcopy /Y "Cosmos\Build\VSIP\Cosmos.System.*" "c:\CosmosRun\Kernel\"
+    xcopy /Y "Cosmos\Build\VSIP\Cosmos.Common.*" "c:\CosmosRun\Kernel\"
+    xcopy /Y "Cosmos\Build\VSIP\Cosmos.Debug.GDB.exe" "c:\CosmosRun\Build\VSIP\"
+    xcopy /Y "Cosmos\Build\syslinux\*.*" "c:\CosmosRun\Build\ISO\"
+    xcopy /Y /S "Cosmos\Build\VMware\*" "c:\CosmosRun\Build\VMware\"
+    xcopy /Y /S "Cosmos\Build\Tools" "c:\CosmosRun\Build\Tools\"
+    xcopy /Y "Cosmos\source\Cosmos.Core.DebugStub\*.xs" "c:\CosmosRun\XSharp\DebugStub\"
+    xcopy /Y /S "Cosmos\Resources\Bochs\*.*" "%ProgramFiles(x86)%\Bochs-2.6.8\"
+    reg add HKLM\SOFTWARE\WOW6432Node\Cosmos /v UserKit /d c:\CosmosRun\
+    reg add HKCR\BochsConfigFile\shell\Run\command /ve /d "\"C:\Program Files (x86)\Bochs-2.6.8\Bochs.exe\" -q -f \"%1\""
+    
     msbuild "Aura Operating System\Aura OS.sln" /t:Restore;Build /p:Platform="Any CPU" /p:Configuration=Debug /maxcpucount /verbosity:normal /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
 
 #test: off
@@ -15,9 +39,6 @@ build_script:
 #  - Cosmos.Core.Memory.Test.dll
 #  - DebugCompiler.dll
 #  - Cosmos.TestRunner.UnitTest.dll
-
-test_script:
-- cmd: dotnet test Tests\Cosmos.TestRunner.UnitTest\Cosmos.TestRunner.UnitTest.csproj --logger "trx;LogFileName=c:\Aura_OS\TestResult.xml"
 
 on_finish:
 - ps: |
