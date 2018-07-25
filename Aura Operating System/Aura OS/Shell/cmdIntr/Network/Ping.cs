@@ -41,16 +41,16 @@ namespace Aura_OS.Shell.cmdIntr.Network
             string str = arg.Remove(startIndex, count);
             string[] items = str.Split('.');
 
-            String IPdest = "";
-
-            int PacketSent = 0;
-            int PacketReceived = 0;
-            int PacketLost = 0;
-
-            int PercentLoss = 0;
-
-            if (items.Length == 4)
+            if (System.Utils.Misc.IsIpv4Address(items))
             {
+                String IPdest = "";
+
+                int PacketSent = 0;
+                int PacketReceived = 0;
+                int PacketLost = 0;
+
+                int PercentLoss = 0;
+
                 try
                 {
                     Address destination = new Address((byte)(Int32.Parse(items[0])), (byte)(Int32.Parse(items[1])), (byte)(Int32.Parse(items[2])), (byte)(Int32.Parse(items[3])));
@@ -81,10 +81,10 @@ namespace Aura_OS.Shell.cmdIntr.Network
                             {
                                 //if (ICMPPacket.recvd_reply.SourceIP == destination)
                                 //{
-                                
+
                                 if (second < 1)
                                 {
-                                    Console.WriteLine("Reply received from " + ICMPPacket.recvd_reply.SourceIP.ToString() + " time < 1s");                                    
+                                    Console.WriteLine("Reply received from " + ICMPPacket.recvd_reply.SourceIP.ToString() + " time < 1s");
                                 }
                                 else if (second >= 1)
                                 {
@@ -118,11 +118,11 @@ namespace Aura_OS.Shell.cmdIntr.Network
                     Console.WriteLine("It is not a correct IP address!");
                 }
                 finally
-                {                    
+                {
                     PercentLoss = 25 * PacketLost;
 
                     Console.WriteLine();
-                    Console.WriteLine("Ping statistics for " + IPdest +":");
+                    Console.WriteLine("Ping statistics for " + IPdest + ":");
                     Console.WriteLine("    Packets: Sent = " + PacketSent + ", Received = " + PacketReceived + ", Lost = " + PacketLost + " (" + PercentLoss + "% loss)");
                 }
             }
@@ -130,7 +130,6 @@ namespace Aura_OS.Shell.cmdIntr.Network
             {
                 Console.WriteLine("It is not an IP address!");
             }
-
         }
 
     }

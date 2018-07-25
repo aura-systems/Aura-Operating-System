@@ -12,13 +12,13 @@ namespace Aura_OS.HAL
     unsafe class SaveScreen
     {
 
-        static uint* lastbuffer;
+        static byte* lastbuffer;
         static int lastX;
         static int lastY;
 
         public static void SaveCurrentScreen()
         {
-            Memory.Memcpy(lastbuffer, Drivers.VBE._buffer, Drivers.VBE.len);
+            Memory.Memcpy(lastbuffer, Graphics.vga_mem, Drivers.VBE.len);
             lastX = Kernel.AConsole.X;
             lastY = Kernel.AConsole.Y;
         }
@@ -29,7 +29,7 @@ namespace Aura_OS.HAL
             Kernel.AConsole.Y = lastY;
             lastX = 0;
             lastY = 0;
-            Memory.Memcpy((uint*)Graphics.vga_mem, lastbuffer, Drivers.VBE.len);
+            Memory.Memcpy(Graphics.vga_mem, lastbuffer, Drivers.VBE.len);
             lastbuffer = null;
         }
 

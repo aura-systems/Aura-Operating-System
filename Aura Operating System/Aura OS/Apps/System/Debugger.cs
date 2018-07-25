@@ -94,6 +94,19 @@ namespace Aura_OS.Apps.System
                 Kernel.debugger.enabled = false;
                 Console.WriteLine("Debugger disabled!");
             }
+            else if (result.Equals("changeip"))
+            {
+                string ip = Aura_OS.System.Drawable.Menu.DispComputernameDialog("Change IP address (currently " + Kernel.debugger.ip.ToString() +")", "IP Address: ");
+
+                if (Aura_OS.System.Utils.Misc.IsIpv4Address(ip))
+                {
+                    Kernel.debugger.ip = Address.Parse(ip);
+                }
+                else
+                {
+                    RegisterSetting();
+                }
+            }
         }
 
         public static int x_;
@@ -109,15 +122,19 @@ namespace Aura_OS.Apps.System
             x_ = x;
             y_ = y;
             SettingMenu(x, y, enabled);
-            string[] item = { "Enable", "Disable" };
-            int language = Aura_OS.System.Drawable.Menu.GenericMenu(item, Settings, x, y);
-            if (language == 0)
+            string[] item = { "Enable", "Disable", "Change IP address" };
+            int settings = Aura_OS.System.Drawable.Menu.GenericMenu(item, Settings, x, y);
+            if (settings == 0)
             {
                 return "on";
             }
-            else if (language == 1)
+            else if (settings == 1)
             {
                 return "off";
+            }
+            else if (settings == 2)
+            {
+                return "changeip";
             }
             else
             {
