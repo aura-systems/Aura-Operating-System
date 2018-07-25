@@ -87,6 +87,7 @@ namespace Aura_OS.System.Network.IPV4.UDP
             }
 
             Send(data, this.destination, this.destinationPort);
+            Apps.System.Debugger.debugger.Send("Update network stack!");
             NetworkStack.Update();
         }
 
@@ -95,7 +96,7 @@ namespace Aura_OS.System.Network.IPV4.UDP
             IPV4.Address source = IPV4.Config.FindNetwork(dest);
             IPV4.UDP.UDPPacket packet = new IPV4.UDP.UDPPacket(source, dest, (UInt16)this.localPort, (UInt16)destPort, data);
 
-            Console.WriteLine("Sending " + packet.ToString());
+            Apps.System.Debugger.debugger.Send("real debugger: Sending " + packet.ToString());
             IPV4.OutgoingBuffer.AddPacket(packet);
         }
 

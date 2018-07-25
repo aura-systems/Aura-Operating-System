@@ -15,6 +15,8 @@ namespace Aura_OS.Apps.System
     public class Debugger
     {
 
+        public static Cosmos.Debug.Kernel.Debugger debugger = new Cosmos.Debug.Kernel.Debugger("aura", "debugger");
+
         UdpClient xClient;
 
         public bool enabled = false;
@@ -36,14 +38,24 @@ namespace Aura_OS.Apps.System
             {
                 Send("--- Aura Debugger v0.1 ---");
                 Send("Connected!");
+                debugger.Send("Debugger started!");
             }
         }
 
         public void Send(string message)
         {
+            debugger.Send(message);
             if (enabled)
             {
                 xClient.Send(Encoding.ASCII.GetBytes("[" + Aura_OS.System.Time.TimeString(true, true, true) + "] - " + message));
+            }
+        }
+
+        internal void Stop()
+        {
+            if (enabled)
+            {
+                xClient.Send(Encoding.ASCII.GetBytes("[" + Aura_OS.System.Time.TimeString(true, true, true) + "] - Properly disconnected by the operating system!"));
             }
         }
     }
@@ -68,6 +80,7 @@ namespace Aura_OS.Apps.System
             }
             else if (result.Equals("off"))
             {
+                Console.Clear();
                 Kernel.debugger.enabled = false;
                 Console.WriteLine("Debugger disabled!");
             }

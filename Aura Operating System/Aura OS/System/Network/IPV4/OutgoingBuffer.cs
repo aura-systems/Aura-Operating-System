@@ -68,13 +68,13 @@ namespace Aura_OS.System.Network.IPV4
 
         internal static void Send()
         {
+            Kernel.debugger.enabled = false;
             ensureQueueExists();
             int _deltaT = 0;
             int second = 0;
 
             while (!(queue.Count < 1))
             {
-
                 if (_deltaT != Cosmos.HAL.RTC.Second)
                 {
                     second++;
@@ -83,7 +83,7 @@ namespace Aura_OS.System.Network.IPV4
 
                 if (second >= 4)
                 {
-                    Kernel.debugger.Send("No response in 4 secondes...");
+                    Apps.System.Debugger.debugger.Send("No response in 4 secondes...");
                     break;
                 }
 
@@ -166,6 +166,7 @@ namespace Aura_OS.System.Network.IPV4
                     }
                 }
             }
+            Kernel.debugger.enabled = true;
         }
 
         internal static void ARPCache_Update(ARPReply_Ethernet arp_reply)
