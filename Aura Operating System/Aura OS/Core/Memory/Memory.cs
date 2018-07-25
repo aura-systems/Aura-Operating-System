@@ -2,6 +2,7 @@
 * PROJECT:          Aura Operating System Development
 * CONTENT:          Memory class
 * PROGRAMMERS:      Myvar (part of CosmosGL)
+*                   http://code4k.blogspot.com/2010/10/high-performance-memcpy-gotchas-in-c.html for CustomCopy
 */
 
 using System.Collections.Generic;
@@ -13,6 +14,36 @@ namespace Aura_OS.Core
 {
     public static unsafe class Memory
     {
+
+        public static unsafe void CustomCopy(void* dest, void* src, int count)
+        {
+            int block;
+
+            count *= 4;
+
+            block = count >> 3;
+
+            long* pDest = (long*)dest;
+            long* pSrc = (long*)src;
+
+            for (int i = 0; i < block; i++)
+            {
+                *pDest = *pSrc; pDest++; pSrc++;
+            }
+            dest = pDest;
+            src = pSrc;
+            count = count - (block << 3);
+
+            if (count > 0)
+            {
+                byte* pDestB = (byte*)dest;
+                byte* pSrcB = (byte*)src;
+                for (int i = 0; i < count; i++)
+                {
+                    *pDestB = *pSrcB; pDestB++; pSrcB++;
+                }
+            }
+        }
 
         [PlugMethod(Assembler = typeof(AsmCopyBytes))]
         public static void Memcpy(byte* dst, byte* src, int len)

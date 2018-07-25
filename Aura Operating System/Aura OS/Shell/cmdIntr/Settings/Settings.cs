@@ -73,7 +73,6 @@ namespace Aura_OS.Shell.cmdIntr.Settings
                 {
                     HAL.SaveScreen.SaveCurrentScreen();
                     Apps.System.DebuggerSettings.RegisterSetting();
-                    HAL.SaveScreen.PushLastScreen();
                 }
             }
             else if (cmdargs.Length == 3 ) //One arg

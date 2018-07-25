@@ -80,9 +80,10 @@ namespace Aura_OS.Apps.System
                 result = DispSettingsDialog(false);
             }
 
+            HAL.SaveScreen.PushLastScreen();
+
             if (result.Equals("on"))
             {
-                Console.Clear();
                 Console.WriteLine("Starting debugger at: " + Kernel.debugger.ip.ToString() + ":4224");
                 Kernel.debugger.enabled = true;
                 Kernel.debugger.Start();
@@ -90,7 +91,6 @@ namespace Aura_OS.Apps.System
             }
             else if (result.Equals("off"))
             {
-                Console.Clear();
                 Kernel.debugger.enabled = false;
                 Console.WriteLine("Debugger disabled!");
             }

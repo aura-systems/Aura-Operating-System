@@ -6,19 +6,21 @@
 
 using Aura_OS.Core;
 using Aura_OS.System.Shell.VESAVBE;
+using Cosmos.Core.Memory.Old;
 
 namespace Aura_OS.HAL
 {
     unsafe class SaveScreen
     {
 
-        static byte* lastbuffer;
+        static uint* lastbuffer;
         static int lastX;
         static int lastY;
 
         public static void SaveCurrentScreen()
         {
-            Memory.Memcpy(lastbuffer, Graphics.vga_mem, Drivers.VBE.len);
+            lastbuffer = (uint*)Heap.MemAlloc((uint)(Drivers.VBE.len * 4));
+            Memory.Memcpy(lastbuffer, Drivers.VBE._buffer, Drivers.VBE.len);
             lastX = Kernel.AConsole.X;
             lastY = Kernel.AConsole.Y;
         }
@@ -29,7 +31,7 @@ namespace Aura_OS.HAL
             Kernel.AConsole.Y = lastY;
             lastX = 0;
             lastY = 0;
-            Memory.Memcpy(Graphics.vga_mem, lastbuffer, Drivers.VBE.len);
+            Memory.Memcpy((uint*)Graphics.vga_mem, lastbuffer, Drivers.VBE.len);
             lastbuffer = null;
         }
 
