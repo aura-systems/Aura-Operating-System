@@ -70,7 +70,7 @@ namespace Aura_OS.HAL.Drivers
             WriteToScreen();
         }
 
-        internal void WriteToScreen()
+        public static void WriteToScreen()
         {
             Memory.Memcpy((uint*)Graphics.vga_mem, _buffer, len);
         }

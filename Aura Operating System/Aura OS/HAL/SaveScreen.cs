@@ -31,7 +31,8 @@ namespace Aura_OS.HAL
             Kernel.AConsole.Y = lastY;
             lastX = 0;
             lastY = 0;
-            Memory.Memcpy((uint*)Graphics.vga_mem, lastbuffer, Drivers.VBE.len);
+            Memory.Memcpy(Drivers.VBE._buffer, lastbuffer, Drivers.VBE.len);
+            Drivers.VBE.WriteToScreen();
             lastbuffer = null;
         }
 

@@ -324,7 +324,7 @@ namespace Aura_OS.System.Shell.VESAVBE
         public void ScrollUp()
         {
             canvas.ScrollUp();
-            canvas.WriteToScreen();
+            VBE.WriteToScreen();
         }
     }
 }
