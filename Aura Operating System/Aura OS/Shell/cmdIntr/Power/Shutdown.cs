@@ -34,6 +34,10 @@ namespace Aura_OS.Shell.cmdIntr.Power
         /// </summary>
         public static void c_Shutdown()
         {
+            if (Kernel.debugger.enabled)
+            {
+                Kernel.debugger.Stop();
+            }
             Kernel.running = false;
             Console.Clear();
             L.Text.Display("shutdown");

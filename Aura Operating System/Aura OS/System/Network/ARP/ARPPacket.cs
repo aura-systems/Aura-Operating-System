@@ -22,8 +22,7 @@ namespace Aura_OS.System.Network.ARP
         internal static void ARPHandler(byte[] packetData)
         {
             ARPPacket arp_packet = new ARPPacket(packetData);
-            //Sys.Console.WriteLine("Received ARP Packet");
-            //Sys.Console.WriteLine(arp_packet.ToString());
+            Kernel.debugger.Send("[Received] " + arp_packet.ToString());
             if (arp_packet.Operation == 0x01)
             {
                 if ((arp_packet.HardwareType == 1) && (arp_packet.ProtocolType == 0x0800))
@@ -31,7 +30,7 @@ namespace Aura_OS.System.Network.ARP
                     IPV4.ARPRequest_Ethernet arp_request = new IPV4.ARPRequest_Ethernet(packetData);
                     if (arp_request.SenderIP == null)
                     {
-                        global::System.Console.WriteLine("SenderIP null in ARPHandler!");
+                        Kernel.debugger.Send("SenderIP null in ARPHandler!");
                     }
                     arp_request = new IPV4.ARPRequest_Ethernet(packetData);
                     

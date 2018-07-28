@@ -26,7 +26,7 @@ namespace Aura_OS.System.Network.DHCP
             DHCPPacket dhcp_packet = new DHCPPacket(packetData);
 
             Kernel.debugger.Send("Received DHCP packet from " + dhcp_packet.SourceIP.ToString());
-            Console.WriteLine("DHCP Offer received!");
+            Kernel.debugger.Send("DHCP Offer received!");
         }
 
         public static int PacketSize { get; set; }
@@ -60,7 +60,7 @@ namespace Aura_OS.System.Network.DHCP
         {
             if ((dhcpPacket[278] == 0x63) && (dhcpPacket[279] == 0x82) && (dhcpPacket[280] == 0x53) && (dhcpPacket[281] == 0x63)) //Magic cookie: DHCP
             {
-                Console.WriteLine("IsDHCPPacket: Magic cookie detected");
+                Kernel.debugger.Send("IsDHCPPacket: Magic cookie detected");
                 return true;
             }
             return false;

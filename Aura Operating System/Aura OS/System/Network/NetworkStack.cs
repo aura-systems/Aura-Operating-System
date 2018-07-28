@@ -55,14 +55,11 @@ namespace Aura_OS.System.Network
 
         internal static void HandlePacket(byte[] packetData)
         {
-            Kernel.debugger.Send("Packet Received Length=" + packetData.Length.ToString());
-            //if (packetData == null)
-            //{
-            //    Console.WriteLine("Error packet data null");
-            //    return;
-            //}
-            EthernetPacket ethernet = new EthernetPacket(packetData);           
-           // Console.WriteLine("Received Ethernet Packet : Src - " + ethernet.SourceMAC.ToString());
+            if (packetData == null)
+            {
+                Kernel.debugger.Send("Error packet data null");
+                return;
+            }
 
             UInt16 etherType = (UInt16)((packetData[12] << 8) | packetData[13]);
             switch (etherType)

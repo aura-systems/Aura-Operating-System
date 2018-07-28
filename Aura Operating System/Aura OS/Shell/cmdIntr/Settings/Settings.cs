@@ -68,6 +68,12 @@ namespace Aura_OS.Shell.cmdIntr.Settings
                 {
                     L.Text.Display("_passuser");
                 }
+
+                else if (cmdargs[1].Equals("debugger"))
+                {
+                    HAL.SaveScreen.SaveCurrentScreen();
+                    Apps.System.DebuggerSettings.RegisterSetting();
+                }
             }
             else if (cmdargs.Length == 3 ) //One arg
             {

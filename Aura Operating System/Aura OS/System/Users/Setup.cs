@@ -361,7 +361,12 @@ namespace Aura_OS.System
 
             Kernel.SystemExists = true;
 
+            Settings.PutValue("debugger", "off");
+
             Settings.PushValues();
+
+            Menu.DispInstallationDialog(90);
+
             System.Users.Users.PushUsers();
 
             Menu.DispInstallationDialog(100);

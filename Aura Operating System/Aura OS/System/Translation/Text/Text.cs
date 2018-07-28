@@ -1013,7 +1013,7 @@ namespace Aura_OS.System.Translation
                             Drawable.Menu.DispErrorDialog("Computer name length must be 1-20 characters.");
                             break;
                         case "computernamedialog":
-                            string text1 = Drawable.Menu.DispComputernameDialog("║ Choisissez un nom pour votre PC :", "║ Nom du PC : ");
+                            string text1 = Drawable.Menu.DispDialogOneArg("Choisissez un nom pour votre PC :", "Nom du PC : ");
                             return text1;
                     }
                     break;
@@ -1041,7 +1041,7 @@ namespace Aura_OS.System.Translation
                             Drawable.Menu.DispErrorDialog("Computer name length must be 1-20 characters.");
                             break;
                         case "computernamedialog":
-                            string text2 = Drawable.Menu.DispComputernameDialog("║ Choose your computer name:", "║ Computer name: ");
+                            string text2 = Drawable.Menu.DispDialogOneArg("Choose your computer name:", "Computer name: ");
                             return text2;
                     }
                     break;
@@ -1069,7 +1069,7 @@ namespace Aura_OS.System.Translation
                             Drawable.Menu.DispErrorDialog("De lengte van de computernaam moet 1-20 tekens lang zijn.");
                             break;
                         case "computernamedialog":
-                            string text2 = Drawable.Menu.DispComputernameDialog("║ Kies de naam van de computer:", "║ Naam computer: ");
+                            string text2 = Drawable.Menu.DispDialogOneArg("Kies de naam van de computer:", "Naam computer: ");
                             return text2;
                     }
                     break;
@@ -1097,7 +1097,7 @@ namespace Aura_OS.System.Translation
                             Drawable.Menu.DispErrorDialog("Il nome computer deve essere lungo da 1 a 20 caratteri.");
                             break;
                         case "computernamedialog":
-                            string text2 = Drawable.Menu.DispComputernameDialog("║ Scegli il nome del computer:", "║ Nome computer: ");
+                            string text2 = Drawable.Menu.DispDialogOneArg("Scegli il nome del computer:", "Nome computer: ");
                             return text2;
                     }
                     break;

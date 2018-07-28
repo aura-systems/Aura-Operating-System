@@ -25,7 +25,7 @@ namespace Aura_OS.HAL.Drivers
 
         public static int Width { get; set; }
         public static int Height { get; set; }
-        public int len;
+        public static int len;
 
         public VBE(int width, int height)
         {
@@ -35,7 +35,7 @@ namespace Aura_OS.HAL.Drivers
             _buffer = (uint*)Heap.MemAlloc((uint)(len * 4));
         }
 
-        private static uint* _buffer;
+        public static uint* _buffer;
 
         public void SetPixel(int x, int y, uint c, bool background)
         {
@@ -70,7 +70,7 @@ namespace Aura_OS.HAL.Drivers
             WriteToScreen();
         }
 
-        internal void WriteToScreen()
+        public static void WriteToScreen()
         {
             Memory.Memcpy((uint*)Graphics.vga_mem, _buffer, len);
         }

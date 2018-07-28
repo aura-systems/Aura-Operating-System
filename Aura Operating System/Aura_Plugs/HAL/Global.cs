@@ -8,7 +8,6 @@ using System;
 using IL2CPU.API.Attribs;
 using Cosmos.HAL;
 using Cosmos.Core;
-using Aura_OS.System;
 
 namespace Aura_Plugs.HAL
 {
@@ -17,12 +16,8 @@ namespace Aura_Plugs.HAL
     public static class Global
     {
 
-        //static public PIT PIT = new PIT();
-
         static public void Init(TextScreenBase textScreen)
         {
-
-            Cosmos.Core.Global.Init();
 
             Console.WriteLine("[Aura Operating System v" + Aura_OS.Kernel.version + " - Made by valentinbreiz and geomtech]");
             Aura_OS.System.CustomConsole.WriteLineInfo("Starting Cosmos kernel...");
