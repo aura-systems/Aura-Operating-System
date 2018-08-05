@@ -139,6 +139,25 @@ namespace Aura_OS.System.Network.IPV4.TCP
 
             Send(data, this.destination, this.destinationPort);
             NetworkStack.Update();
+
+            int _deltaT = 0;
+            int second = 0;
+
+            while (!readytosend)
+            {
+                if (_deltaT != Cosmos.HAL.RTC.Second)
+                {
+                    second++;
+                    _deltaT = Cosmos.HAL.RTC.Second;
+                }
+
+                if (second >= 4)
+                {
+                    Console.WriteLine("No response in 4 secondes...");
+                    break;
+                }
+            }
+            Console.WriteLine("Done!");
         }
 
         public static ulong lastack = 0x00;
@@ -171,24 +190,6 @@ namespace Aura_OS.System.Network.IPV4.TCP
             connection.Flags = 0x18;
 
             connection.data = data;
-
-            int _deltaT = 0;
-            int second = 0;
-
-            while (!readytosend)
-            {
-                if (_deltaT != Cosmos.HAL.RTC.Second)
-                {
-                    second++;
-                    _deltaT = Cosmos.HAL.RTC.Second;
-                }
-
-                if (second >= 4)
-                {
-                    Console.WriteLine("No response in 4 secondes...");
-                    break;
-                }
-            }
 
             connection.Send(true);
 

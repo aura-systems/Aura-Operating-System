@@ -44,11 +44,12 @@ namespace Aura_OS.Apps.System
 
         public void Send(string message)
         {
+            //if (message == null) { return; }
             debugger.Send(message);
-            if (enabled)
-            {
-                xClient.Send(Encoding.ASCII.GetBytes("[" + Aura_OS.System.Time.TimeString(true, true, true) + "] - " + message));
-            }
+            //if (enabled)
+            //{
+            //    xClient.Send(Encoding.ASCII.GetBytes("[" + Aura_OS.System.Time.TimeString(true, true, true) + "] - " + message));
+            //}
         }
 
         internal void Stop()
