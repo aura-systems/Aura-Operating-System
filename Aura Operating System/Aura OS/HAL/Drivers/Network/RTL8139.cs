@@ -8,6 +8,7 @@
 using System;
 using System.Collections.Generic;
 using Aura_OS.Core;
+using Aura_OS.System.Utils;
 using Cosmos.Core;
 using Cosmos.Core.IOGroup.Network;
 using Cosmos.HAL;
@@ -18,7 +19,6 @@ namespace Aura_OS.HAL.Drivers.Network
     public class RTL8139 : NetworkDevice
     {
         protected PCIDevice pciCard;
-        protected AMDPCNetIIIOGroup io;
         protected MACAddress mac;
         protected bool mInitDone;
 
@@ -93,8 +93,12 @@ namespace Aura_OS.HAL.Drivers.Network
             UInt16 cur_status = IntStatusRegister;
 
             Console.WriteLine("RTL8139 IRQ raised!");
+
+            Console.WriteLine("Status: 0x" + System.Utils.Conversion.DecToHex(cur_status));
+
             if ((cur_status & 0x01) != 0)
             {
+                Console.WriteLine("RxOK!");
                 while ((CommandRegister & 0x01) == 0)
                 {
                     //UInt32 packetHeader = BitConverter.ToUInt32(rxBuffer, rxBufferOffset + capr);
@@ -114,13 +118,38 @@ namespace Aura_OS.HAL.Drivers.Network
                     CurAddressPointerReadRegister = (UInt16)(capr - 0x10);
                 }
             }
+            if ((cur_status & 0x2) != 0)
+            {
+                Console.WriteLine("RxErr!");
+            }
+            if ((cur_status & 0x4) != 0)
+            {
+                Console.WriteLine("TxOK!");
+
+                HandleTX();
+            }
             if ((cur_status & 0x10) != 0)
             {
+                Console.WriteLine("RxOverflow!");
                 CurAddressPointerReadRegister = (UInt16)(CurBufferAddressRegister - 0x10);
                 cur_status = (UInt16)(cur_status | 0x01);
             }
 
             IntStatusRegister = cur_status;
+
+        }
+
+        public void HandleTX()
+        {
+            uint i, status;
+            
+            for (i = 0; i < 4; i++)
+            {
+                // We must read the status of every descriptor when     //
+                // a Tx interrupt occurs                                //
+                status = Ports.ind((ushort)(BaseAddress + 0x10 + (i * 4)));
+                Console.WriteLine("Status: " + Conversion.DecToHex((int)status));
+            }
         }
 
         #region Register Access
@@ -343,6 +372,8 @@ namespace Aura_OS.HAL.Drivers.Network
 
         protected bool SendBytes(ref byte[] aData)
         {
+            Console.WriteLine("SendBytes called!");
+
             int txd = mNextTXDesc++;
             if (mNextTXDesc >= 4)
             {
@@ -352,6 +383,7 @@ namespace Aura_OS.HAL.Drivers.Network
             ManagedMemoryBlock txBuffer;
             if (aData.Length < 64)
             {
+                Console.WriteLine("aData.Length < 64");
                 txBuffer = new ManagedMemoryBlock(64);
                 for (uint b = 0; b < aData.Length; b++)
                 {
@@ -360,6 +392,7 @@ namespace Aura_OS.HAL.Drivers.Network
             }
             else
             {
+                Console.WriteLine("aData.Length > 64");
                 txBuffer = new ManagedMemoryBlock((uint)aData.Length);
                 for (uint b = 0; b < aData.Length; b++)
                 {

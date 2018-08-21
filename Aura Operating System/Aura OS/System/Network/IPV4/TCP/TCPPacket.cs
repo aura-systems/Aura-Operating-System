@@ -332,6 +332,8 @@ namespace Aura_OS.System.Network.IPV4.TCP
                 byte[] header = MakeHeader(source.address, dest.address, tcpLen, srcPort, destPort, sequencenumber, acknowledgmentnb, Headerlenght, Flags, WSValue, UrgentPointer, data, false);
                 UInt16 calculatedcrc = Check(header, 0, header.Length);
 
+                //Console.WriteLine("0x" + Utils.Conversion.DecToHex(calculatedcrc));
+
                 mRawData[this.dataOffset + 16] = (byte)((calculatedcrc >> 8) & 0xFF);
                 mRawData[this.dataOffset + 17] = (byte)((calculatedcrc >> 0) & 0xFF);
             }

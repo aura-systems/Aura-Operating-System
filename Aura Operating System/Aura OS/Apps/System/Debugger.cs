@@ -17,7 +17,7 @@ namespace Aura_OS.Apps.System
 
         public static Cosmos.Debug.Kernel.Debugger debugger = new Cosmos.Debug.Kernel.Debugger("aura", "debugger");
 
-        UdpClient xClient;
+        TCPClient xClient;
 
         public bool enabled = false;
 
@@ -32,8 +32,10 @@ namespace Aura_OS.Apps.System
 
         public void Start()
         {
-            xClient = new UdpClient(port);
-            xClient.Connect(ip, port);
+            //xClient = new TCPClient(port);
+            xClient = new TCPClient(4343);
+            //xClient.Connect(ip, port);
+            xClient.Connect(new Address(192, 168, 1, 12), 4224);
             if (enabled)
             {
                 Send("--- Aura Debugger v0.1 ---");
@@ -45,11 +47,11 @@ namespace Aura_OS.Apps.System
         public void Send(string message)
         {
             //if (message == null) { return; }
-            debugger.Send(message);
-            //if (enabled)
-            //{
-            //    xClient.Send(Encoding.ASCII.GetBytes("[" + Aura_OS.System.Time.TimeString(true, true, true) + "] - " + message));
-            //}
+            //debugger.Send(message);
+            if (enabled)
+            {
+                xClient.Send(Encoding.ASCII.GetBytes("[" + Aura_OS.System.Time.TimeString(true, true, true) + "] - " + message));
+            }
         }
 
         internal void Stop()
