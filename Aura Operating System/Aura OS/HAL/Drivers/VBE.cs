@@ -68,14 +68,12 @@ namespace Aura_OS.HAL.Drivers
 
         internal void Clear(uint c)
         {
-            //Memory.Memset(_buffer, c, (uint)(len));
-            //WriteToScreen();
-            ClearVRAM((uint)c);
+            Memory.Memset(_buffer, c, (uint)(len));
+            WriteToScreen();
         }
 
         public static void WriteToScreen()
         {
-            //Memory.Memcpy((uint*)Graphics.vga_mem, _buffer, len);
             Cosmos.Core.MemoryOperations.Copy((uint*)Graphics.vga_mem, _buffer, len);
         }
 
