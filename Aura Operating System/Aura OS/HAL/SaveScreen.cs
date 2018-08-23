@@ -20,7 +20,7 @@ namespace Aura_OS.HAL
         public static void SaveCurrentScreen()
         {
             lastbuffer = (uint*)Heap.MemAlloc((uint)(Drivers.VBE.len * 4));
-            Memory.Memcpy(lastbuffer, Drivers.VBE._buffer, Drivers.VBE.len);
+            Cosmos.Core.MemoryOperations.Copy(lastbuffer, Drivers.VBE._buffer, Drivers.VBE.len);
             lastX = Kernel.AConsole.X;
             lastY = Kernel.AConsole.Y;
         }
@@ -31,7 +31,7 @@ namespace Aura_OS.HAL
             Kernel.AConsole.Y = lastY;
             lastX = 0;
             lastY = 0;
-            Memory.Memcpy(Drivers.VBE._buffer, lastbuffer, Drivers.VBE.len);
+            Cosmos.Core.MemoryOperations.Copy(Drivers.VBE._buffer, lastbuffer, Drivers.VBE.len);
             Drivers.VBE.WriteToScreen();
             lastbuffer = null;
         }
