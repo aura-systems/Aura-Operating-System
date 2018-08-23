@@ -7,13 +7,12 @@
 using Aura_OS.Core;
 using Aura_OS.System.Shell.VESAVBE;
 using Cosmos.Core.Memory.Old;
+using Cosmos.Core;
 
 namespace Aura_OS.HAL.Drivers
 {
     unsafe class VBE
     {
-
-        private Cosmos.Core.IOGroup.VBE IO = Cosmos.Core.Global.BaseIOGroups.VBE;
 
         //public static void SetPixel(int x, int y, int RGB)
         //{
@@ -68,13 +67,13 @@ namespace Aura_OS.HAL.Drivers
 
         internal void Clear(uint c)
         {
-            Memory.Memset(_buffer, c, (uint)(len));
+            MemoryOperations.Fill(_buffer, c, (len));
             WriteToScreen();
         }
 
         public static void WriteToScreen()
         {
-            Cosmos.Core.MemoryOperations.Copy((uint*)Graphics.vga_mem, _buffer, len);
+            MemoryOperations.Copy((uint*)Graphics.vga_mem, _buffer, len);
         }
 
         public void ScrollUp()
@@ -95,21 +94,6 @@ namespace Aura_OS.HAL.Drivers
 
                 }
             }
-        }
-
-        public void ClearVRAM(int aStart, int aCount, int value)
-        {
-            IO.LinearFrameBuffer.Fill(aStart, aCount, value);
-        }
-
-        public void CopyVRAM(int aStart, int[] aData, int aIndex, int aCount)
-        {
-            IO.LinearFrameBuffer.Copy(aStart, aData, aIndex, aCount);
-        }
-
-        public void ClearVRAM(uint value)
-        {
-            IO.LinearFrameBuffer.Fill(value);
         }
     }
 }
