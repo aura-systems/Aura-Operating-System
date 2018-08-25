@@ -8,6 +8,7 @@ using Aura_OS.HAL.Drivers;
 using Aura_OS.System.Graphics;
 using System;
 using System.Collections.Generic;
+using System.Text;
 
 namespace Aura_OS.System.Shell.VESAVBE
 {
@@ -41,19 +42,26 @@ namespace Aura_OS.System.Shell.VESAVBE
         public static uint oemProductNamePtr;
         public static uint oemProductRevPtr;
 
+        public static string oemString;
+        public static string oemVendorName;
+        public static string oemProductName;
+
         public static List<ushort> modelist = new List<ushort>();
 
-        void* FP_TO_LINEAR(void* seg, void* off) {
-            return ((void*)((((ushort)(seg)) << 4) + ((ushort)(off))));
+        static void* PtrtoLinear(void* phys)
+        {
+            return (void*)((((uint)phys >> 16) << 4) + (ushort)phys);
         }
 
-        void* FP_SEG(void* fp) {
-            return ((void*)((uint)(fp) >> 16));
+        byte* GetOemString(uint oemstringptr, byte* stringg, int maxlength)
+        {
+            uint offset = (oemstringptr >> 12 & 0xFFFF0) + (oemstringptr & 0xFFFF);
+            Core.Memory.Memcpy(stringg, (byte*)offset, maxlength);
+            return (stringg);
         }
 
-        void* FP_OFF(void* fp) {
-            return ((void*)(((uint)fp) & 0xffff));
-        }
+
+        Cosmos.Debug.Kernel.Debugger debugger = new Cosmos.Debug.Kernel.Debugger("", "");
 
         public Graphics()
         {
@@ -116,15 +124,15 @@ namespace Aura_OS.System.Shell.VESAVBE
             oemStringPtr = ControllerInfo->oemStringPtr;
             capabilities = ControllerInfo->capabilities;
             videoModePtr = ControllerInfo->videoModePtr;
-            totalmemory = ControllerInfo->totalmemory;
+            totalmemory = (ControllerInfo->totalmemory) * (uint)64;
 
             oemSoftwareRev = ControllerInfo->oemSoftwareRev;
             oemVendorNamePtr = ControllerInfo->oemVendorNamePtr;
             oemProductNamePtr = ControllerInfo->oemProductNamePtr;
             oemProductRevPtr = ControllerInfo->oemProductRevPtr;
 
-
-            ushort* mode_ptr = (ushort*)FP_TO_LINEAR(FP_SEG((void*)videoModePtr), FP_OFF((void*)videoModePtr));
+            //Mode list
+            ushort* mode_ptr = (ushort*)PtrtoLinear((void*)videoModePtr);
 
             for (int i = 0; mode_ptr[i] != 0xFFFF; ++i)
             {
@@ -132,14 +140,16 @@ namespace Aura_OS.System.Shell.VESAVBE
                 mode_ptr += 2;
             }
 
-            //Kernel.debugger.Send("VBE Signature: " + ssignature);
-            //Kernel.debugger.Send("VBE Version: " + sversion);
+            //OEM String
+            byte* oemptr = GetOemString(oemStringPtr, (byte*)Cosmos.Core.Memory.Old.Heap.MemAlloc(200), 200);
 
-            //Kernel.debugger.Send("VBE Pointer: " + ModeInfo->framebuffer.ToString());
+            List<byte> list = new List<byte>();
+            for (int i = 0; oemptr[i] != 0; i++)
+            {
+                list.Add(oemptr[i]);
+            }
 
-            //Kernel.debugger.Send("VBE Bpp: " + ModeInfo->bpp.ToString());
-            //Kernel.debugger.Send("VBE ResX: " + ModeInfo->width.ToString());
-            //Kernel.debugger.Send("VBE ResY: " + ModeInfo->height.ToString());
+            oemString = Encoding.ASCII.GetString(list.ToArray());
 
             heightVESA = ModeInfo->height;
             widthVESA = ModeInfo->width;
