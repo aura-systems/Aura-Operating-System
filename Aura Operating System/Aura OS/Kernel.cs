@@ -35,7 +35,7 @@ namespace Aura_OS
         Setup setup = new Setup();
         public static bool running;
         public static string version = "0.4.5";
-        public static string revision = "030620182120";
+        public static string revision = "280820180021";
         public static string current_directory = @"0:\";
         public static string langSelected = "en_US";
         public static string userLogged;
