@@ -121,6 +121,12 @@ namespace Aura_OS.System.Network.IPV4.TCP
                 {
                     Apps.System.Debugger.debugger.Send("FLAG: FIN, ACK, Disconnected by host!!!");
 
+                    if (tcp_packet.sourcePort == 4224 && tcp_packet.destPort == 4224)
+                    {
+                        Console.WriteLine("Debugger closed by client computer!");
+                        Kernel.debugger.enabled = false;
+                    }
+
                     connection.dest = tcp_packet.sourceIP;
                     connection.source = tcp_packet.destIP;
 
@@ -272,7 +278,6 @@ namespace Aura_OS.System.Network.IPV4.TCP
                     tcpLen = (UInt16)(data.Length +20);
                 }
             }
-                
 
             //sequencenumber
             mRawData[this.dataOffset + 4] = (byte)((sequencenumber >> 24) & 0xFF);

@@ -32,7 +32,7 @@ namespace Aura_OS.Apps.System
 
         public void Start()
         {
-            xClient = new TCPClient(4343);
+            xClient = new TCPClient(4224);
             xClient.Connect(new Address(192, 168, 1, 12), 4224);
             if (enabled)
             {
@@ -56,6 +56,7 @@ namespace Aura_OS.Apps.System
             if (enabled)
             {
                 xClient.Send(Encoding.ASCII.GetBytes("[" + Aura_OS.System.Time.TimeString(true, true, true) + "] - Properly disconnected by the operating system!"));
+                xClient.Close();
             }
         }
     }
@@ -99,6 +100,7 @@ namespace Aura_OS.Apps.System
                 }
                 else
                 {
+                    Kernel.debugger.Stop();
                     Kernel.debugger.enabled = false;
                     Console.WriteLine("Debugger disabled!");
                 }

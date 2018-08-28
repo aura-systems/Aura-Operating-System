@@ -202,10 +202,38 @@ namespace Aura_OS.System.Network.IPV4.TCP
 
         public void Close()
         {
-            if (TCPClient.clients.ContainsKey((UInt32)this.localPort) == true)
-            {
-                TCPClient.clients.Remove((UInt32)this.localPort);
-            }
+
+            Apps.System.Debugger.debugger.Send("Closing TCP Connection...");
+
+            IPV4.Address source = IPV4.Config.FindNetwork(this.destination);
+
+            TCPConnection.Connection connection = new TCPConnection.Connection();
+
+            Apps.System.Debugger.debugger.Send("Closing " + destination.ToString() + ":" + this.destinationPort + "now!");
+
+            connection.dest = this.destination;
+            connection.source = source;
+
+            connection.localPort = (ushort)this.localPort;
+            connection.destPort = (ushort)this.destinationPort;
+
+            connection.acknowledgmentnb = lastack;
+
+            connection.WSValue = 1024;
+
+            connection.sequencenumber = lastsn;
+
+            connection.Checksum = 0x0000;
+
+            connection.Flags = 0x11;
+
+            connection.Send(false);
+
+            readytosend = false;
+
+            Apps.System.Debugger.debugger.Send("Closed!");
+
+
         }
 
         public byte[] Receive(ref IPV4.EndPoint source)
