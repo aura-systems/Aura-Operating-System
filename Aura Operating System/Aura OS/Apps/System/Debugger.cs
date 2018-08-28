@@ -36,7 +36,7 @@ namespace Aura_OS.Apps.System
             xClient.Connect(new Address(192, 168, 1, 12), 4224);
             if (enabled)
             {
-                Send("--- Aura Debugger v0.1 ---");
+                Send("--- Aura Debugger v0.2 ---");
                 Send("Connected!");
                 debugger.Send("Debugger started!");
             }
