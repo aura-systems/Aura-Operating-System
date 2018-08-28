@@ -84,7 +84,7 @@ namespace Aura_OS.System.Translation
                             Console.WriteLine("Langues disponibles: en-US fr-FR nl-NL it-IT");
                             break;
                         case "availabledebugcmd":
-                            Console.WriteLine("Commandes disponibles: vbeinfo vbemodes");
+                            Console.WriteLine("Commandes disponibles: vbeinfo vbemodes debugger {text}");
                             break;
                         case "consolemode":
                             Console.WriteLine("Modes disponibles: textmode graphicmode");
@@ -326,7 +326,7 @@ namespace Aura_OS.System.Translation
                             Console.WriteLine("Available languages: en-US fr-FR nl-NL it-IT");
                             break;
                         case "availabledebugcmd":
-                            Console.WriteLine("Available commands: vbeinfo vbemodes");
+                            Console.WriteLine("Available commands: vbeinfo vbemodes debugger {text}");
                             break;
                         case "consolemode":
                             Console.WriteLine("Available modes: textmode graphicmode");
@@ -562,7 +562,7 @@ namespace Aura_OS.System.Translation
                             Console.WriteLine("Beschikbare talen: en-US fr-FR nl-NL it-IT");
                             break;
                         case "availabledebugcmd":
-                            Console.WriteLine("Beschikbare commando's: vbeinfo vbemodes");
+                            Console.WriteLine("Beschikbare commando's: vbeinfo vbemodes debugger {text}");
                             break;
                         case "consolemode":
                             Console.WriteLine("Beschikbare modi: textmode graphicmode");
@@ -789,7 +789,7 @@ namespace Aura_OS.System.Translation
                             Console.WriteLine("Lingue disponibili: en-US fr-FR nl-NL it-IT");
                             break;
                         case "availabledebugcmd":
-                            Console.WriteLine("Comandi disponibili: vbeinfo vbemodes");
+                            Console.WriteLine("Comandi disponibili: vbeinfo vbemodes debugger {text}");
                             break;
                         case "unknowncolor":
                             Console.WriteLine("Colore sconosciuto.");

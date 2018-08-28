@@ -42,7 +42,13 @@ namespace Aura_OS.Shell.cmdIntr.Tools
             Char separator = ' ';
             string[] cmdargs = settings.Split(separator);
 
-            if (cmdargs.Length == 2) //No arg
+            string cmd = settings.Remove(0, 6);
+
+            if (cmd.StartsWith("debugger "))
+            {
+                Kernel.debugger.Send(cmd.Remove(0, 9));
+            }
+            else if (cmdargs.Length == 2) //No arg
             {
                 if (cmdargs[1].Equals("vbeinfo"))
                 {
