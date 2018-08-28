@@ -24,13 +24,13 @@ namespace Aura_OS.HAL.Drivers.Network
 
         protected ManagedMemoryBlock rxBuffer;
         protected int rxBufferOffset;
-        protected UInt16 capr;
+        protected ushort capr;
 
         protected Queue<byte[]> mRecvBuffer;
         protected Queue<byte[]> mTransmitBuffer;
         private int mNextTXDesc;
 
-        const UInt16 RxBufferSize = 32768;
+        const ushort RxBufferSize = 32768;
         uint BaseAddress;
 
         public override CardType CardType => CardType.Ethernet;
@@ -90,7 +90,7 @@ namespace Aura_OS.HAL.Drivers.Network
 
         protected void HandleNetworkInterrupt(ref IRQContext aContext)
         {
-            UInt16 cur_status = IntStatusRegister;
+            ushort cur_status = IntStatusRegister;
 
             Console.WriteLine("RTL8139 IRQ raised!");
 
@@ -101,9 +101,9 @@ namespace Aura_OS.HAL.Drivers.Network
                 Console.WriteLine("RxOK!");
                 while ((CommandRegister & 0x01) == 0)
                 {
-                    //UInt32 packetHeader = BitConverter.ToUInt32(rxBuffer, rxBufferOffset + capr);
-                    UInt32 packetHeader = rxBuffer.Read32(capr);
-                    UInt16 packetLen = (UInt16)(packetHeader >> 16);
+                    //uint packetHeader = BitConverter.Touint(rxBuffer, rxBufferOffset + capr);
+                    uint packetHeader = rxBuffer.Read32(capr);
+                    ushort packetLen = (ushort)(packetHeader >> 16);
                     if ((packetHeader & 0x3E) != 0x00)
                     {
                         CommandRegister = 0x04; // TX Only;
@@ -115,7 +115,7 @@ namespace Aura_OS.HAL.Drivers.Network
                         ReadRawData(packetLen);
                     }
 
-                    CurAddressPointerReadRegister = (UInt16)(capr - 0x10);
+                    CurAddressPointerReadRegister = (ushort)(capr - 0x10);
                 }
             }
             if ((cur_status & 0x2) != 0)
@@ -131,8 +131,8 @@ namespace Aura_OS.HAL.Drivers.Network
             if ((cur_status & 0x10) != 0)
             {
                 Console.WriteLine("RxOverflow!");
-                CurAddressPointerReadRegister = (UInt16)(CurBufferAddressRegister - 0x10);
-                cur_status = (UInt16)(cur_status | 0x01);
+                CurAddressPointerReadRegister = (ushort)(CurBufferAddressRegister - 0x10);
+                cur_status = (ushort)(cur_status | 0x01);
             }
 
             IntStatusRegister = cur_status;
@@ -153,33 +153,33 @@ namespace Aura_OS.HAL.Drivers.Network
         }
 
         #region Register Access
-        protected UInt32 RBStartRegister
+        protected uint RBStartRegister
         {
             get { return Ports.ind((ushort)(BaseAddress + 0x30)); }
             set { Ports.outd((ushort)(BaseAddress + 0x30), (byte)value); }
         }
-        internal UInt32 RecvConfigRegister
+        internal uint RecvConfigRegister
         {
             get { return Ports.ind((ushort)(BaseAddress + 0x44)); }
             set { Ports.outd((ushort)(BaseAddress + 0x44), (byte)value); }
         }
-        internal UInt16 CurAddressPointerReadRegister
+        internal ushort CurAddressPointerReadRegister
         {
             get { return Ports.inw((ushort)(BaseAddress + 0x38)); }
             set { Ports.outw((ushort)(BaseAddress + 0x38), value); }
         }
-        internal UInt16 CurBufferAddressRegister
+        internal ushort CurBufferAddressRegister
         {
             get { return Ports.inw((ushort)(BaseAddress + 0x3A)); }
             set { Ports.outw((ushort)(BaseAddress + 0x3A), value); }
         }
 
-        internal UInt16 IntMaskRegister
+        internal ushort IntMaskRegister
         {
             get { return Ports.inw((ushort)(BaseAddress + 0x3C)); }
             set { Ports.outw((ushort)(BaseAddress + 0x3C), value); }
         }
-        internal UInt16 IntStatusRegister
+        internal ushort IntStatusRegister
         {
             get { return Ports.inw((ushort)(BaseAddress + 0x3E)); }
             set { Ports.outw((ushort)(BaseAddress + 0x3E), value); }
@@ -202,48 +202,48 @@ namespace Aura_OS.HAL.Drivers.Network
             set { Ports.outb((ushort)(BaseAddress + 0x52), value); }
         }
 
-        internal UInt32 TransmitConfigRegister
+        internal uint TransmitConfigRegister
         {
             get { return Ports.ind((ushort)(BaseAddress + 0x40)); }
             set { Ports.outd((ushort)(BaseAddress + 0x40), (byte)value); }
         }
 
-        internal UInt32 TransmitAddress1Register
+        internal uint TransmitAddress1Register
         {
             get { return Ports.ind((ushort)(BaseAddress + 0x20)); }
             set { Ports.outd((ushort)(BaseAddress + 0x20), (byte)value); }
         }
-        internal UInt32 TransmitAddress2Register
+        internal uint TransmitAddress2Register
         {
             get { return Ports.ind((ushort)(BaseAddress + 0x24)); }
             set { Ports.outd((ushort)(BaseAddress + 0x24), (byte)value); }
         }
-        internal UInt32 TransmitAddress3Register
+        internal uint TransmitAddress3Register
         {
             get { return Ports.ind((ushort)(BaseAddress + 0x28)); }
             set { Ports.outd((ushort)(BaseAddress + 0x28), (byte)value); }
         }
-        internal UInt32 TransmitAddress4Register
+        internal uint TransmitAddress4Register
         {
             get { return Ports.ind((ushort)(BaseAddress + 0x2C)); }
             set { Ports.outd((ushort)(BaseAddress + 0x2C), (byte)value); }
         }
-        internal UInt32 TransmitDescriptor1Register
+        internal uint TransmitDescriptor1Register
         {
             get { return Ports.ind((ushort)(BaseAddress + 0x10)); }
             set { Ports.outd((ushort)(BaseAddress + 0x10), (byte)value); }
         }
-        internal UInt32 TransmitDescriptor2Register
+        internal uint TransmitDescriptor2Register
         {
             get { return Ports.ind((ushort)(BaseAddress + 0x14)); }
             set { Ports.outd((ushort)(BaseAddress + 0x14), (byte)value); }
         }
-        internal UInt32 TransmitDescriptor3Register
+        internal uint TransmitDescriptor3Register
         {
             get { return Ports.ind((ushort)(BaseAddress + 0x18)); }
             set { Ports.outd((ushort)(BaseAddress + 0x18), (byte)value); }
         }
-        internal UInt32 TransmitDescriptor4Register
+        internal uint TransmitDescriptor4Register
         {
             get { return Ports.ind((ushort)(BaseAddress + 0x1C)); }
             set { Ports.outd((ushort)(BaseAddress + 0x1C), (byte)value); }
@@ -335,7 +335,7 @@ namespace Aura_OS.HAL.Drivers.Network
         #endregion
 
         #region Helper Functions
-        private void ReadRawData(UInt16 packetLen)
+        private void ReadRawData(ushort packetLen)
         {
             int recv_size = packetLen - 4;
             byte[] recv_data = new byte[recv_size];
@@ -356,7 +356,7 @@ namespace Aura_OS.HAL.Drivers.Network
                 mRecvBuffer.Enqueue(recv_data);
             }
 
-            capr += (UInt16)((packetLen + 4 + 3) & 0xFFFFFFFC);
+            capr += (ushort)((packetLen + 4 + 3) & 0xFFFFFFFC);
             if (capr > RxBufferSize)
             {
                 capr -= RxBufferSize;

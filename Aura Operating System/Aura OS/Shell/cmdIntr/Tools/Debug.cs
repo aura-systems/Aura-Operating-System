@@ -52,18 +52,31 @@ namespace Aura_OS.Shell.cmdIntr.Tools
                     Console.WriteLine("Width: " + System.Shell.VESAVBE.Graphics.widthVESA);
                     Console.WriteLine("VBE Pointer: 0x" + Conversion.DecToHex((int)System.Shell.VESAVBE.Graphics.vbepointer));
                     Console.WriteLine("VBE Mode: " + System.Shell.VESAVBE.Graphics.VESAMode);
+
+                    Console.WriteLine();
+
                     Console.WriteLine("[VBE Controller Information]");
-                    Console.WriteLine("VBE Version: " + System.Shell.VESAVBE.Graphics.sversion);
+                    
                     Console.WriteLine("VBE Signature: " + System.Shell.VESAVBE.Graphics.ssignature);
-                    Console.WriteLine("OEM String Pointer: 0x" + Conversion.DecToHex((int)System.Shell.VESAVBE.Graphics.oemStringPtr));
+
+                    Console.WriteLine("VBE Version: " + System.Shell.VESAVBE.Graphics.sversion);
+
+                    Console.WriteLine("OEM String: " + System.Shell.VESAVBE.Graphics.oemString);
+
                     Console.WriteLine("Capabilites: " + System.Shell.VESAVBE.Graphics.capabilities);
-                    Console.WriteLine("Video Mode Pointer: 0x" + Conversion.DecToHex((int)System.Shell.VESAVBE.Graphics.videoModePtr));
-                    Console.WriteLine("Total Memory: " + System.Shell.VESAVBE.Graphics.totalmemory);
+
+                    Console.WriteLine("Total Memory: " + System.Shell.VESAVBE.Graphics.totalmemory + " kB");
 
                     Console.WriteLine("OEM Software Rev: " + System.Shell.VESAVBE.Graphics.oemSoftwareRev);
+
+                    Console.WriteLine("Video Mode Pointer: 0x" + Conversion.DecToHex((int)System.Shell.VESAVBE.Graphics.videoModePtr));
+
+                    Console.WriteLine("OEM String Pointer: 0x" + Conversion.DecToHex((int)System.Shell.VESAVBE.Graphics.oemStringPtr));
+
                     Console.WriteLine("OEM Vendor Name Pointer: 0x" + Conversion.DecToHex((int)System.Shell.VESAVBE.Graphics.oemVendorNamePtr));
+
                     Console.WriteLine("OEM Product Name Pointer: 0x" + Conversion.DecToHex((int)System.Shell.VESAVBE.Graphics.oemProductNamePtr));
-                    //Console.WriteLine("OEM Product Name: " + System.Shell.VESAVBE.Graphics.ProductName);
+
                     Console.WriteLine("OEM Product Rev Pointer: 0x" + Conversion.DecToHex((int)System.Shell.VESAVBE.Graphics.oemProductRevPtr));
                 }
 
