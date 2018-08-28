@@ -26,8 +26,8 @@ namespace Aura_OS.System
             //{
             //}
 
-            Kernel.Consolemode = "VESA";
-            return "VESA";
+            Kernel.Consolemode = "VGATextmode";
+            return "VGATextmode";
 
         }
     }
