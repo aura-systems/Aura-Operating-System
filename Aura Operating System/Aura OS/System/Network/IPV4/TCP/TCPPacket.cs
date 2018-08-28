@@ -37,7 +37,7 @@ namespace Aura_OS.System.Network.IPV4.TCP
                 }
             }
 
-            Kernel.debugger.Send("=== Received TCP packet from " + tcp_packet.SourceIP.ToString() + ":" + tcp_packet.SourcePort.ToString() + " Len:" + tcp_packet.tcpLen.ToString() + "===");
+            Apps.System.Debugger.debugger.Send("=== Received TCP packet from " + tcp_packet.SourceIP.ToString() + ":" + tcp_packet.SourcePort.ToString() + " Len:" + tcp_packet.tcpLen.ToString() + "===");
 
             if (CheckCRC(tcp_packet))
             {
@@ -55,7 +55,7 @@ namespace Aura_OS.System.Network.IPV4.TCP
                 if (SYN && !ACK)
                 {
 
-                    Kernel.debugger.Send("FLAG: SYN, New connection");
+                    Apps.System.Debugger.debugger.Send("FLAG: SYN, New connection");
 
                     if (TCPConnection.Connections.ContainsKey((uint)CID))
                     {
@@ -119,7 +119,7 @@ namespace Aura_OS.System.Network.IPV4.TCP
                 }
                 else if ((FIN || RST) && ACK && TCPConnection.Connections[(uint)CID].IsOpen)
                 {
-                    Kernel.debugger.Send("FLAG: FIN, ACK, Disconnected by host!!!");
+                    Apps.System.Debugger.debugger.Send("FLAG: FIN, ACK, Disconnected by host!!!");
 
                     connection.dest = tcp_packet.sourceIP;
                     connection.source = tcp_packet.destIP;
@@ -149,7 +149,7 @@ namespace Aura_OS.System.Network.IPV4.TCP
                 }
                 else if (PSH && ACK && TCPConnection.Connections[(uint)CID].IsOpen)
                 {
-                    Kernel.debugger.Send("FLAG: PSH, ACK, Data received!? :D");
+                    Apps.System.Debugger.debugger.Send("FLAG: PSH, ACK, Data received!? :D");
                     TCPClient receiver = TCPClient.Client(tcp_packet.DestinationPort);
                     if (receiver != null)
                     {
@@ -180,12 +180,12 @@ namespace Aura_OS.System.Network.IPV4.TCP
                 }
                 else if (RST && ACK)
                 {
-                    Kernel.debugger.Send("FLAG: RST, ACK, Port not listening on remote machine?");
+                    Apps.System.Debugger.debugger.Send("FLAG: RST, ACK, Port not listening on remote machine?");
                     return;
                 }
                 else if (RST)
                 {
-                    Kernel.debugger.Send("FLAG: RST, Connection aborted by host.");
+                    Apps.System.Debugger.debugger.Send("FLAG: RST, Connection aborted by host.");
                     return;
                 }
                 else if (ACK && TCPConnection.Connections[(uint)CID].IsOpen)
@@ -198,12 +198,12 @@ namespace Aura_OS.System.Network.IPV4.TCP
                 }
                 else
                 {
-                    Kernel.debugger.Send("What is going wrong? D:");
+                    Apps.System.Debugger.debugger.Send("What is going wrong? D:");
                 }
             }
             else
             {
-                Kernel.debugger.Send("But checksum is incorrect... Packet Passed.");
+                Apps.System.Debugger.debugger.Send("But checksum is incorrect... Packet Passed.");
 
                 TCPConnection.Connection connection = new TCPConnection.Connection();
 
@@ -474,16 +474,16 @@ namespace Aura_OS.System.Network.IPV4.TCP
         {
             byte[] header = MakeHeader(packet.sourceIP.address, packet.destIP.address, packet.tcpLen, packet.sourcePort, packet.destPort, (uint)packet.sequencenumber, (uint)packet.acknowledgmentnb, packet.Headerlenght, packet.Flags, packet.WSValue, packet.UrgentPointer, packet.TCP_Data, false);
             UInt16 calculatedcrc = Check(header, 0, header.Length);
-            Kernel.debugger.Send("Calculated checksum: 0x" + Utils.Conversion.DecToHex(calculatedcrc));
-            Kernel.debugger.Send("Received checksum :  0x" + Utils.Conversion.DecToHex(packet.Checksum));
+            Apps.System.Debugger.debugger.Send("Calculated checksum: 0x" + Utils.Conversion.DecToHex(calculatedcrc));
+            Apps.System.Debugger.debugger.Send("Received checksum :  0x" + Utils.Conversion.DecToHex(packet.Checksum));
             if (calculatedcrc == packet.Checksum)
             {
-                Kernel.debugger.Send("checksum ok!!");
+                Apps.System.Debugger.debugger.Send("checksum ok!!");
                 return true;
             }
             else
             {
-                Kernel.debugger.Send("checksum wrong!!");
+                Apps.System.Debugger.debugger.Send("checksum wrong!!");
                 return false;
             }
         }

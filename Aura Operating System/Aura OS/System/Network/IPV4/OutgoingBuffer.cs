@@ -10,6 +10,7 @@ using Aura_OS.HAL.Drivers.Network;
 using Aura_OS.HAL;
 using Aura_OS.System.Network.ARP;
 using System;
+using Cosmos.Debug.Kernel;
 
 namespace Aura_OS.System.Network.IPV4
 {
@@ -40,6 +41,8 @@ namespace Aura_OS.System.Network.IPV4
                 }                
             }
         }
+
+        public static Debugger debugger = new Debugger("", "");
 
         private static List<BufferEntry> queue;
 
@@ -83,7 +86,7 @@ namespace Aura_OS.System.Network.IPV4
 
                 if (second >= 4)
                 {
-                    Apps.System.Debugger.debugger.Send("No response in 4 secondes...");
+                    debugger.Send("No response in 4 secondes...");
                     break;
                 }
 

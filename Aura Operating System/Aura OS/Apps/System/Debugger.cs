@@ -32,9 +32,7 @@ namespace Aura_OS.Apps.System
 
         public void Start()
         {
-            //xClient = new TCPClient(port);
             xClient = new TCPClient(4343);
-            //xClient.Connect(ip, port);
             xClient.Connect(new Address(192, 168, 1, 12), 4224);
             if (enabled)
             {
@@ -46,8 +44,7 @@ namespace Aura_OS.Apps.System
 
         public void Send(string message)
         {
-            //if (message == null) { return; }
-            //debugger.Send(message);
+            debugger.Send(message);
             if (enabled)
             {
                 xClient.Send(Encoding.ASCII.GetBytes("[" + Aura_OS.System.Time.TimeString(true, true, true) + "] - " + message));
@@ -83,6 +80,8 @@ namespace Aura_OS.Apps.System
                 result = DispSettingsDialog(false);
             }
 
+            Console.Clear();
+
             HAL.SaveScreen.PushLastScreen();
 
             if (result.Equals("on"))
@@ -94,8 +93,15 @@ namespace Aura_OS.Apps.System
             }
             else if (result.Equals("off"))
             {
-                Kernel.debugger.enabled = false;
-                Console.WriteLine("Debugger disabled!");
+                if (!Kernel.debugger.enabled)
+                {
+                    Console.WriteLine("Debugger already disabled!");
+                }
+                else
+                {
+                    Kernel.debugger.enabled = false;
+                    Console.WriteLine("Debugger disabled!");
+                }
             }
             else if (result.Equals("changeip"))
             {

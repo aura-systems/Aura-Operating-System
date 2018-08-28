@@ -14,7 +14,7 @@ using L = Aura_OS.System.Translation;
 namespace Aura_OS.System.Shell.VGA
 {
 
-    class VGAConsole : Console
+    public class VGAConsole : Console
     {
         private const byte LineFeed = (byte)'\n';
         private const byte CarriageReturn = (byte)'\r';
@@ -157,7 +157,7 @@ namespace Aura_OS.System.Shell.VGA
 
         public override void DrawImage(ushort X, ushort Y, ushort Length, ushort height, Image image)
         {
-            throw new NotImplementedException();
+            // Do nothing
         }
 
         public override ConsoleColor Foreground

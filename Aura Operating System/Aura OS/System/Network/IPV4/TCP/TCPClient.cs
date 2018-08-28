@@ -45,7 +45,7 @@ namespace Aura_OS.System.Network.IPV4.TCP
         {
             if (clients.ContainsKey((UInt32)destPort) == true)
             {
-                Kernel.debugger.Send("Client exists for port" + destPort);
+                Apps.System.Debugger.debugger.Send("Client exists for port" + destPort);
                 return clients[(UInt32)destPort];
             }
 
@@ -88,7 +88,7 @@ namespace Aura_OS.System.Network.IPV4.TCP
 
             connection.CID = CID;
 
-            Kernel.debugger.Send(CID.ToString());
+            Apps.System.Debugger.debugger.Send(CID.ToString());
 
             connection.dest = dest;
             connection.source = source;
@@ -121,12 +121,12 @@ namespace Aura_OS.System.Network.IPV4.TCP
 
                 if (second >= 4)
                 {
-                    Kernel.debugger.Send("No response in 4 secondes...");
+                    Apps.System.Debugger.debugger.Send("No response in 4 secondes...");
                     break;
                 }
             }
 
-            Kernel.debugger.Send("Connected!!");
+            Apps.System.Debugger.debugger.Send("Connected!!");
         }
 
         public void Send(byte[] data)
@@ -169,7 +169,10 @@ namespace Aura_OS.System.Network.IPV4.TCP
 
         public void Send(byte[] data, IPV4.Address dest, Int32 destPort)
         {
+
             IPV4.Address source = IPV4.Config.FindNetwork(dest);
+
+            Console.WriteLine("Sending " + "TCP Packet Src=" + source + ":" + localPort + ", Dest=" + dest + ":" + destPort + ", DataLen=" + data.Length);
 
             TCPConnection.Connection connection = new TCPConnection.Connection();
 
@@ -194,8 +197,6 @@ namespace Aura_OS.System.Network.IPV4.TCP
             connection.Send(true);
 
             readytosend = false;
-
-            Console.WriteLine("Sending " + "TCP Packet Src=" + source + ":" + localPort + ", Dest=" + dest + ":" + destPort + ", DataLen=" + data.Length);
 
         }
 

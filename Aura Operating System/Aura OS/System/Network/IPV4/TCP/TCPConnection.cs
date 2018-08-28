@@ -69,7 +69,7 @@ namespace Aura_OS.System.Network.IPV4.TCP
 
             public bool Send(bool isdata)
             {
-                Kernel.debugger.Send("Sending TCP packet...");
+                Apps.System.Debugger.debugger.Send("Sending TCP packet...");
                 if (isdata)
                 {
                     TCPPacket packet = new TCPPacket(source, dest, localPort, destPort, data, sequencenumber, acknowledgmentnb, 0x50, Flags, WSValue, 0x0000, false, false);
@@ -81,6 +81,7 @@ namespace Aura_OS.System.Network.IPV4.TCP
                     OutgoingBuffer.AddPacket(packet);
                 }
                 NetworkStack.Update();
+                Apps.System.Debugger.debugger.Send("Sent!");
                 return true;
             }
 
