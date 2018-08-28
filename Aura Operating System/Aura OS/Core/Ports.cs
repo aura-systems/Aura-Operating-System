@@ -66,6 +66,17 @@ namespace Aura_OS.Core
         }
 
         /// <summary>
+        /// Writes a 32 bit word
+        /// </summary>
+        /// <param name="port"></param>
+        /// <param name="data"></param>
+        public static void outd(ushort port, uint data)
+        {
+            IOPort io = new IOPort(port);
+            io.DWord = data;
+        }
+
+        /// <summary>
         /// Writes a 16 bit word
         /// </summary>
         /// <param name="port"></param>

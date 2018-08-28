@@ -61,13 +61,10 @@ namespace Aura_OS.System.Network.IPV4.TCP
                 }
             }
 
-            public bool Open(int timeout = 3)
+            public bool Start()
             {
-                if (IsOpen) return true;
 
-                
-
-                return this.isOpen;
+                return true;
             }
 
             public bool Send(bool isdata)

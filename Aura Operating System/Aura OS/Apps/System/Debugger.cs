@@ -5,10 +5,10 @@
 */
 
 using Aura_OS.System.Network.IPV4;
-using Aura_OS.System.Network.IPV4.UDP;
 using System;
-using Aura_OS.System;
 using System.Text;
+using Aura_OS.System.Network.IPV4.TCP;
+using Aura_OS.System.Network.IPV4.UDP;
 
 namespace Aura_OS.Apps.System
 {
@@ -17,7 +17,7 @@ namespace Aura_OS.Apps.System
 
         public static Cosmos.Debug.Kernel.Debugger debugger = new Cosmos.Debug.Kernel.Debugger("aura", "debugger");
 
-        UdpClient xClient;
+        TCPClient xClient;
 
         public bool enabled = false;
 
@@ -32,8 +32,10 @@ namespace Aura_OS.Apps.System
 
         public void Start()
         {
-            xClient = new UdpClient(port);
-            xClient.Connect(ip, port);
+            //xClient = new TCPClient(port);
+            xClient = new TCPClient(4343);
+            //xClient.Connect(ip, port);
+            xClient.Connect(new Address(192, 168, 1, 12), 4224);
             if (enabled)
             {
                 Send("--- Aura Debugger v0.1 ---");
@@ -44,7 +46,8 @@ namespace Aura_OS.Apps.System
 
         public void Send(string message)
         {
-            debugger.Send(message);
+            //if (message == null) { return; }
+            //debugger.Send(message);
             if (enabled)
             {
                 xClient.Send(Encoding.ASCII.GetBytes("[" + Aura_OS.System.Time.TimeString(true, true, true) + "] - " + message));

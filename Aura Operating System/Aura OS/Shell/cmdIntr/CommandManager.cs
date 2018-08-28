@@ -303,8 +303,13 @@ namespace Aura_OS.Shell.cmdIntr
             else if (cmd.Equals("tcp"))
             {
                 var xClient = new System.Network.IPV4.TCP.TCPClient(4343);
-                xClient.Connect(new System.Network.IPV4.Address(192, 168, 1, 12), 9020);
-                xClient.Send(Encoding.ASCII.GetBytes("Hello from Aura Operating System!"));
+                xClient.Connect(new System.Network.IPV4.Address(192, 168, 1, 12), 4224);
+                xClient.Send(Encoding.ASCII.GetBytes("1"));
+                xClient.Send(Encoding.ASCII.GetBytes("2"));
+                xClient.Send(Encoding.ASCII.GetBytes("3"));
+                xClient.Send(Encoding.ASCII.GetBytes("4"));
+                xClient.Send(Encoding.ASCII.GetBytes("5"));
+
             }
 
             else if (cmd.Equals("dhcp"))

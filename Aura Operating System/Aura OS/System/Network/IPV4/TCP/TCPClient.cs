@@ -108,9 +108,22 @@ namespace Aura_OS.System.Network.IPV4.TCP
 
             connection.Send(false);
 
+            int _deltaT = 0;
+            int second = 0;
+
             while (!connection.IsOpen)
             {
+                if (_deltaT != Cosmos.HAL.RTC.Second)
+                {
+                    second++;
+                    _deltaT = Cosmos.HAL.RTC.Second;
+                }
 
+                if (second >= 4)
+                {
+                    Kernel.debugger.Send("No response in 4 secondes...");
+                    break;
+                }
             }
 
             Kernel.debugger.Send("Connected!!");
@@ -126,12 +139,33 @@ namespace Aura_OS.System.Network.IPV4.TCP
 
             Send(data, this.destination, this.destinationPort);
             NetworkStack.Update();
+
+            int _deltaT = 0;
+            int second = 0;
+
+            while (!readytosend)
+            {
+                if (_deltaT != Cosmos.HAL.RTC.Second)
+                {
+                    second++;
+                    _deltaT = Cosmos.HAL.RTC.Second;
+                }
+
+                if (second >= 4)
+                {
+                    Console.WriteLine("No response in 4 secondes...");
+                    break;
+                }
+            }
+            Console.WriteLine("Done!");
         }
 
         public static ulong lastack = 0x00;
         public static ulong lastsn = 0x00;
 
         public bool IsConnected { get; internal set; }
+
+        public static bool readytosend = true;
 
         public void Send(byte[] data, IPV4.Address dest, Int32 destPort)
         {
@@ -158,6 +192,8 @@ namespace Aura_OS.System.Network.IPV4.TCP
             connection.data = data;
 
             connection.Send(true);
+
+            readytosend = false;
 
             Console.WriteLine("Sending " + "TCP Packet Src=" + source + ":" + localPort + ", Dest=" + dest + ":" + destPort + ", DataLen=" + data.Length);
 
