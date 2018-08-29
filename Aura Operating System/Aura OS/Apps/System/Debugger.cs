@@ -170,11 +170,11 @@ namespace Aura_OS.Apps.System
             Console.SetCursorPosition(x, y + 1);
             if (enabled)
             {
-                Console.WriteLine("║ Enable or disable UDP debugger: (currently enabled)          ║");
+                Console.WriteLine("║ Enable or disable TCP debugger: (currently enabled)          ║");
             }
             else
             {
-                Console.WriteLine("║ Enable or disable UDP debugger: (currently disabled)         ║");
+                Console.WriteLine("║ Enable or disable TCP debugger: (currently disabled)         ║");
             }
             Console.SetCursorPosition(x_lang, y_lang);
             Console.SetCursorPosition(x, y + 2);
