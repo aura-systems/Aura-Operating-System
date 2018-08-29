@@ -169,6 +169,8 @@ namespace Aura_OS.HAL.Drivers.Network
 
             this.mac = new MACAddress(eeprom_mac);
 
+            Ports.outw((ushort)(BaseAddress + 0x3E), Ports.inw((ushort)(BaseAddress + 0x3E))); //Status zurücksetzen
+
             init_buffers();
 
             Ports.outd((ushort)(BaseAddress + 0x44), 0x0000E70F);
