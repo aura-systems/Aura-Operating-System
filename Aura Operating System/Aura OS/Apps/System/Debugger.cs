@@ -56,6 +56,11 @@ namespace Aura_OS.Apps.System
             {
                 xClient.Send(Encoding.ASCII.GetBytes("[" + Aura_OS.System.Time.TimeString(true, true, true) + "] - Properly disconnected by the operating system!"));
                 xClient.Close();
+                Kernel.debugger.enabled = false;
+            }
+            else
+            {
+                Console.WriteLine("Debugger already disabled!");
             }
         }
     }
@@ -100,7 +105,6 @@ namespace Aura_OS.Apps.System
                 else
                 {
                     Kernel.debugger.Stop();
-                    Kernel.debugger.enabled = false;
                     Console.WriteLine("Debugger disabled!");
                 }
             }
