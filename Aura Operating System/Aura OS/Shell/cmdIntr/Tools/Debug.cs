@@ -8,6 +8,7 @@ using System;
 using L = Aura_OS.System.Translation;
 using Aura_OS.System.Computer;
 using Aura_OS.System.Utils;
+using Aura_OS.Apps.System;
 
 namespace Aura_OS.Shell.cmdIntr.Tools
 {
@@ -52,43 +53,43 @@ namespace Aura_OS.Shell.cmdIntr.Tools
             {
                 if (cmdargs[1].Equals("vbeinfo"))
                 {
-                    Console.WriteLine("[VBE Mode Information]");
-                    Console.WriteLine("BPP: " + System.Shell.VESAVBE.Graphics.depthVESA);
-                    Console.WriteLine("Height: " + System.Shell.VESAVBE.Graphics.heightVESA);
-                    Console.WriteLine("Width: " + System.Shell.VESAVBE.Graphics.widthVESA);
-                    Console.WriteLine("VBE Pointer: 0x" + Conversion.DecToHex((int)System.Shell.VESAVBE.Graphics.vbepointer));
-                    Console.WriteLine("VBE Mode: " + System.Shell.VESAVBE.Graphics.VESAMode);
+                    DebugConsole.WriteLine("[VBE Mode Information]");
+                    DebugConsole.WriteLine("BPP: " + System.Shell.VESAVBE.Graphics.depthVESA);
+                    DebugConsole.WriteLine("Height: " + System.Shell.VESAVBE.Graphics.heightVESA);
+                    DebugConsole.WriteLine("Width: " + System.Shell.VESAVBE.Graphics.widthVESA);
+                    DebugConsole.WriteLine("VBE Pointer: 0x" + Conversion.DecToHex((int)System.Shell.VESAVBE.Graphics.vbepointer));
+                    DebugConsole.WriteLine("VBE Mode: " + System.Shell.VESAVBE.Graphics.VESAMode);
 
-                    Console.WriteLine();
+                    DebugConsole.WriteLine();
 
-                    Console.WriteLine("[VBE Controller Information]");
+                    DebugConsole.WriteLine("[VBE Controller Information]");
                     
-                    Console.WriteLine("VBE Signature: " + System.Shell.VESAVBE.Graphics.ssignature);
+                    DebugConsole.WriteLine("VBE Signature: " + System.Shell.VESAVBE.Graphics.ssignature);
 
-                    Console.WriteLine("VBE Version: " + System.Shell.VESAVBE.Graphics.sversion);
+                    DebugConsole.WriteLine("VBE Version: " + System.Shell.VESAVBE.Graphics.sversion);
 
-                    Console.WriteLine("OEM String: " + System.Shell.VESAVBE.Graphics.oemString);
+                    DebugConsole.WriteLine("OEM String: " + System.Shell.VESAVBE.Graphics.oemString);
 
-                    Console.WriteLine("Capabilites: " + System.Shell.VESAVBE.Graphics.capabilities);
+                    DebugConsole.WriteLine("Capabilites: " + System.Shell.VESAVBE.Graphics.capabilities);
 
-                    Console.WriteLine("Total Memory: " + System.Shell.VESAVBE.Graphics.totalmemory + " kB");
+                    DebugConsole.WriteLine("Total Memory: " + System.Shell.VESAVBE.Graphics.totalmemory + " kB");
 
-                    Console.WriteLine("OEM Software Rev: " + System.Shell.VESAVBE.Graphics.oemSoftwareRev);
+                    DebugConsole.WriteLine("OEM Software Rev: " + System.Shell.VESAVBE.Graphics.oemSoftwareRev);
 
-                    Console.WriteLine("Video Mode Pointer: 0x" + Conversion.DecToHex((int)System.Shell.VESAVBE.Graphics.videoModePtr));
+                    DebugConsole.WriteLine("Video Mode Pointer: 0x" + Conversion.DecToHex((int)System.Shell.VESAVBE.Graphics.videoModePtr));
 
-                    Console.WriteLine("OEM String Pointer: 0x" + Conversion.DecToHex((int)System.Shell.VESAVBE.Graphics.oemStringPtr));
+                    DebugConsole.WriteLine("OEM String Pointer: 0x" + Conversion.DecToHex((int)System.Shell.VESAVBE.Graphics.oemStringPtr));
 
-                    Console.WriteLine("OEM Vendor Name Pointer: 0x" + Conversion.DecToHex((int)System.Shell.VESAVBE.Graphics.oemVendorNamePtr));
+                    DebugConsole.WriteLine("OEM Vendor Name Pointer: 0x" + Conversion.DecToHex((int)System.Shell.VESAVBE.Graphics.oemVendorNamePtr));
 
-                    Console.WriteLine("OEM Product Name Pointer: 0x" + Conversion.DecToHex((int)System.Shell.VESAVBE.Graphics.oemProductNamePtr));
+                    DebugConsole.WriteLine("OEM Product Name Pointer: 0x" + Conversion.DecToHex((int)System.Shell.VESAVBE.Graphics.oemProductNamePtr));
 
-                    Console.WriteLine("OEM Product Rev Pointer: 0x" + Conversion.DecToHex((int)System.Shell.VESAVBE.Graphics.oemProductRevPtr));
+                    DebugConsole.WriteLine("OEM Product Rev Pointer: 0x" + Conversion.DecToHex((int)System.Shell.VESAVBE.Graphics.oemProductRevPtr));
                 }
 
                 else if (cmdargs[1].Equals("vbemodes"))
                 {
-                    Console.WriteLine("[VBE Mode List]");
+                    DebugConsole.WriteLine("[VBE Mode List]");
                     int counter = 0;
                     foreach (uint mode in System.Shell.VESAVBE.Graphics.modelist)
                     {
@@ -101,98 +102,98 @@ namespace Aura_OS.Shell.cmdIntr.Tools
                         switch (mode)
                         {
                             case 0x100:
-                                Console.WriteLine("Mode: 0x" + Conversion.DecToHex((int)mode) + " - 640x400x256");
+                                DebugConsole.WriteLine("Mode: 0x" + Conversion.DecToHex((int)mode) + " - 640x400x256");
                                 break;
                             case 0x101:
-                                Console.WriteLine("Mode: 0x" + Conversion.DecToHex((int)mode) + " - 640x480x256");
+                                DebugConsole.WriteLine("Mode: 0x" + Conversion.DecToHex((int)mode) + " - 640x480x256");
                                 break;
                             case 0x102:
-                                Console.WriteLine("Mode: 0x" + Conversion.DecToHex((int)mode) + " - 800x600x16");
+                                DebugConsole.WriteLine("Mode: 0x" + Conversion.DecToHex((int)mode) + " - 800x600x16");
                                 break;
                             case 0x103:
-                                Console.WriteLine("Mode: 0x" + Conversion.DecToHex((int)mode) + " - 800x600x256");
+                                DebugConsole.WriteLine("Mode: 0x" + Conversion.DecToHex((int)mode) + " - 800x600x256");
                                 break;
                             case 0x104:
-                                Console.WriteLine("Mode: 0x" + Conversion.DecToHex((int)mode) + " - 1024x768x16");
+                                DebugConsole.WriteLine("Mode: 0x" + Conversion.DecToHex((int)mode) + " - 1024x768x16");
                                 break;
                             case 0x105:
-                                Console.WriteLine("Mode: 0x" + Conversion.DecToHex((int)mode) + " - 1024x768x256");
+                                DebugConsole.WriteLine("Mode: 0x" + Conversion.DecToHex((int)mode) + " - 1024x768x256");
                                 break;
                             case 0x106:
-                                Console.WriteLine("Mode: 0x" + Conversion.DecToHex((int)mode) + " - 1280x1024x16");
+                                DebugConsole.WriteLine("Mode: 0x" + Conversion.DecToHex((int)mode) + " - 1280x1024x16");
                                 break;
                             case 0x107:
-                                Console.WriteLine("Mode: 0x" + Conversion.DecToHex((int)mode) + " - 1280x1024x256");
+                                DebugConsole.WriteLine("Mode: 0x" + Conversion.DecToHex((int)mode) + " - 1280x1024x256");
                                 break;
                             case 0x108:
-                                Console.WriteLine("Mode: 0x" + Conversion.DecToHex((int)mode) + " - 80x60 text");
+                                DebugConsole.WriteLine("Mode: 0x" + Conversion.DecToHex((int)mode) + " - 80x60 text");
                                 break;
                             case 0x109:
-                                Console.WriteLine("Mode: 0x" + Conversion.DecToHex((int)mode) + " - 132x25 text");
+                                DebugConsole.WriteLine("Mode: 0x" + Conversion.DecToHex((int)mode) + " - 132x25 text");
                                 break;
                             case 0x10A:
-                                Console.WriteLine("Mode: 0x" + Conversion.DecToHex((int)mode) + " - 132x43 text");
+                                DebugConsole.WriteLine("Mode: 0x" + Conversion.DecToHex((int)mode) + " - 132x43 text");
                                 break;
                             case 0x10B:
-                                Console.WriteLine("Mode: 0x" + Conversion.DecToHex((int)mode) + " - 132x50 text");
+                                DebugConsole.WriteLine("Mode: 0x" + Conversion.DecToHex((int)mode) + " - 132x50 text");
                                 break;
                             case 0x10C:
-                                Console.WriteLine("Mode: 0x" + Conversion.DecToHex((int)mode) + " - 132x60 text");
+                                DebugConsole.WriteLine("Mode: 0x" + Conversion.DecToHex((int)mode) + " - 132x60 text");
                                 break;
 
                             //VBE v1.2+
                             case 0x10D:
-                                Console.WriteLine("Mode: 0x" + Conversion.DecToHex((int)mode) + " - 320x200 32k");
+                                DebugConsole.WriteLine("Mode: 0x" + Conversion.DecToHex((int)mode) + " - 320x200 32k");
                                 break;
                             case 0x10E:
-                                Console.WriteLine("Mode: 0x" + Conversion.DecToHex((int)mode) + " - 320x200 64k");
+                                DebugConsole.WriteLine("Mode: 0x" + Conversion.DecToHex((int)mode) + " - 320x200 64k");
                                 break;
                             case 0x10F:
-                                Console.WriteLine("Mode: 0x" + Conversion.DecToHex((int)mode) + " - 320x200 16M");
+                                DebugConsole.WriteLine("Mode: 0x" + Conversion.DecToHex((int)mode) + " - 320x200 16M");
                                 break;
                             case 0x110:
-                                Console.WriteLine("Mode: 0x" + Conversion.DecToHex((int)mode) + " - 640x480 32k");
+                                DebugConsole.WriteLine("Mode: 0x" + Conversion.DecToHex((int)mode) + " - 640x480 32k");
                                 break;
                             case 0x111:
-                                Console.WriteLine("Mode: 0x" + Conversion.DecToHex((int)mode) + " - 640x480 64k");
+                                DebugConsole.WriteLine("Mode: 0x" + Conversion.DecToHex((int)mode) + " - 640x480 64k");
                                 break;
                             case 0x112:
-                                Console.WriteLine("Mode: 0x" + Conversion.DecToHex((int)mode) + " - 640x480 16M");
+                                DebugConsole.WriteLine("Mode: 0x" + Conversion.DecToHex((int)mode) + " - 640x480 16M");
                                 break;
                             case 0x113:
-                                Console.WriteLine("Mode: 0x" + Conversion.DecToHex((int)mode) + " - 800x600 32k");
+                                DebugConsole.WriteLine("Mode: 0x" + Conversion.DecToHex((int)mode) + " - 800x600 32k");
                                 break;
                             case 0x114:
-                                Console.WriteLine("Mode: 0x" + Conversion.DecToHex((int)mode) + " - 800x600 64k");
+                                DebugConsole.WriteLine("Mode: 0x" + Conversion.DecToHex((int)mode) + " - 800x600 64k");
                                 break;
                             case 0x115:
-                                Console.WriteLine("Mode: 0x" + Conversion.DecToHex((int)mode) + " - 800x600 16M");
+                                DebugConsole.WriteLine("Mode: 0x" + Conversion.DecToHex((int)mode) + " - 800x600 16M");
                                 break;
                             case 0x116:
-                                Console.WriteLine("Mode: 0x" + Conversion.DecToHex((int)mode) + " - 1024x768 32k");
+                                DebugConsole.WriteLine("Mode: 0x" + Conversion.DecToHex((int)mode) + " - 1024x768 32k");
                                 break;
                             case 0x117:
-                                Console.WriteLine("Mode: 0x" + Conversion.DecToHex((int)mode) + " - 1024x768 64k");
+                                DebugConsole.WriteLine("Mode: 0x" + Conversion.DecToHex((int)mode) + " - 1024x768 64k");
                                 break;
                             case 0x118:
-                                Console.WriteLine("Mode: 0x" + Conversion.DecToHex((int)mode) + " - 1024x768 16M");
+                                DebugConsole.WriteLine("Mode: 0x" + Conversion.DecToHex((int)mode) + " - 1024x768 16M");
                                 break;
                             case 0x119:
-                                Console.WriteLine("Mode: 0x" + Conversion.DecToHex((int)mode) + " - 1280x1024 32k");
+                                DebugConsole.WriteLine("Mode: 0x" + Conversion.DecToHex((int)mode) + " - 1280x1024 32k");
                                 break;
                             case 0x11A:
-                                Console.WriteLine("Mode: 0x" + Conversion.DecToHex((int)mode) + " - 1280x1024 64k");
+                                DebugConsole.WriteLine("Mode: 0x" + Conversion.DecToHex((int)mode) + " - 1280x1024 64k");
                                 break;
                             case 0x11B:
-                                Console.WriteLine("Mode: 0x" + Conversion.DecToHex((int)mode) + " - 1280x1024 16M");
+                                DebugConsole.WriteLine("Mode: 0x" + Conversion.DecToHex((int)mode) + " - 1280x1024 16M");
                                 break;
 
                             case 0x81FF:
-                                Console.WriteLine("Mode: 0x" + Conversion.DecToHex((int)mode) + " - Special Mode");
+                                DebugConsole.WriteLine("Mode: 0x" + Conversion.DecToHex((int)mode) + " - Special Mode");
                                 break;
 
                             default:
-                                Console.WriteLine("Mode: 0x" + Conversion.DecToHex((int)mode) + " - Unkown mode");
+                                DebugConsole.WriteLine("Mode: 0x" + Conversion.DecToHex((int)mode) + " - Unkown mode");
                                 break;
                         }
                     }

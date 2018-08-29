@@ -1,6 +1,6 @@
 ﻿/*
 * PROJECT:          Aura Operating System Development
-* CONTENT:          Debugger using UDP!
+* CONTENT:          Debugger using TCP!
 * PROGRAMMERS:      Valentin Charbonnier <valentinbreiz@gmail.com>
 */
 
@@ -8,7 +8,6 @@ using Aura_OS.System.Network.IPV4;
 using System;
 using System.Text;
 using Aura_OS.System.Network.IPV4.TCP;
-using Aura_OS.System.Network.IPV4.UDP;
 
 namespace Aura_OS.Apps.System
 {
@@ -236,4 +235,18 @@ namespace Aura_OS.Apps.System
             Console.SetCursorPosition(x_lang, y_lang);
         }
     }
+
+    public class DebugConsole
+    {
+        public static void WriteLine(string text)
+        {
+            Console.WriteLine(text);
+            Kernel.debugger.Send(text);
+        }
+
+        public static void WriteLine()
+        {
+            Console.WriteLine();
+        }
+    } 
 }
