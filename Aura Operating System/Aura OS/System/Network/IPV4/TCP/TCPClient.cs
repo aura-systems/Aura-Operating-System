@@ -157,7 +157,7 @@ namespace Aura_OS.System.Network.IPV4.TCP
                     break;
                 }
             }
-            Console.WriteLine("Done!");
+            //Console.WriteLine("Done!");
         }
 
         public static ulong lastack = 0x00;
@@ -172,7 +172,7 @@ namespace Aura_OS.System.Network.IPV4.TCP
 
             IPV4.Address source = IPV4.Config.FindNetwork(dest);
 
-            Console.WriteLine("Sending " + "TCP Packet Src=" + source + ":" + localPort + ", Dest=" + dest + ":" + destPort + ", DataLen=" + data.Length);
+            //Console.WriteLine("Sending " + "TCP Packet Src=" + source + ":" + localPort + ", Dest=" + dest + ":" + destPort + ", DataLen=" + data.Length);
 
             TCPConnection.Connection connection = new TCPConnection.Connection();
 

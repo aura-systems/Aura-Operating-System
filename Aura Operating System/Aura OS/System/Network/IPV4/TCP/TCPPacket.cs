@@ -199,7 +199,6 @@ namespace Aura_OS.System.Network.IPV4.TCP
                     TCPClient.lastack = tcp_packet.sequencenumber;
                     TCPClient.lastsn = tcp_packet.acknowledgmentnb;
                     TCPClient.readytosend = true;
-                    Console.WriteLine("FLAG: ACK");
                     return;
                 }
                 else
