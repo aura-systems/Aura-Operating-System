@@ -113,12 +113,8 @@ namespace Aura_OS.HAL.Drivers.Network
 
         void init_buffers()
         {
-            rx_descs = (rx_desc*)Cosmos.Core.Memory.Old.Heap.MemAlloc((uint)rx_descs);
-            tx_descs = (tx_desc*)Cosmos.Core.Memory.Old.Heap.MemAlloc((uint)tx_descs);
             for (int i = 0; i < 10; i++)
             {
-                rx_buf[i] = (byte*)0;
-                tx_buf[i] = (byte*)0;
 
                 rx_descs[i].own = 1;
                 rx_descs[i].eor = 0;
@@ -155,8 +151,6 @@ namespace Aura_OS.HAL.Drivers.Network
 
             BaseAddress = this.pciCard.BaseAddressBar[0].BaseAddress;
 
-            SetIrqHandler(device.InterruptLine, HandleNetworkInterrupt);
-
             // Enable the card
             pciCard.EnableDevice();
 
@@ -185,11 +179,135 @@ namespace Aura_OS.HAL.Drivers.Network
             Ports.outw((ushort)(BaseAddress + 0x3C), 0x03FF); //Activating all Interrupts
             Ports.outb((ushort)(BaseAddress + 0x37), 0x0C); // Enabling receive and transmit
 
+            SetIrqHandler(device.InterruptLine, HandleNetworkInterrupt);
+
+            byte[] aData = new byte[]
+            {
+                0x6C, 0x62, 0x6D, 0x93, 0xC1, 0xDA, 0xb8, 0x86, 0x87, 0x24, 0x34, 0xb7, 0x08, 0x00,
+                0x45, 0x00, 0x00, 0x24, 0x55, 0x1b, 0x00, 0x00, 0x80, 0x11, 0x62, 0x0b, 0xc0, 0xa8, 0x01, 0x46, 0xc0, 0xa8, 0x01, 0x0c,
+                0x10, 0x92, 0x10, 0x92, 0x00, 0x10, 0x15, 0xf3,
+                0x48, 0x65, 0x6c, 0x6c, 0x6f, 0x21, 0x21, 0x21
+            
+            };
+
+            realtek_send_packet(PointerData(aData, aData.Length), aData.Length);
+
         }
+
+        public byte* PointerData(byte[] data, int length)
+        {
+            byte[] safe = new byte[length];
+            for (int i = 0; i < length; i++)
+                safe[i] = data[i];
+
+            fixed (byte* converted = safe)
+            {
+                // This will update the safe and converted arrays.
+                for (int i = 0; i < length; i++)
+                    converted[i]++;
+
+                return converted;
+            }
+        }
+
+        bool printed = false;
+        bool printed1 = false;
 
         protected void HandleNetworkInterrupt(ref IRQContext aContext)
         {
-            Console.WriteLine("RTL8168 IRQ raised!");
+            ushort status = Ports.inw((ushort)(BaseAddress + 0x3E));
+            //kprintf("Status: %b\n",status);
+            if ((status & 0x0001) != 0)
+            {
+                Console.WriteLine("Receive succesfull");
+                //got_packet();
+                /*if(dhcp_timer <= 0 && dhcp_status == 5) {
+                    dhcp_status = 0;
+                }
+                dhcp_get_ip();*/
+            }
+            if ((status & 0x0002) != 0) Console.WriteLine("Receive error");
+            if ((status & 0x0004) != 0 && (status & 0x0080) != 0)
+            {
+                Console.WriteLine("Transmit succesfull - descriptor resetted");
+            }
+            else
+            {
+                if ((status & 0x0004) != 0) Console.WriteLine("Transmit succesfull - descriptor not resetted\n");
+                if ((status & 0x0080) != 0) Console.WriteLine("Transmit descriptor unavailable\n");
+            }
+            if ((status & 0x0008) != 0) Console.WriteLine("Transmit error\n");
+            if ((status & 0x0010) != 0)
+            {
+                if (printed == false)
+                {
+                    Console.WriteLine("Receive descriptor unavailable\n");
+                    printed = true;
+                }
+            }
+            if ((status & 0x0020) != 0)
+            {
+                if ((Ports.inb((ushort)(BaseAddress + 0x6C)) & 0x02) != 0)
+                {
+                    Console.WriteLine("Link is up with ");
+                    if ((Ports.inb((ushort)(BaseAddress + 0x6C)) & 0x04) != 0) Console.WriteLine("10 Mbps and ");
+                    if ((Ports.inb((ushort)(BaseAddress + 0x6C)) & 0x08) != 0) Console.WriteLine("100 Mbps and ");
+                    if ((Ports.inb((ushort)(BaseAddress + 0x6C)) & 0x10) != 0) Console.WriteLine("1000 Mbps and ");
+                    if ((Ports.inb((ushort)(BaseAddress + 0x6C)) & 0x01) != 0) Console.WriteLine("Full-duplex");
+                    else Console.WriteLine("Half-duplex");
+
+                    //dhcp_get_ip();
+                }
+                else
+                {
+                    Console.WriteLine("Link is down\n");
+                }
+            }
+            if ((status & 0x0040) != 0)
+            {
+                if (printed1 == false)
+                {
+                    Console.WriteLine("Receive FIFO overflow\n");
+                    printed1 = true;
+                }
+            }
+            if ((status & 0x0100) != 0) Console.WriteLine("Software Interrupt\n");
+            if ((status & 0x0200) != 0) Console.WriteLine("Receive FIFO empty\n");
+            if ((status & 0x0400) != 0) Console.WriteLine("Unknown Status (reserved Bit 11)\n");
+            if ((status & 0x0800) != 0) Console.WriteLine("Unknown Status (reserved Bit 12)\n");
+            if ((status & 0x1000) != 0) Console.WriteLine("Unknown Status (reserved Bit 13)\n");
+            if ((status & 0x2000) != 0) Console.WriteLine("Unknown Status (reserved Bit 14)\n");
+            //if(status & 0x4000) kprintf("Timeout\n");
+            if ((status & 0x8000) != 0) Console.WriteLine("Unknown Status (reserved Bit 16)\n");
+
+            Ports.outw((ushort)(BaseAddress + 0x3E), Ports.inw((ushort)(BaseAddress + 0x3E)));
+
+        }
+
+        void realtek_send_packet(byte* data, int data_length)
+        {
+
+            //fixed (byte** p = &tx_buf[realtek_next_tx])
+            //{
+            //    Memory.Memcpy((byte*)p, data, data_length);
+            //}
+            
+            for (int i = 0; i < data_length; i++)
+            {
+                tx_buf[realtek_next_tx][i] = data[i];
+            }
+            tx_descs[realtek_next_tx].fs = 1;
+            tx_descs[realtek_next_tx].ls = 1;
+            tx_descs[realtek_next_tx].frame_length = (ushort)data_length;
+            tx_descs[realtek_next_tx].addr_low = (ushort)tx_buf[realtek_next_tx];
+            tx_descs[realtek_next_tx].own = 1;
+            //kprintf("Poll Packet %d: %d\n",realtek_next_tx,tx_descs[realtek_next_tx].frame_length);
+            Ports.outb((ushort)(BaseAddress + 0x38), 0x40);
+            //kprintf("Waiting for transmit...\n");
+            //while(Ports.inb((ushort)(BaseAddress + 0x38)) != 0);
+            //kprintf("Transmit done\n");
+            realtek_next_tx++;
+            if (realtek_next_tx >= 10) realtek_next_tx = 0;
         }
 
 

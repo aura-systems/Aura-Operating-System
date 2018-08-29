@@ -12,21 +12,21 @@ namespace Aura_OS.System
     {
         public static void Init()
         {
-            CustomConsole.WriteLineInfo("Finding PCNETII nic...");
+            CustomConsole.WriteLineInfo("Finding RTL8168 nic...");
 
-            HAL.Drivers.Network.AMDPCNetII xNic;
+            HAL.Drivers.Network.RTL8168 xNic;
 
-            Cosmos.HAL.PCIDevice xNicDev = Cosmos.HAL.PCI.GetDevice(Cosmos.HAL.VendorID.AMD, Cosmos.HAL.DeviceID.PCNETII);
+            Cosmos.HAL.PCIDevice xNicDev = Cosmos.HAL.PCI.GetDevice((Cosmos.HAL.VendorID)0x10EC, (Cosmos.HAL.DeviceID)0x8168);
             if (xNicDev == null)
             {
-                CustomConsole.WriteLineError("PCNETII not found!!");
+                CustomConsole.WriteLineError("RTL8168 not found!!");
                 return;
             }
 
-            CustomConsole.WriteLineOK("Found AMD PCNetII NIC on PCI " + xNicDev.bus + ":" + xNicDev.slot + ":" + xNicDev.function);
+            CustomConsole.WriteLineOK("Found RTL8168 NIC on PCI " + xNicDev.bus + ":" + xNicDev.slot + ":" + xNicDev.function);
             CustomConsole.WriteLineInfo("NIC IRQ: " + xNicDev.InterruptLine);
 
-            xNic = new HAL.Drivers.Network.AMDPCNetII(xNicDev);
+            xNic = new HAL.Drivers.Network.RTL8168(xNicDev);
 
             CustomConsole.WriteLineInfo("NIC MAC Address: " + xNic.MACAddress.ToString());
 
