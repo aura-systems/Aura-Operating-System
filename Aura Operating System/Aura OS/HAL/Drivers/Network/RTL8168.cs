@@ -113,8 +113,15 @@ namespace Aura_OS.HAL.Drivers.Network
 
         void init_buffers()
         {
+
+            rx_descs = (rx_desc*)Cosmos.Core.Memory.Old.Heap.MemAlloc((uint)sizeof(rx_desc));
+            tx_descs = (tx_desc*)Cosmos.Core.Memory.Old.Heap.MemAlloc((uint)sizeof(tx_desc));
+
             for (int i = 0; i < 10; i++)
             {
+
+                rx_buf[i] = (byte*)Cosmos.Core.Memory.Old.Heap.MemAlloc((uint)sizeof(byte*));
+                tx_buf[i] = (byte*)Cosmos.Core.Memory.Old.Heap.MemAlloc((uint)sizeof(byte*));
 
                 rx_descs[i].own = 1;
                 rx_descs[i].eor = 0;
@@ -154,6 +161,13 @@ namespace Aura_OS.HAL.Drivers.Network
             // Enable the card
             pciCard.EnableDevice();
 
+            SetIrqHandler(device.InterruptLine, HandleNetworkInterrupt);
+
+            Ports.outb((ushort)(BaseAddress + 0x37), 0x10); /* Send the Reset bit to the Command register */
+            while ((Ports.inb((ushort)(BaseAddress + 0x37)) & 0x10) != 0) { } /* Wait for the chip to finish resetting */
+
+            Console.WriteLine("Reset done.");
+
             // Get the MAC Address
             byte[] eeprom_mac = new byte[6];
             for (uint b = 0; b < 6; b++)
@@ -167,6 +181,10 @@ namespace Aura_OS.HAL.Drivers.Network
 
             init_buffers();
 
+            Ports.outd((ushort)(BaseAddress + 0xE0), 0x002B);
+
+            Ports.outd((ushort)(BaseAddress + 0x50), 0xC0);
+
             Ports.outd((ushort)(BaseAddress + 0x44), 0x0000E70F);
             Ports.outb((ushort)(BaseAddress + 0x37), 0x04); // Enable TX
             Ports.outd((ushort)(BaseAddress + 0x40), 0x03000700);
@@ -179,7 +197,9 @@ namespace Aura_OS.HAL.Drivers.Network
             Ports.outw((ushort)(BaseAddress + 0x3C), 0x03FF); //Activating all Interrupts
             Ports.outb((ushort)(BaseAddress + 0x37), 0x0C); // Enabling receive and transmit
 
-            SetIrqHandler(device.InterruptLine, HandleNetworkInterrupt);
+            Ports.outd((ushort)(BaseAddress + 0x50), 0x00);
+
+            Console.WriteLine("Init done.");
 
             byte[] aData = new byte[]
             {
@@ -191,6 +211,8 @@ namespace Aura_OS.HAL.Drivers.Network
             };
 
             realtek_send_packet(PointerData(aData, aData.Length), aData.Length);
+
+            Console.WriteLine("Send done.");
 
         }
 
@@ -216,71 +238,11 @@ namespace Aura_OS.HAL.Drivers.Network
         protected void HandleNetworkInterrupt(ref IRQContext aContext)
         {
             ushort status = Ports.inw((ushort)(BaseAddress + 0x3E));
-            //kprintf("Status: %b\n",status);
-            if ((status & 0x0001) != 0)
-            {
-                Console.WriteLine("Receive succesfull");
-                //got_packet();
-                /*if(dhcp_timer <= 0 && dhcp_status == 5) {
-                    dhcp_status = 0;
-                }
-                dhcp_get_ip();*/
-            }
-            if ((status & 0x0002) != 0) Console.WriteLine("Receive error");
-            if ((status & 0x0004) != 0 && (status & 0x0080) != 0)
-            {
-                Console.WriteLine("Transmit succesfull - descriptor resetted");
-            }
-            else
-            {
-                if ((status & 0x0004) != 0) Console.WriteLine("Transmit succesfull - descriptor not resetted\n");
-                if ((status & 0x0080) != 0) Console.WriteLine("Transmit descriptor unavailable\n");
-            }
-            if ((status & 0x0008) != 0) Console.WriteLine("Transmit error\n");
-            if ((status & 0x0010) != 0)
-            {
-                if (printed == false)
-                {
-                    Console.WriteLine("Receive descriptor unavailable\n");
-                    printed = true;
-                }
-            }
-            if ((status & 0x0020) != 0)
-            {
-                if ((Ports.inb((ushort)(BaseAddress + 0x6C)) & 0x02) != 0)
-                {
-                    Console.WriteLine("Link is up with ");
-                    if ((Ports.inb((ushort)(BaseAddress + 0x6C)) & 0x04) != 0) Console.WriteLine("10 Mbps and ");
-                    if ((Ports.inb((ushort)(BaseAddress + 0x6C)) & 0x08) != 0) Console.WriteLine("100 Mbps and ");
-                    if ((Ports.inb((ushort)(BaseAddress + 0x6C)) & 0x10) != 0) Console.WriteLine("1000 Mbps and ");
-                    if ((Ports.inb((ushort)(BaseAddress + 0x6C)) & 0x01) != 0) Console.WriteLine("Full-duplex");
-                    else Console.WriteLine("Half-duplex");
 
-                    //dhcp_get_ip();
-                }
-                else
-                {
-                    Console.WriteLine("Link is down\n");
-                }
-            }
-            if ((status & 0x0040) != 0)
-            {
-                if (printed1 == false)
-                {
-                    Console.WriteLine("Receive FIFO overflow\n");
-                    printed1 = true;
-                }
-            }
-            if ((status & 0x0100) != 0) Console.WriteLine("Software Interrupt\n");
-            if ((status & 0x0200) != 0) Console.WriteLine("Receive FIFO empty\n");
-            if ((status & 0x0400) != 0) Console.WriteLine("Unknown Status (reserved Bit 11)\n");
-            if ((status & 0x0800) != 0) Console.WriteLine("Unknown Status (reserved Bit 12)\n");
-            if ((status & 0x1000) != 0) Console.WriteLine("Unknown Status (reserved Bit 13)\n");
-            if ((status & 0x2000) != 0) Console.WriteLine("Unknown Status (reserved Bit 14)\n");
-            //if(status & 0x4000) kprintf("Timeout\n");
-            if ((status & 0x8000) != 0) Console.WriteLine("Unknown Status (reserved Bit 16)\n");
+            Console.WriteLine(status);
 
-            Ports.outw((ushort)(BaseAddress + 0x3E), Ports.inw((ushort)(BaseAddress + 0x3E)));
+            Console.ReadKey();
+
 
         }
 
