@@ -185,14 +185,24 @@ namespace Aura_OS.HAL.Drivers.Network
 
             Ports.outd((ushort)(BaseAddress + 0x50), 0xC0);
 
-            Ports.outd((ushort)(BaseAddress + 0x44), 0x0000E70F);
+            Ports.outd((ushort)(BaseAddress + 0x44), 0x0000E70F); // Enable RX
             Ports.outb((ushort)(BaseAddress + 0x37), 0x04); // Enable TX
             Ports.outd((ushort)(BaseAddress + 0x40), 0x03000700);
             Ports.outw((ushort)(BaseAddress + 0xDA), 0x0FFF); // Maximal 8kb-Pakete
             Ports.outb((ushort)(BaseAddress + 0xEC), 0x3F); // No early transmit
 
-            Ports.outd((ushort)(BaseAddress + 0x20), (uint)tx_descs);
-            Ports.outd((ushort)(BaseAddress + 0xE4), (uint)rx_descs);
+
+            uint* addresstx = (uint*)&tx_descs[0];
+            uint* addressrx = (uint*)&rx_descs[0];
+
+            Console.WriteLine("addresstx: 0x" + System.Utils.Conversion.DecToHex((int)addresstx));
+            Console.WriteLine("addressrx: 0x" + System.Utils.Conversion.DecToHex((int)addressrx));
+
+            Console.WriteLine("old addresstx: 0x" + System.Utils.Conversion.DecToHex((int)tx_descs));
+            Console.WriteLine("old addressrx: 0x" + System.Utils.Conversion.DecToHex((int)rx_descs));
+
+            Ports.outd((ushort)(BaseAddress + 0x20), (uint)addresstx);
+            Ports.outd((ushort)(BaseAddress + 0xE4), (uint)addressrx);
 
             Console.WriteLine("0x20 : " + Ports.inb((ushort)(BaseAddress + 0x20)) + " " + Ports.inb((ushort)(BaseAddress + 0x24)));
             Console.WriteLine("0xE4 : " + Ports.inb((ushort)(BaseAddress + 0xE4)) + " " + Ports.inb((ushort)(BaseAddress + 0xE8)));
@@ -200,7 +210,7 @@ namespace Aura_OS.HAL.Drivers.Network
             Ports.outw((ushort)(BaseAddress + 0x3C), 0x03FF); //Activating all Interrupts
             Ports.outb((ushort)(BaseAddress + 0x37), 0x0C); // Enabling receive and transmit
 
-            Ports.outd((ushort)(BaseAddress + 0x50), 0x00);
+            //Ports.outd((ushort)(BaseAddress + 0x50), 0x00); /* Lock config registers */
 
             Console.WriteLine("Init done.");
 
@@ -242,10 +252,24 @@ namespace Aura_OS.HAL.Drivers.Network
         {
             ushort status = Ports.inw((ushort)(BaseAddress + 0x3E));
 
-            Console.WriteLine(status);
+            Console.WriteLine("Status: 0x" + System.Utils.Conversion.DecToHex(status));
 
-            Console.ReadKey();
-
+            if (status == 0x0020)
+            {
+                if (Ports.inb((ushort)(BaseAddress + 0x6C)) == 0x02)
+                {
+                    Console.WriteLine("Link is up with ");
+                    if (Ports.inb((ushort)(BaseAddress + 0x6C)) == 0x04) Console.WriteLine("10 Mbps and ");
+                    if (Ports.inb((ushort)(BaseAddress + 0x6C)) == 0x08) Console.WriteLine("100 Mbps and ");
+                    if (Ports.inb((ushort)(BaseAddress + 0x6C)) == 0x10) Console.WriteLine("1000 Mbps and ");
+                    if (Ports.inb((ushort)(BaseAddress + 0x6C)) == 0x01) Console.WriteLine("Full-duplex\n");
+                    else Console.WriteLine("Half-duplex\n");
+                }
+                else
+                {
+                    Console.WriteLine("Link is down\n");
+                }
+            }
 
         }
 
