@@ -194,6 +194,9 @@ namespace Aura_OS.HAL.Drivers.Network
             Ports.outd((ushort)(BaseAddress + 0x20), (uint)tx_descs);
             Ports.outd((ushort)(BaseAddress + 0xE4), (uint)rx_descs);
 
+            Console.WriteLine("0x20 : " + Ports.inb((ushort)(BaseAddress + 0x20)) + " " + Ports.inb((ushort)(BaseAddress + 0x24)));
+            Console.WriteLine("0xE4 : " + Ports.inb((ushort)(BaseAddress + 0xE4)) + " " + Ports.inb((ushort)(BaseAddress + 0xE8)));
+
             Ports.outw((ushort)(BaseAddress + 0x3C), 0x03FF); //Activating all Interrupts
             Ports.outb((ushort)(BaseAddress + 0x37), 0x0C); // Enabling receive and transmit
 
