@@ -256,6 +256,7 @@ namespace Aura_OS.HAL.Drivers.Network
 
             if (status == 0x0020)
             {
+                Console.WriteLine("0x6C : " + Ports.inb((ushort)(BaseAddress + 0x6C)));
                 if (Ports.inb((ushort)(BaseAddress + 0x6C)) == 0x02)
                 {
                     Console.WriteLine("Link is up with ");
@@ -270,6 +271,12 @@ namespace Aura_OS.HAL.Drivers.Network
                     Console.WriteLine("Link is down\n");
                 }
             }
+            else if (status == 0x0040)
+            {
+                Console.WriteLine("Receive FIFO overflow!");
+            }
+
+            Ports.outw((ushort)(BaseAddress + 0x3E), Ports.inw((ushort)(BaseAddress + 0x3E)));
 
         }
 
