@@ -87,7 +87,7 @@ namespace Aura_OS.Apps.System
 
             Console.Clear();
 
-            HAL.SaveScreen.PushLastScreen();
+            //HAL.SaveScreen.PushLastScreen();
 
             if (result.Equals("on"))
             {

@@ -71,7 +71,7 @@ namespace Aura_OS.Shell.cmdIntr.Settings
 
                 else if (cmdargs[1].Equals("debugger"))
                 {
-                    HAL.SaveScreen.SaveCurrentScreen();
+                    //HAL.SaveScreen.SaveCurrentScreen();
                     Apps.System.DebuggerSettings.RegisterSetting();
                 }
             }
