@@ -17,19 +17,8 @@ namespace Aura_OS.HAL.Drivers.Network
     public unsafe class RTL8168 : NetworkDevice
     {
         protected PCIDevice pciCard;
-        protected AMDPCNetIIIOGroup io;
         protected MACAddress mac;
-        protected bool mInitDone;
 
-        protected ManagedMemoryBlock rxBuffer;
-        protected int rxBufferOffset;
-        protected UInt16 capr;
-
-        protected Queue<byte[]> mRecvBuffer;
-        protected Queue<byte[]> mTransmitBuffer;
-        private int mNextTXDesc;
-
-        const UInt16 RxBufferSize = 32768;
         uint BaseAddress;
 
         public override CardType CardType => CardType.Ethernet;
@@ -163,11 +152,6 @@ namespace Aura_OS.HAL.Drivers.Network
 
             SetIrqHandler(device.InterruptLine, HandleNetworkInterrupt);
 
-            Ports.outb((ushort)(BaseAddress + 0x37), 0x10); /* Send the Reset bit to the Command register */
-            while ((Ports.inb((ushort)(BaseAddress + 0x37)) & 0x10) != 0) { } /* Wait for the chip to finish resetting */
-
-            Console.WriteLine("Reset done.");
-
             // Get the MAC Address
             byte[] eeprom_mac = new byte[6];
             for (uint b = 0; b < 6; b++)
@@ -176,6 +160,10 @@ namespace Aura_OS.HAL.Drivers.Network
             }
 
             this.mac = new MACAddress(eeprom_mac);
+
+            Reset();
+
+            Console.WriteLine("Reset done.");
 
             Ports.outw((ushort)(BaseAddress + 0x3E), Ports.inw((ushort)(BaseAddress + 0x3E))); //Status zurücksetzen
 
@@ -191,18 +179,11 @@ namespace Aura_OS.HAL.Drivers.Network
             Ports.outw((ushort)(BaseAddress + 0xDA), 0x0FFF); // Maximal 8kb-Pakete
             Ports.outb((ushort)(BaseAddress + 0xEC), 0x3F); // No early transmit
 
-
-            uint* addresstx = (uint*)&tx_descs[0];
-            uint* addressrx = (uint*)&rx_descs[0];
-
-            Console.WriteLine("addresstx: 0x" + System.Utils.Conversion.DecToHex((int)addresstx));
-            Console.WriteLine("addressrx: 0x" + System.Utils.Conversion.DecToHex((int)addressrx));
-
             Console.WriteLine("old addresstx: 0x" + System.Utils.Conversion.DecToHex((int)tx_descs));
             Console.WriteLine("old addressrx: 0x" + System.Utils.Conversion.DecToHex((int)rx_descs));
 
-            Ports.outd((ushort)(BaseAddress + 0x20), (uint)addresstx);
-            Ports.outd((ushort)(BaseAddress + 0xE4), (uint)addressrx);
+            Ports.outd((ushort)(BaseAddress + 0x20), (uint)tx_descs);
+            Ports.outd((ushort)(BaseAddress + 0xE4), (uint)rx_descs);
 
             Console.WriteLine("0x20 : " + Ports.inb((ushort)(BaseAddress + 0x20)) + " " + Ports.inb((ushort)(BaseAddress + 0x24)));
             Console.WriteLine("0xE4 : " + Ports.inb((ushort)(BaseAddress + 0xE4)) + " " + Ports.inb((ushort)(BaseAddress + 0xE8)));
@@ -227,6 +208,13 @@ namespace Aura_OS.HAL.Drivers.Network
 
             Console.WriteLine("Send done.");
 
+        }
+
+        public bool Reset()
+        {
+            Ports.outb((ushort)(BaseAddress + 0x37), 0x10); /* Send the Reset bit to the Command register */
+            while ((Ports.inb((ushort)(BaseAddress + 0x37)) & 0x10) != 0) { } /* Wait for the chip to finish resetting */
+            return true;
         }
 
         public byte* PointerData(byte[] data, int length)
@@ -274,6 +262,7 @@ namespace Aura_OS.HAL.Drivers.Network
             else if (status == 0x0040)
             {
                 Console.WriteLine("Receive FIFO overflow!");
+                Reset();
             }
 
             Ports.outw((ushort)(BaseAddress + 0x3E), Ports.inw((ushort)(BaseAddress + 0x3E)));
