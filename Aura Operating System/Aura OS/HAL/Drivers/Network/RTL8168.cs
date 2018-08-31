@@ -23,116 +23,52 @@ namespace Aura_OS.HAL.Drivers.Network
 
         public override CardType CardType => CardType.Ethernet;
 
-        public struct rx_desc
-        {
-            public ushort buffer_size;
-            public ushort reserved;
-            public int eor; // if set end of ring
-            public int own; // if 1 owned by nic / else owned by host
-            public uint vlan;
-            public uint addr_low;
-            public uint addr_high;
-        }
-
-        public struct rx_desc_status
-        {
-            public ushort frame_length; // if own = 0 and ls = 1 -> packet length incl. crc in bytes
-            public int tcpf; // if set -> tcp checksum failure
-            public int udpf; // if set -> udp checksum failure
-            public int ipf; // if set -> ip checksum failure
-            public int pid; // protocol-ID:
-                            /*
-                            00 = IP
-                            01 = TCP/IP
-                            10 = UDP/IP
-                            11 = IP
-                            */
-            public int crc; // if set -> crc-error
-            public int runt; // packet smaller than 64 bytes
-            public int res; // if set and ls=1 -> error (crc,runt,rwt,fae)
-            public int rwt; // packet bigger than 8192 bytes
-            public int reserved; // always 0x01
-            public int bar; // broadcast packet received
-            public int pam; // physical packet received
-            public int mar; // multicast packet received
-            public int ls; // if set this is the last segment of packet
-            public int fs; // if set this is the first segment of packet
-            public int eor; // if set end of ring
-            public int own; // if 1 owned by nic / else owned by host
-            public uint vlan;
-            public uint addr_low;
-            public uint addr_high;
-        }
-
-        struct tx_desc
-        {
-            public ushort frame_length; // if own = 0 and ls = 1 -> packet length incl. crc in bytes
-            public int tcpcs; // if set -> auto checksum
-            public int udpcs; // if set -> auto checksum
-            public int ipcs; // if set -> auto checksum
-            public int reserved; // Reserved
-            public int lgsen; // Large-send
-            public int ls; // if set this is the last segment of packet
-            public int fs; // if set this is the first segment of packet
-            public int eor; // if set end of ring
-            public int own; // if 1 owned by nic / else owned by host
-            public uint vlan;
-            public uint addr_low;
-            public uint addr_high;
-        }
-
-        rx_desc* rx_descs;
-        tx_desc* tx_descs;
-
-        byte*[] rx_buf = new byte*[10];
-        byte*[] tx_buf = new byte*[10];
-
         int realtek_next_tx = 0;
 
         public override string Name => "RTL8168";
 
-        public static class Size
+        struct Descriptor
         {
-            public static int Of(uint x)
-            {
-                return sizeof(uint);
-            }
+            public ushort Command; // bit 31 is OWN, bit 30 is EOR
+            public ushort FrameLen;
+            public uint vlan;     /* currently unused */
+            public uint low_buf;  /* low 32-bits of physical buffer address */
+            public uint high_buf; /* high 32-bits of physical buffer address */
+        };
 
-        }
+        Descriptor* Rx_Descriptors = (Descriptor*)0x100000; /* 1MB Base Address of Rx Descriptors */
+        Descriptor* Tx_Descriptors = (Descriptor*)0x200000; /* 1MB Base Address of Rx Descriptors */
+
+        byte*[] rx_buf = new byte*[10];
+
+        int num_of_rx_descriptors = 1024, num_of_tx_descriptors = 1024;
+
+        int rx_buffer_len = 0x0FFF;
 
         void init_buffers()
         {
 
-            rx_descs = (rx_desc*)Cosmos.Core.Memory.Old.Heap.MemAlloc((uint)sizeof(rx_desc));
-            tx_descs = (tx_desc*)Cosmos.Core.Memory.Old.Heap.MemAlloc((uint)sizeof(tx_desc));
+            //Setup RX
 
-            for (int i = 0; i < 10; i++)
+            /* rx_buffer_len is the size (in bytes) that is reserved for incoming packets */
+            uint OWN = 0x80000000, EOR = 0x40000000; /* bit offsets */
+            int i;
+            for (i = 0; i < num_of_rx_descriptors; i++) /* num_of_rx_descriptors can be up to 1024 */
             {
+                if (i == (num_of_rx_descriptors - 1)) /* Last descriptor? if so, set the EOR bit */
+                    Rx_Descriptors[i].Command = (ushort)(OWN | EOR | (rx_buffer_len & 0x3FFF));
+                else
+                    Rx_Descriptors[i].Command = (ushort)(OWN | (rx_buffer_len & 0x3FFF));
 
-                rx_buf[i] = (byte*)Cosmos.Core.Memory.Old.Heap.MemAlloc((uint)sizeof(byte*));
-                tx_buf[i] = (byte*)Cosmos.Core.Memory.Old.Heap.MemAlloc((uint)sizeof(byte*));
-
-                rx_descs[i].own = 1;
-                rx_descs[i].eor = 0;
-                rx_descs[i].buffer_size = 0x0FFF;
-                rx_descs[i].addr_low = (uint)rx_buf[i];
-                rx_descs[i].addr_high = 0;
-
-                tx_descs[i].own = 0;
-                tx_descs[i].eor = 0;
-                tx_descs[i].fs = 0;
-                tx_descs[i].ls = 0;
-                tx_descs[i].lgsen = 0;
-                tx_descs[i].ipcs = 0;
-                tx_descs[i].udpcs = 0;
-                tx_descs[i].tcpcs = 0;
-                tx_descs[i].frame_length = 0x0FFF;
-                tx_descs[i].addr_low = (uint)tx_buf[i];
-                tx_descs[i].addr_high = 0;
-            }
-            rx_descs[9].eor = 1;
-            tx_descs[9].eor = 1;
+                /** packet_buffer_address is the *physical* address for the buffer */
+                Rx_Descriptors[i].low_buf = (uint)rx_buf[i];
+                Console.WriteLine("addressrx buff: 0x" + System.Utils.Conversion.DecToHex((int)rx_buf[i]));
+                Rx_Descriptors[i].high_buf = 0;
+            /* If you are programming for a 64-bit OS, put the high memory location in the 'high_buf' descriptor area */
         }
+
+
+    }
 
         public RTL8168(PCIDevice device)
         {
@@ -171,7 +107,7 @@ namespace Aura_OS.HAL.Drivers.Network
 
             Ports.outd((ushort)(BaseAddress + 0xE0), 0x002B);
 
-            Ports.outd((ushort)(BaseAddress + 0x50), 0xC0);
+            //Ports.outd((ushort)(BaseAddress + 0x50), 0xC0);
 
             Ports.outd((ushort)(BaseAddress + 0x44), 0x0000E70F); // Enable RX
             Ports.outb((ushort)(BaseAddress + 0x37), 0x04); // Enable TX
@@ -179,11 +115,11 @@ namespace Aura_OS.HAL.Drivers.Network
             Ports.outw((ushort)(BaseAddress + 0xDA), 0x0FFF); // Maximal 8kb-Pakete
             Ports.outb((ushort)(BaseAddress + 0xEC), 0x3F); // No early transmit
 
-            Console.WriteLine("old addresstx: 0x" + System.Utils.Conversion.DecToHex((int)tx_descs));
-            Console.WriteLine("old addressrx: 0x" + System.Utils.Conversion.DecToHex((int)rx_descs));
+            Console.WriteLine("addressrx desc: 0x" + System.Utils.Conversion.DecToHex((int)Rx_Descriptors));
+            Console.WriteLine("addresstx desc: 0x" + System.Utils.Conversion.DecToHex((int)Tx_Descriptors));
 
-            Ports.outd((ushort)(BaseAddress + 0x20), (uint)tx_descs);
-            Ports.outd((ushort)(BaseAddress + 0xE4), (uint)rx_descs);
+            Ports.outd((ushort)(BaseAddress + 0x20), (uint)Rx_Descriptors);
+            Ports.outd((ushort)(BaseAddress + 0xE4), (uint)Tx_Descriptors);
 
             Console.WriteLine("0x20 : " + Ports.inb((ushort)(BaseAddress + 0x20)) + " " + Ports.inb((ushort)(BaseAddress + 0x24)));
             Console.WriteLine("0xE4 : " + Ports.inb((ushort)(BaseAddress + 0xE4)) + " " + Ports.inb((ushort)(BaseAddress + 0xE8)));
@@ -204,7 +140,7 @@ namespace Aura_OS.HAL.Drivers.Network
             
             };
 
-            realtek_send_packet(PointerData(aData, aData.Length), aData.Length);
+            //realtek_send_packet(PointerData(aData, aData.Length), aData.Length);
 
             Console.WriteLine("Send done.");
 
@@ -267,32 +203,6 @@ namespace Aura_OS.HAL.Drivers.Network
 
             Ports.outw((ushort)(BaseAddress + 0x3E), Ports.inw((ushort)(BaseAddress + 0x3E)));
 
-        }
-
-        void realtek_send_packet(byte* data, int data_length)
-        {
-
-            //fixed (byte** p = &tx_buf[realtek_next_tx])
-            //{
-            //    Memory.Memcpy((byte*)p, data, data_length);
-            //}
-            
-            for (int i = 0; i < data_length; i++)
-            {
-                tx_buf[realtek_next_tx][i] = data[i];
-            }
-            tx_descs[realtek_next_tx].fs = 1;
-            tx_descs[realtek_next_tx].ls = 1;
-            tx_descs[realtek_next_tx].frame_length = (ushort)data_length;
-            tx_descs[realtek_next_tx].addr_low = (ushort)tx_buf[realtek_next_tx];
-            tx_descs[realtek_next_tx].own = 1;
-            //kprintf("Poll Packet %d: %d\n",realtek_next_tx,tx_descs[realtek_next_tx].frame_length);
-            Ports.outb((ushort)(BaseAddress + 0x38), 0x40);
-            //kprintf("Waiting for transmit...\n");
-            //while(Ports.inb((ushort)(BaseAddress + 0x38)) != 0);
-            //kprintf("Transmit done\n");
-            realtek_next_tx++;
-            if (realtek_next_tx >= 10) realtek_next_tx = 0;
         }
 
 
