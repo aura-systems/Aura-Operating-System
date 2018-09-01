@@ -4,23 +4,22 @@
 * PROGRAMMER(S):    Valentin Charbonnier <valentinbreiz@gmail.com>
 */
 
-using Aura_OS.Core;
-using Aura_OS.System.Shell.VESAVBE;
-using Cosmos.Core.Memory.Old;
-
 namespace Aura_OS.HAL
 {
-    unsafe class SaveScreen
+    class SaveScreen
     {
 
-        static uint* lastbuffer;
+        static uint[] lastbuffer;
         static int lastX;
         static int lastY;
 
         public static void SaveCurrentScreen()
         {
-            lastbuffer = (uint*)Heap.MemAlloc((uint)(Drivers.VBE.len * 4));
-            Memory.Memcpy(lastbuffer, Drivers.VBE._buffer, Drivers.VBE.len);
+            lastbuffer = new uint[Drivers.ManagedVBE.len * 4];
+            for (int i = 0; i < Drivers.ManagedVBE.LinearFrameBuffer.Size; i++)
+            {
+                lastbuffer[i] = Drivers.ManagedVBE.LinearFrameBuffer.Bytes[(uint)i];
+            }
             lastX = Kernel.AConsole.X;
             lastY = Kernel.AConsole.Y;
         }
@@ -31,8 +30,10 @@ namespace Aura_OS.HAL
             Kernel.AConsole.Y = lastY;
             lastX = 0;
             lastY = 0;
-            Memory.Memcpy(Drivers.VBE._buffer, lastbuffer, Drivers.VBE.len);
-            Drivers.VBE.WriteToScreen();
+            for (int i = 0; i < Drivers.ManagedVBE.LinearFrameBuffer.Size; i++)
+            {
+                Drivers.ManagedVBE.LinearFrameBuffer.Bytes[(uint)i] = (byte)lastbuffer[i];
+            }
             lastbuffer = null;
         }
 

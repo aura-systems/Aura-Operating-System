@@ -17,7 +17,7 @@ namespace Aura_OS.System.Shell.VESAVBE
 
         //public static VbeScreen Screen = new VbeScreen();
 
-        public static VBE canvas;
+        public static ManagedVBE canvas;
 
         private static byte[] font;
         //public static VESACanvas vesa;
@@ -27,7 +27,7 @@ namespace Aura_OS.System.Shell.VESAVBE
         public static int widthVESA;
         public static int heightVESA;
         public static string VESAMode = "Unkown Mode? How!?";
-        public static byte* vga_mem;
+
         public static string ssignature;
         public static string sversion;
         public static uint vbepointer;
@@ -59,9 +59,6 @@ namespace Aura_OS.System.Shell.VESAVBE
             Core.Memory.Memcpy(stringg, (byte*)offset, maxlength);
             return (stringg);
         }
-
-
-        Cosmos.Debug.Kernel.Debugger debugger = new Cosmos.Debug.Kernel.Debugger("", "");
 
         public Graphics()
         {
@@ -154,7 +151,6 @@ namespace Aura_OS.System.Shell.VESAVBE
             heightVESA = ModeInfo->height;
             widthVESA = ModeInfo->width;
             depthVESA = ModeInfo->bpp;
-            vga_mem = (byte*)ModeInfo->framebuffer;
 
             vbepointer = ModeInfo->framebuffer;
 
@@ -207,7 +203,7 @@ namespace Aura_OS.System.Shell.VESAVBE
                 VESAMode = "Mode800x600";
             }
 
-            canvas = new VBE(widthVESA, heightVESA);
+            canvas = new ManagedVBE(widthVESA, heightVESA, ModeInfo->framebuffer);
         }
 
         private byte[] Read_font()
@@ -223,7 +219,7 @@ namespace Aura_OS.System.Shell.VESAVBE
 
         internal void Clear(int c)
         {
-            canvas.Clear((uint)c);
+            canvas.ClearVRAM((uint)c);
         }
 
         public void DrawImage(ushort X, ushort Y, ushort Length, ushort height, Image image)
@@ -334,7 +330,6 @@ namespace Aura_OS.System.Shell.VESAVBE
         public void ScrollUp()
         {
             canvas.ScrollUp();
-            VBE.WriteToScreen();
         }
     }
 }
