@@ -39,21 +39,26 @@ namespace Aura_OS.HAL.Drivers.Network
         Descriptor* Rx_Descriptors = (Descriptor*)0x100000; /* 1MB Base Address of Rx Descriptors */
         Descriptor* Tx_Descriptors = (Descriptor*)0x200000; /* 1MB Base Address of Rx Descriptors */
 
-        byte*[] rx_buf = new byte*[10];
+        static byte[][] rx_buffer = new byte[10][];
+        static byte[][] tx_buffer = new byte[10][];
 
-        int num_of_rx_descriptors = 1024, num_of_tx_descriptors = 1024;
+        int num_of_rx_descriptors = 10, num_of_tx_descriptors = 10;
 
-        int rx_buffer_len = 0x0FFF;
+        int rx_buffer_len = 1024;
 
         void init_buffers()
         {
 
+            for (int i = 0; i < rx_buffer.Length; i++)
+            {
+                rx_buffer[i] = new byte[1024];
+            }
+
             //Setup RX
 
             /* rx_buffer_len is the size (in bytes) that is reserved for incoming packets */
-            uint OWN = 0x80000000, EOR = 0x40000000; /* bit offsets */
-            int i;
-            for (i = 0; i < num_of_rx_descriptors; i++) /* num_of_rx_descriptors can be up to 1024 */
+            uint OWN = (1 << 15), EOR = (1 << 14); /* bit offsets */
+            for (int i = 0; i < num_of_rx_descriptors; i++) /* num_of_rx_descriptors can be up to 1024 */
             {
                 if (i == (num_of_rx_descriptors - 1)) /* Last descriptor? if so, set the EOR bit */
                     Rx_Descriptors[i].Command = (ushort)(OWN | EOR | (rx_buffer_len & 0x3FFF));
@@ -61,11 +66,14 @@ namespace Aura_OS.HAL.Drivers.Network
                     Rx_Descriptors[i].Command = (ushort)(OWN | (rx_buffer_len & 0x3FFF));
 
                 /** packet_buffer_address is the *physical* address for the buffer */
-                Rx_Descriptors[i].low_buf = (uint)rx_buf[i];
-                Console.WriteLine("addressrx buff: 0x" + System.Utils.Conversion.DecToHex((int)rx_buf[i]));
+                fixed (byte* ptr = &rx_buffer[i][0])
+                {
+                    Rx_Descriptors[i].low_buf = (uint)ptr;
+                }
+
                 Rx_Descriptors[i].high_buf = 0;
             /* If you are programming for a 64-bit OS, put the high memory location in the 'high_buf' descriptor area */
-        }
+            }
 
 
     }
