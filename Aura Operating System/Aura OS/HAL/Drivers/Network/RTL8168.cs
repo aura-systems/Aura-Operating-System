@@ -29,54 +29,68 @@ namespace Aura_OS.HAL.Drivers.Network
 
         struct Descriptor
         {
-            public ushort Command; // bit 31 is OWN, bit 30 is EOR
-            public ushort FrameLen;
+            public uint Command; // bit 31 is OWN, bit 30 is EOR
             public uint vlan;     /* currently unused */
             public uint low_buf;  /* low 32-bits of physical buffer address */
             public uint high_buf; /* high 32-bits of physical buffer address */
         };
 
-        Descriptor* Rx_Descriptors = (Descriptor*)0x100000; /* 1MB Base Address of Rx Descriptors */
-        Descriptor* Tx_Descriptors = (Descriptor*)0x200000; /* 1MB Base Address of Rx Descriptors */
+        struct RTL8168_networkAdapter_t
+        {
+            public Descriptor* Rx_Descriptors;
+            public Descriptor* Tx_Descriptors;
+            public byte* RxBuffers;
+            public byte* TxBuffers;
+            public ushort TxIndex;
+        }
 
-        static byte[][] rx_buffer = new byte[10][];
-        static byte[][] tx_buffer = new byte[10][];
+        RTL8168_networkAdapter_t* rAdapter;
 
-        int num_of_rx_descriptors = 10, num_of_tx_descriptors = 10;
-
-        int rx_buffer_len = 1024;
-
-        void init_buffers()
+        uint GetMacVersion()
         {
 
-            for (int i = 0; i < rx_buffer.Length; i++)
+            uint reg;
+
+            reg = Ports.ind((ushort)(BaseAddress + 0x40));
+
+            return reg;
+        }
+
+        void InitBuffers()
+        {
+
+            rAdapter = (RTL8168_networkAdapter_t*)Cosmos.Core.Memory.Old.Heap.MemAlloc((uint)sizeof(RTL8168_networkAdapter_t));
+
+            rAdapter->Rx_Descriptors = (Descriptor*)Cosmos.Core.Memory.Old.Heap.MemAlloc((uint)(32 * sizeof(Descriptor) * 2));
+            rAdapter->Tx_Descriptors = rAdapter->Rx_Descriptors + 32;
+
+            rAdapter->RxBuffers = (byte*)Cosmos.Core.Memory.Old.Heap.MemAlloc((uint)(2048 * 32 * 2));
+            rAdapter->TxBuffers = rAdapter->RxBuffers + 2048 * 32;
+
+            for (ushort i = 0; i < 32; i++)
             {
-                rx_buffer[i] = new byte[1024];
-            }
-
-            //Setup RX
-
-            /* rx_buffer_len is the size (in bytes) that is reserved for incoming packets */
-            uint OWN = (1 << 15), EOR = (1 << 14); /* bit offsets */
-            for (int i = 0; i < num_of_rx_descriptors; i++) /* num_of_rx_descriptors can be up to 1024 */
-            {
-                if (i == (num_of_rx_descriptors - 1)) /* Last descriptor? if so, set the EOR bit */
-                    Rx_Descriptors[i].Command = (ushort)(OWN | EOR | (rx_buffer_len & 0x3FFF));
-                else
-                    Rx_Descriptors[i].Command = (ushort)(OWN | (rx_buffer_len & 0x3FFF));
-
-                /** packet_buffer_address is the *physical* address for the buffer */
-                fixed (byte* ptr = &rx_buffer[i][0])
+                if (i == (32 - 1)) // Last descriptor? if so, set the EOR bit
                 {
-                    Rx_Descriptors[i].low_buf = (uint)ptr;
+                    rAdapter->Rx_Descriptors[i].Command = 0x80000000 | 0x40000000 | (2048 & 0x3FFF);
+                    rAdapter->Tx_Descriptors[i].Command = 0x40000000;
                 }
-
-                Rx_Descriptors[i].high_buf = 0;
-            /* If you are programming for a 64-bit OS, put the high memory location in the 'high_buf' descriptor area */
+                else
+                {
+                    rAdapter->Rx_Descriptors[i].Command = 0x80000000 | (2048 & 0x3FFF);
+                    rAdapter->Tx_Descriptors[i].Command = 0;
+                }
+                rAdapter->Rx_Descriptors[i].vlan = 0;
+                rAdapter->Tx_Descriptors[i].vlan = 0;
+                rAdapter->Rx_Descriptors[i].low_buf = (uint)&rAdapter->RxBuffers + (uint)(i * 2048);
+                Console.WriteLine("0x" + System.Utils.Conversion.DecToHex((int)&rAdapter->RxBuffers + i * 2048));
+                rAdapter->Tx_Descriptors[i].low_buf = (uint)&rAdapter->TxBuffers + (uint)(i * 2048);
+                Console.WriteLine("0x" + System.Utils.Conversion.DecToHex((int)&rAdapter->TxBuffers + i * 2048));
+                rAdapter->Rx_Descriptors[i].high_buf = 0;
+                rAdapter->Tx_Descriptors[i].high_buf = 0;
             }
 
-
-    }
+            Console.WriteLine("Descriptors are set up.");
+        }
 
         public RTL8168(PCIDevice device)
         {
@@ -96,6 +110,12 @@ namespace Aura_OS.HAL.Drivers.Network
 
             SetIrqHandler(device.InterruptLine, HandleNetworkInterrupt);
 
+            Reset();
+
+            FifoFix();
+
+            Console.WriteLine("Reset done.");
+
             // Get the MAC Address
             byte[] eeprom_mac = new byte[6];
             for (uint b = 0; b < 6; b++)
@@ -105,53 +125,53 @@ namespace Aura_OS.HAL.Drivers.Network
 
             this.mac = new MACAddress(eeprom_mac);
 
-            Reset();
-
-            Console.WriteLine("Reset done.");
-
-            Ports.outw((ushort)(BaseAddress + 0x3E), Ports.inw((ushort)(BaseAddress + 0x3E))); //Status zurücksetzen
-
-            init_buffers();
-
-            Ports.outd((ushort)(BaseAddress + 0xE0), 0x002B);
-
-            //Ports.outd((ushort)(BaseAddress + 0x50), 0xC0);
+            InitBuffers();
 
             Ports.outd((ushort)(BaseAddress + 0x44), 0x0000E70F); // Enable RX
-            Ports.outb((ushort)(BaseAddress + 0x37), 0x04); // Enable TX
-            Ports.outd((ushort)(BaseAddress + 0x40), 0x03000700);
-            Ports.outw((ushort)(BaseAddress + 0xDA), 0x0FFF); // Maximal 8kb-Pakete
+
+            Ports.outd((ushort)(BaseAddress + 0x37), 0x04);
+
+            Ports.outd((ushort)(BaseAddress + 0x40), 0x03000700); // Enable TX
+
+            Ports.outd((ushort)(BaseAddress + 0xDA), 2048); // Max rx packet size
+
             Ports.outb((ushort)(BaseAddress + 0xEC), 0x3F); // No early transmit
 
-            Console.WriteLine("addressrx desc: 0x" + System.Utils.Conversion.DecToHex((int)Rx_Descriptors));
-            Console.WriteLine("addresstx desc: 0x" + System.Utils.Conversion.DecToHex((int)Tx_Descriptors));
+            Console.WriteLine("addressrx desc: 0x" + System.Utils.Conversion.DecToHex((int)&rAdapter->Tx_Descriptors));
+            Console.WriteLine("addresstx desc: 0x" + System.Utils.Conversion.DecToHex((int)&rAdapter->Rx_Descriptors));
 
-            Ports.outd((ushort)(BaseAddress + 0x20), (uint)Rx_Descriptors);
-            Ports.outd((ushort)(BaseAddress + 0xE4), (uint)Tx_Descriptors);
-
-            Console.WriteLine("0x20 : " + Ports.inb((ushort)(BaseAddress + 0x20)) + " " + Ports.inb((ushort)(BaseAddress + 0x24)));
-            Console.WriteLine("0xE4 : " + Ports.inb((ushort)(BaseAddress + 0xE4)) + " " + Ports.inb((ushort)(BaseAddress + 0xE8)));
+            Ports.outd((ushort)(BaseAddress + 0x20), (uint)&rAdapter->Tx_Descriptors);
+            Ports.outd((ushort)(BaseAddress + 0xE4), (uint)&rAdapter->Rx_Descriptors);
 
             Ports.outw((ushort)(BaseAddress + 0x3C), 0x03FF); //Activating all Interrupts
-            Ports.outb((ushort)(BaseAddress + 0x37), 0x0C); // Enabling receive and transmit
 
-            //Ports.outd((ushort)(BaseAddress + 0x50), 0x00); /* Lock config registers */
+            Ports.outb((ushort)(BaseAddress + 0x37), 0x0C); // Enabling receive and transmit
 
             Console.WriteLine("Init done.");
 
-            byte[] aData = new byte[]
-            {
-                0x6C, 0x62, 0x6D, 0x93, 0xC1, 0xDA, 0xb8, 0x86, 0x87, 0x24, 0x34, 0xb7, 0x08, 0x00,
-                0x45, 0x00, 0x00, 0x24, 0x55, 0x1b, 0x00, 0x00, 0x80, 0x11, 0x62, 0x0b, 0xc0, 0xa8, 0x01, 0x46, 0xc0, 0xa8, 0x01, 0x0c,
-                0x10, 0x92, 0x10, 0x92, 0x00, 0x10, 0x15, 0xf3,
-                0x48, 0x65, 0x6c, 0x6c, 0x6f, 0x21, 0x21, 0x21
-            
-            };
+            Console.WriteLine("Netcard version: 0x" + System.Utils.Conversion.DecToHex((int)GetMacVersion() & 0x7cf00000));
+            Console.WriteLine("Netcard version: 0x" + System.Utils.Conversion.DecToHex((int)GetMacVersion() & 0x7c800000));
+
+            //byte[] aData = new byte[]
+            //{
+            //    0x6C, 0x62, 0x6D, 0x93, 0xC1, 0xDA, 0xb8, 0x86, 0x87, 0x24, 0x34, 0xb7, 0x08, 0x00,
+            //    0x45, 0x00, 0x00, 0x24, 0x55, 0x1b, 0x00, 0x00, 0x80, 0x11, 0x62, 0x0b, 0xc0, 0xa8, 0x01, 0x46, 0xc0, 0xa8, 0x01, 0x0c,
+            //    0x10, 0x92, 0x10, 0x92, 0x00, 0x10, 0x15, 0xf3,
+            //    0x48, 0x65, 0x6c, 0x6c, 0x6f, 0x21, 0x21, 0x21
+            //
+            //};
 
             //realtek_send_packet(PointerData(aData, aData.Length), aData.Length);
 
-            Console.WriteLine("Send done.");
+            //Console.WriteLine("Send done.");
 
+        }
+
+        public bool FifoFix()
+        {
+            Ports.outd((ushort)(BaseAddress + 0xf0), 0x10); /* Send the Reset bit to the Command register */
+            Ports.outd((ushort)(BaseAddress + 0xf0), 0x10);
+            return true;
         }
 
         public bool Reset()
@@ -188,7 +208,7 @@ namespace Aura_OS.HAL.Drivers.Network
 
             if (status == 0x0020)
             {
-                Console.WriteLine("0x6C : " + Ports.inb((ushort)(BaseAddress + 0x6C)));
+                Console.WriteLine("0x6C : 0x" + System.Utils.Conversion.DecToHex(Ports.inb((ushort)(BaseAddress + 0x6C))));
                 if (Ports.inb((ushort)(BaseAddress + 0x6C)) == 0x02)
                 {
                     Console.WriteLine("Link is up with ");
@@ -198,9 +218,17 @@ namespace Aura_OS.HAL.Drivers.Network
                     if (Ports.inb((ushort)(BaseAddress + 0x6C)) == 0x01) Console.WriteLine("Full-duplex\n");
                     else Console.WriteLine("Half-duplex\n");
                 }
+                else if (Ports.inb((ushort)(BaseAddress + 0x6C)) == 0x8B)
+                {
+                    Console.WriteLine("Link is connected! But not 0x02");
+                }
+                else if (Ports.inb((ushort)(BaseAddress + 0x6C)) == 0x80)
+                {
+                    Console.WriteLine("Link is down!");
+                }
                 else
                 {
-                    Console.WriteLine("Link is down\n");
+                    Console.WriteLine("Link is down!? Idk");
                 }
             }
             else if (status == 0x0040)
