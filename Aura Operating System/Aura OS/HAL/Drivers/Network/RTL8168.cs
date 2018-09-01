@@ -61,12 +61,6 @@ namespace Aura_OS.HAL.Drivers.Network
 
             rAdapter = (RTL8168_networkAdapter_t*)Cosmos.Core.Memory.Old.Heap.MemAlloc((uint)sizeof(RTL8168_networkAdapter_t));
 
-            rAdapter->Rx_Descriptors = (Descriptor*)Cosmos.Core.Memory.Old.Heap.MemAlloc((uint)(32 * sizeof(Descriptor) * 2));
-            rAdapter->Tx_Descriptors = rAdapter->Rx_Descriptors + 32;
-
-            rAdapter->RxBuffers = (byte*)Cosmos.Core.Memory.Old.Heap.MemAlloc((uint)(2048 * 32 * 2));
-            rAdapter->TxBuffers = rAdapter->RxBuffers + 2048 * 32;
-
             for (ushort i = 0; i < 32; i++)
             {
                 if (i == (32 - 1)) // Last descriptor? if so, set the EOR bit
