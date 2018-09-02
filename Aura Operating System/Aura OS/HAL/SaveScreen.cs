@@ -5,7 +5,7 @@
 */
 
 using Aura_OS.Core;
-using Aura_OS.System.Shell.VESAVBE;
+using Cosmos.Core;
 using Cosmos.Core.Memory.Old;
 
 namespace Aura_OS.HAL
@@ -20,7 +20,7 @@ namespace Aura_OS.HAL
         public static void SaveCurrentScreen()
         {
             lastbuffer = (uint*)Heap.MemAlloc((uint)(Drivers.VBE.len * 4));
-            Memory.Memcpy(lastbuffer, Drivers.VBE._buffer, Drivers.VBE.len);
+            MemoryOperations.Copy(lastbuffer, Drivers.VBE._buffer, Drivers.VBE.len);
             lastX = Kernel.AConsole.X;
             lastY = Kernel.AConsole.Y;
         }
@@ -31,7 +31,7 @@ namespace Aura_OS.HAL
             Kernel.AConsole.Y = lastY;
             lastX = 0;
             lastY = 0;
-            Memory.Memcpy(Drivers.VBE._buffer, lastbuffer, Drivers.VBE.len);
+            MemoryOperations.Copy(Drivers.VBE._buffer, lastbuffer, Drivers.VBE.len);
             Drivers.VBE.WriteToScreen();
             lastbuffer = null;
         }

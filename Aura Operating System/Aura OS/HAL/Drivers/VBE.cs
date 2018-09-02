@@ -7,6 +7,7 @@
 using Aura_OS.Core;
 using Aura_OS.System.Shell.VESAVBE;
 using Cosmos.Core.Memory.Old;
+using Cosmos.Core;
 
 namespace Aura_OS.HAL.Drivers
 {
@@ -66,13 +67,13 @@ namespace Aura_OS.HAL.Drivers
 
         internal void Clear(uint c)
         {
-            Memory.Memset(_buffer, c, (uint)(len));
+            MemoryOperations.Fill(_buffer, c, (len));
             WriteToScreen();
         }
 
         public static void WriteToScreen()
         {
-            Memory.Memcpy((uint*)Graphics.vga_mem, _buffer, len);
+            MemoryOperations.Copy((uint*)Graphics.vga_mem, _buffer, len);
         }
 
         public void ScrollUp()

@@ -126,4 +126,7 @@
   <ItemGroup>
     <PlugsReference Include="$(MSBuildProjectDirectory)\..\Aura_Plugs\bin\Debug\netstandard2.0\Aura_Plugs.dll" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="System\Graphics\CGS\" />
+  </ItemGroup>
 </Project>
