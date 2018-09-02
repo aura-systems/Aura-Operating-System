@@ -9,17 +9,13 @@ namespace Aura_OS.HAL
     class SaveScreen
     {
 
-        static uint[] lastbuffer;
+        static int[] lastbuffer;
         static int lastX;
         static int lastY;
 
         public static void SaveCurrentScreen()
         {
-            lastbuffer = new uint[Drivers.ManagedVBE.len * 4];
-            for (int i = 0; i < Drivers.ManagedVBE.LinearFrameBuffer.Size; i++)
-            {
-                lastbuffer[i] = Drivers.ManagedVBE.LinearFrameBuffer.Bytes[(uint)i];
-            }
+            lastbuffer = Drivers.ManagedVBE.LinearFrameBuffer.Copy(0, 0, Drivers.ManagedVBE.len * 4);
             lastX = Kernel.AConsole.X;
             lastY = Kernel.AConsole.Y;
         }
@@ -30,10 +26,7 @@ namespace Aura_OS.HAL
             Kernel.AConsole.Y = lastY;
             lastX = 0;
             lastY = 0;
-            for (int i = 0; i < Drivers.ManagedVBE.LinearFrameBuffer.Size; i++)
-            {
-                Drivers.ManagedVBE.LinearFrameBuffer.Bytes[(uint)i] = (byte)lastbuffer[i];
-            }
+            Drivers.ManagedVBE.LinearFrameBuffer.Copy(lastbuffer);
             lastbuffer = null;
         }
 
