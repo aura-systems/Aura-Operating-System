@@ -84,11 +84,11 @@ namespace Aura_OS
                 System.CustomConsole.WriteLineInfo("Booting Aura Operating System...");
 
                 System.CustomConsole.WriteLineInfo("VBE Informations:");
-                System.CustomConsole.WriteLineInfo("VBE Version: " + System.Shell.VESAVBE.Graphics.sversion);
-                System.CustomConsole.WriteLineInfo("VBE Signature: " + System.Shell.VESAVBE.Graphics.ssignature);
-                System.CustomConsole.WriteLineInfo("BPP: " + System.Shell.VESAVBE.Graphics.depthVESA);
-                System.CustomConsole.WriteLineInfo("Height: " + System.Shell.VESAVBE.Graphics.heightVESA);
-                System.CustomConsole.WriteLineInfo("Width: " + System.Shell.VESAVBE.Graphics.widthVESA);
+                System.CustomConsole.WriteLineInfo("VBE Version: " + System.Shell.VESAVBE.Graphics.VBEVersion);
+                System.CustomConsole.WriteLineInfo("VBE Signature: " + System.Shell.VESAVBE.Graphics.VBESignature);
+                System.CustomConsole.WriteLineInfo("BPP: " + System.Shell.VESAVBE.Graphics.ModeInfo.bpp);
+                System.CustomConsole.WriteLineInfo("Height: " + System.Shell.VESAVBE.Graphics.ModeInfo.height);
+                System.CustomConsole.WriteLineInfo("Width: " + System.Shell.VESAVBE.Graphics.ModeInfo.width);
 
                 #region Register Filesystem
                 Sys.FileSystem.VFS.VFSManager.RegisterVFS(vFS);

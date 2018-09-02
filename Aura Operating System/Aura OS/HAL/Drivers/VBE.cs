@@ -4,7 +4,6 @@
 * PROGRAMMERS:      Valentin Charbonnier <valentinbreiz@gmail.com>
 */
 
-
 using Cosmos.Core;
 
 namespace Aura_OS.HAL.Drivers
@@ -101,4 +100,5 @@ namespace Aura_OS.HAL.Drivers
             LinearFrameBuffer.Fill(mScrollSize, mRow2Addr, 0x00);
         }
     }
+
 }
