@@ -18,11 +18,18 @@ namespace Aura_OS.HAL.Drivers
         int height;
         public static int len;
 
+        uint mScrollSize;
+        uint mRow2Addr;
+
         public ManagedVBE(int xres, int yres, uint pointer)
         {
             width = xres;
             height = yres;
-            len = xres * yres;
+            len = width * height;
+
+            mScrollSize = (uint)(len * 4);
+            mRow2Addr = (uint)(width * 4 * 16);
+
             LinearFrameBuffer = new MemoryBlock(pointer, (uint)(width * height * 4));
         }
 
@@ -90,20 +97,8 @@ namespace Aura_OS.HAL.Drivers
 
         public void ScrollUp()
         {
-            for (int i = 0; i < height; i++)
-            {
-                for (int m = 0; m < width; m++)
-                {
-                    SetVRAM((uint)(i * width + m), GetVRAM((uint)((i + 16) * width + m)));// 16 is the font y size
-                }
-            }
-            for (int i = height - 16; i < height; i++)
-            {
-                for (int m = 0; m < width; m++)
-                {
-                    SetVRAM((uint)(i * width + m), 0x00);
-                }
-            }
+            LinearFrameBuffer.MoveDown(0, mRow2Addr, mScrollSize);
+            LinearFrameBuffer.Fill(mScrollSize, mRow2Addr, 0x00);
         }
     }
 }
