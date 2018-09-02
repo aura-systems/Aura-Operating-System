@@ -40,7 +40,7 @@ namespace Aura_OS.System.Shell.VESAVBE
         byte* GetOemString(uint oemstringptr, byte* stringg, int maxlength)
         {
             uint offset = (oemstringptr >> 12 & 0xFFFF0) + (oemstringptr & 0xFFFF);
-            Core.Memory.Memcpy(stringg, (byte*)offset, maxlength);
+            Cosmos.Core.MemoryOperations.Copy(stringg, (byte*)offset, maxlength);
             return stringg;
         }
 
