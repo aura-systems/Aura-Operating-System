@@ -27,9 +27,9 @@ namespace Aura_OS.System.GUI.Graphics
             return _canvas.Blit(x0, y0, w, h);
         }
 
-        public void DrawArea(uint area, int posx, int posy)
+        public void DrawArea(int x0, int y0, int w, int h, uint value)
         {
-            Heap.MemAlloc((uint)(Width * Height * 4));
+            _canvas.DeBlit(x0, y0, w, h, value);
         }
 
         //TransparencyKey is always Lime! (0x00ff00, R=00 - G=FF - B=00)

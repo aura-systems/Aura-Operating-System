@@ -5,6 +5,7 @@
 */
 
  using System;
+using System.Collections.Generic;
 using Aura_OS.System.GUI.Graphics;
 using Aura_OS.System.GUI.UI.Util;
 using Cosmos.HAL;
@@ -78,7 +79,7 @@ namespace Aura_OS.System.GUI.UI
         public static void Render()
         {
 
-            g.Clear(Colors.White);
+            Refresh();
 
             if (_deltaT != RTC.Second)
             {
@@ -87,8 +88,6 @@ namespace Aura_OS.System.GUI.UI
                 _deltaT = RTC.Second;
             }
             _frames++;
-
-            g.DrawString("Aura Operating System v" + Kernel.version + "-" + Kernel.revision, 0, 0, Colors.Black, Fonts.CFF._Pixel6_Mini_cff);
 
             g.DrawString(Time.TimeString(true, true, true), 0, 20, Colors.Black, Fonts.CFF._Pixel6_Mini_cff);
 
@@ -120,11 +119,31 @@ namespace Aura_OS.System.GUI.UI
                     break;
             }
 
-            WindowsManager.ShowWindows();
-
             Cursor.Render();
 
             Canvas.WriteToScreen();
+            //g.DrawArea(lastx, lasty, 12, 18, MouseBuffer);
+        }
+
+        public static List<Area> ToRefresh = new List<Area>();
+
+        public static uint MouseBuffer;
+        public static int lastx;
+        public static int lasty;
+
+        public static void Refresh()
+        {
+            //MouseBuffer = g.GetArea((int)X, (int)Y, 12, 18);
+            g.FillRectangle((int)X, (int)Y, 12 * 4, 18, Colors.White);
+            foreach (Area area in ToRefresh)
+            {
+                g.FillRectangle(area.X, area.Y, area.XMAX * 4, area.YMAX, Colors.White);
+            }
+        }
+
+        public static void AddAreatoRefresh(int x, int y, int sizex, int sizey)
+        {
+            ToRefresh.Add(new Area(x, y, sizex, sizey));
         }
 
         public static void MouseLeftEvent()
@@ -136,11 +155,6 @@ namespace Aura_OS.System.GUI.UI
                     WindowsManager.Active_Windows.Remove(wind);
                 }
             }
-        }
-
-        public static bool click_contained_in_area(Area CloseArea, Util.Point ClickPoint)
-        {
-            return true;
         }
 
         public static void Initialize()
@@ -157,6 +171,13 @@ namespace Aura_OS.System.GUI.UI
             Cursor.Image = Framework.Graphics.Image.Load(Images.Cursors.CursorCIF);
 
             WindowsManager.AddWindow(600, 400, 300, 200, "Installation.");
+            WindowsManager.ShowWindows();
+
+            g.DrawString("Aura Operating System v" + Kernel.version + "-" + Kernel.revision, 0, 0, Colors.Black, Fonts.CFF._Pixel6_Mini_cff);
+
+            AddAreatoRefresh(0, 20, 69, 14); //DATETIME
+            AddAreatoRefresh(0, 40, 69, 14); //FPS
+            AddAreatoRefresh(0, 60, 140, 14); //MOUSEVENT
 
             Canvas.WriteToScreen();
 
