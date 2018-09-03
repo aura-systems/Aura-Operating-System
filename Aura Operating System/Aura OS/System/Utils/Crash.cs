@@ -9,7 +9,7 @@ using Sys = Cosmos.System;
 
 namespace Aura_OS.System
 {
-    class Crash
+    public class Crash
     {
 
         /// <summary>
@@ -18,6 +18,7 @@ namespace Aura_OS.System
         /// <param name="ex">Exception that stop the kernel</param>
         public static void StopKernel(Exception ex)
         {
+
             Kernel.running = false;
 
             string ex_message = ex.Message;
@@ -25,7 +26,10 @@ namespace Aura_OS.System
 
             Console.BackgroundColor = ConsoleColor.Red;
 
-            Console.Clear();
+            Shell.VESAVBE.Graphics.canvas.ClearVRAM(0xAA0000);
+
+            Kernel.AConsole.X = 0;
+            Kernel.AConsole.Y = 0;
 
             Console.WriteLine("An error occured in Aura Operating System:");
             Console.WriteLine(ex);
@@ -34,6 +38,8 @@ namespace Aura_OS.System
                 inner_message = ex.InnerException.Message;
                 Console.WriteLine(inner_message);
             }
+            Console.WriteLine("Aura Version: " + Kernel.version);
+            Console.WriteLine("Aura Revision: " + Kernel.revision);
             Console.WriteLine();
             Console.WriteLine("If this is the first time you've seen this error screen, press any key to restart your computer. If this screen appears again, follow these steps:");
             Console.WriteLine();
@@ -54,15 +60,21 @@ namespace Aura_OS.System
         /// <param name="ex">Exception that stop the kernel</param>
         public static void StopKernel(string exception, string description, string lastknowaddress, string ctxinterrupt)
         {
+
             Kernel.running = false;
 
             Console.BackgroundColor = ConsoleColor.Red;
 
-            Console.Clear();
+            Shell.VESAVBE.Graphics.canvas.ClearVRAM(0xAA0000);
+
+            Kernel.AConsole.X = 0;
+            Kernel.AConsole.Y = 0;
 
             Console.WriteLine("CPU Exception x" + ctxinterrupt + " occured in Aura Operating System:");
             Console.WriteLine("Exception: " + exception);
             Console.WriteLine("Description: " + description);
+            Console.WriteLine("Aura Version: " + Kernel.version);
+            Console.WriteLine("Aura Revision: " + Kernel.revision);
             if (lastknowaddress != "")
             {
                 Console.WriteLine("Last known address: 0x" + lastknowaddress);

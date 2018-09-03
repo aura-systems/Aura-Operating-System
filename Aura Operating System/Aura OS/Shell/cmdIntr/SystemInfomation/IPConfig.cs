@@ -5,6 +5,8 @@
 */
 
 
+using System;
+using System.Collections.Generic;
 using L = Aura_OS.System.Translation;
 
 namespace Aura_OS.Shell.cmdIntr.SystemInfomation
@@ -32,8 +34,7 @@ namespace Aura_OS.Shell.cmdIntr.SystemInfomation
         /// </summary>
         public static void c_IPConfig()
         {
-            L.Text.Display("NetworkInProgress");
-            L.Text.Display("MAC");            
+            L.List_Translation.Ipconfig();
         }
     }
 }

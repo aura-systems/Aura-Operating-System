@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.Net.Sdk">
+﻿<Project Sdk="Microsoft.Net.Sdk">
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <StackCorruptionDetectionLevel>MethodFooters</StackCorruptionDetectionLevel>

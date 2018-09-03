@@ -5,7 +5,6 @@
 */
 
 using System;
-using System.IO;
 using L = Aura_OS.System.Translation;
 using Aura_OS.System.Computer;
 
@@ -34,7 +33,7 @@ namespace Aura_OS.Shell.cmdIntr.Settings
         /// </summary>
         public static void c_Settings()
         {
-            L.Help.Settings();
+            L.List_Translation.Settings();
         }
 
         public static void c_Settings(string settings)
@@ -68,6 +67,12 @@ namespace Aura_OS.Shell.cmdIntr.Settings
                 else if (cmdargs[1].Equals("passuser"))
                 {
                     L.Text.Display("_passuser");
+                }
+
+                else if (cmdargs[1].Equals("debugger"))
+                {
+                    HAL.SaveScreen.SaveCurrentScreen();
+                    Apps.System.DebuggerSettings.RegisterSetting();
                 }
             }
             else if (cmdargs.Length == 3 ) //One arg
@@ -110,7 +115,7 @@ namespace Aura_OS.Shell.cmdIntr.Settings
                         L.Text.Display("unknownlanguage");
                         L.Text.Display("availablelanguage");
                     }
-                }
+                }                
 
                 else if (cmdargs[1].Equals("adduser"))
                 {

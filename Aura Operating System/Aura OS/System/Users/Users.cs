@@ -5,12 +5,9 @@
 *                   Valentin Charbonnier <valentinbreiz@gmail.com>
 */
 
-using System;
 using System.IO;
 using Aura_OS.System.Translation;
 using Aura_OS.System.Security;
-using Aura_OS.System.Drawable;
-using Aura_OS.System.Utils;
 using System.Collections.Generic;
 
 namespace Aura_OS.System.Users
@@ -59,7 +56,7 @@ namespace Aura_OS.System.Users
         {
             try
             {
-                password = MD5.hash(password);
+                password = Sha256.hash(password);
                 LoadUsers();
                 if (GetUser("user").StartsWith(username))
                 {
@@ -112,8 +109,6 @@ namespace Aura_OS.System.Users
             Text.Display("user:passwordhasbeenchanged", username);
 
         }
-
-        ///////
 
         public static void DeleteUser(string user)
         {
@@ -174,7 +169,7 @@ namespace Aura_OS.System.Users
             }
             if (exists)
             {
-                password = MD5.hash(password);
+                password = Sha256.hash(password);
 
                 usersfile[index] = "user:" + username + ":" + password + "|" + Kernel.userLevelLogged;
 
