@@ -130,102 +130,110 @@ namespace Aura_OS.System.GUI.Graphics
             }
             
         }
-         #region Internals
-         private uint Blend(uint color1, uint color2, byte alpha)
+        #region Internals
+
+        private uint Blend(uint color1, uint color2, byte alpha)
         {
             uint rb = (color1 & 0xFF00FF) + (alpha * (color2 & 0xFF00FF)) >> 8;
             uint g = (color1 & 0x00FF00) + (alpha * (color2 & 0x00FF00)) >> 8;
             return (rb & 0xFF00FF) + (g & 0x00FF00);
         }
-         private byte BlendChanel(byte r, float amount)
+
+        private byte BlendChanel(byte r, float amount)
         {
             return (byte) ((r * amount) + r * (1 - amount));
         }
-         private Color Blend(Color color, Color backColor, float amount)
+
+        private Color Blend(Color color, Color backColor, float amount)
         {
             byte r = (byte) ((color.R * amount) + backColor.R * (1 - amount));
             byte g = (byte) ((color.G * amount) + backColor.G * (1 - amount));
             byte b = (byte) ((color.B * amount) + backColor.B * (1 - amount));
             return new Color(r, g, b);
         }
-         private void SetPixel(int x, int y, Color c)
+
+        private void SetPixel(int x, int y, Color c)
         {
-            x = (int) ((float) x * Scale.X);
-            y = (int) ((float) y * Scale.Y);
-             x += Transform.X;
-            y += Transform.Y;
-             if (c.A != 255)
+            if (!(x > Shell.VESAVBE.Graphics.ModeInfo.width || y > Shell.VESAVBE.Graphics.ModeInfo.height))
             {
-                //transparency needed
-                var cn = new Color((int) Blend((uint) _canvas.GetPixel(x, y).ToHex(), (uint) c.ToHex(), (byte) c.A));
-                 if (ContainerFlag)
+                x = (int)((float)x * Scale.X);
+                y = (int)((float)y * Scale.Y);
+                x += Transform.X;
+                y += Transform.Y;
+                if (c.A != 255)
                 {
-                    if (Container.Intersects(x, y))
+                    //transparency needed
+                    var cn = new Color((int)Blend((uint)_canvas.GetPixel(x, y).ToHex(), (uint)c.ToHex(), (byte)c.A));
+                    if (ContainerFlag)
                     {
-                        _canvas.SetPixel(Offset.X + x, Offset.Y + y, cn);
-                    }
-                }
-                else
-                {
-                    if (ClipingFlag)
-                    {
-                        if (ClipingIsInclude)
+                        if (Container.Intersects(x, y))
                         {
-                            if (ClipRectangle.Intersects(x, y))
-                            {
-                                _canvas.SetPixel(Offset.X + x, Offset.Y + y, cn);
-                            }
-                        }
-                        else
-                        {
-                            if (!ClipRectangle.Intersects(x, y))
-                            {
-                                _canvas.SetPixel(Offset.X + x, Offset.Y + y, cn);
-                            }
+                            _canvas.SetPixel(Offset.X + x, Offset.Y + y, cn);
                         }
                     }
                     else
                     {
-                        _canvas.SetPixel(Offset.X + x, Offset.Y + y, cn);
-                    }
-                }
-            }
-            else
-            {
-                if (ContainerFlag)
-                {
-                    if (Container.Intersects(x, y))
-                    {
-                        _canvas.SetPixel(Offset.X + x, Offset.Y + y, c);
-                    }
-                }
-                else
-                {
-                    if (ClipingFlag)
-                    {
-                        if (ClipingIsInclude)
+                        if (ClipingFlag)
                         {
-                            if (ClipRectangle.Intersects(x, y))
+                            if (ClipingIsInclude)
                             {
-                                _canvas.SetPixel(Offset.X + x, Offset.Y + y, c);
+                                if (ClipRectangle.Intersects(x, y))
+                                {
+                                    _canvas.SetPixel(Offset.X + x, Offset.Y + y, cn);
+                                }
+                            }
+                            else
+                            {
+                                if (!ClipRectangle.Intersects(x, y))
+                                {
+                                    _canvas.SetPixel(Offset.X + x, Offset.Y + y, cn);
+                                }
                             }
                         }
                         else
                         {
-                            if (!ClipRectangle.Intersects(x, y))
-                            {
-                                _canvas.SetPixel(Offset.X + x, Offset.Y + y, c);
-                            }
+                            _canvas.SetPixel(Offset.X + x, Offset.Y + y, cn);
+                        }
+                    }
+                }
+                else
+                {
+                    if (ContainerFlag)
+                    {
+                        if (Container.Intersects(x, y))
+                        {
+                            _canvas.SetPixel(Offset.X + x, Offset.Y + y, c);
                         }
                     }
                     else
                     {
-                        _canvas.SetPixel(Offset.X + x, Offset.Y + y, c);
+                        if (ClipingFlag)
+                        {
+                            if (ClipingIsInclude)
+                            {
+                                if (ClipRectangle.Intersects(x, y))
+                                {
+                                    _canvas.SetPixel(Offset.X + x, Offset.Y + y, c);
+                                }
+                            }
+                            else
+                            {
+                                if (!ClipRectangle.Intersects(x, y))
+                                {
+                                    _canvas.SetPixel(Offset.X + x, Offset.Y + y, c);
+                                }
+                            }
+                        }
+                        else
+                        {
+                            _canvas.SetPixel(Offset.X + x, Offset.Y + y, c);
+                        }
                     }
                 }
             }
         }
-         #endregion
+
+        #endregion
          #region Containers
          public void SetContainer(int x, int y, int w, int h)
         {

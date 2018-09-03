@@ -11,10 +11,13 @@ using System.Text;
         public static bool Enabled { get; set; }
         public static Framework.Graphics.Image Image;
 
+        public static int CursorSize;
+
         public static void Init()
         {
             MouseManager.ScreenHeight = (uint)Desktop.Height;
             MouseManager.ScreenWidth = (uint)Desktop.Width;
+            CursorSize = Image.Height;
         }
 
         public static void Render()
