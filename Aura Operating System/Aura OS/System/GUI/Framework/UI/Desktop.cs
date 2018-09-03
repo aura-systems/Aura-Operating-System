@@ -134,7 +134,7 @@ namespace Aura_OS.System.GUI.UI
         public static void Refresh()
         {
             //MouseBuffer = g.GetArea((int)X, (int)Y, 12, 18);
-            g.FillRectangle((int)X, (int)Y, 12 * 4, 18, Colors.White);
+            g.FillRectangle(lastx, lasty, 12 * 4, 18, Colors.White);
             foreach (Area area in ToRefresh)
             {
                 g.FillRectangle(area.X, area.Y, area.XMAX * 4, area.YMAX, Colors.White);
