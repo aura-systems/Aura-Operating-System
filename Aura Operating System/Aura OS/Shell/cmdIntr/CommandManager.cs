@@ -351,12 +351,6 @@ namespace Aura_OS.Shell.cmdIntr
             //    Util.xml.CmdXmlParser.c_CmdXmlParser(cmd, 0, 4);
             //}
 
-
-            else if (cmd.Equals("startx"))
-            {
-                System.GUI.UI.Desktop.Main();
-            }
-
             #endregion Tests
 
             #region Tools
