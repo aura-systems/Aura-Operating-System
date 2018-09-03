@@ -26,10 +26,7 @@ namespace Aura_OS.System.Utils
             //reset of config in memory if there is "something"
             file = reset;
             //load
-            if (Kernel.SystemExists)
-            {
-                file = File.ReadAllLines(@"0:\System\settings.conf");
-            }
+            file = File.ReadAllLines(@"0:\System\settings.conf");
         }
 
         /// <summary>
@@ -37,10 +34,7 @@ namespace Aura_OS.System.Utils
         /// </summary>
         public static void PushValues()
         {
-            if (Kernel.SystemExists)
-            {
-                File.WriteAllLines(@"0:\System\settings.conf", file);
-            }
+            File.WriteAllLines(@"0:\System\settings.conf", file);
         }
 
         /// <summary>
@@ -74,12 +68,6 @@ namespace Aura_OS.System.Utils
         /// </summary>
         public static string GetValue(string parameter)
         {
-
-            if (file == null)
-            {
-                return "null";
-            }
-
             string value = "null";
 
             foreach (string line in file)

@@ -25,7 +25,7 @@ namespace Aura_OS.System.Users
             int middle = text.IndexOf("//////");
             string user = text.Remove(middle, text.Length - middle);
             string pass = text.Remove(0, middle + 6);
-            string Sha256psw = Sha256.hash(pass);
+            string md5psw = MD5.hash(pass);
             string type;
 
             Users.LoadUsers();
@@ -39,7 +39,7 @@ namespace Aura_OS.System.Users
                 type = UserLevel.StandardUser();
             }
 
-            if (Users.GetUser("user:" + user).Contains(Sha256psw))
+            if (Users.GetUser("user:" + user).Contains(md5psw))
             {
                 Start(user);
             }
@@ -59,7 +59,6 @@ namespace Aura_OS.System.Users
             string title_fr = "Connexion à votre compte Aura.";
             string title_en = "Login to your Aura account.";
             string title_nl = "Log in op je Aura account.";
-            string title_it = "Accedi al tuo Aura account.";
 
             switch (Kernel.langSelected)
             {
@@ -69,8 +68,6 @@ namespace Aura_OS.System.Users
                     return title_fr;
                 case "nl_NL":
                     return title_nl;
-                case "it_IT":
-                    return title_it;
             }
 
             return title_en; //default
@@ -108,53 +105,6 @@ namespace Aura_OS.System.Users
 
             Console.Clear();
 
-            Utils.Settings.LoadValues();
-            string consolemode = Utils.Settings.GetValue("consolemode");
-
-            if (consolemode == "null")
-            {
-                switch (Video.GetVideo())
-                {
-                    case "VGATextmode":
-                        Kernel.AConsole = new System.Shell.VGA.VGAConsole(null);
-                        break;
-                    case "SVGA":
-                        // TO DO ?
-                        break;
-                    case "VESA":
-                        Kernel.AConsole = new System.Shell.VESAVBE.VESAVBEConsole();
-                        break;
-                    default:
-                        Kernel.AConsole = new System.Shell.VGA.VGAConsole(null);
-                        break;
-                }
-            }
-            else
-            {
-                switch (consolemode)
-                {
-                    case "VGATextmode":
-                        Kernel.AConsole = new System.Shell.VGA.VGAConsole(null);
-                        break;
-                    case "SVGA":
-                        // TO DO ?
-                        break;
-                    case "VESA":
-                        Kernel.AConsole = new System.Shell.VESAVBE.VESAVBEConsole();
-                        break;
-                    default:
-                        Kernel.AConsole = new System.Shell.VGA.VGAConsole(null);
-                        break;
-                }
-            }
-
-            string debugger = Utils.Settings.GetValue("debugger");
-
-            if (debugger == "on")
-            {
-                Kernel.debugger.enabled = true;
-            }
-    
             WelcomeMessage.Display();
             Text.Display("logged", username);
 

@@ -38,9 +38,8 @@ namespace Aura_OS.Shell.cmdIntr.FileSystem
 
             foreach (var vol in vols)
             {
-                Console.WriteLine("  " + vol.mName + "\t   \t" + Kernel.vFS.GetFileSystemType(vol.mName) + " \t" + vol.mSize + " MB\t" + vol.mParent);
+                Console.WriteLine("  " + vol.mName + "\t   \tFAT32 \t" + vol.mSize + " MB\t" + vol.mParent);
             }
-
         }
     }
 }

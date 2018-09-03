@@ -25,8 +25,6 @@ namespace Aura_OS.System
         private string FinalLang;
         private string FinalHostname;
 
-        private bool noinstallnofs = false;
-
         /// <summary>
         /// Verify filesystem
         /// </summary>
@@ -59,7 +57,7 @@ namespace Aura_OS.System
         {           
             if(FileSystem() == "false")
             {
-                RunWithoutFS(false);
+                RunWithoutFS();
             }
             else if(FileSystem() == "true"){
                 Kernel.SystemExists = true;
@@ -67,12 +65,9 @@ namespace Aura_OS.System
             else if(FileSystem() == "continue")
             {
                 RegisterLanguage();
+                RegisterHostname();
                 RegisterUser();
-                if (!noinstallnofs)
-                {
-                    RegisterHostname();
-                    Installation();
-                }
+                Installation();
             }           
         }
 
@@ -107,44 +102,36 @@ namespace Aura_OS.System
             username = text.Remove(middle, text.Length - middle);
             password = text.Remove(0, middle + 6);
 
-            if (username == "root" || password == "root")
+            string tryusername = "";
+
+            if (tryusername.StartsWith("user:" + username))
             {
-                noinstallnofs = true;
-                RunWithoutFS(true);
+                Text.Menu("alreadyuser");
+                RegisterUser();
             }
             else
             {
-                string tryusername = "";
-
-                if (tryusername.StartsWith("user:" + username))
+                if ((username.Length >= 4) && (username.Length <= 20))
                 {
-                    Text.Menu("alreadyuser");
-                    RegisterUser();
-                }
-                else
-                {
-                    if ((username.Length >= 4) && (username.Length <= 20))
+                    if ((password.Length >= 6) && (password.Length <= 40))
                     {
-                        if ((password.Length >= 6) && (password.Length <= 40))
-                        {
-                            //good
-                            password = Sha256.hash(password);
-                            FinalUsername = username;
-                            FinalPassword = password;
-                        }
-                        else
-                        {
-                            Text.Menu("error2");
-                            RegisterUser();
-                        }
+                        //good
+                        password = MD5.hash(password);
+                        FinalUsername = username;
+                        FinalPassword = password;
                     }
                     else
                     {
-                        Text.Menu("error3");
+                        Text.Menu("error2");
                         RegisterUser();
                     }
                 }
-            }
+                else
+                {
+                    Text.Menu("error3");
+                    RegisterUser();
+                }
+            }            
         }
 
         /// <summary>
@@ -184,16 +171,19 @@ namespace Aura_OS.System
                 FinalLang = "nl_NL";
                 Keyboard.Init();
             }
-            else if ((language.Equals("it_IT")) || language.Equals("it-IT"))
-            {
-                Kernel.langSelected = "it_IT";
-                FinalLang = "it_IT";
-                Keyboard.Init();
-            }
             else
             {
                 RegisterLanguage();
             }
+        }
+
+        /// <summary>
+        /// Called to define default colors
+        /// </summary>
+        public void RegisterDefaults()
+        {
+            Settings.PutValue("foregroundcolor","7");
+            Settings.PutValue("backgroundcolor", "0");
         }
 
         /// <summary>
@@ -217,43 +207,24 @@ namespace Aura_OS.System
             }
             catch
             {
-                RunWithoutFS(false);
+                RunWithoutFS();
             }            
         }
 
         /// <summary>
         /// Method called to start Aura_OS without using filesystem and loggged to "root"
         /// </summary>
-        public void RunWithoutFS(bool nofsroot) //logged with root without using filesystem
+        public void RunWithoutFS() //logged with root without using filesystem
         {
-            if (!nofsroot)
-            {
-                RegisterLanguage();
-            }
+            RegisterLanguage();
             Kernel.SystemExists = false;
             Kernel.userLogged = "root";
             Kernel.Logged = true;
             Console.Clear();
-            switch (Video.GetVideo())
-            {
-                case "VGATextmode":
-                    Kernel.AConsole = new System.Shell.VGA.VGAConsole(null);
-                    break;
-                case "SVGA":
-                    // TO DO ?
-                    break;
-                case "VESA":
-                    Kernel.AConsole = new System.Shell.VESAVBE.VESAVBEConsole();
-                    break;
-                default:
-                    Kernel.AConsole = new System.Shell.VGA.VGAConsole(null);
-                    break;
-            }
             WelcomeMessage.Display();
             Text.Display("logged", "root");
             Text.Display("nofilesystem");
             Console.WriteLine();
-            Kernel.running = true;
         }
 
         /// <summary>
@@ -263,26 +234,13 @@ namespace Aura_OS.System
         {
             Console.Clear();
 
+            Kernel.SystemExists = true;
             Kernel.userLogged = username;
             Kernel.JustInstalled = true;
             Kernel.running = true;
 
             Console.Clear();
-            switch (Video.GetVideo())
-            {
-                case "VGATextmode":
-                    Kernel.AConsole = new System.Shell.VGA.VGAConsole(null);
-                    break;
-                case "SVGA":
-                    // TO DO ?
-                    break;
-                case "VESA":
-                    Kernel.AConsole = new System.Shell.VESAVBE.VESAVBEConsole();
-                    break;
-                default:
-                    Kernel.AConsole = new System.Shell.VGA.VGAConsole(null);
-                    break;
-            }
+
             WelcomeMessage.Display();
             Text.Display("logged", username);
 
@@ -317,7 +275,7 @@ namespace Aura_OS.System
 
             Menu.DispInstallationDialog(30);
 
-            System.Users.Users.PutUser("user:root", Sha256.hash("root") + ":admin");
+            System.Users.Users.PutUser("user:root", MD5.hash("root") + ":admin");
 
             Menu.DispInstallationDialog(40);
 
@@ -343,30 +301,14 @@ namespace Aura_OS.System
                 Settings.PutValue("language", "nl_NL");
                 Menu.DispInstallationDialog(60);
             }
-            else if ((FinalLang.Equals("it_IT")) || FinalLang.Equals("it-IT"))
-            {
-                Settings.PutValue("language", "it_IT");
-                Menu.DispInstallationDialog(60);
-            }
 
             Settings.PutValue("hostname", FinalHostname);
 
-            Menu.DispInstallationDialog(70);
-
-            Settings.PutValue("setuptime", Time.MonthString() + "/" + Time.DayString() + "/" + Time.YearString() + ", " + Time.TimeString(true, true, true));
-
-            Settings.PutValue("consolemode", "null");
-
             Menu.DispInstallationDialog(80);
 
-            Kernel.SystemExists = true;
-
-            Settings.PutValue("debugger", "off");
+            RegisterDefaults();
 
             Settings.PushValues();
-
-            Menu.DispInstallationDialog(90);
-
             System.Users.Users.PushUsers();
 
             Menu.DispInstallationDialog(100);

@@ -18,10 +18,6 @@ using Aura_OS.System.Utils;
 using System.Collections.Generic;
 using System.Text;
 using Cosmos.System.ExtendedASCII;
-using Aura_OS.Core;
-using Aura_OS.Apps.System;
-using Aura_OS.System.Network.IPV4;
-using Cosmos.HAL;
 
 #endregion
 
@@ -34,26 +30,21 @@ namespace Aura_OS
 
         Setup setup = new Setup();
         public static bool running;
-        public static string version = "0.4.5";
-        public static string revision = "280820180021";
+        public static string version = "0.4.3";
+        public static string revision = "050120182138";
         public static string current_directory = @"0:\";
         public static string langSelected = "en_US";
         public static string userLogged;
         public static string userLevelLogged;
         public static bool Logged = false;
         public static string ComputerName = "aura-pc";
+        public static int color = 7;
+        public static string RootContent;
         public static string UserDir = @"0:\Users\" + userLogged + "\\";
         public static bool SystemExists = false;
         public static bool JustInstalled = false;
         public static CosmosVFS vFS = new CosmosVFS();
 		public static Dictionary<string, string> environmentvariables = new Dictionary<string, string>();
-        //public static HAL.PCSpeaker speaker = new HAL.PCSpeaker();
-        public static string boottime = Time.MonthString() + "/" + Time.DayString() + "/" + Time.YearString() + ", " + Time.TimeString(true, true, true);
-        public static System.Shell.Console AConsole;
-        public static string Consolemode = "VGATextmode";
-        public static MemoryManager MemMon;
-
-        public static Debugger debugger = new Debugger(new Address(192, 168, 1, 12), 4224);
 
         #endregion
 
@@ -73,38 +64,37 @@ namespace Aura_OS
         {
             try
             {
-                Shell.cmdIntr.CommandManager.RegisterAllCommands();
-
-                //AConsole = new System.Shell.VGA.VGAConsole(null);
-
+                Console.Clear();
                 Encoding.RegisterProvider(CosmosEncodingProvider.Instance);
                 Console.InputEncoding = Encoding.GetEncoding(437);
                 Console.OutputEncoding = Encoding.GetEncoding(437);
-
-                System.CustomConsole.WriteLineInfo("Booting Aura Operating System...");
-
-                System.CustomConsole.WriteLineInfo("VBE Informations:");
-                System.CustomConsole.WriteLineInfo("VBE Version: " + System.Shell.VESAVBE.Graphics.VBEVersion);
-                System.CustomConsole.WriteLineInfo("VBE Signature: " + System.Shell.VESAVBE.Graphics.VBESignature);
-                System.CustomConsole.WriteLineInfo("BPP: " + System.Shell.VESAVBE.Graphics.ModeInfo.bpp);
-                System.CustomConsole.WriteLineInfo("Height: " + System.Shell.VESAVBE.Graphics.ModeInfo.height);
-                System.CustomConsole.WriteLineInfo("Width: " + System.Shell.VESAVBE.Graphics.ModeInfo.width);
+                Console.ForegroundColor = ConsoleColor.DarkMagenta;
+                Console.Write("Booting Aura...\n");
+                Console.ForegroundColor = ConsoleColor.White;
 
                 #region Register Filesystem
                 Sys.FileSystem.VFS.VFSManager.RegisterVFS(vFS);
                 if (ContainsVolumes())
                 {
-                    System.CustomConsole.WriteLineOK("FileSystem Registration");
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    Console.Write("[OK]");
+                    Console.ForegroundColor = ConsoleColor.White;
+                    Console.Write(" ");
+                    Console.ForegroundColor = ConsoleColor.DarkMagenta;
+                    Console.Write("FileSystem Registration\n");
+                    Console.ForegroundColor = ConsoleColor.White;
                 }
                 else
                 {
-                    System.CustomConsole.WriteLineError("FileSystem Registration");
+                    Console.ForegroundColor = ConsoleColor.DarkRed;
+                    Console.Write("[Error]");
+                    Console.ForegroundColor = ConsoleColor.White;
+                    Console.Write(" ");
+                    Console.ForegroundColor = ConsoleColor.DarkMagenta;
+                    Console.Write("FileSystem Registration\n");
+                    Console.ForegroundColor = ConsoleColor.White;
                 }
                 #endregion
-
-                NetworkInit.Init();
-
-                System.CustomConsole.WriteLineOK("Aura successfully started!");
 
                 setup.InitSetup();
 
@@ -132,9 +122,6 @@ namespace Aura_OS
                 {
                     running = true;
                 }
-
-                boottime = Time.MonthString() + "/" + Time.DayString() + "/" + Time.YearString() + ", " + Time.TimeString(true, true, true);
-
             }
             catch (Exception ex)
             {
@@ -151,23 +138,15 @@ namespace Aura_OS
         {
             try
             {
-
-                //Sys.Thread TBAR = new Sys.Thread(TaskBar);
-
                 while (running)
                 {
                     if (Logged) //If logged
                     {
-                        //TBAR.Start();
-                        BeforeCommand();
-
-                        Sys.Console.writecommand = true;
+                        BeforeCommand();                  
 
                         var cmd = Console.ReadLine();
-                        //TBAR.Stop();
                         Shell.cmdIntr.CommandManager._CommandManger(cmd);
-                        //Console.WriteLine();
-
+                        Console.WriteLine();
                     }
                     else
                     {
@@ -182,38 +161,13 @@ namespace Aura_OS
             }
         }
 
-        int _deltaT = 0;
-
-        private void TaskBar()
-        {
-
-            int oldx = 0;
-            int oldy = 0;
-
-            while (true)
-            {
-                if (_deltaT != RTC.Second)
-                {
-                    oldx = AConsole.X;
-                    oldy = AConsole.Y;
-                    _deltaT = RTC.Second;
-                    AConsole.X = AConsole.Width - 8;
-                    AConsole.Y = 0;
-                    AConsole.Write(Encoding.ASCII.GetBytes(Time.TimeString(true, true, true)));
-                    AConsole.X = oldx;
-                    AConsole.Y = oldy;
-                }
-            }
-            
-        }
-
         #endregion
 
         #region BeforeCommand
         /// <summary>
         /// Display the line before the user input and set the console color.
         /// </summary>
-        public static void BeforeCommand()
+        private static void BeforeCommand()
         {
             if (current_directory == @"0:\")
             {
@@ -233,12 +187,45 @@ namespace Aura_OS
                 Console.ForegroundColor = ConsoleColor.Gray;
                 Console.Write("> ");
 
-                Console.ForegroundColor = ConsoleColor.White;
-                
+                if (color == 0)
+                {
+                    Console.ForegroundColor = ConsoleColor.Black;
+                }
+                else if (color == 1)
+                {
+                    Console.ForegroundColor = ConsoleColor.Blue;
+                }
+                else if (color == 2)
+                {
+                    Console.ForegroundColor = ConsoleColor.Green;
+                }
+                else if (color == 3)
+                {
+                    Console.ForegroundColor = ConsoleColor.DarkBlue;
+                }
+                else if (color == 4)
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                }
+                else if (color == 5)
+                {
+                    Console.ForegroundColor = ConsoleColor.Magenta;
+                }
+                else if (color == 6)
+                {
+                    Console.ForegroundColor = ConsoleColor.Yellow;
+                }
+                else if (color == 7)
+                {
+                    Console.ForegroundColor = ConsoleColor.White;
+                }
+                else
+                {
+                    Console.ForegroundColor = ConsoleColor.White;
+                }
             }
             else
             {
-
                 Console.ForegroundColor = ConsoleColor.Blue;
                 Console.Write(UserLevel.TypeUser());
 
@@ -257,8 +244,42 @@ namespace Aura_OS
                 Console.ForegroundColor = ConsoleColor.DarkGray;
                 Console.Write(current_directory + "~ ");
 
-                Console.ForegroundColor = ConsoleColor.White;
-
+                if (color == 0)
+                {
+                    Console.ForegroundColor = ConsoleColor.Black;
+                }
+                else if (color == 1)
+                {
+                    Console.ForegroundColor = ConsoleColor.Blue;
+                }
+                else if (color == 2)
+                {
+                    Console.ForegroundColor = ConsoleColor.Green;
+                }
+                else if (color == 3)
+                {
+                    Console.ForegroundColor = ConsoleColor.DarkBlue;
+                }
+                else if (color == 4)
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                }
+                else if (color == 5)
+                {
+                    Console.ForegroundColor = ConsoleColor.Magenta;
+                }
+                else if (color == 6)
+                {
+                    Console.ForegroundColor = ConsoleColor.Yellow;
+                }
+                else if (color == 7)
+                {
+                    Console.ForegroundColor = ConsoleColor.White;
+                }
+                else
+                {
+                    Console.ForegroundColor = ConsoleColor.White;
+                }
             }
         } 
         #endregion

@@ -32,7 +32,7 @@ namespace Aura_OS.Shell.cmdIntr.FileSystem
         /// <summary>
         /// c = commnad, c_CP
         /// </summary>
-        public static void c_CP_only()
+        public static void c_CP()
         {
             L.Text.Display("usagecp");
         }
@@ -46,6 +46,8 @@ namespace Aura_OS.Shell.cmdIntr.FileSystem
             //args commands
             Char cmdargschar = ' ';
             string[] cmdargs = cp.Split(cmdargschar);
+
+            string fileinput = cp.Remove(startIndex, count);
 
             if (!cmdargs[1].StartsWith("-")) //WITHOUT ARGS, NO OVERWRITING
             {

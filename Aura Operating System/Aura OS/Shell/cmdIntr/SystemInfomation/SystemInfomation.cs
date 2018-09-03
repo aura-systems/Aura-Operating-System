@@ -31,7 +31,12 @@ namespace Aura_OS.Shell.cmdIntr.SystemInfomation
         /// </summary>
         public static void c_SystemInfomation()
         {
-            L.List_Translation.Systeminfo();
+            L.Text.Display("Computername");
+            L.Text.Display("OSName");
+            L.Text.Display("OSVersion");
+            L.Text.Display("OSRevision");
+            L.Text.Display("time");
+            L.Text.Display("AmountRAM");
         }
     }
 }

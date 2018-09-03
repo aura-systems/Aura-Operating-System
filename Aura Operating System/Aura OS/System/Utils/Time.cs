@@ -131,8 +131,6 @@ namespace Aura_OS.System
                     return getTime12(hour, min, sec);
                 case "nl_NL":
                     return getTime24(hour, min, sec);
-                case "it_IT":
-                    return getTime12(hour, min, sec);
                 default:
                     return getTime12(hour, min, sec);
             }
