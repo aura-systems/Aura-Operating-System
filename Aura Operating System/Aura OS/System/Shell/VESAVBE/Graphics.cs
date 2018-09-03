@@ -204,7 +204,7 @@ namespace Aura_OS.System.Shell.VESAVBE
             return font;
         }
 
-        internal void Clear(int c)
+        public static void Clear(int c)
         {
             canvas.ClearVRAM((uint)c);
         }

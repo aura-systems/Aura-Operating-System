@@ -91,7 +91,7 @@ namespace Aura_OS.System.Shell.VESAVBE
 
         public override void Clear()
         {
-            graphics.Clear(0x00);
+            Graphics.Clear(0x00);
             mX = 0;
             mY = 0;
         }

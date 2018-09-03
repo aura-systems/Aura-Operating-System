@@ -10,8 +10,8 @@ using System.Text;
          public static void AddWindow(int sizex, int sizey, int posx, int posy, string name)
         {
             Window win = new Window();
-            Util.Point position = new Util.Point(posx, posy);
-            Util.Point size = new Util.Point(sizex, sizey);
+            Util.Point position = new Util.Point((uint)posx, (uint)posy);
+            Util.Point size = new Util.Point((uint)sizex, (uint)sizey);
             win.pos = position;
             win.size = size;
             win.Name = name;
@@ -37,14 +37,14 @@ using System.Text;
          public Util.Area CloseArea;
          public void Draw()
         {
-            Desktop.g.FillRectangle(pos.X, pos.Y - 21, size.X, 20, Colors.AliceBlue);
-            Desktop.g.DrawString(Name, pos.X + 1, pos.Y - 20, Colors.Black, Fonts.CFF._Pixel7_Mini_cff);
-            Desktop.g.FillRectangle(pos.X, pos.Y - 1, size.X + 1, size.Y + 1, Colors.White);
-            Desktop.g.DrawRectangle(pos.X - 1, pos.Y - 22, size.X + 2, size.Y + 22, Colors.DarkGray);
-            Desktop.g.FillRectangle(pos.X + size.X - 19, pos.Y - 21, 20, 20, Colors.Red);
-            Desktop.g.FillRectangle(pos.X + size.X - 39, pos.Y - 21, 20, 20, Colors.Orange);
-            CloseArea.X = pos.X + size.X - 19;
-            CloseArea.Y = pos.Y - 20;
+            Desktop.g.FillRectangle((int)pos.X, (int)pos.Y - 21, (int)size.X, 20, Colors.AliceBlue);
+            Desktop.g.DrawString(Name, (int)pos.X + 1, (int)pos.Y - 20, Colors.Black, Fonts.CFF._Pixel7_Mini_cff);
+            Desktop.g.FillRectangle((int)pos.X, (int)pos.Y - 1, (int)size.X + 1, (int)size.Y + 1, Colors.White);
+            Desktop.g.DrawRectangle((int)pos.X - 1, (int)pos.Y - 22, (int)size.X + 2, (int)size.Y + 22, Colors.DarkGray);
+            Desktop.g.FillRectangle((int)pos.X + (int)size.X - 19, (int)pos.Y - 21, 20, 20, Colors.Red);
+            Desktop.g.FillRectangle((int)pos.X + (int)size.X - 39, (int)pos.Y - 21, 20, 20, Colors.Orange);
+            CloseArea.X = (int)pos.X + (int)size.X - 19;
+            CloseArea.Y = (int)pos.Y - 20;
             CloseArea.XMAX = CloseArea.X + 19;
             CloseArea.YMAX = CloseArea.Y + 19;
         }

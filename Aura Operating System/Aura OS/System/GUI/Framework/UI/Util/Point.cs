@@ -6,19 +6,19 @@ using System.Text;
 {
     public class Point
     {
-        public Point(int x, int y)
+        public Point(uint x, uint y)
         {
             this.X = x;
             this.Y = y;
         }
-        int x;
-        public int X
+        uint x;
+        public uint X
         {
             get { return x; }
             set { x = value; }
         }
-        int y;
-        public int Y
+        uint y;
+        public uint Y
         {
             get { return y; }
             set { y = value; }

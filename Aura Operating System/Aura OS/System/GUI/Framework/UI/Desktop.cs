@@ -11,16 +11,17 @@ using Aura_OS.System.GUI.Graphics;
 using Aura_OS.System.GUI.Imaging;
 using Aura_OS.System.GUI.UI.Util;
 using Cosmos.HAL;
-using static Cosmos.HAL.Mouse;
+using static Cosmos.System.MouseManager;
+
  namespace Aura_OS.System.GUI.UI
 {
     class Desktop
     {
-         public static VbeScreen Screen = new VbeScreen();
+
         public static Canvas Canvas = new Canvas(1366, 768);
         public static SdfFont terminus;
-         public static int Width = 1366;
-        public static int Height = 768;
+        public static int Width = Shell.VESAVBE.Graphics.ModeInfo.width;
+        public static int Height = Shell.VESAVBE.Graphics.ModeInfo.height;
          static int _frames = 0;
         static int _fps = 0;
         static int _deltaT = 0;
@@ -72,12 +73,7 @@ using static Cosmos.HAL.Mouse;
                 }
             }
             
-             switch (Cursor.Mouse.Buttons)
-            {
-                case MouseState.Left:
-                    mouse_click = new Util.Point(Cursor.Mouse.X, Cursor.Mouse.Y);
-                    break;
-            }
+             
              return 0;
         }
          //public static Image cursor;
@@ -144,8 +140,8 @@ using static Cosmos.HAL.Mouse;
          public static void Initialize()
         {
             Console.Clear();
-             Screen.SetMode(VbeScreen.ScreenSize.Size1366X768, VbeScreen.Bpp.Bpp32);
-            Screen.Clear(Colors.Blue);
+
+            Shell.VESAVBE.Graphics.Clear(Colors.Blue.ToHex());
              //_deltaT = RTC.Second;
              g = new Graphics.Graphics(Canvas);
             g.Clear(Colors.White);

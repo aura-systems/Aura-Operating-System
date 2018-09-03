@@ -1,5 +1,5 @@
 using Cosmos.Core.Memory.Old;
-using Aura_OS.System.GUI.Drivers;
+
  namespace Aura_OS.System.GUI.Graphics
 {
     public unsafe class Canvas : ICanvas
@@ -27,7 +27,7 @@ using Aura_OS.System.GUI.Drivers;
         }
          public void WriteToScreen()
         {
-            Memory.Memcpy((uint*) 0xE0000000, _buffer, Width * Height);
+            Cosmos.Core.MemoryOperations.Copy((uint*)Shell.VESAVBE.Graphics.ModeInfo.framebuffer, _buffer, Width * Height);
         }
          public uint Blit(int x0, int y0, int w, int h)
         {
@@ -36,17 +36,17 @@ using Aura_OS.System.GUI.Drivers;
             for (y = 0; y < h; y++)
             {
                 int yoff = ((y + y0) * w * 4);
-                Memory.Memcpy((byte*)target, (byte*)_buffer + (yoff) + (x0 * 4), w);
+                Cosmos.Core.MemoryOperations.Copy((byte*)target, (byte*)_buffer + (yoff) + (x0 * 4), w);
             }
             return target;
         }
          public void SetScanLine(int offset, int length, uint color)
         {
-            Memory.Memset(offset + _buffer, color, (uint)length);
+            Cosmos.Core.MemoryOperations.Fill((byte*)(offset + _buffer), (int)color, length);
         }
          public void Clear(uint c)
         {
-            Memory.Memset(_buffer, c, (uint)(Width * Height));
+            Cosmos.Core.MemoryOperations.Fill((byte*)_buffer, (int)c, Width * Height);
         }
     }
 } 
