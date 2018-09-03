@@ -65,29 +65,29 @@ namespace Aura_OS.System.Translation
                         case "alreadyexist":
                             Console.WriteLine(arg + " existe déjà !");
                             break;
-                        case "Computername":
-                            Console.WriteLine("Nom du PC:                     " + Kernel.ComputerName);
-                            break;
-                        case "OSName":
-                            Console.WriteLine("Nom du système d'exploitation: Aura");
-                            break;
-                        case "OSVersion":
-                            Console.WriteLine("Version du système:            " + Kernel.version);
-                            break;
-                        case "OSRevision":
-                            Console.WriteLine("Révision du système:           " + Kernel.revision);
-                            break;
-                        case "AmountRAM":
-                            Console.WriteLine("Montant de la RAM:             " + Info.GetAmountRAM());
-                            break;
                         case "UnknownCommand":
                             Console.WriteLine("Commande inconnue.");
                             break;
                         case "unknownlanguage":
                             Console.WriteLine("Langue inconnue.");
                             break;
+                        case "unknownmode":
+                            Console.WriteLine("Mode inconnu.");
+                            break;
+                        case "alreadyintextmode":
+                            Console.WriteLine("Vous êtes déjà en textmode!");
+                            break;
+                        case "nographicmode":
+                            Console.WriteLine("Aucun mode graphique n'est encore supporté pour votre machine.");
+                            break;
                         case "availablelanguage":
-                            Console.WriteLine("Langues disponibles: en_US fr_FR nl_NL");
+                            Console.WriteLine("Langues disponibles: en-US fr-FR nl-NL it-IT");
+                            break;
+                        case "availabledebugcmd":
+                            Console.WriteLine("Commandes disponibles: vbeinfo vbemodes debugger {text}");
+                            break;
+                        case "consolemode":
+                            Console.WriteLine("Modes disponibles: textmode graphicmode");
                             break;
                         case "unknowncolor":
                             Console.WriteLine("Couleur inconnue.");
@@ -179,9 +179,6 @@ namespace Aura_OS.System.Translation
                         case "mkdir":
                             Console.WriteLine("Entrez le nom du dossier (mkdir dossier).");
                             break;
-                        case "time":
-                            Console.WriteLine("Date et heure:                 " + Time.MonthString() + "/" + Time.DayString() + "/" + Time.YearString() + ", " + Time.TimeString(true, true, true));
-                            break;
                         case "mkdirfilealreadyexist":
                             Console.WriteLine("Le dossier existait déjà, le répertoire \"" + arg + "\" a donc été créé.");
                             break;
@@ -233,14 +230,14 @@ namespace Aura_OS.System.Translation
                             Console.WriteLine("voir la progression du projet sur ce domaine.");
                             Console.WriteLine();
                             break;
-                        case "MAC":
-                            Console.WriteLine("Addresse Physique (MAC): " + Core.Network.PhysicalAddress());
-                            break;
                         case "notavalidscript":
                             Console.WriteLine("Ce fichier n'est pas un script valide.");
                             break;
                         case "md5":
                             Console.WriteLine("Voici le résultat en MD5.");
+                            break;
+                        case "SHA256":
+                            Console.WriteLine("Voici le résultat en SHA256.");
                             break;
                         case "user:existalready":
                             Console.WriteLine($"{arg} existe déjà !");
@@ -281,6 +278,9 @@ namespace Aura_OS.System.Translation
                         case "nofilesystem":
                             Console.WriteLine("Aucun volume détecté, le sytème de fichiers est désactivé!");
                             break;
+                        case "time":
+                            Console.WriteLine("L'heure actuelle est :  " + Time.MonthString() + "/" + Time.DayString() + "/" + Time.YearString() + ", " + Time.TimeString(true, true, true));
+                            break;
                     }
                     break;
 
@@ -307,29 +307,29 @@ namespace Aura_OS.System.Translation
                         case "alreadyexist":
                             Console.WriteLine(arg + " already exists!");
                             break;
-                        case "Computername":
-                            Console.WriteLine("Computer name:             " + Kernel.ComputerName);
-                            break;
-                        case "OSName":
-                            Console.WriteLine("Operating system name:     Aura");
-                            break;
-                        case "OSVersion":
-                            Console.WriteLine("Operating system version:  " + Kernel.version);
-                            break;
-                        case "OSRevision":
-                            Console.WriteLine("Operating system revision: " + Kernel.revision);
-                            break;
-                        case "AmountRAM":
-                            Console.WriteLine("Amount of RAM:             " + Cosmos.Core.CPU.GetAmountOfRAM() + "MB");
-                            break;
                         case "UnknownCommand":
                             Console.WriteLine("Unknown command.");
                             break;
                         case "unknownlanguage":
                             Console.WriteLine("Unknown language.");
                             break;
+                        case "unknownmode":
+                            Console.WriteLine("Unknown mode.");
+                            break;
+                        case "alreadyintextmode":
+                            Console.WriteLine("You already are in textmode!");
+                            break;
+                        case "nographicmode":
+                            Console.WriteLine("No graphics mode is supported for your machine yet.");
+                            break;
                         case "availablelanguage":
-                            Console.WriteLine("Available languages: en-US fr-FR nl-NL");
+                            Console.WriteLine("Available languages: en-US fr-FR nl-NL it-IT");
+                            break;
+                        case "availabledebugcmd":
+                            Console.WriteLine("Available commands: vbeinfo vbemodes debugger {text}");
+                            break;
+                        case "consolemode":
+                            Console.WriteLine("Available modes: textmode graphicmode");
                             break;
                         case "unknowncolor":
                             Console.WriteLine("Unknown colour.");
@@ -418,9 +418,6 @@ namespace Aura_OS.System.Translation
                         case "mkdir":
                             Console.WriteLine("Enter the directory name (mkdir directory).");
                             break;
-                        case "time":
-                            Console.WriteLine("Date and time:             " + Time.MonthString() + "/" + Time.DayString() + "/" + Time.YearString() + ", " + Time.TimeString(true, true, true));
-                            break;
                         case "mkdirfilealreadyexist":
                             Console.WriteLine("That folder existed already, directory \"" + arg + "\" has been created.");
                             break;
@@ -472,14 +469,11 @@ namespace Aura_OS.System.Translation
                             Console.WriteLine("see the progression on this part.");
                             Console.WriteLine();
                             break;
-                        case "MAC":
-                            Console.WriteLine("MAC Address: " + Core.Network.PhysicalAddress());
-                            break;
-                        case "notavalidscript":
-                            Console.WriteLine("This file is not a valid script.");
-                            break;
                         case "md5":
                             Console.WriteLine("This is the result in MD5.");
+                            break;
+                        case "SHA256":
+                            Console.WriteLine("This is the result in SHA256.");
                             break;
                         case "user:existalready":
                             Console.WriteLine($"{arg} exist already !");
@@ -520,6 +514,9 @@ namespace Aura_OS.System.Translation
                         case "nofilesystem":
                             Console.WriteLine("No volumes are detected, filesystem is disabled!");
                             break;
+                        case "time":
+                            Console.WriteLine("The current time is:  " + Time.MonthString() + "/" + Time.DayString() + "/" + Time.YearString() + ", " + Time.TimeString(true, true, true));
+                            break;
                     }
                     break;
 
@@ -546,29 +543,29 @@ namespace Aura_OS.System.Translation
                         case "alreadyexist":
                             Console.WriteLine(arg + " bestaat al!");
                             break;
-                        case "Computername":
-                            Console.WriteLine("Naam computer:             " + Kernel.ComputerName);
-                            break;
-                        case "OSName":
-                            Console.WriteLine("Naam besturingssysteem:    Aura");
-                            break;
-                        case "OSVersion":
-                            Console.WriteLine("Versie besturingssysteem:  " + Kernel.version);
-                            break;
-                        case "OSRevision":
-                            Console.WriteLine("Revisie besturingssysteem: " + Kernel.revision);
-                            break;
-                        case "AmountRAM":
-                            Console.WriteLine("Hoeveelheid RAM:           " + Cosmos.Core.CPU.GetAmountOfRAM() + "MB");
-                            break;
                         case "UnknownCommand":
                             Console.WriteLine("Onbekend commando.");
                             break;
                         case "unknownlanguage":
                             Console.WriteLine("Onbekende taal.");
                             break;
+                        case "unknownmode":
+                            Console.WriteLine("Onbekende modus.");
+                            break;
+                        case "alreadyintextmode":
+                            Console.WriteLine("U bent al in tekstmodus!");
+                            break;
+                        case "nographicmode":
+                            Console.WriteLine("Er wordt nog geen grafische modus ondersteund voor uw apparaat.");
+                            break;
                         case "availablelanguage":
-                            Console.WriteLine("Beschikbare talen: en-US fr-FR nl-NL");
+                            Console.WriteLine("Beschikbare talen: en-US fr-FR nl-NL it-IT");
+                            break;
+                        case "availabledebugcmd":
+                            Console.WriteLine("Beschikbare commando's: vbeinfo vbemodes debugger {text}");
+                            break;
+                        case "consolemode":
+                            Console.WriteLine("Beschikbare modi: textmode graphicmode");
                             break;
                         case "unknowncolor":
                             Console.WriteLine("Onbekende kleur.");
@@ -657,9 +654,6 @@ namespace Aura_OS.System.Translation
                         case "mkdir":
                             Console.WriteLine("Voer de mapnaam in  (mkdir map).");
                             break;
-                        case "time":
-                            Console.WriteLine("Datum en tijd:             " + Time.MonthString() + "/" + Time.DayString() + "/" + Time.YearString() + ", " + Time.TimeString(true, true, true));
-                            break;
                         case "mkdirfilealreadyexist":
                             Console.WriteLine("Die map bestond al, map \"" + arg + "\" is aangemaakt.");
                             break;
@@ -711,14 +705,11 @@ namespace Aura_OS.System.Translation
                             Console.WriteLine("de vooruitgang te zien van dit onderdeel.");
                             Console.WriteLine();
                             break;
-                        case "MAC":
-                            Console.WriteLine("MAC Adres: " + Core.Network.PhysicalAddress());
-                            break;
                         case "notavalidscript":
                             Console.WriteLine("Dit bestand is geen geldig script.");
                             break;
-                        case "md5":
-                            Console.WriteLine("Dit is het resultaat in MD5.");
+                        case "SHA256":
+                            Console.WriteLine("Dit is het resultaat in SHA256.");
                             break;
                         case "user:existalready":
                             Console.WriteLine($"{arg} bestaat al !");
@@ -759,7 +750,238 @@ namespace Aura_OS.System.Translation
                         case "nofilesystem":
                             Console.WriteLine("Er zijn geen volumes gedetecteerd, het bestandssysteem is uitgeschakeld!");
                             break;
+                        case "time":
+                            Console.WriteLine("De huidige tijd is:  " + Time.MonthString() + "/" + Time.DayString() + "/" + Time.YearString() + ", " + Time.TimeString(true, true, true));
+                            break;
                     }
+                    break;
+                    
+                case "it_IT":
+
+                    switch (ToTranslate)
+                    {
+
+                        case "shutdown":
+                            Console.WriteLine("Arresto in corso...");
+                            break;
+                        case "keyboard":
+                            Console.WriteLine("Inizializzazione Tastiera IT...");
+                            break;
+                        case "restart":
+                            Console.WriteLine("Riavviando...");
+                            break;
+                        case "directorydoesntexist":
+                            Console.WriteLine("Questa cartella non esiste!");
+                            break;
+                        case "doesnotexist":
+                            Console.WriteLine(arg + " non esiste!");
+                            break;
+                        case "alreadyexist":
+                            Console.WriteLine(arg + " esiste già!");
+                            break;
+                        case "UnknownCommand":
+                            Console.WriteLine("Comando sconosciuto.");
+                            break;
+                        case "unknownlanguage":
+                            Console.WriteLine("Lingua sconosciuta.");
+                            break;
+                        case "availablelanguage":
+                            Console.WriteLine("Lingue disponibili: en-US fr-FR nl-NL it-IT");
+                            break;
+                        case "availabledebugcmd":
+                            Console.WriteLine("Comandi disponibili: vbeinfo vbemodes debugger {text}");
+                            break;
+                        case "unknowncolor":
+                            Console.WriteLine("Colore sconosciuto.");
+                            break;
+                        case "logged":
+                            Console.WriteLine("Hai eseguito accesso come " + arg + ".");
+                            break;
+                        case "unknownuser":
+                            Console.WriteLine("Utente sconosciuto.");
+                            break;
+                        case "languageask":
+                            Console.WriteLine("Scegli la tua lingua:");
+                            break;
+                        case "chooseyourusername":
+                            Console.WriteLine("Scegli un nome utente per il tuo account Aura:");
+                            break;
+                        case "alreadyuser":
+                            Console.WriteLine("Questo utente esiste già!");
+                            break;
+                        case "passuser":
+                            Console.WriteLine("Scegli una password per " + arg);
+                            break;
+                        case "setupcmd":
+                            Console.WriteLine("Vuoi veramente reiniziallizare il computer ? Tutti i file saranno cancellati. [o/n]");
+                            break;
+                        case "user":
+                            Console.Write("Login > ");
+                            break;
+                        case "passwd":
+                            Console.Write("Password > ");
+                            break;
+                        case "charmin":
+                            Console.Write("L'username deve essere lungo dai 4 ai 20 caratteri e contenere testo alfanumerico.");
+                            break;
+                        case "pswcharmin":
+                            Console.Write("La password deve essere lunga dai 6 ai 40 caratteri e contenere testo alfanumerico.");
+                            break;
+                        case "errorwhileusercreating":
+                            Console.Write("C'è stato un errore durante la creazione dell'account utente.");
+                            break;
+                        case "whattypeuser":
+                            Console.Write("Quale deve essere il livello dell'utente ?");
+                            break;
+                        case "mkfil":
+                            Console.WriteLine("Inserisci il nome del file (mkfil file.txt).");
+                            break;
+                        case "doesnotexit":
+                            Console.WriteLine("Questo file non esiste.");
+                            break;
+                        case "wrongpassword":
+                            Console.WriteLine("Password sbagliata.");
+                            break;
+                        case "liquideditor":
+                            Console.WriteLine("Liquid Editor v" + arg + " by TheCool1James & valentinbreiz                             ");
+                            break;
+                        case "filename":
+                            Console.Write("File name : ");
+                            break;
+                        case "saved":
+                            Console.WriteLine("'" + arg + "' e' stato salvato in '" + arg2 + "' !");
+                            break;
+                        case "menuliquideditor":
+                            Console.Write("[F1]Salva  [F2]Nuovo  [ESC]Esci\n");
+                            break;
+                        case "list":
+                            Console.WriteLine(" List: " + arg + "\n");
+                            break;
+                        case "line":
+                            Console.WriteLine(" Linea: " + arg + "\n");
+                            break;
+                        case "askcomputername":
+                            Console.WriteLine("Scegli il nome del computer :");
+                            break;
+                        case "computernameincorrect":
+                            Console.WriteLine("Il nome del computer non è corretto, la lunghezza del nome del computer deve essere di 1-20 caratteri.");
+                            break;
+                        case "computernamename":
+                            Console.Write("Nome computer > ");
+                            break;
+                        case "computernamesuccess":
+                            Console.Write("Il nuovo nome del computer è stato salvato!");
+                            break;
+                        case "tips":
+                            Console.WriteLine(" * Suggerimenti :");
+                            break;
+                        case "mkdir":
+                            Console.WriteLine("Inserisci il nome della cartella (mkdir cartella).");
+                            break;
+                        case "mkdirfilealreadyexist":
+                            Console.WriteLine("Questa cartella esiste già, la cartella \"" + arg + "\" è stata creata.");
+                            break;
+                        case "mkdirunsupporteddot":
+                            Console.WriteLine("Non ci possono essere punti nel nome della cartella.");
+                            break;
+                        case "invalidargument":
+                            Console.WriteLine("Questo argomento non è valido.");
+                            break;
+                        case "filecopied":
+                            Console.WriteLine("File Copiato.");
+                            break;
+                        case "filealreadyexist":
+                            Console.WriteLine("Questo file esiste già.");
+                            break;
+                        case "docpoover":
+                            Console.WriteLine("Esegui 'cp -o fileOrigine fileDestinazione' per sovrascrivere il file.");
+                            break;
+                        case "sourcefiledoesntexist":
+                            Console.WriteLine("Il file d'origine non esiste.");
+                            break;
+                        case "usagecp":
+                            Console.WriteLine("Utilizzo: cp {args} fileOrigine fileDestinazionee");
+                            break;
+                        case "emptyarg":
+                            Console.WriteLine("Argomento Sconosciuto.");
+                            break;
+                        case "about":
+                            Console.ForegroundColor = ConsoleColor.White;
+                            Console.WriteLine("Aura [Versione " + Kernel.version + "-" + Kernel.revision + "]");
+                            Console.WriteLine("Creato da Alexy DA CRUZ e Valentin CHARBONNIER.");
+                            Console.WriteLine();
+                            Console.ForegroundColor = ConsoleColor.Green;
+                            Console.WriteLine("Sito web: aura-team.com");
+                            Console.ForegroundColor = ConsoleColor.White;
+                            break;
+                        case "errorthisisafile":
+                            Console.WriteLine("Questo è un file.");
+                            break;
+                        case "volCommand":
+                            Console.WriteLine();
+                            Console.WriteLine("  Volume ###\tFormat\tSize");
+                            Console.WriteLine("  ----------\t------\t--------");
+                            break;
+                        case "NetworkInProgress":
+                            Console.WriteLine("Stiamo lavorando sulla rete, perciò");
+                            Console.WriteLine("questa funzione è attualmente in alpha.");
+                            Console.WriteLine("Puoi visitare la  roadmap su aura-team.com per");
+                            Console.WriteLine("vedere i progressi riguardo questa parte.");
+                            Console.WriteLine();
+                            break;
+                        case "notavalidscript":
+                            Console.WriteLine("Questo non è uno script valido.");
+                            break;
+                        case "md5":
+                            Console.WriteLine("Questo è il risultato in MD5.");
+                            break;
+                        case "SHA256":
+                            Console.WriteLine("Questo è il risultato in SHA256.");
+                            break;
+                        case "user:existalready":
+                            Console.WriteLine($"{arg} esiste già !");
+                            break;
+                        case "user:hasbeencreated":
+                            Console.WriteLine($"{arg} è stato creato !");
+                            break;
+                        case "user:personaldirectories":
+                            Console.WriteLine($"La cartella personale di {arg} è stata creata !");
+                            break;
+                        case "user:doesntexist":
+                            Console.WriteLine($"{arg} non esiste !");
+                            break;
+                        case "user:hasbeenremoved":
+                            Console.WriteLine($"{arg} è stato rimosso !");
+                            break;
+                        case "user:passwordhasbeenchanged":
+                            Console.WriteLine($"La password è stata modificata !");
+                            break;
+                        case "passwd:newpass":
+                            Console.Write($"Inserisci la nuova password: ");
+                            break;
+                        case "passwd:retype":
+                            Console.Write($"Inserisci nuovamente la nuova password: ");
+                            break;
+                        case "passwd:updated":
+                            Console.WriteLine($"passwd: password aggiornata correttamente.");
+                            break;
+                        case "adduser":
+                            Console.WriteLine($"Prova: settings adduser user pass");
+                            break;
+                        case "_passuser":
+                            Console.WriteLine($"Prova: settings passuser user pass");
+                            break;
+                        case "remuser":
+                            Console.WriteLine($"Prova: settings remuser user");
+                            break;
+                        case "nofilesystem":
+                            Console.WriteLine("Nessun volume identificato , il filesystem è disattivato!");
+                            break;
+                        case "time":
+                            Console.WriteLine("Data e ora attuali sono: " + Time.MonthString() + "/" + Time.DayString() + "/" + Time.YearString() + ", " + Time.TimeString(true, true, true));
+                            break;
+                    }
+                    
                     break;
             }
         }
@@ -791,7 +1013,7 @@ namespace Aura_OS.System.Translation
                             Drawable.Menu.DispErrorDialog("Computer name length must be 1-20 characters.");
                             break;
                         case "computernamedialog":
-                            string text1 = Drawable.Menu.DispComputernameDialog("║ Choisissez un nom pour votre PC :", "║ Nom du PC : ");
+                            string text1 = Drawable.Menu.DispDialogOneArg("Choisissez un nom pour votre PC :", "Nom du PC : ");
                             return text1;
                     }
                     break;
@@ -819,7 +1041,7 @@ namespace Aura_OS.System.Translation
                             Drawable.Menu.DispErrorDialog("Computer name length must be 1-20 characters.");
                             break;
                         case "computernamedialog":
-                            string text2 = Drawable.Menu.DispComputernameDialog("║ Choose your computer name:", "║ Computer name: ");
+                            string text2 = Drawable.Menu.DispDialogOneArg("Choose your computer name:", "Computer name: ");
                             return text2;
                     }
                     break;
@@ -847,10 +1069,39 @@ namespace Aura_OS.System.Translation
                             Drawable.Menu.DispErrorDialog("De lengte van de computernaam moet 1-20 tekens lang zijn.");
                             break;
                         case "computernamedialog":
-                            string text2 = Drawable.Menu.DispComputernameDialog("║ Kies de naam van de computer:", "║ Naam computer: ");
+                            string text2 = Drawable.Menu.DispDialogOneArg("Kies de naam van de computer:", "Naam computer: ");
                             return text2;
                     }
                     break;
+                    
+                case "it_IT":
+
+                    switch (ToTranslate)
+                    {
+                        case "setup":
+                            string text = Drawable.Menu.DispLoginForm("Creazione account Aura.");
+                            return text;
+                        case "alreadyuser":
+                            Drawable.Menu.DispErrorDialog("Questo utente esiste già!");
+                            break;
+                        case "error1":
+                            Drawable.Menu.DispErrorDialog("Errore durante la creazione dell' utente!");
+                            break;
+                        case "error2":
+                            Drawable.Menu.DispErrorDialog("Questa password è troppo corta!");
+                            break;
+                        case "error3":
+                            Drawable.Menu.DispErrorDialog("Questo nickname è troppo corto!");
+                            break;
+                        case "errorcomputer":
+                            Drawable.Menu.DispErrorDialog("Il nome computer deve essere lungo da 1 a 20 caratteri.");
+                            break;
+                        case "computernamedialog":
+                            string text2 = Drawable.Menu.DispDialogOneArg("Scegli il nome del computer:", "Nome computer: ");
+                            return text2;
+                    }
+                    break;
+                    
             }
             return "";
         }

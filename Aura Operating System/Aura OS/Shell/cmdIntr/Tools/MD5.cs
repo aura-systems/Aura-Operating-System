@@ -1,11 +1,9 @@
 ﻿/*
 * PROJECT:          Aura Operating System Development
-* CONTENT:          Command Interpreter - Run Script
+* CONTENT:          Command MD5
 * PROGRAMMER(S):    DA CRUZ Alexy <dacruzalexy@gmail.com>
 */
 
-using System.IO;
-using L = Aura_OS.System.Translation;
 
 namespace Aura_OS.Shell.cmdIntr.Tools
 {
@@ -36,7 +34,7 @@ namespace Aura_OS.Shell.cmdIntr.Tools
         public static void c_MD5(string arg, short startIndex = 0, short count = 4)
         {
             string str = arg.Remove(startIndex, count);
-            Apps.User.MD5.Hash(str);
+            Apps.User.CryptoTool.HashMD5(str);
         }
 
     }
