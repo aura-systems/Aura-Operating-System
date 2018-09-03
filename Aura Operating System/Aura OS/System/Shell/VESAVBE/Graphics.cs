@@ -15,38 +15,22 @@ namespace Aura_OS.System.Shell.VESAVBE
     unsafe class Graphics
     {
 
-        //public static VbeScreen Screen = new VbeScreen();
+        public static ManagedVBE canvas;
 
-        public static VBE canvas;
+        private static byte[] Font;
 
-        private static byte[] font;
-        //public static VESACanvas vesa;
-        private static uint[] pallete = new uint[16];
+        private static uint[] Pallete = new uint[16];
 
-        public static int depthVESA;
-        public static int widthVESA;
-        public static int heightVESA;
+        public static Core.VBE.ModeInfo ModeInfo;
+        public static Core.VBE.ControllerInfo ControllerInfo;
+
         public static string VESAMode = "Unkown Mode? How!?";
-        public static byte* vga_mem;
-        public static string ssignature;
-        public static string sversion;
-        public static uint vbepointer;
 
-        public static uint oemStringPtr;
-        public static uint capabilities;
-        public static uint videoModePtr;
-        public static uint totalmemory;
+        public static string VBESignature;
+        public static string VBEVersion;
+        public static string VBEOEM;
 
-        public static uint oemSoftwareRev;
-        public static uint oemVendorNamePtr;
-        public static uint oemProductNamePtr;
-        public static uint oemProductRevPtr;
-
-        public static string oemString;
-        public static string oemVendorName;
-        public static string oemProductName;
-
-        public static List<ushort> modelist = new List<ushort>();
+        public static List<ushort> Modes = new List<ushort>();
 
         static void* PtrtoLinear(void* phys)
         {
@@ -56,92 +40,85 @@ namespace Aura_OS.System.Shell.VESAVBE
         byte* GetOemString(uint oemstringptr, byte* stringg, int maxlength)
         {
             uint offset = (oemstringptr >> 12 & 0xFFFF0) + (oemstringptr & 0xFFFF);
-            Core.Memory.Memcpy(stringg, (byte*)offset, maxlength);
-            return (stringg);
+            Cosmos.Core.MemoryOperations.Copy(stringg, (byte*)offset, maxlength);
+            return stringg;
         }
-
-
-        Cosmos.Debug.Kernel.Debugger debugger = new Cosmos.Debug.Kernel.Debugger("", "");
 
         public Graphics()
         {
-            pallete[0] = 0x000000; // Black
-            pallete[1] = 0x0000AB; // Darkblue
-            pallete[2] = 0x008000; // DarkGreen
-            pallete[3] = 0x008080; // DarkCyan
-            pallete[4] = 0x800000; // DarkRed
-            pallete[5] = 0x800080; // DarkMagenta
-            pallete[6] = 0x808000; // DarkYellow
-            pallete[7] = 0xC0C0C0; // Gray
-            pallete[8] = 0x808080; // DarkGray
-            pallete[9] = 0x5353FF; // Blue
-            pallete[10] = 0x55FF55; // Green
-            pallete[11] = 0x00FFFF; // Cyan
-            pallete[12] = 0xAA0000; // Red
-            pallete[13] = 0xFF00FF; // Magenta
-            pallete[14] = 0xFFFF55; // Yellow
-            pallete[15] = 0xFFFFFF; //White
-            font = Read_font();
+            Pallete[0] = 0x000000; // Black
+            Pallete[1] = 0x0000AB; // Darkblue
+            Pallete[2] = 0x008000; // DarkGreen
+            Pallete[3] = 0x008080; // DarkCyan
+            Pallete[4] = 0x800000; // DarkRed
+            Pallete[5] = 0x800080; // DarkMagenta
+            Pallete[6] = 0x808000; // DarkYellow
+            Pallete[7] = 0xC0C0C0; // Gray
+            Pallete[8] = 0x808080; // DarkGray
+            Pallete[9] = 0x5353FF; // Blue
+            Pallete[10] = 0x55FF55; // Green
+            Pallete[11] = 0x00FFFF; // Cyan
+            Pallete[12] = 0xAA0000; // Red
+            Pallete[13] = 0xFF00FF; // Magenta
+            Pallete[14] = 0xFFFF55; // Yellow
+            Pallete[15] = 0xFFFFFF; //White
+            Font = Read_font();
 
             Core.MultiBoot.Header* header = (Core.MultiBoot.Header*)Core.GetMBI.GetMBIAddress();
 
-            //Kernel.debugger.Send("Multiboot upper: " + header->mem_upper.ToString());
+            Core.VBE.ModeInfo* modeinfo = (Core.VBE.ModeInfo*)header->vbeModeInfo;
+            Core.VBE.ControllerInfo* controllerinfo = (Core.VBE.ControllerInfo*)header->vbeControlInfo;
 
-            Core.VBE.ModeInfo* ModeInfo = (Core.VBE.ModeInfo*)header->vbeModeInfo;
-            Core.VBE.ControllerInfo* ControllerInfo = (Core.VBE.ControllerInfo*)header->vbeControlInfo;
+            ControllerInfo.vbeSignature = controllerinfo->vbeSignature;
+            ControllerInfo.vbeVersion = controllerinfo->vbeVersion;
 
-            //debugger.Send("VBE Signature: " + ControllerInfo->vbeSignature.ToString());
-
-            ushort version = ControllerInfo->vbeVersion;
-            uint signature = ControllerInfo->vbeSignature;
-
-            if (signature == 0x41534556) // VESA in Hex
+            if (ControllerInfo.vbeSignature == 0x41534556) // VESA in Hex
             {
-                ssignature = "VESA";
+                VBESignature = "VESA";
             }
             else
             {
-                ssignature = "Unknown Signature";
+                VBESignature = "Unknown Signature!?";
             }
 
-            if (version == 0x102)
+            if (ControllerInfo.vbeVersion == 0x102)
             {
-                sversion = "1.2";
+                VBEVersion = "1.2";
             }
-            else if (version == 0x200)
+            else if (ControllerInfo.vbeVersion == 0x200)
             {
-                sversion = "2.0";
+                VBEVersion = "2.0";
             }
-            else if (version == 0x300)
+            else if (ControllerInfo.vbeVersion == 0x300)
             {
-                sversion = "3.0";
+                VBEVersion = "3.0";
             }
             else
             {
-                sversion = "Unknwon version";
+                VBEVersion = "Unknown version";
             }
 
-            oemStringPtr = ControllerInfo->oemStringPtr;
-            capabilities = ControllerInfo->capabilities;
-            videoModePtr = ControllerInfo->videoModePtr;
-            totalmemory = (ControllerInfo->totalmemory) * (uint)64;
+            ControllerInfo.oemStringPtr = controllerinfo->oemStringPtr;
+            ControllerInfo.capabilities = controllerinfo->capabilities;
+            ControllerInfo.videoModePtr = controllerinfo->videoModePtr;
+            ControllerInfo.totalmemory = controllerinfo->totalmemory;
 
-            oemSoftwareRev = ControllerInfo->oemSoftwareRev;
-            oemVendorNamePtr = ControllerInfo->oemVendorNamePtr;
-            oemProductNamePtr = ControllerInfo->oemProductNamePtr;
-            oemProductRevPtr = ControllerInfo->oemProductRevPtr;
+            ControllerInfo.oemSoftwareRev = controllerinfo->oemSoftwareRev;
+            ControllerInfo.oemVendorNamePtr = controllerinfo->oemVendorNamePtr;
+            ControllerInfo.oemProductNamePtr = controllerinfo->oemProductNamePtr;
+            ControllerInfo.oemProductRevPtr = controllerinfo->oemProductRevPtr;
 
             //Mode list
-            ushort* mode_ptr = (ushort*)PtrtoLinear((void*)videoModePtr);
+            ushort* mode_ptr = (ushort*)PtrtoLinear((void*)ControllerInfo.videoModePtr);
 
             for (int i = 0; mode_ptr[i] != 0xFFFF; ++i)
             {
-                modelist.Add(mode_ptr[i]);
+                Modes.Add(mode_ptr[i]);
                 mode_ptr += 2;
             }
 
             //OEM String
-            byte* oemptr = GetOemString(oemStringPtr, (byte*)Cosmos.Core.Memory.Old.Heap.MemAlloc(200), 200);
+            byte* oemptr = GetOemString(ControllerInfo.oemStringPtr, (byte*)Cosmos.Core.Memory.Old.Heap.MemAlloc(200), 200);
 
             List<byte> list = new List<byte>();
             for (int i = 0; oemptr[i] != 0; i++)
@@ -149,16 +126,14 @@ namespace Aura_OS.System.Shell.VESAVBE
                 list.Add(oemptr[i]);
             }
 
-            oemString = Encoding.ASCII.GetString(list.ToArray());
+            VBEOEM = Encoding.ASCII.GetString(list.ToArray());
 
-            heightVESA = ModeInfo->height;
-            widthVESA = ModeInfo->width;
-            depthVESA = ModeInfo->bpp;
-            vga_mem = (byte*)ModeInfo->framebuffer;
+            ModeInfo.height = modeinfo->height;
+            ModeInfo.width = modeinfo->width;
+            ModeInfo.bpp = modeinfo->bpp;
+            ModeInfo.framebuffer = modeinfo->framebuffer;
 
-            vbepointer = ModeInfo->framebuffer;
-
-            if (widthVESA.Equals(1280) &&  heightVESA.Equals(768))
+            if (ModeInfo.width == (1280) && ModeInfo.height == (768))
             {
                 VESAVBEConsole.mRows = (int)ConsoleMode.Mode1280x768.Rows;
                 VESAVBEConsole.mWidth = (int)ConsoleMode.Mode1280x768.Rows;
@@ -166,7 +141,7 @@ namespace Aura_OS.System.Shell.VESAVBE
                 VESAVBEConsole.mHeight = (int)ConsoleMode.Mode1280x768.Cols;
                 VESAMode = "Mode1280x768";
             }
-			else if (widthVESA.Equals(1280) &&  heightVESA.Equals(800))
+			else if (ModeInfo.width == (1280) &&  ModeInfo.height == (800))
             {
                 VESAVBEConsole.mRows = (int)ConsoleMode.Mode1280x800.Rows;
                 VESAVBEConsole.mWidth = (int)ConsoleMode.Mode1280x800.Rows;
@@ -174,7 +149,7 @@ namespace Aura_OS.System.Shell.VESAVBE
                 VESAVBEConsole.mHeight = (int)ConsoleMode.Mode1280x800.Cols;
                 VESAMode = "Mode1280x800";
             }
-            else if (widthVESA.Equals(1600) && heightVESA.Equals(1200))
+            else if (ModeInfo.width == (1600) && ModeInfo.height == (1200))
             {
                 VESAVBEConsole.mRows = (int)ConsoleMode.Mode1600x1200.Rows;
                 VESAVBEConsole.mWidth = (int)ConsoleMode.Mode1600x1200.Rows;
@@ -182,7 +157,7 @@ namespace Aura_OS.System.Shell.VESAVBE
                 VESAVBEConsole.mHeight = (int)ConsoleMode.Mode1600x1200.Cols;
                 VESAMode = "Mode1600x1200";
             }
-            else if (widthVESA.Equals(1152) && heightVESA.Equals(864))
+            else if (ModeInfo.width == (1152) && ModeInfo.height == (864))
             {
                 VESAVBEConsole.mRows = (int)ConsoleMode.Mode1152x864.Rows;
                 VESAVBEConsole.mWidth = (int)ConsoleMode.Mode1152x864.Rows;
@@ -190,7 +165,7 @@ namespace Aura_OS.System.Shell.VESAVBE
                 VESAVBEConsole.mHeight = (int)ConsoleMode.Mode1152x864.Cols;
                 VESAMode = "Mode1152x864";
             }
-            else if (widthVESA.Equals(1360) && heightVESA.Equals(768))
+            else if (ModeInfo.width == (1360) && ModeInfo.height == (768))
             {
                 VESAVBEConsole.mRows = (int)ConsoleMode.Mode1360x768.Rows;
                 VESAVBEConsole.mWidth = (int)ConsoleMode.Mode1360x768.Rows;
@@ -198,7 +173,15 @@ namespace Aura_OS.System.Shell.VESAVBE
                 VESAVBEConsole.mHeight = (int)ConsoleMode.Mode1360x768.Cols;
                 VESAMode = "Mode1360x768";
             }
-            else if (widthVESA.Equals(800) && heightVESA.Equals(600))
+            else if (ModeInfo.width == (800) && ModeInfo.height == (600))
+            {
+                VESAVBEConsole.mRows = (int)ConsoleMode.Mode800x600.Rows;
+                VESAVBEConsole.mWidth = (int)ConsoleMode.Mode800x600.Rows;
+                VESAVBEConsole.mCols = (int)ConsoleMode.Mode800x600.Cols;
+                VESAVBEConsole.mHeight = (int)ConsoleMode.Mode800x600.Cols;
+                VESAMode = "Mode800x600";
+            }
+            else
             {
                 VESAVBEConsole.mRows = (int)ConsoleMode.Mode800x600.Rows;
                 VESAVBEConsole.mWidth = (int)ConsoleMode.Mode800x600.Rows;
@@ -207,7 +190,7 @@ namespace Aura_OS.System.Shell.VESAVBE
                 VESAMode = "Mode800x600";
             }
 
-            canvas = new VBE(widthVESA, heightVESA);
+            canvas = new ManagedVBE(ModeInfo.width, ModeInfo.height, ModeInfo.framebuffer);
         }
 
         private byte[] Read_font()
@@ -223,7 +206,7 @@ namespace Aura_OS.System.Shell.VESAVBE
 
         internal void Clear(int c)
         {
-            canvas.Clear((uint)c);
+            canvas.ClearVRAM((uint)c);
         }
 
         public void DrawImage(ushort X, ushort Y, ushort Length, ushort height, Image image)
@@ -249,16 +232,16 @@ namespace Aura_OS.System.Shell.VESAVBE
                 {
                     for (byte cx = 0; cx < 9; cx++)
                     {
-                        canvas.SetPixel((ushort)((9 * (Kernel.AConsole.X)) + (9 - cx)), (ushort)((16 * (Kernel.AConsole.Y)) + cy), (pallete[(int)Kernel.AConsole.Background]), true);
+                        canvas.SetPixel((ushort)((9 * (Kernel.AConsole.X)) + (9 - cx)), (ushort)((16 * (Kernel.AConsole.Y)) + cy), (Pallete[(int)Kernel.AConsole.Background]), true);
                     }
                 }
                 for (int cy = 0; cy < 16; cy++)
                 {
                     for (byte cx = 0; cx < 8; cx++)
                     {
-                        if (getb(font[p + cy], cx + 1))
+                        if (getb(Font[p + cy], cx + 1))
                         {
-                            canvas.SetPixel((ushort)((9 * (Kernel.AConsole.X)) + (9 - cx)), (ushort)((16 * (Kernel.AConsole.Y)) + cy), (pallete[VESAVBEConsole.foreground]), true);
+                            canvas.SetPixel((ushort)((9 * (Kernel.AConsole.X)) + (9 - cx)), (ushort)((16 * (Kernel.AConsole.Y)) + cy), (Pallete[VESAVBEConsole.foreground]), true);
                         }
                         else
                         {
@@ -273,9 +256,9 @@ namespace Aura_OS.System.Shell.VESAVBE
                 {
                     for (byte cx = 0; cx < 8; cx++)
                     {
-                        if (getb(font[p + cy], cx + 1))
+                        if (getb(Font[p + cy], cx + 1))
                         {
-                            canvas.SetPixel((ushort)((9 * (Kernel.AConsole.X)) + (9 - cx)), (ushort)((16 * (Kernel.AConsole.Y)) + cy), (pallete[VESAVBEConsole.foreground]), false);
+                            canvas.SetPixel((ushort)((9 * (Kernel.AConsole.X)) + (9 - cx)), (ushort)((16 * (Kernel.AConsole.Y)) + cy), (Pallete[VESAVBEConsole.foreground]), false);
                         }
                         else
                         {
@@ -298,7 +281,7 @@ namespace Aura_OS.System.Shell.VESAVBE
             char c = (char)ch;
             if (c != 0 && c != '\n' && c != '\r')
             {
-                drawChar((c));
+                drawChar(c);
             }
             else if (c == '\n')
             {
@@ -334,7 +317,6 @@ namespace Aura_OS.System.Shell.VESAVBE
         public void ScrollUp()
         {
             canvas.ScrollUp();
-            VBE.WriteToScreen();
         }
     }
 }

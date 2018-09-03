@@ -54,44 +54,44 @@ namespace Aura_OS.Shell.cmdIntr.Tools
                 if (cmdargs[1].Equals("vbeinfo"))
                 {
                     DebugConsole.WriteLine("[VBE Mode Information]");
-                    DebugConsole.WriteLine("BPP: " + System.Shell.VESAVBE.Graphics.depthVESA);
-                    DebugConsole.WriteLine("Height: " + System.Shell.VESAVBE.Graphics.heightVESA);
-                    DebugConsole.WriteLine("Width: " + System.Shell.VESAVBE.Graphics.widthVESA);
-                    DebugConsole.WriteLine("VBE Pointer: 0x" + Conversion.DecToHex((int)System.Shell.VESAVBE.Graphics.vbepointer));
+                    DebugConsole.WriteLine("BPP: " + System.Shell.VESAVBE.Graphics.ModeInfo.bpp);
+                    DebugConsole.WriteLine("Height: " + System.Shell.VESAVBE.Graphics.ModeInfo.height);
+                    DebugConsole.WriteLine("Width: " + System.Shell.VESAVBE.Graphics.ModeInfo.width);
+                    DebugConsole.WriteLine("VBE Pointer: 0x" + Conversion.DecToHex((int)System.Shell.VESAVBE.Graphics.ModeInfo.framebuffer));
                     DebugConsole.WriteLine("VBE Mode: " + System.Shell.VESAVBE.Graphics.VESAMode);
 
                     DebugConsole.WriteLine();
 
                     DebugConsole.WriteLine("[VBE Controller Information]");
                     
-                    DebugConsole.WriteLine("VBE Signature: " + System.Shell.VESAVBE.Graphics.ssignature);
+                    DebugConsole.WriteLine("VBE Signature: " + System.Shell.VESAVBE.Graphics.VBESignature);
 
-                    DebugConsole.WriteLine("VBE Version: " + System.Shell.VESAVBE.Graphics.sversion);
+                    DebugConsole.WriteLine("VBE Version: " + System.Shell.VESAVBE.Graphics.VBEVersion);
 
-                    DebugConsole.WriteLine("OEM String: " + System.Shell.VESAVBE.Graphics.oemString);
+                    DebugConsole.WriteLine("OEM String: " + System.Shell.VESAVBE.Graphics.VBEOEM);
 
-                    DebugConsole.WriteLine("Capabilites: " + System.Shell.VESAVBE.Graphics.capabilities);
+                    DebugConsole.WriteLine("Capabilites: " + System.Shell.VESAVBE.Graphics.ControllerInfo.capabilities);
 
-                    DebugConsole.WriteLine("Total Memory: " + System.Shell.VESAVBE.Graphics.totalmemory + " kB");
+                    DebugConsole.WriteLine("Total Memory: " + (System.Shell.VESAVBE.Graphics.ControllerInfo.totalmemory * 64) + " kB");
 
-                    DebugConsole.WriteLine("OEM Software Rev: " + System.Shell.VESAVBE.Graphics.oemSoftwareRev);
+                    DebugConsole.WriteLine("OEM Software Rev: " + System.Shell.VESAVBE.Graphics.ControllerInfo.oemSoftwareRev);
 
-                    DebugConsole.WriteLine("Video Mode Pointer: 0x" + Conversion.DecToHex((int)System.Shell.VESAVBE.Graphics.videoModePtr));
+                    DebugConsole.WriteLine("Video RAM Pointer: 0x" + Conversion.DecToHex((int)System.Shell.VESAVBE.Graphics.ModeInfo.framebuffer));
 
-                    DebugConsole.WriteLine("OEM String Pointer: 0x" + Conversion.DecToHex((int)System.Shell.VESAVBE.Graphics.oemStringPtr));
+                    DebugConsole.WriteLine("OEM String Pointer: 0x" + Conversion.DecToHex((int)System.Shell.VESAVBE.Graphics.ControllerInfo.oemStringPtr));
 
-                    DebugConsole.WriteLine("OEM Vendor Name Pointer: 0x" + Conversion.DecToHex((int)System.Shell.VESAVBE.Graphics.oemVendorNamePtr));
+                    DebugConsole.WriteLine("OEM Vendor Name Pointer: 0x" + Conversion.DecToHex((int)System.Shell.VESAVBE.Graphics.ControllerInfo.oemVendorNamePtr));
 
-                    DebugConsole.WriteLine("OEM Product Name Pointer: 0x" + Conversion.DecToHex((int)System.Shell.VESAVBE.Graphics.oemProductNamePtr));
+                    DebugConsole.WriteLine("OEM Product Name Pointer: 0x" + Conversion.DecToHex((int)System.Shell.VESAVBE.Graphics.ControllerInfo.oemProductNamePtr));
 
-                    DebugConsole.WriteLine("OEM Product Rev Pointer: 0x" + Conversion.DecToHex((int)System.Shell.VESAVBE.Graphics.oemProductRevPtr));
+                    DebugConsole.WriteLine("OEM Product Rev Pointer: 0x" + Conversion.DecToHex((int)System.Shell.VESAVBE.Graphics.ControllerInfo.oemProductRevPtr));
                 }
 
                 else if (cmdargs[1].Equals("vbemodes"))
                 {
                     DebugConsole.WriteLine("[VBE Mode List]");
                     int counter = 0;
-                    foreach (uint mode in System.Shell.VESAVBE.Graphics.modelist)
+                    foreach (uint mode in System.Shell.VESAVBE.Graphics.Modes)
                     {
                         counter++;
                         if (counter == 19)
