@@ -27,7 +27,7 @@ using Cosmos.Core.Memory.Old;
         }
          public void WriteToScreen()
         {
-            Cosmos.Core.MemoryOperations.Copy((uint*)Shell.VESAVBE.Graphics.ModeInfo.framebuffer, _buffer, Width * Height);
+            Cosmos.Core.MemoryOperations.Copy((uint*)Shell.VESAVBE.Graphics.ModeInfo.framebuffer, _buffer, Width * Height * 4);
         }
          public uint Blit(int x0, int y0, int w, int h)
         {
@@ -46,7 +46,7 @@ using Cosmos.Core.Memory.Old;
         }
          public void Clear(uint c)
         {
-            Cosmos.Core.MemoryOperations.Fill((byte*)_buffer, (int)c, Width * Height);
+            Cosmos.Core.MemoryOperations.Fill((byte*)_buffer, (int)c, Width * Height * 4);
         }
     }
 } 
