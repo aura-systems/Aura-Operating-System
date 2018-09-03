@@ -3,12 +3,9 @@
 * CONTENT:          Desktop
 * PROGRAMMER(S):    Valentin Charbonnier <valentinbreiz@gmail.com>
 */
+
  using System;
-using System.Collections.Generic;
-using System.Text;
-using Aura_OS.System.GUI;
 using Aura_OS.System.GUI.Graphics;
-using Aura_OS.System.GUI.Imaging;
 using Aura_OS.System.GUI.UI.Util;
 using Cosmos.HAL;
 using static Cosmos.System.MouseManager;
@@ -20,15 +17,15 @@ namespace Aura_OS.System.GUI.UI
             
         public static Canvas Canvas = new Canvas(Shell.VESAVBE.Graphics.ModeInfo.width, Shell.VESAVBE.Graphics.ModeInfo.height);
         public static SdfFont terminus;
+
         public static int Width = Shell.VESAVBE.Graphics.ModeInfo.width;
         public static int Height = Shell.VESAVBE.Graphics.ModeInfo.height;
+
         static int _frames = 0;
         static int _fps = 0;
         static int _deltaT = 0;
         static int _deltaTM = 0;
-        static Util.Point mouse_click;
-        static Dictionary<string, Util.Area> clickabled_area = new Dictionary<string, Util.Area>();
-        private static bool flag = false;
+
         public static int Main()
         {
              Initialize();
@@ -76,10 +73,8 @@ namespace Aura_OS.System.GUI.UI
             return 0;
         }
 
-         //public static Image cursor;
         public static Graphics.Graphics g;
-        public static bool firsttime = true;
-        public static string hour;
+
         public static void Render()
         {
 
@@ -99,9 +94,48 @@ namespace Aura_OS.System.GUI.UI
 
             g.DrawString("FPS: " + _fps, 0, 40, Colors.Black, Fonts.CFF._Pixel6_Mini_cff);
 
+            switch (MouseState)
+            {
+                case Cosmos.System.MouseState.Right:
+                    g.DrawString("Mouse: Right", 0, 60, Colors.Black, Fonts.CFF._Pixel6_Mini_cff);
+                    break;
+                case Cosmos.System.MouseState.Left:
+                    g.DrawString("Mouse: Left", 0, 60, Colors.Black, Fonts.CFF._Pixel6_Mini_cff);
+                    MouseLeftEvent();
+                    break;
+                case Cosmos.System.MouseState.Middle:
+                    g.DrawString("Mouse: Middle", 0, 60, Colors.Black, Fonts.CFF._Pixel6_Mini_cff);
+                    break;
+                case Cosmos.System.MouseState.None:
+                    g.DrawString("Mouse: None", 0, 60, Colors.Black, Fonts.CFF._Pixel6_Mini_cff);
+                    break;
+                case Cosmos.System.MouseState.FourthButton:
+                    g.DrawString("Mouse: FourthButton", 0, 60, Colors.Black, Fonts.CFF._Pixel6_Mini_cff);
+                    break;
+                case Cosmos.System.MouseState.FifthButton:
+                    g.DrawString("Mouse: FifthButton", 0, 60, Colors.Black, Fonts.CFF._Pixel6_Mini_cff);
+                    break;
+                default:
+                    g.DrawString("Mouse: Unknown!?", 0, 60, Colors.Black, Fonts.CFF._Pixel6_Mini_cff);
+                    break;
+            }
+
+            WindowsManager.ShowWindows();
+
             Cursor.Render();
 
             Canvas.WriteToScreen();
+        }
+
+        public static void MouseLeftEvent()
+        {
+            foreach (Window wind in WindowsManager.Active_Windows)
+            {
+                if (wind.IsXCloseArea((int)X) && wind.IsYCloseArea((int)Y))
+                {
+                    WindowsManager.Active_Windows.Remove(wind);
+                }
+            }
         }
 
         public static bool click_contained_in_area(Area CloseArea, Util.Point ClickPoint)
@@ -121,6 +155,8 @@ namespace Aura_OS.System.GUI.UI
             Cursor.Enabled = true;
     
             Cursor.Image = Framework.Graphics.Image.Load(Images.Cursors.CursorCIF);
+
+            WindowsManager.AddWindow(600, 400, 300, 200, "Installation.");
 
             Canvas.WriteToScreen();
 

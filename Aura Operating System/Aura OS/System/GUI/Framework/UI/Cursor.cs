@@ -1,9 +1,6 @@
+
 using Aura_OS.System.GUI.Graphics;
-using Cosmos.HAL;
 using Cosmos.System;
-using System;
-using System.Collections.Generic;
-using System.Text;
  namespace Aura_OS.System.GUI.UI
 {
     public static class Cursor
