@@ -5,25 +5,31 @@
     <IgnoreDebugStubAttribute>False</IgnoreDebugStubAttribute>
     <VMware_StackCorruptionDetectionLevel>MethodFooters</VMware_StackCorruptionDetectionLevel>
     <VMware_IgnoreDebugStubAttribute>False</VMware_IgnoreDebugStubAttribute>
+    <PXE_StackCorruptionDetectionLevel>MethodFooters</PXE_StackCorruptionDetectionLevel>
+    <PXE_IgnoreDebugStubAttribute>False</PXE_IgnoreDebugStubAttribute>
     <ISO_StackCorruptionDetectionLevel>MethodFooters</ISO_StackCorruptionDetectionLevel>
     <ISO_IgnoreDebugStubAttribute>False</ISO_IgnoreDebugStubAttribute>
+    <RuntimeIdentifier>cosmos</RuntimeIdentifier>
+    <SelfContained>True</SelfContained>
     <Bochs_StackCorruptionDetectionLevel>MethodFooters</Bochs_StackCorruptionDetectionLevel>
     <Bochs_Name>Aura_OSBoot</Bochs_Name>
     <Bochs_IgnoreDebugStubAttribute>False</Bochs_IgnoreDebugStubAttribute>
+    <IntelEdison_StackCorruptionDetectionLevel>MethodFooters</IntelEdison_StackCorruptionDetectionLevel>
+    <IntelEdison_IgnoreDebugStubAttribute>False</IntelEdison_IgnoreDebugStubAttribute>
   </PropertyGroup>
   <PropertyGroup>
-    <BinFormat>elf</BinFormat>
-    <Profile>ISO</Profile>
-    <DebugEnabled>False</DebugEnabled>
+    <BinFormat>Bin</BinFormat>
+    <Profile>VMware</Profile>
+    <DebugEnabled>True</DebugEnabled>
     <DebugMode>Source</DebugMode>
     <TraceMode>User</TraceMode>
     <EnableGDB>False</EnableGDB>
     <StartCosmosGDB>false</StartCosmosGDB>
-    <VMWareEdition>Player</VMWareEdition>
-    <OutputPath>bin\Debug\net462\netstandard2.0\</OutputPath>
-    <Description>Creates a bootable ISO image which can be burned to a DVD. After running the selected project, an explorer window will open containing the ISO file. The ISO file can then be burned to a CD or DVD and used to boot a physical or virtual system.</Description>
+    <VMWareEdition>Workstation</VMWareEdition>
+    <OutputPath>bin\Debug\</OutputPath>
+    <Description>Use VMware Player or Workstation to deploy and debug.</Description>
     <Deployment>ISO</Deployment>
-    <Launch>None</Launch>
+    <Launch>VMware</Launch>
     <VisualStudioDebugPort>Pipe: Cosmos\Serial</VisualStudioDebugPort>
     <PxeInterface>192.168.68.1</PxeInterface>
     <VMware_Description>Use VMware Player or Workstation to deploy and debug.</VMware_Description>
@@ -33,7 +39,7 @@
     <VMware_DebugMode>Source</VMware_DebugMode>
     <VMware_VisualStudioDebugPort>Pipe: Cosmos\Serial</VMware_VisualStudioDebugPort>
     <VMware_PxeInterface>192.168.68.1</VMware_PxeInterface>
-    <VMware_VMwareEdition>Player</VMware_VMwareEdition>
+    <VMware_VMwareEdition>Workstation</VMware_VMwareEdition>
     <VMware_OutputPath>bin\Debug\net462\</VMware_OutputPath>
     <VMware_EnableGDB>False</VMware_EnableGDB>
     <VMware_StartCosmosGDB>false</VMware_StartCosmosGDB>
@@ -49,9 +55,9 @@
     <ISO_EnableGDB>False</ISO_EnableGDB>
     <ISO_StartCosmosGDB>false</ISO_StartCosmosGDB>
     <StackCorruptionDetectionEnabled>True</StackCorruptionDetectionEnabled>
-    <ISO_StackCorruptionDetectionEnabled>True</ISO_StackCorruptionDetectionEnabled>
-    <VMware_StackCorruptionDetectionEnabled>True</VMware_StackCorruptionDetectionEnabled>
-    <Bochs_StackCorruptionDetectionEnabled>True</Bochs_StackCorruptionDetectionEnabled>
+    <ISO_StackCorruptionDetectionEnabled>False</ISO_StackCorruptionDetectionEnabled>
+    <VMware_StackCorruptionDetectionEnabled>False</VMware_StackCorruptionDetectionEnabled>
+    <Bochs_StackCorruptionDetectionEnabled>False</Bochs_StackCorruptionDetectionEnabled>
     <Bochs_Description>Use Bochs emulator to deploy and debug.</Bochs_Description>
     <Bochs_Deployment>ISO</Bochs_Deployment>
     <Bochs_Launch>Bochs</Bochs_Launch>
@@ -94,8 +100,9 @@
     <IntelEdison_StartCosmosGDB>false</IntelEdison_StartCosmosGDB>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DebugEnabled>False</DebugEnabled>
+    <StackCorruptionDetectionEnabled>False</StackCorruptionDetectionEnabled>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <StackCorruptionDetectionEnabled>True</StackCorruptionDetectionEnabled>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Cosmos.Build" Version="*" NoWarn="NU1604" />
@@ -103,14 +110,20 @@
     <PackageReference Include="Cosmos.System2" Version="1.0.0-*" />
   </ItemGroup>
   <ItemGroup>
+    <Reference Include="IL2CPU.API">
+      <HintPath>..\..\..\..\..\AppData\Roaming\Cosmos User Kit\Build\IL2CPU\IL2CPU.API.dll</HintPath>
+    </Reference>
     <Reference Include="XSharp">
-      <HintPath>..\..\..\..\..\AppData\Roaming\Cosmos User Kit\Build\IL2CPU\XSharp.Assembler.dll</HintPath>
+      <HintPath>..\..\..\..\..\AppData\Roaming\Cosmos User Kit\Build\IL2CPU\XSharp.dll</HintPath>
     </Reference>
     <Reference Include="IL2CPU">
       <HintPath>..\..\..\..\..\AppData\Roaming\Cosmos User Kit\Build\IL2CPU\IL2CPU.dll</HintPath>
     </Reference>
-    <Reference Include="IL2CPU.API">
-      <HintPath>..\..\..\..\..\AppData\Roaming\Cosmos User Kit\Build\IL2CPU\IL2CPU.API.dll</HintPath>
+    <Reference Include="XSharp.Assembler">
+      <HintPath>..\..\..\..\..\AppData\Roaming\Cosmos User Kit\Build\IL2CPU\XSharp.Assembler.dll</HintPath>
     </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <PlugsReference Include="$(MSBuildProjectDirectory)\..\Aura_Plugs\bin\Debug\netstandard2.0\Aura_Plugs.dll" />
   </ItemGroup>
 </Project>
