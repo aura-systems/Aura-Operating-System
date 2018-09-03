@@ -120,7 +120,7 @@ namespace Aura_OS.System.GUI.UI
             Cursor.Init();
             Cursor.Enabled = true;
     
-            Cursor.Image = Framework.Graphics.Image.Load(Images.Cursors.Normal_CIF);
+            Cursor.Image = Framework.Graphics.Image.Load(Images.Cursors.CursorCIF);
 
             Canvas.WriteToScreen();
 

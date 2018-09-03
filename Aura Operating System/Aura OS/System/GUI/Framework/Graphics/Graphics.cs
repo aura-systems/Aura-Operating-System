@@ -6,7 +6,7 @@ using Aura_OS.System.GUI.Imaging;
 using Aura_OS.System.GUI.UI.Fonts;
 using Cosmos.Core.Memory.Old;
 using PolyPartition;
- namespace Aura_OS.System.GUI.Graphics
+namespace Aura_OS.System.GUI.Graphics
 {
     public class Graphics
     {
@@ -18,18 +18,22 @@ using PolyPartition;
         private bool ClipingIsInclude { get; set; }
         private PointF Scale { get; set; } = new PointF(1, 1);
         private Point Transform { get; set; } = new Point(0, 0);
-         public Point Offset { get; set; } = new Point(0, 0);
-         public int Height { get; set; }
+        public Point Offset { get; set; } = new Point(0, 0);
+        public int Height { get; set; }
         public int Width { get; set; }
-         public uint GetArea(int x0, int y0, int w, int h)
+
+        public uint GetArea(int x0, int y0, int w, int h)
         {
             return _canvas.Blit(x0, y0, w, h);
         }
-         public void DrawArea(uint area, int posx, int posy)
+
+        public void DrawArea(uint area, int posx, int posy)
         {
             Heap.MemAlloc((uint)(Width * Height * 4));
         }
-         public void DrawImage(Framework.Graphics.Image img, int x, int y, Color TransparencyKey = null)
+
+        //TransparencyKey is always Lime! (0x00ff00, R=00 - G=FF - B=00)
+        public void DrawImage(Framework.Graphics.Image img, int x, int y, Color TransparencyKey = null)
         {
             int z = 0;
             for (int p = y; p < y + img.Height; p++)
@@ -51,7 +55,8 @@ using PolyPartition;
                 }
             }
         }
-         public void DrawString(string c, int x, int y, Color color, Font f)
+
+        public void DrawString(string c, int x, int y, Color color, Font f)
         {
             int totalwidth = 0;
             for (int i = 0; i < c.Length; i++)
@@ -71,7 +76,8 @@ using PolyPartition;
                 }
              }
         }
-         public int DrawChar(char c, int x, int y, Color color, Font f)
+
+        public int DrawChar(char c, int x, int y, Color color, Font f)
         {
             var index = 0;
             for (int i = 0; i < f.Char.Count; i++)
@@ -97,7 +103,8 @@ using PolyPartition;
             }
              return width;
         }
-         public Graphics(ICanvas canvas)
+
+        public Graphics(ICanvas canvas)
         {
             _canvas = canvas;
             Height = canvas.Height;
@@ -105,7 +112,8 @@ using PolyPartition;
              Container = new Rectangle(0, 0, canvas.Width, canvas.Height);
             ContainerFlag = false;
         }
-         public void GetFillRectangle(int x, int y, int sizex, int sizey)
+
+        public void GetFillRectangle(int x, int y, int sizex, int sizey)
         {
             
             x = (int)((float)x * Scale.X);
@@ -224,13 +232,15 @@ using PolyPartition;
             ContainerFlag = true;
             Container = new Rectangle(x, y, w, h);
         }
-         #endregion
-         #region Misc
-         public void Clear(Color c)
+        #endregion
+        #region Misc
+
+        public void Clear(Color c)
         {
             _canvas.Clear((uint) c.ToHex());
         }
-         public void Flush()
+
+        public void Flush()
         {
             _canvas.WriteToScreen();
         }
@@ -435,9 +445,10 @@ using PolyPartition;
              DrawLine(x, y, x, y + h, c);
             DrawLine(x + w, y, x + w, y + h, c);
         }
-         #endregion
-         #region Fill
-         public void FillEllipse(int xc, int yc, int width, int height, Color c)
+        #endregion
+        #region Fill
+
+        public void FillEllipse(int xc, int yc, int width, int height, Color c)
         {
             int a2 = width * width;
             int b2 = height * height;
@@ -468,14 +479,16 @@ using PolyPartition;
                 sigma += a2 * ((4 * y) + 6);
             }
         }
-         private void ScanConvertTriangle(List<MinMaxPair> scanBuffer, Point minYVert, Point midYVert,
+
+        private void ScanConvertTriangle(List<MinMaxPair> scanBuffer, Point minYVert, Point midYVert,
             Point maxYVert, int handedness)
         {
             ScanConvertLine(scanBuffer, minYVert, maxYVert, 0 + handedness);
             ScanConvertLine(scanBuffer, minYVert, midYVert, 1 - handedness);
             ScanConvertLine(scanBuffer, midYVert, maxYVert, 1 - handedness);
         }
-         private void ScanConvertLine(List<MinMaxPair> scanBuffer, Point minYVert, Point maxYVert, int whichSide)
+
+        private void ScanConvertLine(List<MinMaxPair> scanBuffer, Point minYVert, Point maxYVert, int whichSide)
         {
             int yStart = (int) minYVert.Y;
             int yEnd = (int) maxYVert.Y;
@@ -505,7 +518,8 @@ using PolyPartition;
                  curX += xStep;
             }
         }
-         public void FillTriangle(int x, int y, Point v0, Point v1, Point v2, Color c)
+
+        public void FillTriangle(int x, int y, Point v0, Point v1, Point v2, Color c)
         {
             x = (int) ((float) x * Scale.X);
             y = (int) ((float) y * Scale.Y);
@@ -566,7 +580,8 @@ using PolyPartition;
                     (uint) c.ToHex());
             }
         }
-         public void FillPath(Point[] points, Color c)
+
+        public void FillPath(Point[] points, Color c)
         {
             var polly = new TpplPoly(points.Length);
              for (int i = 0; i < points.Length; i++)
@@ -586,7 +601,8 @@ using PolyPartition;
                     new Point((int) v.X, (int) v.Y), c);
             }
         }
-         public void FillPolygon(Point[] points, Color c)
+
+        public void FillPolygon(Point[] points, Color c)
         {
             var polly = new TpplPoly(points.Length + 1);
              for (int i = 0; i < points.Length; i++)
@@ -616,7 +632,8 @@ using PolyPartition;
                     c);
             }
         }
-         public void FillRectangle(int x, int y, int w, int h, Color c)
+
+        public void FillRectangle(int x, int y, int w, int h, Color c)
         {
             x = (int) ((float) x * Scale.X);
             y = (int) ((float) y * Scale.Y);

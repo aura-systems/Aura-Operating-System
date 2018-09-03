@@ -21,7 +21,7 @@ using System.Text;
         {
             if (Enabled)
             {
-                Desktop.g.DrawImage(Image, (int)MouseManager.X, (int)MouseManager.Y);
+                Desktop.g.DrawImage(Image, (int)MouseManager.X, (int)MouseManager.Y, Colors.Lime);
             }
         }
 
