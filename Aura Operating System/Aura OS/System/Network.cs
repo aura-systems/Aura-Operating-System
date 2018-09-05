@@ -33,7 +33,7 @@ namespace Aura_OS.System
             Network.NetworkStack.Init();
             xNic.Enable();
 
-            Network.NetworkStack.ConfigIP(xNic, new Network.IPV4.Config(new Network.IPV4.Address(192, 168, 1, 70), new Network.IPV4.Address(255, 255, 255, 0)));
+            Network.NetworkStack.ConfigIP(xNic, new Network.IPV4.Config(new Network.IPV4.Address(192, 168, 1, 70), new Network.IPV4.Address(255, 255, 255, 0), new Network.IPV4.Address(192, 168, 1, 254)));
             CustomConsole.WriteLineOK("Network initialization done!");
         }
     }
