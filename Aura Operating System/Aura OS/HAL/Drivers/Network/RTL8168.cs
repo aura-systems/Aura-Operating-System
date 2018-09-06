@@ -27,7 +27,7 @@ namespace Aura_OS.HAL.Drivers.Network
 
         public override string Name => "RTL8168";
 
-        struct Descriptor
+        public struct Descriptor
         {
             public uint Command; // bit 31 is OWN, bit 30 is EOR
             public uint vlan;     /* currently unused */
@@ -35,7 +35,7 @@ namespace Aura_OS.HAL.Drivers.Network
             public uint high_buf; /* high 32-bits of physical buffer address */
         };
 
-        struct RTL8168_networkAdapter_t
+        public struct RTL8168_networkAdapter_t
         {
             public Descriptor* Rx_Descriptors;
             public Descriptor* Tx_Descriptors;
@@ -146,22 +146,41 @@ namespace Aura_OS.HAL.Drivers.Network
             Console.WriteLine("Netcard version: 0x" + System.Utils.Conversion.DecToHex((int)GetMacVersion() & 0x7cf00000));
             Console.WriteLine("Netcard version: 0x" + System.Utils.Conversion.DecToHex((int)GetMacVersion() & 0x7c800000));
 
-            //byte[] aData = new byte[]
-            //{
-            //    0x6C, 0x62, 0x6D, 0x93, 0xC1, 0xDA, 0xb8, 0x86, 0x87, 0x24, 0x34, 0xb7, 0x08, 0x00,
-            //    0x45, 0x00, 0x00, 0x24, 0x55, 0x1b, 0x00, 0x00, 0x80, 0x11, 0x62, 0x0b, 0xc0, 0xa8, 0x01, 0x46, 0xc0, 0xa8, 0x01, 0x0c,
-            //    0x10, 0x92, 0x10, 0x92, 0x00, 0x10, 0x15, 0xf3,
-            //    0x48, 0x65, 0x6c, 0x6c, 0x6f, 0x21, 0x21, 0x21
-            //
-            //};
+            ushort[] aData = new ushort[]
+            {
+                0x6C, 0x62, 0x6D, 0x93, 0xC1, 0xDA, 0xb8, 0x86, 0x87, 0x24, 0x34, 0xb7, 0x08, 0x00,
+                0x45, 0x00, 0x00, 0x24, 0x55, 0x1b, 0x00, 0x00, 0x80, 0x11, 0x62, 0x0b, 0xc0, 0xa8, 0x01, 0x46, 0xc0, 0xa8, 0x01, 0x0c,
+                0x10, 0x92, 0x10, 0x92, 0x00, 0x10, 0x15, 0xf3,
+                0x48, 0x65, 0x6c, 0x6c, 0x6f, 0x21, 0x21, 0x21
+            
+            };
 
-            //realtek_send_packet(PointerData(aData, aData.Length), aData.Length);
+            rtl8168_send(PointerData(aData, aData.Length), aData.Length);
 
-            //Console.WriteLine("Send done.");
+            Console.WriteLine("Send done.");
 
         }
 
-        public bool FifoFix()
+        bool rtl8168_send(ushort* data, int length)
+{
+    if (length > 2048)
+        return false; // Splitting packets not yet supported
+
+        MemoryOperations.Copy(rAdapter->TxBuffers + rAdapter->TxIndex* 2048, (byte*)data, length); // Copy data to TxBuffer
+
+        long flags = 0x80000000 | (rAdapter->Tx_Descriptors[rAdapter->TxIndex].Command & 0x40000000) | (length & 0x3FFF) | 0x20000000 | 0x10000000;
+
+        rAdapter->Tx_Descriptors[rAdapter->TxIndex].Command = (uint)flags;
+    rAdapter->Tx_Descriptors[rAdapter->TxIndex].vlan = 0;
+    Ports.outd((ushort)(BaseAddress + 0x38), 0x40); // Tell the NIC that a packet is waiting
+
+        rAdapter->TxIndex++;
+    rAdapter->TxIndex %= 32;
+
+    return true;
+}
+
+    public bool FifoFix()
         {
             Ports.outd((ushort)(BaseAddress + 0xf0), 0x10); /* Send the Reset bit to the Command register */
             Ports.outd((ushort)(BaseAddress + 0xf0), 0x10);
@@ -175,13 +194,13 @@ namespace Aura_OS.HAL.Drivers.Network
             return true;
         }
 
-        public byte* PointerData(byte[] data, int length)
+        public ushort* PointerData(ushort[] data, int length)
         {
-            byte[] safe = new byte[length];
+            ushort[] safe = new ushort[length];
             for (int i = 0; i < length; i++)
                 safe[i] = data[i];
 
-            fixed (byte* converted = safe)
+            fixed (ushort* converted = safe)
             {
                 // This will update the safe and converted arrays.
                 for (int i = 0; i < length; i++)
@@ -200,35 +219,44 @@ namespace Aura_OS.HAL.Drivers.Network
 
             Console.WriteLine("Status: 0x" + System.Utils.Conversion.DecToHex(status));
 
-            if (status == 0x0020)
+            if ((status & 0x0001) != 0)
+            {
+                Console.WriteLine("WOW PACKET RECEIVED!!!!!");
+            }
+            if (((status & 0x0004) != 0) && ((status & 0x0080) != 0))
+            {
+                Console.WriteLine("Transmit succesfull - descriptor resetted");
+            }
+            else
+            {
+                if ((status & 0x0004) != 0) Console.WriteLine("Transmit succesfull - descriptor not resetted");
+                if ((status & 0x0080) != 0) Console.WriteLine("Transmit descriptor unavailable");
+            }
+            if ((status & 0x0020) != 0)
             {
                 Console.WriteLine("0x6C : 0x" + System.Utils.Conversion.DecToHex(Ports.inb((ushort)(BaseAddress + 0x6C))));
-                if (Ports.inb((ushort)(BaseAddress + 0x6C)) == 0x02)
+                if ((Ports.inb((ushort)(BaseAddress + 0x6C)) & 0x02) != 0)
                 {
                     Console.WriteLine("Link is up with ");
-                    if (Ports.inb((ushort)(BaseAddress + 0x6C)) == 0x04) Console.WriteLine("10 Mbps and ");
-                    if (Ports.inb((ushort)(BaseAddress + 0x6C)) == 0x08) Console.WriteLine("100 Mbps and ");
-                    if (Ports.inb((ushort)(BaseAddress + 0x6C)) == 0x10) Console.WriteLine("1000 Mbps and ");
-                    if (Ports.inb((ushort)(BaseAddress + 0x6C)) == 0x01) Console.WriteLine("Full-duplex\n");
+                    if ((Ports.inb((ushort)(BaseAddress + 0x6C)) & 0x04) != 0) Console.WriteLine("10 Mbps and ");
+                    if ((Ports.inb((ushort)(BaseAddress + 0x6C)) & 0x08) != 0) Console.WriteLine("100 Mbps and ");
+                    if ((Ports.inb((ushort)(BaseAddress + 0x6C)) & 0x10) != 0) Console.WriteLine("1000 Mbps and ");
+                    if ((Ports.inb((ushort)(BaseAddress + 0x6C)) & 0x01) != 0) Console.WriteLine("Full-duplex\n");
                     else Console.WriteLine("Half-duplex\n");
-                }
-                else if (Ports.inb((ushort)(BaseAddress + 0x6C)) == 0x8B)
-                {
-                    Console.WriteLine("Link is connected! But not 0x02");
-                }
-                else if (Ports.inb((ushort)(BaseAddress + 0x6C)) == 0x80)
-                {
-                    Console.WriteLine("Link is down!");
                 }
                 else
                 {
-                    Console.WriteLine("Link is down!? Idk");
+                    Console.WriteLine("Link is down!");
                 }
             }
-            else if (status == 0x0040)
+            if ((status & 0x0040) != 0)
             {
                 Console.WriteLine("Receive FIFO overflow!");
                 Reset();
+            }
+            if ((status & 0x0100) != 0)
+            {
+                Console.WriteLine("Software Interrupt");
             }
 
             Ports.outw((ushort)(BaseAddress + 0x3E), Ports.inw((ushort)(BaseAddress + 0x3E)));
