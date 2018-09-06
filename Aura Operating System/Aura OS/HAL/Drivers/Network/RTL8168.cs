@@ -23,8 +23,6 @@ namespace Aura_OS.HAL.Drivers.Network
 
         public override CardType CardType => CardType.Ethernet;
 
-        int realtek_next_tx = 0;
-
         public override string Name => "RTL8168";
 
         struct Descriptor
@@ -41,18 +39,9 @@ namespace Aura_OS.HAL.Drivers.Network
         Descriptor[] Rx_Descriptors;
         Descriptor[] Tx_Descriptors;
 
-        int num_of_rx_descriptors = 1024, num_of_tx_descriptors = 10;
-
-        int rx_buffer_len = 1024;
-
         uint GetMacVersion()
         {
-
-            uint reg;
-
-            reg = Ports.ind((ushort)(BaseAddress + 0x40));
-
-            return reg;
+            return Ports.ind((ushort)(BaseAddress + 0x40));
         }
 
         void InitBuffers()
@@ -153,14 +142,14 @@ namespace Aura_OS.HAL.Drivers.Network
             Console.WriteLine("Netcard version: 0x" + System.Utils.Conversion.DecToHex((int)GetMacVersion() & 0x7cf00000));
             Console.WriteLine("Netcard version: 0x" + System.Utils.Conversion.DecToHex((int)GetMacVersion() & 0x7c800000));
 
-            ushort[] aData = new ushort[]
-            {
-                0x6C, 0x62, 0x6D, 0x93, 0xC1, 0xDA, 0xb8, 0x86, 0x87, 0x24, 0x34, 0xb7, 0x08, 0x00,
-                0x45, 0x00, 0x00, 0x24, 0x55, 0x1b, 0x00, 0x00, 0x80, 0x11, 0x62, 0x0b, 0xc0, 0xa8, 0x01, 0x46, 0xc0, 0xa8, 0x01, 0x0c,
-                0x10, 0x92, 0x10, 0x92, 0x00, 0x10, 0x15, 0xf3,
-                0x48, 0x65, 0x6c, 0x6c, 0x6f, 0x21, 0x21, 0x21
-            
-            };
+            //ushort[] aData = new ushort[]
+            //{
+            //    0x6C, 0x62, 0x6D, 0x93, 0xC1, 0xDA, 0xb8, 0x86, 0x87, 0x24, 0x34, 0xb7, 0x08, 0x00,
+            //    0x45, 0x00, 0x00, 0x24, 0x55, 0x1b, 0x00, 0x00, 0x80, 0x11, 0x62, 0x0b, 0xc0, 0xa8, 0x01, 0x46, 0xc0, 0xa8, 0x01, 0x0c,
+            //    0x10, 0x92, 0x10, 0x92, 0x00, 0x10, 0x15, 0xf3,
+            //    0x48, 0x65, 0x6c, 0x6c, 0x6f, 0x21, 0x21, 0x21
+            //
+            //};
 
             //rtl8168_send(PointerData(aData, aData.Length), aData.Length);
 
@@ -190,9 +179,6 @@ namespace Aura_OS.HAL.Drivers.Network
                 return converted;
             }
         }
-
-        bool printed = false;
-        bool printed1 = false;
 
         protected void HandleNetworkInterrupt(ref IRQContext aContext)
         {
@@ -268,7 +254,6 @@ namespace Aura_OS.HAL.Drivers.Network
             Ports.outw((ushort)(BaseAddress + 0x3E), Ports.inw((ushort)(BaseAddress + 0x3E)));
 
         }
-
 
         #region Network Device Implementation
         public override MACAddress MACAddress
