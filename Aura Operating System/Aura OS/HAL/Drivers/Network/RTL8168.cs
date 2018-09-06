@@ -82,8 +82,8 @@ namespace Aura_OS.HAL.Drivers.Network
                 Rx_Descriptors[i].vlan = 0;
                 Tx_Descriptors[i].vlan = 0;
 
-                Rx_Descriptors[i].low_buf = RxBuffers.Offset;
-                Tx_Descriptors[i].low_buf = TxBuffers.Offset;
+                Rx_Descriptors[i].low_buf = RxBuffers.Offset + (uint)(i * 2048);
+                Tx_Descriptors[i].low_buf = TxBuffers.Offset + (uint)(i * 2048);
                 Rx_Descriptors[i].high_buf = 0;
                 Tx_Descriptors[i].high_buf = 0;
             }
@@ -107,9 +107,9 @@ namespace Aura_OS.HAL.Drivers.Network
 
             SetIrqHandler(device.InterruptLine, HandleNetworkInterrupt);
 
-            Reset();
+            Ports.outb((ushort)(BaseAddress + 0xE0), 0x08);
 
-            Console.WriteLine("Reset done.");
+            Reset();
 
             // Get the MAC Address
             byte[] eeprom_mac = new byte[6];
@@ -128,7 +128,7 @@ namespace Aura_OS.HAL.Drivers.Network
 
             Ports.outd((ushort)(BaseAddress + 0x40), 0x03000700); // Enable TX
 
-            Ports.outd((ushort)(BaseAddress + 0xDA), 0x1FFF); // Max rx packet size
+            Ports.outd((ushort)(BaseAddress + 0xDA), 2048); // Max rx packet size
 
             Ports.outb((ushort)(BaseAddress + 0xEC), 0x3F); // No early transmit
 
@@ -144,7 +144,7 @@ namespace Aura_OS.HAL.Drivers.Network
                 Console.WriteLine("addressrx desc: 0x" + System.Utils.Conversion.DecToHex((int)pbArr));
             }
 
-            Ports.outw((ushort)(BaseAddress + 0x3C), 0xC3FF); //Activating all Interrupts
+            Ports.outw((ushort)(BaseAddress + 0x3C), 0x41BB); //Activating all Interrupts
 
             Ports.outb((ushort)(BaseAddress + 0x37), 0x0C); // Enabling receive and transmit
 
