@@ -27,24 +27,24 @@ namespace Aura_OS.HAL.Drivers.Network
 
         public override string Name => "RTL8168";
 
-        public struct Descriptor
+        struct Descriptor
         {
-            public uint Command; // bit 31 is OWN, bit 30 is EOR
+            public ushort Command; // bit 31 is OWN, bit 30 is EOR
+            public ushort FrameLen;
             public uint vlan;     /* currently unused */
             public uint low_buf;  /* low 32-bits of physical buffer address */
             public uint high_buf; /* high 32-bits of physical buffer address */
         };
 
-        public struct RTL8168_networkAdapter_t
-        {
-            public Descriptor* Rx_Descriptors;
-            public Descriptor* Tx_Descriptors;
-            public byte* RxBuffers;
-            public byte* TxBuffers;
-            public ushort TxIndex;
-        }
+        Descriptor* Rx_Descriptors = (Descriptor*)0x100000; /* 1MB Base Address of Rx Descriptors */
+        Descriptor* Tx_Descriptors = (Descriptor*)0x200000; /* 1MB Base Address of Rx Descriptors */
 
-        RTL8168_networkAdapter_t* rAdapter;
+        static byte[][] rx_buffer = new byte[10][];
+        static byte[][] tx_buffer = new byte[10][];
+
+        int num_of_rx_descriptors = 10, num_of_tx_descriptors = 10;
+
+        int rx_buffer_len = 1024;
 
         uint GetMacVersion()
         {
@@ -59,31 +59,31 @@ namespace Aura_OS.HAL.Drivers.Network
         void InitBuffers()
         {
 
-            rAdapter = (RTL8168_networkAdapter_t*)Cosmos.Core.Memory.Old.Heap.MemAlloc((uint)sizeof(RTL8168_networkAdapter_t));
-
-            for (ushort i = 0; i < 32; i++)
+            for (int i = 0; i < rx_buffer.Length; i++)
             {
-                if (i == (32 - 1)) // Last descriptor? if so, set the EOR bit
-                {
-                    rAdapter->Rx_Descriptors[i].Command = 0x80000000 | 0x40000000 | (2048 & 0x3FFF);
-                    rAdapter->Tx_Descriptors[i].Command = 0x40000000;
-                }
-                else
-                {
-                    rAdapter->Rx_Descriptors[i].Command = 0x80000000 | (2048 & 0x3FFF);
-                    rAdapter->Tx_Descriptors[i].Command = 0;
-                }
-                rAdapter->Rx_Descriptors[i].vlan = 0;
-                rAdapter->Tx_Descriptors[i].vlan = 0;
-                rAdapter->Rx_Descriptors[i].low_buf = (uint)&rAdapter->RxBuffers + (uint)(i * 2048);
-                Console.WriteLine("0x" + System.Utils.Conversion.DecToHex((int)&rAdapter->RxBuffers + i * 2048));
-                rAdapter->Tx_Descriptors[i].low_buf = (uint)&rAdapter->TxBuffers + (uint)(i * 2048);
-                Console.WriteLine("0x" + System.Utils.Conversion.DecToHex((int)&rAdapter->TxBuffers + i * 2048));
-                rAdapter->Rx_Descriptors[i].high_buf = 0;
-                rAdapter->Tx_Descriptors[i].high_buf = 0;
+                rx_buffer[i] = new byte[1024];
             }
 
-            Console.WriteLine("Descriptors are set up.");
+            //Setup RX
+
+            /* rx_buffer_len is the size (in bytes) that is reserved for incoming packets */
+            uint OWN = (1 << 15), EOR = (1 << 14); /* bit offsets */
+            for (int i = 0; i < num_of_rx_descriptors; i++) /* num_of_rx_descriptors can be up to 1024 */
+            {
+                if (i == (num_of_rx_descriptors - 1)) /* Last descriptor? if so, set the EOR bit */
+                    Rx_Descriptors[i].Command = (ushort)(OWN | EOR | (rx_buffer_len & 0x3FFF));
+                else
+                    Rx_Descriptors[i].Command = (ushort)(OWN | (rx_buffer_len & 0x3FFF));
+
+                /** packet_buffer_address is the *physical* address for the buffer */
+                fixed (byte* ptr = &rx_buffer[i][0])
+                {
+                    Rx_Descriptors[i].low_buf = (uint)ptr;
+                }
+
+                Rx_Descriptors[i].high_buf = 0;
+                /* If you are programming for a 64-bit OS, put the high memory location in the 'high_buf' descriptor area */
+            }
         }
 
         public RTL8168(PCIDevice device)
@@ -105,8 +105,6 @@ namespace Aura_OS.HAL.Drivers.Network
             SetIrqHandler(device.InterruptLine, HandleNetworkInterrupt);
 
             Reset();
-
-            FifoFix();
 
             Console.WriteLine("Reset done.");
 
@@ -131,11 +129,11 @@ namespace Aura_OS.HAL.Drivers.Network
 
             Ports.outb((ushort)(BaseAddress + 0xEC), 0x3F); // No early transmit
 
-            Console.WriteLine("addressrx desc: 0x" + System.Utils.Conversion.DecToHex((int)&rAdapter->Tx_Descriptors));
-            Console.WriteLine("addresstx desc: 0x" + System.Utils.Conversion.DecToHex((int)&rAdapter->Rx_Descriptors));
+            Console.WriteLine("addressrx desc: 0x" + System.Utils.Conversion.DecToHex((int)Tx_Descriptors));
+            Console.WriteLine("addresstx desc: 0x" + System.Utils.Conversion.DecToHex((int)Rx_Descriptors));
 
-            Ports.outd((ushort)(BaseAddress + 0x20), (uint)&rAdapter->Tx_Descriptors);
-            Ports.outd((ushort)(BaseAddress + 0xE4), (uint)&rAdapter->Rx_Descriptors);
+            Ports.outd((ushort)(BaseAddress + 0x20), (uint)Tx_Descriptors);
+            Ports.outd((ushort)(BaseAddress + 0xE4), (uint)Rx_Descriptors);
 
             Ports.outw((ushort)(BaseAddress + 0x3C), 0x03FF); //Activating all Interrupts
 
@@ -155,36 +153,10 @@ namespace Aura_OS.HAL.Drivers.Network
             
             };
 
-            rtl8168_send(PointerData(aData, aData.Length), aData.Length);
+            //rtl8168_send(PointerData(aData, aData.Length), aData.Length);
 
             Console.WriteLine("Send done.");
 
-        }
-
-        bool rtl8168_send(ushort* data, int length)
-{
-    if (length > 2048)
-        return false; // Splitting packets not yet supported
-
-        MemoryOperations.Copy(rAdapter->TxBuffers + rAdapter->TxIndex* 2048, (byte*)data, length); // Copy data to TxBuffer
-
-        long flags = 0x80000000 | (rAdapter->Tx_Descriptors[rAdapter->TxIndex].Command & 0x40000000) | (length & 0x3FFF) | 0x20000000 | 0x10000000;
-
-        rAdapter->Tx_Descriptors[rAdapter->TxIndex].Command = (uint)flags;
-    rAdapter->Tx_Descriptors[rAdapter->TxIndex].vlan = 0;
-    Ports.outd((ushort)(BaseAddress + 0x38), 0x40); // Tell the NIC that a packet is waiting
-
-        rAdapter->TxIndex++;
-    rAdapter->TxIndex %= 32;
-
-    return true;
-}
-
-    public bool FifoFix()
-        {
-            Ports.outd((ushort)(BaseAddress + 0xf0), 0x10); /* Send the Reset bit to the Command register */
-            Ports.outd((ushort)(BaseAddress + 0xf0), 0x10);
-            return true;
         }
 
         public bool Reset()
@@ -223,6 +195,7 @@ namespace Aura_OS.HAL.Drivers.Network
             {
                 Console.WriteLine("WOW PACKET RECEIVED!!!!!");
             }
+            if ((status & 0x0002) != 0) Console.WriteLine("Receive error");
             if (((status & 0x0004) != 0) && ((status & 0x0080) != 0))
             {
                 Console.WriteLine("Transmit succesfull - descriptor resetted");
@@ -231,6 +204,11 @@ namespace Aura_OS.HAL.Drivers.Network
             {
                 if ((status & 0x0004) != 0) Console.WriteLine("Transmit succesfull - descriptor not resetted");
                 if ((status & 0x0080) != 0) Console.WriteLine("Transmit descriptor unavailable");
+            }
+            if ((status & 0x0008) != 0) Console.WriteLine("Transmit error");
+            if ((status & 0x0010) != 0)
+            {
+                Console.WriteLine("Receive descriptor unavailable");
             }
             if ((status & 0x0020) != 0)
             {
@@ -241,8 +219,8 @@ namespace Aura_OS.HAL.Drivers.Network
                     if ((Ports.inb((ushort)(BaseAddress + 0x6C)) & 0x04) != 0) Console.WriteLine("10 Mbps and ");
                     if ((Ports.inb((ushort)(BaseAddress + 0x6C)) & 0x08) != 0) Console.WriteLine("100 Mbps and ");
                     if ((Ports.inb((ushort)(BaseAddress + 0x6C)) & 0x10) != 0) Console.WriteLine("1000 Mbps and ");
-                    if ((Ports.inb((ushort)(BaseAddress + 0x6C)) & 0x01) != 0) Console.WriteLine("Full-duplex\n");
-                    else Console.WriteLine("Half-duplex\n");
+                    if ((Ports.inb((ushort)(BaseAddress + 0x6C)) & 0x01) != 0) Console.WriteLine("Full-duplex");
+                    else Console.WriteLine("Half-duplex");
                 }
                 else
                 {
@@ -258,6 +236,13 @@ namespace Aura_OS.HAL.Drivers.Network
             {
                 Console.WriteLine("Software Interrupt");
             }
+            if ((status & 0x0200) != 0) Console.WriteLine("Receive FIFO empty");
+            if ((status & 0x0400) != 0) Console.WriteLine("Unknown Status (reserved Bit 11)");
+            if ((status & 0x0800) != 0) Console.WriteLine("Unknown Status (reserved Bit 12)");
+            if ((status & 0x1000) != 0) Console.WriteLine("Unknown Status (reserved Bit 13)");
+            if ((status & 0x2000) != 0) Console.WriteLine("Unknown Status (reserved Bit 14)");
+            if ((status & 0x4000) != 0) Console.WriteLine("Timeout");
+            if ((status & 0x8000) != 0) Console.WriteLine("Unknown Status (reserved Bit 16)");
 
             Ports.outw((ushort)(BaseAddress + 0x3E), Ports.inw((ushort)(BaseAddress + 0x3E)));
 
