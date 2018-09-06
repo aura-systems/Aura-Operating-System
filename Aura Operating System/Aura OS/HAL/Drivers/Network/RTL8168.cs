@@ -29,20 +29,19 @@ namespace Aura_OS.HAL.Drivers.Network
 
         struct Descriptor
         {
-            public ushort Command; // bit 31 is OWN, bit 30 is EOR
-            public ushort FrameLen;
+            public uint Command; // bit 31 is OWN, bit 30 is EOR
             public uint vlan;     /* currently unused */
             public uint low_buf;  /* low 32-bits of physical buffer address */
             public uint high_buf; /* high 32-bits of physical buffer address */
         };
 
-        Descriptor* Rx_Descriptors = (Descriptor*)0x100000; /* 1MB Base Address of Rx Descriptors */
-        Descriptor* Tx_Descriptors = (Descriptor*)0x200000; /* 1MB Base Address of Rx Descriptors */
+        ManagedMemoryBlock RxBuffers;
+        ManagedMemoryBlock TxBuffers;
 
-        static byte[][] rx_buffer = new byte[10][];
-        static byte[][] tx_buffer = new byte[10][];
+        Descriptor[] Rx_Descriptors;
+        Descriptor[] Tx_Descriptors;
 
-        int num_of_rx_descriptors = 10, num_of_tx_descriptors = 10;
+        int num_of_rx_descriptors = 1024, num_of_tx_descriptors = 10;
 
         int rx_buffer_len = 1024;
 
@@ -59,30 +58,34 @@ namespace Aura_OS.HAL.Drivers.Network
         void InitBuffers()
         {
 
-            for (int i = 0; i < rx_buffer.Length; i++)
+            Rx_Descriptors = new Descriptor[32];
+            Tx_Descriptors = new Descriptor[32];
+
+            RxBuffers = new ManagedMemoryBlock(2048 * 32 * 2);
+            TxBuffers = new ManagedMemoryBlock(RxBuffers.Size + 2048 * 32);
+
+            uint OWN = 0x80000000, EOR = 0x40000000; /* Bit offsets */
+
+            for (int i = 0; i < 32; i++)
             {
-                rx_buffer[i] = new byte[1024];
-            }
-
-            //Setup RX
-
-            /* rx_buffer_len is the size (in bytes) that is reserved for incoming packets */
-            uint OWN = (1 << 15), EOR = (1 << 14); /* bit offsets */
-            for (int i = 0; i < num_of_rx_descriptors; i++) /* num_of_rx_descriptors can be up to 1024 */
-            {
-                if (i == (num_of_rx_descriptors - 1)) /* Last descriptor? if so, set the EOR bit */
-                    Rx_Descriptors[i].Command = (ushort)(OWN | EOR | (rx_buffer_len & 0x3FFF));
-                else
-                    Rx_Descriptors[i].Command = (ushort)(OWN | (rx_buffer_len & 0x3FFF));
-
-                /** packet_buffer_address is the *physical* address for the buffer */
-                fixed (byte* ptr = &rx_buffer[i][0])
+                if (i == (32 - 1)) /* Last descriptor? if so, set the EOR bit */
                 {
-                    Rx_Descriptors[i].low_buf = (uint)ptr;
+                    Rx_Descriptors[i].Command = OWN | EOR | (2048 & 0x3FFF);
+                    Tx_Descriptors[i].Command = EOR;
+                }
+                else
+                {
+                    Rx_Descriptors[i].Command = OWN | (2048 & 0x3FFF);
+                    Tx_Descriptors[i].Command = 0;
                 }
 
+                Rx_Descriptors[i].vlan = 0;
+                Tx_Descriptors[i].vlan = 0;
+
+                Rx_Descriptors[i].low_buf = RxBuffers.Offset;
+                Tx_Descriptors[i].low_buf = TxBuffers.Offset;
                 Rx_Descriptors[i].high_buf = 0;
-                /* If you are programming for a 64-bit OS, put the high memory location in the 'high_buf' descriptor area */
+                Tx_Descriptors[i].high_buf = 0;
             }
         }
 
@@ -125,17 +128,23 @@ namespace Aura_OS.HAL.Drivers.Network
 
             Ports.outd((ushort)(BaseAddress + 0x40), 0x03000700); // Enable TX
 
-            Ports.outd((ushort)(BaseAddress + 0xDA), 2048); // Max rx packet size
+            Ports.outd((ushort)(BaseAddress + 0xDA), 0x1FFF); // Max rx packet size
 
             Ports.outb((ushort)(BaseAddress + 0xEC), 0x3F); // No early transmit
 
-            Console.WriteLine("addressrx desc: 0x" + System.Utils.Conversion.DecToHex((int)Tx_Descriptors));
-            Console.WriteLine("addresstx desc: 0x" + System.Utils.Conversion.DecToHex((int)Rx_Descriptors));
+            fixed (Descriptor* pbArr = &Tx_Descriptors[0])
+            {
+                Ports.outd((ushort)(BaseAddress + 0x20), (uint)pbArr);
+                Console.WriteLine("addresstx desc: 0x" + System.Utils.Conversion.DecToHex((int)pbArr));
+            }
 
-            Ports.outd((ushort)(BaseAddress + 0x20), (uint)Tx_Descriptors);
-            Ports.outd((ushort)(BaseAddress + 0xE4), (uint)Rx_Descriptors);
+            fixed (Descriptor* pbArr = &Rx_Descriptors[0])
+            {
+                Ports.outd((ushort)(BaseAddress + 0xE4), (uint)pbArr);
+                Console.WriteLine("addressrx desc: 0x" + System.Utils.Conversion.DecToHex((int)pbArr));
+            }
 
-            Ports.outw((ushort)(BaseAddress + 0x3C), 0x03FF); //Activating all Interrupts
+            Ports.outw((ushort)(BaseAddress + 0x3C), 0xC3FF); //Activating all Interrupts
 
             Ports.outb((ushort)(BaseAddress + 0x37), 0x0C); // Enabling receive and transmit
 
@@ -187,6 +196,7 @@ namespace Aura_OS.HAL.Drivers.Network
 
         protected void HandleNetworkInterrupt(ref IRQContext aContext)
         {
+
             ushort status = Ports.inw((ushort)(BaseAddress + 0x3E));
 
             Console.WriteLine("Status: 0x" + System.Utils.Conversion.DecToHex(status));
@@ -229,14 +239,25 @@ namespace Aura_OS.HAL.Drivers.Network
             }
             if ((status & 0x0040) != 0)
             {
-                Console.WriteLine("Receive FIFO overflow!");
-                Reset();
+                Console.WriteLine("RX FIFO overflow!");
+                if ((status & 0x0200) != 0)
+                {
+                    Console.WriteLine("RX FIFO empty");
+                }
+                else
+                {
+                    Console.WriteLine("Set 0 to FOVW");
+                }
             }
             if ((status & 0x0100) != 0)
             {
                 Console.WriteLine("Software Interrupt");
             }
-            if ((status & 0x0200) != 0) Console.WriteLine("Receive FIFO empty");
+            if ((status & 0x0200) != 0)
+            {
+                Console.WriteLine("RX FIFO empty");
+                Ports.outw((ushort)(BaseAddress + status), 0x0040); //https://groups.google.com/forum/#!topic/fa.linux.kernel/Vo8-9W3LoQs
+            } 
             if ((status & 0x0400) != 0) Console.WriteLine("Unknown Status (reserved Bit 11)");
             if ((status & 0x0800) != 0) Console.WriteLine("Unknown Status (reserved Bit 12)");
             if ((status & 0x1000) != 0) Console.WriteLine("Unknown Status (reserved Bit 13)");
