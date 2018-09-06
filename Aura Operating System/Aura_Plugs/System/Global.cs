@@ -16,7 +16,7 @@ namespace Aura_OS.System.Plugs
     {
         public static void Init(TextScreenBase textScreen)
         {
-            Kernel.AConsole = new Shell.VGA.VGAConsole(null);
+            Kernel.AConsole = new Shell.VESAVBE.VESAVBEConsole();
             Aura_Plugs.HAL.Global.Init(textScreen);
             Cosmos.System.Global.NumLock = false;
             Cosmos.System.Global.CapsLock = false;
