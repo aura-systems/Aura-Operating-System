@@ -75,7 +75,7 @@ namespace Aura_OS
             {
                 Shell.cmdIntr.CommandManager.RegisterAllCommands();
 
-                //AConsole = new System.Shell.VGA.VGAConsole(null);
+                AConsole = new System.Shell.VGA.VGAConsole(null);
 
                 Encoding.RegisterProvider(CosmosEncodingProvider.Instance);
                 Console.InputEncoding = Encoding.GetEncoding(437);
