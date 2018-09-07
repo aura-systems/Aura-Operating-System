@@ -65,8 +65,8 @@ namespace Aura_OS.HAL.Drivers.Network
             for (int i = 0; i < 32; i++)
             {
                 uint xOffset = (uint)i * 16;
-                ManagedMemoryBlock rxbuffer = new ManagedMemoryBlock(2048 * 8, 8);
-                ManagedMemoryBlock txbuffer = new ManagedMemoryBlock(2048 * 8, 8);
+                ManagedMemoryBlock rxbuffer = new ManagedMemoryBlock(2048, 8);
+                ManagedMemoryBlock txbuffer = new ManagedMemoryBlock(2048, 8);
                 if (i == (32 - 1)) /* Last descriptor? if so, set the EOR bit */
                 {
                     mRxDescriptor.Write32(xOffset + 0, OWN | EOR | (2048 & 0x3FFF));
