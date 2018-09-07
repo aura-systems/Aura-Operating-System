@@ -19,6 +19,8 @@ namespace Aura_OS.HAL.Drivers.Network
         protected PCIDevice pciCard;
         protected MACAddress mac;
 
+        public DataReceivedHandler DataReceived;
+
         uint BaseAddress;
 
         public override CardType CardType => CardType.Ethernet;
@@ -41,6 +43,10 @@ namespace Aura_OS.HAL.Drivers.Network
 
         protected List<ManagedMemoryBlock> mRxBuffers;
         protected List<ManagedMemoryBlock> mTxBuffers;
+
+        protected Queue<byte[]> mRecvBuffer;
+        protected Queue<byte[]> mTransmitBuffer;
+
         //Descriptor[] Rx_Descriptors;
         //Descriptor[] Tx_Descriptors;
 
@@ -59,6 +65,10 @@ namespace Aura_OS.HAL.Drivers.Network
 
             mRxBuffers = new List<ManagedMemoryBlock>();//new ManagedMemoryBlock(2048 * 32 * 2, 8);
             mTxBuffers = new List<ManagedMemoryBlock>();//new ManagedMemoryBlock(RxBuffers.Size + 2048 * 32, 8);
+
+            // Setup our Receive and Transmit Queues
+            mTransmitBuffer = new Queue<byte[]>();
+            mRecvBuffer = new Queue<byte[]>();
 
             uint OWN = 0x80000000, EOR = 0x40000000; /* Bit offsets */
 
@@ -161,6 +171,15 @@ namespace Aura_OS.HAL.Drivers.Network
                 Console.WriteLine("addressrx desc: 0x" + System.Utils.Conversion.DecToHex((int)mRxDescriptor.Offset));
             //}
 
+            if (((GetMacVersion() & 0x7cf00000) == 0x54100000) || ((GetMacVersion() & 0x7cf00000) == 0x54000000))
+            {
+                Console.WriteLine("8168H Detected!");
+
+                Ports.outd((ushort)(BaseAddress + 0x40), Ports.ind((ushort)(BaseAddress + 0x40)) | (1 << 7)); // AUTO TX FIFO
+
+                //Ports.outd((ushort)(BaseAddress + 0xf0, Ports.ind((ushort)(BaseAddress + 0xf0) & (ushort)0xFFF7FFFF);
+            }
+
             Ports.outw((ushort)(BaseAddress + 0x3C), 0xC3FF); //Activating all Interrupts
 
             Ports.outb((ushort)(BaseAddress + 0x37), 0x0C); // Enabling receive and transmit
@@ -218,6 +237,8 @@ namespace Aura_OS.HAL.Drivers.Network
             if ((status & 0x0001) != 0)
             {
                 Console.WriteLine("WOW PACKET RECEIVED!!!!!");
+                ReadRawData();
+
             }
             if ((status & 0x0002) != 0) Console.WriteLine("Receive error");
             if (((status & 0x0004) != 0) && ((status & 0x0080) != 0))
@@ -260,7 +281,7 @@ namespace Aura_OS.HAL.Drivers.Network
                 }
                 else
                 {
-                    Console.WriteLine("Set 0 to FOVW");
+                    //Console.WriteLine("Set 0 to FOVW");
                 }
             }
             if ((status & 0x0100) != 0)
@@ -327,6 +348,51 @@ namespace Aura_OS.HAL.Drivers.Network
         public override bool IsReceiveBufferFull()
         {
             return false;
+        }
+
+        private void ReadRawData()
+        {
+            for (ushort i = 0; i < 32; i++)
+            {
+                uint xOffset = (uint)(i * 16);
+                if ((mRxDescriptor.Read32(xOffset) & 0x80000000) == 0) // Buffer contains received data
+                {
+                    Console.WriteLine("Buffer contains RX Data!!");
+
+                    // Read data
+                    uint length = mRxDescriptor.Read32(xOffset + 0) & 0x3FFF;
+                    if (length > 4)
+                    {
+
+                        Console.WriteLine("DATALEN = " + length);
+
+                        byte[] recv_data;
+                        recv_data = new byte[length];
+                        for (uint b = 0; b < length; b++)
+                        {
+                            recv_data[b] = mRxBuffers[i][b];
+                        }
+
+                        if (DataReceived != null)
+                        {
+                            DataReceived(recv_data);
+                        }
+                        else
+                        {
+                            mRecvBuffer.Enqueue(recv_data);
+                        }
+
+                    }
+                        //network_receivedPacket(adapter, rAdapter->RxBuffers + i * RTL8168_BUFFER_LENGTH, length - 4); // Strip CRC from packet.
+
+                    // Reset descriptor
+                    if (i == (32 - 1)) // Last descriptor? if so, set the EOR bit
+                        mRxDescriptor.Write32(xOffset + 0, 0x80000000 | 0x40000000 | (2048 & 0x3FFF));
+                    else
+                        mRxDescriptor.Write32(xOffset + 0, 0x80000000 | (2048 & 0x3FFF));
+                    mRxDescriptor.Write32(xOffset + 4, 0);
+                }
+            }
         }
 
         #endregion

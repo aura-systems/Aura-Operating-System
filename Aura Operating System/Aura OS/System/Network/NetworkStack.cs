@@ -61,6 +61,8 @@ namespace Aura_OS.System.Network
                 return;
             }
 
+            Console.WriteLine("HandlePacket!");
+
             UInt16 etherType = (UInt16)((packetData[12] << 8) | packetData[13]);
             switch (etherType)
             {

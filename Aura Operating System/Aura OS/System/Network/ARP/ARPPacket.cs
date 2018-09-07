@@ -22,7 +22,7 @@ namespace Aura_OS.System.Network.ARP
         internal static void ARPHandler(byte[] packetData)
         {
             ARPPacket arp_packet = new ARPPacket(packetData);
-            Apps.System.Debugger.debugger.Send("[Received] " + arp_packet.ToString());
+            Console.WriteLine("[Received] " + arp_packet.ToString());
             if (arp_packet.Operation == 0x01)
             {
                 if ((arp_packet.HardwareType == 1) && (arp_packet.ProtocolType == 0x0800))
