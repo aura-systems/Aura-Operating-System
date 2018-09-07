@@ -5,6 +5,7 @@
 */
 
 using System;
+using System.Text;
 
 namespace Aura_OS.System
 {
@@ -35,6 +36,12 @@ namespace Aura_OS.System
 
             Network.NetworkStack.ConfigIP(xNic, new Network.IPV4.Config(new Network.IPV4.Address(192, 168, 1, 70), new Network.IPV4.Address(255, 255, 255, 0)));
             CustomConsole.WriteLineOK("Network initialization done!");
+
+            var xClient = new System.Network.IPV4.UDP.UdpClient(4242);
+            xClient.Connect(new System.Network.IPV4.Address(192, 168, 1, 12), 4242);
+            xClient.Send(Encoding.ASCII.GetBytes("Hello from Aura Operating System!"));
+
+            Console.WriteLine("UDP Sent!");
         }
     }
 }

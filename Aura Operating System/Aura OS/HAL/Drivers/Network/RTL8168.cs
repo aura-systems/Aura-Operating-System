@@ -7,7 +7,7 @@
 using System;
 using System.Collections.Generic;
 using Aura_OS.Core;
-using Cosmos.Core;
+using Aura_OS.Core.MMemory;
 using Cosmos.Core.IOGroup.Network;
 using Cosmos.HAL;
 using static Cosmos.Core.INTs;
@@ -33,11 +33,16 @@ namespace Aura_OS.HAL.Drivers.Network
             public uint high_buf; /* high 32-bits of physical buffer address */
         };
 
-        ManagedMemoryBlock RxBuffers;
-        ManagedMemoryBlock TxBuffers;
+        //ManagedMemoryBlock RxBuffers;
+        //ManagedMemoryBlock TxBuffers;
 
-        Descriptor[] Rx_Descriptors;
-        Descriptor[] Tx_Descriptors;
+        protected ManagedMemoryBlock mRxDescriptor;
+        protected ManagedMemoryBlock mTxDescriptor;
+
+        protected List<ManagedMemoryBlock> mRxBuffers;
+        protected List<ManagedMemoryBlock> mTxBuffers;
+        //Descriptor[] Rx_Descriptors;
+        //Descriptor[] Tx_Descriptors;
 
         uint GetMacVersion()
         {
@@ -47,34 +52,55 @@ namespace Aura_OS.HAL.Drivers.Network
         void InitBuffers()
         {
 
-            Rx_Descriptors = new Descriptor[32];
-            Tx_Descriptors = new Descriptor[32];
+            mRxDescriptor = new ManagedMemoryBlock((uint)(32 * sizeof(Descriptor)), 256);
+            //Console.WriteLine("(uint)(32 * sizeof(Descriptor) * 2 = " + (uint)(32 * sizeof(Descriptor) * 2));
+            //Console.WriteLine("mRxDescriptor.Size = " + mRxDescriptor.Size);
+            mTxDescriptor = new ManagedMemoryBlock((uint)(32 * sizeof(Descriptor)), 256);
 
-            RxBuffers = new ManagedMemoryBlock(2048 * 32 * 2);
-            TxBuffers = new ManagedMemoryBlock(RxBuffers.Size + 2048 * 32);
+            mRxBuffers = new List<ManagedMemoryBlock>();//new ManagedMemoryBlock(2048 * 32 * 2, 8);
+            mTxBuffers = new List<ManagedMemoryBlock>();//new ManagedMemoryBlock(RxBuffers.Size + 2048 * 32, 8);
 
             uint OWN = 0x80000000, EOR = 0x40000000; /* Bit offsets */
 
             for (int i = 0; i < 32; i++)
             {
+                uint xOffset = (uint)i * 16;
+                ManagedMemoryBlock rxbuffer = new ManagedMemoryBlock(2048 * 8, 8);
+                ManagedMemoryBlock txbuffer = new ManagedMemoryBlock(2048 * 8, 8);
                 if (i == (32 - 1)) /* Last descriptor? if so, set the EOR bit */
                 {
-                    Rx_Descriptors[i].Command = OWN | EOR | (2048 & 0x3FFF);
-                    Tx_Descriptors[i].Command = EOR;
+                    mRxDescriptor.Write32(xOffset + 0, OWN | EOR | (2048 & 0x3FFF));
+                    //Rx_Descriptors[i].Command = OWN | EOR | (2048 & 0x3FFF);
+                    mTxDescriptor.Write32(xOffset + 0, EOR);
+                    //Tx_Descriptors[i].Command = EOR;
                 }
                 else
                 {
-                    Rx_Descriptors[i].Command = OWN | (2048 & 0x3FFF);
-                    Tx_Descriptors[i].Command = 0;
+                    mRxDescriptor.Write32(xOffset + 0, OWN | EOR | (2048 & 0x3FFF));
+                    //Rx_Descriptors[i].Command = OWN | (2048 & 0x3FFF);
+                    mTxDescriptor.Write32(xOffset + 0, 0);
+                    //Tx_Descriptors[i].Command = 0;
                 }
 
-                Rx_Descriptors[i].vlan = 0;
-                Tx_Descriptors[i].vlan = 0;
+                mRxBuffers.Add(rxbuffer);
+                mRxBuffers.Add(txbuffer);
 
-                Rx_Descriptors[i].low_buf = RxBuffers.Offset + (uint)(i * 2048);
-                Tx_Descriptors[i].low_buf = TxBuffers.Offset + (uint)(i * 2048);
-                Rx_Descriptors[i].high_buf = 0;
-                Tx_Descriptors[i].high_buf = 0;
+                mRxDescriptor.Write32(xOffset + 4, 0);
+                mTxDescriptor.Write32(xOffset + 4, 0);
+
+                //Rx_Descriptors[i].vlan = 0;
+                //Tx_Descriptors[i].vlan = 0;
+
+                mRxDescriptor.Write32(xOffset + 8, rxbuffer.Offset);
+                mTxDescriptor.Write32(xOffset + 8, txbuffer.Offset);
+
+                mRxDescriptor.Write32(xOffset + 12, 0);
+                mTxDescriptor.Write32(xOffset + 12, 0);
+
+                //Rx_Descriptors[i].low_buf = RxBuffers.Offset + (uint)(i * 2048);
+                //Tx_Descriptors[i].low_buf = TxBuffers.Offset + (uint)(i * 2048);
+                //Rx_Descriptors[i].high_buf = 0;
+                //Tx_Descriptors[i].high_buf = 0;
             }
         }
 
@@ -111,6 +137,8 @@ namespace Aura_OS.HAL.Drivers.Network
 
             InitBuffers();
 
+            Console.WriteLine("Init buffers done!");
+
             Ports.outd((ushort)(BaseAddress + 0x44), 0x0000E70F); // Enable RX
 
             Ports.outd((ushort)(BaseAddress + 0x37), 0x04);
@@ -121,19 +149,19 @@ namespace Aura_OS.HAL.Drivers.Network
 
             Ports.outb((ushort)(BaseAddress + 0xEC), 0x3F); // No early transmit
 
-            fixed (Descriptor* pbArr = &Tx_Descriptors[0])
-            {
-                Ports.outd((ushort)(BaseAddress + 0x20), (uint)pbArr);
-                Console.WriteLine("addresstx desc: 0x" + System.Utils.Conversion.DecToHex((int)pbArr));
-            }
+            //fixed (Descriptor* pbArr = &Tx_Descriptors[0])
+            //{
+                Ports.outd((ushort)(BaseAddress + 0x20), mTxDescriptor.Offset);
+                Console.WriteLine("addresstx desc: 0x" + System.Utils.Conversion.DecToHex((int)mTxDescriptor.Offset));
+            //}
 
-            fixed (Descriptor* pbArr = &Rx_Descriptors[0])
-            {
-                Ports.outd((ushort)(BaseAddress + 0xE4), (uint)pbArr);
-                Console.WriteLine("addressrx desc: 0x" + System.Utils.Conversion.DecToHex((int)pbArr));
-            }
+            //fixed (Descriptor* pbArr = &Rx_Descriptors[0])
+            //{
+                Ports.outd((ushort)(BaseAddress + 0xE4), mRxDescriptor.Offset);
+                Console.WriteLine("addressrx desc: 0x" + System.Utils.Conversion.DecToHex((int)mRxDescriptor.Offset));
+            //}
 
-            Ports.outw((ushort)(BaseAddress + 0x3C), 0x41BB); //Activating all Interrupts
+            Ports.outw((ushort)(BaseAddress + 0x3C), 0xC3FF); //Activating all Interrupts
 
             Ports.outb((ushort)(BaseAddress + 0x37), 0x0C); // Enabling receive and transmit
 
@@ -251,7 +279,7 @@ namespace Aura_OS.HAL.Drivers.Network
             if ((status & 0x4000) != 0) Console.WriteLine("Timeout");
             if ((status & 0x8000) != 0) Console.WriteLine("Unknown Status (reserved Bit 16)");
 
-            Ports.outw((ushort)(BaseAddress + 0x3E), Ports.inw((ushort)(BaseAddress + 0x3E)));
+            Ports.outw((ushort)(BaseAddress + 0x3E), status);
 
         }
 
