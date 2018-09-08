@@ -95,7 +95,7 @@ namespace Aura_OS.HAL.Drivers.Network
                 }
 
                 mRxBuffers.Add(rxbuffer);
-                mRxBuffers.Add(txbuffer);
+                mTxBuffers.Add(txbuffer);
 
                 mRxDescriptor.Write32(xOffset + 4, 0);
                 mTxDescriptor.Write32(xOffset + 4, 0);
@@ -356,19 +356,17 @@ namespace Aura_OS.HAL.Drivers.Network
             if (aData.Length > 2048)
                 return false; // Splitting packets not yet supported
 
-            Console.WriteLine("Step 1");
-
-            int txd = mNextTXDesc++;
-            if (mNextTXDesc >= 32)
-            {
-                mNextTXDesc = 0;
-            }
+            int txd = mNextTXDesc;
+            //if (mNextTXDesc >= 32)
+            //{
+            //    mNextTXDesc = 0;
+            //}
 
             uint xOffset = (uint)(txd * 16);
 
-            Console.WriteLine("Step 2");
-            
-            for (uint b = 0; b < aData.Length; b++)
+            int len = aData.Length;
+
+            for (uint b = 0; b < len; b++)
             {
                 mTxBuffers[txd][b] = aData[b];
             }
@@ -390,6 +388,9 @@ namespace Aura_OS.HAL.Drivers.Network
 
             Console.WriteLine("SendBytes done!");
 
+            mNextTXDesc++;
+            mNextTXDesc %= 32;
+
             return true;
 
         }
@@ -399,19 +400,15 @@ namespace Aura_OS.HAL.Drivers.Network
             for (ushort i = 0; i < 32; i++)
             {
                 uint xOffset = (uint)(i * 16);
-                if ((mRxDescriptor.Read32(xOffset) & 0x80000000) == 0) // Buffer contains received data
+                if ((mRxDescriptor.Read32(xOffset) & 0x80000000) == 0)
                 {
-                    Console.WriteLine("Buffer contains RX Data!!");
-
-                    // Read data
                     uint length = mRxDescriptor.Read32(xOffset + 0) & 0x3FFF;
                     if (length > 4)
                     {
 
                         Console.WriteLine("DATALEN = " + length);
 
-                        byte[] recv_data;
-                        recv_data = new byte[length];
+                        byte[] recv_data = new byte[length - 4];
                         for (uint b = 0; b < length; b++)
                         {
                             recv_data[b] = mRxBuffers[i][b];
@@ -419,7 +416,6 @@ namespace Aura_OS.HAL.Drivers.Network
 
                         if (DataReceived != null)
                         {
-                            Console.WriteLine("DataReceived != null");
                             DataReceived(recv_data);
                         }
                         else
@@ -428,7 +424,6 @@ namespace Aura_OS.HAL.Drivers.Network
                         }
 
                     }
-                        //network_receivedPacket(adapter, rAdapter->RxBuffers + i * RTL8168_BUFFER_LENGTH, length - 4); // Strip CRC from packet.
 
                     // Reset descriptor
                     if (i == (32 - 1)) // Last descriptor? if so, set the EOR bit
