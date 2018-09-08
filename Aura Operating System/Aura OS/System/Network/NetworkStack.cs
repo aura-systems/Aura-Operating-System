@@ -57,7 +57,7 @@ namespace Aura_OS.System.Network
         {
             if (packetData == null)
             {
-                Apps.System.Debugger.debugger.Send("Error packet data null");
+                Console.WriteLine("Error packet data null");
                 return;
             }
 
@@ -71,6 +71,9 @@ namespace Aura_OS.System.Network
                     break;
                 case 0x0800:
                     IPV4.IPPacket.IPv4Handler(packetData);
+                    break;
+                default:
+                    Console.WriteLine("UNKNOWN PACKET");
                     break;
             }
         }

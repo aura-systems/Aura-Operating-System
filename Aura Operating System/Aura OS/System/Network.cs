@@ -38,7 +38,7 @@ namespace Aura_OS.System
             CustomConsole.WriteLineOK("Network initialization done!");
 
             var xClient = new System.Network.IPV4.UDP.UdpClient(4242);
-            xClient.Connect(new System.Network.IPV4.Address(192, 168, 1, 12), 4242);
+            xClient.Connect(new System.Network.IPV4.Address(192, 168, 1, 28), 4242);
             xClient.Send(Encoding.ASCII.GetBytes("Hello from Aura Operating System!"));
 
             Console.WriteLine("UDP Sent!");

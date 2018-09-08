@@ -14,12 +14,10 @@ using static Cosmos.Core.INTs;
 
 namespace Aura_OS.HAL.Drivers.Network
 {
-    public unsafe class RTL8168 : NetworkDevice
+    public class RTL8168 : NetworkDevice
     {
         protected PCIDevice pciCard;
         protected MACAddress mac;
-
-        public DataReceivedHandler DataReceived;
 
         uint BaseAddress;
 
@@ -47,6 +45,8 @@ namespace Aura_OS.HAL.Drivers.Network
         protected Queue<byte[]> mRecvBuffer;
         protected Queue<byte[]> mTransmitBuffer;
 
+        private int mNextTXDesc;
+
         //Descriptor[] Rx_Descriptors;
         //Descriptor[] Tx_Descriptors;
 
@@ -58,10 +58,12 @@ namespace Aura_OS.HAL.Drivers.Network
         void InitBuffers()
         {
 
-            mRxDescriptor = new ManagedMemoryBlock((uint)(32 * sizeof(Descriptor)), 256);
+            mNextTXDesc = 0;
+
+            mRxDescriptor = new ManagedMemoryBlock((uint)(32 * 16), 256);
             //Console.WriteLine("(uint)(32 * sizeof(Descriptor) * 2 = " + (uint)(32 * sizeof(Descriptor) * 2));
             //Console.WriteLine("mRxDescriptor.Size = " + mRxDescriptor.Size);
-            mTxDescriptor = new ManagedMemoryBlock((uint)(32 * sizeof(Descriptor)), 256);
+            mTxDescriptor = new ManagedMemoryBlock((uint)(32 * 16), 256);
 
             mRxBuffers = new List<ManagedMemoryBlock>();//new ManagedMemoryBlock(2048 * 32 * 2, 8);
             mTxBuffers = new List<ManagedMemoryBlock>();//new ManagedMemoryBlock(RxBuffers.Size + 2048 * 32, 8);
@@ -114,8 +116,8 @@ namespace Aura_OS.HAL.Drivers.Network
             }
         }
 
-        public RTL8168(PCIDevice device)
-        {
+        public RTL8168(PCIDevice device) : base()
+        { 
             if (device == null)
             {
                 throw new ArgumentException("PCI Device is null. Unable to get Realtek 8168 card");
@@ -209,22 +211,6 @@ namespace Aura_OS.HAL.Drivers.Network
             Ports.outb((ushort)(BaseAddress + 0x37), 0x10); /* Send the Reset bit to the Command register */
             while ((Ports.inb((ushort)(BaseAddress + 0x37)) & 0x10) != 0) { } /* Wait for the chip to finish resetting */
             return true;
-        }
-
-        public ushort* PointerData(ushort[] data, int length)
-        {
-            ushort[] safe = new ushort[length];
-            for (int i = 0; i < length; i++)
-                safe[i] = data[i];
-
-            fixed (ushort* converted = safe)
-            {
-                // This will update the safe and converted arrays.
-                for (int i = 0; i < length; i++)
-                    converted[i]++;
-
-                return converted;
-            }
         }
 
         protected void HandleNetworkInterrupt(ref IRQContext aContext)
@@ -322,6 +308,20 @@ namespace Aura_OS.HAL.Drivers.Network
 
         public override bool QueueBytes(byte[] buffer, int offset, int length)
         {
+
+            Console.WriteLine("QueueBytes called!");
+            byte[] data = new byte[length];
+            for (int b = 0; b < length; b++)
+            {
+                data[b] = buffer[b + offset];
+            }
+
+            if (SendBytes(ref data) == false)
+            {
+                Console.WriteLine("Returned false...");
+                mTransmitBuffer.Enqueue(data);
+            }
+
             return true;
         }
 
@@ -350,6 +350,50 @@ namespace Aura_OS.HAL.Drivers.Network
             return false;
         }
 
+        protected bool SendBytes(ref byte[] aData)
+        {
+            Console.WriteLine("SendBytes called!");
+            if (aData.Length > 2048)
+                return false; // Splitting packets not yet supported
+
+            Console.WriteLine("Step 1");
+
+            int txd = mNextTXDesc++;
+            if (mNextTXDesc >= 32)
+            {
+                mNextTXDesc = 0;
+            }
+
+            uint xOffset = (uint)(txd * 16);
+
+            Console.WriteLine("Step 2");
+            
+            for (uint b = 0; b < aData.Length; b++)
+            {
+                mTxBuffers[txd][b] = aData[b];
+            }
+
+            Console.WriteLine("Step 3");
+
+            //UInt16 buffer_len = (UInt16)(aData.Length < 64 ? 64 : aData.Length);
+            //UInt16 buffer_len = (UInt16)aData.Length;
+            //buffer_len = (UInt16)(~buffer_len);
+            //buffer_len++;
+
+            mTxDescriptor.Write32(xOffset + 0, 0x80000000 | mTxDescriptor.Read32(xOffset + 0) & 0x40000000 | (uint)(aData.Length & 0x3FFF) | (1 << 29) | (1 << 28));
+            Console.WriteLine("Step 4");
+            mTxDescriptor.Write32(xOffset + 4, 0);
+
+            Console.WriteLine("Step 5");
+
+            Ports.outb((ushort)(BaseAddress + 0x38), 1 << 6);
+
+            Console.WriteLine("SendBytes done!");
+
+            return true;
+
+        }
+
         private void ReadRawData()
         {
             for (ushort i = 0; i < 32; i++)
@@ -375,6 +419,7 @@ namespace Aura_OS.HAL.Drivers.Network
 
                         if (DataReceived != null)
                         {
+                            Console.WriteLine("DataReceived != null");
                             DataReceived(recv_data);
                         }
                         else
