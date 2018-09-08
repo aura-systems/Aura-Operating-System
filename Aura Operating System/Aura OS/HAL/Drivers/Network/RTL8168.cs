@@ -8,7 +8,6 @@ using System;
 using System.Collections.Generic;
 using Aura_OS.Core;
 using Aura_OS.Core.MMemory;
-using Cosmos.Core.IOGroup.Network;
 using Cosmos.HAL;
 using static Cosmos.Core.INTs;
 
@@ -25,17 +24,6 @@ namespace Aura_OS.HAL.Drivers.Network
 
         public override string Name => "RTL8168";
 
-        struct Descriptor
-        {
-            public uint Command; // bit 31 is OWN, bit 30 is EOR
-            public uint vlan;     /* currently unused */
-            public uint low_buf;  /* low 32-bits of physical buffer address */
-            public uint high_buf; /* high 32-bits of physical buffer address */
-        };
-
-        //ManagedMemoryBlock RxBuffers;
-        //ManagedMemoryBlock TxBuffers;
-
         protected ManagedMemoryBlock mRxDescriptor;
         protected ManagedMemoryBlock mTxDescriptor;
 
@@ -47,8 +35,7 @@ namespace Aura_OS.HAL.Drivers.Network
 
         private int mNextTXDesc;
 
-        //Descriptor[] Rx_Descriptors;
-        //Descriptor[] Tx_Descriptors;
+        uint OWN = 0x80000000, EOR = 0x40000000;
 
         uint GetMacVersion()
         {
@@ -60,38 +47,29 @@ namespace Aura_OS.HAL.Drivers.Network
 
             mNextTXDesc = 0;
 
-            mRxDescriptor = new ManagedMemoryBlock((uint)(32 * 16), 256);
-            //Console.WriteLine("(uint)(32 * sizeof(Descriptor) * 2 = " + (uint)(32 * sizeof(Descriptor) * 2));
-            //Console.WriteLine("mRxDescriptor.Size = " + mRxDescriptor.Size);
-            mTxDescriptor = new ManagedMemoryBlock((uint)(32 * 16), 256);
+            mRxDescriptor = new ManagedMemoryBlock(32 * 16, 256);
+            mTxDescriptor = new ManagedMemoryBlock(32 * 16, 256);
 
-            mRxBuffers = new List<ManagedMemoryBlock>();//new ManagedMemoryBlock(2048 * 32 * 2, 8);
-            mTxBuffers = new List<ManagedMemoryBlock>();//new ManagedMemoryBlock(RxBuffers.Size + 2048 * 32, 8);
+            mRxBuffers = new List<ManagedMemoryBlock>();
+            mTxBuffers = new List<ManagedMemoryBlock>();
 
-            // Setup our Receive and Transmit Queues
             mTransmitBuffer = new Queue<byte[]>();
             mRecvBuffer = new Queue<byte[]>();
-
-            uint OWN = 0x80000000, EOR = 0x40000000; /* Bit offsets */
 
             for (int i = 0; i < 32; i++)
             {
                 uint xOffset = (uint)i * 16;
                 ManagedMemoryBlock rxbuffer = new ManagedMemoryBlock(2048, 8);
                 ManagedMemoryBlock txbuffer = new ManagedMemoryBlock(2048, 8);
-                if (i == (32 - 1)) /* Last descriptor? if so, set the EOR bit */
+                if (i == (32 - 1))
                 {
                     mRxDescriptor.Write32(xOffset + 0, OWN | EOR | (2048 & 0x3FFF));
-                    //Rx_Descriptors[i].Command = OWN | EOR | (2048 & 0x3FFF);
                     mTxDescriptor.Write32(xOffset + 0, EOR);
-                    //Tx_Descriptors[i].Command = EOR;
                 }
                 else
                 {
                     mRxDescriptor.Write32(xOffset + 0, OWN | EOR | (2048 & 0x3FFF));
-                    //Rx_Descriptors[i].Command = OWN | (2048 & 0x3FFF);
                     mTxDescriptor.Write32(xOffset + 0, 0);
-                    //Tx_Descriptors[i].Command = 0;
                 }
 
                 mRxBuffers.Add(rxbuffer);
@@ -100,19 +78,12 @@ namespace Aura_OS.HAL.Drivers.Network
                 mRxDescriptor.Write32(xOffset + 4, 0);
                 mTxDescriptor.Write32(xOffset + 4, 0);
 
-                //Rx_Descriptors[i].vlan = 0;
-                //Tx_Descriptors[i].vlan = 0;
-
                 mRxDescriptor.Write32(xOffset + 8, rxbuffer.Offset);
                 mTxDescriptor.Write32(xOffset + 8, txbuffer.Offset);
 
                 mRxDescriptor.Write32(xOffset + 12, 0);
                 mTxDescriptor.Write32(xOffset + 12, 0);
 
-                //Rx_Descriptors[i].low_buf = RxBuffers.Offset + (uint)(i * 2048);
-                //Tx_Descriptors[i].low_buf = TxBuffers.Offset + (uint)(i * 2048);
-                //Rx_Descriptors[i].high_buf = 0;
-                //Tx_Descriptors[i].high_buf = 0;
             }
         }
 
@@ -161,48 +132,25 @@ namespace Aura_OS.HAL.Drivers.Network
 
             Ports.outb((ushort)(BaseAddress + 0xEC), 0x3F); // No early transmit
 
-            //fixed (Descriptor* pbArr = &Tx_Descriptors[0])
-            //{
-                Ports.outd((ushort)(BaseAddress + 0x20), mTxDescriptor.Offset);
-                Console.WriteLine("addresstx desc: 0x" + System.Utils.Conversion.DecToHex((int)mTxDescriptor.Offset));
-            //}
+            Ports.outd((ushort)(BaseAddress + 0x20), mTxDescriptor.Offset);
+            Console.WriteLine("addresstx desc: 0x" + System.Utils.Conversion.DecToHex((int)mTxDescriptor.Offset));
 
-            //fixed (Descriptor* pbArr = &Rx_Descriptors[0])
-            //{
-                Ports.outd((ushort)(BaseAddress + 0xE4), mRxDescriptor.Offset);
-                Console.WriteLine("addressrx desc: 0x" + System.Utils.Conversion.DecToHex((int)mRxDescriptor.Offset));
-            //}
+            Ports.outd((ushort)(BaseAddress + 0xE4), mRxDescriptor.Offset);
+            Console.WriteLine("addressrx desc: 0x" + System.Utils.Conversion.DecToHex((int)mRxDescriptor.Offset));
 
             if (((GetMacVersion() & 0x7cf00000) == 0x54100000) || ((GetMacVersion() & 0x7cf00000) == 0x54000000))
             {
                 Console.WriteLine("8168H Detected!");
 
                 Ports.outd((ushort)(BaseAddress + 0x40), Ports.ind((ushort)(BaseAddress + 0x40)) | (1 << 7)); // AUTO TX FIFO
-
-                //Ports.outd((ushort)(BaseAddress + 0xf0, Ports.ind((ushort)(BaseAddress + 0xf0) & (ushort)0xFFF7FFFF);
             }
 
             Ports.outw((ushort)(BaseAddress + 0x3C), 0xC3FF); //Activating all Interrupts
 
             Ports.outb((ushort)(BaseAddress + 0x37), 0x0C); // Enabling receive and transmit
 
-            Console.WriteLine("Init done.");
-
             Console.WriteLine("Netcard version: 0x" + System.Utils.Conversion.DecToHex((int)GetMacVersion() & 0x7cf00000));
             Console.WriteLine("Netcard version: 0x" + System.Utils.Conversion.DecToHex((int)GetMacVersion() & 0x7c800000));
-
-            //ushort[] aData = new ushort[]
-            //{
-            //    0x6C, 0x62, 0x6D, 0x93, 0xC1, 0xDA, 0xb8, 0x86, 0x87, 0x24, 0x34, 0xb7, 0x08, 0x00,
-            //    0x45, 0x00, 0x00, 0x24, 0x55, 0x1b, 0x00, 0x00, 0x80, 0x11, 0x62, 0x0b, 0xc0, 0xa8, 0x01, 0x46, 0xc0, 0xa8, 0x01, 0x0c,
-            //    0x10, 0x92, 0x10, 0x92, 0x00, 0x10, 0x15, 0xf3,
-            //    0x48, 0x65, 0x6c, 0x6c, 0x6f, 0x21, 0x21, 0x21
-            //
-            //};
-
-            //rtl8168_send(PointerData(aData, aData.Length), aData.Length);
-
-            Console.WriteLine("Send done.");
 
         }
 
@@ -222,9 +170,7 @@ namespace Aura_OS.HAL.Drivers.Network
 
             if ((status & 0x0001) != 0)
             {
-                Console.WriteLine("WOW PACKET RECEIVED!!!!!");
                 ReadRawData();
-
             }
             if ((status & 0x0002) != 0) Console.WriteLine("Receive error");
             if (((status & 0x0004) != 0) && ((status & 0x0080) != 0))
@@ -265,10 +211,6 @@ namespace Aura_OS.HAL.Drivers.Network
                 {
                     Console.WriteLine("RX FIFO empty");
                 }
-                else
-                {
-                    //Console.WriteLine("Set 0 to FOVW");
-                }
             }
             if ((status & 0x0100) != 0)
             {
@@ -308,8 +250,6 @@ namespace Aura_OS.HAL.Drivers.Network
 
         public override bool QueueBytes(byte[] buffer, int offset, int length)
         {
-
-            Console.WriteLine("QueueBytes called!");
             byte[] data = new byte[length];
             for (int b = 0; b < length; b++)
             {
@@ -318,7 +258,6 @@ namespace Aura_OS.HAL.Drivers.Network
 
             if (SendBytes(ref data) == false)
             {
-                Console.WriteLine("Returned false...");
                 mTransmitBuffer.Enqueue(data);
             }
 
@@ -352,41 +291,30 @@ namespace Aura_OS.HAL.Drivers.Network
 
         protected bool SendBytes(ref byte[] aData)
         {
-            Console.WriteLine("SendBytes called!");
             if (aData.Length > 2048)
                 return false; // Splitting packets not yet supported
 
-            int txd = mNextTXDesc;
-            //if (mNextTXDesc >= 32)
-            //{
-            //    mNextTXDesc = 0;
-            //}
+            uint xOffset = (uint)(mNextTXDesc * 16);
 
-            uint xOffset = (uint)(txd * 16);
+            Console.WriteLine("mNEXTTXDESC=" + mNextTXDesc);
 
-            int len = aData.Length;
-
-            for (uint b = 0; b < len; b++)
+            for (uint b = 0; b < aData.Length; b++)
             {
-                mTxBuffers[txd][b] = aData[b];
+                mTxBuffers[mNextTXDesc][b] = aData[b];
             }
 
-            Console.WriteLine("Step 3");
-
-            //UInt16 buffer_len = (UInt16)(aData.Length < 64 ? 64 : aData.Length);
-            //UInt16 buffer_len = (UInt16)aData.Length;
-            //buffer_len = (UInt16)(~buffer_len);
-            //buffer_len++;
-
-            mTxDescriptor.Write32(xOffset + 0, 0x80000000 | mTxDescriptor.Read32(xOffset + 0) & 0x40000000 | (uint)(aData.Length & 0x3FFF) | (1 << 29) | (1 << 28));
-            Console.WriteLine("Step 4");
+            if (mNextTXDesc == (32 - 1))
+            {
+                mTxDescriptor.Write32(xOffset + 0, OWN | mTxDescriptor.Read32(xOffset + 0) & EOR | (uint)(aData.Length & 0x3FFF) | (1 << 29) | (1 << 28));
+            }
+            else
+            {
+                mTxDescriptor.Write32(xOffset + 0, OWN | mTxDescriptor.Read32(xOffset + 0) | (uint)(aData.Length & 0x3FFF) | (1 << 29) | (1 << 28));
+            }
+           
             mTxDescriptor.Write32(xOffset + 4, 0);
 
-            Console.WriteLine("Step 5");
-
             Ports.outb((ushort)(BaseAddress + 0x38), 1 << 6);
-
-            Console.WriteLine("SendBytes done!");
 
             mNextTXDesc++;
             mNextTXDesc %= 32;
@@ -427,9 +355,9 @@ namespace Aura_OS.HAL.Drivers.Network
 
                     // Reset descriptor
                     if (i == (32 - 1)) // Last descriptor? if so, set the EOR bit
-                        mRxDescriptor.Write32(xOffset + 0, 0x80000000 | 0x40000000 | (2048 & 0x3FFF));
+                        mRxDescriptor.Write32(xOffset + 0, OWN | EOR | (2048 & 0x3FFF));
                     else
-                        mRxDescriptor.Write32(xOffset + 0, 0x80000000 | (2048 & 0x3FFF));
+                        mRxDescriptor.Write32(xOffset + 0, OWN | (2048 & 0x3FFF));
                     mRxDescriptor.Write32(xOffset + 4, 0);
                 }
             }
