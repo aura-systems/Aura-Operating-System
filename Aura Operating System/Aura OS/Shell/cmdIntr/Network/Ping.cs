@@ -9,6 +9,7 @@ using Sys = Cosmos.System;
 using L = Aura_OS.System.Translation;
 using Aura_OS.System.Network.IPV4;
 using Aura_OS.System.Network;
+using Aura_OS.System;
 
 namespace Aura_OS.Shell.cmdIntr.Network
 {
@@ -66,11 +67,21 @@ namespace Aura_OS.Shell.cmdIntr.Network
                     for (int i = 0; i < 4; i++)
                     {
                         second = 0;
-                        //Console.WriteLine("Sending ping to " + destination.ToString() + "...");
+                        CustomConsole.WriteLineInfo("Sending ping to " + destination.ToString() + "...");
 
-                        ICMPEchoRequest request = new ICMPEchoRequest(source, destination, 0x0001, 0x50);
-                        OutgoingBuffer.AddPacket(request);
-                        NetworkStack.Update();
+                        try
+                        {
+                            ICMPEchoRequest request = new ICMPEchoRequest(source, destination, 0x0001, 0x50); //this is working
+                            CustomConsole.WriteLineInfo("ICMP Request has been created.");
+                            OutgoingBuffer.AddPacket(request); //Aura doesn't work when this is called.
+                            CustomConsole.WriteLineInfo("Packet has been added to the OutgoingBuffer");
+                            NetworkStack.Update();
+                            CustomConsole.WriteLineInfo("NetworkStack updating...");
+                        }
+                        catch (Exception ex)
+                        {
+                            CustomConsole.WriteLineError(ex.ToString());
+                        }
 
                         PacketSent++;
 
