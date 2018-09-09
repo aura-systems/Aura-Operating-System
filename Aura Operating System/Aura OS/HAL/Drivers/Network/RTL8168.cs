@@ -164,9 +164,7 @@ namespace Aura_OS.HAL.Drivers.Network
         {
 
             ushort status = Ports.inw((ushort)(BaseAddress + 0x3E));
-
-            Console.WriteLine("Status: 0x" + System.Utils.Conversion.DecToHex(status));
-
+            
             if ((status & 0x0001) != 0)
             {
                 ReadRawData();
@@ -305,6 +303,7 @@ namespace Aura_OS.HAL.Drivers.Network
             if (mNextTXDesc == (32 - 1))
             {
                 mTxDescriptor.Write32(xOffset + 0, OWN | mTxDescriptor.Read32(xOffset + 0) & EOR | (uint)(aData.Length & 0x3FFF) | (1 << 29) | (1 << 28));
+                mNextTXDesc = 0;
             }
             else
             {
@@ -333,7 +332,7 @@ namespace Aura_OS.HAL.Drivers.Network
                     if (length > 4)
                     {
 
-                        Console.WriteLine("DATALEN = " + length);
+                        //Console.WriteLine("DATALEN = " + length);
 
                         byte[] recv_data = new byte[length - 4];
                         for (uint b = 0; b < length; b++)
