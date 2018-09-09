@@ -64,13 +64,13 @@ namespace Aura_OS.System.Shell
 
         public enum Mode1280x768
         {
-            Rows = 138,
+            Rows = 141,
             Cols = 48
         };
 		
-		 public enum Mode1280x800
+		public enum Mode1280x800
         {
-            Rows = 140,
+            Rows = 141,
             Cols = 48
         };
 
