@@ -104,8 +104,6 @@ namespace Aura_OS
 
                 NetworkInit.Init();
 
-                Console.ReadKey();
-
                 System.CustomConsole.WriteLineOK("Aura successfully started!");
 
                 setup.InitSetup();
