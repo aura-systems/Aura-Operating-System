@@ -71,7 +71,9 @@ namespace Aura_OS.Shell.cmdIntr.Network
 
                         try
                         {
-                            ICMPEchoRequest request = new ICMPEchoRequest(source, destination, 0x0001, 0x50); //this is working
+                            //replace address by source
+                            System.Network.IPV4.Address address = new System.Network.IPV4.Address(192, 168, 1, 70);
+                            ICMPEchoRequest request = new ICMPEchoRequest(address , destination, 0x0001, 0x50); //this is working
                             OutgoingBuffer.AddPacket(request); //Aura doesn't work when this is called.
                             NetworkStack.Update();
                         }

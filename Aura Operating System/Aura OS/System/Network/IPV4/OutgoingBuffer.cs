@@ -170,6 +170,24 @@ namespace Aura_OS.System.Network.IPV4
                         entry.Status = BufferEntry.EntryStatus.DONE;
 
                     }
+                    else if (entry.Status == BufferEntry.EntryStatus.INTERNET)
+                    {
+                        CustomConsole.WriteLineOK("Internet status called");
+
+                        //entry.nextHop = Config.FindRoute(entry.Packet.DestinationIP);
+                        entry.nextHop = new Address(192, 168, 1, 254);
+                        if (entry.nextHop == null)
+                        {
+                            CustomConsole.WriteLineError("NextHop null");
+                            entry.Status = BufferEntry.EntryStatus.DONE;
+                            continue;
+                        }
+                        CustomConsole.WriteLineInfo("NextHop " + entry.nextHop.ToString());
+
+                        entry.NIC.QueueBytes(entry.Packet.RawData);
+
+                        entry.Status = BufferEntry.EntryStatus.DONE;
+                    }
                     else if (entry.Status == BufferEntry.EntryStatus.JUST_SEND)
                     {
                         entry.NIC.QueueBytes(entry.Packet.RawData);
