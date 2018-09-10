@@ -214,6 +214,7 @@ namespace Aura_OS.System.Translation
                     Console.WriteLine("- setlang {lang} (pour changer la langue du système)");
                     //Console.WriteLine("- consolemode {mode} (pour changer le mode video de la console)");
                     Console.WriteLine("- debugger (pour configurer le debugger)");
+                    Console.WriteLine("- ipaddress (pour changer l'adresse IP du PC)");
                     break;
 
                 case "en_US":
@@ -225,6 +226,7 @@ namespace Aura_OS.System.Translation
                     Console.WriteLine("- setlang {lang} (to change the system language)");
                     //Console.WriteLine("- consolemode {mode} (to change the video mode of the console)");
                     Console.WriteLine("- debugger (to configure the debugger)");
+                    Console.WriteLine("- ipaddress (to change the IP address of the PC)");
                     break;
 
                 case "nl_NL":
@@ -236,6 +238,7 @@ namespace Aura_OS.System.Translation
                     Console.WriteLine("- setlang {lang} (om de systeemtaal aan te passen)");
                     //Console.WriteLine("- consolemode {mode} (om de videomodus van de console te wijzigen)");
                     Console.WriteLine("- debugger (om de debugger te configureren)");
+                    Console.WriteLine("- ipaddress (om het IP-adres van de PC te wijzigen)");
                     break;
                     
                 case "it_IT":
@@ -247,6 +250,7 @@ namespace Aura_OS.System.Translation
                     Console.WriteLine("- setlang {lang} (per cambiare la lingua di sistema)");
                     //Console.WriteLine("- consolemode {mode} (om de videomodus van de console te wijzigen)");
                     Console.WriteLine("- debugger {lang} (per configurare il debugger)");
+                    Console.WriteLine("- ipaddress (per modificare l'indirizzo IP del PC)");
                     break;
             }
         }

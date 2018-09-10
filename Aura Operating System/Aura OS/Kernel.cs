@@ -52,7 +52,7 @@ namespace Aura_OS
         public static System.Shell.Console AConsole;
         public static string Consolemode = "VGATextmode";
         public static Config LocalNetworkConfig;
-        public static Debugger debugger = new Debugger(new Address(192, 168, 1, 12), 4224);
+        public static Debugger debugger;
 
         #endregion
 

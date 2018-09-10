@@ -108,14 +108,17 @@ namespace Aura_OS.System.Network.IPV4
         public Address IPAddress
         {
             get { return this.address; }
+            set { this.address = value; }
         }
         public Address SubnetMask
         {
             get { return this.subnetMask; }
+            set { this.subnetMask = value; }
         }
         public Address DefaultGateway
         {
             get { return this.defaultGateway; }
+            set { this.defaultGateway = value; }
         }
     }
 }

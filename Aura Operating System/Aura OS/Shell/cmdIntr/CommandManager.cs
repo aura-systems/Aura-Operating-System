@@ -75,7 +75,13 @@ namespace Aura_OS.Shell.cmdIntr
         public static void _CommandManger(string cmd)
         {
 
-            Kernel.debugger.Send("Cmd manager: " + cmd);
+            if (Kernel.debugger != null)
+            {
+                if (Kernel.debugger.enabled)
+                {
+                    Kernel.debugger.Send("Cmd manager: " + cmd);
+                }
+            }
 
             #region Power
 

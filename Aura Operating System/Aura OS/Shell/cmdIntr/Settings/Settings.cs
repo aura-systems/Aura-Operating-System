@@ -74,6 +74,25 @@ namespace Aura_OS.Shell.cmdIntr.Settings
                     HAL.SaveScreen.SaveCurrentScreen();
                     Apps.System.DebuggerSettings.RegisterSetting();
                 }
+
+                else if (cmdargs[1].Equals("ipaddress"))
+                {
+                    L.Text.Display("changeipaddress");
+                    Console.Write("IP: ");
+                    string IP = Console.ReadLine();
+
+                    if (System.Utils.Misc.IsIpv4Address(IP))
+                    {
+                        System.Utils.Settings.LoadValues();
+                        System.Utils.Settings.EditValue("ipaddress", IP);
+                        System.Utils.Settings.PushValues();
+                        L.Text.Display("pleasereboot");
+                    }
+                    else
+                    {
+                        L.Text.Display("notcorrectaddress");
+                    }
+                }
             }
             else if (cmdargs.Length == 3 ) //One arg
             {

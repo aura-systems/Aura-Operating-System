@@ -154,7 +154,9 @@ namespace Aura_OS.System.Users
             {
                 Kernel.debugger.enabled = true;
             }
-    
+
+            NetworkInit.Enable();
+
             WelcomeMessage.Display();
             Text.Display("logged", username);
 

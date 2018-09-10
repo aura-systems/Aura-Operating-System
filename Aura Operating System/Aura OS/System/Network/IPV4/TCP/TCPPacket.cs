@@ -124,7 +124,7 @@ namespace Aura_OS.System.Network.IPV4.TCP
                     if (tcp_packet.sourcePort == 4224 && tcp_packet.destPort == 4224)
                     {
                         Console.WriteLine("Debugger closed by client computer!");
-                        Kernel.debugger.enabled = false;
+                        Kernel.debugger.Stop();
                     }
 
                     connection.dest = tcp_packet.sourceIP;

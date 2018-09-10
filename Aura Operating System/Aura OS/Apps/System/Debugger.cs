@@ -20,7 +20,7 @@ namespace Aura_OS.Apps.System
 
         public bool enabled = false;
 
-        int port;
+        public int port;
         public Address ip;
 
         public Debugger(Address IP, int Port)
@@ -33,12 +33,11 @@ namespace Aura_OS.Apps.System
         {
             xClient = new TCPClient(port);
             xClient.Connect(ip, port);
-            if (enabled)
-            {
-                Send("--- Aura Debugger v0.2 ---");
-                Send("Connected!");
-                debugger.Send("Debugger started!");
-            }
+            enabled = true;
+
+            Send("--- Aura Debugger v0.2 ---");
+            Send("Connected!");
+            debugger.Send("Debugger started!");
         }
 
         public void Send(string message)
@@ -85,43 +84,66 @@ namespace Aura_OS.Apps.System
                 result = DispSettingsDialog(false);
             }
 
-            Console.Clear();
-
             HAL.SaveScreen.PushLastScreen();
 
             if (result.Equals("on"))
             {
-                Console.WriteLine("Starting debugger at: " + Kernel.debugger.ip.ToString() + ":4224");
-                Kernel.debugger.enabled = true;
+                if (Kernel.debugger == null)
+                {
+                    Kernel.debugger = new Debugger(new Address(192, 168, 1, 12), 4224);
+                }
+                Console.WriteLine("Starting debugger at: " + Kernel.debugger.ip.ToString() + ":" + Kernel.debugger.port);
                 Kernel.debugger.Start();
                 Console.WriteLine("Debugger started!");
             }
             else if (result.Equals("off"))
             {
-                if (!Kernel.debugger.enabled)
+                if (Kernel.debugger != null)
                 {
-                    Console.WriteLine("Debugger already disabled!");
-                }
-                else
-                {
-                    Kernel.debugger.Stop();
-                    Console.WriteLine("Debugger disabled!");
+                    if (!Kernel.debugger.enabled)
+                    {
+                        Console.WriteLine("Debugger already disabled!");
+                    }
+                    else
+                    {
+                        Kernel.debugger.Stop();
+                        Console.WriteLine("Debugger disabled!");
+                    }
                 }
             }
             else if (result.Equals("changeip"))
             {
 
-                string ip = Aura_OS.System.Drawable.Menu.DispDialogOneArg("Change IP address (currently " + Kernel.debugger.ip.ToString() +")", "IP Address: ");
+                string ip = VOIDIP();
 
                 if (Aura_OS.System.Utils.Misc.IsIpv4Address(ip))
                 {
-                    Kernel.debugger.ip = Address.Parse(ip);
+                    if (Kernel.debugger != null)
+                    {
+                        if (Kernel.debugger.enabled)
+                        {
+                            Kernel.debugger.Stop();
+                        }
+                    }
+                    Kernel.debugger = new Debugger(Address.Parse(ip), 4224);
                 }
                 else
                 {
                     Aura_OS.System.Drawable.Menu.DispErrorDialog("It is not an IP address!");
                     RegisterSetting();
                 }
+            }
+        }
+
+        private static string VOIDIP()
+        {
+            if (Kernel.debugger != null)
+            {
+                return Aura_OS.System.Drawable.Menu.DispDialogOneArg("Change IP address (currently " + Kernel.debugger.ip.ToString() + ")", "IP Address: ");
+            }
+            else
+            {
+                return Aura_OS.System.Drawable.Menu.DispDialogOneArg("Change IP address", "IP Address: ");
             }
         }
 
@@ -245,7 +267,13 @@ namespace Aura_OS.Apps.System
         public static void WriteLine(string text)
         {
             Console.WriteLine(text);
-            Kernel.debugger.Send(text);
+            if (Kernel.debugger != null)
+            {
+                if (Kernel.debugger.enabled)
+                {
+                    Kernel.debugger.Send(text);
+                }
+            }
         }
 
         public static void WriteLine()
