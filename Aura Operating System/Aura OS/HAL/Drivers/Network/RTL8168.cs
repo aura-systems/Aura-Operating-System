@@ -292,8 +292,12 @@ namespace Aura_OS.HAL.Drivers.Network
                 return false; // Splitting packets not yet supported
 
             uint xOffset = (uint)(mNextTXDesc * 16);
-
-            Console.WriteLine("mNEXTTXDESC=" + mNextTXDesc);
+            
+            if ((mTxDescriptor.Read32(xOffset + 0) & (1 << 31)) != 0)
+            {
+                Console.WriteLine("The Tx buffer is busy");
+                return false;
+            }
 
             for (uint b = 0; b < aData.Length; b++)
             {
@@ -331,8 +335,6 @@ namespace Aura_OS.HAL.Drivers.Network
                     uint length = mRxDescriptor.Read32(xOffset + 0) & 0x3FFF;
                     if (length > 4)
                     {
-
-                        //Console.WriteLine("DATALEN = " + length);
 
                         byte[] recv_data = new byte[length - 4];
                         for (uint b = 0; b < length; b++)
