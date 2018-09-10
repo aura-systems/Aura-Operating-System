@@ -43,7 +43,7 @@ namespace Aura_OS.Shell.cmdIntr.Network
 
             if (System.Utils.Misc.IsIpv4Address(items))
             {
-                String IPdest = "";
+                string IPdest = "";
 
                 int PacketSent = 0;
                 int PacketReceived = 0;
@@ -115,7 +115,7 @@ namespace Aura_OS.Shell.cmdIntr.Network
                 }
                 catch
                 {
-                    Console.WriteLine("It is not a correct IP address!");
+                    L.Text.Display("notcorrectaddress");
                 }
                 finally
                 {

@@ -31,8 +31,8 @@ namespace Aura_OS.Apps.System
 
         public void Start()
         {
-            xClient = new TCPClient(4224);
-            xClient.Connect(new Address(192, 168, 1, 12), 4224);
+            xClient = new TCPClient(port);
+            xClient.Connect(ip, port);
             if (enabled)
             {
                 Send("--- Aura Debugger v0.2 ---");

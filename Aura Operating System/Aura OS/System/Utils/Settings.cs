@@ -16,7 +16,6 @@ namespace Aura_OS.System.Utils
         static List<string> configurationfile = new List<string>();
         static List<string> usersfile = new List<string>();
         static string[] file;
-        static string[] reset;
 
         /// <summary>
         /// Load values from settings.conf.
@@ -24,7 +23,7 @@ namespace Aura_OS.System.Utils
         public static void LoadValues()
         {
             //reset of config in memory if there is "something"
-            file = reset;
+            file = null;
             //load
             if (Kernel.SystemExists)
             {
