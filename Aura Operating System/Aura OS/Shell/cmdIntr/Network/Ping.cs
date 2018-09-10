@@ -72,11 +72,8 @@ namespace Aura_OS.Shell.cmdIntr.Network
                         try
                         {
                             ICMPEchoRequest request = new ICMPEchoRequest(source, destination, 0x0001, 0x50); //this is working
-                            CustomConsole.WriteLineInfo("ICMP Request has been created.");
                             OutgoingBuffer.AddPacket(request); //Aura doesn't work when this is called.
-                            CustomConsole.WriteLineInfo("Packet has been added to the OutgoingBuffer");
                             NetworkStack.Update();
-                            CustomConsole.WriteLineInfo("NetworkStack updating...");
                         }
                         catch (Exception ex)
                         {

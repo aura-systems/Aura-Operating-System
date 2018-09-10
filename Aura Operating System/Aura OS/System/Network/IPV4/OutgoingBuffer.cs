@@ -19,7 +19,7 @@ namespace Aura_OS.System.Network.IPV4
 
         private class BufferEntry
         {
-            public enum EntryStatus { ADDED, ARP_SENT, ROUTE_ARP_SENT, JUST_SEND, DONE, DHCP_REQUEST };
+            public enum EntryStatus { ADDED, ARP_SENT, ROUTE_ARP_SENT, JUST_SEND, DONE, DHCP_REQUEST, INTERNET };
 
             public NetworkDevice NIC;
             public IPPacket Packet;
@@ -37,7 +37,15 @@ namespace Aura_OS.System.Network.IPV4
                 }
                 else
                 {
-                    this.Status = EntryStatus.ADDED;
+                    if (!Config.IsLocalAddress(Packet.DestinationIP))
+                    {
+                        CustomConsole.WriteLineOK("Internet redirection code");
+                        this.Status = EntryStatus.INTERNET;
+                    }
+                    else
+                    {
+                        this.Status = EntryStatus.ADDED;
+                    }
                 }                
             }
         }
@@ -57,8 +65,12 @@ namespace Aura_OS.System.Network.IPV4
         internal static void AddPacket(IPPacket packet)
         {
             ensureQueueExists();
+            CustomConsole.WriteLineError("IP DEST: " + packet.DestinationIP.ToString());
+            CustomConsole.WriteLineInfo("Finding interface....");
             NetworkDevice nic = Config.FindInterface(packet.SourceIP);
             packet.SourceMAC = nic.MACAddress;
+            CustomConsole.WriteLineOK("Interface found!");
+            CustomConsole.WriteLineInfo("Packet destination @IP: " + packet.DestinationIP.ToString());
             queue.Add(new BufferEntry(nic, packet));
         }
 
