@@ -369,7 +369,7 @@ namespace Aura_OS.System
 
             Settings.PutValue("subnet", "255.255.255.0"); 
 
-            Settings.PutValue("gateway", "192.168.1.1");
+            Settings.PutValue("gateway", "192.168.1.254");
 
             Settings.PushValues();
 
