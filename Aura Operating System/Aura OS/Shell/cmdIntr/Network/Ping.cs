@@ -128,7 +128,10 @@ namespace Aura_OS.Shell.cmdIntr.Network
             }
             else
             {
-                Console.WriteLine("It is not an IP address!");
+                //Ping DNS
+                Console.WriteLine("DNS TEST");
+                System.Network.IPV4.UDP.DNS.DNSClient DNSRequest = new System.Network.IPV4.UDP.DNS.DNSClient(53);
+                DNSRequest.Ask(str);
             }
         }
 
