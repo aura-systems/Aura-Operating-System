@@ -18,7 +18,7 @@ namespace Aura_OS.System
             {
                 if (!IsSavedConf())
                 {
-                    Kernel.LocalNetworkConfig = new Network.IPV4.Config(new Network.IPV4.Address(192, 168, 1, 70), new Network.IPV4.Address(255, 255, 255, 0), new Network.IPV4.Address(192, 168, 1, 1));
+                    Kernel.LocalNetworkConfig = new Network.IPV4.Config(new Network.IPV4.Address(192, 168, 1, 70), new Network.IPV4.Address(255, 255, 255, 0), new Network.IPV4.Address(192, 168, 1, 254));
                     Network.NetworkStack.ConfigIP(RTL8168NIC, Kernel.LocalNetworkConfig);
                 }
                 else
@@ -31,7 +31,7 @@ namespace Aura_OS.System
             {
                 if (!IsSavedConf())
                 {
-                    Kernel.LocalNetworkConfig = new Network.IPV4.Config(new Network.IPV4.Address(192, 168, 1, 70), new Network.IPV4.Address(255, 255, 255, 0), new Network.IPV4.Address(192, 168, 1, 1));
+                    Kernel.LocalNetworkConfig = new Network.IPV4.Config(new Network.IPV4.Address(192, 168, 1, 70), new Network.IPV4.Address(255, 255, 255, 0), new Network.IPV4.Address(192, 168, 1, 254));
                     Network.NetworkStack.ConfigIP(AMDPCNetIINIC, Kernel.LocalNetworkConfig);
                 }
                 else
