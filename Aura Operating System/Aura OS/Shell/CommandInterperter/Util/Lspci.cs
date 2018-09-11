@@ -1,6 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+/*
+* PROJECT:          Aura Operating System Development
+* CONTENT:          Lspci
+* PROGRAMMER(S):    John Welsh <djlw78@gmail.com>
+*/
+
 using WMCommandFramework.COSMOS;
 namespace Aura_OS.Shell.CommandInterperter.Util
 {

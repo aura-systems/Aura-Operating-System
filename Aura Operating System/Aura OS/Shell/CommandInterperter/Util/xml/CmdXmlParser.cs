@@ -1,5 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿/*
+* PROJECT:          Aura Operating System Development
+* CONTENT:          Command XML Parser
+* PROGRAMMER(S):    John Welsh <djlw78@gmail.com>
+*/
+
+using System;
 using System.IO;
 using System.Text;
 using Aura_OS.System.Parser.XML;
