@@ -2,6 +2,7 @@
 * PROJECT:          Aura Operating System Development
 * CONTENT:          To send packets
 * PROGRAMMERS:      Valentin Charbonnier <valentinbreiz@gmail.com>
+*                   Alexy Da Cruz <dacruzalexy@gmail.com>
 *                   Port of Cosmos Code.
 */
 
