@@ -37,15 +37,16 @@ namespace Aura_OS.System.Network.IPV4
                 }
                 else
                 {
-                    if (!Config.IsLocalAddress(Packet.DestinationIP))
-                    {
-                        CustomConsole.WriteLineOK("Internet redirection code");
-                        this.Status = EntryStatus.INTERNET;
-                    }
-                    else
-                    {
-                        this.Status = EntryStatus.ADDED;
-                    }
+                    //if (!Config.IsLocalAddress(Packet.DestinationIP))
+                    //{
+                    //    CustomConsole.WriteLineOK("Internet redirection code");
+                    //    this.Status = EntryStatus.INTERNET;
+                    //}
+                    //else
+                    //{
+                    //    this.Status = EntryStatus.ADDED;
+                    //}
+                    this.Status = EntryStatus.ADDED;
                 }                
             }
         }
