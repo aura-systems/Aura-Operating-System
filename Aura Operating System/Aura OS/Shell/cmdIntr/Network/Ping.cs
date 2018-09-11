@@ -68,7 +68,7 @@ namespace Aura_OS.Shell.cmdIntr.Network
                     for (int i = 0; i < 4; i++)
                     {
                         second = 0;
-                        CustomConsole.WriteLineInfo("Sending ping to " + destination.ToString() + "...");
+                        //CustomConsole.WriteLineInfo("Sending ping to " + destination.ToString() + "...");
 
                         try
                         {

@@ -19,7 +19,7 @@ namespace Aura_OS.System.Network.IPV4
 
         private class BufferEntry
         {
-            public enum EntryStatus { ADDED, ARP_SENT, ROUTE_ARP_SENT, JUST_SEND, DONE, DHCP_REQUEST, INTERNET };
+            public enum EntryStatus { ADDED, ARP_SENT, ROUTE_ARP_SENT, JUST_SEND, DONE, DHCP_REQUEST };
 
             public NetworkDevice NIC;
             public IPPacket Packet;
@@ -37,15 +37,6 @@ namespace Aura_OS.System.Network.IPV4
                 }
                 else
                 {
-                    //if (!Config.IsLocalAddress(Packet.DestinationIP))
-                    //{
-                    //    CustomConsole.WriteLineOK("Internet redirection code");
-                    //    this.Status = EntryStatus.INTERNET;
-                    //}
-                    //else
-                    //{
-                    //    this.Status = EntryStatus.ADDED;
-                    //}
                     this.Status = EntryStatus.ADDED;
                 }                
             }
@@ -166,24 +157,6 @@ namespace Aura_OS.System.Network.IPV4
 
                         entry.Status = BufferEntry.EntryStatus.DONE;
 
-                    }
-                    else if (entry.Status == BufferEntry.EntryStatus.INTERNET)
-                    {
-                        CustomConsole.WriteLineOK("Internet status called");
-
-                        entry.nextHop = Config.FindRoute(entry.Packet.DestinationIP);
-                        
-                        if (entry.nextHop == null)
-                        {
-                            CustomConsole.WriteLineError("NextHop null");
-                            entry.Status = BufferEntry.EntryStatus.DONE;
-                            continue;
-                        }
-                        CustomConsole.WriteLineInfo("NextHop " + entry.nextHop.ToString());
-
-                        entry.NIC.QueueBytes(entry.Packet.RawData);
-
-                        entry.Status = BufferEntry.EntryStatus.DONE;
                     }
                     else if (entry.Status == BufferEntry.EntryStatus.JUST_SEND)
                     {
