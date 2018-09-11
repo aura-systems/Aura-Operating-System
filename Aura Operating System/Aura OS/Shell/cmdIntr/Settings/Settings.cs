@@ -81,10 +81,18 @@ namespace Aura_OS.Shell.cmdIntr.Settings
                     Console.Write("IP: ");
                     string IP = Console.ReadLine();
 
-                    if (System.Utils.Misc.IsIpv4Address(IP))
+                    Console.Write("Subnet: ");
+                    string Subnet = Console.ReadLine();
+
+                    Console.Write("Gateway: ");
+                    string Gateway = Console.ReadLine();
+
+                    if (System.Utils.Misc.IsIpv4Address(IP) && System.Utils.Misc.IsIpv4Address(Subnet) && System.Utils.Misc.IsIpv4Address(Gateway))
                     {
                         System.Utils.Settings.LoadValues();
                         System.Utils.Settings.EditValue("ipaddress", IP);
+                        System.Utils.Settings.EditValue("subnet", Subnet);
+                        System.Utils.Settings.EditValue("gateway", Gateway);
                         System.Utils.Settings.PushValues();
                         L.Text.Display("pleasereboot");
                     }
