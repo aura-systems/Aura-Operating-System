@@ -101,6 +101,8 @@ namespace Aura_OS.System.Network.IPV4
                     BufferEntry entry = queue[e];
                     if (entry.Status == BufferEntry.EntryStatus.ADDED)
                     {
+                        
+                        //Need to figure how this is working
                         if (Config.IsLocalAddress(entry.Packet.DestinationIP) == false)
                         {
                             entry.nextHop = Config.FindRoute(entry.Packet.DestinationIP);

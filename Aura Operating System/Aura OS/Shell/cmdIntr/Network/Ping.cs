@@ -9,6 +9,7 @@ using Sys = Cosmos.System;
 using L = Aura_OS.System.Translation;
 using Aura_OS.System.Network.IPV4;
 using Aura_OS.System.Network;
+using Aura_OS.System;
 
 namespace Aura_OS.Shell.cmdIntr.Network
 {
@@ -56,6 +57,7 @@ namespace Aura_OS.Shell.cmdIntr.Network
                     Address destination = new Address((byte)(Int32.Parse(items[0])), (byte)(Int32.Parse(items[1])), (byte)(Int32.Parse(items[2])), (byte)(Int32.Parse(items[3])));
                     Address source = Config.FindNetwork(destination);
 
+
                     IPdest = destination.ToString();
 
                     int _deltaT = 0;
@@ -66,11 +68,20 @@ namespace Aura_OS.Shell.cmdIntr.Network
                     for (int i = 0; i < 4; i++)
                     {
                         second = 0;
-                        //Console.WriteLine("Sending ping to " + destination.ToString() + "...");
+                        //CustomConsole.WriteLineInfo("Sending ping to " + destination.ToString() + "...");
 
-                        ICMPEchoRequest request = new ICMPEchoRequest(source, destination, 0x0001, 0x50);
-                        OutgoingBuffer.AddPacket(request);
-                        NetworkStack.Update();
+                        try
+                        {
+                            //replace address by source
+                            //System.Network.IPV4.Address address = new System.Network.IPV4.Address(192, 168, 1, 70);
+                            ICMPEchoRequest request = new ICMPEchoRequest(source , destination, 0x0001, 0x50); //this is working
+                            OutgoingBuffer.AddPacket(request); //Aura doesn't work when this is called.
+                            NetworkStack.Update();
+                        }
+                        catch (Exception ex)
+                        {
+                            CustomConsole.WriteLineError(ex.ToString());
+                        }
 
                         PacketSent++;
 
