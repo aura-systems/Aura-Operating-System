@@ -73,10 +73,11 @@ namespace Aura_OS.System.Network.IPV4
         {
             for (int c = 0; c < ipConfigs.Count; c++)
             {
-                if (ipConfigs[c].DefaultGateway.CompareTo(Address.Zero) != 0)
-                {
-                    return ipConfigs[c].DefaultGateway;
-                }
+                //if (ipConfigs[c].DefaultGateway.CompareTo(Address.Zero) != 0)
+                //{
+                //    return ipConfigs[c].DefaultGateway;
+                //}
+                return ipConfigs[c].DefaultGateway;
             }
 
             return null;

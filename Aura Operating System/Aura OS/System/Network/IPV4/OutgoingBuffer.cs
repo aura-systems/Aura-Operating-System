@@ -174,8 +174,8 @@ namespace Aura_OS.System.Network.IPV4
                     {
                         CustomConsole.WriteLineOK("Internet status called");
 
-                        //entry.nextHop = Config.FindRoute(entry.Packet.DestinationIP);
-                        entry.nextHop = new Address(192, 168, 1, 254);
+                        entry.nextHop = Config.FindRoute(entry.Packet.DestinationIP);
+                        
                         if (entry.nextHop == null)
                         {
                             CustomConsole.WriteLineError("NextHop null");
