@@ -2,6 +2,11 @@
 
 Open source project used in Aura Operating System:
 
+### WMCommandFramework
+- Description: Used for the commands manager.
+- Location: [https://github.com/aura-systems/Aura-Operating-System/tree/f7e780548937d24814dd55d78fc2cd751875bfe8/Aura%20Operating%20System/Aura%20OS/Shell/WMCommandFramework.COSMOS]
+- License file: [LICENSE.MD](https://github.com/aura-systems/Aura-Operating-System/blob/master/LICENCES/WMCommandFramework/LICENSE.md)
+
 ### NanoXML
 - Description: Used to parse XML files.
 - Location: [Aura Operating System/Aura OS/System/Parser/XML/NanoXMLParser.cs]
