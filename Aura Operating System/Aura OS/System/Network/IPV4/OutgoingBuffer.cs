@@ -65,12 +65,8 @@ namespace Aura_OS.System.Network.IPV4
         internal static void AddPacket(IPPacket packet)
         {
             ensureQueueExists();
-            CustomConsole.WriteLineError("IP DEST: " + packet.DestinationIP.ToString());
-            CustomConsole.WriteLineInfo("Finding interface....");
             NetworkDevice nic = Config.FindInterface(packet.SourceIP);
             packet.SourceMAC = nic.MACAddress;
-            CustomConsole.WriteLineOK("Interface found!");
-            CustomConsole.WriteLineInfo("Packet destination @IP: " + packet.DestinationIP.ToString());
             queue.Add(new BufferEntry(nic, packet));
         }
 
