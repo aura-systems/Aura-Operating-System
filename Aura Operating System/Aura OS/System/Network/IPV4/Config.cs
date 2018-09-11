@@ -42,6 +42,11 @@ namespace Aura_OS.System.Network.IPV4
                 {
                     default_gw = ipConfigs[c].IPAddress;
                 }
+
+                if (!IsLocalAddress(destIP))
+                {
+                    return ipConfigs[c].IPAddress;
+                }
             }
 
             return default_gw;
@@ -63,9 +68,6 @@ namespace Aura_OS.System.Network.IPV4
 
         internal static HAL.Drivers.Network.NetworkDevice FindInterface(Address sourceIP)
         {
-            CustomConsole.WriteLineInfo("source IP: " + sourceIP.ToString());
-            CustomConsole.WriteLineInfo("source IP hash: " + sourceIP.Hash.ToString());
-            //return NetworkStack.AddressMap[sourceIP.Hash];
             return NetworkStack.AddressMap[sourceIP.Hash];
         }
 
