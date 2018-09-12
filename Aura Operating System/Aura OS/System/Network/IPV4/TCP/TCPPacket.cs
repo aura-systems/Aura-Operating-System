@@ -25,6 +25,12 @@ namespace Aura_OS.System.Network.IPV4.TCP
 
             TCPPacket tcp_packet = new TCPPacket(packetData);
 
+            if (Firewall.TCP.TCPIncomingFilter(tcp_packet))
+            {
+                Apps.System.Debugger.debugger.Send("=== [FIREWALL] TCP INCOMING PACKET BLOCKED " + tcp_packet.SourceIP.ToString() + ":" + tcp_packet.SourcePort.ToString() + " ===");
+                return;
+            }
+
             foreach (HAL.Drivers.Network.NetworkDevice device in NetworkConfig.Keys)
             {
                 if (device.Name == "PCNETII")
