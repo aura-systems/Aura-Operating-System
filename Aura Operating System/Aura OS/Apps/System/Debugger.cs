@@ -90,7 +90,7 @@ namespace Aura_OS.Apps.System
             {
                 if (Kernel.debugger == null)
                 {
-                    Kernel.debugger = new Debugger(new Address(192, 168, 1, 12), 4224);
+                    Kernel.debugger = new Debugger(new Address(192, 168, 1, 28), 4224);
                 }
                 Console.WriteLine("Starting debugger at: " + Kernel.debugger.ip.ToString() + ":" + Kernel.debugger.port);
                 Kernel.debugger.Start();

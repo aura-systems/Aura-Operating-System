@@ -25,15 +25,32 @@ namespace Aura_OS.System.Network.IPV4.TCP
 
             TCPPacket tcp_packet = new TCPPacket(packetData);
 
-            if (packetData.Length == 64 && tcp_packet.ipLength < 50)
+            foreach (HAL.Drivers.Network.NetworkDevice device in NetworkConfig.Keys)
             {
-                byte[] rdata = tcp_packet.mRawData;
-                int lenght = 64 - (64 - (tcp_packet.ipLength + 14));
-                tcp_packet.tcpLen = (ushort)(lenght - 34);
-                tcp_packet.mRawData = new byte[lenght];
-                for (int b = 0; b <= lenght; b++)
+                if (device.Name == "PCNETII")
                 {
-                    tcp_packet.mRawData[b] = rdata[b];
+                    if (packetData.Length == 64 && tcp_packet.ipLength < 50)
+                    {
+                        byte[] rdata = tcp_packet.mRawData;
+                        int lenght = 64 - (64 - (tcp_packet.ipLength + 14));
+                        tcp_packet.tcpLen = (ushort)(lenght - 34);
+                        tcp_packet.mRawData = new byte[lenght];
+                        for (int b = 0; b <= lenght; b++)
+                        {
+                            tcp_packet.mRawData[b] = rdata[b];
+                        }
+                    }
+                }
+                if (device.Name == "RTL8168")
+                {
+                    byte[] rdata = tcp_packet.mRawData;
+                    int lenght = 64 - (64 - (tcp_packet.ipLength + 14));
+                    tcp_packet.tcpLen = (ushort)(lenght - 34);
+                    tcp_packet.mRawData = new byte[lenght];
+                    for (int b = 0; b <= lenght; b++)
+                    {
+                        tcp_packet.mRawData[b] = rdata[b];
+                    }
                 }
             }
 
