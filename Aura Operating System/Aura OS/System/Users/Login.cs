@@ -109,44 +109,44 @@ namespace Aura_OS.System.Users
             Console.Clear();
 
             Utils.Settings.LoadValues();
-            string consolemode = Utils.Settings.GetValue("consolemode");
+            //string consolemode = Utils.Settings.GetValue("consolemode");
 
-            if (consolemode == "null")
-            {
-                switch (Video.GetVideo())
-                {
-                    case "VGATextmode":
-                        Kernel.AConsole = new System.Shell.VGA.VGAConsole(null);
-                        break;
-                    case "SVGA":
-                        // TO DO ?
-                        break;
-                    case "VESA":
-                        Kernel.AConsole = new System.Shell.VESAVBE.VESAVBEConsole();
-                        break;
-                    default:
-                        Kernel.AConsole = new System.Shell.VGA.VGAConsole(null);
-                        break;
-                }
-            }
-            else
-            {
-                switch (consolemode)
-                {
-                    case "VGATextmode":
-                        Kernel.AConsole = new System.Shell.VGA.VGAConsole(null);
-                        break;
-                    case "SVGA":
-                        // TO DO ?
-                        break;
-                    case "VESA":
-                        Kernel.AConsole = new System.Shell.VESAVBE.VESAVBEConsole();
-                        break;
-                    default:
-                        Kernel.AConsole = new System.Shell.VGA.VGAConsole(null);
-                        break;
-                }
-            }
+            //if (consolemode == "null")
+            //{
+            //    switch (Video.GetVideo())
+            //    {
+            //        case "VGATextmode":
+            //            //Kernel.AConsole = new System.Shell.VGA.VGAConsole(null);
+            //            break;
+            //        case "SVGA":
+            //            // TO DO ?
+            //            break;
+            //        case "VESA":
+            //            //Kernel.AConsole = new System.Shell.VESAVBE.VESAVBEConsole();
+            //            break;
+            //        default:
+            //            //Kernel.AConsole = new System.Shell.VGA.VGAConsole(null);
+            //            break;
+            //    }
+            //}
+            //else
+            //{
+            //    switch (consolemode)
+            //    {
+            //        case "VGATextmode":
+            //            //Kernel.AConsole = new System.Shell.VGA.VGAConsole(null);
+            //            break;
+            //        case "SVGA":
+            //            // TO DO ?
+            //            break;
+            //        case "VESA":
+            //            //Kernel.AConsole = new System.Shell.VESAVBE.VESAVBEConsole();
+            //            break;
+            //        default:
+            //            //Kernel.AConsole = new System.Shell.VGA.VGAConsole(null);
+            //            break;
+            //    }
+            //}
 
             string debugger = Utils.Settings.GetValue("debugger");
 

@@ -234,21 +234,21 @@ namespace Aura_OS.System
             Kernel.userLogged = "root";
             Kernel.Logged = true;
             Console.Clear();
-            switch (Video.GetVideo())
-            {
-                case "VGATextmode":
-                    Kernel.AConsole = new System.Shell.VGA.VGAConsole(null);
-                    break;
-                case "SVGA":
-                    // TO DO ?
-                    break;
-                case "VESA":
-                    Kernel.AConsole = new System.Shell.VESAVBE.VESAVBEConsole();
-                    break;
-                default:
-                    Kernel.AConsole = new System.Shell.VGA.VGAConsole(null);
-                    break;
-            }
+            //switch (Video.GetVideo())
+            //{
+            //    case "VGATextmode":
+            //        //Kernel.AConsole = new System.Shell.VGA.VGAConsole(null);
+            //        break;
+            //    case "SVGA":
+            //        // TO DO ?
+            //        break;
+            //    case "VESA":
+            //        //Kernel.AConsole = new System.Shell.VESAVBE.VESAVBEConsole();
+            //        break;
+            //    default:
+            //        //Kernel.AConsole = new System.Shell.VGA.VGAConsole(null);
+            //        break;
+            //}
             NetworkInit.Enable();
             WelcomeMessage.Display();
             Text.Display("logged", "root");
@@ -269,21 +269,21 @@ namespace Aura_OS.System
             Kernel.running = true;
 
             Console.Clear();
-            switch (Video.GetVideo())
-            {
-                case "VGATextmode":
-                    Kernel.AConsole = new System.Shell.VGA.VGAConsole(null);
-                    break;
-                case "SVGA":
-                    // TO DO ?
-                    break;
-                case "VESA":
-                    Kernel.AConsole = new System.Shell.VESAVBE.VESAVBEConsole();
-                    break;
-                default:
-                    Kernel.AConsole = new System.Shell.VGA.VGAConsole(null);
-                    break;
-            }
+            //switch (Video.GetVideo())
+            //{
+            //    case "VGATextmode":
+            //        //Kernel.AConsole = new System.Shell.VGA.VGAConsole(null);
+            //        break;
+            //    case "SVGA":
+            //        // TO DO ?
+            //        break;
+            //    case "VESA":
+            //        //Kernel.AConsole = new System.Shell.VESAVBE.VESAVBEConsole();
+            //        break;
+            //    default:
+            //        //Kernel.AConsole = new System.Shell.VGA.VGAConsole(null);
+            //        break;
+            //}
             NetworkInit.Enable();
             WelcomeMessage.Display();
             Text.Display("logged", username);
