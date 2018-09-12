@@ -20,7 +20,9 @@ namespace Aura_OS.HAL.Drivers
         uint mScrollSize;
         uint mRow2Addr;
 
-        public ManagedVBE(int xres, int yres, uint pointer)
+        bool IsLinearFrameBuffer;
+
+        public ManagedVBE(int xres, int yres, uint pointer, bool lfb)
         {
             width = xres;
             height = yres;
@@ -29,7 +31,17 @@ namespace Aura_OS.HAL.Drivers
             mScrollSize = (uint)(len * 4);
             mRow2Addr = (uint)(width * 4 * 16);
 
-            LinearFrameBuffer = new MemoryBlock(pointer, (uint)(width * height * 4));
+            if (lfb)
+            {
+                LinearFrameBuffer = new MemoryBlock(pointer, (uint)(width * height * 4));
+                IsLinearFrameBuffer = true;
+            }
+            else
+            {
+                LinearFrameBuffer = new MemoryBlock(pointer, (uint)((width * height * 4) + (8 * height * 4)));
+                IsLinearFrameBuffer = false;
+            }
+
         }
 
         public void SetVRAM(uint index, byte value)
@@ -90,7 +102,15 @@ namespace Aura_OS.HAL.Drivers
         {
             int xBytePerPixel = 32 / 8;
             int stride = 32 / 8;
-            int pitch = width * xBytePerPixel;
+            int pitch;
+            if (IsLinearFrameBuffer)
+            {
+                pitch = width * xBytePerPixel;
+            }
+            else
+            {
+                pitch = (width + 8) * xBytePerPixel;
+            }
             return (x * stride) + (y * pitch);
         }
 

@@ -44,6 +44,8 @@ namespace Aura_OS.System.Shell.VESAVBE
             return stringg;
         }
 
+        public static ushort lfb;
+
         public Graphics()
         {
             Pallete[0] = 0x000000; // Black
@@ -68,6 +70,8 @@ namespace Aura_OS.System.Shell.VESAVBE
 
             Core.VBE.ModeInfo* modeinfo = (Core.VBE.ModeInfo*)header->vbeModeInfo;
             Core.VBE.ControllerInfo* controllerinfo = (Core.VBE.ControllerInfo*)header->vbeControlInfo;
+            
+            lfb = (ushort)(modeinfo->attributes & (1 << 7)); //0 Linear Framebuffer not supported
 
             ControllerInfo.vbeSignature = controllerinfo->vbeSignature;
             ControllerInfo.vbeVersion = controllerinfo->vbeVersion;
@@ -198,7 +202,15 @@ namespace Aura_OS.System.Shell.VESAVBE
                 VESAMode = "Mode800x600";
             }
 
-            canvas = new ManagedVBE(ModeInfo.width, ModeInfo.height, ModeInfo.framebuffer);
+            if (lfb == 0)
+            {
+                canvas = new ManagedVBE(ModeInfo.width, ModeInfo.height, ModeInfo.framebuffer, false);
+            }
+            else
+            {
+                canvas = new ManagedVBE(ModeInfo.width, ModeInfo.height, ModeInfo.framebuffer, true);
+            }
+
         }
 
         private byte[] Read_font()
