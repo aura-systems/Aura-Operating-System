@@ -28,18 +28,21 @@ namespace Aura_OS.HAL.Drivers
             height = yres;
             len = width * height;
 
-            mScrollSize = (uint)(len * 4);
-            mRow2Addr = (uint)(width * 4 * 16);
+            IsLinearFrameBuffer = lfb;
 
-            if (lfb)
+            if (IsLinearFrameBuffer)
             {
-                LinearFrameBuffer = new MemoryBlock(pointer, (uint)(width * height * 4));
+                mScrollSize = (uint)(len * 4);
+                mRow2Addr = (uint)(width * 4 * 16);
                 IsLinearFrameBuffer = true;
+                LinearFrameBuffer = new MemoryBlock(pointer, (uint)(width * height * 4));
             }
             else
             {
-                LinearFrameBuffer = new MemoryBlock(pointer, (uint)((width * height * 4) + (8 * height * 4)));
+                mScrollSize = (uint)(len * 4 + (10 * 4));
+                mRow2Addr = (uint)((width + 10) * 4 * 16);
                 IsLinearFrameBuffer = false;
+                LinearFrameBuffer = new MemoryBlock(pointer, (uint)((width * height * 4) + (10 * height * 4)));
             }
 
         }
@@ -109,7 +112,7 @@ namespace Aura_OS.HAL.Drivers
             }
             else
             {
-                pitch = (width + 8) * xBytePerPixel;
+                pitch = (width + 10) * xBytePerPixel;
             }
             return (x * stride) + (y * pitch);
         }

@@ -16,6 +16,9 @@ namespace Aura_OS.System
         /// </summary>
         public static void Print()
         {
+
+            Console.Clear();
+
             Console.ForegroundColor = ConsoleColor.White;
             Console.WriteLine($@"
   
