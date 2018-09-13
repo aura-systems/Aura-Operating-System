@@ -57,7 +57,7 @@ namespace Aura_OS.Shell.cmdIntr.Tools
                     DebugConsole.WriteLine("BPP: " + System.Shell.VESAVBE.Graphics.ModeInfo.bpp);
                     DebugConsole.WriteLine("Height: " + System.Shell.VESAVBE.Graphics.ModeInfo.height);
                     DebugConsole.WriteLine("Width: " + System.Shell.VESAVBE.Graphics.ModeInfo.width);
-                    DebugConsole.WriteLine("Linear Frame Buffer: " + System.Shell.VESAVBE.Graphics.lfb);
+                    DebugConsole.WriteLine("Pitch: " + System.Shell.VESAVBE.Graphics.ModeInfo.pitch);
                     DebugConsole.WriteLine("VBE Pointer: 0x" + Conversion.DecToHex((int)System.Shell.VESAVBE.Graphics.ModeInfo.framebuffer));
                     DebugConsole.WriteLine("VBE Mode: " + System.Shell.VESAVBE.Graphics.VESAMode);
 

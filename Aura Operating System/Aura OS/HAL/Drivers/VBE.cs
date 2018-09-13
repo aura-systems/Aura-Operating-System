@@ -22,6 +22,8 @@ namespace Aura_OS.HAL.Drivers
 
         bool IsLinearFrameBuffer;
 
+        public static uint OffScreenSize;
+
         public ManagedVBE(int xres, int yres, uint pointer, bool lfb)
         {
             width = xres;
@@ -34,15 +36,14 @@ namespace Aura_OS.HAL.Drivers
             {
                 mScrollSize = (uint)(len * 4);
                 mRow2Addr = (uint)(width * 4 * 16);
-                IsLinearFrameBuffer = true;
                 LinearFrameBuffer = new MemoryBlock(pointer, (uint)(width * height * 4));
             }
             else
             {
-                mScrollSize = (uint)(len * 4 + (10 * 4));
-                mRow2Addr = (uint)((width + 10) * 4 * 16);
-                IsLinearFrameBuffer = false;
-                LinearFrameBuffer = new MemoryBlock(pointer, (uint)((width * height * 4) + (10 * height * 4)));
+                OffScreenSize = (uint)((System.Shell.VESAVBE.Graphics.ModeInfo.pitch / 4) - System.Shell.VESAVBE.Graphics.ModeInfo.width);
+                mScrollSize = (uint)(len * 4 + (OffScreenSize * 4));
+                mRow2Addr = (uint)((width + OffScreenSize) * 4 * 16);
+                LinearFrameBuffer = new MemoryBlock(pointer, (uint)((width * height * 4) + (OffScreenSize * height * 4)));
             }
 
         }
@@ -89,32 +90,32 @@ namespace Aura_OS.HAL.Drivers
                 if (c != 0x00)
                 {
                     uint offset;
-                    offset = (uint)GetPointOffset(x, y);
+                    offset = GetPointOffset(x, y);
                     SetVRAM(offset, c);
                 }
             }
             else
             {
                 uint offset;
-                offset = (uint)GetPointOffset(x, y);
+                offset = GetPointOffset(x, y);
                 SetVRAM(offset, c);
             }            
         }
 
-        private int GetPointOffset(int x, int y)
+        private uint GetPointOffset(int x, int y)
         {
-            int xBytePerPixel = 32 / 8;
-            int stride = 32 / 8;
-            int pitch;
+            uint xBytePerPixel = 32 / 8;
+            uint stride = 32 / 8;
+            uint pitch;
             if (IsLinearFrameBuffer)
             {
-                pitch = width * xBytePerPixel;
+                pitch = (uint)(width * xBytePerPixel);
             }
             else
             {
-                pitch = (width + 10) * xBytePerPixel;
+                pitch = (uint)((width + OffScreenSize) * xBytePerPixel);
             }
-            return (x * stride) + (y * pitch);
+            return (uint)((x * stride) + (y * pitch));
         }
 
         public void ScrollUp()

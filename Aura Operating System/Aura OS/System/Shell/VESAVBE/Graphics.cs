@@ -70,8 +70,6 @@ namespace Aura_OS.System.Shell.VESAVBE
 
             Core.VBE.ModeInfo* modeinfo = (Core.VBE.ModeInfo*)header->vbeModeInfo;
             Core.VBE.ControllerInfo* controllerinfo = (Core.VBE.ControllerInfo*)header->vbeControlInfo;
-            
-            lfb = (ushort)(modeinfo->attributes & (1 << 7)); //0 Linear Framebuffer not supported
 
             ControllerInfo.vbeSignature = controllerinfo->vbeSignature;
             ControllerInfo.vbeVersion = controllerinfo->vbeVersion;
@@ -136,6 +134,7 @@ namespace Aura_OS.System.Shell.VESAVBE
             ModeInfo.width = modeinfo->width;
             ModeInfo.bpp = modeinfo->bpp;
             ModeInfo.framebuffer = modeinfo->framebuffer;
+            ModeInfo.pitch = modeinfo->pitch;
 
             if (ModeInfo.width == (1280) && ModeInfo.height == (768))
             {
@@ -202,13 +201,13 @@ namespace Aura_OS.System.Shell.VESAVBE
                 VESAMode = "Mode800x600";
             }
 
-            if (lfb == 0)
+            if ((ModeInfo.pitch / 4) == ModeInfo.width)
             {
-                canvas = new ManagedVBE(ModeInfo.width, ModeInfo.height, ModeInfo.framebuffer, false);
+                canvas = new ManagedVBE(ModeInfo.width, ModeInfo.height, ModeInfo.framebuffer, true);
             }
             else
             {
-                canvas = new ManagedVBE(ModeInfo.width, ModeInfo.height, ModeInfo.framebuffer, true);
+                canvas = new ManagedVBE(ModeInfo.width, ModeInfo.height, ModeInfo.framebuffer, false);
             }
 
         }
