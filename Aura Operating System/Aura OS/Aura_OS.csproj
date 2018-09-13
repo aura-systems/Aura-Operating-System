@@ -27,6 +27,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <StackCorruptionDetectionEnabled>False</StackCorruptionDetectionEnabled>
+    <IgnoreDebugStubAttribute>True</IgnoreDebugStubAttribute>
   </PropertyGroup>
   
   <ItemGroup>
