@@ -172,7 +172,6 @@ namespace Aura_OS.HAL.Drivers.Network
             if ((status & 0x0002) != 0) Console.WriteLine("Receive error");
             if (((status & 0x0004) != 0) && ((status & 0x0080) != 0))
             {
-                Console.WriteLine("Transmit succesfull - descriptor resetted");
             }
             else
             {
@@ -186,10 +185,9 @@ namespace Aura_OS.HAL.Drivers.Network
             }
             if ((status & 0x0020) != 0)
             {
-                Console.WriteLine("0x6C : 0x" + System.Utils.Conversion.DecToHex(Ports.inb((ushort)(BaseAddress + 0x6C))));
                 if ((Ports.inb((ushort)(BaseAddress + 0x6C)) & 0x02) != 0)
                 {
-                    Console.WriteLine("Link is up with ");
+                    Console.WriteLine("\nLink is up with ");
                     if ((Ports.inb((ushort)(BaseAddress + 0x6C)) & 0x04) != 0) Console.WriteLine("10 Mbps and ");
                     if ((Ports.inb((ushort)(BaseAddress + 0x6C)) & 0x08) != 0) Console.WriteLine("100 Mbps and ");
                     if ((Ports.inb((ushort)(BaseAddress + 0x6C)) & 0x10) != 0) Console.WriteLine("1000 Mbps and ");
@@ -198,7 +196,7 @@ namespace Aura_OS.HAL.Drivers.Network
                 }
                 else
                 {
-                    Console.WriteLine("Link is down!");
+                    Console.WriteLine("\nLink is down!");
                 }
             }
             if ((status & 0x0040) != 0)

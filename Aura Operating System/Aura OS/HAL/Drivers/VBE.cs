@@ -20,8 +20,6 @@ namespace Aura_OS.HAL.Drivers
         uint mScrollSize;
         uint mRow2Addr;
 
-        bool IsLinearFrameBuffer;
-
         public static uint OffScreenSize;
 
         public ManagedVBE(int xres, int yres, uint pointer, bool lfb)
@@ -30,12 +28,14 @@ namespace Aura_OS.HAL.Drivers
             height = yres;
             len = width * height;
 
-            IsLinearFrameBuffer = lfb;
+            xBytePerPixel = 32 / 8;
+            stride = 32 / 8;
 
-            if (IsLinearFrameBuffer)
+            if (lfb)
             {
                 mScrollSize = (uint)(len * 4);
                 mRow2Addr = (uint)(width * 4 * 16);
+                pitch = (uint)(width * xBytePerPixel);
                 LinearFrameBuffer = new MemoryBlock(pointer, (uint)(width * height * 4));
             }
             else
@@ -43,6 +43,7 @@ namespace Aura_OS.HAL.Drivers
                 OffScreenSize = (uint)((System.Shell.VESAVBE.Graphics.ModeInfo.pitch / 4) - System.Shell.VESAVBE.Graphics.ModeInfo.width);
                 mScrollSize = (uint)(len * 4 + (OffScreenSize * 4));
                 mRow2Addr = (uint)((width + OffScreenSize) * 4 * 16);
+                pitch = (uint)((width + OffScreenSize) * xBytePerPixel);
                 LinearFrameBuffer = new MemoryBlock(pointer, (uint)((width * height * 4) + (OffScreenSize * height * 4)));
             }
 
@@ -89,32 +90,21 @@ namespace Aura_OS.HAL.Drivers
             {
                 if (c != 0x00)
                 {
-                    uint offset;
-                    offset = GetPointOffset(x, y);
-                    SetVRAM(offset, c);
+                    SetVRAM(GetPointOffset(x, y), c);
                 }
             }
             else
             {
-                uint offset;
-                offset = GetPointOffset(x, y);
-                SetVRAM(offset, c);
+                SetVRAM(GetPointOffset(x, y), c);
             }            
         }
 
+        uint xBytePerPixel;
+        uint stride;
+        uint pitch;
+
         private uint GetPointOffset(int x, int y)
         {
-            uint xBytePerPixel = 32 / 8;
-            uint stride = 32 / 8;
-            uint pitch;
-            if (IsLinearFrameBuffer)
-            {
-                pitch = (uint)(width * xBytePerPixel);
-            }
-            else
-            {
-                pitch = (uint)((width + OffScreenSize) * xBytePerPixel);
-            }
             return (uint)((x * stride) + (y * pitch));
         }
 
