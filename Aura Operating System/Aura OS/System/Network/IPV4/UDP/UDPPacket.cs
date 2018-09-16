@@ -2,6 +2,7 @@
 * PROJECT:          Aura Operating System Development
 * CONTENT:          UDP Packet
 * PROGRAMMERS:      Valentin Charbonnier <valentinbreiz@gmail.com>
+*                   Alexy Da Cruz <dacruzalexy@gmail.com>
 *                   Port of Cosmos Code.
 */
 
@@ -22,6 +23,12 @@ namespace Aura_OS.System.Network.IPV4.UDP
         internal static void UDPHandler(byte[] packetData)
         {
             UDPPacket udp_packet = new UDPPacket(packetData);
+
+            if (Firewall.UDP.Block_UDPIncomingPacket(udp_packet))
+            {
+                Apps.System.Debugger.debugger.Send("=== [FIREWALL] TCP INCOMING PACKET BLOCKED " + udp_packet.SourceIP.ToString() + ":" + udp_packet.SourcePort.ToString() + " ===");
+                return;
+            }
 
             Apps.System.Debugger.debugger.Send("Received UDP packet from " + udp_packet.SourceIP.ToString() + ":" + udp_packet.SourcePort.ToString());
 

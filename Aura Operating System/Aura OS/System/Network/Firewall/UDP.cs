@@ -1,34 +1,33 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using Aura_OS.System.Network;
 
 /*
 * PROJECT:          Aura Operating System Development
-* CONTENT:          Firewall - Core - TCP Filter
+* CONTENT:          Firewall - Core - UDP Filter
 * PROGRAMMERS:      Alexy Da Cruz <dacruzalexy@gmail.com>
 */
 
 namespace Aura_OS.System.Network.Firewall
 {
-    class TCP
+    class UDP
     {
-        private static List<String> TCPFilterList = new List<String>();
+        private static List<String> UDPFilterList = new List<String>();
         //from ip, port, incoming bool, outcoming bool
         //192.168.1.1, 25565, true, true
 
-        public static bool Block_TCPIncomingPacket(IPV4.TCP.TCPPacket packet)
+        public static bool Block_UDPIncomingPacket(IPV4.UDP.UDPPacket packet)
         {
             IPV4.Address IPSource = packet.SourceIP;
             ushort Port = packet.SourcePort;
 
-            for (int i = 0; i < TCPFilterList.Count; i++)
+            for (int i = 0; i < UDPFilterList.Count; i++)
             {
-                if (TCPFilterList[i].Contains(IPSource.ToString() + "," + Port.ToString() + ",true"))
+                if (UDPFilterList[i].Contains(IPSource.ToString() + "," + Port.ToString() + ",true"))
                 {
                     return true;
                 }
-                if (TCPFilterList[i].Contains(IPSource.ToString() + ",*,true"))
+                if (UDPFilterList[i].Contains(IPSource.ToString() + ",*,true"))
                 {
                     return true;
                 }
@@ -36,23 +35,23 @@ namespace Aura_OS.System.Network.Firewall
             return false;
         }
 
-        public static bool Block_TCPOutgoingPacket(IPV4.TCP.TCPPacket packet)
+        public static bool Block_UDPOutgoingPacket(IPV4.UDP.UDPPacket packet)
         {
             IPV4.Address IPSource = packet.SourceIP;
             ushort Port = packet.SourcePort;
 
-            for (int i = 0; i < TCPFilterList.Count; i++)
+            for (int i = 0; i < UDPFilterList.Count; i++)
             {
-                if (TCPFilterList[i].Contains(IPSource.ToString() + "," + Port.ToString()))
+                if (UDPFilterList[i].Contains(IPSource.ToString() + "," + Port.ToString()))
                 {
-                    string[] FilterList = TCPFilterList[i].Split(',');
+                    string[] FilterList = UDPFilterList[i].Split(',');
                     bool OUTGOING = bool.Parse(FilterList[3]);
 
                     return OUTGOING;
                 }
-                if (TCPFilterList[i].Contains(IPSource.ToString() + ",*"))
+                if (UDPFilterList[i].Contains(IPSource.ToString() + ",*"))
                 {
-                    string[] FilterList = TCPFilterList[i].Split(',');
+                    string[] FilterList = UDPFilterList[i].Split(',');
                     bool OUTGOING = bool.Parse(FilterList[3]);
 
                     return OUTGOING;
