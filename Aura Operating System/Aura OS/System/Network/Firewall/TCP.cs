@@ -11,7 +11,7 @@ namespace Aura_OS.System.Network.Firewall
         //from ip, port, incoming bool, outcoming bool
         //192.168.1.1, 25565, true, true
 
-        public static bool TCPIncomingFilter(IPV4.TCP.TCPPacket packet)
+        public static bool Block_TCPIncomingPacket(IPV4.TCP.TCPPacket packet)
         {
             IPV4.Address IPSource = packet.SourceIP;
             ushort Port = packet.SourcePort;
@@ -31,6 +31,31 @@ namespace Aura_OS.System.Network.Firewall
                     //bool INCOMING = bool.Parse(FilterList[2]);
 
                     return true;
+                }
+            }
+            return false;
+        }
+
+        public static bool Block_TCPOutgoingPacket(IPV4.TCP.TCPPacket packet)
+        {
+            IPV4.Address IPSource = packet.SourceIP;
+            ushort Port = packet.SourcePort;
+
+            for (int i = 0; i < TCPFilterList.Count; i++)
+            {
+                if (TCPFilterList[i].Contains(IPSource.ToString() + "," + Port.ToString()))
+                {
+                    string[] FilterList = TCPFilterList[i].Split(',');
+                    bool OUTGOING = bool.Parse(FilterList[3]);
+
+                    return OUTGOING;
+                }
+                if (TCPFilterList[i].Contains(IPSource.ToString() + ",*"))
+                {
+                    string[] FilterList = TCPFilterList[i].Split(',');
+                    bool OUTGOING = bool.Parse(FilterList[3]);
+
+                    return OUTGOING;
                 }
             }
             return false;
