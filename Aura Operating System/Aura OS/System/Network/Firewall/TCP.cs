@@ -14,7 +14,7 @@ namespace Aura_OS.System.Network.Firewall
     class TCP
     {
         private static List<String> TCPFilterList = new List<String>();
-        //from ip, port, incoming bool, outcoming bool
+        //from ip, port, incoming bool, outgoing bool
         //192.168.1.1, 25565, true, true
 
         public static bool Block_TCPIncomingPacket(IPV4.TCP.TCPPacket packet)
