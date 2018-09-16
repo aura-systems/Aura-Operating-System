@@ -13,7 +13,7 @@ namespace Aura_OS.System.Network.Firewall
     class UDP
     {
         private static List<String> UDPFilterList = new List<String>();
-        //from ip, port, incoming bool, outcoming bool
+        //from ip, port, incoming bool, outgoing bool
         //192.168.1.1, 25565, true, true
 
         public static bool Block_UDPIncomingPacket(IPV4.UDP.UDPPacket packet)
