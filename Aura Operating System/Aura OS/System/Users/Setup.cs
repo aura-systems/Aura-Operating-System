@@ -325,12 +325,7 @@ namespace Aura_OS.System
 
             Menu.DispInstallationDialog(30);
 
-            Network.Firewall.TCPFilter.LoadConf();
-
-            Menu.DispInstallationDialog(35);
-
-            Network.Firewall.TCPFilter.Block("192.168.1.59", 1, true, true);
-            Network.Firewall.TCPFilter.Push();
+            Menu.DispInstallationDialog(35);            
 
             Menu.DispInstallationDialog(40);
 
