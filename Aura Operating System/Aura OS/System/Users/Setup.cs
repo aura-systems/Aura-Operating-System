@@ -307,6 +307,8 @@ namespace Aura_OS.System
             Menu.DispInstallationDialog(10);
 
             File.Create(@"0:\System\settings.conf");
+            File.Create(@"0:\System\firewall_tcp.conf");
+            File.Create(@"0:\System\firewall_udp.conf");
             File.Create(@"0:\System\passwd");
 
             Menu.DispInstallationDialog(15);
