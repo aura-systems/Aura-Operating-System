@@ -319,9 +319,18 @@ namespace Aura_OS.System
 
             System.Users.Users.PutUser("user:" + FinalUsername, FinalPassword + ":admin");
 
-            Menu.DispInstallationDialog(30);
+            Menu.DispInstallationDialog(25);
 
             System.Users.Users.PutUser("user:root", Sha256.hash("root") + ":admin");
+
+            Menu.DispInstallationDialog(30);
+
+            Network.Firewall.TCPFilter.LoadConf();
+
+            Menu.DispInstallationDialog(35);
+
+            Network.Firewall.TCPFilter.Block("192.168.1.59", 1, true, true);
+            Network.Firewall.TCPFilter.Push();
 
             Menu.DispInstallationDialog(40);
 
@@ -329,6 +338,8 @@ namespace Aura_OS.System
             CreateUserDirectories(Users);
 
             Settings.LoadValues();
+
+            Menu.DispInstallationDialog(45);
 
             Menu.DispInstallationDialog(50);
 
