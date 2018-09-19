@@ -236,13 +236,6 @@ namespace Aura_OS.Shell.cmdIntr
                 Tests.Crash.c_Crash();
             }
 
-            else if (cmd.Equals("cmd"))
-            {
-                CMDs.Add("ipconfig");
-                CMDs.Add("netconf");
-                CMDs.Add("help");
-            }
-
             else if (cmd.Equals("crashcpu"))
             {
                 int value = 1;
