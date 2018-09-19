@@ -18,18 +18,21 @@ namespace Aura_OS.System.Network.Firewall
 
         public static bool Block_UDPIncomingPacket(IPV4.UDP.UDPPacket packet)
         {
-            IPV4.Address IPSource = packet.SourceIP;
-            ushort Port = packet.SourcePort;
-
-            for (int i = 0; i < UDPFilterList.Count; i++)
+            if (Core.Status())
             {
-                if (UDPFilterList[i].Contains(IPSource.ToString() + "," + Port.ToString() + ",true"))
+                IPV4.Address IPSource = packet.SourceIP;
+                ushort Port = packet.SourcePort;
+
+                for (int i = 0; i < UDPFilterList.Count; i++)
                 {
-                    return true;
-                }
-                if (UDPFilterList[i].Contains(IPSource.ToString() + ",*,true"))
-                {
-                    return true;
+                    if (UDPFilterList[i].Contains(IPSource.ToString() + "," + Port.ToString() + ",true"))
+                    {
+                        return true;
+                    }
+                    if (UDPFilterList[i].Contains(IPSource.ToString() + ",*,true"))
+                    {
+                        return true;
+                    }
                 }
             }
             return false;

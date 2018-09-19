@@ -19,18 +19,21 @@ namespace Aura_OS.System.Network.Firewall
 
         public static bool Block_TCPIncomingPacket(IPV4.TCP.TCPPacket packet)
         {
-            IPV4.Address IPSource = packet.SourceIP;
-            ushort Port = packet.SourcePort;
-
-            for (int i = 0; i < TCPFilterList.Count; i++)
+            if (Core.Status())
             {
-                if (TCPFilterList[i].Contains(IPSource.ToString() + "," + Port.ToString() + ",true"))
+                IPV4.Address IPSource = packet.SourceIP;
+                ushort Port = packet.SourcePort;
+
+                for (int i = 0; i < TCPFilterList.Count; i++)
                 {
-                    return true;
-                }
-                if (TCPFilterList[i].Contains(IPSource.ToString() + ",*,true"))
-                {
-                    return true;
+                    if (TCPFilterList[i].Contains(IPSource.ToString() + "," + Port.ToString() + ",true"))
+                    {
+                        return true;
+                    }
+                    if (TCPFilterList[i].Contains(IPSource.ToString() + ",*,true"))
+                    {
+                        return true;
+                    }
                 }
             }
             return false;
