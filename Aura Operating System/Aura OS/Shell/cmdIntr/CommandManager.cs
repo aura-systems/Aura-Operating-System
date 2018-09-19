@@ -315,11 +315,6 @@ namespace Aura_OS.Shell.cmdIntr
                 System.Network.NetworkStack.Update();
             }
 
-            else if (cmd.Equals("firewall-create"))
-            {
-                System.Network.Firewall.TCPRules.Create("192.168.1.59", 4224, true, true);
-            }
-
             //else if (cmd.Equals("discover"))
             //{
             //    //byte[] mac = { 0x00,0x0C, 0x29,0x7C, 0x85,0x28};                
