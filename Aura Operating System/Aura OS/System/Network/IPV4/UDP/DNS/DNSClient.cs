@@ -77,26 +77,26 @@ namespace Aura_OS.System.Network.IPV4.UDP.DNS
             this.destinationPort = destPort;
         }
 
-        public static DNSPacket askpacket;
+        public static DNSPacketAsk askpacket;
 
         public void Ask(string url)
         {
             Address gateway = new Address(192, 168, 1, 1);
             Address source = Config.FindNetwork(gateway);
 
-            askpacket = new DNSPacket(source, gateway, 0x1234, 0x0100, 1, url);
+            askpacket = new DNSPacketAsk(source, gateway, 0x1234, 0x0100, 1, url);
 
             OutgoingBuffer.AddPacket(askpacket);
             NetworkStack.Update();
         }
 
-        internal void receiveData(DNSPacket packet)
+        internal void receiveData(DNSPacketAnswer packet)
         {
             Console.WriteLine();
             IPV4.EndPoint source = new IPV4.EndPoint(packet.SourceIP, 53);
 
             Console.WriteLine("\nReceived DNS Packet from " + source.ToString());
-            Console.WriteLine(askpacket.Url + " is " + packet.RawData);
+            Console.WriteLine(askpacket.Url + " is " + packet.address);
 
             
         }
