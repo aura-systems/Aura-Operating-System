@@ -157,6 +157,7 @@ namespace Aura_OS.Shell.cmdIntr.Network
                         break;
                     }
                 }
+                DNSRequest.Close();
                 c_Ping("     " + DNSRequest.address.ToString());
             }
         }

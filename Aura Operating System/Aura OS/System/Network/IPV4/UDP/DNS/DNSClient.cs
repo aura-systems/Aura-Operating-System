@@ -49,6 +49,14 @@ namespace Aura_OS.System.Network.IPV4.UDP.DNS
             return null;
         }
 
+        public void Close()
+        {
+            if (DNSClient.clients.ContainsKey((UInt32)this.localPort))
+            {
+                DNSClient.clients.Clear();
+            }
+        }
+
         public DNSClient()
             : this(0)
         { }
