@@ -34,18 +34,6 @@ namespace Aura_OS.System.Network.IPV4
         internal static void IPv4Handler(byte[] packetData)
         {
             IPPacket ip_packet = new IPPacket(packetData);
-
-            if (ip_packet.RawData.Length != ip_packet.IPLength + 14)
-            {
-                int packetlen = ip_packet.IPLength + 14;
-                byte[] rdata = ip_packet.mRawData;
-                ip_packet.mRawData = new byte[packetlen];
-                for (int b = 0; b < packetlen; b++)
-                {
-                    ip_packet.mRawData[b] = rdata[b];
-                }
-            }
-
             Apps.System.Debugger.debugger.Send("[Received] " + ip_packet.ToString());
             if (ip_packet.SourceIP == null)
             {
