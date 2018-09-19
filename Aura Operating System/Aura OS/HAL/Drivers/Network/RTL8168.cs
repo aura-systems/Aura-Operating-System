@@ -176,7 +176,7 @@ namespace Aura_OS.HAL.Drivers.Network
             else
             {
                 if ((status & 0x0004) != 0) Console.WriteLine("Transmit succesfull - descriptor not resetted");
-                if ((status & 0x0080) != 0) Console.WriteLine("Transmit descriptor unavailable");
+                //if ((status & 0x0080) != 0) Console.WriteLine("Transmit descriptor unavailable");
             }
             if ((status & 0x0008) != 0) Console.WriteLine("Transmit error");
             if ((status & 0x0010) != 0)
