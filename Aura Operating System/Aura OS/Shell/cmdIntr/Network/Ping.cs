@@ -128,10 +128,25 @@ namespace Aura_OS.Shell.cmdIntr.Network
             }
             else
             {
-                //Ping DNS
-                Console.WriteLine("DNS TEST");
                 System.Network.IPV4.UDP.DNS.DNSClient DNSRequest = new System.Network.IPV4.UDP.DNS.DNSClient(53);
                 DNSRequest.Ask(str);
+                int _deltaT = 0;
+                int second = 0;
+                while (!DNSRequest.ReceivedResponse)
+                {
+                    if (_deltaT != Cosmos.HAL.RTC.Second)
+                    {
+                        second++;
+                        _deltaT = Cosmos.HAL.RTC.Second;
+                    }
+
+                    if (second >= 4)
+                    {
+                        Apps.System.Debugger.debugger.Send("No response in 4 secondes...");
+                        break;
+                    }
+                }
+                c_Ping("     " + DNSRequest.address.ToString());
             }
         }
 

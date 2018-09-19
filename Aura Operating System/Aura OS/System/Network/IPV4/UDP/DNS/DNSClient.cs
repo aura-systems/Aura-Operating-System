@@ -77,7 +77,12 @@ namespace Aura_OS.System.Network.IPV4.UDP.DNS
             this.destinationPort = destPort;
         }
 
-        public static DNSPacketAsk askpacket;
+        public DNSPacketAsk askpacket;
+
+        public bool ReceivedResponse;
+
+        public string URL;
+        public Address address;
 
         public void Ask(string url)
         {
@@ -93,12 +98,10 @@ namespace Aura_OS.System.Network.IPV4.UDP.DNS
         internal void receiveData(DNSPacketAnswer packet)
         {
             Console.WriteLine();
-            IPV4.EndPoint source = new IPV4.EndPoint(packet.SourceIP, 53);
-
-            Console.WriteLine("\nReceived DNS Packet from " + source.ToString());
-            Console.WriteLine(askpacket.Url + " is " + packet.address);
-
-            
+            EndPoint source = new EndPoint(packet.SourceIP, 53);
+            URL = askpacket.Url;
+            address = packet.address;
+            ReceivedResponse = true;
         }
     }
 }
