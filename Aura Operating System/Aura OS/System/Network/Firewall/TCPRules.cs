@@ -15,20 +15,29 @@ namespace Aura_OS.System.Network.Firewall
         /// <summary>
         /// Method to create an user.
         /// </summary>
-        public static void Create(string ip, ushort port, bool incoming, bool outgoing)
+        public static void Create(string ip, string port, string incoming, string outgoing)
         {
-            try
+            if (!IPV4.Address.IsIPAddress(ip))
             {
-                LoadRules();
-                AddRule(ip, port, incoming, outgoing);
-                PushRules();
+                return;
             }
-            catch
-            {
-                //Text.Display("errorwhileusercreating");
-            }
+            ushort f_port = ushort.Parse(port);         
+
+            bool f_notbool = false;
+            bool f_incoming = bool.TryParse(incoming, out f_notbool);
+            bool f_outgoing = bool.TryParse(incoming, out f_notbool);
+
+            LoadRules();
+            AddRule(ip, f_port, f_incoming, f_outgoing);
+            PushRules();
         }
 
+        public static void Create(string ip, ushort port, bool incoming, bool outgoing)
+        {
+            LoadRules();
+            AddRule(ip, port, incoming, outgoing);
+            PushRules();
+        }
 
         public static void DeleteRule(string ip, ushort port, bool incoming, bool outgoing)
         {
