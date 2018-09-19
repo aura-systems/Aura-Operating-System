@@ -4,12 +4,12 @@
 * PROGRAMMERS:      Valentin Charbonnier <valentinbreiz@gmail.com>
 */
 
-namespace Aura_OS.System
-{
-    public class Video
-    {
-        public static string GetVideo()
-        {
+//namespace Aura_OS.System
+//{
+//    public class Video
+//    {
+        //public static string GetVideo()
+        //{
 
             // TO DO: Scroll console in SVGAII
             //if (Cosmos.HAL.PCI.GetDevice(Cosmos.HAL.VendorID.VMWare, Cosmos.HAL.DeviceID.SVGAIIAdapter) != null)
@@ -26,9 +26,9 @@ namespace Aura_OS.System
             //{
             //}
 
-            Kernel.Consolemode = "VESA";
-            return "VESA";
+            //Kernel.Consolemode = "VESA";
+            //return "VESA";
 
-        }
-    }
-}
+        //}
+//    }
+//}

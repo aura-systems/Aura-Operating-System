@@ -27,12 +27,12 @@ namespace Aura_OS.System.Network.ARP
             {
                 if ((arp_packet.HardwareType == 1) && (arp_packet.ProtocolType == 0x0800))
                 {
-                    IPV4.ARPRequest_Ethernet arp_request = new IPV4.ARPRequest_Ethernet(packetData);
+                    ARPRequest_Ethernet arp_request = new ARPRequest_Ethernet(packetData);
                     if (arp_request.SenderIP == null)
                     {
                         Apps.System.Debugger.debugger.Send("SenderIP null in ARPHandler!");
                     }
-                    arp_request = new IPV4.ARPRequest_Ethernet(packetData);
+                    arp_request = new ARPRequest_Ethernet(packetData);
                     
                     ARPCache.Update(arp_request.SenderIP, arp_request.SenderMAC);
 
@@ -41,8 +41,8 @@ namespace Aura_OS.System.Network.ARP
                         Apps.System.Debugger.debugger.Send("ARP Request Recvd from " + arp_request.SenderIP.ToString());
                         NetworkDevice nic = NetworkStack.AddressMap[arp_request.TargetIP.Hash];
 
-                        IPV4.ARPReply_Ethernet reply =
-                            new IPV4.ARPReply_Ethernet(nic.MACAddress, arp_request.TargetIP, arp_request.SenderMAC, arp_request.SenderIP);
+                        ARPReply_Ethernet reply =
+                            new ARPReply_Ethernet(nic.MACAddress, arp_request.TargetIP, arp_request.SenderMAC, arp_request.SenderIP);
 
                         nic.QueueBytes(reply.RawData);
                     }
@@ -52,7 +52,7 @@ namespace Aura_OS.System.Network.ARP
             {
                 if ((arp_packet.HardwareType == 1) && (arp_packet.ProtocolType == 0x0800))
                 {
-                    IPV4.ARPReply_Ethernet arp_reply = new IPV4.ARPReply_Ethernet(packetData);
+                    ARPReply_Ethernet arp_reply = new ARPReply_Ethernet(packetData);
                     Apps.System.Debugger.debugger.Send("Received ARP Reply");
                     Apps.System.Debugger.debugger.Send(arp_reply.ToString());
                     Apps.System.Debugger.debugger.Send("ARP Reply Recvd from " + arp_reply.SenderIP.ToString());

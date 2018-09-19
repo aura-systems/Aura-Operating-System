@@ -44,6 +44,8 @@ namespace Aura_OS.System.Shell.VESAVBE
             return stringg;
         }
 
+        public static ushort lfb;
+
         public Graphics()
         {
             Pallete[0] = 0x000000; // Black
@@ -132,6 +134,7 @@ namespace Aura_OS.System.Shell.VESAVBE
             ModeInfo.width = modeinfo->width;
             ModeInfo.bpp = modeinfo->bpp;
             ModeInfo.framebuffer = modeinfo->framebuffer;
+            ModeInfo.pitch = modeinfo->pitch;
 
             if (ModeInfo.width == (1280) && ModeInfo.height == (768))
             {
@@ -173,6 +176,14 @@ namespace Aura_OS.System.Shell.VESAVBE
                 VESAVBEConsole.mHeight = (int)ConsoleMode.Mode1360x768.Cols;
                 VESAMode = "Mode1360x768";
             }
+            else if (ModeInfo.width == (1366) && ModeInfo.height == (768))
+            {
+                VESAVBEConsole.mRows = (int)ConsoleMode.Mode1366x768.Rows;
+                VESAVBEConsole.mWidth = (int)ConsoleMode.Mode1366x768.Rows;
+                VESAVBEConsole.mCols = (int)ConsoleMode.Mode1366x768.Cols;
+                VESAVBEConsole.mHeight = (int)ConsoleMode.Mode1366x768.Cols;
+                VESAMode = "Mode1366x768";
+            }
             else if (ModeInfo.width == (800) && ModeInfo.height == (600))
             {
                 VESAVBEConsole.mRows = (int)ConsoleMode.Mode800x600.Rows;
@@ -190,7 +201,15 @@ namespace Aura_OS.System.Shell.VESAVBE
                 VESAMode = "Mode800x600";
             }
 
-            canvas = new ManagedVBE(ModeInfo.width, ModeInfo.height, ModeInfo.framebuffer);
+            if ((ModeInfo.pitch / 4) == ModeInfo.width)
+            {
+                canvas = new ManagedVBE(ModeInfo.width, ModeInfo.height, ModeInfo.framebuffer, true);
+            }
+            else
+            {
+                canvas = new ManagedVBE(ModeInfo.width, ModeInfo.height, ModeInfo.framebuffer, false);
+            }
+
         }
 
         private byte[] Read_font()

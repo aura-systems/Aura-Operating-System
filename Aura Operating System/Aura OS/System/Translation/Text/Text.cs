@@ -281,6 +281,15 @@ namespace Aura_OS.System.Translation
                         case "time":
                             Console.WriteLine("L'heure actuelle est :  " + Time.MonthString() + "/" + Time.DayString() + "/" + Time.YearString() + ", " + Time.TimeString(true, true, true));
                             break;
+                        case "changeipaddress":
+                            Console.WriteLine("Nouvelle adresse IP du PC (actuellement " + Kernel.LocalNetworkConfig.IPAddress.ToString() + ") :");
+                            break;
+                        case "notcorrectaddress":
+                            Console.WriteLine("Ce n'est pas une adresse IP correcte !");
+                            break;
+                        case "pleasereboot":
+                            Console.WriteLine("Veuillez redémarrer votre PC pour appliquer les changements.");
+                            break;
                     }
                     break;
 
@@ -516,6 +525,15 @@ namespace Aura_OS.System.Translation
                             break;
                         case "time":
                             Console.WriteLine("The current time is:  " + Time.MonthString() + "/" + Time.DayString() + "/" + Time.YearString() + ", " + Time.TimeString(true, true, true));
+                            break;
+                        case "changeipaddress":
+                            Console.WriteLine("New IP address of the PC (now " + Kernel.LocalNetworkConfig.IPAddress.ToString() + ") :");
+                            break;
+                        case "notcorrectaddress":
+                            Console.WriteLine("This is not a correct IP address!");
+                            break;
+                        case "pleasereboot":
+                            Console.WriteLine("Please restart your PC to apply the changes.");
                             break;
                     }
                     break;
@@ -753,6 +771,15 @@ namespace Aura_OS.System.Translation
                         case "time":
                             Console.WriteLine("De huidige tijd is:  " + Time.MonthString() + "/" + Time.DayString() + "/" + Time.YearString() + ", " + Time.TimeString(true, true, true));
                             break;
+                        case "changeipaddress":
+                            Console.WriteLine("Nieuw IP-adres van de PC (nu " + Kernel.LocalNetworkConfig.IPAddress.ToString() + ") :");
+                            break;
+                        case "notcorrectaddress":
+                            Console.WriteLine("Dit is geen correct IP adres!");
+                            break;
+                        case "pleasereboot":
+                            Console.WriteLine("Start uw PC opnieuw op om de wijzigingen toe te passen.");
+                            break;
                     }
                     break;
                     
@@ -979,6 +1006,15 @@ namespace Aura_OS.System.Translation
                             break;
                         case "time":
                             Console.WriteLine("Data e ora attuali sono: " + Time.MonthString() + "/" + Time.DayString() + "/" + Time.YearString() + ", " + Time.TimeString(true, true, true));
+                            break;
+                        case "changeipaddress":
+                            Console.WriteLine("Nuovo indirizzo IP del PC (ora " + Kernel.LocalNetworkConfig.IPAddress.ToString() + ") :");
+                            break;
+                        case "notcorrectaddress":
+                            Console.WriteLine("Questo non è un indirizzo IP corretto!");
+                            break;
+                        case "pleasereboot":
+                            Console.WriteLine("Riavviare il PC per applicare le modifiche.");
                             break;
                     }
                     

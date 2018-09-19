@@ -1,7 +1,7 @@
 ﻿/*
 * PROJECT:          Aura Operating System Development
-* CONTENT:          Command Interpreter - CP
-* PROGRAMMER(S):    John Welsh <djlw78@gmail.com>
+* CONTENT:          Copy file
+* PROGRAMMER(S):    Alexy DA CRUZ <dacruzalexy@gmail.com>
 */
 
 using System;

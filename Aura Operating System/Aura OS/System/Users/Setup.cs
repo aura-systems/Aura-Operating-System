@@ -33,7 +33,7 @@ namespace Aura_OS.System
         /// <returns>"true", if we don't need to init setup</returns>
         /// <returns>"continue", if we need to init setup with FS</returns>
         /// <returns>"false", if there is not a FS</returns>
-        public string FileSystem()
+        public static string FileSystem()
         {
             if (Kernel.ContainsVolumes())
             {
@@ -234,21 +234,22 @@ namespace Aura_OS.System
             Kernel.userLogged = "root";
             Kernel.Logged = true;
             Console.Clear();
-            switch (Video.GetVideo())
-            {
-                case "VGATextmode":
-                    Kernel.AConsole = new System.Shell.VGA.VGAConsole(null);
-                    break;
-                case "SVGA":
-                    // TO DO ?
-                    break;
-                case "VESA":
-                    Kernel.AConsole = new System.Shell.VESAVBE.VESAVBEConsole();
-                    break;
-                default:
-                    Kernel.AConsole = new System.Shell.VGA.VGAConsole(null);
-                    break;
-            }
+            //switch (Video.GetVideo())
+            //{
+            //    case "VGATextmode":
+            //        //Kernel.AConsole = new System.Shell.VGA.VGAConsole(null);
+            //        break;
+            //    case "SVGA":
+            //        // TO DO ?
+            //        break;
+            //    case "VESA":
+            //        //Kernel.AConsole = new System.Shell.VESAVBE.VESAVBEConsole();
+            //        break;
+            //    default:
+            //        //Kernel.AConsole = new System.Shell.VGA.VGAConsole(null);
+            //        break;
+            //}
+            NetworkInit.Enable();
             WelcomeMessage.Display();
             Text.Display("logged", "root");
             Text.Display("nofilesystem");
@@ -268,21 +269,22 @@ namespace Aura_OS.System
             Kernel.running = true;
 
             Console.Clear();
-            switch (Video.GetVideo())
-            {
-                case "VGATextmode":
-                    Kernel.AConsole = new System.Shell.VGA.VGAConsole(null);
-                    break;
-                case "SVGA":
-                    // TO DO ?
-                    break;
-                case "VESA":
-                    Kernel.AConsole = new System.Shell.VESAVBE.VESAVBEConsole();
-                    break;
-                default:
-                    Kernel.AConsole = new System.Shell.VGA.VGAConsole(null);
-                    break;
-            }
+            //switch (Video.GetVideo())
+            //{
+            //    case "VGATextmode":
+            //        //Kernel.AConsole = new System.Shell.VGA.VGAConsole(null);
+            //        break;
+            //    case "SVGA":
+            //        // TO DO ?
+            //        break;
+            //    case "VESA":
+            //        //Kernel.AConsole = new System.Shell.VESAVBE.VESAVBEConsole();
+            //        break;
+            //    default:
+            //        //Kernel.AConsole = new System.Shell.VGA.VGAConsole(null);
+            //        break;
+            //}
+            NetworkInit.Enable();
             WelcomeMessage.Display();
             Text.Display("logged", username);
 
@@ -362,6 +364,12 @@ namespace Aura_OS.System
             Kernel.SystemExists = true;
 
             Settings.PutValue("debugger", "off");
+
+            Settings.PutValue("ipaddress", "192.168.1.70");
+
+            Settings.PutValue("subnet", "255.255.255.0"); 
+
+            Settings.PutValue("gateway", "192.168.1.254");
 
             Settings.PushValues();
 

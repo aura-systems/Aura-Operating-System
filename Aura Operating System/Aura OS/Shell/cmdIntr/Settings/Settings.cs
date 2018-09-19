@@ -71,8 +71,34 @@ namespace Aura_OS.Shell.cmdIntr.Settings
 
                 else if (cmdargs[1].Equals("debugger"))
                 {
-                    HAL.SaveScreen.SaveCurrentScreen();
                     Apps.System.DebuggerSettings.RegisterSetting();
+                }
+
+                else if (cmdargs[1].Equals("ipaddress"))
+                {
+                    L.Text.Display("changeipaddress");
+                    Console.Write("IP: ");
+                    string IP = Console.ReadLine();
+
+                    Console.Write("Subnet: ");
+                    string Subnet = Console.ReadLine();
+
+                    Console.Write("Gateway: ");
+                    string Gateway = Console.ReadLine();
+
+                    if (System.Utils.Misc.IsIpv4Address(IP) && System.Utils.Misc.IsIpv4Address(Subnet) && System.Utils.Misc.IsIpv4Address(Gateway))
+                    {
+                        System.Utils.Settings.LoadValues();
+                        System.Utils.Settings.EditValue("ipaddress", IP);
+                        System.Utils.Settings.EditValue("subnet", Subnet);
+                        System.Utils.Settings.EditValue("gateway", Gateway);
+                        System.Utils.Settings.PushValues();
+                        L.Text.Display("pleasereboot");
+                    }
+                    else
+                    {
+                        L.Text.Display("notcorrectaddress");
+                    }
                 }
             }
             else if (cmdargs.Length == 3 ) //One arg

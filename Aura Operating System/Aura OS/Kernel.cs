@@ -51,9 +51,8 @@ namespace Aura_OS
         public static string boottime = Time.MonthString() + "/" + Time.DayString() + "/" + Time.YearString() + ", " + Time.TimeString(true, true, true);
         public static System.Shell.Console AConsole;
         public static string Consolemode = "VGATextmode";
-        public static MemoryManager MemMon;
-
-        public static Debugger debugger = new Debugger(new Address(192, 168, 1, 12), 4224);
+        public static Config LocalNetworkConfig;
+        public static Debugger debugger;
 
         #endregion
 

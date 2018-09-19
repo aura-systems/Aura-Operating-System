@@ -75,15 +75,21 @@ namespace Aura_OS.Shell.cmdIntr
         public static void _CommandManger(string cmd)
         {
 
-            Kernel.debugger.Send("Cmd manager: " + cmd);
+            if (Kernel.debugger != null)
+            {
+                if (Kernel.debugger.enabled)
+                {
+                    Kernel.debugger.Send("Cmd manager: " + cmd);
+                }
+            }
 
             #region Power
 
-            if (cmd.Equals("shutdown"))
+            if (cmd.Equals("shutdown") || cmd.Equals("sd"))
             {//NOTE: Why isn't it just the constructor? This leaves more room for <package>.<class>.HelpInfo;
                 Power.Shutdown.c_Shutdown();
             }
-            else if (cmd.Equals("reboot"))
+            else if (cmd.Equals("reboot") || cmd.Equals("rb"))
             {
                 Power.Reboot.c_Reboot();
             }
@@ -270,31 +276,6 @@ namespace Aura_OS.Shell.cmdIntr
                 Console.WriteLine("Done!");
             }
 
-            else if (cmd.Equals("8139test"))
-            {
-                Console.WriteLine("Finding RTL8139 nic...");
-
-                HAL.Drivers.Network.RTL8139 xNic;
-
-                Cosmos.HAL.PCIDevice xNicDev = Cosmos.HAL.PCI.GetDevice((Cosmos.HAL.VendorID)0x10ec, (Cosmos.HAL.DeviceID)0x8139);
-                if (xNicDev == null)
-                {
-                    Console.WriteLine("PCIDevice not found!!");
-                    return;
-                }
-
-                Console.WriteLine("Found RTL8139 NIC on PCI " + xNicDev.bus + ":" + xNicDev.slot + ":" + xNicDev.function);
-                Console.WriteLine("NIC IRQ: " + xNicDev.InterruptLine);
-
-                xNic = new HAL.Drivers.Network.RTL8139(xNicDev);
-
-                Console.WriteLine("NIC MAC Address: " + xNic.MACAddress.ToString());
-
-                xNic.Enable();
-
-                Console.WriteLine("Done!");
-            }
-
             else if (cmd.Equals("udp"))
             {
                 var xClient = new System.Network.IPV4.UDP.UdpClient(4242);
@@ -329,6 +310,12 @@ namespace Aura_OS.Shell.cmdIntr
             {
                 Console.WriteLine(new HAL.MACAddress(new byte[] { 00, 01, 02, 03, 04, 05 }).Hash);
                 Console.WriteLine(new System.Network.IPV4.Address(192, 168, 1, 12).Hash);
+            }
+
+            else if (cmd.Equals("dns"))
+            {
+                System.Network.IPV4.UDP.DNS.DNSClient DNSRequest = new System.Network.IPV4.UDP.DNS.DNSClient(53);
+                DNSRequest.Ask("perdu.com");
             }
 
             //else if (cmd.Equals("discover"))

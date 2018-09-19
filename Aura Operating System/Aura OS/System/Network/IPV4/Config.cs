@@ -2,6 +2,7 @@
 * PROJECT:          Aura Operating System Development
 * CONTENT:          List of all IPs / Utils
 * PROGRAMMERS:      Valentin Charbonnier <valentinbreiz@gmail.com>
+*                   Alexy DA CRUZ <dacruzalexy@gmail.com>
 *                   Port of Cosmos Code.
 */
 
@@ -42,6 +43,11 @@ namespace Aura_OS.System.Network.IPV4
                 {
                     default_gw = ipConfigs[c].IPAddress;
                 }
+
+                if (!IsLocalAddress(destIP))
+                {
+                    return ipConfigs[c].IPAddress;
+                }
             }
 
             return default_gw;
@@ -70,10 +76,11 @@ namespace Aura_OS.System.Network.IPV4
         {
             for (int c = 0; c < ipConfigs.Count; c++)
             {
-                if (ipConfigs[c].DefaultGateway.CompareTo(Address.Zero) != 0)
-                {
-                    return ipConfigs[c].DefaultGateway;
-                }
+                //if (ipConfigs[c].DefaultGateway.CompareTo(Address.Zero) != 0)
+                //{
+                //    return ipConfigs[c].DefaultGateway;
+                //}
+                return ipConfigs[c].DefaultGateway;
             }
 
             return null;
@@ -108,14 +115,17 @@ namespace Aura_OS.System.Network.IPV4
         public Address IPAddress
         {
             get { return this.address; }
+            set { this.address = value; }
         }
         public Address SubnetMask
         {
             get { return this.subnetMask; }
+            set { this.subnetMask = value; }
         }
         public Address DefaultGateway
         {
             get { return this.defaultGateway; }
+            set { this.defaultGateway = value; }
         }
     }
 }

@@ -25,15 +25,38 @@ namespace Aura_OS.System.Network.IPV4.TCP
 
             TCPPacket tcp_packet = new TCPPacket(packetData);
 
-            if (packetData.Length == 64 && tcp_packet.ipLength < 50)
+            if (Firewall.TCP.TCPIncomingFilter(tcp_packet))
             {
-                byte[] rdata = tcp_packet.mRawData;
-                int lenght = 64 - (64 - (tcp_packet.ipLength + 14));
-                tcp_packet.tcpLen = (ushort)(lenght - 34);
-                tcp_packet.mRawData = new byte[lenght];
-                for (int b = 0; b <= lenght; b++)
+                Apps.System.Debugger.debugger.Send("=== [FIREWALL] TCP INCOMING PACKET BLOCKED " + tcp_packet.SourceIP.ToString() + ":" + tcp_packet.SourcePort.ToString() + " ===");
+                return;
+            }
+
+            foreach (HAL.Drivers.Network.NetworkDevice device in NetworkConfig.Keys)
+            {
+                if (device.Name == "PCNETII")
                 {
-                    tcp_packet.mRawData[b] = rdata[b];
+                    if (packetData.Length == 64 && tcp_packet.ipLength < 50)
+                    {
+                        byte[] rdata = tcp_packet.mRawData;
+                        int lenght = 64 - (64 - (tcp_packet.ipLength + 14));
+                        tcp_packet.tcpLen = (ushort)(lenght - 34);
+                        tcp_packet.mRawData = new byte[lenght];
+                        for (int b = 0; b <= lenght; b++)
+                        {
+                            tcp_packet.mRawData[b] = rdata[b];
+                        }
+                    }
+                }
+                if (device.Name == "RTL8168")
+                {
+                    byte[] rdata = tcp_packet.mRawData;
+                    int lenght = 64 - (64 - (tcp_packet.ipLength + 14));
+                    tcp_packet.tcpLen = (ushort)(lenght - 34);
+                    tcp_packet.mRawData = new byte[lenght];
+                    for (int b = 0; b <= lenght; b++)
+                    {
+                        tcp_packet.mRawData[b] = rdata[b];
+                    }
                 }
             }
 
@@ -124,7 +147,7 @@ namespace Aura_OS.System.Network.IPV4.TCP
                     if (tcp_packet.sourcePort == 4224 && tcp_packet.destPort == 4224)
                     {
                         Console.WriteLine("Debugger closed by client computer!");
-                        Kernel.debugger.enabled = false;
+                        Kernel.debugger.Stop();
                     }
 
                     connection.dest = tcp_packet.sourceIP;
