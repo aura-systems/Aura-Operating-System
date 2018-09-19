@@ -28,7 +28,7 @@ namespace Aura_OS.System
               Aura Operating System
               v{ Kernel.version }
 ");
-            Kernel.AConsole.DrawImage(3, 0, 0, 0, Graphics.Image.Load(aura_cif));
+            Kernel.AConsole.DrawImage(3, 0, 0, 0, Graphics.Imaging.Image.Load(aura_cif));
         }
 
         public static byte[] aura_cif =

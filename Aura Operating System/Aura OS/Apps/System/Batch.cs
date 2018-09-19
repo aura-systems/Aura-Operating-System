@@ -4,6 +4,7 @@
 * PROGRAMMERS:      Alexy DA CRUZ <dacruzalexy@gmail.com>
 */
 
+using Aura_OS.System.Shell.cmdIntr;
 using Aura_OS.System.Translation;
 using System;
 using System.IO;
@@ -25,7 +26,7 @@ namespace Aura_OS.Apps.System
                     string[] lines = File.ReadAllLines(filename);
                     foreach (string line in lines)
                     {
-                        Shell.cmdIntr.CommandManager._CommandManger(line);
+                        CommandManager._CommandManger(line);
                     }
                 }
                 else

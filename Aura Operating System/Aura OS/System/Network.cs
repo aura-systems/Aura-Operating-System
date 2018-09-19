@@ -5,7 +5,6 @@
 */
 
 using Cosmos.HAL;
-using System;
 
 namespace Aura_OS.System
 {
