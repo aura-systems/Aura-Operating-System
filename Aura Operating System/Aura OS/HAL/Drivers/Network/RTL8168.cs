@@ -302,15 +302,7 @@ namespace Aura_OS.HAL.Drivers.Network
                 mTxBuffers[mNextTXDesc][b] = aData[b];
             }
 
-            if (mNextTXDesc == (32 - 1))
-            {
-                mTxDescriptor.Write32(xOffset + 0, OWN | mTxDescriptor.Read32(xOffset + 0) & EOR | (uint)(aData.Length & 0x3FFF) | (1 << 29) | (1 << 28));
-                mNextTXDesc = 0;
-            }
-            else
-            {
-                mTxDescriptor.Write32(xOffset + 0, OWN | mTxDescriptor.Read32(xOffset + 0) | (uint)(aData.Length & 0x3FFF) | (1 << 29) | (1 << 28));
-            }
+            mTxDescriptor.Write32(xOffset + 0, OWN | mTxDescriptor.Read32(xOffset + 0) & EOR | (uint)(aData.Length & 0x3FFF) | (1 << 29) | (1 << 28));
 
             mTxDescriptor.Write32(xOffset + 4, 0);
 
