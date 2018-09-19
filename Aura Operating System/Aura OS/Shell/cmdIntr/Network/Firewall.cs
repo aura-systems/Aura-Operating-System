@@ -38,13 +38,22 @@ namespace Aura_OS.Shell.cmdIntr.Network
         {
             string str = arg.Remove(startIndex, count);
             string[] args = str.Split(' ');
-            //fw add 192.168.1.1 8080 true true
+            //fw add tcp/udp 192.168.1.1 8080 true true
 
             if(args.Length == 5)
             {
                 if(args[0] == "add")
                 {                    
-                    System.Network.Firewall.TCPRules.Create(args[1], args[2], args[3], args[4]);
+                    if(args[1] == "tcp")
+                    {
+                        System.Network.Firewall.TCPRules.Create(args[2], args[3], args[4], args[5]);
+                    }
+                }
+
+                if(args[0] == "rm")
+                {
+                    //todo
+                    //System.Network.Firewall.TCPRules.DeleteRule(args[1], args[2], args[3], args[4]);
                 }
             }
             else
