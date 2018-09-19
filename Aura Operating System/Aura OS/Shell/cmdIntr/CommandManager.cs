@@ -85,11 +85,11 @@ namespace Aura_OS.Shell.cmdIntr
 
             #region Power
 
-            if (cmd.Equals("shutdown"))
+            if (cmd.Equals("shutdown") || cmd.Equals("sd"))
             {//NOTE: Why isn't it just the constructor? This leaves more room for <package>.<class>.HelpInfo;
                 Power.Shutdown.c_Shutdown();
             }
-            else if (cmd.Equals("reboot"))
+            else if (cmd.Equals("reboot") || cmd.Equals("rb"))
             {
                 Power.Reboot.c_Reboot();
             }
