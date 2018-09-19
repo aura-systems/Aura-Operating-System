@@ -315,12 +315,6 @@ namespace Aura_OS.Shell.cmdIntr
                 System.Network.NetworkStack.Update();
             }
 
-            else if (cmd.Equals("haship"))
-            {
-                Console.WriteLine(new HAL.MACAddress(new byte[] { 00, 01, 02, 03, 04, 05 }).Hash);
-                Console.WriteLine(new System.Network.IPV4.Address(192, 168, 1, 12).Hash);
-            }
-
             else if (cmd.Equals("firewall-create"))
             {
                 System.Network.Firewall.TCPRules.Create("192.168.1.59", 4224, true, true);
