@@ -336,6 +336,8 @@ namespace Aura_OS.System
 
             Menu.DispInstallationDialog(45);
 
+            Settings.PutValue("firewall-status", "true");
+
             Menu.DispInstallationDialog(50);
 
             if ((FinalLang.Equals("en_US")) || FinalLang.Equals("en-US"))
