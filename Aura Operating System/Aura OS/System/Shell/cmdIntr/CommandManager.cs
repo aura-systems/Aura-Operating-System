@@ -4,6 +4,7 @@
 * PROGRAMMER(S):    John Welsh <djlw78@gmail.com>
 */
 
+using Aura_OS.Shell.cmdIntr.Network;
 using Aura_OS.System.Utils;
 using System;
 using System.Collections.Generic;
@@ -199,6 +200,15 @@ namespace Aura_OS.System.Shell.cmdIntr
 
             #endregion Settings
 
+            #region Firewall
+
+            else if (cmd.StartsWith("fw"))
+            {
+                Firewall.c_Firewall(cmd);
+            }
+
+            #endregion
+
             #region System Infomation
 
             else if (cmd.Equals("systeminfo"))
@@ -306,18 +316,6 @@ namespace Aura_OS.System.Shell.cmdIntr
                 System.Network.NetworkStack.Update();
             }
 
-            else if (cmd.Equals("haship"))
-            {
-                Console.WriteLine(new HAL.MACAddress(new byte[] { 00, 01, 02, 03, 04, 05 }).Hash);
-                Console.WriteLine(new System.Network.IPV4.Address(192, 168, 1, 12).Hash);
-            }
-
-            else if (cmd.Equals("dns"))
-            {
-                System.Network.IPV4.UDP.DNS.DNSClient DNSRequest = new System.Network.IPV4.UDP.DNS.DNSClient(53);
-                DNSRequest.Ask("perdu.com");
-            }
-
             //else if (cmd.Equals("discover"))
             //{
             //    //byte[] mac = { 0x00,0x0C, 0x29,0x7C, 0x85,0x28};                
@@ -409,9 +407,9 @@ namespace Aura_OS.System.Shell.cmdIntr
 
         static void ANETSTACKINIT()
         {
-            while(true)
+            while (true)
             {
-                for (int i=0; i < 50000000; i++)
+                for (int i = 0; i < 50000000; i++)
                 {
                 }
                 Console.WriteLine("thread");
