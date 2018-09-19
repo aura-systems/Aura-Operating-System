@@ -65,6 +65,21 @@ namespace Aura_OS.System.Network.IPV4
             }
         }
 
+        public static bool IsIPAddress(string adr)
+        {
+            string[] fragments = adr.Split('.');
+            if (fragments.Length == 4)
+            {
+                byte first = byte.Parse(fragments[0]);
+                byte second = byte.Parse(fragments[1]);
+                byte third = byte.Parse(fragments[2]);
+                byte fourth = byte.Parse(fragments[3]);
+
+                return true;
+            }
+            return false;
+        }
+
         public bool IsLoopbackAddress()
         {
             if (address[0] == 127)
