@@ -33,6 +33,11 @@ namespace Aura_OS.System.Network.IPV4.UDP
                     Network.DHCP.DHCPPacket.DHCPHandler(packetData);
                     return;
                 }
+                else if (udp_packet.SourcePort == 53)
+                {
+                    DNS.DNSPacket.DNSandler(packetData);
+                    return;
+                }
 
                 Apps.System.Debugger.debugger.Send("Content: " + Encoding.ASCII.GetString(udp_packet.UDP_Data));
                 UdpClient receiver = UdpClient.Client(udp_packet.DestinationPort);

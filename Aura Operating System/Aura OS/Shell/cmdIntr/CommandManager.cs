@@ -312,6 +312,12 @@ namespace Aura_OS.Shell.cmdIntr
                 Console.WriteLine(new System.Network.IPV4.Address(192, 168, 1, 12).Hash);
             }
 
+            else if (cmd.Equals("dns"))
+            {
+                System.Network.IPV4.UDP.DNS.DNSClient DNSRequest = new System.Network.IPV4.UDP.DNS.DNSClient(53);
+                DNSRequest.Ask("perdu.com");
+            }
+
             //else if (cmd.Equals("discover"))
             //{
             //    //byte[] mac = { 0x00,0x0C, 0x29,0x7C, 0x85,0x28};                
