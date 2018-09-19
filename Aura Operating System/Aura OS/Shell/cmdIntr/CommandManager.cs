@@ -199,15 +199,6 @@ namespace Aura_OS.Shell.cmdIntr
 
             #endregion Settings
 
-            #region Firewall
-
-            else if (cmd.StartsWith("fw"))
-            {
-                Network.Firewall.c_Firewall(cmd);
-            }
-
-            #endregion
-
             #region System Infomation
 
             else if (cmd.Equals("systeminfo"))
@@ -234,6 +225,13 @@ namespace Aura_OS.Shell.cmdIntr
             else if (cmd.Equals("crash"))
             {
                 Tests.Crash.c_Crash();
+            }
+
+            else if (cmd.Equals("cmd"))
+            {
+                CMDs.Add("ipconfig");
+                CMDs.Add("netconf");
+                CMDs.Add("help");
             }
 
             else if (cmd.Equals("crashcpu"))
@@ -281,7 +279,7 @@ namespace Aura_OS.Shell.cmdIntr
             else if (cmd.Equals("udp"))
             {
                 var xClient = new System.Network.IPV4.UDP.UdpClient(4242);
-                xClient.Connect(new System.Network.IPV4.Address(192,168,1,12), 4242);
+                xClient.Connect(new System.Network.IPV4.Address(192, 168, 1, 12), 4242);
                 xClient.Send(Encoding.ASCII.GetBytes("Hello from Aura Operating System!"));
             }
 
@@ -301,11 +299,17 @@ namespace Aura_OS.Shell.cmdIntr
             {
                 byte[] macb = { 0x00, 0x0C, 0x29, 0x7C, 0x85, 0x28 };
                 HAL.MACAddress mac = new HAL.MACAddress(macb);
-                System.Network.DHCP.DHCPDiscover dhcp_discover = new System.Network.DHCP.DHCPDiscover(mac, System.Network.IPV4.Address.Zero, new System.Network.IPV4.Address(192,168,1,100));
+                System.Network.DHCP.DHCPDiscover dhcp_discover = new System.Network.DHCP.DHCPDiscover(mac, System.Network.IPV4.Address.Zero, new System.Network.IPV4.Address(192, 168, 1, 100));
                 //System.Network.DHCP.DHCPRequest dhcp_request = new System.Network.DHCP.DHCPRequest(mac, System.Network.IPV4.Address.Zero, new System.Network.IPV4.Address(192, 168, 1, 100), new System.Network.IPV4.Address(192, 168, 1, 254));
 
                 System.Network.IPV4.OutgoingBuffer.AddPacket(dhcp_discover);
                 System.Network.NetworkStack.Update();
+            }
+
+            else if (cmd.Equals("haship"))
+            {
+                Console.WriteLine(new HAL.MACAddress(new byte[] { 00, 01, 02, 03, 04, 05 }).Hash);
+                Console.WriteLine(new System.Network.IPV4.Address(192, 168, 1, 12).Hash);
             }
 
             //else if (cmd.Equals("discover"))
@@ -399,9 +403,9 @@ namespace Aura_OS.Shell.cmdIntr
 
         static void ANETSTACKINIT()
         {
-            while(true)
+            while (true)
             {
-                for (int i=0; i < 50000000; i++)
+                for (int i = 0; i < 50000000; i++)
                 {
                 }
                 Console.WriteLine("thread");
