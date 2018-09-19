@@ -4,6 +4,8 @@
 * PROGRAMMER(S):    Valentin Charbonnier <valentinbreiz@gmail.com>
 */
 
+using Aura_OS.HAL.Drivers.Video;
+
 namespace Aura_OS.HAL
 {
     class SaveScreen
@@ -15,7 +17,7 @@ namespace Aura_OS.HAL
 
         public static void SaveCurrentScreen()
         {
-            lastbuffer = Drivers.ManagedVBE.LinearFrameBuffer.Copy(0, 0, Drivers.ManagedVBE.len * 4);
+            lastbuffer = ManagedVBE.LinearFrameBuffer.Copy(0, 0, ManagedVBE.len * 4);
             lastX = Kernel.AConsole.X;
             lastY = Kernel.AConsole.Y;
         }
@@ -26,7 +28,7 @@ namespace Aura_OS.HAL
             Kernel.AConsole.Y = lastY;
             lastX = 0;
             lastY = 0;
-            Drivers.ManagedVBE.LinearFrameBuffer.Copy(lastbuffer);
+            ManagedVBE.LinearFrameBuffer.Copy(lastbuffer);
             lastbuffer = null;
         }
 

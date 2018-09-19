@@ -20,7 +20,7 @@ Please read the [Aura Progression](https://github.com/aura-systems/Aura-Operatin
 * Basic command interpreter.
 * Exception Handler.
 * Console in VGA Textmode (80x25) / SVGAII Graphics mode / VBE Graphics mode + Extended ASCII support.
-* Networking (PCNETII / RTL8168 Driver, ARP, IPV4, ICMP, TCP, UDP)
+* Networking (PCNETII / RTL8168 Driver, ARP, IPV4, ICMP, TCP, UDP, DNS)
 
 Aura's kernel: https://github.com/aura-systems/Cosmos.
 

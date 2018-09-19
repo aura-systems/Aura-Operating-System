@@ -18,10 +18,11 @@ using Aura_OS.System.Utils;
 using System.Collections.Generic;
 using System.Text;
 using Cosmos.System.ExtendedASCII;
-using Aura_OS.Core;
 using Aura_OS.Apps.System;
 using Aura_OS.System.Network.IPV4;
 using Cosmos.HAL;
+using Aura_OS.System.Graphics.VBE;
+using Aura_OS.System.Shell.cmdIntr;
 
 #endregion
 
@@ -49,7 +50,7 @@ namespace Aura_OS
 		public static Dictionary<string, string> environmentvariables = new Dictionary<string, string>();
         //public static HAL.PCSpeaker speaker = new HAL.PCSpeaker();
         public static string boottime = Time.MonthString() + "/" + Time.DayString() + "/" + Time.YearString() + ", " + Time.TimeString(true, true, true);
-        public static System.Shell.Console AConsole;
+        public static System.AConsole.Console AConsole;
         public static string Consolemode = "VGATextmode";
         public static Config LocalNetworkConfig;
         public static Debugger debugger;
@@ -72,7 +73,7 @@ namespace Aura_OS
         {
             try
             {
-                Shell.cmdIntr.CommandManager.RegisterAllCommands();
+                CommandManager.RegisterAllCommands();
 
                 //AConsole = new System.Shell.VGA.VGAConsole(null);
 
@@ -83,11 +84,11 @@ namespace Aura_OS
                 System.CustomConsole.WriteLineInfo("Booting Aura Operating System...");
 
                 System.CustomConsole.WriteLineInfo("VBE Informations:");
-                System.CustomConsole.WriteLineInfo("VBE Version: " + System.Shell.VESAVBE.Graphics.VBEVersion);
-                System.CustomConsole.WriteLineInfo("VBE Signature: " + System.Shell.VESAVBE.Graphics.VBESignature);
-                System.CustomConsole.WriteLineInfo("BPP: " + System.Shell.VESAVBE.Graphics.ModeInfo.bpp);
-                System.CustomConsole.WriteLineInfo("Height: " + System.Shell.VESAVBE.Graphics.ModeInfo.height);
-                System.CustomConsole.WriteLineInfo("Width: " + System.Shell.VESAVBE.Graphics.ModeInfo.width);
+                System.CustomConsole.WriteLineInfo("VBE Version: " + Graphics.VBEVersion);
+                System.CustomConsole.WriteLineInfo("VBE Signature: " + Graphics.VBESignature);
+                System.CustomConsole.WriteLineInfo("BPP: " + Graphics.ModeInfo.bpp);
+                System.CustomConsole.WriteLineInfo("Height: " + Graphics.ModeInfo.height);
+                System.CustomConsole.WriteLineInfo("Width: " + Graphics.ModeInfo.width);
 
                 #region Register Filesystem
                 Sys.FileSystem.VFS.VFSManager.RegisterVFS(vFS);
@@ -164,7 +165,7 @@ namespace Aura_OS
 
                         var cmd = Console.ReadLine();
                         //TBAR.Stop();
-                        Shell.cmdIntr.CommandManager._CommandManger(cmd);
+                        CommandManager._CommandManger(cmd);
                         //Console.WriteLine();
 
                     }
@@ -181,30 +182,30 @@ namespace Aura_OS
             }
         }
 
-        int _deltaT = 0;
+        //int _deltaT = 0;
 
-        private void TaskBar()
-        {
-
-            int oldx = 0;
-            int oldy = 0;
-
-            while (true)
-            {
-                if (_deltaT != RTC.Second)
-                {
-                    oldx = AConsole.X;
-                    oldy = AConsole.Y;
-                    _deltaT = RTC.Second;
-                    AConsole.X = AConsole.Width - 8;
-                    AConsole.Y = 0;
-                    AConsole.Write(Encoding.ASCII.GetBytes(Time.TimeString(true, true, true)));
-                    AConsole.X = oldx;
-                    AConsole.Y = oldy;
-                }
-            }
-            
-        }
+        //private void TaskBar()
+        //{
+        //
+        //    int oldx = 0;
+        //    int oldy = 0;
+        //
+        //    while (true)
+        //    {
+        //        if (_deltaT != RTC.Second)
+        //        {
+        //            oldx = AConsole.X;
+        //            oldy = AConsole.Y;
+        //            _deltaT = RTC.Second;
+        //            AConsole.X = AConsole.Width - 8;
+        //            AConsole.Y = 0;
+        //            AConsole.Write(Encoding.ASCII.GetBytes(Time.TimeString(true, true, true)));
+        //            AConsole.X = oldx;
+        //            AConsole.Y = oldy;
+        //        }
+        //    }
+        //    
+        //}
 
         #endregion
 

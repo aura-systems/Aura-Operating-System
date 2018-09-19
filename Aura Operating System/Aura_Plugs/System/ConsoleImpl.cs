@@ -14,6 +14,7 @@ using Cosmos.System;
 using IL2CPU.API.Attribs;
 using Sys = System;
 using Aura_OS;
+using Aura_OS.System.Shell.cmdIntr;
 
 namespace Aura_Plugs
 {
@@ -25,7 +26,7 @@ namespace Aura_Plugs
         private static Encoding ConsoleInputEncoding = Encoding.ASCII;
         private static Encoding ConsoleOutputEncoding = Encoding.ASCII;
 
-        private static Aura_OS.System.Shell.Console GetConsole()
+        private static Aura_OS.System.AConsole.Console GetConsole()
         {
             return Aura_OS.Kernel.AConsole;
         }

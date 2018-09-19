@@ -176,7 +176,7 @@ namespace Aura_OS.HAL.Drivers.Network
             else
             {
                 if ((status & 0x0004) != 0) Console.WriteLine("Transmit succesfull - descriptor not resetted");
-                if ((status & 0x0080) != 0) Console.WriteLine("Transmit descriptor unavailable");
+                //if ((status & 0x0080) != 0) Console.WriteLine("Transmit descriptor unavailable");
             }
             if ((status & 0x0008) != 0) Console.WriteLine("Transmit error");
             if ((status & 0x0010) != 0)
@@ -302,15 +302,7 @@ namespace Aura_OS.HAL.Drivers.Network
                 mTxBuffers[mNextTXDesc][b] = aData[b];
             }
 
-            if (mNextTXDesc == (32 - 1))
-            {
-                mTxDescriptor.Write32(xOffset + 0, OWN | mTxDescriptor.Read32(xOffset + 0) & EOR | (uint)(aData.Length & 0x3FFF) | (1 << 29) | (1 << 28));
-                mNextTXDesc = 0;
-            }
-            else
-            {
-                mTxDescriptor.Write32(xOffset + 0, OWN | mTxDescriptor.Read32(xOffset + 0) | (uint)(aData.Length & 0x3FFF) | (1 << 29) | (1 << 28));
-            }
+            mTxDescriptor.Write32(xOffset + 0, OWN | mTxDescriptor.Read32(xOffset + 0) & EOR | (uint)(aData.Length & 0x3FFF) | (1 << 29) | (1 << 28));
 
             mTxDescriptor.Write32(xOffset + 4, 0);
 

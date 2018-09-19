@@ -26,7 +26,7 @@ namespace Aura_OS.System
 
             Console.BackgroundColor = ConsoleColor.Red;
 
-            Shell.VESAVBE.Graphics.canvas.ClearVRAM(0xAA0000);
+            Graphics.VBE.Graphics.Canvas.ClearVRAM(0xAA0000);
 
             Kernel.AConsole.X = 0;
             Kernel.AConsole.Y = 0;
@@ -65,7 +65,7 @@ namespace Aura_OS.System
 
             Console.BackgroundColor = ConsoleColor.Red;
 
-            Shell.VESAVBE.Graphics.canvas.ClearVRAM(0xAA0000);
+            Graphics.VBE.Graphics.Canvas.ClearVRAM(0xAA0000);
 
             Kernel.AConsole.X = 0;
             Kernel.AConsole.Y = 0;

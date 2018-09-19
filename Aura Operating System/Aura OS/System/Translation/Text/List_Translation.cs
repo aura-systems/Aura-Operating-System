@@ -44,7 +44,7 @@ namespace Aura_OS.System.Translation
                     Console.WriteLine("- settings {args} (permet d'accéder aux paramètres)");
                     Console.WriteLine("- logout (permet de se déconnecter)");
                     
-                    if(Shell.KeyboardShortcuts.Close())
+                    if(AConsole.KeyboardShortcuts.Close())
                     {
                         return;
                     }
@@ -88,7 +88,7 @@ namespace Aura_OS.System.Translation
                     Console.WriteLine("- settings {args} (access to settings)");
                     Console.WriteLine("- logout (to disconnect)");
 
-                    if (Shell.KeyboardShortcuts.Close())
+                    if (AConsole.KeyboardShortcuts.Close())
                     {
                         return;
                     }
@@ -132,7 +132,7 @@ namespace Aura_OS.System.Translation
                     Console.WriteLine("- settings {argumenten} (toegang tot instellingen)");
                     Console.WriteLine("- logout (om los te koppelen)");
 
-                    if (Shell.KeyboardShortcuts.Close())
+                    if (AConsole.KeyboardShortcuts.Close())
                     {
                         return;
                     }
