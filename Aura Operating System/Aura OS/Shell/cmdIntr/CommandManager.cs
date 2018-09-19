@@ -199,6 +199,15 @@ namespace Aura_OS.Shell.cmdIntr
 
             #endregion Settings
 
+            #region Firewall
+
+            else if (cmd.StartsWith("fw"))
+            {
+                Network.Firewall.c_Firewall(cmd);
+            }
+
+            #endregion
+
             #region System Infomation
 
             else if (cmd.Equals("systeminfo"))
