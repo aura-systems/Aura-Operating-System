@@ -4,7 +4,9 @@
 * PROGRAMMER(S):    Valentin Charbonnier <valentinbreiz@gmail.com>
 */
 
+using Aura_OS.System.Utils;
 using System;
+using static Cosmos.HAL.PCIDevice;
 
 namespace Aura_OS.System.Shell.cmdIntr.Util
 {
@@ -37,7 +39,7 @@ namespace Aura_OS.System.Shell.cmdIntr.Util
             int count = 0;
             foreach (Cosmos.HAL.PCIDevice device in Cosmos.HAL.PCI.Devices)
             {
-                Console.WriteLine(device.bus + ":" + device.slot + ":" + device.function + " " + Cosmos.HAL.PCIDevice.DeviceClass.GetTypeString(device) + ": " + Cosmos.HAL.PCIDevice.DeviceClass.GetDeviceString(device) + " (0x" + System.Utils.Conversion.DecToHex(device.VendorID) + ":0x" + System.Utils.Conversion.DecToHex(device.DeviceID) + ")");
+                Console.WriteLine(Conversion.D2(device.bus) + ":" + Conversion.D2(device.slot) + ":" + Conversion.D2(device.function) + " - " + "0x" + Conversion.D4(Conversion.DecToHex(device.VendorID)) + ":0x" + Conversion.D4(Conversion.DecToHex(device.DeviceID)) + " : " + DeviceClass.GetTypeString(device) + ": " + DeviceClass.GetDeviceString(device));
                 count++;
                 if (count==19)
                 {
