@@ -47,6 +47,9 @@ namespace Aura_OS.System.Translation
 
                     switch (ToTranslate)
                     {
+                        case "title_firewall_rules":
+                            Console.WriteLine("Addresse || Port || Entrant || Sortant");
+                            break;
                         case "shutdown": //This is a keyword
                             Console.WriteLine("Extinction en cours..."); //That is a translated sentence.
                             break;

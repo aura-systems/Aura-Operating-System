@@ -52,8 +52,15 @@ namespace Aura_OS.Shell.cmdIntr.Network
 
                 if(args[0] == "rm")
                 {
-                    //todo
-                    //System.Network.Firewall.TCPRules.DeleteRule(args[1], args[2], args[3], args[4]);
+                    if(args[1] == "tcp")
+                    {
+                        System.Network.Firewall.TCPRules.Delete(args[1], args[2], args[3], args[4]);
+                    }                    
+                }
+
+                if(args[0] == "get")
+                {
+                    System.Network.Firewall.TCPRules.GetRules(args[1] + ":" + args[2]);
                 }
             }
             else
