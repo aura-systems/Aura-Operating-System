@@ -78,6 +78,12 @@ namespace Aura_OS.HAL.Drivers.Sound
             status.mode = 0;
             status.playing = false;
 
+            byte interruptline = (Ports.inb(DSP_BUFFER));
+            Console.WriteLine("interruptline=" + interruptline);
+            //Cosmos.Core.INTs.SetIrqHandler(5, sb16_handler);
+
+            
+
             return true;
 
         }
@@ -210,16 +216,38 @@ namespace Aura_OS.HAL.Drivers.Sound
 
             Console.WriteLine("sampling rate set!");
 
+            uint bytes_read = (uint)status.fd.Length;
+            for (int i = 0; i < 32 * 1024; i++)
+            {
+                dma_buffer[(uint)i] = status.fd[i];
+            }
             //uint bytes_read = syscall_read(fd, (uint8_t*)dma_buffer, CHUNK_SIZE * 2);
 
             dma_start(status.channel, dma_buffer.Offset, dma_buffer.Size, (byte)DMA.DMA_MODE_AI);
 
+            Console.WriteLine("dma_start done.");
+
             sb16_start_playback(32 * 1024);
-            //if (bytes_read < 32 * 1024)
-            //{
-            //    sb16_stop_playback_after();
-            //}
+            if (bytes_read < 32 * 1024)
+            {
+                Console.WriteLine("bytes_read < 32 * 1024");
+                sb16_stop_playback_after();
+            }
+
+            sb16_handler();
             return 0;
+        }
+
+        static void sb16_stop_playback_after()
+        {
+            if ((status.mode & STATUS_8BIT) != 0)
+            {
+                sb16_dsp_write((byte)DSPCMD.DSP_STOP_AFTER_8BIT);
+            }
+            else
+            {
+                sb16_dsp_write((byte)DSPCMD.DSP_STOP_AFTER_16BIT);
+            }
         }
 
         // DSP commands
@@ -458,6 +486,90 @@ namespace Aura_OS.HAL.Drivers.Sound
             public long chunk_id;
             public long data_size;
         }
+
+        static ManagedMemoryBlock first_block = dma_buffer;
+        static ManagedMemoryBlock second_block = new ManagedMemoryBlock(dma_buffer.Size + (32 * 1024));
+        static ManagedMemoryBlock current_block = dma_buffer;
+
+
+        static void reset_playback()
+        {
+            status.playing = false;
+            current_block = first_block;
+            int i;
+            for (i = 0; i < dma_buffer.Size; i++)
+            {
+                dma_buffer[(uint)i] = 0;
+            }
+            status.fd = null;
+        }
+
+        static void sb16_stop_playback()
+        {
+            if ((status.mode & STATUS_8BIT) != 0)
+            {
+                sb16_dsp_write((byte)DSPCMD.DSP_STOP_8BIT);
+            }
+            else
+            {
+                sb16_dsp_write((byte)DSPCMD.DSP_STOP_16BIT);
+            }
+            reset_playback();
+        }
+
+        static void sb16_handler()
+        {
+
+            Console.WriteLine("sb16_handler");
+
+            //save all
+            //registers_t regs;
+            //save_regs(regs);
+
+            if (status.playing)
+            {
+                //uint flags;
+                //block_interrupts(&flags);
+                uint bytes_read = (uint)status.fd.Length;
+                for (int i = 0; i < 32 * 1024; i++)
+                {
+                    current_block[(uint)i] = status.fd[i];
+                }
+                //restore_interrupts(flags);
+                if (bytes_read > 0)
+                {
+                    ushort block_size = (ushort)bytes_read;
+                    // there are no more chunks after this one; stop playback after the
+                    // current block
+                    if (bytes_read < (32 * 1024))
+                    {
+                        sb16_stop_playback_after();
+                        reset_playback();
+                    }
+                    if (current_block == first_block)
+                    {
+                        current_block = second_block;
+                    }
+                    else
+                    {
+                        current_block = first_block;
+                    }
+
+                    sb16_start_playback(block_size);
+                }
+                else
+                {
+                    // file has no more bytes left; we're done playing
+                    reset_playback();
+                    sb16_stop_playback();
+                }
+            }
+
+            sb16_inb((byte)DSP.DSPReadStatus);
+            sb16_inb((byte)DSP.DSPIntAck);
+
+
+            }
 
     }
 }
