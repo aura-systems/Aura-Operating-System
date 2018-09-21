@@ -222,6 +222,11 @@ namespace Aura_OS.System.Shell.cmdIntr
 
             #region Tests
 
+            else if (cmd.Equals("ac"))
+            {
+                HAL.Drivers.Sound.AC97.FindAll();
+            }
+
             else if (cmd.Equals("crash"))
             {
                 Tests.Crash.c_Crash();
