@@ -36,7 +36,9 @@ namespace Aura_OS.HAL.Drivers.Sound
         }
         public static void reset_DSP()
         {
+            Console.WriteLine("01");
             Ports.outb(DSP_RESET, 1);
+            Console.WriteLine("02");
             Wait();
             Ports.outb(DSP_RESET, 0);
             Wait();
@@ -60,8 +62,11 @@ namespace Aura_OS.HAL.Drivers.Sound
             return Ports.inb(DSP_READ);
         }
 
+        static byte INTERRUPT_SETUP = 0x80;
+
         public static bool init_SB16()
         {
+
             reset_DSP();
 
             if (sound_blaster == false)
@@ -78,14 +83,66 @@ namespace Aura_OS.HAL.Drivers.Sound
             status.mode = 0;
             status.playing = false;
 
-            byte interruptline = (Ports.inb(DSP_BUFFER));
-            Console.WriteLine("interruptline=" + interruptline);
-            //Cosmos.Core.INTs.SetIrqHandler(5, sb16_handler);
+            Console.WriteLine("Searching IRQ...");
 
-            
+            int irq = 5;
+            int iss;
+
+            switch (irq)
+            {
+                case 2:
+                    iss = 0x01;
+                    break;
+                case 5:
+                    iss = 0x02;
+                    break;
+                case 7:
+                    iss = 0x04;
+                    break;
+                case 10:
+                    iss = 0x08;
+                    break;
+                default:
+                    iss = readMixer(INTERRUPT_SETUP);
+                    break;
+            }
+
+            iss = writeMixer(INTERRUPT_SETUP, (byte)(iss &0x0f)) & 0x0f;
+            switch (iss)
+            {
+                case 0x01:
+                    irq = 2;
+                    break;
+                case 0x02:
+                    irq = 5;
+                    break;
+                case 0x04:
+                    irq = 7;
+                    break;
+                case 0x08:
+                    irq = 10;
+                    break;
+                default:
+                    return false;
+            }
+            Console.WriteLine("interruptline=" + irq);
+            Cosmos.Core.INTs.SetIrqHandler((byte)irq, sb16_handler);
 
             return true;
 
+        }
+
+        static byte writeMixer(byte addr, byte val)
+        {
+            Ports.outb(0x224, addr);
+            Ports.outb(0x225, val);
+            return Ports.inb(0x225);
+        }
+
+        static byte readMixer(byte addr)
+        {
+            Ports.outb(0x224, addr);
+            return Ports.inb(0x225);
         }
 
         static int RIFF = 0x52494646;
@@ -107,7 +164,7 @@ namespace Aura_OS.HAL.Drivers.Sound
             //    return info;
             //}
             info.chunk_id = (buf[0] << 24) | (buf[1] << 16) | (buf[2] << 8) | buf[3];
-            info.data_size = (buf[7] << 24) | (buf[6] << 16) | (buf[5] << 8) | buf[4];
+            info.data_size = ((buf[7] << 24) | (buf[6] << 16) | (buf[5] << 8) | buf[4]) - 36;
             if (info.chunk_id == RIFF)
             {
                 if (((buf[8] << 24) | (buf[9] << 16) | (buf[10] << 8) | buf[11]) != WAVE)
@@ -175,13 +232,15 @@ namespace Aura_OS.HAL.Drivers.Sound
 
             Console.WriteLine("sample_rate=" + sample_rate);
 
+            dma_buffer = new ManagedMemoryBlock((uint)info.data_size);
+
             return play_file(status.fd, bits, is_signed, sample_rate);
         }
 
         static byte STATUS_8BIT = (1 << 1);
         static byte STATUS_SIGNED = (1 << 2);
 
-        static ManagedMemoryBlock dma_buffer = new ManagedMemoryBlock((32 * 1024) * 2);
+        static ManagedMemoryBlock dma_buffer;
 
         static int play_file(byte[] fd, int bits, bool is_signed, int sample_rate)
         {
@@ -217,24 +276,22 @@ namespace Aura_OS.HAL.Drivers.Sound
             Console.WriteLine("sampling rate set!");
 
             uint bytes_read = (uint)status.fd.Length;
-            for (int i = 0; i < 32 * 1024; i++)
+            for (int i = 0; i < dma_buffer.Size; i++)
             {
-                dma_buffer[(uint)i] = status.fd[i];
+                dma_buffer[(uint)i] = status.fd[44 + i];
             }
-            //uint bytes_read = syscall_read(fd, (uint8_t*)dma_buffer, CHUNK_SIZE * 2);
 
             dma_start(status.channel, dma_buffer.Offset, dma_buffer.Size, (byte)DMA.DMA_MODE_AI);
 
             Console.WriteLine("dma_start done.");
 
-            sb16_start_playback(32 * 1024);
-            if (bytes_read < 32 * 1024)
+            sb16_start_playback(dma_buffer.Size);
+            if (bytes_read < dma_buffer.Size)
             {
-                Console.WriteLine("bytes_read < 32 * 1024");
+                Console.WriteLine("bytes_read < dma_buffer.Size");
                 sb16_stop_playback_after();
             }
 
-            sb16_handler();
             return 0;
         }
 
@@ -487,13 +544,16 @@ namespace Aura_OS.HAL.Drivers.Sound
             public long data_size;
         }
 
-        static ManagedMemoryBlock first_block = dma_buffer;
-        static ManagedMemoryBlock second_block = new ManagedMemoryBlock(dma_buffer.Size + (32 * 1024));
-        static ManagedMemoryBlock current_block = dma_buffer;
+        static ManagedMemoryBlock first_block;
+        //static ManagedMemoryBlock second_block = new ManagedMemoryBlock(dma_buffer.Size + dma_buffer.Size);
+        static ManagedMemoryBlock current_block;
 
 
         static void reset_playback()
         {
+            first_block = dma_buffer;
+            current_block = dma_buffer;
+
             status.playing = false;
             current_block = first_block;
             int i;
@@ -517,7 +577,7 @@ namespace Aura_OS.HAL.Drivers.Sound
             reset_playback();
         }
 
-        static void sb16_handler()
+        static void sb16_handler(ref Cosmos.Core.INTs.IRQContext context)
         {
 
             Console.WriteLine("sb16_handler");
@@ -530,10 +590,10 @@ namespace Aura_OS.HAL.Drivers.Sound
             {
                 //uint flags;
                 //block_interrupts(&flags);
-                uint bytes_read = (uint)status.fd.Length;
-                for (int i = 0; i < 32 * 1024; i++)
+                uint bytes_read = dma_buffer.Size;
+                for (int i = 0; i < dma_buffer.Size; i++)
                 {
-                    current_block[(uint)i] = status.fd[i];
+                    current_block[(uint)i] = dma_buffer[(uint)i];
                 }
                 //restore_interrupts(flags);
                 if (bytes_read > 0)
@@ -541,14 +601,14 @@ namespace Aura_OS.HAL.Drivers.Sound
                     ushort block_size = (ushort)bytes_read;
                     // there are no more chunks after this one; stop playback after the
                     // current block
-                    if (bytes_read < (32 * 1024))
+                    if (bytes_read < dma_buffer.Size)
                     {
                         sb16_stop_playback_after();
                         reset_playback();
                     }
                     if (current_block == first_block)
                     {
-                        current_block = second_block;
+                        //current_block = second_block;
                     }
                     else
                     {
