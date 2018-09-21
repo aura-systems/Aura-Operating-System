@@ -290,6 +290,9 @@ namespace Aura_OS.System.Translation
                         case "pleasereboot":
                             Console.WriteLine("Veuillez redémarrer votre PC pour appliquer les changements.");
                             break;
+                        case "volumeinvalid":
+                            Console.WriteLine("Le lecteur spécifié est introuvable.");
+                            break;
                     }
                     break;
 
@@ -534,6 +537,9 @@ namespace Aura_OS.System.Translation
                             break;
                         case "pleasereboot":
                             Console.WriteLine("Please restart your PC to apply the changes.");
+                            break;
+                        case "volumeinvalid":
+                            Console.WriteLine("The specified drive is not found.");
                             break;
                     }
                     break;
@@ -780,6 +786,9 @@ namespace Aura_OS.System.Translation
                         case "pleasereboot":
                             Console.WriteLine("Start uw PC opnieuw op om de wijzigingen toe te passen.");
                             break;
+                        case "volumeinvalid":
+                            Console.WriteLine("De opgegeven aandrijving wordt niet gevonden.");
+                            break;
                     }
                     break;
                     
@@ -1015,6 +1024,9 @@ namespace Aura_OS.System.Translation
                             break;
                         case "pleasereboot":
                             Console.WriteLine("Riavviare il PC per applicare le modifiche.");
+                            break;
+                        case "volumeinvalid":
+                            Console.WriteLine("L'unità specificata non viene trovata.");
                             break;
                     }
                     

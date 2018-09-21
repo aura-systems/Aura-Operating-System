@@ -8,6 +8,8 @@ using Aura_OS.System.Utils;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using L = Aura_OS.System.Translation;
+
 
 namespace Aura_OS.System.Shell.cmdIntr
 {
@@ -367,6 +369,10 @@ namespace Aura_OS.System.Shell.cmdIntr
                 {
                     Console.WriteLine();
                     return;
+                }
+                else if (cmd.Length == 2)
+                {
+                    FileSystem.ChangeVol.c_ChangeVol(cmd);
                 }
                 else
                 {

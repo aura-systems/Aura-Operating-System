@@ -54,6 +54,7 @@ namespace Aura_OS
         public static string Consolemode = "VGATextmode";
         public static Config LocalNetworkConfig;
         public static Debugger debugger;
+        public static string current_volume = @"0:\";
 
         #endregion
 
@@ -215,7 +216,7 @@ namespace Aura_OS
         /// </summary>
         public static void BeforeCommand()
         {
-            if (current_directory == @"0:\")
+            if (current_directory == Kernel.current_volume)
             {
 
                 Console.ForegroundColor = ConsoleColor.Blue;
