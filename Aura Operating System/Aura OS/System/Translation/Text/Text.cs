@@ -47,6 +47,9 @@ namespace Aura_OS.System.Translation
 
                     switch (ToTranslate)
                     {
+                        case "fw_rule_doesnt_exists":
+                            Console.WriteLine("Cette règle n'existe pas.");
+                            break;
                         case "fw_enabled":
                             Console.WriteLine("Le pare-feu a été activé.");
                             break;
@@ -311,6 +314,9 @@ namespace Aura_OS.System.Translation
 
                     switch (ToTranslate)
                     {
+                        case "fw_rule_doesnt_exists":
+                            Console.WriteLine("This rule doesn't exists.");
+                            break;
                         case "fw_enabled":
                             Console.WriteLine("Firewall enabled.");
                             break;
@@ -566,6 +572,9 @@ namespace Aura_OS.System.Translation
 
                     switch (ToTranslate)
                     {
+                        case "fw_rule_doesnt_exists":
+                            Console.WriteLine("Een dergelijke regel bestaat niet.");
+                            break;
                         case "fw_enabled":
                             Console.WriteLine("De firewall is uitgeschakeld");
                             break;
@@ -821,6 +830,9 @@ namespace Aura_OS.System.Translation
 
                     switch (ToTranslate)
                     {
+                        case "fw_rule_doesnt_exists":
+                            Console.WriteLine("Non esiste una regola del genere.");
+                            break;
                         case "fw_enabled":
                             Console.WriteLine("Il firewall è stato attivato.");
                             break;

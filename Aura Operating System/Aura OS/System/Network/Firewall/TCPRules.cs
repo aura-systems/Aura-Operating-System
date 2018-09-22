@@ -68,6 +68,10 @@ namespace Aura_OS.System.Network.Firewall
                     index = counter;
                     exists = true;
                 }
+                else
+                {
+                    Translation.Text.Display("fw_rule_doesnt_exists");
+                }
             }
             if (exists)
             {
