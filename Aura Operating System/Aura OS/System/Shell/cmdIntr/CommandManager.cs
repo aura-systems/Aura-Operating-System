@@ -9,6 +9,8 @@ using Aura_OS.System.Utils;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using L = Aura_OS.System.Translation;
+
 
 namespace Aura_OS.System.Shell.cmdIntr
 {
@@ -253,37 +255,12 @@ namespace Aura_OS.System.Shell.cmdIntr
 
             else if (cmd.Equals("beep"))
             {
-                //Kernel.speaker.beep();
+                Kernel.speaker.beep();
             }
 
             else if (cmd.Equals("play"))
             {
-                //Kernel.speaker.playmusic();
-            }
-
-            else if (cmd.Equals("8168test"))
-            {
-                Console.WriteLine("Finding RTL8168 nic...");
-
-                HAL.Drivers.Network.RTL8168 xNic;
-
-                Cosmos.HAL.PCIDevice xNicDev = Cosmos.HAL.PCI.GetDevice((Cosmos.HAL.VendorID)0x10ec, (Cosmos.HAL.DeviceID)0x8168);
-                if (xNicDev == null)
-                {
-                    Console.WriteLine("PCIDevice not found!!");
-                    return;
-                }
-
-                Console.WriteLine("Found RTL8168 NIC on PCI " + xNicDev.bus + ":" + xNicDev.slot + ":" + xNicDev.function);
-                Console.WriteLine("NIC IRQ: " + xNicDev.InterruptLine);
-
-                xNic = new HAL.Drivers.Network.RTL8168(xNicDev);
-
-                Console.WriteLine("NIC MAC Address: " + xNic.MACAddress.ToString());
-
-                xNic.Enable();
-
-                Console.WriteLine("Done!");
+                Kernel.speaker.playmusic();
             }
 
             else if (cmd.Equals("udp"))
@@ -390,6 +367,10 @@ namespace Aura_OS.System.Shell.cmdIntr
                 {
                     Console.WriteLine();
                     return;
+                }
+                else if (cmd.Length == 2)
+                {
+                    FileSystem.ChangeVol.c_ChangeVol(cmd);
                 }
                 else
                 {

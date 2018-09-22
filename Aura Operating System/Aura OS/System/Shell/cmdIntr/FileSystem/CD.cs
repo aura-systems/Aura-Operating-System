@@ -41,7 +41,7 @@ namespace Aura_OS.System.Shell.cmdIntr.FileSystem
                 {
                     Directory.SetCurrentDirectory(Kernel.current_directory);
                     var root = Kernel.vFS.GetDirectory(Kernel.current_directory);
-                    if (Kernel.current_directory == @"0:\")
+                    if (Kernel.current_directory == Kernel.current_volume)
                     {
                     }
                     else
@@ -49,9 +49,9 @@ namespace Aura_OS.System.Shell.cmdIntr.FileSystem
                         Kernel.current_directory = root.mParent.mFullPath;
                     }
                 }
-                else if (dir == @"0:\")
+                else if (dir == Kernel.current_volume)
                 { 
-                    Kernel.current_directory = @"0:\";
+                    Kernel.current_directory = Kernel.current_volume;
                 }
                 else
                 {

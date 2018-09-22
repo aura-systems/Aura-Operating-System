@@ -38,7 +38,14 @@ namespace Aura_OS.System.Shell.cmdIntr.FileSystem
 
             foreach (var vol in vols)
             {
-                Console.WriteLine("  " + vol.mName + "\t   \t" + Kernel.vFS.GetFileSystemType(vol.mName) + " \t" + vol.mSize + " MB\t" + vol.mParent);
+                if (vol.mName == Kernel.current_volume && vols.Count > 1)
+                {
+                    Console.WriteLine(" >" + vol.mName + "\t   \t" + Kernel.vFS.GetFileSystemType(vol.mName) + " \t" + vol.mSize + " MB\t" + vol.mParent);
+                }
+                else
+                {
+                    Console.WriteLine("  " + vol.mName + "\t   \t" + Kernel.vFS.GetFileSystemType(vol.mName) + " \t" + vol.mSize + " MB\t" + vol.mParent);
+                }
             }
 
         }

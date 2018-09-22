@@ -36,7 +36,7 @@ namespace Aura_OS.System.Shell.cmdIntr.Settings
             Kernel.userLevelLogged = "";
             Kernel.userLogged = "";
             Directory.SetCurrentDirectory(Kernel.current_directory);
-            Kernel.current_directory = @"0:\";
+            Kernel.current_directory = Kernel.current_volume;
             Console.Clear();
         }
     }
