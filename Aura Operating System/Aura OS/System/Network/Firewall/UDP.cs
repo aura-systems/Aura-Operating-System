@@ -40,8 +40,8 @@ namespace Aura_OS.System.Network.Firewall
 
         public static bool Block_UDPOutgoingPacket(IPV4.UDP.UDPPacket packet)
         {
-            IPV4.Address IPSource = packet.SourceIP;
-            ushort Port = packet.SourcePort;
+            IPV4.Address IPSource = packet.DestinationIP;
+            ushort Port = packet.DestinationPort;
 
             for (int i = 0; i < UDPFilterList.Count; i++)
             {
