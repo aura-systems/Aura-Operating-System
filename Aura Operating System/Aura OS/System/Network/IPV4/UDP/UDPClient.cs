@@ -96,6 +96,10 @@ namespace Aura_OS.System.Network.IPV4.UDP
             IPV4.UDP.UDPPacket packet = new IPV4.UDP.UDPPacket(source, dest, (UInt16)this.localPort, (UInt16)destPort, data);
 
             Console.WriteLine("Sending " + packet.ToString());
+            if (Firewall.UDP.Block_UDPOutgoingPacket(packet))
+            {
+                return;
+            }
             IPV4.OutgoingBuffer.AddPacket(packet);
         }
 
