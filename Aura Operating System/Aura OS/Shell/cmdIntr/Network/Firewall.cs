@@ -64,6 +64,18 @@ namespace Aura_OS.Shell.cmdIntr.Network
                 {
                     L.Text.Display("usagefw");
                 }
+                else if (args[0] == "enable")
+                {
+                    System.Network.Firewall.Core.Enable();
+                }
+                else if (args[0] == "disable")
+                {
+                    System.Network.Firewall.Core.Disable();
+                }
+                else if (args[0] == "status")
+                {
+                    Console.WriteLine("Firewall status : " + System.Network.Firewall.Core.Status().ToString());
+                }
                 else
                 {
                     Console.WriteLine("Invalid firewall command");
