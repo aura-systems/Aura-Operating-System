@@ -41,8 +41,8 @@ namespace Aura_OS.System.Network.Firewall
 
         public static bool Block_TCPOutgoingPacket(IPV4.TCP.TCPPacket packet)
         {
-            IPV4.Address IPSource = packet.SourceIP;
-            ushort Port = packet.SourcePort;
+            IPV4.Address IPSource = packet.DestinationIP;
+            ushort Port = packet.DestinationPort;
 
             for (int i = 0; i < TCPFilterList.Count; i++)
             {
