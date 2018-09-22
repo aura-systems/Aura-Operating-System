@@ -48,6 +48,10 @@ namespace Aura_OS.Shell.cmdIntr.Network
                     {
                         System.Network.Firewall.TCPRules.Create(args[2], args[3], args[4], args[5]);
                     }
+                    if (args[1] == "udp")
+                    {
+                        System.Network.Firewall.TCPRules.Create(args[2], args[3], args[4], args[5]);
+                    }
                 }
 
                 if(args[0] == "rm")
@@ -55,7 +59,11 @@ namespace Aura_OS.Shell.cmdIntr.Network
                     if(args[1] == "tcp")
                     {
                         System.Network.Firewall.TCPRules.Delete(args[1], args[2], args[3], args[4]);
-                    }                    
+                    }
+                    if (args[1] == "udp")
+                    {
+                        System.Network.Firewall.UDPRules.Create(args[2], args[3], args[4], args[5]);
+                    }
                 }
             }
             else
