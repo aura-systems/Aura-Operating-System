@@ -17,7 +17,7 @@ namespace Aura_OS.HAL
 
         public static void SaveCurrentScreen()
         {
-            ManagedVBE.LinearFrameBuffer.Copy(lastbuffer, 0, ManagedVBE.len * 4);
+            lastbuffer = ManagedVBE.LinearFrameBuffer.Copy(0, 0, ManagedVBE.len * 4);
             lastX = Kernel.AConsole.X;
             lastY = Kernel.AConsole.Y;
         }
