@@ -47,6 +47,12 @@ namespace Aura_OS.System.Translation
 
                     switch (ToTranslate)
                     {
+                        case "fw_enabled":
+                            Console.WriteLine("Le pare-feu a été activé.");
+                            break;
+                        case "fw_disabled":
+                            Console.WriteLine("Le pare-feu a été désactivé");
+                            break;
                         case "title_firewall_rules":
                             Console.WriteLine("Addresse || Port || Entrant || Sortant");
                             break;
@@ -305,7 +311,12 @@ namespace Aura_OS.System.Translation
 
                     switch (ToTranslate)
                     {
-
+                        case "fw_enabled":
+                            Console.WriteLine("Firewall enabled.");
+                            break;
+                        case "fw_disabled":
+                            Console.WriteLine("Firewall disabled.");
+                            break;
                         case "shutdown":
                             Console.WriteLine("Shutting Down...");
                             break;
@@ -555,7 +566,12 @@ namespace Aura_OS.System.Translation
 
                     switch (ToTranslate)
                     {
-
+                        case "fw_enabled":
+                            Console.WriteLine("De firewall is uitgeschakeld");
+                            break;
+                        case "fw_disabled":
+                            Console.WriteLine("De firewall is geactiveerd");
+                            break;
                         case "shutdown":
                             Console.WriteLine("Afsluiten...");
                             break;
@@ -805,7 +821,12 @@ namespace Aura_OS.System.Translation
 
                     switch (ToTranslate)
                     {
-
+                        case "fw_enabled":
+                            Console.WriteLine("Il firewall è stato attivato.");
+                            break;
+                        case "fw_disabled":
+                            Console.WriteLine("Il firewall è stato disabilitato.");
+                            break;
                         case "shutdown":
                             Console.WriteLine("Arresto in corso...");
                             break;
