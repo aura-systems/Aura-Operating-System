@@ -106,40 +106,40 @@ namespace Aura_OS.System.Network.Firewall
             rulesfile.Clear();
         }
 
-        public static void GetRules(string ip)
-        {
-            Translation.Text.Display("title_firewall_rules");
-            foreach (string item in rules)
-            {
-                string[] rule = item.Split(',');
-                string[] net = rule[0].Split(':');
+        //public static void GetRules(string ip)
+        //{
+        //    Translation.Text.Display("title_firewall_rules");
+        //    foreach (string item in rules)
+        //    {
+        //        string[] rule = item.Split(',');
+        //        string[] net = rule[0].Split(':');
 
 
-                if (rule[0].StartsWith(ip))
-                {
-                    if (rule[1] == "true")
-                    {
-                        rule[1] = "DENY";
-                    }
-                    else
-                    {
-                        rule[1] = "ALLOW";
-                    }
+        //        if (rule[0].StartsWith(ip))
+        //        {
+        //            if (rule[1] == "true")
+        //            {
+        //                rule[1] = "DENY";
+        //            }
+        //            else
+        //            {
+        //                rule[1] = "ALLOW";
+        //            }
 
-                    if (rule[2] == "true")
-                    {
-                        rule[2] = "DENY";
-                    }
-                    else
-                    {
-                        rule[2] = "ALLOW";
-                    }
+        //            if (rule[2] == "true")
+        //            {
+        //                rule[2] = "DENY";
+        //            }
+        //            else
+        //            {
+        //                rule[2] = "ALLOW";
+        //            }
 
-                    Console.WriteLine(rule[0] + ", " + rule[1] + ", " + rule[2]);
-                }
+        //            Console.WriteLine(rule[0] + ", " + rule[1] + ", " + rule[2]);
+        //        }
 
-            }
-        }
+        //    }
+        //}
 
         private static void PushRules()
         {

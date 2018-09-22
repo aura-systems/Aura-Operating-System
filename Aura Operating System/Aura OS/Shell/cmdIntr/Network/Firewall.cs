@@ -57,15 +57,17 @@ namespace Aura_OS.Shell.cmdIntr.Network
                         System.Network.Firewall.TCPRules.Delete(args[1], args[2], args[3], args[4]);
                     }                    
                 }
-
-                if(args[0] == "get")
-                {
-                    System.Network.Firewall.TCPRules.GetRules(args[1] + ":" + args[2]);
-                }
             }
             else
             {
-                Console.WriteLine("Invalid firewall command");
+                if (args[0] == "help")
+                {
+                    L.Text.Display("usagefw");
+                }
+                else
+                {
+                    Console.WriteLine("Invalid firewall command");
+                }
             }
             
         }
