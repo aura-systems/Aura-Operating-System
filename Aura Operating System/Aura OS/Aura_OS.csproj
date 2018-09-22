@@ -106,8 +106,8 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Cosmos.Build" Version="*" NoWarn="NU1604" />
-    <PackageReference Include="Cosmos.Debug.Kernel" Version="1.0.0-*" />
-    <PackageReference Include="Cosmos.System2" Version="1.0.0-*" />
+    <PackageReference Include="Cosmos.Debug.Kernel" Version="*" NoWarn="NU1604" />
+    <PackageReference Include="Cosmos.System2" Version="*" NoWarn="NU1604" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="IL2CPU.API">
