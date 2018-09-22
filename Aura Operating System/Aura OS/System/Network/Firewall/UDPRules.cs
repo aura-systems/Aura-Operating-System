@@ -18,7 +18,7 @@ namespace Aura_OS.System.Network.Firewall
 
         public static void Create(string ip, string port, string incoming, string outgoing)
         {
-            if (!IPV4.Address.IsIPAddress(ip))
+            if (!Utils.Misc.IsIpv4Address(ip))
             {
                 return;
             }
