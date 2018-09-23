@@ -2,6 +2,12 @@
 using Aura_OS.System.Network.IPV4;
 using Aura_OS.HAL;
 
+/*
+* PROJECT:          Aura Operating System Development
+* CONTENT:          DHCP Request
+* PROGRAMMERS:      Alexy DA CRUZ <dacruzalexy@gmail.com>
+*/
+
 namespace Aura_OS.System.Network.DHCP
 {
     public class DHCPRequest : DHCPPacket
