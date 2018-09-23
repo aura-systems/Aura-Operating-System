@@ -110,16 +110,10 @@ namespace Aura_OS.HAL.Drivers.Video
 
         public void ScrollUp()
         {
-            MoveDown(0, mRow2Addr, mScrollSize);
+            LinearFrameBuffer.MoveDown(0, mRow2Addr, mScrollSize);
             LinearFrameBuffer.Fill(mScrollSize, mRow2Addr, 0x00);
         }
 
-        public unsafe void MoveDown(uint aDest, uint aSrc, uint aCount)
-        {
-            byte* xDest = (byte*)(System.Graphics.VBE.Graphics.ModeInfo.framebuffer + aDest);
-            byte* xSrc = (byte*)(System.Graphics.VBE.Graphics.ModeInfo.framebuffer + aSrc);
-            MemoryOperations.Copy(xDest, xSrc, (int)aCount);
-        }
     }
 
 }
