@@ -174,6 +174,10 @@ namespace Aura_OS.System.Network.IPV4.TCP
 
             //Console.WriteLine("Sending " + "TCP Packet Src=" + source + ":" + localPort + ", Dest=" + dest + ":" + destPort + ", DataLen=" + data.Length);
 
+            if (Firewall.TCP.Block_TCPOutgoingPacket(packet))
+            {
+                return;
+            }
             TCPConnection.Connection connection = new TCPConnection.Connection();
 
             connection.dest = dest;
