@@ -4,7 +4,10 @@
 * PROGRAMMER(S):    John Welsh <djlw78@gmail.com>
 */
 
+using Aura_OS.System.CosmosSFS;
 using Aura_OS.System.Utils;
+using Cosmos.HAL.BlockDevice;
+using SimpleFileSystem;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -70,6 +73,8 @@ namespace Aura_OS.System.Shell.cmdIntr
             Register("debug");
         }
 
+        static SimpleFS Fs;
+
         /// <summary>
         /// Shell Interpreter
         /// </summary>
@@ -116,6 +121,59 @@ namespace Aura_OS.System.Shell.cmdIntr
             #endregion Console
 
             #region FileSystem
+
+            else if (cmd.Equals("sfs"))
+            {
+                var blockDevice = BlockDevice.Devices[0];
+                var p = new Partition(blockDevice, 0, blockDevice.BlockCount);
+                Fs = new SimpleFS(new CosmosBlockDevice(p));
+
+                Console.WriteLine("Sfs initialized.");
+            }
+
+            else if (cmd.Equals("sfsload"))
+            {
+                Fs.Load();
+            }
+
+            else if (cmd.Equals("sfsformat"))
+            {
+                Fs.Format();
+            }
+
+            else if (cmd.Equals("sfsls"))
+            {
+                foreach (var directory in Fs?.GetAllDirectories())
+                {
+                    Console.WriteLine(directory);
+                }
+
+                foreach (var fl in Fs?.GetAllFiles())
+                {
+                    Console.WriteLine(fl + " " + Fs.ReadAllText(fl));
+                }
+            }
+
+            else if (cmd.Equals("sfsmkdir"))
+            {
+                Fs?.CreateDirectory("test");
+            }
+
+            else if (cmd.Equals("sfsrmdir"))
+            {
+                Fs.DeleteDirectory("test");
+            }
+
+            else if (cmd.Equals("sfsmkfil"))
+            {
+                Fs?.WriteAllText("bob.txt", "Content of bob.txt");
+            }
+
+            else if (cmd.Equals("sfsrdfil"))
+            {
+                Console.WriteLine("bob.txt:");
+                Console.WriteLine(Fs.ReadAllText("bob.txt"));
+            }
 
             else if (cmd.StartsWith("cd "))
             {
