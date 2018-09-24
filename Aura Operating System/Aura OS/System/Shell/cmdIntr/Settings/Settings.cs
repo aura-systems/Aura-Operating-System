@@ -88,12 +88,16 @@ namespace Aura_OS.System.Shell.cmdIntr.Settings
 
                     if (System.Utils.Misc.IsIpv4Address(IP) && System.Utils.Misc.IsIpv4Address(Subnet) && System.Utils.Misc.IsIpv4Address(Gateway))
                     {
+                        System.Network.NetworkStack.RemoveAllConfigIP();
+
                         System.Utils.Settings.LoadValues();
                         System.Utils.Settings.EditValue("ipaddress", IP);
                         System.Utils.Settings.EditValue("subnet", Subnet);
                         System.Utils.Settings.EditValue("gateway", Gateway);
                         System.Utils.Settings.PushValues();
-                        L.Text.Display("pleasereboot");
+                        
+                        NetworkInit.Init(false);
+                        NetworkInit.Enable();
                     }
                     else
                     {

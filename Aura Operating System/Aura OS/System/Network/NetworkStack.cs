@@ -38,6 +38,14 @@ namespace Aura_OS.System.Network
             IPV4.TCP.TCPPacket.VMTInclude();
         }
 
+        public static void SetConfigIP(NetworkDevice nic, IPV4.Config config)
+        {
+            NetworkConfig.Add(nic, config);
+            AddressMap.Add(config.IPAddress.Hash, nic);
+            IPV4.Config.Add(config);
+            nic.DataReceived = HandlePacket;
+        }
+
         /// <summary>
         /// Configure a IP configuration on the given network device.
         /// <remarks>Multiple IP Configurations can be made, like *nix environments</remarks>
@@ -47,10 +55,26 @@ namespace Aura_OS.System.Network
         /// Mask and Default Gateway for the device</param>
         public static void ConfigIP(NetworkDevice nic, IPV4.Config config)
         {
-            NetworkConfig.Add(nic, config);
-            AddressMap.Add(config.IPAddress.Hash, nic);
-            IPV4.Config.Add(config);
-            nic.DataReceived = HandlePacket;
+            if (NetworkConfig.ContainsKey(nic))
+            {
+                CustomConsole.WriteLineInfo("Config existante");
+                IPV4.Config toremove = NetworkConfig.Get(nic);                
+                AddressMap.Remove(toremove.IPAddress.Hash);
+                IPV4.Config.Remove(config);
+                NetworkConfig.Remove(nic);
+                SetConfigIP(nic, config);
+            }
+            else
+            {
+                SetConfigIP(nic, config);
+            }
+        }
+
+        public static void RemoveAllConfigIP()
+        {
+            AddressMap.Clear();
+            IPV4.Config.RemoveAll();
+            NetworkConfig.Clear();
         }
 
         internal static void HandlePacket(byte[] packetData)
