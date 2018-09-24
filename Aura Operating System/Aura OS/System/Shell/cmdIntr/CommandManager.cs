@@ -274,7 +274,7 @@ namespace Aura_OS.System.Shell.cmdIntr
 
             else if (cmd.Equals("dhcp"))
             {
-                byte[] macb = { 0x00, 0x0C, 0x29, 0x7C, 0x85, 0x28 };
+                byte[] macb = { 0x00, 0x0C, 0x29, 0x18, 0x14, 0xC4 };
                 HAL.MACAddress mac = new HAL.MACAddress(macb);
                 System.Network.DHCP.DHCPDiscover dhcp_discover = new System.Network.DHCP.DHCPDiscover(mac, System.Network.IPV4.Address.Zero, new System.Network.IPV4.Address(192,168,1,100));
                 //System.Network.DHCP.DHCPRequest dhcp_request = new System.Network.DHCP.DHCPRequest(mac, System.Network.IPV4.Address.Zero, new System.Network.IPV4.Address(192, 168, 1, 100), new System.Network.IPV4.Address(192, 168, 1, 254));
