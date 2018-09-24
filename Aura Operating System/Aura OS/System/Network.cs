@@ -88,7 +88,7 @@ namespace Aura_OS.System
             if (Setup.FileSystem() == "true")
             {
                 Utils.Settings.LoadValues();
-                if ((Utils.Settings.GetValue("ipaddress") != "192.168.1.70") || (Utils.Settings.GetValue("subnet") != "255.255.255.0") || (Utils.Settings.GetValue("gateway") != "192.168.1.254"))
+                if ((Utils.Settings.GetValue("ipaddress") != "192.168.1.70") || (Utils.Settings.GetValue("subnet") != "255.255.255.0") || (Utils.Settings.GetValue("gateway") != "192.168.1.1"))
                 {
                     return true;
                 }
