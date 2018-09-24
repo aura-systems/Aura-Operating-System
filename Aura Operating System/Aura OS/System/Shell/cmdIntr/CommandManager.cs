@@ -175,6 +175,24 @@ namespace Aura_OS.System.Shell.cmdIntr
                 Console.WriteLine(Fs.ReadAllText("bob.txt"));
             }
 
+            else if (cmd.Equals("sfsrmfil"))
+            {
+                Console.WriteLine("bob.txt rm");
+                Fs.DeleteFile("bob.txt");
+            }
+
+            else if (cmd.Equals("sfsfilexist"))
+            {
+                if (Fs.FileExists("bob.txt"))
+                {
+                    Console.WriteLine("Exists!!");
+                }
+                else
+                {
+                    Console.WriteLine("Not exist!!");
+                }
+            }
+
             else if (cmd.StartsWith("cd "))
             {
                 FileSystem.CD.c_CD(cmd);

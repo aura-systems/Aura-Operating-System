@@ -11,13 +11,13 @@ namespace Aura_OS.HAL
     class SaveScreen
     {
 
-        static int[] lastbuffer;
+        static uint[] lastbuffer;
         static int lastX;
         static int lastY;
 
         public static void SaveCurrentScreen()
         {
-            lastbuffer = ManagedVBE.LinearFrameBuffer.Copy(0, 0, ManagedVBE.len * 4);
+            lastbuffer = ManagedVBE.LinearFrameBuffer.ToArray();
             lastX = Kernel.AConsole.X;
             lastY = Kernel.AConsole.Y;
         }

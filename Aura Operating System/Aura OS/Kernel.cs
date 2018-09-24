@@ -92,7 +92,7 @@ namespace Aura_OS
                 System.CustomConsole.WriteLineInfo("Width: " + Graphics.ModeInfo.width);
 
                 #region Register Filesystem
-                Sys.FileSystem.VFS.VFSManager.RegisterVFS(vFS, "FAT");
+                Sys.FileSystem.VFS.VFSManager.RegisterVFS(vFS);
                 if (ContainsVolumes())
                 {
                     System.CustomConsole.WriteLineOK("FileSystem Registration");
