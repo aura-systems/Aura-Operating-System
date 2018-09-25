@@ -224,6 +224,11 @@ namespace Aura_OS.System.Shell.cmdIntr
 
             #region Tests
 
+            else if (cmd.Equals("elf"))
+            {
+                Executables.ElfHandler.Run(Executables.TestFile.test_elf);
+            }
+
             else if (cmd.Equals("crash"))
             {
                 Tests.Crash.c_Crash();

@@ -7,7 +7,7 @@ namespace Aura_OS.System.Executables
 {
 	public unsafe class ElfHandler
 	{
-		private byte[] UnmanagedString(string s)
+		private static byte[] UnmanagedString(string s)
 		{
 			var re = new byte[s.Length + 1];
 
@@ -21,9 +21,9 @@ namespace Aura_OS.System.Executables
 		}
 
 		//this is suppose to be in before run, will need it own command
-		public static void BR()
+		public static void Run(byte[] file)
 		{
-			fixed (byte* ptr = TestFile.test_so)
+			fixed (byte* ptr = file)
 			{
 				var exe = new UnmanagedExecutible(ptr);
 				exe.Load();
@@ -32,19 +32,19 @@ namespace Aura_OS.System.Executables
 				Console.WriteLine("Executing");
 
 				new ArgumentWriter();
-				exe.Invoke("tty_clear");
-
-				new ArgumentWriter()
-					.Push(5)  //fg
-					.Push(15); //bg
-				exe.Invoke("tty_set_color");
-
-				fixed (byte* str = UnmanagedString("Hello World"))
-				{
-					new ArgumentWriter()
-						.Push((uint)str);
-					exe.Invoke("tty_puts");
-				}
+				exe.Invoke("start");
+//
+				//new ArgumentWriter()
+				//	.Push(5)  //fg
+				//	.Push(15); //bg
+				//exe.Invoke("tty_set_color");
+                //
+				//fixed (byte* str = UnmanagedString("Hello World"))
+				//{
+				//	new ArgumentWriter()
+				//		.Push((uint)str);
+				//	exe.Invoke("tty_puts");
+				//}
 
 
 			}

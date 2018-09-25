@@ -135,6 +135,7 @@ namespace CosmosELFCore
         {
             for (int i = 0; i < _elf.Symbols.Count; i++)
             {
+                Console.WriteLine(_elf.Symbols[i].Name);
                 if (function == _elf.Symbols[i].Name)
                 {
                     Invoker.Offset =
