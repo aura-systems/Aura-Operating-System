@@ -20,15 +20,15 @@ using System.Text;
 using Cosmos.System.ExtendedASCII;
 using Aura_OS.Apps.System;
 using Aura_OS.System.Network.IPV4;
-using Cosmos.HAL;
 using Aura_OS.System.Graphics.VBE;
 using Aura_OS.System.Shell.cmdIntr;
+using Aura_OS.System.Executables.Drivers;
 
 #endregion
 
 namespace Aura_OS
 {
-    public class Kernel : Sys.Kernel
+	public class Kernel : Sys.Kernel
     {
 
         #region Global variables
@@ -46,7 +46,8 @@ namespace Aura_OS
         public static string UserDir = @"0:\Users\" + userLogged + "\\";
         public static bool SystemExists = false;
         public static bool JustInstalled = false;
-        public static CosmosVFS vFS = new CosmosVFS();
+		public static List<Driver> Drivers = new List<Driver>();
+		public static CosmosVFS vFS = new CosmosVFS();
 		public static Dictionary<string, string> environmentvariables = new Dictionary<string, string>();
         public static HAL.PCSpeaker speaker = new HAL.PCSpeaker();
         public static string boottime = Time.MonthString() + "/" + Time.DayString() + "/" + Time.YearString() + ", " + Time.TimeString(true, true, true);
