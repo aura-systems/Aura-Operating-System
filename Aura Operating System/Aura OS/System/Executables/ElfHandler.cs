@@ -20,7 +20,8 @@ namespace Aura_OS.System.Executables
 			return re;
 		}
 
-		public void BR()
+		//this is suppose to be in before run, will need it own command
+		public static void BR()
 		{
 			fixed (byte* ptr = TestFile.test_so)
 			{
