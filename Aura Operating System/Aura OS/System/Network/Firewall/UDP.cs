@@ -25,11 +25,11 @@ namespace Aura_OS.System.Network.Firewall
 
                 for (int i = 0; i < UDPFilterList.Count; i++)
                 {
-                    if (UDPFilterList[i].Contains(IPSource.ToString() + "," + Port.ToString() + ",true"))
+                    if (UDPFilterList[i].Contains(IPSource.ToString() + ":" + Port.ToString() + ",true"))
                     {
                         return true;
                     }
-                    if (UDPFilterList[i].Contains(IPSource.ToString() + ",*,true"))
+                    if (UDPFilterList[i].Contains(IPSource.ToString() + ":*,true"))
                     {
                         return true;
                     }
@@ -45,14 +45,14 @@ namespace Aura_OS.System.Network.Firewall
 
             for (int i = 0; i < UDPFilterList.Count; i++)
             {
-                if (UDPFilterList[i].Contains(IPSource.ToString() + "," + Port.ToString()))
+                if (UDPFilterList[i].Contains(IPSource.ToString() + ":" + Port.ToString()))
                 {
                     string[] FilterList = UDPFilterList[i].Split(',');
                     bool OUTGOING = bool.Parse(FilterList[3]);
 
                     return OUTGOING;
                 }
-                if (UDPFilterList[i].Contains(IPSource.ToString() + ",*"))
+                if (UDPFilterList[i].Contains(IPSource.ToString() + ":*"))
                 {
                     string[] FilterList = UDPFilterList[i].Split(',');
                     bool OUTGOING = bool.Parse(FilterList[3]);

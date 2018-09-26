@@ -26,11 +26,11 @@ namespace Aura_OS.System.Network.Firewall
 
                 for (int i = 0; i < TCPFilterList.Count; i++)
                 {
-                    if (TCPFilterList[i].Contains(IPSource.ToString() + "," + Port.ToString() + ",true"))
+                    if (TCPFilterList[i].Contains(IPSource.ToString() + ":" + Port.ToString() + ",true"))
                     {
                         return true;
                     }
-                    if (TCPFilterList[i].Contains(IPSource.ToString() + ",*,true"))
+                    if (TCPFilterList[i].Contains(IPSource.ToString() + ":*,true"))
                     {
                         return true;
                     }
@@ -41,19 +41,19 @@ namespace Aura_OS.System.Network.Firewall
 
         public static bool Block_TCPOutgoingPacket(IPV4.TCP.TCPPacket packet)
         {
-            IPV4.Address IPSource = packet.DestinationIP;
+            IPV4.Address IPDest = packet.DestinationIP;
             ushort Port = packet.DestinationPort;
 
             for (int i = 0; i < TCPFilterList.Count; i++)
             {
-                if (TCPFilterList[i].Contains(IPSource.ToString() + "," + Port.ToString()))
+                if (TCPFilterList[i].Contains(IPDest.ToString() + ":" + Port.ToString()))
                 {
                     string[] FilterList = TCPFilterList[i].Split(',');
                     bool OUTGOING = bool.Parse(FilterList[3]);
 
                     return OUTGOING;
                 }
-                if (TCPFilterList[i].Contains(IPSource.ToString() + ",*"))
+                if (TCPFilterList[i].Contains(IPDest.ToString() + ":*"))
                 {
                     string[] FilterList = TCPFilterList[i].Split(',');
                     bool OUTGOING = bool.Parse(FilterList[3]);
