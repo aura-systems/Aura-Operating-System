@@ -306,6 +306,7 @@ namespace Aura_OS.System.Translation
                             Console.WriteLine("Utilisation: fw add/rm <tcp/udp> <ip> <port> <entrant> <sortant>");
                             Console.WriteLine("Exemple: fw add tcp 192.168.1.40 8080 true true");
                             Console.WriteLine("         Cette règle bloque le protocole TCP sur le port 8080 en entré et en sortie.");
+                            break;
                         case "volumeinvalid":
                             Console.WriteLine("Le lecteur spécifié est introuvable.");
                             break;
@@ -566,6 +567,7 @@ namespace Aura_OS.System.Translation
                             Console.WriteLine("Utilisation: fw add/rm <tcp/udp> <ip> <port> <incoming> <outgoing>");
                             Console.WriteLine("Example: fw add tcp 192.168.1.40 8080 true true");
                             Console.WriteLine("         This rule blocks the TCP protocol on port 8080 in and out.");
+                            break;
                         case "volumeinvalid":
                             Console.WriteLine("The specified drive is not found.");
                             break;
@@ -826,6 +828,7 @@ namespace Aura_OS.System.Translation
                             Console.WriteLine("Gebruik: fw add/rm <tcp/udp> <ip> <port> <binnenkomend> <uitgaand>");
                             Console.WriteLine("Example: fw add tcp 192.168.1.40 8080 true true");
                             Console.WriteLine("         Deze regel blokkeert het TCP protocol op poort 8080 in en uit");
+                            break;
                         case "volumeinvalid":
                             Console.WriteLine("De opgegeven aandrijving wordt niet gevonden.");
                             break;
@@ -1077,6 +1080,7 @@ namespace Aura_OS.System.Translation
                             Console.WriteLine("Utilisation: fw add/rm <tcp/udp> <ip> <port> <entrata> <estroverso>");
                             Console.WriteLine("Esempio: fw add tcp 192.168.1.40 8080 true true");
                             Console.WriteLine("         Questa regola blocca il protocollo TCP sulla porta 8080 in e out.");
+                            break;
                         case "volumeinvalid":
                             Console.WriteLine("L'unità specificata non viene trovata.");
                             break;
