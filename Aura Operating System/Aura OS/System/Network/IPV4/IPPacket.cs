@@ -41,8 +41,8 @@ namespace Aura_OS.System.Network.IPV4
             }
             ARPCache.Update(ip_packet.SourceIP, ip_packet.SourceMAC);
 
-            if ((NetworkStack.AddressMap.ContainsKey(ip_packet.DestinationIP.Hash) == true) ||
-                (ip_packet.DestinationIP.address[3] == 255))
+            if ((NetworkStack.AddressMap.ContainsKey(ip_packet.DestinationIP.Hash) == true) || (ip_packet.DestinationIP.address[3] == 255) || 
+                (NetworkStack.MACMap.ContainsKey(ip_packet.DestinationMAC.Hash)))
             {
                 switch (ip_packet.Protocol)
                 {
