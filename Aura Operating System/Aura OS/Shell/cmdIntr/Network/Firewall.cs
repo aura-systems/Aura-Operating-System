@@ -34,62 +34,53 @@ namespace Aura_OS.Shell.cmdIntr.Network
         /// <param name="arg">IP Address</param>
         /// /// <param name="startIndex">The start index for remove.</param>
         /// <param name="count">The count index for remove.</param>
-        public static void c_Firewall(string arg, short startIndex = 0, short count = 3)
-        {
-            string str = arg.Remove(startIndex, count);
-            string[] args = str.Split(' ');
+        public static void c_Firewall(string arg)
+        {            
+            string[] args = arg.Split(' ');
             //fw add tcp/udp 192.168.1.1 8080 true true
 
-            if(args.Length == 5)
+            if (args[1] == "add")
             {
-                if(args[0] == "add")
-                {                    
-                    if(args[1] == "tcp")
-                    {
-                        System.Network.Firewall.TCPRules.Create(args[2], args[3], args[4], args[5]);
-                    }
-                    if (args[1] == "udp")
-                    {
-                        System.Network.Firewall.TCPRules.Create(args[2], args[3], args[4], args[5]);
-                    }
-                }
-
-                if(args[0] == "rm")
+                if (args[2] == "tcp")
                 {
-                    if(args[1] == "tcp")
-                    {
-                        System.Network.Firewall.TCPRules.Delete(args[1], args[2], args[3], args[4]);
-                    }
-                    if (args[1] == "udp")
-                    {
-                        System.Network.Firewall.UDPRules.Create(args[2], args[3], args[4], args[5]);
-                    }
+                    System.Network.Firewall.TCPRules.Create(args[3], args[4], args[5], args[6]);
                 }
+                if (args[2] == "udp")
+                {
+                    System.Network.Firewall.TCPRules.Create(args[3], args[4], args[5], args[6]);
+                }
+            }
+            else if (args[1] == "rm")
+            {
+                if (args[2] == "tcp")
+                {
+                    System.Network.Firewall.TCPRules.Delete(args[2], args[3], args[4], args[5]);
+                }
+                if (args[2] == "udp")
+                {
+                    System.Network.Firewall.UDPRules.Create(args[3], args[4], args[5], args[6]);
+                }
+            }
+            else if (args[1] == "help")
+            {
+                L.Text.Display("usagefw");
+            }
+            else if (args[1] == "enable")
+            {
+                System.Network.Firewall.Core.Enable();
+            }
+            else if (args[1] == "disable")
+            {
+                System.Network.Firewall.Core.Disable();
+            }
+            else if (args[1] == "status")
+            {
+                Console.WriteLine("Firewall status : " + System.Network.Firewall.Core.Status().ToString());
             }
             else
             {
-                if (args[0] == "help")
-                {
-                    L.Text.Display("usagefw");
-                }
-                else if (args[0] == "enable")
-                {
-                    System.Network.Firewall.Core.Enable();
-                }
-                else if (args[0] == "disable")
-                {
-                    System.Network.Firewall.Core.Disable();
-                }
-                else if (args[0] == "status")
-                {
-                    Console.WriteLine("Firewall status : " + System.Network.Firewall.Core.Status().ToString());
-                }
-                else
-                {
-                    Console.WriteLine("Invalid firewall command");
-                }
+                Console.WriteLine("Invalid firewall command");
             }
-            
         }
     }
 }
