@@ -2,9 +2,14 @@
 
 Open source project used in Aura Operating System:
 
+### CosmosELF
+- Description: Used as elf loader and executer.
+- Location: [Aura Operating System/Aura OS/System/Executables/ELF]
+- License file: [LICENSE.MD](https://github.com/aura-systems/Aura-Operating-System/blob/master/LICENCES/COSMOSELF/LICENSE.md)
+
 ### WMCommandFramework
 - Description: Used for the commands manager.
-- Location: [https://github.com/aura-systems/Aura-Operating-System/tree/f7e780548937d24814dd55d78fc2cd751875bfe8/Aura%20Operating%20System/Aura%20OS/Shell/WMCommandFramework.COSMOS]
+- Location: [Aura Operating System/Aura OS/System/Shell/WMCommandFramework.COSMOS]
 - License file: [LICENSE.MD](https://github.com/aura-systems/Aura-Operating-System/blob/master/LICENCES/WMCommandFramework/LICENSE.md)
 
 ### NanoXML
