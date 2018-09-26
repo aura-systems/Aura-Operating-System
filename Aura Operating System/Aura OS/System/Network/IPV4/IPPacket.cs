@@ -59,7 +59,6 @@ namespace Aura_OS.System.Network.IPV4
             }
             else if (NetworkStack.MACMap.ContainsKey(ip_packet.DestinationMAC.Hash))
             {
-                Console.WriteLine("=> DHCP !");
                 DHCP.DHCPPacket.DHCPHandler(packetData);
             }
         }
