@@ -73,18 +73,23 @@ namespace Aura_OS.System.Network.IPV4.TCP
                 if (isdata)
                 {
                     TCPPacket packet = new TCPPacket(source, dest, localPort, destPort, data, sequencenumber, acknowledgmentnb, 0x50, Flags, WSValue, 0x0000, false, false);
-                    if (!Firewall.TCP.Block_TCPOutgoingPacket(packet))
-                    {
+                    if (Firewall.TCP.Block_TCPOutgoingPacket(packet) == false)
+                    {                        
                         OutgoingBuffer.AddPacket(packet);
                         NetworkStack.Update();
                         Apps.System.Debugger.debugger.Send("Sent!");
-                    }                    
+                    } 
+                    else
+                    {
+                        Console.WriteLine("Firewall power !");
+                        return false;
+                    }
                 }
                 else
                 {
                     TCPPacket packet = new TCPPacket(source, dest, localPort, destPort, data, sequencenumber, acknowledgmentnb, 0x50, Flags, WSValue, 0x0000, true, true);
-                    if (!Firewall.TCP.Block_TCPOutgoingPacket(packet))
-                    {
+                    if (Firewall.TCP.Block_TCPOutgoingPacket(packet) == false)
+                    {                        
                         OutgoingBuffer.AddPacket(packet);
                         NetworkStack.Update();
                         Apps.System.Debugger.debugger.Send("Sent!");

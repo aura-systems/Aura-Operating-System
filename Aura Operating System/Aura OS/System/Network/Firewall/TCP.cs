@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
 using Aura_OS.System.Network;
 
@@ -13,18 +14,24 @@ namespace Aura_OS.System.Network.Firewall
 {
     class TCP
     {
-        private static List<String> TCPFilterList = new List<String>();
+        private static string[] TCPFilterList;
         //from ip, port, incoming bool, outgoing bool
         //192.168.1.1, 25565, true, true
+
+        private static void LoadRules()
+        {
+            TCPFilterList = File.ReadAllLines(@"0:\System\firewall_tcp.conf");
+        }
 
         public static bool Block_TCPIncomingPacket(IPV4.TCP.TCPPacket packet)
         {
             if (Core.Status())
             {
+                LoadRules();
                 IPV4.Address IPSource = packet.SourceIP;
                 ushort Port = packet.SourcePort;
 
-                for (int i = 0; i < TCPFilterList.Count; i++)
+                for (int i = 0; i < TCPFilterList.Length; i++)
                 {
                     if (TCPFilterList[i].Contains(IPSource.ToString() + ":" + Port.ToString() + ",true"))
                     {
@@ -41,24 +48,28 @@ namespace Aura_OS.System.Network.Firewall
 
         public static bool Block_TCPOutgoingPacket(IPV4.TCP.TCPPacket packet)
         {
-            IPV4.Address IPDest = packet.DestinationIP;
-            ushort Port = packet.DestinationPort;
-
-            for (int i = 0; i < TCPFilterList.Count; i++)
+            if (Core.Status())
             {
-                if (TCPFilterList[i].Contains(IPDest.ToString() + ":" + Port.ToString()))
-                {
-                    string[] FilterList = TCPFilterList[i].Split(',');
-                    bool OUTGOING = bool.Parse(FilterList[3]);
+                LoadRules();
+                IPV4.Address IPDest = packet.DestinationIP;
+                ushort Port = packet.DestinationPort;
 
-                    return OUTGOING;
-                }
-                if (TCPFilterList[i].Contains(IPDest.ToString() + ":*"))
+                for (int i = 0; i < TCPFilterList.Length; i++)
                 {
-                    string[] FilterList = TCPFilterList[i].Split(',');
-                    bool OUTGOING = bool.Parse(FilterList[3]);
+                    if (TCPFilterList[i].Contains(IPDest.ToString() + ":" + Port.ToString()))
+                    {
+                        string[] FilterList = TCPFilterList[i].Split(',');
+                        bool OUTGOING = bool.Parse(FilterList[3]);
 
-                    return OUTGOING;
+                        return OUTGOING;
+                    }
+                    if (TCPFilterList[i].Contains(IPDest.ToString() + ":*"))
+                    {
+                        string[] FilterList = TCPFilterList[i].Split(',');
+                        bool OUTGOING = bool.Parse(FilterList[3]);
+
+                        return OUTGOING;
+                    }
                 }
             }
             return false;
