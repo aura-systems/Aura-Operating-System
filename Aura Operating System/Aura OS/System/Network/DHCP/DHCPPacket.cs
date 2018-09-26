@@ -4,6 +4,12 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
+/*
+* PROJECT:          Aura Operating System Development
+* CONTENT:          DHCP Packet
+* PROGRAMMERS:      Alexy DA CRUZ <dacruzalexy@gmail.com>
+*/
+
 namespace Aura_OS.System.Network.DHCP
 {
     public class DHCPPacket : IPPacket

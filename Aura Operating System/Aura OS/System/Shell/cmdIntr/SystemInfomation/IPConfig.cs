@@ -5,6 +5,8 @@
 */
 
 
+using Aura_OS.System.Network;
+using Cosmos.HAL;
 using System;
 using System.Collections.Generic;
 using L = Aura_OS.System.Translation;
@@ -29,12 +31,52 @@ namespace Aura_OS.System.Shell.cmdIntr.SystemInfomation
         /// </summary>
         public IPConfig() { }
 
+        static HAL.Drivers.Network.RTL8168 RTL8168NIC;
+
         /// <summary>
         /// c = command, c_SystemInfomation
         /// </summary>
-        public static void c_IPConfig()
+        public static void c_IPConfig(string cmd)
         {
-            L.List_Translation.Ipconfig();
+            string[] args = cmd.Split(' ');
+
+            if (args[1] == "/release")
+            {
+                NetworkStack.RemoveAllConfigIP();
+
+                Utils.Settings.LoadValues();
+                Utils.Settings.EditValue("ipaddress", "0.0.0.0");
+                Utils.Settings.EditValue("subnet", "0.0.0.0");
+                Utils.Settings.EditValue("gateway", "0.0.0.0");
+                Utils.Settings.PushValues();
+
+                NetworkInit.Init(false);
+                NetworkInit.Enable();
+            }
+            else if (args[1] == "/set")
+            {
+                NetworkStack.RemoveAllConfigIP();
+
+                if (Utils.Misc.IsIpv4Address(args[2]) && Utils.Misc.IsIpv4Address(args[3]) && Utils.Misc.IsIpv4Address(args[4]))
+                {
+                    Utils.Settings.LoadValues();
+                    Utils.Settings.EditValue("ipaddress", args[2]);
+                    Utils.Settings.EditValue("subnet", args[3]);
+                    Utils.Settings.EditValue("gateway", args[4]);
+                    Utils.Settings.PushValues();
+
+                    NetworkInit.Init(false);
+                    NetworkInit.Enable();
+                }
+                else
+                {
+                    L.Text.Display("notcorrectaddress");
+                }                
+            }
+            else
+            {
+                L.List_Translation.Ipconfig();
+            }
         }
     }
 }

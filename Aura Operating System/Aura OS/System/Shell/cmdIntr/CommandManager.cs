@@ -221,9 +221,9 @@ namespace Aura_OS.System.Shell.cmdIntr
             {
                 SystemInfomation.Version.c_Version();
             }
-            else if ((cmd.Equals("ipconfig")) || (cmd.Equals("ifconfig")) || (cmd.Equals("netconf")))
+            else if ((cmd.StartsWith("ipconfig")) || (cmd.StartsWith("ifconfig")) || (cmd.StartsWith("netconf")))
             {
-                SystemInfomation.IPConfig.c_IPConfig();
+                SystemInfomation.IPConfig.c_IPConfig(cmd);
             }
             else if ((cmd.Equals("time")) || (cmd.Equals("date")))
             {

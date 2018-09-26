@@ -17,7 +17,7 @@ namespace Aura_OS.System
             {
                 if (!IsSavedConf())
                 {
-                    Kernel.LocalNetworkConfig = new Network.IPV4.Config(new Network.IPV4.Address(192, 168, 1, 70), new Network.IPV4.Address(255, 255, 255, 0), new Network.IPV4.Address(192, 168, 1, 1));
+                    Kernel.LocalNetworkConfig = new Network.IPV4.Config(new Network.IPV4.Address(0,0,0,0), new Network.IPV4.Address(0,0,0,0), new Network.IPV4.Address(0,0,0,0));
                     Network.NetworkStack.ConfigIP(RTL8168NIC, Kernel.LocalNetworkConfig);
                 }
                 else
@@ -30,7 +30,7 @@ namespace Aura_OS.System
             {
                 if (!IsSavedConf())
                 {
-                    Kernel.LocalNetworkConfig = new Network.IPV4.Config(new Network.IPV4.Address(192, 168, 1, 70), new Network.IPV4.Address(255, 255, 255, 0), new Network.IPV4.Address(192, 168, 1, 1));
+                    Kernel.LocalNetworkConfig = new Network.IPV4.Config(new Network.IPV4.Address(0,0,0,0), new Network.IPV4.Address(0,0,0,0), new Network.IPV4.Address(0,0,0,0));
                     Network.NetworkStack.ConfigIP(AMDPCNetIINIC, Kernel.LocalNetworkConfig);
                 }
                 else
@@ -44,33 +44,42 @@ namespace Aura_OS.System
         static HAL.Drivers.Network.RTL8168 RTL8168NIC;
         static HAL.Drivers.Network.AMDPCNetII AMDPCNetIINIC;
 
-        public static void Init()
+        public static void Init(bool debug = true)
         {
-            CustomConsole.WriteLineInfo("Finding nic...");
+            if (debug)
+            {
+                CustomConsole.WriteLineInfo("Finding nic...");
+            }
 
             PCIDevice RTL8168 = PCI.GetDevice((VendorID)0x10EC, (DeviceID)0x8168);
             if (RTL8168 != null)
             {
-                CustomConsole.WriteLineOK("Found RTL8168 NIC on PCI " + RTL8168.bus + ":" + RTL8168.slot + ":" + RTL8168.function);
-                CustomConsole.WriteLineInfo("NIC IRQ: " + RTL8168.InterruptLine);
-
+                if (debug)
+                {
+                    CustomConsole.WriteLineOK("Found RTL8168 NIC on PCI " + RTL8168.bus + ":" + RTL8168.slot + ":" + RTL8168.function);
+                    CustomConsole.WriteLineInfo("NIC IRQ: " + RTL8168.InterruptLine);
+                }
                 RTL8168NIC = new HAL.Drivers.Network.RTL8168(RTL8168);
-
-                CustomConsole.WriteLineInfo("NIC MAC Address: " + RTL8168NIC.MACAddress.ToString());
-
+                if (debug)
+                {
+                    CustomConsole.WriteLineInfo("NIC MAC Address: " + RTL8168NIC.MACAddress.ToString());
+                }
                 Network.NetworkStack.Init();
                 RTL8168NIC.Enable();
             }
             PCIDevice AMDPCNETII = PCI.GetDevice(VendorID.AMD, DeviceID.PCNETII);
             if (AMDPCNETII != null)
             {
-                CustomConsole.WriteLineOK("Found AMDPCNETII NIC on PCI " + AMDPCNETII.bus + ":" + AMDPCNETII.slot + ":" + AMDPCNETII.function);
-                CustomConsole.WriteLineInfo("NIC IRQ: " + RTL8168.InterruptLine);
-
+                if (debug)
+                {
+                    CustomConsole.WriteLineOK("Found AMDPCNETII NIC on PCI " + AMDPCNETII.bus + ":" + AMDPCNETII.slot + ":" + AMDPCNETII.function);
+                    CustomConsole.WriteLineInfo("NIC IRQ: " + RTL8168.InterruptLine);
+                }
                 AMDPCNetIINIC = new HAL.Drivers.Network.AMDPCNetII(AMDPCNETII);
-
-                CustomConsole.WriteLineInfo("NIC MAC Address: " + AMDPCNetIINIC.MACAddress.ToString());
-
+                if (debug)
+                {
+                    CustomConsole.WriteLineInfo("NIC MAC Address: " + AMDPCNetIINIC.MACAddress.ToString());
+                }
                 Network.NetworkStack.Init();
                 AMDPCNetIINIC.Enable();
             }
@@ -79,8 +88,10 @@ namespace Aura_OS.System
                 CustomConsole.WriteLineError("No supported network card found!!");
                 return;
             }
-
-            CustomConsole.WriteLineOK("Network initialization done!");
+            if (debug)
+            {
+                CustomConsole.WriteLineOK("Network initialization done!");
+            }
         }
 
         static bool IsSavedConf()
@@ -88,7 +99,7 @@ namespace Aura_OS.System
             if (Setup.FileSystem() == "true")
             {
                 Utils.Settings.LoadValues();
-                if ((Utils.Settings.GetValue("ipaddress") != "192.168.1.70") || (Utils.Settings.GetValue("subnet") != "255.255.255.0") || (Utils.Settings.GetValue("gateway") != "192.168.1.254"))
+                if ((Utils.Settings.GetValue("ipaddress") != "0.0.0.0") || (Utils.Settings.GetValue("subnet") != "0.0.0.0") || (Utils.Settings.GetValue("gateway") != "0.0.0.0"))
                 {
                     return true;
                 }

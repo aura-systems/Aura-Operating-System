@@ -373,9 +373,9 @@ namespace Aura_OS.System.Drawable
             Console.SetCursorPosition(x, y);
             Console.SetCursorPosition(x, y+6);
             Console.Write("║ Password: ");
-            Console.BackgroundColor = ConsoleColor.Black;
-            Console.ForegroundColor = ConsoleColor.Black;
-            string password = Console.ReadLine();
+            //Console.BackgroundColor = ConsoleColor.Black;
+            //Console.ForegroundColor = ConsoleColor.Black;
+            string password = Utils.Password.ReadLine();
             Console.SetCursorPosition(x, y);
 
             string text = name + "//////" + password;

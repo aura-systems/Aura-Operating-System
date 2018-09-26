@@ -24,8 +24,6 @@ namespace Aura_OS.System
             string ex_message = ex.Message;
             string inner_message = "";
 
-            Console.BackgroundColor = ConsoleColor.Red;
-
             Graphics.VBE.Graphics.Canvas.ClearVRAM(0xAA0000);
 
             Kernel.AConsole.X = 0;
@@ -62,8 +60,6 @@ namespace Aura_OS.System
         {
 
             Kernel.running = false;
-
-            Console.BackgroundColor = ConsoleColor.Red;
 
             Graphics.VBE.Graphics.Canvas.ClearVRAM(0xAA0000);
 
