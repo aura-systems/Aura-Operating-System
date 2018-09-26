@@ -68,20 +68,28 @@ namespace Aura_OS.System.Network.IPV4.TCP
             }
 
             public bool Send(bool isdata)
-            {
+            {                
                 Apps.System.Debugger.debugger.Send("Sending TCP packet...");
                 if (isdata)
                 {
                     TCPPacket packet = new TCPPacket(source, dest, localPort, destPort, data, sequencenumber, acknowledgmentnb, 0x50, Flags, WSValue, 0x0000, false, false);
-                    OutgoingBuffer.AddPacket(packet);
+                    if (!Firewall.TCP.Block_TCPOutgoingPacket(packet))
+                    {
+                        OutgoingBuffer.AddPacket(packet);
+                        NetworkStack.Update();
+                        Apps.System.Debugger.debugger.Send("Sent!");
+                    }                    
                 }
                 else
                 {
                     TCPPacket packet = new TCPPacket(source, dest, localPort, destPort, data, sequencenumber, acknowledgmentnb, 0x50, Flags, WSValue, 0x0000, true, true);
-                    OutgoingBuffer.AddPacket(packet);
-                }
-                NetworkStack.Update();
-                Apps.System.Debugger.debugger.Send("Sent!");
+                    if (!Firewall.TCP.Block_TCPOutgoingPacket(packet))
+                    {
+                        OutgoingBuffer.AddPacket(packet);
+                        NetworkStack.Update();
+                        Apps.System.Debugger.debugger.Send("Sent!");
+                    }
+                }                
                 return true;
             }
 
