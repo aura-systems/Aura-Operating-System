@@ -13,7 +13,8 @@ using System.Text;
 namespace Aura_OS.System.Network.DHCP
 {
     public class DHCPPacket : IPPacket
-    {  
+    {
+        
         public static void VMTInclude()
         {
             new DHCPPacket();
@@ -31,8 +32,17 @@ namespace Aura_OS.System.Network.DHCP
         {
             DHCPPacket dhcp_packet = new DHCPPacket(packetData);
 
-            Apps.System.Debugger.debugger.Send("Received DHCP packet from " + dhcp_packet.SourceIP.ToString());
-            Apps.System.Debugger.debugger.Send("DHCP Offer received!");
+            if (IsDHCPPacket(packetData))
+            {
+                Apps.System.Debugger.debugger.Send("Received DHCP packet from " + dhcp_packet.SourceIP.ToString());
+                Apps.System.Debugger.debugger.Send("DHCP Offer received!");
+            }
+        }
+        protected override void initFields()
+        {
+            base.initFields();
+
+
         }
 
         public static int PacketSize { get; set; }
@@ -64,9 +74,12 @@ namespace Aura_OS.System.Network.DHCP
 
         public static bool IsDHCPPacket(byte[] dhcpPacket)
         {
+            Console.WriteLine(dhcpPacket[278].ToString());
+            Console.WriteLine(dhcpPacket[279].ToString());
             if ((dhcpPacket[278] == 0x63) && (dhcpPacket[279] == 0x82) && (dhcpPacket[280] == 0x53) && (dhcpPacket[281] == 0x63)) //Magic cookie: DHCP
+            //if ((dhcpPacket[244] == 0x63) && (dhcpPacket[245] == 0x82) && (dhcpPacket[246] == 0x53) && (dhcpPacket[247] == 0x63)) //Magic cookie: DHCP
             {
-                Apps.System.Debugger.debugger.Send("IsDHCPPacket: Magic cookie detected");
+                Console.WriteLine("IsDHCPPacket: Magic cookie detected");
                 return true;
             }
             return false;
