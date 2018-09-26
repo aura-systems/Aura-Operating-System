@@ -28,6 +28,16 @@ namespace Aura_OS.System.Network.IPV4
             ipConfigs.Add(config);
         }
 
+        internal static void Remove(Config config)
+        {
+            ipConfigs.Remove(config);
+        }
+
+        internal static void RemoveAll()
+        {
+            ipConfigs.Clear();
+        }
+
         internal static Address FindNetwork(Address destIP)
         {
             Address default_gw = null;
