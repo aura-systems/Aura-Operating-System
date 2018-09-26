@@ -14,7 +14,7 @@ namespace Aura_OS.System.Network.DHCP
 {
     public class DHCPPacket : IPPacket
     {
-        
+
         public static void VMTInclude()
         {
             new DHCPPacket();
@@ -71,20 +71,40 @@ namespace Aura_OS.System.Network.DHCP
 
             initFields();
         }
-
+        
         public static bool IsDHCPPacket(byte[] dhcpPacket)
         {
-            Console.WriteLine(dhcpPacket[278].ToString());
-            Console.WriteLine(dhcpPacket[279].ToString());
             if ((dhcpPacket[278] == 0x63) && (dhcpPacket[279] == 0x82) && (dhcpPacket[280] == 0x53) && (dhcpPacket[281] == 0x63)) //Magic cookie: DHCP
-            //if ((dhcpPacket[244] == 0x63) && (dhcpPacket[245] == 0x82) && (dhcpPacket[246] == 0x53) && (dhcpPacket[247] == 0x63)) //Magic cookie: DHCP
             {
-                Console.WriteLine("IsDHCPPacket: Magic cookie detected");
+                switch (dhcpPacket[284])
+                {
+                    case 0x02: //DHCP : Offer
+
+                        byte DHCPMessageTypeLenght = dhcpPacket[283];
+                        byte DHCPServerIDLenght = dhcpPacket[286];
+
+                        NetworkStack.RemoveAllConfigIP();
+
+                        Utils.Settings.LoadValues();
+                        Utils.Settings.EditValue("ipaddress", new Address(dhcpPacket, 58).ToString());
+                        Utils.Settings.EditValue("subnet", new Address(dhcpPacket, 299).ToString());
+                        Utils.Settings.EditValue("gateway", new Address(dhcpPacket, 287).ToString());
+                        Utils.Settings.PushValues();
+
+                        NetworkInit.Init(false);
+                        NetworkInit.Enable();
+
+                        Console.WriteLine("DHCP : New IP config applied!");
+
+                        break;
+                    default:
+                        break;
+                }              
                 return true;
             }
             return false;
         }
-        
+
         public override string ToString()
         {
             return "DHCP Packet Src=" + srcMAC + ", Dest=" + destMAC + ", ";
