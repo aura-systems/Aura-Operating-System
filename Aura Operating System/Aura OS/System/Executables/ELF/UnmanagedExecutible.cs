@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading;
 using Cosmos.Core.Memory.Old;
 
 namespace CosmosELFCore
@@ -135,7 +136,6 @@ namespace CosmosELFCore
         {
             for (int i = 0; i < _elf.Symbols.Count; i++)
             {
-                Console.WriteLine(_elf.Symbols[i].Name);
                 if (function == _elf.Symbols[i].Name)
                 {
                     Invoker.Offset =
@@ -144,6 +144,7 @@ namespace CosmosELFCore
 
                     Invoker.StoreState();
                     Invoker.CallCode();
+                    Cosmos.HAL.Global.PIT.Wait(25);
                     Invoker.LoadState();
 
                     break;

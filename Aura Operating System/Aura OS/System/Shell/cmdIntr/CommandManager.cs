@@ -8,6 +8,7 @@ using Aura_OS.System.Utils;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using Aura_OS.System.Executables;
 using L = Aura_OS.System.Translation;
 
 
@@ -226,7 +227,12 @@ namespace Aura_OS.System.Shell.cmdIntr
 
             else if (cmd.Equals("elf"))
             {
-                Executables.ElfHandler.Run(Executables.TestFile.test_elf);
+                ElfHandler.Run(TestFile.test_elf);
+            }
+
+            else if (cmd.Equals("bin"))
+            {
+                PlainBinaryProgram.LoadProgram(TestFile.test_bin);
             }
 
             else if (cmd.Equals("crash"))

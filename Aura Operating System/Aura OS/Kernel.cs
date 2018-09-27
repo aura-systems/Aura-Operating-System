@@ -85,6 +85,8 @@ namespace Aura_OS
 
                 System.CustomConsole.WriteLineInfo("Booting Aura Operating System...");
 
+                System.Executables.Drivers.Syscalls.AuraAPI.Init();
+
                 System.CustomConsole.WriteLineInfo("VBE Informations:");
                 System.CustomConsole.WriteLineInfo("VBE Version: " + Graphics.VBEVersion);
                 System.CustomConsole.WriteLineInfo("VBE Signature: " + Graphics.VBESignature);

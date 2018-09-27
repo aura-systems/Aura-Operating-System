@@ -29,25 +29,24 @@ namespace Aura_OS.System.Executables
 				exe.Load();
 				exe.Link();
 
-				Console.WriteLine("Executing");
-
 				new ArgumentWriter();
 				exe.Invoke("start");
-//
-				//new ArgumentWriter()
-				//	.Push(5)  //fg
-				//	.Push(15); //bg
-				//exe.Invoke("tty_set_color");
+
                 //
-				//fixed (byte* str = UnmanagedString("Hello World"))
-				//{
-				//	new ArgumentWriter()
-				//		.Push((uint)str);
-				//	exe.Invoke("tty_puts");
-				//}
+                //new ArgumentWriter()
+                //	.Push(5)  //fg
+                //	.Push(15); //bg
+                //exe.Invoke("tty_set_color");
+                //
+                //fixed (byte* str = UnmanagedString("Hello World"))
+                //{
+                //	new ArgumentWriter()
+                //		.Push((uint)str);
+                //	exe.Invoke("tty_puts");
+                //}
 
 
-			}
+            }
 		}
 	}
 }

@@ -5,12 +5,11 @@ using System.Text;
 
 namespace Aura_OS.System.Executables.Drivers.Syscalls
 {
-	class AuraAPI : Driver
+	class AuraAPI
 	{
-		public override bool Init()
+		public static bool Init()
 		{
-			Name = "Aura Syscalls";
-			SetIntHandler(0x80, SWI); //ints.setinthandler
+			SetIntHandler(0x48, SWI); //ints.setinthandler
 			return true;
 		}
 
@@ -19,9 +18,9 @@ namespace Aura_OS.System.Executables.Drivers.Syscalls
 
 		public unsafe static void SWI(ref IRQContext aContext)
 		{
-			if (aContext.Interrupt == 0x80) //Interrupt.
-            {
-                Console.WriteLine("0x80");
+			if (aContext.Interrupt == 0x48) //Interrupt.
+			{
+			    Console.WriteLine("EAX=" + CosmosELFCore.Invoker.eax);
                 if (aContext.EAX == 1) //sys_exit
                 {
                     Console.WriteLine("sys_exit");
@@ -31,10 +30,10 @@ namespace Aura_OS.System.Executables.Drivers.Syscalls
                     Console.WriteLine("sys_write");
                     if (aContext.EBX == 1) //stdout
                     {
-                        Console.WriteLine("stdout");
+                        Console.WriteLine("sys_exit");
                         uint maxBytes = aContext.EDX;
                         uint ptr = aContext.ECX;
-                        byte* dat = (byte*)ptr;
+                        byte* dat = (byte*)(ptr + Executables.PlainBinaryProgram.ProgramAddress); //
 
                         for (int i = 0; dat[i] != 0 && i < maxBytes; i++)
                         {
