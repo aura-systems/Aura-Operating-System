@@ -14,18 +14,10 @@ namespace Aura_OS.System.Network.DHCP
     {
         protected int xID;
 
-        public DHCPOffer()
-            : base()
-        { }
-
-        public DHCPOffer(byte[] rawData)
-            : base(rawData)
-        { }
-
         public static int PacketSize { get; set; }
 
-        public DHCPOffer(MACAddress src, Address source, Address requested_ip, Address server_address)
-            : base(src, source, requested_ip)
+        public DHCPOffer(MACAddress src, Address source, Address server_address)
+            : base(Address.Zero) //to change
         {
             //Request
             mRawData[dataOffset + 8] = 0x01;
@@ -89,26 +81,17 @@ namespace Aura_OS.System.Network.DHCP
             mRawData[dataOffset + 255] = server_address.address[2];
             mRawData[dataOffset + 256] = server_address.address[3];
 
-            //Requested IP Address
-            mRawData[dataOffset + 257] = 0x32;
+            //Parameters start here
+            mRawData[dataOffset + 257] = 0x37;
             mRawData[dataOffset + 258] = 4;
 
-            mRawData[dataOffset + 259] = requested_ip.address[0];
-            mRawData[dataOffset + 260] = requested_ip.address[1];
-            mRawData[dataOffset + 261] = requested_ip.address[2];
-            mRawData[dataOffset + 262] = requested_ip.address[3];
-
-            //Parameters start here
-            mRawData[dataOffset + 263] = 0x37;
-            mRawData[dataOffset + 264] = 4;
-
             //Parameters
-            mRawData[dataOffset + 265] = 0x01;
-            mRawData[dataOffset + 266] = 0x03;
-            mRawData[dataOffset + 267] = 0x0f;
-            mRawData[dataOffset + 268] = 0x06;
+            mRawData[dataOffset + 259] = 0x01;
+            mRawData[dataOffset + 260] = 0x03;
+            mRawData[dataOffset + 261] = 0x0f;
+            mRawData[dataOffset + 262] = 0x06;
 
-            mRawData[dataOffset + 269] = 0xff; //ENDMARK
+            mRawData[dataOffset + 263] = 0xff; //ENDMARK
 
             ////Fill 0
             //for (int i = 264; i < 272; i++)
