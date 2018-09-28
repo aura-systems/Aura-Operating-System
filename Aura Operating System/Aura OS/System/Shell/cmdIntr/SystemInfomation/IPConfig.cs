@@ -49,8 +49,7 @@ namespace Aura_OS.System.Shell.cmdIntr.SystemInfomation
                 Utils.Settings.EditValue("subnet", "0.0.0.0");
                 Utils.Settings.EditValue("gateway", "0.0.0.0");
                 Utils.Settings.PushValues();
-
-                NetworkInit.Init(false);
+                
                 NetworkInit.Enable();
             }
             else if (args[1] == "/set")
@@ -64,8 +63,7 @@ namespace Aura_OS.System.Shell.cmdIntr.SystemInfomation
                     Utils.Settings.EditValue("subnet", args[3]);
                     Utils.Settings.EditValue("gateway", args[4]);
                     Utils.Settings.PushValues();
-
-                    NetworkInit.Init(false);
+                    
                     NetworkInit.Enable();
                 }
                 else
