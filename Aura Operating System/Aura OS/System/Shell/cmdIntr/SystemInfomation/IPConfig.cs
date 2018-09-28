@@ -6,6 +6,8 @@
 
 
 using Aura_OS.System.Network;
+using Aura_OS.System.Network.DHCP;
+using Aura_OS.System.Network.IPV4;
 using Cosmos.HAL;
 using System;
 using System.Collections.Generic;
@@ -42,7 +44,7 @@ namespace Aura_OS.System.Shell.cmdIntr.SystemInfomation
 
             if (args[1] == "/release")
             {
-                System.Network.DHCP.DHCPRelease dhcp_release = new System.Network.DHCP.DHCPDiscover(mac, System.Network.IPV4.Address.Zero, new System.Network.IPV4.Address(192, 168, 1, 100));
+                DHCPCore.SendReleasePacket();
 
                 NetworkStack.RemoveAllConfigIP();
 
@@ -72,6 +74,10 @@ namespace Aura_OS.System.Shell.cmdIntr.SystemInfomation
                 {
                     L.Text.Display("notcorrectaddress");
                 }                
+            }
+            else if (args[1] == "/renew")
+            {
+                DHCPCore.SendDiscoverPacket();
             }
             else
             {
