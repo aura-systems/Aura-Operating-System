@@ -44,6 +44,10 @@ namespace Aura_OS.System.Network.IPV4
 
             for (int c = 0; c < ipConfigs.Count; c++)
             {
+                if((ipConfigs[c].IPAddress == Address.Zero) && (ipConfigs[c].SubnetMask == Address.Zero) && (destIP == Address.Broadcast))
+                {
+                    return ipConfigs[c].IPAddress;
+                }
                 if ((ipConfigs[c].IPAddress.Hash & ipConfigs[c].SubnetMask.Hash) ==
                     (destIP.Hash & ipConfigs[c].SubnetMask.Hash))
                 {
