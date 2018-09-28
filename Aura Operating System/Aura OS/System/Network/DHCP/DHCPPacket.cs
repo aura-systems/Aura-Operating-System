@@ -14,16 +14,6 @@ namespace Aura_OS.System.Network.DHCP
 {
     public class DHCPPacket : IPPacket
     {
-
-        public static void VMTInclude()
-        {
-            new DHCPPacket();
-        }
-
-        public DHCPPacket()
-            : base()
-        { }
-
         public DHCPPacket(byte[] rawData)
             : base(rawData)
         { }
@@ -32,36 +22,31 @@ namespace Aura_OS.System.Network.DHCP
         {
             DHCPPacket dhcp_packet = new DHCPPacket(packetData);
 
-            if (IsDHCPPacket(packetData))
+            if ((packetData[278] == 0x63) && (packetData[279] == 0x82) && (packetData[280] == 0x53) && (packetData[281] == 0x63)) //Magic cookie: DHCP
             {
-                if ((packetData[278] == 0x63) && (packetData[279] == 0x82) && (packetData[280] == 0x53) && (packetData[281] == 0x63)) //Magic cookie: DHCP
+                switch (packetData[284])
                 {
-                    switch (packetData[284])
-                    {
-                        case 0x02: //DHCP : Offer
+                    case 0x02: //DHCP : Offer
 
-                            byte DHCPMessageTypeLenght = packetData[283];
-                            byte DHCPServerIDLenght = packetData[286];
+                        NetworkStack.RemoveAllConfigIP();
 
-                            NetworkStack.RemoveAllConfigIP();
+                        Utils.Settings.LoadValues();
+                        Utils.Settings.EditValue("ipaddress", new Address(packetData, 58).ToString());
+                        Utils.Settings.EditValue("subnet", new Address(packetData, 299).ToString());
+                        Utils.Settings.EditValue("gateway", new Address(packetData, 287).ToString());
+                        Utils.Settings.PushValues();
 
-                            Utils.Settings.LoadValues();
-                            Utils.Settings.EditValue("ipaddress", new Address(packetData, 58).ToString());
-                            Utils.Settings.EditValue("subnet", new Address(packetData, 299).ToString());
-                            Utils.Settings.EditValue("gateway", new Address(packetData, 287).ToString());
-                            Utils.Settings.PushValues();
+                        NetworkInit.Init(false);
+                        NetworkInit.Enable();
 
-                            NetworkInit.Init(false);
-                            NetworkInit.Enable();
+                        Apps.System.Debugger.debugger.Send("New DHCP configuration applied!");
 
-                            Apps.System.Debugger.debugger.Send("New DHCP configuration applied!");
-
-                            break;
-                        default:
-                            break;
-                    }
-                }                
+                        break;
+                    default:
+                        break;
+                }
             }
+
         }
         protected override void initFields()
         {
@@ -70,8 +55,8 @@ namespace Aura_OS.System.Network.DHCP
 
         public static int PacketSize { get; set; }
 
-        public DHCPPacket(MACAddress src, Address source, Address requested)
-            : base(src, MACAddress.Broadcast, 300, 0x11, source, Address.Broadcast, 0x00)
+        public DHCPPacket(Address source)
+            : base(300, 0x11, source, Address.Broadcast, 0x00, MACAddress.Broadcast)
         {
             //UDP
 
@@ -93,11 +78,6 @@ namespace Aura_OS.System.Network.DHCP
             mRawData[dataOffset + 7] = 0x00;
 
             initFields();
-        }
-        
-        public static bool IsDHCPPacket(byte[] dhcpPacket)
-        {
-            
         }
 
         public override string ToString()
