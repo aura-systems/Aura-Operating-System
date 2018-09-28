@@ -131,6 +131,10 @@ namespace Aura_OS.System.Utils
 
                 configurationfile.Clear();
             }
+            else
+            {
+                PutValue(parameter, value);
+            }
         }
 
         /** public static void DisableParameter(string parameter)
