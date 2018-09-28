@@ -4,27 +4,27 @@ using Aura_OS.HAL;
 
 /*
 * PROJECT:          Aura Operating System Development
-* CONTENT:          DHCP Requesting
+* CONTENT:          DHCP Discovering
 * PROGRAMMERS:      Alexy DA CRUZ <dacruzalexy@gmail.com>
 */
 
 namespace Aura_OS.System.Network.DHCP
 {
-    public class DHCPRequest : DHCPPacket
+    public class DHCPRelease : DHCPPacket
     {
         protected int xID;
 
-        public DHCPRequest()
+        public DHCPRelease()
             : base()
         { }
 
-        public DHCPRequest(byte[] rawData)
+        public DHCPRelease(byte[] rawData)
             : base(rawData)
         { }
 
         public static int PacketSize { get; set; }
 
-        public DHCPRequest(MACAddress src, Address source, Address requested_ip)
+        public DHCPRelease(MACAddress src, Address source, Address requested_ip)
             : base(src, source, requested_ip)
         {
             //Request
@@ -76,7 +76,7 @@ namespace Aura_OS.System.Network.DHCP
 
             //options
 
-            //Request
+            //Discover
             mRawData[dataOffset + 248] = 0x35;
             mRawData[dataOffset + 249] = 0x01;
             mRawData[dataOffset + 250] = 0x01;

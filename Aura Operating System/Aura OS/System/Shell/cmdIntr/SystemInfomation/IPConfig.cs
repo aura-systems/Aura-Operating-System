@@ -42,6 +42,8 @@ namespace Aura_OS.System.Shell.cmdIntr.SystemInfomation
 
             if (args[1] == "/release")
             {
+                System.Network.DHCP.DHCPRelease dhcp_release = new System.Network.DHCP.DHCPDiscover(mac, System.Network.IPV4.Address.Zero, new System.Network.IPV4.Address(192, 168, 1, 100));
+
                 NetworkStack.RemoveAllConfigIP();
 
                 Utils.Settings.LoadValues();

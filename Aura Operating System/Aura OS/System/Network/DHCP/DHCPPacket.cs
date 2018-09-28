@@ -34,15 +34,38 @@ namespace Aura_OS.System.Network.DHCP
 
             if (IsDHCPPacket(packetData))
             {
-                Apps.System.Debugger.debugger.Send("Received DHCP packet from " + dhcp_packet.SourceIP.ToString());
-                Apps.System.Debugger.debugger.Send("DHCP Offer received!");
+                if ((packetData[278] == 0x63) && (packetData[279] == 0x82) && (packetData[280] == 0x53) && (packetData[281] == 0x63)) //Magic cookie: DHCP
+                {
+                    switch (packetData[284])
+                    {
+                        case 0x02: //DHCP : Offer
+
+                            byte DHCPMessageTypeLenght = packetData[283];
+                            byte DHCPServerIDLenght = packetData[286];
+
+                            NetworkStack.RemoveAllConfigIP();
+
+                            Utils.Settings.LoadValues();
+                            Utils.Settings.EditValue("ipaddress", new Address(packetData, 58).ToString());
+                            Utils.Settings.EditValue("subnet", new Address(packetData, 299).ToString());
+                            Utils.Settings.EditValue("gateway", new Address(packetData, 287).ToString());
+                            Utils.Settings.PushValues();
+
+                            NetworkInit.Init(false);
+                            NetworkInit.Enable();
+
+                            Apps.System.Debugger.debugger.Send("New DHCP configuration applied!");
+
+                            break;
+                        default:
+                            break;
+                    }
+                }                
             }
         }
         protected override void initFields()
         {
             base.initFields();
-
-
         }
 
         public static int PacketSize { get; set; }
@@ -74,35 +97,7 @@ namespace Aura_OS.System.Network.DHCP
         
         public static bool IsDHCPPacket(byte[] dhcpPacket)
         {
-            if ((dhcpPacket[278] == 0x63) && (dhcpPacket[279] == 0x82) && (dhcpPacket[280] == 0x53) && (dhcpPacket[281] == 0x63)) //Magic cookie: DHCP
-            {
-                switch (dhcpPacket[284])
-                {
-                    case 0x02: //DHCP : Offer
-
-                        byte DHCPMessageTypeLenght = dhcpPacket[283];
-                        byte DHCPServerIDLenght = dhcpPacket[286];
-
-                        NetworkStack.RemoveAllConfigIP();
-
-                        Utils.Settings.LoadValues();
-                        Utils.Settings.EditValue("ipaddress", new Address(dhcpPacket, 58).ToString());
-                        Utils.Settings.EditValue("subnet", new Address(dhcpPacket, 299).ToString());
-                        Utils.Settings.EditValue("gateway", new Address(dhcpPacket, 287).ToString());
-                        Utils.Settings.PushValues();
-
-                        NetworkInit.Init(false);
-                        NetworkInit.Enable();
-
-                        Console.WriteLine("DHCP : New IP config applied!");
-
-                        break;
-                    default:
-                        break;
-                }              
-                return true;
-            }
-            return false;
+            
         }
 
         public override string ToString()
