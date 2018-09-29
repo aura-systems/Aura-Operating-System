@@ -17,7 +17,7 @@ namespace Aura_OS.System.Network.DHCP
         public static int PacketSize { get; set; }
 
         public DHCPRequest()
-            : base(Address.Zero)
+            : base(DHCPCore.DHCPClientAddress)
         {
             //Request
             mRawData[dataOffset + 8] = 0x01;

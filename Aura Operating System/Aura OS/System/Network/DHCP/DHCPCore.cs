@@ -13,6 +13,8 @@ namespace Aura_OS.System.Network.DHCP
 {
     class DHCPCore
     {
+        public static Address DHCPClientAddress;
+
         /// <summary>
         /// Get the IP address of the DHCP server
         /// </summary>
