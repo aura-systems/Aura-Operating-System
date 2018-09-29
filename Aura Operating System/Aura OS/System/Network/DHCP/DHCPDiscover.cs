@@ -4,8 +4,8 @@ using Aura_OS.HAL;
 
 /*
 * PROJECT:          Aura Operating System Development
-* CONTENT:          DHCP Discovering
-* PROGRAMMERS:      Alexy DA CRUZ <dacruzalexy@gmail.com>
+* CONTENT:          DHCP - DHCP Discover Packet
+* PROGRAMMER(S):    Alexy DA CRUZ <dacruzalexy@gmail.com>
 */
 
 namespace Aura_OS.System.Network.DHCP

@@ -3,6 +3,12 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
+/*
+* PROJECT:          Aura Operating System Development
+* CONTENT:          DHCP - DHCP Core
+* PROGRAMMER(S):    Alexy DA CRUZ <dacruzalexy@gmail.com>
+*/
+
 namespace Aura_OS.System.Network.DHCP
 {
     class DHCPCore

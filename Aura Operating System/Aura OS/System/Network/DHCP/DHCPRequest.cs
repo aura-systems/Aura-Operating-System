@@ -4,7 +4,7 @@ using Aura_OS.HAL;
 
 /*
 * PROJECT:          Aura Operating System Development
-* CONTENT:          DHCP Requesting
+* CONTENT:          DHCP - DHCP Request packet
 * PROGRAMMERS:      Alexy DA CRUZ <dacruzalexy@gmail.com>
 */
 
