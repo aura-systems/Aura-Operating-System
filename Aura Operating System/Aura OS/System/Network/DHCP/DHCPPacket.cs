@@ -55,8 +55,8 @@ namespace Aura_OS.System.Network.DHCP
 
         public static int PacketSize { get; set; }
 
-        public DHCPPacket(Address source)
-            : base(300, 0x11, source, Address.Broadcast, 0x00, MACAddress.Broadcast)
+        public DHCPPacket(Address source, MACAddress mac)
+            : base(mac, MACAddress.Broadcast, 300, 0x11, source, Address.Broadcast, 0x00)
         {
             //UDP
 

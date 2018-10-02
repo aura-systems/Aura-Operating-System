@@ -16,8 +16,8 @@ namespace Aura_OS.System.Network.DHCP
 
         public static int PacketSize { get; set; }
 
-        public DHCPRequest()
-            : base(DHCPCore.DHCPClientAddress)
+        public DHCPRequest(MACAddress mac_src)
+            : base(DHCPCore.DHCPClientAddress, mac_src)
         {
             //Request
             mRawData[dataOffset + 8] = 0x01;
@@ -47,12 +47,12 @@ namespace Aura_OS.System.Network.DHCP
             }
 
             //SourceMAC mac
-            mRawData[dataOffset + 36] = SourceMAC.bytes[0];
-            mRawData[dataOffset + 37] = SourceMAC.bytes[1];
-            mRawData[dataOffset + 38] = SourceMAC.bytes[2];
-            mRawData[dataOffset + 39] = SourceMAC.bytes[3];
-            mRawData[dataOffset + 40] = SourceMAC.bytes[4];
-            mRawData[dataOffset + 41] = SourceMAC.bytes[5];
+            mRawData[dataOffset + 36] = mac_src.bytes[0];
+            mRawData[dataOffset + 37] = mac_src.bytes[1];
+            mRawData[dataOffset + 38] = mac_src.bytes[2];
+            mRawData[dataOffset + 39] = mac_src.bytes[3];
+            mRawData[dataOffset + 40] = mac_src.bytes[4];
+            mRawData[dataOffset + 41] = mac_src.bytes[5];
 
             //Fill 0
             for (int i = 42; i < 243; i++)

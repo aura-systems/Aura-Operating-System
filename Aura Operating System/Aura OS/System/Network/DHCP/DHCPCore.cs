@@ -41,9 +41,12 @@ namespace Aura_OS.System.Network.DHCP
         /// </summary>
         public static void SendDiscoverPacket()
         {
-            DHCPDiscover dhcp_discover = new DHCPDiscover();
-            OutgoingBuffer.AddPacket(dhcp_discover);
-            NetworkStack.Update();
+            foreach (HAL.Drivers.Network.NetworkDevice networkDevice in HAL.Drivers.Network.NetworkDevice.Devices)
+            {
+                DHCPDiscover dhcp_discover = new DHCPDiscover(networkDevice.MACAddress);
+                OutgoingBuffer.AddPacket(dhcp_discover);
+                NetworkStack.Update();
+            }            
         }
 
         /// <summary>
@@ -51,9 +54,12 @@ namespace Aura_OS.System.Network.DHCP
         /// </summary>
         public static void SendRequestPacket()
         {
-            DHCPRequest dhcp_request = new DHCPRequest();
-            OutgoingBuffer.AddPacket(dhcp_request);
-            NetworkStack.Update();
+            foreach (HAL.Drivers.Network.NetworkDevice networkDevice in HAL.Drivers.Network.NetworkDevice.Devices)
+            {
+                DHCPRequest dhcp_request = new DHCPRequest(networkDevice.MACAddress);
+                OutgoingBuffer.AddPacket(dhcp_request);
+                NetworkStack.Update();
+            }
         }
     }
 }
