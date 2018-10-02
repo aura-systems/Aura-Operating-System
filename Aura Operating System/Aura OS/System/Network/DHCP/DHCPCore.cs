@@ -46,6 +46,7 @@ namespace Aura_OS.System.Network.DHCP
                 DHCPDiscover dhcp_discover = new DHCPDiscover(networkDevice.MACAddress);
                 OutgoingBuffer.AddPacket(dhcp_discover);
                 NetworkStack.Update();
+                Console.WriteLine("Sent");
             }            
         }
 

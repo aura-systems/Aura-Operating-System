@@ -20,34 +20,33 @@ namespace Aura_OS.System.Network.DHCP
 
         public static void DHCPHandler(byte[] packetData)
         {
-            DHCPPacket dhcp_packet = new DHCPPacket(packetData);
+            Console.WriteLine("DHCP Handler called()");
+            DHCPOption Options = new DHCPOption(packetData);
 
-            if ((packetData[278] == 0x63) && (packetData[279] == 0x82) && (packetData[280] == 0x53) && (packetData[281] == 0x63)) //Magic cookie: DHCP
+            Console.WriteLine(Options.Type.ToString());
+            if (Options.Type == 0x02)
             {
-                switch (packetData[284])
+                foreach (byte bit in Options.IPV4)
                 {
-                    case 0x02: //DHCP : Offer
-
-                        NetworkStack.RemoveAllConfigIP();
-
-                        Utils.Settings.LoadValues();
-                        Utils.Settings.EditValue("ipaddress", new Address(packetData, 58).ToString());
-                        Utils.Settings.EditValue("subnet", new Address(packetData, 299).ToString());
-                        Utils.Settings.EditValue("gateway", new Address(packetData, 287).ToString());
-                        Utils.Settings.PushValues();
-
-                        NetworkInit.Init(false);
-                        NetworkInit.Enable();
-
-                        Apps.System.Debugger.debugger.Send("New DHCP configuration applied!");
-
-                        break;
-                    default:
-                        break;
+                    Console.WriteLine(bit.ToString());
                 }
-            }
 
+                //NetworkStack.RemoveAllConfigIP();
+
+                //Utils.Settings.LoadValues();
+                //Utils.Settings.EditValue("ipaddress", new Address(Options.IPV4, 0).ToString());
+                //Utils.Settings.EditValue("subnet", new Address(Options.Subnet, 0).ToString());
+                //Utils.Settings.EditValue("gateway", new Address(Options.Gateway, 0).ToString());
+                //Utils.Settings.PushValues();
+
+                //NetworkInit.Init(false);
+                //NetworkInit.Enable();
+
+                //Apps.System.Debugger.debugger.Send("New DHCP configuration applied!");
+                //CustomConsole.WriteLineOK("New DHCP configuration applied!");
+            }
         }
+
         protected override void initFields()
         {
             base.initFields();
