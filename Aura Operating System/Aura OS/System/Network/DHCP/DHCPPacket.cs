@@ -19,31 +19,24 @@ namespace Aura_OS.System.Network.DHCP
         { }
 
         public static void DHCPHandler(byte[] packetData)
-        {
-            Console.WriteLine("DHCP Handler called()");
+        {            
             DHCPOption Options = new DHCPOption(packetData);
-
-            Console.WriteLine(Options.Type.ToString());
+         
             if (Options.Type == 0x02)
             {
-                foreach (byte bit in Options.IPV4)
-                {
-                    Console.WriteLine(bit.ToString());
-                }
+                NetworkStack.RemoveAllConfigIP();
 
-                //NetworkStack.RemoveAllConfigIP();
+                Utils.Settings.LoadValues();
+                Utils.Settings.EditValue("ipaddress", Options.Address(packetData).ToString());
+                Utils.Settings.EditValue("subnet", Options.Subnet(packetData).ToString());
+                Utils.Settings.EditValue("gateway", Options.Gateway(packetData).ToString());
+                Utils.Settings.PushValues();
 
-                //Utils.Settings.LoadValues();
-                //Utils.Settings.EditValue("ipaddress", new Address(Options.IPV4, 0).ToString());
-                //Utils.Settings.EditValue("subnet", new Address(Options.Subnet, 0).ToString());
-                //Utils.Settings.EditValue("gateway", new Address(Options.Gateway, 0).ToString());
-                //Utils.Settings.PushValues();
+                NetworkInit.Init(false);
+                NetworkInit.Enable();
 
-                //NetworkInit.Init(false);
-                //NetworkInit.Enable();
-
-                //Apps.System.Debugger.debugger.Send("New DHCP configuration applied!");
-                //CustomConsole.WriteLineOK("New DHCP configuration applied!");
+                Apps.System.Debugger.debugger.Send("New DHCP configuration applied!");
+                CustomConsole.WriteLineOK("New DHCP configuration applied!");
             }
         }
 
