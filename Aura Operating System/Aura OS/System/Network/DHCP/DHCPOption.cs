@@ -3,54 +3,96 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
+/*
+* PROJECT:          Aura Operating System Development
+* CONTENT:          DHCP - DHCP Options
+* PROGRAMMER(S):    Alexy DA CRUZ <dacruzalexy@gmail.com>
+*/
+
 namespace Aura_OS.System.Network.DHCP
 {
     class DHCPOption
     {
         private int SubnetOffset;
+        private int DHCPServerIDOffset;
+
+        private static byte[] PacketData;
 
         public DHCPOption(byte[] data)
         {
-            if ((data[278] == 0x63) && (data[279] == 0x82) && (data[280] == 0x53) && (data[281] == 0x63))
+            PacketData = data;
+
+            //DHCP magic packet
+            if ((PacketData[278] == 0x63) && (PacketData[279] == 0x82) && (PacketData[280] == 0x53) && (PacketData[281] == 0x63))
             {
-                for (int a = 282; a < data.Length; a++)
+                for (int a = 282; a < PacketData.Length; a++)
                 {
-                    if (data[a] == 0x35)
+                    //get the type of the DHCP packet
+                    if (PacketData[a] == 0x35)
                     {
-                        if (data[a + 1] == 0x01)
+                        if (PacketData[a + 1] == 0x01)
                         {
-                            Type = data[a + 2];
+                            Type = PacketData[a + 2];
                         }
                     }
 
-                    if ((data[a] == 0x01) && (data[a + 1] == 0x04) && (data[a + 2] == 0xff))
+                    //get the Subnet optionss
+                    if ((PacketData[a] == 0x01) && (PacketData[a + 1] == 0x04) && (PacketData[a + 2] == 0xff))
                     {
                         SubnetOffset = a + 2;
-                        return;
+                    } 
+                    
+                    if(Type == 0x02)
+                    {
+                        //get the DHCP Server IP option
+                        if ((PacketData[a] == 0x54) && (PacketData[a + 1] == 0x04))
+                        {
+                            DHCPServerIDOffset = a + 2;
+                        }
                     }
                 }
             }
         }
 
+        /// <summary>
+        /// Return type of DHCP packet
+        /// </summary>
         public byte Type
         {
             get;
             set;
         }
 
-        public Address Address(byte[] data)
+        /// <summary>
+        /// Return the address that is sent by the DHCP server
+        /// </summary>
+        public Address Address()
         {
-            return new Address(data, 58);
+            return new Address(PacketData, 58);
         }
 
-        public Address Gateway(byte[] data)
+        /// <summary>
+        /// Return the gateway address that is sent by the DHCP server
+        /// </summary>
+        public Address Gateway()
         {
-            return new Address(data, 62);
+            return new Address(PacketData, 62);
         }
 
-        public Address Subnet(byte[] data)
+        /// <summary>
+        /// Return the subnet located in the bootstrap options
+        /// </summary>
+        public Address Subnet()
         {
-            return new Address(data, SubnetOffset);
+            return new Address(PacketData, SubnetOffset);
+        }
+
+        /// <summary>
+        /// Return the DHCP server IP located in the bootstrap options
+        /// </summary>
+        public Address Server()
+        {
+            return new Address(PacketData, DHCPServerIDOffset);
         }
     }
 }

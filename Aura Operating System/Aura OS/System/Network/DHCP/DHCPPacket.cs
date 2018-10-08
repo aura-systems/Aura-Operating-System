@@ -21,22 +21,17 @@ namespace Aura_OS.System.Network.DHCP
         public static void DHCPHandler(byte[] packetData)
         {            
             DHCPOption Options = new DHCPOption(packetData);
-         
+
             if (Options.Type == 0x02)
             {
-                NetworkStack.RemoveAllConfigIP();
+                //Offert packet received
+                Core.SendRequestPacket(Options.Address(), Options.Server());
+            }
 
-                Utils.Settings.LoadValues();
-                Utils.Settings.EditValue("ipaddress", Options.Address(packetData).ToString());
-                Utils.Settings.EditValue("subnet", Options.Subnet(packetData).ToString());
-                Utils.Settings.EditValue("gateway", Options.Gateway(packetData).ToString());
-                Utils.Settings.PushValues();
-
-                NetworkInit.Init(false);
-                NetworkInit.Enable();
-
-                Apps.System.Debugger.debugger.Send("New DHCP configuration applied!");
-                CustomConsole.WriteLineOK("New DHCP configuration applied!");
+            if (Options.Type == 0x05 || Options.Type == 0x06)
+            {
+                //ACK or NAK DHCP packet received
+                Core.Apply(Options);
             }
         }
 

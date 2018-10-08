@@ -44,7 +44,7 @@ namespace Aura_OS.System.Shell.cmdIntr.SystemInfomation
 
             if (args[1] == "/release")
             {
-                DHCPCore.SendReleasePacket();
+                System.Network.DHCP.Core.SendReleasePacket();
 
                 NetworkStack.RemoveAllConfigIP();
 
@@ -77,7 +77,7 @@ namespace Aura_OS.System.Shell.cmdIntr.SystemInfomation
             }
             else if (args[1] == "/renew")
             {
-                DHCPCore.SendDiscoverPacket();
+                System.Network.DHCP.Core.SendDiscoverPacket();
             }
             else
             {

@@ -11,10 +11,8 @@ using System.Text;
 
 namespace Aura_OS.System.Network.DHCP
 {
-    class DHCPCore
+    class Core
     {
-        public static Address DHCPClientAddress;
-
         /// <summary>
         /// Get the IP address of the DHCP server
         /// </summary>
@@ -46,21 +44,39 @@ namespace Aura_OS.System.Network.DHCP
                 DHCPDiscover dhcp_discover = new DHCPDiscover(networkDevice.MACAddress);
                 OutgoingBuffer.AddPacket(dhcp_discover);
                 NetworkStack.Update();
-                Console.WriteLine("Sent");
+                CustomConsole.WriteLineInfo("Discovering Packet sent");
             }            
         }
 
         /// <summary>
         /// Send a request to apply the new IP configuration
         /// </summary>
-        public static void SendRequestPacket()
+        public static void SendRequestPacket(Address RequestedAddress, Address DHCPServerAddress)
         {
             foreach (HAL.Drivers.Network.NetworkDevice networkDevice in HAL.Drivers.Network.NetworkDevice.Devices)
             {
-                DHCPRequest dhcp_request = new DHCPRequest(networkDevice.MACAddress);
+                DHCPRequest dhcp_request = new DHCPRequest(networkDevice.MACAddress, RequestedAddress, DHCPServerAddress);
                 OutgoingBuffer.AddPacket(dhcp_request);
                 NetworkStack.Update();
+                CustomConsole.WriteLineInfo("Requesting Packet sent");
             }
+        }
+
+        public static void Apply(DHCPOption Options)
+        {
+            NetworkStack.RemoveAllConfigIP();
+
+            Utils.Settings.LoadValues();
+            Utils.Settings.EditValue("ipaddress", Options.Address().ToString());
+            Utils.Settings.EditValue("subnet", Options.Subnet().ToString());
+            Utils.Settings.EditValue("gateway", Options.Gateway().ToString());
+            Utils.Settings.PushValues();
+
+            NetworkInit.Init(false);
+            NetworkInit.Enable();
+
+            Apps.System.Debugger.debugger.Send("New DHCP configuration applied!");
+            CustomConsole.WriteLineOK("New DHCP configuration applied!");
         }
     }
 }

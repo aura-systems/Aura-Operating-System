@@ -16,8 +16,8 @@ namespace Aura_OS.System.Network.DHCP
 
         public static int PacketSize { get; set; }
 
-        public DHCPRequest(MACAddress mac_src)
-            : base(DHCPCore.DHCPClientAddress, mac_src)
+        public DHCPRequest(MACAddress mac_src, Address RequestedAddress, Address DHCPServerAddress)
+            : base(Address.Zero, mac_src)
         {
             //Request
             mRawData[dataOffset + 8] = 0x01;
@@ -69,21 +69,28 @@ namespace Aura_OS.System.Network.DHCP
             //options
 
             //Request
-            mRawData[dataOffset + 248] = 0x35;
-            mRawData[dataOffset + 249] = 0x01;
-            mRawData[dataOffset + 250] = 0x01;
+            mRawData[dataOffset + 248] = 53;
+            mRawData[dataOffset + 249] = 1;
+            mRawData[dataOffset + 250] = 3;
 
-            //Parameters start here
-            mRawData[dataOffset + 251] = 0x37;
+            //Requested Address
+            mRawData[dataOffset + 251] = 50;
             mRawData[dataOffset + 252] = 4;
+            
+            mRawData[dataOffset + 253] = RequestedAddress.address[0];
+            mRawData[dataOffset + 254] = RequestedAddress.address[1];
+            mRawData[dataOffset + 255] = RequestedAddress.address[2];
+            mRawData[dataOffset + 256] = RequestedAddress.address[3];
 
-            //Parameters
-            mRawData[dataOffset + 253] = 0x01;
-            mRawData[dataOffset + 254] = 0x03;
-            mRawData[dataOffset + 255] = 0x0f;
-            mRawData[dataOffset + 256] = 0x06;
+            mRawData[dataOffset + 257] = 54;
+            mRawData[dataOffset + 258] = 4;
 
-            mRawData[dataOffset + 257] = 0xff; //ENDMARK
+            mRawData[dataOffset + 259] = RequestedAddress.address[0];
+            mRawData[dataOffset + 260] = RequestedAddress.address[1];
+            mRawData[dataOffset + 261] = RequestedAddress.address[2];
+            mRawData[dataOffset + 262] = RequestedAddress.address[3];
+
+            mRawData[dataOffset + 263] = 0xFF;
 
             //Fill 0
             //for (int i = 258; i < 272; i++)
