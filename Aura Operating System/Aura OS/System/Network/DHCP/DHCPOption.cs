@@ -46,17 +46,9 @@ namespace Aura_OS.System.Network.DHCP
                     if(Type == 0x02)
                     {
                         //get the DHCP Server IP option
-                        if ((PacketData[a] == 0x54) && (PacketData[a + 1] == 0x04))
+                        if ((PacketData[a] == 0x36) && (PacketData[a + 1] == 0x04))
                         {
                             DHCPServerIDOffset = a + 2;
-                        }
-                    }
-
-                    if(Type == 0x05 || Type == 0x06)
-                    {
-                        if ((PacketData[a] == 0x03) && (PacketData[a + 1] == 0x04))
-                        {
-                            GatewayOffset = a + 2;
                         }
                     }
                 }
@@ -85,7 +77,11 @@ namespace Aura_OS.System.Network.DHCP
         /// </summary>
         public Address Gateway()
         {
-            return new Address(PacketData, GatewayOffset);
+            if (Type == 0x05 || Type == 0x06)
+            {
+                return new Address(PacketData, 66);
+            }
+            return null;
         }
 
         /// <summary>
