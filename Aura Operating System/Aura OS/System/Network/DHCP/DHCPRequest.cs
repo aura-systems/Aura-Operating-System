@@ -85,10 +85,10 @@ namespace Aura_OS.System.Network.DHCP
             mRawData[dataOffset + 257] = 54;
             mRawData[dataOffset + 258] = 4;
 
-            mRawData[dataOffset + 259] = RequestedAddress.address[0];
-            mRawData[dataOffset + 260] = RequestedAddress.address[1];
-            mRawData[dataOffset + 261] = RequestedAddress.address[2];
-            mRawData[dataOffset + 262] = RequestedAddress.address[3];
+            mRawData[dataOffset + 259] = DHCPServerAddress.address[0];
+            mRawData[dataOffset + 260] = DHCPServerAddress.address[1];
+            mRawData[dataOffset + 261] = DHCPServerAddress.address[2];
+            mRawData[dataOffset + 262] = DHCPServerAddress.address[3];
 
             mRawData[dataOffset + 263] = 0xFF;
 
