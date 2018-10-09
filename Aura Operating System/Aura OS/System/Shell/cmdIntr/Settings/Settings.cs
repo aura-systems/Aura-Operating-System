@@ -38,6 +38,7 @@ namespace Aura_OS.System.Shell.cmdIntr.Settings
 
         public static void c_Settings(string settings)
         {
+            Utils.Settings set = new Utils.Settings(@"0:\System\settings.conf");
             Char separator = ' ';
             string[] cmdargs = settings.Split(separator);
 
@@ -90,12 +91,14 @@ namespace Aura_OS.System.Shell.cmdIntr.Settings
                     {
                         System.Network.NetworkStack.RemoveAllConfigIP();
 
-                        System.Utils.Settings.LoadValues();
-                        System.Utils.Settings.EditValue("ipaddress", IP);
-                        System.Utils.Settings.EditValue("subnet", Subnet);
-                        System.Utils.Settings.EditValue("gateway", Gateway);
-                        System.Utils.Settings.PushValues();
-                        
+                        foreach (HAL.Drivers.Network.NetworkDevice networkDevice in HAL.Drivers.Network.NetworkDevice.Devices)
+                        {
+                            NetworkInit.NetworkSettings(networkDevice).Edit("ipaddress", IP);
+                            NetworkInit.NetworkSettings(networkDevice).Edit("subnet", Subnet);
+                            NetworkInit.NetworkSettings(networkDevice).Edit("gateway", Gateway);
+                            NetworkInit.NetworkSettings(networkDevice).Push();
+                        }
+
                         NetworkInit.Init(false);
                         NetworkInit.Enable();
                     }
@@ -120,25 +123,23 @@ namespace Aura_OS.System.Shell.cmdIntr.Settings
                     {
                         Kernel.langSelected = "en_US";
                         L.Keyboard.Init();
-                        System.Utils.Settings.LoadValues();
-                        System.Utils.Settings.EditValue("language", "en_US");
-                        System.Utils.Settings.PushValues();
+                        
+                        set.Edit("language", "en_US");
+                        set.Push();
                     }
                     else if ((cmdargs[2].Equals("fr_FR")) || cmdargs[2].Equals("fr-FR"))
                     {
                         Kernel.langSelected = "fr_FR";
-                        L.Keyboard.Init();
-                        System.Utils.Settings.LoadValues();
-                        System.Utils.Settings.EditValue("language", "fr_FR");
-                        System.Utils.Settings.PushValues();
+                        L.Keyboard.Init();                        
+                        set.Edit("language", "fr_FR");
+                        set.Push();
                     }
                     else if ((cmdargs[2].Equals("nl_NL")) || cmdargs[2].Equals("nl-NL"))
                     {
                         Kernel.langSelected = "nl_NL";
                         L.Keyboard.Init();
-                        System.Utils.Settings.LoadValues();
-                        System.Utils.Settings.EditValue("language", "nl_NL");
-                        System.Utils.Settings.PushValues();
+                        set.Edit("language", "nl_NL");
+                        set.Push();
                     }
                     else
                     {

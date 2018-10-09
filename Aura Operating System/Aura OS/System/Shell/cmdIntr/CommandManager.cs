@@ -228,6 +228,10 @@ namespace Aura_OS.System.Shell.cmdIntr
             {
                 Tests.Crash.c_Crash();
             }
+            else if (cmd.Equals("netfile"))
+            {
+                NetworkInit.CreateFilesConf();
+            }
 
             else if (cmd.Equals("cmd"))
             {

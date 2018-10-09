@@ -5,37 +5,39 @@
 */
 
 using Cosmos.HAL;
+using System.IO;
 
 namespace Aura_OS.System
 {
     class NetworkInit
     {
+        static Utils.Settings settings;
 
         public static void Enable()
         {
             if (RTL8168NIC != null)
             {
-                if (!IsSavedConf())
+                if (!IsSavedConf(RTL8168NIC))
                 {
                     Kernel.LocalNetworkConfig = new Network.IPV4.Config(new Network.IPV4.Address(0,0,0,0), new Network.IPV4.Address(0,0,0,0), new Network.IPV4.Address(0,0,0,0));
                     Network.NetworkStack.ConfigIP(RTL8168NIC, Kernel.LocalNetworkConfig);
                 }
                 else
                 {
-                    Kernel.LocalNetworkConfig = new Network.IPV4.Config(Network.IPV4.Address.Parse(Utils.Settings.GetValue("ipaddress")), Network.IPV4.Address.Parse(Utils.Settings.GetValue("subnet")), Network.IPV4.Address.Parse(Utils.Settings.GetValue("gateway")));
+                    Kernel.LocalNetworkConfig = new Network.IPV4.Config(Network.IPV4.Address.Parse(NetworkSettings(RTL8168NIC).Get("ipaddress")), Network.IPV4.Address.Parse(NetworkSettings(RTL8168NIC).Get("subnet")), Network.IPV4.Address.Parse(NetworkSettings(RTL8168NIC).Get("gateway")));
                     Network.NetworkStack.ConfigIP(RTL8168NIC, Kernel.LocalNetworkConfig);
                 }
             }
             if (AMDPCNetIINIC != null)
             {
-                if (!IsSavedConf())
+                if (!IsSavedConf(AMDPCNetIINIC))
                 {
                     Kernel.LocalNetworkConfig = new Network.IPV4.Config(new Network.IPV4.Address(0,0,0,0), new Network.IPV4.Address(0,0,0,0), new Network.IPV4.Address(0,0,0,0));
                     Network.NetworkStack.ConfigIP(AMDPCNetIINIC, Kernel.LocalNetworkConfig);
                 }
                 else
                 {
-                    Kernel.LocalNetworkConfig = new Network.IPV4.Config(Network.IPV4.Address.Parse(Utils.Settings.GetValue("ipaddress")), Network.IPV4.Address.Parse(Utils.Settings.GetValue("subnet")), Network.IPV4.Address.Parse(Utils.Settings.GetValue("gateway")));
+                    Kernel.LocalNetworkConfig = new Network.IPV4.Config(Network.IPV4.Address.Parse(NetworkSettings(AMDPCNetIINIC).Get("ipaddress")), Network.IPV4.Address.Parse(NetworkSettings(AMDPCNetIINIC).Get("subnet")), Network.IPV4.Address.Parse(NetworkSettings(AMDPCNetIINIC).Get("gateway")));
                     Network.NetworkStack.ConfigIP(AMDPCNetIINIC, Kernel.LocalNetworkConfig);
                 }
             }
@@ -94,12 +96,11 @@ namespace Aura_OS.System
             }
         }
 
-        static bool IsSavedConf()
+        static bool IsSavedConf(HAL.Drivers.Network.NetworkDevice networkDevice)
         {
             if (Setup.FileSystem() == "true")
             {
-                Utils.Settings.LoadValues();
-                if ((Utils.Settings.GetValue("ipaddress") != "0.0.0.0") || (Utils.Settings.GetValue("subnet") != "0.0.0.0") || (Utils.Settings.GetValue("gateway") != "0.0.0.0"))
+                if ((NetworkSettings(networkDevice).Get("ipaddress") != "0.0.0.0") || (NetworkSettings(networkDevice).Get("subnet") != "0.0.0.0") || (NetworkSettings(networkDevice).Get("gateway") != "0.0.0.0"))
                 {
                     return true;
                 }
@@ -112,6 +113,26 @@ namespace Aura_OS.System
             {
                 return false;
             }
+        }
+
+        public static void CreateFilesConf()
+        {
+            foreach (HAL.Drivers.Network.NetworkDevice networkDevice in HAL.Drivers.Network.NetworkDevice.Devices)
+            {
+                CustomConsole.WriteLineInfo(networkDevice.Name);
+                CustomConsole.WriteLineInfo(networkDevice.MACAddress.ToString());
+                if (!File.Exists(@"0:\System\" + networkDevice.Name + ".conf"))
+                {
+                    string[] DefaultConfigIP = { "ipaddress=0.0.0.0", "subnet=0.0.0.0", "gateway=0.0.0.0", "DNS01=0.0.0.0", "DNS02=0.0.0.0" };
+                    File.WriteAllLines(@"0:\System\" + networkDevice.Name + ".conf", DefaultConfigIP);
+                }                
+            }
+        }
+
+        public static Utils.Settings NetworkSettings(HAL.Drivers.Network.NetworkDevice networkDevice)
+        {
+            settings = new Utils.Settings(@"0:\System\" + networkDevice.Name + ".conf");
+            return settings;
         }
 
     }
