@@ -107,8 +107,7 @@ namespace Aura_OS.System.Users
             Kernel.running = true;
 
             Console.Clear();
-
-            Utils.Settings.LoadValues();
+                        
             //string consolemode = Utils.Settings.GetValue("consolemode");
 
             //if (consolemode == "null")
@@ -148,7 +147,7 @@ namespace Aura_OS.System.Users
             //    }
             //}
 
-            string debugger = Utils.Settings.GetValue("debugger");
+            string debugger = Kernel.settings.Get("debugger");
 
             if (debugger == "on")
             {

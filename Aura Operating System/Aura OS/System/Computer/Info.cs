@@ -14,8 +14,7 @@ using Cosmos.HAL.PCInformation;
 namespace Aura_OS.System.Computer
 {
     class Info
-    {
-
+    {        
         /// <summary>
         /// Method to get the computer name
         /// </summary>
@@ -23,9 +22,8 @@ namespace Aura_OS.System.Computer
         public static string getComputerName()
         {
             try
-            {
-                Settings.LoadValues();
-                string hostname = Settings.GetValue("hostname");
+            {                
+                string hostname = Kernel.settings.Get("hostname");
                 Kernel.ComputerName = hostname;
                 return hostname;
             }
@@ -50,10 +48,9 @@ namespace Aura_OS.System.Computer
         /// </summary>
         /// <param name="name"></param>
         public static void setComputerName(string name)
-        {
-            Settings.LoadValues();
-            Settings.EditValue("hostname", name);
-            Settings.PushValues();
+        {            
+            Kernel.settings.Edit("hostname", name);
+            Kernel.settings.Push();
             Kernel.ComputerName = name;
         }
 

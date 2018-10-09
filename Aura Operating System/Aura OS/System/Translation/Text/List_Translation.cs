@@ -270,7 +270,7 @@ namespace Aura_OS.System.Translation
                     Console.WriteLine("Date et heure:                 " + Time.MonthString() + "/" + Time.DayString() + "/" + Time.YearString() + ", " + Time.TimeString(true, true, true));
                     if (Kernel.SystemExists)
                     {
-                        Console.WriteLine("Date d'installation originale: " + Utils.Settings.GetValue("setuptime"));
+                        Console.WriteLine("Date d'installation originale: " + Kernel.settings.Get("setuptime"));
                     }
                     Console.WriteLine("Heure de démarrage du système: " + Kernel.boottime);
                     Console.WriteLine("Mémoire totale:                " + Core.MemoryManager.TotalMemory + "MB");
@@ -295,7 +295,7 @@ namespace Aura_OS.System.Translation
                     Console.WriteLine("Date and time:             " + Time.MonthString() + "/" + Time.DayString() + "/" + Time.YearString() + ", " + Time.TimeString(true, true, true));
                     if (Kernel.SystemExists)
                     {
-                        Console.WriteLine("Original Install Date:     " + Utils.Settings.GetValue("setuptime"));
+                        Console.WriteLine("Original Install Date:     " + Kernel.settings.Get("setuptime"));
                     }
                     Console.WriteLine("System Boot Time:          " + Kernel.boottime);
                     Console.WriteLine("Total memory:              " + Core.MemoryManager.TotalMemory + "MB");
@@ -320,7 +320,7 @@ namespace Aura_OS.System.Translation
                     Console.WriteLine("Datum en tijd:             " + Time.MonthString() + "/" + Time.DayString() + "/" + Time.YearString() + ", " + Time.TimeString(true, true, true));
                     if (Kernel.SystemExists)
                     {
-                        Console.WriteLine("Installeer datum:          " + Utils.Settings.GetValue("setuptime"));
+                        Console.WriteLine("Installeer datum:          " + Kernel.settings.Get("setuptime"));
                     }
                     Console.WriteLine("Starttijd van het systeem: " + Kernel.boottime);
                     Console.WriteLine("Totaal geheugen:           " + Core.MemoryManager.TotalMemory + "MB");
@@ -345,7 +345,7 @@ namespace Aura_OS.System.Translation
                     Console.WriteLine("Data e ora:                      " + Time.MonthString() + "/" + Time.DayString() + "/" + Time.YearString() + ", " + Time.TimeString(true, true, true));
                     if (Kernel.SystemExists)
                     {
-                        Console.WriteLine("Data Installazione Sistema:      " + Utils.Settings.GetValue("setuptime"));
+                        Console.WriteLine("Data Installazione Sistema:      " + Kernel.settings.Get("setuptime"));
                     }
                     Console.WriteLine("System Boot Time:                " + Kernel.boottime);
                     Console.WriteLine("Memoria totale:                  " + Core.MemoryManager.TotalMemory + "MB");
