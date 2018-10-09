@@ -129,6 +129,7 @@ namespace Aura_OS.System
             }
         }
 
+        //TO-DO (it's not working)
         public static Utils.Settings NetworkSettings(HAL.Drivers.Network.NetworkDevice networkDevice)
         {
             settings = new Utils.Settings(@"0:\System\" + networkDevice.Name + ".conf");
