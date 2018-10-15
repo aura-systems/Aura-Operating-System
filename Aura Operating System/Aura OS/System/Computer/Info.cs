@@ -24,8 +24,8 @@ namespace Aura_OS.System.Computer
         {
             try
             {
-                Settings.LoadValues();
-                string hostname = Settings.GetValue("hostname");
+                Settings config = new Settings(@"0:\System\settings.conf");
+                string hostname = config.GetValue("hostname");
                 Kernel.ComputerName = hostname;
                 return hostname;
             }
@@ -51,9 +51,9 @@ namespace Aura_OS.System.Computer
         /// <param name="name"></param>
         public static void setComputerName(string name)
         {
-            Settings.LoadValues();
-            Settings.EditValue("hostname", name);
-            Settings.PushValues();
+            Settings config = new Settings(@"0:\System\settings.conf");
+            config.EditValue("hostname", name);
+            config.PushValues();
             Kernel.ComputerName = name;
         }
 
@@ -98,14 +98,6 @@ namespace Aura_OS.System.Computer
         public static string GetMACAddress()
         {
             return Cosmos.HAL.Network.MACAddress.Broadcast + "";
-        }
-
-        /// <summary>
-        /// Display local IP Address.
-        /// </summary>
-        public static string GetIPAddress()
-        {
-            return "0.0.0.0/0";
         }
 
         /// <summary>
