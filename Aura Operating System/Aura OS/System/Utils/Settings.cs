@@ -95,9 +95,9 @@ namespace Aura_OS.System.Utils
             return value;
         }
 
-        public void GetValue(string parameter)
+        public string GetValue(string parameter)
         {
-            Get(parameter);
+            return Get(parameter);
         }
 
         public void Edit(string parameter, string value)
