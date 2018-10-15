@@ -326,53 +326,52 @@ namespace Aura_OS.System
             string[] Users = { "root", FinalUsername };
             CreateUserDirectories(Users);
 
-            Settings settings = new Settings(@"0:\System\settings.conf");            
+            Settings.LoadValues();
 
             Menu.DispInstallationDialog(50);
 
             if ((FinalLang.Equals("en_US")) || FinalLang.Equals("en-US"))
             {
-                settings.Add("language", "en_US");
+                Settings.PutValue("language", "en_US");
                 Menu.DispInstallationDialog(60);
             }
             else if ((FinalLang.Equals("fr_FR")) || FinalLang.Equals("fr-FR"))
             {
-                settings.Add("language", "fr_FR");
+                Settings.PutValue("language", "fr_FR");
                 Menu.DispInstallationDialog(60);
             }
             else if ((FinalLang.Equals("nl_NL")) || FinalLang.Equals("nl-NL"))
             {
-                settings.Add("language", "nl_NL");
+                Settings.PutValue("language", "nl_NL");
                 Menu.DispInstallationDialog(60);
             }
             else if ((FinalLang.Equals("it_IT")) || FinalLang.Equals("it-IT"))
             {
-                settings.Add("language", "it_IT");
+                Settings.PutValue("language", "it_IT");
                 Menu.DispInstallationDialog(60);
             }
 
-            settings.Add("hostname", FinalHostname);
+            Settings.PutValue("hostname", FinalHostname);
 
             Menu.DispInstallationDialog(70);
 
-            settings.Add("setuptime", Time.MonthString() + "/" + Time.DayString() + "/" + Time.YearString() + ", " + Time.TimeString(true, true, true));
+            Settings.PutValue("setuptime", Time.MonthString() + "/" + Time.DayString() + "/" + Time.YearString() + ", " + Time.TimeString(true, true, true));
 
-            settings.Add("consolemode", "null");
+            Settings.PutValue("consolemode", "null");
 
             Menu.DispInstallationDialog(80);
 
             Kernel.SystemExists = true;
 
-            settings.Add("debugger", "off");
+            Settings.PutValue("debugger", "off");
 
-            //settings.Add("ipaddress", "0.0.0.0");
+            Settings.PutValue("ipaddress", "0.0.0.0");
 
-            //settings.Add("subnet", "0.0.0.0"); 
+            Settings.PutValue("subnet", "0.0.0.0"); 
 
-            //settings.Add("gateway", "0.0.0.0");
-            NetworkInit.CreateFilesConf();
+            Settings.PutValue("gateway", "0.0.0.0");
 
-            settings.Push();
+            Settings.PushValues();
 
             Menu.DispInstallationDialog(90);
 

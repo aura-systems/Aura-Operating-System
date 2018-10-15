@@ -1,7 +1,7 @@
 ﻿/*
 * PROJECT:          Aura Operating System Development
-* CONTENT:          Settings Class v2
-* PROGRAMMERS:      <dacruzalexy@gmail.com> Alexy DA CRUZ
+* CONTENT:          Settings class
+* PROGRAMMERS:      Valentin Charbonnier <valentinbreiz@gmail.com>
 */
 
 using System;
@@ -10,38 +10,48 @@ using System.IO;
 
 namespace Aura_OS.System.Utils
 {
-    public class Settings
+    public static class Settings
     {
-        static List<string> config = new List<string>();
-        string[] fileContent;
-        string path;
 
-        public Settings(string path)
+        static List<string> configurationfile = new List<string>();
+        static List<string> usersfile = new List<string>();
+        static string[] file;
+
+        /// <summary>
+        /// Load values from settings.conf.
+        /// </summary>
+        public static void LoadValues()
         {
-            this.path = path;
-
-            fileContent = null;
+            //reset of config in memory if there is "something"
+            file = null;
+            //load
             if (Kernel.SystemExists)
             {
-                fileContent = File.ReadAllLines(path);
+                file = File.ReadAllLines(@"0:\System\settings.conf");
             }
         }
 
-        public void Push()
+        /// <summary>
+        /// Push values to settings.conf.
+        /// </summary>
+        public static void PushValues()
         {
             if (Kernel.SystemExists)
             {
-                File.WriteAllLines(path, fileContent);
+                File.WriteAllLines(@"0:\System\settings.conf", file);
             }
         }
 
-        public void Add(string parameter, string value)
+        /// <summary>
+        /// Put a value in settings.
+        /// </summary>
+        public static void PutValue(string parameter, string value)
         {
             bool contains = false;
 
-            foreach (string line in fileContent)
+            foreach (string line in file)
             {
-                config.Add(line);
+                configurationfile.Add(line);
                 if (line.StartsWith(parameter))
                 {
                     contains = true;
@@ -50,46 +60,53 @@ namespace Aura_OS.System.Utils
 
             if (!contains)
             {
-                config.Add(parameter + "=" + value);
+                configurationfile.Add(parameter + "=" + value);
             }
 
-            fileContent = config.ToArray();
+            file = configurationfile.ToArray();
 
-            config.Clear();
+            configurationfile.Clear();
         }
 
-        public string Get(string parameter)
+        /// <summary>
+        /// Get a value from settings.
+        /// </summary>
+        public static string GetValue(string parameter)
         {
-            if (fileContent == null)
+
+            if (file == null)
             {
                 return "null";
             }
 
             string value = "null";
 
-            foreach (string line in fileContent)
+            foreach (string line in file)
             {
-                config.Add(line);
+                configurationfile.Add(line);
             }
 
-            foreach (string element in config)
+            foreach (string element in configurationfile)
             {
                 if (element.StartsWith(parameter))
                 {
-                    value = element.Remove(0, parameter.Length + 1);
+                    value = element.Remove(0, parameter.Length + 1 );
                 }
             }
 
-            config.Clear();
+            configurationfile.Clear();
 
             return value;
         }
 
-        public void Edit(string parameter, string value)
+        /// <summary>
+        /// Edit a value in settings.
+        /// </summary>
+        public static void EditValue(string parameter, string value)
         {
-            foreach (string line in fileContent)
+            foreach (string line in file)
             {
-                config.Add(line);
+                configurationfile.Add(line);
             }
 
             int counter = -1;
@@ -97,7 +114,7 @@ namespace Aura_OS.System.Utils
 
             bool exists = false;
 
-            foreach (string element in config)
+            foreach (string element in configurationfile)
             {
                 counter = counter + 1;
                 if (element.Contains(parameter))
@@ -108,17 +125,80 @@ namespace Aura_OS.System.Utils
             }
             if (exists)
             {
-                config[index] = parameter + "=" + value;
+                configurationfile[index] = parameter + "=" + value;
 
-                fileContent = config.ToArray();
+                file = configurationfile.ToArray();
 
-                config.Clear();
+                configurationfile.Clear();
             }
             else
             {
-                Add(parameter, value);
+                PutValue(parameter, value);
             }
         }
+
+        /** public static void DisableParameter(string parameter)
+        {
+            foreach (string line in file)
+            {
+                configurationfile.Add(line);
+            }
+
+            int counter = -1;
+            int index = 0;
+
+            bool exists = false;
+
+            foreach (string element in configurationfile)
+            {
+                counter = counter + 1;
+                if (element.Contains(parameter))
+                {
+                    index = counter;
+                    exists = true;
+                }
+            }
+            if (exists)
+            {
+                configurationfile[index] = "#" + parameter + "=" + GetValue(parameter);
+
+                file = configurationfile.ToArray();
+
+                configurationfile.Clear();
+            }
+        }
+
+        public static void EnableParameter(string parameter)
+        {
+            foreach (string line in file)
+            {
+                configurationfile.Add(line);
+            }
+
+            int counter = -1;
+            int index = 0;
+
+            bool exists = false;
+
+            foreach (string element in configurationfile)
+            {
+                counter = counter + 1;
+                if (element.Contains(parameter))
+                {
+                    index = counter;
+                    exists = true;
+                }
+            }
+            if (exists)
+            {
+                configurationfile[index] = parameter + "=" + GetValue(parameter);
+
+                file = configurationfile.ToArray();
+
+                configurationfile.Clear();
+            }
+        }
+    **/
 
     }
 }

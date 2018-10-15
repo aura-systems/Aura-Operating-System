@@ -55,7 +55,6 @@ namespace Aura_OS
         public static Config LocalNetworkConfig;
         public static Debugger debugger;
         public static string current_volume = @"0:\";
-        public static Settings settings;
 
         #endregion
 
@@ -114,9 +113,9 @@ namespace Aura_OS
                 {
                     if (!JustInstalled)
                     {
-                        settings = new Settings(@"0:\System\settings.conf");
 
-                        langSelected = settings.Get("language");
+                        Settings.LoadValues();
+                        langSelected = Settings.GetValue("language");
 
                         #region Language
 
@@ -124,9 +123,7 @@ namespace Aura_OS
 
                         #endregion
 
-                        Info.getComputerName();                        
-
-                        NetworkInit.CreateFilesConf();
+                        Info.getComputerName();
 
                         running = true;
 
