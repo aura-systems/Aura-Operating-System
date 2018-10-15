@@ -52,6 +52,7 @@ namespace Aura_OS.System.Shell.cmdIntr.SystemInfomation
                 Utils.Settings.EditValue("ipaddress", "0.0.0.0");
                 Utils.Settings.EditValue("subnet", "0.0.0.0");
                 Utils.Settings.EditValue("gateway", "0.0.0.0");
+                Utils.Settings.EditValue("dns01", "0.0.0.0");
                 Utils.Settings.PushValues();
                 
                 NetworkInit.Enable();
@@ -66,6 +67,7 @@ namespace Aura_OS.System.Shell.cmdIntr.SystemInfomation
                     Utils.Settings.EditValue("ipaddress", args[2]);
                     Utils.Settings.EditValue("subnet", args[3]);
                     Utils.Settings.EditValue("gateway", args[4]);
+                    Utils.Settings.EditValue("dns01", "0.0.0.0");
                     Utils.Settings.PushValues();
                     
                     NetworkInit.Enable();

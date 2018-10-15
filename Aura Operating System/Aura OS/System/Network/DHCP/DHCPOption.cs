@@ -16,6 +16,7 @@ namespace Aura_OS.System.Network.DHCP
         private int SubnetOffset;
         private int DHCPServerIDOffset;
         private int GatewayOffset;
+        private int DNS01Offset;
 
         private static byte[] PacketData;
 
@@ -41,9 +42,21 @@ namespace Aura_OS.System.Network.DHCP
                     if ((PacketData[a] == 0x01) && (PacketData[a + 1] == 0x04) && (PacketData[a + 2] == 0xff))
                     {
                         SubnetOffset = a + 2;
-                    } 
-                    
-                    if(Type == 0x02)
+                    }
+
+                    //get the next hop router
+                    if ((PacketData[a] == 0x03) && (PacketData[a + 1] == 0x04))
+                    {
+                        GatewayOffset = a + 2;
+                    }
+
+                    //get dns
+                    if ((PacketData[a] == 0x06) && (PacketData[a + 1] == 0x04))
+                    {
+                        DNS01Offset = a + 2;
+                    }
+
+                    if (Type == 0x02)
                     {
                         //get the DHCP Server IP option
                         if ((PacketData[a] == 0x36) && (PacketData[a + 1] == 0x04))
@@ -77,11 +90,7 @@ namespace Aura_OS.System.Network.DHCP
         /// </summary>
         public Address Gateway()
         {
-            if (Type == 0x05 || Type == 0x06)
-            {
-                return new Address(PacketData, 66);
-            }
-            return null;
+            return new Address(PacketData, GatewayOffset);
         }
 
         /// <summary>
@@ -90,6 +99,11 @@ namespace Aura_OS.System.Network.DHCP
         public Address Subnet()
         {
             return new Address(PacketData, SubnetOffset);
+        }
+
+        public Address DNS01()
+        {
+            return new Address(PacketData, DNS01Offset);
         }
 
         /// <summary>

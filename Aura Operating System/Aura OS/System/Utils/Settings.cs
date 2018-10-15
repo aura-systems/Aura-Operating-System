@@ -42,6 +42,12 @@ namespace Aura_OS.System.Utils
             }
         }
 
+        public static void Reload()
+        {
+            PushValues();
+            LoadValues();
+        }
+
         /// <summary>
         /// Put a value in settings.
         /// </summary>

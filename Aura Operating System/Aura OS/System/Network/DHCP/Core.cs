@@ -44,6 +44,7 @@ namespace Aura_OS.System.Network.DHCP
                 DHCPDiscover dhcp_discover = new DHCPDiscover(networkDevice.MACAddress);
                 OutgoingBuffer.AddPacket(dhcp_discover);
                 NetworkStack.Update();
+                CustomConsole.WriteLineInfo("Discovering Packet sent");
             }            
         }
 
@@ -57,6 +58,7 @@ namespace Aura_OS.System.Network.DHCP
                 DHCPRequest dhcp_request = new DHCPRequest(networkDevice.MACAddress, RequestedAddress, DHCPServerAddress);
                 OutgoingBuffer.AddPacket(dhcp_request);
                 NetworkStack.Update();
+                CustomConsole.WriteLineInfo("Requesting Packet sent");
             }
         }
 
@@ -68,10 +70,14 @@ namespace Aura_OS.System.Network.DHCP
             Utils.Settings.EditValue("ipaddress", Options.Address().ToString());
             Utils.Settings.EditValue("subnet", Options.Subnet().ToString());
             Utils.Settings.EditValue("gateway", Options.Gateway().ToString());
-            Utils.Settings.PushValues();
+            Utils.Settings.EditValue("dns01", Options.DNS01().ToString());
+            Utils.Settings.Reload();
 
             NetworkInit.Init(false);
             NetworkInit.Enable();
+
+            Apps.System.Debugger.debugger.Send("New DHCP configuration applied!");
+            CustomConsole.WriteLineOK("New DHCP configuration applied!");
         }
     }
 }
