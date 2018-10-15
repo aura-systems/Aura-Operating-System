@@ -110,7 +110,7 @@ namespace Aura_OS.System.Users
 
             Utils.Settings config = new Utils.Settings(@"0:\System\settings.conf");
 
-            string debugger = Utils.Settings.GetValue("debugger");
+            string debugger = config.GetValue("debugger");
 
             if (debugger == "on")
             {
