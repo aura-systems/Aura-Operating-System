@@ -57,6 +57,10 @@ namespace Aura_OS.System.Network.IPV4
                         break;
                 }
             }
+            else if (NetworkStack.MACMap.ContainsKey(ip_packet.DestinationMAC.Hash))
+            {
+                DHCP.DHCPPacket.DHCPHandler(packetData);
+            }
         }
 
         public static UInt16 NextIPFragmentID
@@ -95,6 +99,10 @@ namespace Aura_OS.System.Network.IPV4
 
         protected IPPacket(UInt16 dataLength, byte protocol, Address source, Address dest, byte Flags)
             : this(MACAddress.None, MACAddress.None, dataLength, protocol, source, dest, Flags)
+        { }
+
+        protected IPPacket(UInt16 dataLength, byte protocol, Address source, Address dest, byte Flags, MACAddress broadcast)
+            : this(MACAddress.None, broadcast, dataLength, protocol, source, dest, Flags)
         { }
 
         public IPPacket(MACAddress srcMAC, MACAddress destMAC, UInt16 dataLength, byte protocol,
