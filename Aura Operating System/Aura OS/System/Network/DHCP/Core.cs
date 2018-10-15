@@ -18,8 +18,9 @@ namespace Aura_OS.System.Network.DHCP
         /// </summary>
         /// <returns></returns>
         public static Address DHCPServerAddress()
-        {            
-            return Address.Parse(Kernel.settings.Get("dhcp_server"));
+        {
+            Utils.Settings.LoadValues();
+            return Address.Parse(Utils.Settings.GetValue("dhcp_server"));
         }
 
         /// <summary>
@@ -63,13 +64,11 @@ namespace Aura_OS.System.Network.DHCP
         {
             NetworkStack.RemoveAllConfigIP();
 
-            foreach (HAL.Drivers.Network.NetworkDevice networkDevice in HAL.Drivers.Network.NetworkDevice.Devices)
-            {
-                NetworkInit.NetworkSettings(networkDevice).Edit("ipaddress", Options.Address().ToString());
-                NetworkInit.NetworkSettings(networkDevice).Edit("subnet", Options.Subnet().ToString());
-                NetworkInit.NetworkSettings(networkDevice).Edit("gateway", Options.Gateway().ToString());
-                NetworkInit.NetworkSettings(networkDevice).Push();
-            }
+            Utils.Settings.LoadValues();
+            Utils.Settings.EditValue("ipaddress", Options.Address().ToString());
+            Utils.Settings.EditValue("subnet", Options.Subnet().ToString());
+            Utils.Settings.EditValue("gateway", Options.Gateway().ToString());
+            Utils.Settings.PushValues();
 
             NetworkInit.Init(false);
             NetworkInit.Enable();

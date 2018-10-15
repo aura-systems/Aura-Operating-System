@@ -16,7 +16,7 @@ using L = Aura_OS.System.Translation;
 namespace Aura_OS.System.Shell.cmdIntr.SystemInfomation
 {
     class IPConfig
-    {        
+    {
         private static string HelpInfo = "";
 
         /// <summary>
@@ -48,14 +48,12 @@ namespace Aura_OS.System.Shell.cmdIntr.SystemInfomation
 
                 NetworkStack.RemoveAllConfigIP();
 
-                foreach (HAL.Drivers.Network.NetworkDevice networkDevice in HAL.Drivers.Network.NetworkDevice.Devices)
-                {
-                    NetworkInit.NetworkSettings(networkDevice).Edit("ipaddress", "0.0.0.0");
-                    NetworkInit.NetworkSettings(networkDevice).Edit("subnet", "0.0.0.0");
-                    NetworkInit.NetworkSettings(networkDevice).Edit("gateway", "0.0.0.0");
-                    NetworkInit.NetworkSettings(networkDevice).Push();
-                }
-
+                Utils.Settings.LoadValues();
+                Utils.Settings.EditValue("ipaddress", "0.0.0.0");
+                Utils.Settings.EditValue("subnet", "0.0.0.0");
+                Utils.Settings.EditValue("gateway", "0.0.0.0");
+                Utils.Settings.PushValues();
+                
                 NetworkInit.Enable();
             }
             else if (args[1] == "/set")
@@ -64,14 +62,12 @@ namespace Aura_OS.System.Shell.cmdIntr.SystemInfomation
 
                 if (Utils.Misc.IsIpv4Address(args[2]) && Utils.Misc.IsIpv4Address(args[3]) && Utils.Misc.IsIpv4Address(args[4]))
                 {
-                    foreach (HAL.Drivers.Network.NetworkDevice networkDevice in HAL.Drivers.Network.NetworkDevice.Devices)
-                    {
-                        NetworkInit.NetworkSettings(networkDevice).Edit("ipaddress", args[2]);
-                        NetworkInit.NetworkSettings(networkDevice).Edit("subnet", args[3]);
-                        NetworkInit.NetworkSettings(networkDevice).Edit("gateway", args[4]);
-                        NetworkInit.NetworkSettings(networkDevice).Push();
-                    }
-
+                    Utils.Settings.LoadValues();
+                    Utils.Settings.EditValue("ipaddress", args[2]);
+                    Utils.Settings.EditValue("subnet", args[3]);
+                    Utils.Settings.EditValue("gateway", args[4]);
+                    Utils.Settings.PushValues();
+                    
                     NetworkInit.Enable();
                 }
                 else
