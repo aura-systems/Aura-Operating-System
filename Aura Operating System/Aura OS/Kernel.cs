@@ -114,8 +114,8 @@ namespace Aura_OS
                     if (!JustInstalled)
                     {
 
-                        Settings.LoadValues();
-                        langSelected = Settings.GetValue("language");
+                        Settings config = new Settings(@"0:\System\settings.conf");
+                        langSelected = config.GetValue("language");
 
                         #region Language
 
