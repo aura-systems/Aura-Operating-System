@@ -40,8 +40,11 @@ Work in progress:
 ## Contribute
 You want to add awesome features to Aura? Here's how:
 
+
 Fork Aura-Operating-System repo
+
 Commit & push a new feature to the forked repository
+
 Open a pull request so we can merge your work in this repository :)
 
 ## Try Aura
