@@ -37,6 +37,13 @@ Work in progress:
 
 <p align="center"><img width=60% src="https://raw.githubusercontent.com/aura-systems/Aura-Operating-System/master/ARTWORK/aura1.png"></p>
 
+##Contribute
+You want to add awesome features to Aura? Here's how:
+
+Fork Aura-Operating-System repo
+Commit & push a new feature to the forked repository
+Open a pull request so we can merge your work in this repository :)
+
 ## Try Aura
 Download VMWare [at this address](https://my.vmware.com/en/web/vmware/free#desktop_end_user_computing/vmware_workstation_player/12_0). Install and run it.
 
