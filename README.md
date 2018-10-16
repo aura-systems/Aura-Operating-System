@@ -20,7 +20,7 @@ Please read the [Aura Progression](https://github.com/aura-systems/Aura-Operatin
 * Basic command interpreter.
 * Exception Handler.
 * Console in VGA Textmode (80x25) / SVGAII Graphics mode / VBE Graphics mode + Extended ASCII support.
-* Networking (PCNETII / RTL8168 Driver, ARP, IPV4, ICMP, TCP, UDP, DNS)
+* Networking (PCNETII / RTL8168 Driver, ARP, IPV4, ICMP, TCP, UDP, DNS, DHCP Client)
 
 Aura's kernel: https://github.com/aura-systems/Cosmos.
 
@@ -37,7 +37,7 @@ Work in progress:
 
 <p align="center"><img width=60% src="https://raw.githubusercontent.com/aura-systems/Aura-Operating-System/master/ARTWORK/aura1.png"></p>
 
-##Contribute
+## Contribute
 You want to add awesome features to Aura? Here's how:
 
 Fork Aura-Operating-System repo
