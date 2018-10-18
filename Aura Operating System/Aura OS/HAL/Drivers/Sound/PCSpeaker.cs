@@ -14,7 +14,7 @@ using Cosmos.Core;
 using Cosmos.HAL;
 using System;
 
-namespace Aura_OS.HAL
+namespace Aura_OS.HAL.Drivers.Sound
 {
     public class PCSpeaker
     {
