@@ -44,12 +44,6 @@ namespace Aura_OS.System.Network.DHCP
                         SubnetOffset = a + 2;
                     }
 
-                    //get the next hop router
-                    if ((PacketData[a] == 0x03) && (PacketData[a + 1] == 0x04))
-                    {
-                        GatewayOffset = a + 2;
-                    }
-
                     //get dns
                     if ((PacketData[a] == 0x06) && (PacketData[a + 1] == 0x04))
                     {
@@ -90,7 +84,7 @@ namespace Aura_OS.System.Network.DHCP
         /// </summary>
         public Address Gateway()
         {
-            return new Address(PacketData, GatewayOffset);
+            return new Address(PacketData, 62);
         }
 
         /// <summary>
