@@ -15,7 +15,6 @@ namespace Aura_OS.System.Network.DHCP
     {
         private int SubnetOffset;
         private int DHCPServerIDOffset;
-        private int GatewayOffset;
         private int DNS01Offset;
 
         private static byte[] PacketData;
