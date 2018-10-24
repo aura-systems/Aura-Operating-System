@@ -49,13 +49,10 @@ namespace Aura_OS.System.Network.DHCP
                         DNS01Offset = a + 2;
                     }
 
-                    if (Type == 0x02)
+                    //get the DHCP Server IP option
+                    if ((PacketData[a] == 0x36) && (PacketData[a + 1] == 0x04))
                     {
-                        //get the DHCP Server IP option
-                        if ((PacketData[a] == 0x36) && (PacketData[a + 1] == 0x04))
-                        {
-                            DHCPServerIDOffset = a + 2;
-                        }
+                        DHCPServerIDOffset = a + 2;
                     }
                 }
             }

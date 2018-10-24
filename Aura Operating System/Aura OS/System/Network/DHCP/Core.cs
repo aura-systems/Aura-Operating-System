@@ -69,6 +69,7 @@ namespace Aura_OS.System.Network.DHCP
             Utils.Settings.EditValue("subnet", Options.Subnet().ToString());
             Utils.Settings.EditValue("gateway", Options.Gateway().ToString());
             Utils.Settings.EditValue("dns01", Options.DNS01().ToString());
+            Utils.Settings.EditValue("dhcp_server", Options.Server().ToString());
             Utils.Settings.Reload();
 
             NetworkInit.Init(false);
