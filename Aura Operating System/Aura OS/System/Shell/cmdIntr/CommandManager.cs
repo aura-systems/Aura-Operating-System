@@ -81,7 +81,7 @@ namespace Aura_OS.System.Shell.cmdIntr
             {
                 if (Kernel.debugger.enabled)
                 {
-                    Kernel.debugger.Send("Cmd manager: " + cmd);
+                    Kernel.debugger.Send("[Command] > " + cmd);
                 }
             }
 

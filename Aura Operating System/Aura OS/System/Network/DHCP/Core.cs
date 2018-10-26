@@ -64,16 +64,27 @@ namespace Aura_OS.System.Network.DHCP
         {
             NetworkStack.RemoveAllConfigIP();
 
+            Console.WriteLine();
+            CustomConsole.WriteLineInfo("[DHCP ACK] Packet received, applying IP configuration...");
+            CustomConsole.WriteLineInfo("   IP Address  : " + Options.Address().ToString());
+            CustomConsole.WriteLineInfo("   Subnet mask : " + Options.Subnet().ToString());
+            CustomConsole.WriteLineInfo("   Gateway     : " + Options.Gateway().ToString());
+            CustomConsole.WriteLineInfo("   DNS server  : " + Options.DNS01().ToString());
+
             Utils.Settings.LoadValues();
             Utils.Settings.EditValue("ipaddress", Options.Address().ToString());
             Utils.Settings.EditValue("subnet", Options.Subnet().ToString());
             Utils.Settings.EditValue("gateway", Options.Gateway().ToString());
             Utils.Settings.EditValue("dns01", Options.DNS01().ToString());
             Utils.Settings.EditValue("dhcp_server", Options.Server().ToString());
-            Utils.Settings.Reload();
+            Utils.Settings.PushValues();
 
-            NetworkInit.Init(false);
             NetworkInit.Enable();
+
+            CustomConsole.WriteLineOK("[DHCP CONFIG] IP configuration applied.");
+            Console.WriteLine();
+
+            Kernel.BeforeCommand();
         }
     }
 }
