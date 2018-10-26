@@ -66,25 +66,30 @@ namespace Aura_OS.System.Network.DHCP
         {
             NetworkStack.RemoveAllConfigIP();
 
-            Console.WriteLine();
-            CustomConsole.WriteLineInfo("[DHCP ACK] Packet received, applying IP configuration...");
-            CustomConsole.WriteLineInfo("   IP Address  : " + Options.Address().ToString());
-            CustomConsole.WriteLineInfo("   Subnet mask : " + Options.Subnet().ToString());
-            CustomConsole.WriteLineInfo("   Gateway     : " + Options.Gateway().ToString());
-            CustomConsole.WriteLineInfo("   DNS server  : " + Options.DNS01().ToString());
+            //cf. Roadmap (have to change this, because some network interfaces are not configured in dhcp mode) [have to be done in 0.5.x]
+            foreach (NetworkDevice networkDevice in NetworkDevice.Devices)
+            {
+                Console.WriteLine();
+                CustomConsole.WriteLineInfo("[DHCP ACK][" + networkDevice + "] Packet received, applying IP configuration...");
+                CustomConsole.WriteLineInfo("   IP Address  : " + Options.Address().ToString());
+                CustomConsole.WriteLineInfo("   Subnet mask : " + Options.Subnet().ToString());
+                CustomConsole.WriteLineInfo("   Gateway     : " + Options.Gateway().ToString());
+                CustomConsole.WriteLineInfo("   DNS server  : " + Options.DNS01().ToString());
 
-            Utils.Settings.LoadValues();
-            Utils.Settings.EditValue("ipaddress", Options.Address().ToString());
-            Utils.Settings.EditValue("subnet", Options.Subnet().ToString());
-            Utils.Settings.EditValue("gateway", Options.Gateway().ToString());
-            Utils.Settings.EditValue("dns01", Options.DNS01().ToString());
-            Utils.Settings.EditValue("dhcp_server", Options.Server().ToString());
-            Utils.Settings.PushValues();
+                Utils.Settings settings = new Utils.Settings(@"0:\System\" + networkDevice.Name + ".conf");
+                settings.EditValue("ipaddress", Options.Address().ToString());
+                settings.EditValue("subnet", Options.Subnet().ToString());
+                settings.EditValue("gateway", Options.Gateway().ToString());
+                settings.EditValue("dns01", Options.DNS01().ToString());
+                settings.EditValue("dhcp_server", Options.Server().ToString());
+                settings.PushValues();
 
-            NetworkInit.Enable();
+                NetworkInit.Enable();
 
-            CustomConsole.WriteLineOK("[DHCP CONFIG] IP configuration applied.");
-            Console.WriteLine();
+                CustomConsole.WriteLineOK("[DHCP CONFIG][" + networkDevice + "] IP configuration applied.");
+                Console.WriteLine();
+
+            }
 
             Kernel.BeforeCommand();
         }
