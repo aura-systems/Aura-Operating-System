@@ -446,6 +446,7 @@ namespace Aura_OS.System.Translation
                         Console.WriteLine("Adresse IP            : " + NetworkConfig.Values[counter].IPAddress.ToString());
                         Console.WriteLine("Masque de sous-réseau : " + NetworkConfig.Values[counter].SubnetMask.ToString());
                         Console.WriteLine("Passerelle par défaut : " + NetworkConfig.Values[counter].DefaultGateway.ToString());
+                        Console.WriteLine("Serveur DNS préféré   : " + Utils.Settings.GetValue("dns01"));
                         counter++;
                     }
                     counter = 0;
@@ -464,10 +465,11 @@ namespace Aura_OS.System.Translation
                                 Console.WriteLine("Wireless Card " + counter1 + " - " + device.Name);
                                 break;
                         }
-                        Console.WriteLine("MAC Address     : " + device.MACAddress.ToString());
-                        Console.WriteLine("IP Address      : " + NetworkConfig.Values[counter1].IPAddress.ToString());
-                        Console.WriteLine("Subnet mask     : " + NetworkConfig.Values[counter1].SubnetMask.ToString());
-                        Console.WriteLine("Default Gateway : " + NetworkConfig.Values[counter1].DefaultGateway.ToString());
+                        Console.WriteLine("MAC Address          : " + device.MACAddress.ToString());
+                        Console.WriteLine("IP Address           : " + NetworkConfig.Values[counter1].IPAddress.ToString());
+                        Console.WriteLine("Subnet mask          : " + NetworkConfig.Values[counter1].SubnetMask.ToString());
+                        Console.WriteLine("Default Gateway      : " + NetworkConfig.Values[counter1].DefaultGateway.ToString());
+                        Console.WriteLine("Preferred DNS server : " + Utils.Settings.GetValue("dns01"));
                         counter1++;
                     }
                     counter1 = 0;
@@ -486,10 +488,11 @@ namespace Aura_OS.System.Translation
                                 Console.WriteLine("Draadloze Netwerkkaart " + counter2 + " :");
                                 break;
                         }
-                        Console.WriteLine("MAC-adres        : " + device.MACAddress.ToString());
-                        Console.WriteLine("IP-adres         : " + NetworkConfig.Values[counter2].IPAddress.ToString());
-                        Console.WriteLine("Subnetmasker     : " + NetworkConfig.Values[counter2].SubnetMask.ToString());
-                        Console.WriteLine("Standaardgateway : " + NetworkConfig.Values[counter2].DefaultGateway.ToString());
+                        Console.WriteLine("MAC-adres           : " + device.MACAddress.ToString());
+                        Console.WriteLine("IP-adres            : " + NetworkConfig.Values[counter2].IPAddress.ToString());
+                        Console.WriteLine("Subnetmasker        : " + NetworkConfig.Values[counter2].SubnetMask.ToString());
+                        Console.WriteLine("Standaardgateway    : " + NetworkConfig.Values[counter2].DefaultGateway.ToString());
+                        Console.WriteLine("Voorkeur DNS-server : " + Utils.Settings.GetValue("dns01"));
                         counter2++;
                     }
                     counter2 = 0;
@@ -512,6 +515,7 @@ namespace Aura_OS.System.Translation
                         Console.WriteLine("Indirizzo IP          : " + NetworkConfig.Values[counter3].IPAddress.ToString());
                         Console.WriteLine("Maschera di sottorete : " + NetworkConfig.Values[counter3].SubnetMask.ToString());
                         Console.WriteLine("Gateway predefinito   : " + NetworkConfig.Values[counter3].DefaultGateway.ToString());
+                        Console.WriteLine("Server DNS preferito  : " + Utils.Settings.GetValue("dns01"));
                         counter3++;
                     }
                     counter3 = 0;

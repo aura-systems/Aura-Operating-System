@@ -1,6 +1,6 @@
 BSD 3-Clause License
 
-Copyright (c) 2017, Aura Operating System
+Copyright (c) 2018, Aura Operating System
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without

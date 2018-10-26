@@ -13,32 +13,37 @@ using System.Text;
 namespace Aura_OS.System.Network.DHCP
 {
     public class DHCPPacket : IPPacket
-    {  
-        public static void VMTInclude()
-        {
-            new DHCPPacket();
-        }
-
-        public DHCPPacket()
-            : base()
-        { }
-
+    {
         public DHCPPacket(byte[] rawData)
             : base(rawData)
         { }
 
         public static void DHCPHandler(byte[] packetData)
-        {
-            DHCPPacket dhcp_packet = new DHCPPacket(packetData);
+        {            
+            DHCPOption Options = new DHCPOption(packetData);
 
-            Apps.System.Debugger.debugger.Send("Received DHCP packet from " + dhcp_packet.SourceIP.ToString());
-            Apps.System.Debugger.debugger.Send("DHCP Offer received!");
+            if (Options.Type == 0x02)
+            {
+                //Offert packet received
+                Core.SendRequestPacket(Options.Address(), Options.Server());
+            }
+
+            if (Options.Type == 0x05 || Options.Type == 0x06)
+            {
+                //ACK or NAK DHCP packet received
+                Core.Apply(Options);
+            }
+        }
+
+        protected override void initFields()
+        {
+            base.initFields();
         }
 
         public static int PacketSize { get; set; }
 
-        public DHCPPacket(MACAddress src, Address source, Address requested)
-            : base(src, MACAddress.Broadcast, 300, 0x11, source, Address.Broadcast, 0x00)
+        public DHCPPacket(Address source, MACAddress mac)
+            : base(mac, MACAddress.Broadcast, 300, 0x11, source, Address.Broadcast, 0x00)
         {
             //UDP
 
@@ -62,16 +67,6 @@ namespace Aura_OS.System.Network.DHCP
             initFields();
         }
 
-        public static bool IsDHCPPacket(byte[] dhcpPacket)
-        {
-            if ((dhcpPacket[278] == 0x63) && (dhcpPacket[279] == 0x82) && (dhcpPacket[280] == 0x53) && (dhcpPacket[281] == 0x63)) //Magic cookie: DHCP
-            {
-                Apps.System.Debugger.debugger.Send("IsDHCPPacket: Magic cookie detected");
-                return true;
-            }
-            return false;
-        }
-        
         public override string ToString()
         {
             return "DHCP Packet Src=" + srcMAC + ", Dest=" + destMAC + ", ";
