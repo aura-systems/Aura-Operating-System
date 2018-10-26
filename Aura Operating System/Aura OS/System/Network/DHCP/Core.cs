@@ -1,7 +1,6 @@
 ﻿using Aura_OS.System.Network.IPV4;
 using System;
-using System.Collections.Generic;
-using System.Text;
+using Aura_OS.HAL.Drivers.Network;
 
 /*
 * PROJECT:          Aura Operating System Development
@@ -17,10 +16,10 @@ namespace Aura_OS.System.Network.DHCP
         /// Get the IP address of the DHCP server
         /// </summary>
         /// <returns></returns>
-        public static Address DHCPServerAddress()
+        public static Address DHCPServerAddress(NetworkDevice networkDevice)
         {
-            Utils.Settings.LoadValues();
-            return Address.Parse(Utils.Settings.GetValue("dhcp_server"));
+            Utils.Settings settings = new Utils.Settings(@"0:\System\" + networkDevice.Name + ".conf");
+            return Address.Parse(settings.GetValue("dhcp_server"));
         }
 
         /// <summary>
@@ -28,10 +27,13 @@ namespace Aura_OS.System.Network.DHCP
         /// </summary>
         public static void SendReleasePacket()
         {
-            Address source = Config.FindNetwork(DHCPServerAddress());
-            DHCPRelease dhcp_release = new DHCPRelease(source, DHCPServerAddress());
-            OutgoingBuffer.AddPacket(dhcp_release);
-            NetworkStack.Update();
+            foreach (NetworkDevice networkDevice in NetworkDevice.Devices)
+            {
+                Address source = Config.FindNetwork(DHCPServerAddress(networkDevice));
+                DHCPRelease dhcp_release = new DHCPRelease(source, DHCPServerAddress(networkDevice));
+                OutgoingBuffer.AddPacket(dhcp_release);
+                NetworkStack.Update();
+            }            
         }
 
         /// <summary>
@@ -39,7 +41,7 @@ namespace Aura_OS.System.Network.DHCP
         /// </summary>
         public static void SendDiscoverPacket()
         {
-            foreach (HAL.Drivers.Network.NetworkDevice networkDevice in HAL.Drivers.Network.NetworkDevice.Devices)
+            foreach (NetworkDevice networkDevice in NetworkDevice.Devices)
             {
                 DHCPDiscover dhcp_discover = new DHCPDiscover(networkDevice.MACAddress);
                 OutgoingBuffer.AddPacket(dhcp_discover);
@@ -52,7 +54,7 @@ namespace Aura_OS.System.Network.DHCP
         /// </summary>
         public static void SendRequestPacket(Address RequestedAddress, Address DHCPServerAddress)
         {
-            foreach (HAL.Drivers.Network.NetworkDevice networkDevice in HAL.Drivers.Network.NetworkDevice.Devices)
+            foreach (NetworkDevice networkDevice in NetworkDevice.Devices)
             {
                 DHCPRequest dhcp_request = new DHCPRequest(networkDevice.MACAddress, RequestedAddress, DHCPServerAddress);
                 OutgoingBuffer.AddPacket(dhcp_request);

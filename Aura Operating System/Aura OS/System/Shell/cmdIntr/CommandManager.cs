@@ -7,6 +7,7 @@
 using Aura_OS.System.Utils;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
 using L = Aura_OS.System.Translation;
 
@@ -229,13 +230,6 @@ namespace Aura_OS.System.Shell.cmdIntr
                 Tests.Crash.c_Crash();
             }
 
-            else if (cmd.Equals("cmd"))
-            {
-                CMDs.Add("ipconfig");
-                CMDs.Add("netconf");
-                CMDs.Add("help");
-            }
-
             else if (cmd.Equals("crashcpu"))
             {
                 int value = 1;
@@ -282,6 +276,14 @@ namespace Aura_OS.System.Shell.cmdIntr
             {
                 System.Network.IPV4.UDP.DNS.DNSClient DNSRequest = new System.Network.IPV4.UDP.DNS.DNSClient(53);
                 DNSRequest.Ask("perdu.com");
+            }
+
+            else if (cmd.Equals("net /refresh"))
+            {
+                foreach (HAL.Drivers.Network.NetworkDevice networkDevice in HAL.Drivers.Network.NetworkDevice.Devices)
+                {
+                    File.Create(@"0:\System\" + networkDevice.Name + ".conf");
+                }
             }
 
             //else if (cmd.StartsWith("xml "))

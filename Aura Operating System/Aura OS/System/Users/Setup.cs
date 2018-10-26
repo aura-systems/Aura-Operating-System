@@ -49,22 +49,23 @@ namespace Aura_OS.System
             else
             {
                 return "false";
-            }         
+            }
         }
 
         /// <summary>
         /// Init setup and verify which mode we use to run Aura_OS (if we start setup or not) 
         /// </summary>
         public void InitSetup()
-        {           
-            if(FileSystem() == "false")
+        {
+            if (FileSystem() == "false")
             {
                 RunWithoutFS(false);
             }
-            else if(FileSystem() == "true"){
+            else if (FileSystem() == "true")
+            {
                 Kernel.SystemExists = true;
             }
-            else if(FileSystem() == "continue")
+            else if (FileSystem() == "continue")
             {
                 RegisterLanguage();
                 RegisterUser();
@@ -73,7 +74,7 @@ namespace Aura_OS.System
                     RegisterHostname();
                     Installation();
                 }
-            }           
+            }
         }
 
         /// <summary>
@@ -152,10 +153,10 @@ namespace Aura_OS.System
         /// </summary>
         public void CreateUserDirectories(string[] Users)
         {
-            foreach(string user in Users)
+            foreach (string user in Users)
             {
                 if (!Directory.Exists(@"0:\Users\" + user))
-                    Directory.CreateDirectory(@"0:\Users\" + user);                
+                    Directory.CreateDirectory(@"0:\Users\" + user);
             }
         }
 
@@ -170,7 +171,7 @@ namespace Aura_OS.System
             {
                 Kernel.langSelected = "en_US";
                 FinalLang = "en_US";
-                Keyboard.Init();                
+                Keyboard.Init();
             }
             else if ((language.Equals("fr_FR")) || language.Equals("fr-FR"))
             {
@@ -218,7 +219,7 @@ namespace Aura_OS.System
             catch
             {
                 RunWithoutFS(false);
-            }            
+            }
         }
 
         /// <summary>
@@ -300,7 +301,7 @@ namespace Aura_OS.System
         {
             Menu.DispInstallationDialog(0);
 
-            Menu.DispInstallationDialog(5);            
+            Menu.DispInstallationDialog(5);
 
             InitDirs(); //create needed directories if they doesn't exist
 
@@ -365,12 +366,11 @@ namespace Aura_OS.System
 
             config.PutValue("debugger", "off");
 
-            //Settings.PutValue("ipaddress", "0.0.0.0");
-
-            //Settings.PutValue("subnet", "0.0.0.0"); 
-
-            //Settings.PutValue("gateway", "0.0.0.0");
-
+            foreach (HAL.Drivers.Network.NetworkDevice networkDevice in HAL.Drivers.Network.NetworkDevice.Devices)
+            {
+                File.Create(@"0:\System\" + networkDevice.Name + ".conf");
+            }
+            
             config.PushValues();
 
             Menu.DispInstallationDialog(90);
