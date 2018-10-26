@@ -45,30 +45,21 @@ namespace Aura_OS.System.Shell.cmdIntr.SystemInfomation
             if (args[1] == "/release")
             {
                 System.Network.DHCP.Core.SendReleasePacket();
-
-                NetworkStack.RemoveAllConfigIP();
-
-                Utils.Settings.LoadValues();
-                Utils.Settings.EditValue("ipaddress", "0.0.0.0");
-                Utils.Settings.EditValue("subnet", "0.0.0.0");
-                Utils.Settings.EditValue("gateway", "0.0.0.0");
-                Utils.Settings.EditValue("dns01", "0.0.0.0");
-                Utils.Settings.PushValues();
-                
-                NetworkInit.Enable();
             }
             else if (args[1] == "/set")
             {
                 NetworkStack.RemoveAllConfigIP();
 
-                if (Utils.Misc.IsIpv4Address(args[2]) && Utils.Misc.IsIpv4Address(args[3]) && Utils.Misc.IsIpv4Address(args[4]))
+                if (Utils.Misc.IsIpv4Address(args[3]) && Utils.Misc.IsIpv4Address(args[4]) && Utils.Misc.IsIpv4Address(args[5]))
                 {
-                    Utils.Settings.LoadValues();
-                    Utils.Settings.EditValue("ipaddress", args[2]);
-                    Utils.Settings.EditValue("subnet", args[3]);
-                    Utils.Settings.EditValue("gateway", args[4]);
-                    Utils.Settings.EditValue("dns01", "0.0.0.0");
-                    Utils.Settings.PushValues();
+                    string Interface = args[2];
+
+                    Utils.Settings settings = new Utils.Settings(@"0:\System\" + Interface + ".conf");
+                    settings.EditValue("ipaddress", args[3]);
+                    settings.EditValue("subnet", args[4]);
+                    settings.EditValue("gateway", args[5]);
+                    settings.EditValue("dns01", "0.0.0.0");
+                    settings.PushValues();
                     
                     NetworkInit.Enable();
                 }

@@ -33,6 +33,17 @@ namespace Aura_OS.System.Network.DHCP
                 DHCPRelease dhcp_release = new DHCPRelease(source, DHCPServerAddress(networkDevice));
                 OutgoingBuffer.AddPacket(dhcp_release);
                 NetworkStack.Update();
+
+                NetworkStack.RemoveAllConfigIP();
+
+                Utils.Settings settings = new Utils.Settings(@"0:\System\" + networkDevice.Name + ".conf");
+                settings.EditValue("ipaddress", "0.0.0.0");
+                settings.EditValue("subnet", "0.0.0.0");
+                settings.EditValue("gateway", "0.0.0.0");
+                settings.EditValue("dns01", "0.0.0.0");
+                settings.PushValues();
+
+                NetworkInit.Enable();
             }            
         }
 

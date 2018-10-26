@@ -12,30 +12,32 @@ namespace Aura_OS.System
     {
 
         public static void Enable()
-        {
+        {            
             if (RTL8168NIC != null)
             {
-                if (!IsSavedConf())
+                Utils.Settings settings = new Utils.Settings(@"0:\System\" + RTL8168NIC.Name + ".conf");
+                if (!IsSavedConf(RTL8168NIC.Name))
                 {
                     Kernel.LocalNetworkConfig = new Network.IPV4.Config(new Network.IPV4.Address(0,0,0,0), new Network.IPV4.Address(0,0,0,0), new Network.IPV4.Address(0,0,0,0));
                     Network.NetworkStack.ConfigIP(RTL8168NIC, Kernel.LocalNetworkConfig);
                 }
                 else
                 {
-                    Kernel.LocalNetworkConfig = new Network.IPV4.Config(Network.IPV4.Address.Parse(Utils.Settings.GetValue("ipaddress")), Network.IPV4.Address.Parse(Utils.Settings.GetValue("subnet")), Network.IPV4.Address.Parse(Utils.Settings.GetValue("gateway")));
+                    Kernel.LocalNetworkConfig = new Network.IPV4.Config(Network.IPV4.Address.Parse(settings.GetValue("ipaddress")), Network.IPV4.Address.Parse(settings.GetValue("subnet")), Network.IPV4.Address.Parse(settings.GetValue("gateway")));
                     Network.NetworkStack.ConfigIP(RTL8168NIC, Kernel.LocalNetworkConfig);
                 }
             }
             if (AMDPCNetIINIC != null)
             {
-                if (!IsSavedConf())
+                Utils.Settings settings = new Utils.Settings(@"0:\System\" + AMDPCNetIINIC.Name + ".conf");
+                if (!IsSavedConf(AMDPCNetIINIC.Name))
                 {
                     Kernel.LocalNetworkConfig = new Network.IPV4.Config(new Network.IPV4.Address(0,0,0,0), new Network.IPV4.Address(0,0,0,0), new Network.IPV4.Address(0,0,0,0));
                     Network.NetworkStack.ConfigIP(AMDPCNetIINIC, Kernel.LocalNetworkConfig);
                 }
                 else
                 {
-                    Kernel.LocalNetworkConfig = new Network.IPV4.Config(Network.IPV4.Address.Parse(Utils.Settings.GetValue("ipaddress")), Network.IPV4.Address.Parse(Utils.Settings.GetValue("subnet")), Network.IPV4.Address.Parse(Utils.Settings.GetValue("gateway")));
+                    Kernel.LocalNetworkConfig = new Network.IPV4.Config(Network.IPV4.Address.Parse(settings.GetValue("ipaddress")), Network.IPV4.Address.Parse(settings.GetValue("subnet")), Network.IPV4.Address.Parse(settings.GetValue("gateway")));
                     Network.NetworkStack.ConfigIP(AMDPCNetIINIC, Kernel.LocalNetworkConfig);
                 }
             }
@@ -94,12 +96,12 @@ namespace Aura_OS.System
             }
         }
 
-        static bool IsSavedConf()
+        static bool IsSavedConf(string device)
         {
             if (Setup.FileSystem() == "true")
             {
-                Utils.Settings.LoadValues();
-                if ((Utils.Settings.GetValue("ipaddress") != "0.0.0.0") || (Utils.Settings.GetValue("subnet") != "0.0.0.0") || (Utils.Settings.GetValue("gateway") != "0.0.0.0"))
+                Utils.Settings settings = new Utils.Settings(@"0:\System\" + device + ".conf");
+                if ((settings.GetValue("ipaddress") != "0.0.0.0") || (settings.GetValue("subnet") != "0.0.0.0") || (settings.GetValue("gateway") != "0.0.0.0"))
                 {
                     return true;
                 }
