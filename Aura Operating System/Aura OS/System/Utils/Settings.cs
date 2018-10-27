@@ -23,7 +23,10 @@ namespace Aura_OS.System.Utils
             fileContent = null;
             if (Kernel.SystemExists)
             {
-                fileContent = File.ReadAllLines(path);
+                if (File.Exists(path))
+                {
+                    fileContent = File.ReadAllLines(path);
+                }
             }
         }
 

@@ -125,6 +125,8 @@ namespace Aura_OS
 
                         Info.getComputerName();
 
+                        System.Network.NetworkInterfaces.Init();
+
                         running = true;
 
                     }
