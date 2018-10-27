@@ -369,6 +369,12 @@ namespace Aura_OS.System
             foreach (HAL.Drivers.Network.NetworkDevice networkDevice in HAL.Drivers.Network.NetworkDevice.Devices)
             {
                 File.Create(@"0:\System\" + networkDevice.Name + ".conf");
+                Settings settings = new Settings(@"0:\System\" + networkDevice.Name + ".conf");
+                settings.Add("ipaddress", "0.0.0.0");
+                settings.Add("subnet", "0.0.0.0");
+                settings.Add("gateway", "0.0.0.0");
+                settings.Add("dns01", "0.0.0.0");
+                settings.Push();
             }
             
             config.PushValues();

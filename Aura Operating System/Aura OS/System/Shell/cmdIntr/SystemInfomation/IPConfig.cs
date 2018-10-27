@@ -48,24 +48,82 @@ namespace Aura_OS.System.Shell.cmdIntr.SystemInfomation
             }
             else if (args[1] == "/set")
             {
-                NetworkStack.RemoveAllConfigIP();
-
-                if (Utils.Misc.IsIpv4Address(args[3]) && Utils.Misc.IsIpv4Address(args[4]) && Utils.Misc.IsIpv4Address(args[5]))
+                if(args.Length <= 3)
                 {
-                    string Interface = args[2];
-
-                    Utils.Settings settings = new Utils.Settings(@"0:\System\" + Interface + ".conf");
-                    settings.EditValue("ipaddress", args[3]);
-                    settings.EditValue("subnet", args[4]);
-                    settings.EditValue("gateway", args[5]);
-                    settings.EditValue("dns01", "0.0.0.0");
-                    settings.PushValues();
-                    
-                    NetworkInit.Enable();
+                    Console.WriteLine("Usage : " + args[0] + " /set {interface} {IPv4} {Subnet} -g {Gateway} -d {PrimaryDNS}");
                 }
                 else
                 {
-                    L.Text.Display("notcorrectaddress");
+                    string Interface = args[2];
+                    Utils.Settings settings = new Utils.Settings(@"0:\System\" + Interface + ".conf");                    
+
+                    if (args.Length >= 5)
+                    {   
+                        if (Utils.Misc.IsIpv4Address(args[3]) && Utils.Misc.IsIpv4Address(args[4]))
+                        {
+                            NetworkStack.RemoveAllConfigIP();
+                            settings.Edit("ipaddress", args[3]);
+                            settings.Edit("subnet", args[4]);
+                            Reload(settings);
+                        }
+                        else
+                        {
+                            L.Text.Display("notcorrectaddress");
+                        }
+                    }
+                    else if (args.Length == 7)
+                    {
+                        if (Utils.Misc.IsIpv4Address(args[6]))
+                        {
+                            if (args[5] == "-g")
+                            {
+                                settings.Edit("gateway", args[6]);
+                            }
+                            else
+                            {
+                                settings.Edit("gateway", "0.0.0.0");
+                            }
+
+                            if (args[5] == "-d")
+                            {
+                                settings.Edit("dns01", args[6]);
+                            }
+                            else
+                            {
+                                settings.Edit("dns01", "0.0.0.0");
+                            }
+
+                            Reload(settings);
+                        }
+                        else
+                        {
+                            L.Text.Display("notcorrectaddress");
+                        }
+                    }
+                    else if (args.Length == 9)
+                    {
+                        if (Utils.Misc.IsIpv4Address(args[6]) && Utils.Misc.IsIpv4Address(args[7]))
+                        {
+                            if (args[5] == "-g")
+                            {
+                                settings.Edit("gateway", args[6]);
+                            }
+                            if (args[6] == "-d")
+                            {
+                                settings.Edit("dns01", args[7]);
+                            }
+
+                            Reload(settings);
+                        }
+                        else
+                        {
+                            L.Text.Display("notcorrectaddress");
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine("Usage : " + args[0] + " /set {interface} {IPv4} {Subnet} -g {Gateway} -d {PrimaryDNS}");
+                    }                                     
                 }                
             }
             else if (args[1] == "/renew")
@@ -76,6 +134,14 @@ namespace Aura_OS.System.Shell.cmdIntr.SystemInfomation
             {
                 L.List_Translation.Ipconfig();
             }
+        }
+
+
+        private static void Reload(Utils.Settings settings)
+        {
+            settings.Push();
+
+            NetworkInit.Enable();
         }
     }
 }
