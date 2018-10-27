@@ -97,7 +97,7 @@ namespace Aura_OS.System.Network.DHCP
 
                 NetworkInit.Enable();
 
-                CustomConsole.WriteLineOK("[DHCP CONFIG][" + networkDevice + "] IP configuration applied.");
+                CustomConsole.WriteLineOK("[DHCP CONFIG][" + networkDevice.Name + "] IP configuration applied.");
                 Console.WriteLine();
 
             }
