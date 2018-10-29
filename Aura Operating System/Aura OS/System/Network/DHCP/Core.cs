@@ -81,7 +81,7 @@ namespace Aura_OS.System.Network.DHCP
             foreach (NetworkDevice networkDevice in NetworkDevice.Devices)
             {
                 Console.WriteLine();
-                CustomConsole.WriteLineInfo("[DHCP ACK][" + networkDevice + "] Packet received, applying IP configuration...");
+                CustomConsole.WriteLineInfo("[DHCP ACK][" + networkDevice.Name + "] Packet received, applying IP configuration...");
                 CustomConsole.WriteLineInfo("   IP Address  : " + Options.Address().ToString());
                 CustomConsole.WriteLineInfo("   Subnet mask : " + Options.Subnet().ToString());
                 CustomConsole.WriteLineInfo("   Gateway     : " + Options.Gateway().ToString());
