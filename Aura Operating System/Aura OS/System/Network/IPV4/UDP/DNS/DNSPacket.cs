@@ -25,7 +25,7 @@ namespace Aura_OS.System.Network.IPV4.UDP.DNS
         public string Url;
         public Address ReceivedIP;
 
-        internal static void DNSandler(byte[] packetData)
+        internal static void DNSHandler(byte[] packetData)
         {
             DNSPacket dns_packet = new DNSPacket(packetData);
 
