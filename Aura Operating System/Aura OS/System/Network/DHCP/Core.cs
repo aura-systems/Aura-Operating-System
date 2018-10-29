@@ -12,6 +12,8 @@ namespace Aura_OS.System.Network.DHCP
 {
     class Core
     {
+        public static bool DHCPAsked = false;
+
         /// <summary>
         /// Get the IP address of the DHCP server
         /// </summary>
@@ -57,6 +59,8 @@ namespace Aura_OS.System.Network.DHCP
                 DHCPDiscover dhcp_discover = new DHCPDiscover(networkDevice.MACAddress);
                 OutgoingBuffer.AddPacket(dhcp_discover);
                 NetworkStack.Update();
+
+                DHCPAsked = true;
             }            
         }
 
@@ -113,6 +117,7 @@ namespace Aura_OS.System.Network.DHCP
                 {
                     CustomConsole.WriteLineOK("[DHCP CONFIG][" + networkDevice.Name + "] IP configuration applied.");
                     Console.WriteLine();
+                    DHCPAsked = false;
                 }
             }
 

@@ -31,7 +31,14 @@ namespace Aura_OS.System.Network.DHCP
             if (Options.Type == 0x05 || Options.Type == 0x06)
             {
                 //ACK or NAK DHCP packet received
-                Core.Apply(Options);
+                if (Core.DHCPAsked)
+                {
+                    Core.Apply(Options, true);
+                }
+                else
+                {
+                    Core.Apply(Options);
+                }
             }
         }
 
