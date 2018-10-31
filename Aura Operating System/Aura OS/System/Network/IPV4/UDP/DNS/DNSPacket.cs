@@ -33,6 +33,8 @@ namespace Aura_OS.System.Network.IPV4.UDP.DNS
             if (dns_packet.Questions == 1 && dns_packet.AnswerRRs == 1)
             {
                 DNSPacketAnswer dns_packetanswer = new DNSPacketAnswer(packetData);
+
+                DNSClient.PacketReceived(dns_packetanswer);
             }
 
         }
