@@ -38,5 +38,11 @@ namespace Aura_OS.System.Network.IPV4.UDP.DNS
                 return null;
             }
         }
+
+        public static void Clear()
+        {
+            Name.Clear();
+            Address.Clear();
+        }
     }
 }
