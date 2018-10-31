@@ -148,6 +148,7 @@ namespace Aura_OS.System.Shell.cmdIntr.Network
                 else
                 {   
                     Console.WriteLine("Unknow host " + str);
+                    //retry
                 }
             }
         }
