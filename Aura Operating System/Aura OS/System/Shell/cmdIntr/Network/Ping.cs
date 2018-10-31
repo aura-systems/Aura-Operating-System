@@ -15,6 +15,7 @@ namespace Aura_OS.System.Shell.cmdIntr.Network
 {
     class Ping
     {
+
         private static string HelpInfo = "";
 
         /// <summary>
@@ -139,26 +140,15 @@ namespace Aura_OS.System.Shell.cmdIntr.Network
             }
             else
             {
-                System.Network.IPV4.UDP.DNS.DNSClient DNSRequest = new System.Network.IPV4.UDP.DNS.DNSClient(53);
-                DNSRequest.Ask(str);
-                int _deltaT = 0;
-                int second = 0;
-                while (!DNSRequest.ReceivedResponse)
+                if (System.Network.IPV4.UDP.DNS.DNSClient.Request(str))
                 {
-                    if (_deltaT != Cosmos.HAL.RTC.Second)
-                    {
-                        second++;
-                        _deltaT = Cosmos.HAL.RTC.Second;
-                    }
-
-                    if (second >= 4)
-                    {
-                        Apps.System.Debugger.debugger.Send("No response in 4 secondes...");
-                        break;
-                    }
+                    Address IP = System.Network.IPV4.UDP.DNS.DNSCache.GetCache(str);
+                    c_Ping("ping " + IP.ToString());
                 }
-                DNSRequest.Close();
-                c_Ping("     " + DNSRequest.address.ToString());
+                else
+                {   
+                    Console.WriteLine("Unknow host " + str);
+                }
             }
         }
 
