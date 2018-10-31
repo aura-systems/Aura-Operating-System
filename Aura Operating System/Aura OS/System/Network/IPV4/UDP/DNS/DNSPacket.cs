@@ -2,6 +2,7 @@
 * PROJECT:          Aura Operating System Development
 * CONTENT:          DNS Packet
 * PROGRAMMERS:      Valentin Charbonnier <valentinbreiz@gmail.com>
+*                   Alexy DA CRUZ <dacruzalexy@gmail.com>
 */
 
 using System;
@@ -32,12 +33,6 @@ namespace Aura_OS.System.Network.IPV4.UDP.DNS
             if (dns_packet.Questions == 1 && dns_packet.AnswerRRs == 1)
             {
                 DNSPacketAnswer dns_packetanswer = new DNSPacketAnswer(packetData);
-
-                DNSClient receiver = DNSClient.Client(dns_packetanswer.DestinationPort);
-                if (receiver != null)
-                {
-                    receiver.receiveData(dns_packetanswer);
-                }
             }
 
         }
