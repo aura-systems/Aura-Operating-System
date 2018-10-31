@@ -15,7 +15,7 @@ namespace Aura_OS.System.Network.IPV4.UDP.DNS
             Address.Add(address);
         }
 
-        public static Address Lookup(string name)
+        public static Address GetCache(string name)
         {
             if (Name.Contains(name))
             {
@@ -27,7 +27,7 @@ namespace Aura_OS.System.Network.IPV4.UDP.DNS
             }
         }
 
-        public static string ReverseLookup(Address address)
+        public static string GetReverseCache(Address address)
         {
             if (Address.Contains(address))
             {
