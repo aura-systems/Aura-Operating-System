@@ -33,10 +33,6 @@ namespace Aura_OS.System.Network
             base.initFields();
             mSenderMAC = new MACAddress(mRawData, 22);
             mSenderIP = new Address(mRawData, 28);
-            if (SenderIP == null)
-            {
-                Apps.System.Debugger.debugger.Send("But its already null again");
-            }
             mTargetMAC = new MACAddress(mRawData, 32);
             mTargetIP = new Address(mRawData, 38);
         }
@@ -126,12 +122,7 @@ namespace Aura_OS.System.Network
 
         internal ARPRequest_Ethernet(byte[] rawData)
             : base(rawData)
-        {
-            if (SenderIP == null)
-            {
-                Apps.System.Debugger.debugger.Send("In ARPRequest_Ethernet, SenderIP is null!");
-            }
-        }
+        { }
 
         internal ARPRequest_Ethernet(MACAddress ourMAC, Address ourIP, MACAddress targetMAC, Address targetIP, MACAddress arpTargetMAC)
             : base(1, ourMAC, ourIP, targetMAC, targetIP, 42, arpTargetMAC)
