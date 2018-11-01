@@ -7,6 +7,7 @@
 using System;
 using Sys = Cosmos.System;
 using L = Aura_OS.System.Translation;
+using Aura_OS.System.Network.IPV4.ICMP;
 using Aura_OS.System.Network.IPV4;
 using Aura_OS.System.Network;
 using Aura_OS.System;
