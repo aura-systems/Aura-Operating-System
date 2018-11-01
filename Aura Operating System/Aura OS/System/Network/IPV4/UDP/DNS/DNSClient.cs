@@ -43,7 +43,7 @@ namespace Aura_OS.System.Network.IPV4.UDP.DNS
             }   
             else if (DNS_Answer.AnswerType == 28) //Record AAAA (IPv6)
             {
-                //not implemented
+                //not implemented because of IPv6 that is not yet available in Aura.
             }
         }
     }

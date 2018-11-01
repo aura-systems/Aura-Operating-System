@@ -2,6 +2,12 @@
 using System.Collections.Generic;
 using System.Text;
 
+/*
+* PROJECT:          Aura Operating System Development
+* CONTENT:          DNS Cache
+* PROGRAMMERS:      Alexy DA CRUZ <dacruzalexy@gmail.com>
+*/
+
 namespace Aura_OS.System.Network.IPV4.UDP.DNS
 {
     class DNSCache
