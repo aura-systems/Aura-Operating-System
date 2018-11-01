@@ -5,12 +5,8 @@
 */
 
 using System;
-using Sys = Cosmos.System;
-using L = Aura_OS.System.Translation;
-using Aura_OS.System.Network.IPV4.ICMP;
+using ICMP = Aura_OS.System.Network.IPV4.ICMP;
 using Aura_OS.System.Network.IPV4;
-using Aura_OS.System.Network;
-using Aura_OS.System;
 
 namespace Aura_OS.System.Shell.cmdIntr.Network
 {
@@ -44,115 +40,18 @@ namespace Aura_OS.System.Shell.cmdIntr.Network
             string str = arg.Remove(startIndex, count);
             string[] items = str.Split('.');
 
-            if (System.Utils.Misc.IsIpv4Address(items))
+            if (Utils.Misc.IsIpv4Address(items))
             {
-                string IPdest = "";
-
-                int PacketSent = 0;
-                int PacketReceived = 0;
-                int PacketLost = 0;
-
-                int PercentLoss = 0;
-
-                try
-                {
-                    Address destination = new Address((byte)(Int32.Parse(items[0])), (byte)(Int32.Parse(items[1])), (byte)(Int32.Parse(items[2])), (byte)(Int32.Parse(items[3])));
-                    Address source = Config.FindNetwork(destination);
-
-
-                    IPdest = destination.ToString();
-
-                    int _deltaT = 0;
-                    int second;
-
-                    Console.WriteLine("Sending ping to " + destination.ToString());
-
-                    for (int i = 0; i < 4; i++)
-                    {
-                        second = 0;
-                        //CustomConsole.WriteLineInfo("Sending ping to " + destination.ToString() + "...");
-
-                        try
-                        {
-                            //replace address by source
-                            //System.Network.IPV4.Address address = new System.Network.IPV4.Address(192, 168, 1, 70);
-                            ICMPEchoRequest request = new ICMPEchoRequest(source , destination, 0x0001, 0x50); //this is working
-                            OutgoingBuffer.AddPacket(request); //Aura doesn't work when this is called.
-                            NetworkStack.Update();
-                        }
-                        catch (Exception ex)
-                        {
-                            CustomConsole.WriteLineError(ex.ToString());
-                        }
-
-                        PacketSent++;
-
-                        while (true)
-                        {
-
-                            if (ICMPPacket.recvd_reply != null)
-                            {
-                                //if (ICMPPacket.recvd_reply.SourceIP == destination)
-                                //{
-
-                                if (second < 1)
-                                {
-                                    Console.WriteLine("Reply received from " + ICMPPacket.recvd_reply.SourceIP.ToString() + " time < 1s");
-                                }
-                                else if (second >= 1)
-                                {
-                                    Console.WriteLine("Reply received from " + ICMPPacket.recvd_reply.SourceIP.ToString() + " time " + second + "s");
-                                }
-
-                                PacketReceived++;
-
-                                ICMPPacket.recvd_reply = null;
-                                break;
-                                //}
-                            }
-
-                            if (second >= 5)
-                            {
-                                Console.WriteLine("Destination host unreachable.");
-                                PacketLost++;
-                                break;
-                            }
-
-                            if (_deltaT != Cosmos.HAL.RTC.Second)
-                            {
-                                second++;
-                                _deltaT = Cosmos.HAL.RTC.Second;
-                            }
-                        }
-                    }
-                }
-                catch
-                {
-                    L.Text.Display("notcorrectaddress");
-                }
-                finally
-                {
-                    PercentLoss = 25 * PacketLost;
-
-                    Console.WriteLine();
-                    Console.WriteLine("Ping statistics for " + IPdest + ":");
-                    Console.WriteLine("    Packets: Sent = " + PacketSent + ", Received = " + PacketReceived + ", Lost = " + PacketLost + " (" + PercentLoss + "% loss)");
-                }
+                Address destination = new Address((byte)Int32.Parse(items[0]), (byte)Int32.Parse(items[1]), (byte)Int32.Parse(items[2]), (byte)Int32.Parse(items[3]));
+                ICMP.Ping ping = new ICMP.Ping(destination);
             }
             else
             {
-                if (System.Network.IPV4.UDP.DNS.DNSClient.Request(str))
+                if (!str.Contains(" ")) //no space in DNS name
                 {
-                    Address IP = System.Network.IPV4.UDP.DNS.DNSCache.GetCache(str);
-                    c_Ping("ping " + IP.ToString());
-                }
-                else
-                {   
-                    Console.WriteLine("Unknow host " + str);
-                    //retry
+                    ICMP.Ping ping = new ICMP.Ping(str);
                 }
             }
         }
-
     }
 }
