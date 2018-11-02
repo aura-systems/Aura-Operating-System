@@ -25,7 +25,8 @@ namespace Aura_OS.System.Network.IPV4.UDP.DNS
         {
             if (Name.Contains(name))
             {
-                return Address[Name.IndexOf(name)];
+                int index = Name.IndexOf(name);
+                return Address[index];
             }
             else
             {
@@ -37,7 +38,8 @@ namespace Aura_OS.System.Network.IPV4.UDP.DNS
         {
             if (Address.Contains(address))
             {
-                return Name[Address.IndexOf(address)];
+                int index = Address.IndexOf(address);
+                return Name[index];
             }
             else
             {
