@@ -12,7 +12,7 @@ using System.Text;
 
 namespace Aura_OS.System.Network.IPV4.UDP.DNS
 {
-    public class DNSClient
+    static class DNSClient
     {   
         public static bool Request(string name)
         {

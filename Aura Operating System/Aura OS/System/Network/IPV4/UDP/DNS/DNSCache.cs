@@ -10,7 +10,7 @@ using System.Text;
 
 namespace Aura_OS.System.Network.IPV4.UDP.DNS
 {
-    class DNSCache
+    static class DNSCache
     {
         public static List<string> Name = new List<string>();
         public static List<Address> Address = new List<Address>();

@@ -88,7 +88,7 @@ namespace Aura_OS.System.Network.IPV4.ICMP
             }
             finally
             {
-                PercentLoss = PacketSent * 100 / 4;
+                PercentLoss = (PacketSent * 100) / 4;
 
                 Console.WriteLine(Stats(destination));
             }
