@@ -274,8 +274,17 @@ namespace Aura_OS.System.Shell.cmdIntr
 
             else if (cmd.Equals("dns"))
             {
-                System.Network.IPV4.UDP.DNS.DNSClient DNSRequest = new System.Network.IPV4.UDP.DNS.DNSClient(53);
-                DNSRequest.Ask("perdu.com");
+                Console.WriteLine("DNS Test :");
+
+                if (System.Network.IPV4.UDP.DNS.DNSClient.Request("google.fr"))
+                {
+                    System.Network.IPV4.Address destination = System.Network.IPV4.UDP.DNS.DNSCache.GetCache("google.fr");
+                    Console.WriteLine("google.fr > " + destination.ToString());
+                }
+                else
+                {
+                    Console.WriteLine("Error when trying to resolve google.fr");
+                }
             }
 
             else if (cmd.Equals("net /refresh"))

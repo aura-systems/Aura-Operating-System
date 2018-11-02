@@ -8,6 +8,7 @@
 using System;
 using Aura_OS.HAL;
 using Aura_OS.System.Network.ARP;
+using Aura_OS.System.Network.IPV4.ICMP;
 using Aura_OS.System.Network.IPV4.TCP;
 using Aura_OS.System.Network.IPV4.UDP;
 
