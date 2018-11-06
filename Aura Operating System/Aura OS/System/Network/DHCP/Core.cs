@@ -107,7 +107,7 @@ namespace Aura_OS.System.Network.DHCP
 
                 Utils.Settings settings = new Utils.Settings(@"0:\System\" + networkDevice.Name + ".conf");
                 Utils.Settings dns_settings = new Utils.Settings(@"0:\System\resolv.conf");
-                dns_settings.EditValue("primary_dns", "0.0.0.0");
+                dns_settings.EditValue("primary_dns", Options.PrimaryDNS().ToString());
                 settings.EditValue("ipaddress", Options.Address().ToString());
                 settings.EditValue("subnet", Options.Subnet().ToString());
                 settings.EditValue("gateway", Options.Gateway().ToString());
