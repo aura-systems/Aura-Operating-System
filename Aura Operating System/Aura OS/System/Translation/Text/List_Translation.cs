@@ -443,11 +443,12 @@ namespace Aura_OS.System.Translation
                                 break;
                         }
                         Utils.Settings settings = new Utils.Settings(@"0:\System\" + device.Name + ".conf");
+                        Utils.Settings dns_settings = new Utils.Settings(@"0:\System\resolv.conf");
                         Console.WriteLine("Adresse MAC           : " + device.MACAddress.ToString());
                         Console.WriteLine("Adresse IP            : " + settings.GetValue("ipaddress"));
                         Console.WriteLine("Masque de sous-réseau : " + settings.GetValue("subnet"));
                         Console.WriteLine("Passerelle par défaut : " + settings.GetValue("gateway"));
-                        Console.WriteLine("Serveur DNS préféré   : " + settings.GetValue("dns01"));
+                        Console.WriteLine("Serveur DNS préféré   : " + dns_settings.GetValue("primary_dns"));
                         counter++;
                     }
                     counter = 0;
@@ -467,11 +468,12 @@ namespace Aura_OS.System.Translation
                                 break;
                         }
                         Utils.Settings settings = new Utils.Settings(@"0:\System\" + device.Name + ".conf");
+                        Utils.Settings dns_settings = new Utils.Settings(@"0:\System\resolv.conf");
                         Console.WriteLine("MAC Address          : " + device.MACAddress.ToString());
                         Console.WriteLine("IP Address           : " + settings.GetValue("ipaddress"));
                         Console.WriteLine("Subnet mask          : " + settings.GetValue("subnet"));
                         Console.WriteLine("Default Gateway      : " + settings.GetValue("gateway"));
-                        Console.WriteLine("Preferred DNS server : " + settings.GetValue("dns01"));
+                        Console.WriteLine("Primary DNS server   : " + dns_settings.GetValue("primary_dns"));
                         counter1++;
                     }
                     counter1 = 0;
@@ -491,11 +493,12 @@ namespace Aura_OS.System.Translation
                                 break;
                         }
                         Utils.Settings settings = new Utils.Settings(@"0:\System\" + device.Name + ".conf");
+                        Utils.Settings dns_settings = new Utils.Settings(@"0:\System\resolv.conf");
                         Console.WriteLine("MAC-adres           : " + device.MACAddress.ToString());
                         Console.WriteLine("IP-adres            : " + settings.GetValue("ipaddress"));
                         Console.WriteLine("Subnetmasker        : " + settings.GetValue("subnet"));
                         Console.WriteLine("Standaardgateway    : " + settings.GetValue("gateway"));
-                        Console.WriteLine("Voorkeur DNS-server : " + settings.GetValue("dns01"));
+                        Console.WriteLine("Voorkeur DNS-server : " + dns_settings.GetValue("primary_dns"));
                         counter2++;
                     }
                     counter2 = 0;
@@ -515,11 +518,12 @@ namespace Aura_OS.System.Translation
                                 break;
                         }
                         Utils.Settings settings = new Utils.Settings(@"0:\System\" + device.Name + ".conf");
+                        Utils.Settings dns_settings = new Utils.Settings(@"0:\System\resolv.conf");
                         Console.WriteLine("Indirizzo MAC         : " + device.MACAddress.ToString());
                         Console.WriteLine("Indirizzo IP          : " + settings.GetValue("ipaddress"));
                         Console.WriteLine("Maschera di sottorete : " + settings.GetValue("subnet"));
                         Console.WriteLine("Gateway predefinito   : " + settings.GetValue("gateway"));
-                        Console.WriteLine("Server DNS preferito  : " + settings.GetValue("dns01"));
+                        Console.WriteLine("Server DNS preferito  : " + dns_settings.GetValue("primary_dns"));
                         counter3++;
                     }
                     counter3 = 0;

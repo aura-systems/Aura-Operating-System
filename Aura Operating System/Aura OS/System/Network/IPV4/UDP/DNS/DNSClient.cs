@@ -94,8 +94,8 @@ namespace Aura_OS.System.Network.IPV4.UDP.DNS
 
         public void Ask(string url)
         {
-            Utils.Settings settings = new Utils.Settings(@"0:\System\" + NetworkInterfaces.Interface("eth0") + ".conf");
-            Address gateway = Address.Parse(settings.Get("dns01"));
+            Utils.Settings settings = new Utils.Settings(@"0:\System\resolv.conf");
+            Address gateway = Address.Parse(settings.Get("primary_dns"));
             Address source = Config.FindNetwork(gateway);
 
             askpacket = new DNSPacketAsk(source, gateway, 0x1234, 0x0100, 1, url);

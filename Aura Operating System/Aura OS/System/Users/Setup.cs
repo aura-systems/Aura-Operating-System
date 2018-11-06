@@ -369,12 +369,15 @@ namespace Aura_OS.System
             foreach (HAL.Drivers.Network.NetworkDevice networkDevice in HAL.Drivers.Network.NetworkDevice.Devices)
             {
                 File.Create(@"0:\System\" + networkDevice.Name + ".conf");
+                File.Create(@"0:\System\resolv.conf");
                 Settings settings = new Settings(@"0:\System\" + networkDevice.Name + ".conf");
+                Settings dns_settings = new Settings(@"0:\System\resolv.conf");
                 settings.Add("ipaddress", "0.0.0.0");
                 settings.Add("subnet", "0.0.0.0");
                 settings.Add("gateway", "0.0.0.0");
-                settings.Add("dns01", "0.0.0.0");
+                dns_settings.Add("primary_dns", "0.0.0.0");
                 settings.Push();
+                dns_settings.Push();
             }
             
             config.PushValues();

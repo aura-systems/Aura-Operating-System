@@ -284,11 +284,13 @@ namespace Aura_OS.System.Shell.cmdIntr
                 {
                     File.Create(@"0:\System\" + networkDevice.Name + ".conf");
                     Utils.Settings settings = new Utils.Settings(@"0:\System\" + networkDevice.Name + ".conf");
+                    Utils.Settings dns_settings = new Utils.Settings(@"0:\System\resolv.conf");
                     settings.Edit("ipaddress", "0.0.0.0");
                     settings.Edit("subnet", "0.0.0.0");
                     settings.Edit("gateway", "0.0.0.0");
-                    settings.Edit("dns01", "0.0.0.0");
+                    dns_settings.Edit("primary_dns", "0.0.0.0");
                     settings.Push();
+                    dns_settings.Push();
                 }
             }
 

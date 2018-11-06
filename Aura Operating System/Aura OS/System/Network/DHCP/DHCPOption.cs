@@ -15,7 +15,7 @@ namespace Aura_OS.System.Network.DHCP
     {
         private int SubnetOffset;
         private int DHCPServerIDOffset;
-        private int DNS01Offset;
+        private int PrimaryDNSOffset;
 
         private static byte[] PacketData;
 
@@ -46,7 +46,7 @@ namespace Aura_OS.System.Network.DHCP
                     //get dns
                     if ((PacketData[a] == 0x06) && (PacketData[a + 1] == 0x04))
                     {
-                        DNS01Offset = a + 2;
+                        PrimaryDNSOffset = a + 2;
                     }
 
                     //get the DHCP Server IP option
@@ -91,9 +91,9 @@ namespace Aura_OS.System.Network.DHCP
             return new Address(PacketData, SubnetOffset);
         }
 
-        public Address DNS01()
+        public Address PrimaryDNS()
         {
-            return new Address(PacketData, DNS01Offset);
+            return new Address(PacketData, PrimaryDNSOffset);
         }
 
         /// <summary>

@@ -58,9 +58,11 @@ namespace Aura_OS.System.Shell.cmdIntr.SystemInfomation
                     if (NetworkInterfaces.Interface(args[2]) != "null")
                     {
                         Utils.Settings settings = new Utils.Settings(@"0:\System\" + NetworkInterfaces.Interface(args[2]) + ".conf");
+                        Utils.Settings dns_settings = new Utils.Settings(@"0:\System\resolv.conf");
                         NetworkStack.RemoveAllConfigIP();
                         ApplyIP(args, settings);
                         settings.Push();
+                        dns_settings.PushValues();
                         NetworkInit.Enable();
                     }
                     else
@@ -81,6 +83,7 @@ namespace Aura_OS.System.Shell.cmdIntr.SystemInfomation
 
         private static void ApplyIP(string[] args, Utils.Settings settings)
         {
+            Utils.Settings dns_settings = new Utils.Settings(@"0:\System\resolv.conf");
             int args_count = args.Length;
             switch (args_count)
             {
@@ -93,7 +96,7 @@ namespace Aura_OS.System.Shell.cmdIntr.SystemInfomation
                         settings.Edit("ipaddress", args[3]);
                         settings.Edit("subnet", args[4]);
                         settings.Edit("gateway", "0.0.0.0");
-                        settings.Edit("dns01", "0.0.0.0");
+                        dns_settings.Edit("primary_dns", "0.0.0.0");
                     }
                     else
                     {
@@ -108,18 +111,18 @@ namespace Aura_OS.System.Shell.cmdIntr.SystemInfomation
                         if (args[5] == "-g")
                         {
                             settings.Edit("gateway", args[6]);
-                            settings.Edit("dns01", "0.0.0.0");
+                            dns_settings.Edit("primary_dns", "0.0.0.0");
                         }
                         else if (args[5] == "-d")
                         {
-                            settings.Edit("dns01", args[6]);
+                            dns_settings.Edit("primary_dns", args[6]);
                             settings.Edit("gateway", "0.0.0.0");
                         }
                         else
                         {
                             Console.WriteLine("Usage : " + args[0] + " /set {interface} {IPv4} {Subnet} -g {Gateway} -d {PrimaryDNS}");
                             settings.Edit("gateway", "0.0.0.0");
-                            settings.Edit("dns01", "0.0.0.0");
+                            dns_settings.Edit("primary_dns", "0.0.0.0");
                         }
                     }
                     else
@@ -138,13 +141,13 @@ namespace Aura_OS.System.Shell.cmdIntr.SystemInfomation
                         }
                         else if (args[5] == "-d")
                         {
-                            settings.Edit("dns01", args[6]);
+                            dns_settings.Edit("primary_dns", args[6]);
                         }
                         else
                         {
                             Console.WriteLine("Usage : " + args[0] + " /set {interface} {IPv4} {Subnet} -g {Gateway} -d {PrimaryDNS}");
                             settings.Edit("gateway", "0.0.0.0");
-                            settings.Edit("dns01", "0.0.0.0");
+                            dns_settings.Edit("primary_dns", "0.0.0.0");
                         }
 
                         if (args[7] == "-g")
@@ -153,13 +156,13 @@ namespace Aura_OS.System.Shell.cmdIntr.SystemInfomation
                         }
                         else if (args[7] == "-d")
                         {
-                            settings.Edit("dns01", args[8]);
+                            dns_settings.Edit("primary_dns", args[8]);
                         }
                         else
                         {
                             Console.WriteLine("Usage : " + args[0] + " /set {interface} {IPv4} {Subnet} -g {Gateway} -d {PrimaryDNS}");
                             settings.Edit("gateway", "0.0.0.0");
-                            settings.Edit("dns01", "0.0.0.0");
+                            dns_settings.Edit("primary_dns", "0.0.0.0");
                         }
                     }
                     break;
