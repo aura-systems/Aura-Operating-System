@@ -272,11 +272,11 @@ namespace Aura_OS.System.Shell.cmdIntr
                 Console.WriteLine(new System.Network.IPV4.Address(192, 168, 1, 12).Hash);
             }
 
-            else if (cmd.Equals("dns"))
-            {
-                System.Network.IPV4.UDP.DNS.DNSClient DNSRequest = new System.Network.IPV4.UDP.DNS.DNSClient(53);
-                DNSRequest.Ask("perdu.com");
-            }
+            //else if (cmd.Equals("dns"))
+            //{
+            //    System.Network.IPV4.UDP.DNS.DNSClient DNSRequest = new System.Network.IPV4.UDP.DNS.DNSClient(53);
+            //    DNSRequest.Ask("perdu.com");
+            //}
 
             else if (cmd.Equals("net /refresh"))
             {

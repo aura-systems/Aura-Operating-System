@@ -10,6 +10,7 @@ using L = Aura_OS.System.Translation;
 using Aura_OS.System.Network.IPV4;
 using Aura_OS.System.Network;
 using Aura_OS.System;
+using Aura_OS.System.Network.IPV4.UDP.DNS;
 
 namespace Aura_OS.System.Shell.cmdIntr.Network
 {
@@ -138,27 +139,29 @@ namespace Aura_OS.System.Shell.cmdIntr.Network
                 }
             }
             else
-            {
-                System.Network.IPV4.UDP.DNS.DNSClient DNSRequest = new System.Network.IPV4.UDP.DNS.DNSClient(53);
-                DNSRequest.Ask(str);
-                int _deltaT = 0;
-                int second = 0;
-                while (!DNSRequest.ReceivedResponse)
-                {
-                    if (_deltaT != Cosmos.HAL.RTC.Second)
-                    {
-                        second++;
-                        _deltaT = Cosmos.HAL.RTC.Second;
-                    }
+            {                
+                DNSClient.GetName(str);
+                Console.WriteLine(DNSClient.DNS_ReceivedIP.ToString());
+                return;
+                //
+                //int _deltaT = 0;
+                //int second = 0;
+                //while (!DNSRequest.ReceivedResponse)
+                //{
+                //    if (_deltaT != Cosmos.HAL.RTC.Second)
+                //    {
+                //        second++;
+                //        _deltaT = Cosmos.HAL.RTC.Second;
+                //    }
 
-                    if (second >= 4)
-                    {
-                        Apps.System.Debugger.debugger.Send("No response in 4 secondes...");
-                        break;
-                    }
-                }
-                DNSRequest.Close();
-                c_Ping("     " + DNSRequest.address.ToString());
+                //    if (second >= 4)
+                //    {
+                //        Apps.System.Debugger.debugger.Send("No response in 4 secondes...");
+                //        break;
+                //    }
+                //}
+                //DNSRequest.Close();
+                c_Ping("ping " + DNSClient.DNS_ReceivedIP);
             }
         }
 

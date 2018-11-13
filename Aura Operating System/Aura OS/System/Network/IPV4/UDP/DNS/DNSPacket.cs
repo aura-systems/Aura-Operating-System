@@ -33,11 +33,8 @@ namespace Aura_OS.System.Network.IPV4.UDP.DNS
             {
                 DNSPacketAnswer dns_packetanswer = new DNSPacketAnswer(packetData);
 
-                DNSClient receiver = DNSClient.Client(dns_packetanswer.DestinationPort);
-                if (receiver != null)
-                {
-                    receiver.receiveData(dns_packetanswer);
-                }
+                DNSClient.ReceivedResponse = true;
+                DNSClient.DNSHandler(dns_packetanswer);
             }
 
         }
