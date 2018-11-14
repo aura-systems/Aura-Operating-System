@@ -1,7 +1,7 @@
 ﻿/*
 * PROJECT:          Aura Operating System Development
 * CONTENT:          Memory Informations
-* PROGRAMMER(S):    Arawn Davies <arawn.davies@gmail.com>
+* PROGRAMMER(S):    Arawn Davies <arawn.davies780@gmail.com>
 *                   Valentin Charbonnier <valentinbreiz@gmail.com>
 */
 
