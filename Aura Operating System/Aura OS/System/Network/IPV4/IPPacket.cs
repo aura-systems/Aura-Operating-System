@@ -10,6 +10,7 @@ using Aura_OS.HAL;
 using Aura_OS.System.Network.ARP;
 using Aura_OS.System.Network.IPV4.TCP;
 using Aura_OS.System.Network.IPV4.UDP;
+using Aura_OS.System.Security;
 
 namespace Aura_OS.System.Network.IPV4
 {
@@ -139,21 +140,7 @@ namespace Aura_OS.System.Network.IPV4
 
         protected UInt16 CalcOcCRC(UInt16 offset, UInt16 length)
         {
-            return IPPacket.CalcOcCRC(this.RawData, offset, length);
-        }
-
-        protected static UInt16 CalcOcCRC(byte[] buffer, UInt16 offset, int length)
-        {
-            UInt32 crc = 0;
-
-            for (UInt16 w = offset; w < offset + length; w += 2)
-            {
-                crc += (UInt16)((buffer[w] << 8) | buffer[w + 1]);
-            }
-
-            crc = (~((crc & 0xFFFF) + (crc >> 16)));
-
-            return (UInt16)crc;
+            return CRC.Check(this.RawData, offset, length);
         }
 
         protected UInt16 CalcIPCRC(UInt16 headerLength)

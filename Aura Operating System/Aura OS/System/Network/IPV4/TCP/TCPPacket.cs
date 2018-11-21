@@ -4,6 +4,7 @@
 * PROGRAMMERS:      Valentin Charbonnier <valentinbreiz@gmail.com>
 */
 
+using Aura_OS.System.Security;
 using System;
 using System.Text;
 
@@ -354,7 +355,7 @@ namespace Aura_OS.System.Network.IPV4.TCP
                 }
 
                 byte[] header = MakeHeader(source.address, dest.address, TCPLen, srcPort, destPort, sequencenumber, acknowledgmentnb, Headerlenght, Flags, WSValue, UrgentPointer, options, false);
-                ushort calculatedcrc = Check(header, 0, header.Length);
+                ushort calculatedcrc = CRC.Check(header, 0, header.Length);
 
                 mRawData[this.dataOffset + 16] = (byte)((calculatedcrc >> 8) & 0xFF);
                 mRawData[this.dataOffset + 17] = (byte)((calculatedcrc >> 0) & 0xFF);
@@ -362,7 +363,7 @@ namespace Aura_OS.System.Network.IPV4.TCP
             else
             {
                 byte[] header = MakeHeader(source.address, dest.address, TCPLen, srcPort, destPort, sequencenumber, acknowledgmentnb, Headerlenght, Flags, WSValue, UrgentPointer, data, false);
-                ushort calculatedcrc = Check(header, 0, header.Length);
+                ushort calculatedcrc = CRC.Check(header, 0, header.Length);
 
                 mRawData[this.dataOffset + 16] = (byte)((calculatedcrc >> 8) & 0xFF);
                 mRawData[this.dataOffset + 17] = (byte)((calculatedcrc >> 0) & 0xFF);
@@ -503,7 +504,7 @@ namespace Aura_OS.System.Network.IPV4.TCP
         public static bool CheckCRC(TCPPacket packet)
         {
             byte[] header = MakeHeader(packet.sourceIP.address, packet.destIP.address, packet.TCPLen, packet.SourcePort, packet.DestinationPort, (uint)packet.SequenceNumber, (uint)packet.ACKNumber, packet.Headerlenght, packet.Flags, packet.WSValue, packet.UrgentPointer, packet.TCP_Data, false);
-            ushort calculatedcrc = Check(header, 0, header.Length);
+            ushort calculatedcrc = CRC.Check(header, 0, header.Length);
             if (calculatedcrc == packet.Checksum)
             {
                 Apps.System.Debugger.debugger.Send("checksum ok!!");
@@ -516,20 +517,6 @@ namespace Aura_OS.System.Network.IPV4.TCP
                 Apps.System.Debugger.debugger.Send("checksum wrong!!");
                 return false;
             }
-        }
-
-        protected static ushort Check(byte[] buffer, ushort offset, int length)
-        {
-            uint crc = 0;
-
-            for (ushort w = offset; w < offset + length; w += 2)
-            {
-                crc += (ushort)((buffer[w] << 8) | buffer[w + 1]);
-            }
-
-            crc = (~((crc & 0xFFFF) + (crc >> 16)));
-            return (ushort)crc;
-
         }
 
         public override string ToString()

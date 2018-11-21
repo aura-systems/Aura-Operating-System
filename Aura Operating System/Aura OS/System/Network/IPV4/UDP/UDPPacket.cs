@@ -5,6 +5,7 @@
 *                   Port of Cosmos Code.
 */
 
+using Aura_OS.System.Security;
 using System;
 using System.Text;
 
@@ -93,7 +94,7 @@ namespace Aura_OS.System.Network.IPV4.UDP
         public static bool CheckCRC(UDPPacket packet)
         {
             byte[] header = MakeHeader(packet.sourceIP.address, packet.destIP.address, packet.udpLen, packet.sourcePort, packet.destPort, packet.UDP_Data);
-            UInt16 calculatedcrc = Check(header, 0, header.Length);
+            UInt16 calculatedcrc = CRC.Check(header, 0, header.Length);
             Apps.System.Debugger.debugger.Send("Calculated: 0x" + Utils.Conversion.DecToHex(calculatedcrc));
             Apps.System.Debugger.debugger.Send("Received:  0x" + Utils.Conversion.DecToHex(packet.udpCRC));
             if (calculatedcrc == packet.udpCRC)
@@ -104,20 +105,6 @@ namespace Aura_OS.System.Network.IPV4.UDP
             {
                 return false;
             }
-        }
-
-        protected static UInt16 Check(byte[] buffer, UInt16 offset, int length)
-        {
-            UInt32 crc = 0;
-
-            for (UInt16 w = offset; w < offset + length; w += 2)
-            {
-                crc += (UInt16)((buffer[w] << 8) | buffer[w + 1]);
-            }
-
-            crc = (~((crc & 0xFFFF) + (crc >> 16)));
-            return (UInt16)crc;
-            
         }
 
         /// <summary>
@@ -149,7 +136,7 @@ namespace Aura_OS.System.Network.IPV4.UDP
             mRawData[this.dataOffset + 5] = (byte)((udpLen >> 0) & 0xFF);
 
             byte[] header = MakeHeader(source.address, dest.address, udpLen, srcPort, destPort, data);
-            UInt16 calculatedcrc = Check(header, 0, header.Length);
+            UInt16 calculatedcrc = CRC.Check(header, 0, header.Length);
 
             mRawData[this.dataOffset + 6] = (byte)((calculatedcrc >> 8) & 0xFF);
             mRawData[this.dataOffset + 7] = (byte)((calculatedcrc >> 0) & 0xFF);
