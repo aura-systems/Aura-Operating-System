@@ -69,6 +69,7 @@ namespace Aura_OS.System.Shell.cmdIntr
             Register("lspci");
             Register("about");
             Register("debug");
+            Register("cat");
         }
 
         /// <summary>
@@ -173,6 +174,10 @@ namespace Aura_OS.System.Shell.cmdIntr
             else if (cmd.StartsWith("run "))
             {
                 FileSystem.Run.c_Run(cmd);
+            }
+            else if (cmd.StartsWith("cat"))
+            {
+                FileSystem.Cat.c_Cat(cmd);
             }
 
             #endregion FileSystem
@@ -371,17 +376,5 @@ namespace Aura_OS.System.Shell.cmdIntr
             #endregion Util
 
         }
-
-        static void ANETSTACKINIT()
-        {
-            while(true)
-            {
-                for (int i=0; i < 50000000; i++)
-                {
-                }
-                Console.WriteLine("thread");
-            }
-        }
-
     }
 }
