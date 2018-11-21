@@ -10,15 +10,29 @@ using System.Collections;
 namespace Aura_OS.System.Network.IPV4.TCP
 {
 
-    public static class TCPConnection
+    public static class TCPFlux
     {
-        internal static TempDictionary<Connection> Connections = new TempDictionary<Connection>();
+        internal static TempDictionary<Status> Connections = new TempDictionary<Status>();
 
-        internal class Connection
+        internal class Status
         {
 
-            public Address source; public Address dest; public UInt16 destPort; public byte[] data = { 0x00, 0x00, 0x00, 0x00 }; public ulong sequencenumber; public ulong acknowledgmentnb; public UInt16 Headerlenght; public UInt16 Flags; public UInt16 WSValue; public UInt16 Checksum; public UInt16 UrgentPointer = 0x00;
-            public UInt16 localPort;
+            public Address Source;
+            public Address Destination;
+
+            public ushort DestinationPort;
+            public ushort SourcePort;
+
+            public byte[] Data = { 0x00, 0x00, 0x00, 0x00 };
+
+            public ulong SequenceNumber;
+            public ulong ACKNumber;
+
+            public uint Headerlenght;
+            public ushort Flags;
+            public ushort WSValue;
+            public uint Checksum;
+            public uint UrgentPointer = 0x00;
 
             internal bool isClosing = false;
             private bool isOpen = false;
@@ -53,35 +67,19 @@ namespace Aura_OS.System.Network.IPV4.TCP
                 }
             }
 
-            public bool IsLocal
-            {
-                get
-                {
-                    return false;
-                }
-            }
-
-            public bool Start()
-            {
-
-                return true;
-            }
-
             public bool Send(bool isdata)
             {
-                Apps.System.Debugger.debugger.Send("Sending TCP packet...");
                 if (isdata)
                 {
-                    TCPPacket packet = new TCPPacket(source, dest, localPort, destPort, data, sequencenumber, acknowledgmentnb, 0x50, Flags, WSValue, 0x0000, false, false);
+                    TCPPacket packet = new TCPPacket(Source, Destination, SourcePort, DestinationPort, Data, SequenceNumber, ACKNumber, 0x50, Flags, WSValue, 0x0000, false, false);
                     OutgoingBuffer.AddPacket(packet);
                 }
                 else
                 {
-                    TCPPacket packet = new TCPPacket(source, dest, localPort, destPort, data, sequencenumber, acknowledgmentnb, 0x50, Flags, WSValue, 0x0000, true, true);
+                    TCPPacket packet = new TCPPacket(Source, Destination, SourcePort, DestinationPort, Data, SequenceNumber, ACKNumber, 0x50, Flags, WSValue, 0x0000, true, true);
                     OutgoingBuffer.AddPacket(packet);
                 }
                 NetworkStack.Update();
-                Apps.System.Debugger.debugger.Send("Sent!");
                 return true;
             }
 

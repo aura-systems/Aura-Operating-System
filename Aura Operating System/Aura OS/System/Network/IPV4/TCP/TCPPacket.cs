@@ -12,13 +12,18 @@ namespace Aura_OS.System.Network.IPV4.TCP
     public class TCPPacket : IPPacket
     {
 
-        protected UInt16 sourcePort;
-        protected UInt16 destPort;
-        protected UInt16 tcpLen;
-        protected UInt16 tcpCRC;
-        ulong sequencenumber; ulong acknowledgmentnb; int Headerlenght; int Flags; int WSValue; int Checksum; int UrgentPointer;
+        public ushort SourcePort;
+        public ushort DestinationPort;
+        protected ushort TCPLen;
 
-        static int datalen = 0;
+        ulong SequenceNumber;
+        ulong ACKNumber;
+
+        int Headerlenght;
+        int Flags;
+        int WSValue;
+        int Checksum;
+        int UrgentPointer;
 
         internal static void TCPHandler(byte[] packetData)
         {
@@ -39,7 +44,7 @@ namespace Aura_OS.System.Network.IPV4.TCP
                     {
                         byte[] rdata = tcp_packet.mRawData;
                         int lenght = 64 - (64 - (tcp_packet.ipLength + 14));
-                        tcp_packet.tcpLen = (ushort)(lenght - 34);
+                        tcp_packet.TCPLen = (ushort)(lenght - 34);
                         tcp_packet.mRawData = new byte[lenght];
                         for (int b = 0; b <= lenght; b++)
                         {
@@ -51,7 +56,7 @@ namespace Aura_OS.System.Network.IPV4.TCP
                 {
                     byte[] rdata = tcp_packet.mRawData;
                     int lenght = 64 - (64 - (tcp_packet.ipLength + 14));
-                    tcp_packet.tcpLen = (ushort)(lenght - 34);
+                    tcp_packet.TCPLen = (ushort)(lenght - 34);
                     tcp_packet.mRawData = new byte[lenght];
                     for (int b = 0; b <= lenght; b++)
                     {
@@ -60,7 +65,7 @@ namespace Aura_OS.System.Network.IPV4.TCP
                 }
             }
 
-            Apps.System.Debugger.debugger.Send("=== Received TCP packet from " + tcp_packet.SourceIP.ToString() + ":" + tcp_packet.SourcePort.ToString() + " Len:" + tcp_packet.tcpLen.ToString() + "===");
+            Apps.System.Debugger.debugger.Send("=== Received TCP packet from " + tcp_packet.SourceIP.ToString() + ":" + tcp_packet.SourcePort.ToString() + " Len:" + tcp_packet.TCPLen.ToString() + "===");
 
             if (CheckCRC(tcp_packet))
             {
@@ -71,112 +76,112 @@ namespace Aura_OS.System.Network.IPV4.TCP
                 bool PSH = (packetData[47] & (1 << 3)) != 0;
                 bool RST = (packetData[47] & (1 << 2)) != 0;
 
-                ulong CID = tcp_packet.SourceIP.Hash + tcp_packet.sourcePort + tcp_packet.destPort;
+                ulong CID = tcp_packet.SourceIP.Hash + tcp_packet.SourcePort + tcp_packet.DestinationPort;
 
-                TCPConnection.Connection connection = new TCPConnection.Connection();
+                TCPFlux.Status tcp_status = new TCPFlux.Status();
 
                 if (SYN && !ACK)
                 {
 
                     Apps.System.Debugger.debugger.Send("FLAG: SYN, New connection");
 
-                    if (TCPConnection.Connections.ContainsKey((uint)CID))
+                    if (TCPFlux.Connections.ContainsKey((uint)CID))
                     {
-                        TCPConnection.Connections.Remove((uint)CID);
+                        TCPFlux.Connections.Remove((uint)CID);
                     }
                     else
                     {
-                        connection = new TCPConnection.Connection();
+                        tcp_status = new TCPFlux.Status();
                     }
 
-                    TCPConnection.Connections.Add((uint)CID, connection);
+                    TCPFlux.Connections.Add((uint)CID, tcp_status);
 
-                    connection.CID = CID;
+                    tcp_status.CID = CID;
 
-                    connection.dest = tcp_packet.sourceIP;
-                    connection.source = tcp_packet.destIP;
+                    tcp_status.Destination = tcp_packet.sourceIP;
+                    tcp_status.Source = tcp_packet.destIP;
 
-                    connection.localPort = tcp_packet.destPort;
-                    connection.destPort = tcp_packet.sourcePort;
+                    tcp_status.SourcePort = tcp_packet.DestinationPort;
+                    tcp_status.DestinationPort = tcp_packet.SourcePort;
 
-                    connection.acknowledgmentnb = tcp_packet.sequencenumber + 1;
+                    tcp_status.ACKNumber = tcp_packet.SequenceNumber + 1;
 
-                    connection.WSValue = 1024;
+                    tcp_status.WSValue = 1024;
 
-                    connection.sequencenumber = 3455719727;
+                    tcp_status.SequenceNumber = 3455719727;
 
-                    connection.Checksum = 0x0000;
+                    tcp_status.Checksum = 0x0000;
 
-                    connection.Flags = 0x12;
+                    tcp_status.Flags = 0x12;
 
-                    connection.Send(false);
+                    tcp_status.Send(false);
 
-                    connection.IsOpen = true;
+                    tcp_status.IsOpen = true;
 
                     return;
                 }
                 else if (SYN && ACK)
                 {
-                    connection.dest = tcp_packet.sourceIP;
-                    connection.source = tcp_packet.destIP;
+                    tcp_status.Destination = tcp_packet.sourceIP;
+                    tcp_status.Source = tcp_packet.destIP;
 
-                    connection.localPort = tcp_packet.destPort;
-                    connection.destPort = tcp_packet.sourcePort;
+                    tcp_status.SourcePort = tcp_packet.DestinationPort;
+                    tcp_status.DestinationPort = tcp_packet.SourcePort;
 
-                    connection.acknowledgmentnb = tcp_packet.sequencenumber + 1;
+                    tcp_status.ACKNumber = tcp_packet.SequenceNumber + 1;
 
-                    connection.WSValue = 1024;
+                    tcp_status.WSValue = 1024;
 
-                    connection.sequencenumber = tcp_packet.acknowledgmentnb;
+                    tcp_status.SequenceNumber = tcp_packet.ACKNumber;
 
-                    connection.Checksum = 0x0000;
+                    tcp_status.Checksum = 0x0000;
 
-                    connection.Flags = 0x10;
+                    tcp_status.Flags = 0x10;
 
-                    connection.Send(false);
+                    tcp_status.Send(false);
 
-                    TCPClient.lastack = tcp_packet.sequencenumber + 1;
-                    TCPClient.lastsn = tcp_packet.acknowledgmentnb;
+                    TCPClient.lastack = tcp_packet.SequenceNumber + 1;
+                    TCPClient.lastsn = tcp_packet.ACKNumber;
 
-                    TCPConnection.Connections[(uint)CID].IsOpen = true;
+                    TCPFlux.Connections[(uint)CID].IsOpen = true;
                 }
-                else if ((FIN || RST) && ACK && TCPConnection.Connections[(uint)CID].IsOpen)
+                else if ((FIN || RST) && ACK && TCPFlux.Connections[(uint)CID].IsOpen)
                 {
                     Apps.System.Debugger.debugger.Send("FLAG: FIN, ACK, Disconnected by host!!!");
 
-                    if (tcp_packet.sourcePort == 4224 && tcp_packet.destPort == 4224)
+                    if (tcp_packet.SourcePort == 4224 && tcp_packet.DestinationPort == 4224)
                     {
                         Console.WriteLine("Debugger closed by client computer!");
                         Kernel.debugger.Stop();
                     }
 
-                    connection.dest = tcp_packet.sourceIP;
-                    connection.source = tcp_packet.destIP;
+                    tcp_status.Destination = tcp_packet.sourceIP;
+                    tcp_status.Source = tcp_packet.destIP;
 
-                    connection.localPort = tcp_packet.destPort;
-                    connection.destPort = tcp_packet.sourcePort;
+                    tcp_status.SourcePort = tcp_packet.DestinationPort;
+                    tcp_status.DestinationPort = tcp_packet.SourcePort;
 
-                    connection.acknowledgmentnb = tcp_packet.sequencenumber + 1;
+                    tcp_status.ACKNumber = tcp_packet.SequenceNumber + 1;
 
-                    connection.WSValue = 1024;
+                    tcp_status.WSValue = 1024;
 
-                    connection.sequencenumber = tcp_packet.acknowledgmentnb;
+                    tcp_status.SequenceNumber = tcp_packet.ACKNumber;
 
-                    connection.Checksum = 0x0000;
+                    tcp_status.Checksum = 0x0000;
 
-                    connection.Flags = 0x10;
+                    tcp_status.Flags = 0x10;
 
-                    connection.Send(false);
+                    tcp_status.Send(false);
 
-                    connection.Flags = 0x11;
+                    tcp_status.Flags = 0x11;
 
-                    connection.Send(false);
+                    tcp_status.Send(false);
 
-                    connection.Close();
+                    tcp_status.Close();
 
                     return;
                 }
-                else if (PSH && ACK && TCPConnection.Connections[(uint)CID].IsOpen)
+                else if (PSH && ACK && TCPFlux.Connections[(uint)CID].IsOpen)
                 {
                     Apps.System.Debugger.debugger.Send("FLAG: PSH, ACK, Data received!? :D");
                     TCPClient receiver = TCPClient.Client(tcp_packet.DestinationPort);
@@ -185,25 +190,25 @@ namespace Aura_OS.System.Network.IPV4.TCP
                         receiver.receiveData(tcp_packet);
                     }
 
-                    connection.dest = tcp_packet.sourceIP;
-                    connection.source = tcp_packet.destIP;
+                    tcp_status.Destination = tcp_packet.sourceIP;
+                    tcp_status.Source = tcp_packet.destIP;
 
-                    connection.localPort = tcp_packet.destPort;
-                    connection.destPort = tcp_packet.sourcePort;
+                    tcp_status.SourcePort = tcp_packet.DestinationPort;
+                    tcp_status.DestinationPort = tcp_packet.SourcePort;
 
-                    connection.acknowledgmentnb = tcp_packet.sequencenumber + (ulong)tcp_packet.TCP_Data.Length;
+                    tcp_status.ACKNumber = tcp_packet.SequenceNumber + (ulong)tcp_packet.TCP_Data.Length;
 
-                    connection.WSValue = 1024;
+                    tcp_status.WSValue = 1024;
 
-                    connection.sequencenumber = tcp_packet.acknowledgmentnb;
+                    tcp_status.SequenceNumber = tcp_packet.ACKNumber;
 
-                    connection.Checksum = 0x0000;
+                    tcp_status.Checksum = 0x0000;
 
-                    connection.Flags = 0x10;
+                    tcp_status.Flags = 0x10;
 
-                    connection.Send(false);
+                    tcp_status.Send(false);
 
-                    connection.IsOpen = false;
+                    tcp_status.IsOpen = false;
 
                     return;
                 }
@@ -217,10 +222,10 @@ namespace Aura_OS.System.Network.IPV4.TCP
                     Apps.System.Debugger.debugger.Send("FLAG: RST, Connection aborted by host.");
                     return;
                 }
-                else if (ACK && TCPConnection.Connections[(uint)CID].IsOpen)
+                else if (ACK && TCPFlux.Connections[(uint)CID].IsOpen)
                 {
-                    TCPClient.lastack = tcp_packet.sequencenumber;
-                    TCPClient.lastsn = tcp_packet.acknowledgmentnb;
+                    TCPClient.lastack = tcp_packet.SequenceNumber;
+                    TCPClient.lastsn = tcp_packet.ACKNumber;
                     TCPClient.readytosend = true;
                     return;
                 }
@@ -233,19 +238,19 @@ namespace Aura_OS.System.Network.IPV4.TCP
             {
                 Apps.System.Debugger.debugger.Send("But checksum is incorrect... Packet Passed.");
 
-                TCPConnection.Connection connection = new TCPConnection.Connection();
+                TCPFlux.Status connection = new TCPFlux.Status();
 
-                connection.dest = tcp_packet.sourceIP;
-                connection.source = tcp_packet.destIP;
+                connection.Destination = tcp_packet.sourceIP;
+                connection.Source = tcp_packet.destIP;
 
-                connection.localPort = tcp_packet.destPort;
-                connection.destPort = tcp_packet.sourcePort;
+                connection.SourcePort = tcp_packet.DestinationPort;
+                connection.DestinationPort = tcp_packet.SourcePort;
 
-                connection.acknowledgmentnb = 0x0000;
+                connection.ACKNumber = 0x0000;
 
                 connection.WSValue = 1024;
 
-                connection.sequencenumber = tcp_packet.acknowledgmentnb;
+                connection.SequenceNumber = tcp_packet.ACKNumber;
 
                 connection.Checksum = 0x0000;
 
@@ -276,8 +281,8 @@ namespace Aura_OS.System.Network.IPV4.TCP
         {
         }
 
-        public TCPPacket(Address source, Address dest, UInt16 srcPort, UInt16 destPort, byte[] data, ulong sequencenumber, ulong acknowledgmentnb, UInt16 Headerlenght, UInt16 Flags, UInt16 WSValue, UInt16 UrgentPointer, bool nodata, bool Sync)
-            : base((UInt16)(20 + data.Length), 0x06, source, dest, 0x40)
+        public TCPPacket(Address source, Address dest, ushort srcPort, ushort destPort, byte[] data, ulong sequencenumber, ulong acknowledgmentnb, ushort Headerlenght, ushort Flags, ushort WSValue, ushort UrgentPointer, bool nodata, bool Sync)
+            : base((ushort)(20 + data.Length), 0x06, source, dest, 0x40)
         {
             mRawData[this.dataOffset + 0] = (byte)((srcPort >> 8) & 0xFF);
             mRawData[this.dataOffset + 1] = (byte)((srcPort >> 0) & 0xFF);
@@ -287,17 +292,17 @@ namespace Aura_OS.System.Network.IPV4.TCP
 
             if (!nodata)
             {
-                tcpLen = (UInt16)(data.Length + 20);
+                TCPLen = (ushort)(data.Length + 20);
             }
             else
             {
                 if (Sync)
                 {
-                    tcpLen = (UInt16)(20 + 4);
+                    TCPLen = (ushort)(20 + 4);
                 }
                 else
                 {
-                    tcpLen = (UInt16)(data.Length +20);
+                    TCPLen = (ushort)(data.Length +20);
                 }
             }
 
@@ -348,18 +353,16 @@ namespace Aura_OS.System.Network.IPV4.TCP
                     mRawData[this.dataOffset + 20 + b] = options[b];
                 }
 
-                byte[] header = MakeHeader(source.address, dest.address, tcpLen, srcPort, destPort, sequencenumber, acknowledgmentnb, Headerlenght, Flags, WSValue, UrgentPointer, options, false);
-                UInt16 calculatedcrc = Check(header, 0, header.Length);
+                byte[] header = MakeHeader(source.address, dest.address, TCPLen, srcPort, destPort, sequencenumber, acknowledgmentnb, Headerlenght, Flags, WSValue, UrgentPointer, options, false);
+                ushort calculatedcrc = Check(header, 0, header.Length);
 
                 mRawData[this.dataOffset + 16] = (byte)((calculatedcrc >> 8) & 0xFF);
                 mRawData[this.dataOffset + 17] = (byte)((calculatedcrc >> 0) & 0xFF);
             }
             else
             {
-                byte[] header = MakeHeader(source.address, dest.address, tcpLen, srcPort, destPort, sequencenumber, acknowledgmentnb, Headerlenght, Flags, WSValue, UrgentPointer, data, false);
-                UInt16 calculatedcrc = Check(header, 0, header.Length);
-
-                //Console.WriteLine("0x" + Utils.Conversion.DecToHex(calculatedcrc));
+                byte[] header = MakeHeader(source.address, dest.address, TCPLen, srcPort, destPort, sequencenumber, acknowledgmentnb, Headerlenght, Flags, WSValue, UrgentPointer, data, false);
+                ushort calculatedcrc = Check(header, 0, header.Length);
 
                 mRawData[this.dataOffset + 16] = (byte)((calculatedcrc >> 8) & 0xFF);
                 mRawData[this.dataOffset + 17] = (byte)((calculatedcrc >> 0) & 0xFF);
@@ -379,50 +382,50 @@ namespace Aura_OS.System.Network.IPV4.TCP
         {
             base.initFields();
 
-            sourcePort = (UInt16)((mRawData[dataOffset] << 8) | mRawData[dataOffset + 1]);
-            destPort = (UInt16)((mRawData[dataOffset + 2] << 8) | mRawData[dataOffset + 3]);
-            sequencenumber = (uint)((mRawData[dataOffset + 4] << 24) | (mRawData[dataOffset + 5] << 16) | (mRawData[dataOffset + 6] << 8) | mRawData[dataOffset + 7]);
-            acknowledgmentnb = (uint)((mRawData[dataOffset + 8] << 24) | (mRawData[dataOffset + 9] << 16) | (mRawData[dataOffset + 10] << 8) | mRawData[dataOffset + 11]);
+            SourcePort = (ushort)((mRawData[dataOffset] << 8) | mRawData[dataOffset + 1]);
+            DestinationPort = (ushort)((mRawData[dataOffset + 2] << 8) | mRawData[dataOffset + 3]);
+            SequenceNumber = (uint)((mRawData[dataOffset + 4] << 24) | (mRawData[dataOffset + 5] << 16) | (mRawData[dataOffset + 6] << 8) | mRawData[dataOffset + 7]);
+            ACKNumber = (uint)((mRawData[dataOffset + 8] << 24) | (mRawData[dataOffset + 9] << 16) | (mRawData[dataOffset + 10] << 8) | mRawData[dataOffset + 11]);
             Headerlenght = mRawData[dataOffset + 12];
             Flags = mRawData[dataOffset + 13];
-            WSValue = (UInt16)((mRawData[dataOffset + 14] << 8) | mRawData[dataOffset + 15]);
-            Checksum = (UInt16)((mRawData[dataOffset + 16] << 8) | mRawData[dataOffset + 17]);
-            UrgentPointer = (UInt16)((mRawData[dataOffset + 18] << 8) | mRawData[dataOffset + 19]);
-            tcpLen = (UInt16)(mRawData.Length - (34)); //34 TCP Begin 54TCP end
+            WSValue = (ushort)((mRawData[dataOffset + 14] << 8) | mRawData[dataOffset + 15]);
+            Checksum = (ushort)((mRawData[dataOffset + 16] << 8) | mRawData[dataOffset + 17]);
+            UrgentPointer = (ushort)((mRawData[dataOffset + 18] << 8) | mRawData[dataOffset + 19]);
+            TCPLen = (ushort)(mRawData.Length - (34));
         }
 
-        internal UInt16 DestinationPort
+        internal ushort TCP_Length
         {
-            get { return this.destPort; }
+            get
+            {
+                return this.TCPLen;
+            }
         }
-        internal UInt16 SourcePort
+
+        internal ushort TCP_DataLength
         {
-            get { return this.sourcePort; }
+            get
+            {
+                return (ushort)(TCPLen - 20);
+            }
         }
-        internal UInt16 TCP_Length
-        {
-            get { return this.tcpLen; }
-        }
-        internal UInt16 TCP_DataLength
-        {
-            get { return (UInt16)(this.tcpLen - 20); }
-        }
+
         internal byte[] TCP_Data
         {
             get
             {
-                byte[] data = new byte[this.tcpLen - 20];
+                byte[] data = new byte[TCPLen - 20];
 
                 for (int b = 0; b < data.Length; b++)
                 {
-                    data[b] = this.mRawData[this.dataOffset + 20 + b];
+                    data[b] = this.mRawData[dataOffset + 20 + b];
                 }
 
                 return data;
             }
         }
 
-        public static byte[] MakeHeader(byte[] sourceIP, byte[] destIP, UInt16 tcpLen, UInt16 sourcePort, UInt16 destPort, ulong sequencenumber, ulong acknowledgmentnb, int Headerlenght, int Flags, int WSValue, int UrgentPointer, byte[] TCP_Data, bool nodata)
+        public static byte[] MakeHeader(byte[] sourceIP, byte[] destIP, ushort tcpLen, ushort sourcePort, ushort destPort, ulong sequencenumber, ulong acknowledgmentnb, int Headerlenght, int Flags, int WSValue, int UrgentPointer, byte[] TCP_Data, bool nodata)
         {
 
             byte[] header;
@@ -499,10 +502,8 @@ namespace Aura_OS.System.Network.IPV4.TCP
 
         public static bool CheckCRC(TCPPacket packet)
         {
-            byte[] header = MakeHeader(packet.sourceIP.address, packet.destIP.address, packet.tcpLen, packet.sourcePort, packet.destPort, (uint)packet.sequencenumber, (uint)packet.acknowledgmentnb, packet.Headerlenght, packet.Flags, packet.WSValue, packet.UrgentPointer, packet.TCP_Data, false);
-            UInt16 calculatedcrc = Check(header, 0, header.Length);
-            Apps.System.Debugger.debugger.Send("Calculated checksum: 0x" + Utils.Conversion.DecToHex(calculatedcrc));
-            Apps.System.Debugger.debugger.Send("Received checksum :  0x" + Utils.Conversion.DecToHex(packet.Checksum));
+            byte[] header = MakeHeader(packet.sourceIP.address, packet.destIP.address, packet.TCPLen, packet.SourcePort, packet.DestinationPort, (uint)packet.SequenceNumber, (uint)packet.ACKNumber, packet.Headerlenght, packet.Flags, packet.WSValue, packet.UrgentPointer, packet.TCP_Data, false);
+            ushort calculatedcrc = Check(header, 0, header.Length);
             if (calculatedcrc == packet.Checksum)
             {
                 Apps.System.Debugger.debugger.Send("checksum ok!!");
@@ -510,28 +511,30 @@ namespace Aura_OS.System.Network.IPV4.TCP
             }
             else
             {
+                Apps.System.Debugger.debugger.Send("Calculated checksum: 0x" + Utils.Conversion.DecToHex(calculatedcrc));
+                Apps.System.Debugger.debugger.Send("Received checksum :  0x" + Utils.Conversion.DecToHex(packet.Checksum));
                 Apps.System.Debugger.debugger.Send("checksum wrong!!");
                 return false;
             }
         }
 
-        protected static UInt16 Check(byte[] buffer, UInt16 offset, int length)
+        protected static ushort Check(byte[] buffer, ushort offset, int length)
         {
-            UInt32 crc = 0;
+            uint crc = 0;
 
-            for (UInt16 w = offset; w < offset + length; w += 2)
+            for (ushort w = offset; w < offset + length; w += 2)
             {
-                crc += (UInt16)((buffer[w] << 8) | buffer[w + 1]);
+                crc += (ushort)((buffer[w] << 8) | buffer[w + 1]);
             }
 
             crc = (~((crc & 0xFFFF) + (crc >> 16)));
-            return (UInt16)crc;
+            return (ushort)crc;
 
         }
 
         public override string ToString()
         {
-            return "TCP Packet Src=" + sourceIP + ":" + sourcePort + ", Dest=" + destIP + ":" + destPort + ", DataLen=" + TCP_DataLength;
+            return "TCP Packet Src=" + sourceIP + ":" + SourcePort + ", Dest=" + destIP + ":" + DestinationPort + ", DataLen=" + TCP_DataLength;
         }
     }
 }

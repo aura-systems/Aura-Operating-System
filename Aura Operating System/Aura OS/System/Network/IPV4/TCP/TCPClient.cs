@@ -79,28 +79,28 @@ namespace Aura_OS.System.Network.IPV4.TCP
             this.destination = dest;
             this.destinationPort = destPort;
 
-            TCPConnection.Connection connection = new TCPConnection.Connection();
+            TCPFlux.Status connection = new TCPFlux.Status();
             Address source = Config.FindNetwork(dest);
 
             ulong CID = (ulong)(dest.Hash + this.localPort + destPort);
 
-            TCPConnection.Connections.Add((uint)CID, connection);
+            TCPFlux.Connections.Add((uint)CID, connection);
 
             connection.CID = CID;
 
             Apps.System.Debugger.debugger.Send(CID.ToString());
 
-            connection.dest = dest;
-            connection.source = source;
+            connection.Destination = dest;
+            connection.Source = source;
 
-            connection.localPort = (ushort)localPort;
-            connection.destPort = (ushort)destPort;
+            connection.SourcePort = (ushort)localPort;
+            connection.DestinationPort = (ushort)destPort;
 
-            connection.acknowledgmentnb = 0x0000;
+            connection.ACKNumber = 0x0000;
 
             connection.WSValue = 1024;
 
-            connection.sequencenumber = 3455719727;
+            connection.SequenceNumber = 3455719727;
 
             connection.Checksum = 0x0000;
 
@@ -174,25 +174,25 @@ namespace Aura_OS.System.Network.IPV4.TCP
 
             //Console.WriteLine("Sending " + "TCP Packet Src=" + source + ":" + localPort + ", Dest=" + dest + ":" + destPort + ", DataLen=" + data.Length);
 
-            TCPConnection.Connection connection = new TCPConnection.Connection();
+            TCPFlux.Status connection = new TCPFlux.Status();
 
-            connection.dest = dest;
-            connection.source = source;
+            connection.Destination = dest;
+            connection.Source = source;
 
-            connection.localPort = (ushort)localPort;
-            connection.destPort = (ushort)destPort;
+            connection.SourcePort = (ushort)localPort;
+            connection.DestinationPort = (ushort)destPort;
 
-            connection.acknowledgmentnb = lastack;
+            connection.ACKNumber = lastack;
 
             connection.WSValue = 1024;
 
-            connection.sequencenumber = lastsn;
+            connection.SequenceNumber = lastsn;
 
             connection.Checksum = 0x0000;
 
             connection.Flags = 0x18;
 
-            connection.data = data;
+            connection.Data = data;
 
             connection.Send(true);
 
@@ -207,21 +207,21 @@ namespace Aura_OS.System.Network.IPV4.TCP
 
             IPV4.Address source = IPV4.Config.FindNetwork(this.destination);
 
-            TCPConnection.Connection connection = new TCPConnection.Connection();
+            TCPFlux.Status connection = new TCPFlux.Status();
 
             Apps.System.Debugger.debugger.Send("Closing " + destination.ToString() + ":" + this.destinationPort + "now!");
 
-            connection.dest = this.destination;
-            connection.source = source;
+            connection.Destination = this.destination;
+            connection.Source = source;
 
-            connection.localPort = (ushort)this.localPort;
-            connection.destPort = (ushort)this.destinationPort;
+            connection.SourcePort = (ushort)this.localPort;
+            connection.DestinationPort = (ushort)this.destinationPort;
 
-            connection.acknowledgmentnb = lastack;
+            connection.ACKNumber = lastack;
 
             connection.WSValue = 1024;
 
-            connection.sequencenumber = lastsn;
+            connection.SequenceNumber = lastsn;
 
             connection.Checksum = 0x0000;
 
