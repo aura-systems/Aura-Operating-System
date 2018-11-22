@@ -75,7 +75,7 @@ namespace Aura_OS.System
                 if (debug)
                 {
                     CustomConsole.WriteLineOK("Found AMDPCNETII NIC on PCI " + AMDPCNETII.bus + ":" + AMDPCNETII.slot + ":" + AMDPCNETII.function);
-                    CustomConsole.WriteLineInfo("NIC IRQ: " + RTL8168.InterruptLine);
+                    CustomConsole.WriteLineInfo("NIC IRQ: " + AMDPCNETII.InterruptLine);
                 }
                 AMDPCNetIINIC = new HAL.Drivers.Network.AMDPCNetII(AMDPCNETII);
                 if (debug)
