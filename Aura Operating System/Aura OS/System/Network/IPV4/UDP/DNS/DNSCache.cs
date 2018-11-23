@@ -12,59 +12,19 @@ namespace Aura_OS.System.Network.IPV4.UDP.DNS
 {
     public class DNSCache
     {
-        //public static List<string> DNSName = new List<string>();
-        //public static List<string> DNSAddress = new List<string>();
-        static string[] DNSName;
-        static string[] DNSAddress;
-        static string[] ArrayNull;
+        static List<string> DNSName = new List<string>();
+        static List<Address> DNSAddress = new List<Address>();
 
-        static int position = 0;
-
-        public static void Add_A_Entry(string name, Address address)
+        public static Address IP;
+        
+        public static bool IsInCache(string name)
         {
-            DNSName[position] = name;
-            DNSAddress[position] = address.ToString();
-        }
-
-        public static string GetAddress(string name)
-        {
-            if (ArrayContains(DNSName, name))
+            if (DNSName.Contains(name))
             {
-                //return DNSAddress[Array.IndexOf(DNSName, name)];
-                return "8.8.8.8";
+                IP = DNSAddress[DNSName.IndexOf(name)];
+                return true;
             }
-            else
-            {
-                return null;
-            }
-        }
-
-        //public static string GetName(Address address)
-        //{
-        //    if (Address.Contains(address.ToString()))
-        //    {
-        //        return DNSName[Array.IndexOf(DNSAddress, address.ToString())];
-        //    }
-        //    else
-        //    {
-        //        return null;
-        //    }
-        //}
-
-        public static void FlushDNS()
-        {
-            DNSName = ArrayNull;
-            DNSAddress = ArrayNull;
-        }
-
-        private static bool ArrayContains(string[] array, string value)
-        {
-            int pos = Array.IndexOf(array, value);
-            if(pos < 0)
-            {
-                return false;
-            }
-            return true;
+            return false;
         }
     }
 }
