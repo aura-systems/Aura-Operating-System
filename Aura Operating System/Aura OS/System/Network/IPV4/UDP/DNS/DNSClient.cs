@@ -114,6 +114,27 @@ namespace Aura_OS.System.Network.IPV4.UDP.DNS
             }
         }
 
+        public void Ask(string dns_name, Address server)
+        {
+            if (!Kernel.DNScache.ContainsKey(dns_name))
+            {
+                Utils.Settings settings = new Utils.Settings(@"0:\System\resolv.conf");
+                Address source = Config.FindNetwork(server);
+
+                askpacket = new DNSPacketAsk(source, server, 0x1234, 0x0100, 1, dns_name);
+
+                OutgoingBuffer.AddPacket(askpacket);
+                NetworkStack.Update();
+            }
+            else
+            {
+                URL = dns_name;
+                address = Kernel.DNScache[dns_name];
+
+                ReceivedResponse = true;
+            }
+        }
+
         internal void receiveData(DNSPacketAnswer packet)
         {
             Console.WriteLine();
