@@ -92,13 +92,13 @@ namespace Aura_OS.System.Network.IPV4.UDP.DNS
         public string URL;
         public Address address;
 
-        public void Ask(string url)
+        public void Ask(string dns_name)
         {
-            Utils.Settings settings = new Utils.Settings(@"0:\System\" + NetworkInterfaces.Interface("eth0") + ".conf");
-            Address gateway = Address.Parse(settings.Get("dns01"));
-            Address source = Config.FindNetwork(gateway);
+            Utils.Settings settings = new Utils.Settings(@"0:\System\resolv.conf");
+            Address primary_dns_server = Address.Parse(settings.Get("primary_dns"));
+            Address source = Config.FindNetwork(primary_dns_server);
 
-            askpacket = new DNSPacketAsk(source, gateway, 0x1234, 0x0100, 1, url);
+            askpacket = new DNSPacketAsk(source, primary_dns_server, 0x1234, 0x0100, 1, dns_name);
 
             OutgoingBuffer.AddPacket(askpacket);
             NetworkStack.Update();
