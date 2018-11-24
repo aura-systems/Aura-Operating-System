@@ -41,6 +41,20 @@ namespace Aura_OS.System.Shell.cmdIntr.Network
         {
             string str = arg.Remove(startIndex, count);
             string[] items = str.Split('.');
+            string env = str.Remove(0, 1);
+
+            if (str.StartsWith("$"))
+            {
+                if (Kernel.environmentvariables.ContainsKey(env))
+                {
+                    c_Ping("     " + Kernel.environmentvariables[env]);
+                    return;
+                }
+                else
+                {
+                    return;
+                }
+            }
 
             if (System.Utils.Misc.IsIpv4Address(items))
             {
@@ -71,7 +85,7 @@ namespace Aura_OS.System.Shell.cmdIntr.Network
 
                         try
                         {
-                            ICMPEchoRequest request = new ICMPEchoRequest(source , destination, 0x0001, 0x50);
+                            ICMPEchoRequest request = new ICMPEchoRequest(source, destination, 0x0001, 0x50);
                             OutgoingBuffer.AddPacket(request);
                             NetworkStack.Update();
                         }
@@ -96,8 +110,8 @@ namespace Aura_OS.System.Shell.cmdIntr.Network
                                     Console.WriteLine("Reply received from " + ICMPPacket.recvd_reply.SourceIP.ToString());
                                     PacketReceived++;
                                     ICMPPacket.recvd_reply = null;
-                                }                                
-                                break;                                
+                                }
+                                break;
                             }
 
                             if (second >= 5)
@@ -121,7 +135,7 @@ namespace Aura_OS.System.Shell.cmdIntr.Network
                 }
                 finally
                 {
-                    PercentLoss = (100/PacketSent) * PacketLost;
+                    PercentLoss = (100 / PacketSent) * PacketLost;
 
                     Console.WriteLine();
                     Console.WriteLine("Ping statistics for " + IPdest + ":");
