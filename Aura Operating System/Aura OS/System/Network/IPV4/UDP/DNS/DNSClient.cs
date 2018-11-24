@@ -96,8 +96,6 @@ namespace Aura_OS.System.Network.IPV4.UDP.DNS
         {
             if (!Kernel.DNScache.ContainsKey(dns_name))
             {
-                Console.WriteLine("INFO : DNS packet will be send.");
-
                 Utils.Settings settings = new Utils.Settings(@"0:\System\resolv.conf");
                 Address primary_dns_server = Address.Parse(settings.Get("primary_dns"));
                 Address source = Config.FindNetwork(primary_dns_server);
@@ -109,8 +107,6 @@ namespace Aura_OS.System.Network.IPV4.UDP.DNS
             }          
             else
             {
-                Console.WriteLine("INFO : DNS Cache has been used.");
-
                 URL = dns_name;
                 address = Kernel.DNScache[dns_name];
 
