@@ -94,22 +94,40 @@ namespace Aura_OS.System.Network.IPV4.UDP.DNS
 
         public void Ask(string dns_name)
         {
-            Utils.Settings settings = new Utils.Settings(@"0:\System\resolv.conf");
-            Address primary_dns_server = Address.Parse(settings.Get("primary_dns"));
-            Address source = Config.FindNetwork(primary_dns_server);
+            if (!Kernel.DNScache.ContainsKey(dns_name))
+            {
+                Console.WriteLine("INFO : DNS packet will be send.");
 
-            askpacket = new DNSPacketAsk(source, primary_dns_server, 0x1234, 0x0100, 1, dns_name);
+                Utils.Settings settings = new Utils.Settings(@"0:\System\resolv.conf");
+                Address primary_dns_server = Address.Parse(settings.Get("primary_dns"));
+                Address source = Config.FindNetwork(primary_dns_server);
 
-            OutgoingBuffer.AddPacket(askpacket);
-            NetworkStack.Update();
+                askpacket = new DNSPacketAsk(source, primary_dns_server, 0x1234, 0x0100, 1, dns_name);
+
+                OutgoingBuffer.AddPacket(askpacket);
+                NetworkStack.Update();
+            }          
+            else
+            {
+                Console.WriteLine("INFO : DNS Cache has been used.");
+
+                URL = dns_name;
+                address = Kernel.DNScache[dns_name];
+
+                ReceivedResponse = true;
+            }
         }
 
         internal void receiveData(DNSPacketAnswer packet)
         {
             Console.WriteLine();
             EndPoint source = new EndPoint(packet.SourceIP, 53);
+
             URL = askpacket.Url;
             address = packet.address;
+
+            Kernel.DNScache.Add(URL, address);
+
             ReceivedResponse = true;
         }
     }
