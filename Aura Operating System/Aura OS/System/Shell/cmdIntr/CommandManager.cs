@@ -219,7 +219,7 @@ namespace Aura_OS.System.Shell.cmdIntr
             }
             else if ((cmd.StartsWith("ipconfig")) || (cmd.StartsWith("ifconfig")) || (cmd.StartsWith("netconf")))
             {
-                SystemInfomation.IPConfig.c_IPConfig(cmd);
+                Network.IPConfig.c_IPConfig(cmd);
             }
             else if ((cmd.Equals("time")) || (cmd.Equals("date")))
             {
