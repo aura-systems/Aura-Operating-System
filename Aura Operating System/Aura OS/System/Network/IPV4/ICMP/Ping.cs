@@ -45,9 +45,7 @@ namespace Aura_OS.System.Network.IPV4.ICMP
                 IPdest = destination.ToString();
 
                 int _deltaT = 0;
-                int second;
-
-                
+                int second;                
 
                 if(servername != null)
                 {
