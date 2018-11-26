@@ -75,7 +75,7 @@ namespace Aura_OS.System.Shell.cmdIntr.Network
             }
             else if (args[1] == "/flushdns")
             {
-                Kernel.DNScache.Clear();
+                //Kernel.DNScache.Clear();
             }
             else
             {
