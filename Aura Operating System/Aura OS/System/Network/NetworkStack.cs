@@ -8,7 +8,7 @@
 using System;
 using Aura_OS.HAL.Drivers.Network;
 using Aura_OS.System.Network.ARP;
-using Aura_OS.System.Network.IPV4;
+using Aura_OS.System.Network.IPV4.ICMP;
 
 namespace Aura_OS.System.Network
 {

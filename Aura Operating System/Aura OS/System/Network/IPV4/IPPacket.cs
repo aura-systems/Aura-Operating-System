@@ -10,6 +10,7 @@ using Aura_OS.HAL;
 using Aura_OS.System.Network.ARP;
 using Aura_OS.System.Network.IPV4.TCP;
 using Aura_OS.System.Network.IPV4.UDP;
+using Aura_OS.System.Network.IPV4.ICMP;
 
 namespace Aura_OS.System.Network.IPV4
 {
