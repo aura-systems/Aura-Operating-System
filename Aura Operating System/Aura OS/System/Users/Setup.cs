@@ -370,10 +370,11 @@ namespace Aura_OS.System
             {
                 File.Create(@"0:\System\" + networkDevice.Name + ".conf");
                 Settings settings = new Settings(@"0:\System\" + networkDevice.Name + ".conf");
+                Utils.Settings dns_settings = new Utils.Settings(@"0:\System\resolv.conf");
                 settings.Add("ipaddress", "0.0.0.0");
                 settings.Add("subnet", "0.0.0.0");
                 settings.Add("gateway", "0.0.0.0");
-                settings.Add("dns01", "0.0.0.0");
+                dns_settings.Add("primary_dns", "0.0.0.0");
                 settings.Push();
             }
             

@@ -427,6 +427,7 @@ namespace Aura_OS.System.Translation
         /// </summary>
         public static void Ipconfig()
         {
+            Utils.Settings dns_settings = new Utils.Settings(@"0:\System\resolv.conf");
             switch (Kernel.langSelected)
             {
                 case "fr_FR":
@@ -447,7 +448,7 @@ namespace Aura_OS.System.Translation
                         Console.WriteLine("Adresse IP            : " + settings.GetValue("ipaddress"));
                         Console.WriteLine("Masque de sous-réseau : " + settings.GetValue("subnet"));
                         Console.WriteLine("Passerelle par défaut : " + settings.GetValue("gateway"));
-                        Console.WriteLine("Serveur DNS préféré   : " + settings.GetValue("dns01"));
+                        Console.WriteLine("Serveur DNS préféré   : " + dns_settings.GetValue("primary_dns"));
                         counter++;
                     }
                     counter = 0;
@@ -471,7 +472,7 @@ namespace Aura_OS.System.Translation
                         Console.WriteLine("IP Address           : " + settings.GetValue("ipaddress"));
                         Console.WriteLine("Subnet mask          : " + settings.GetValue("subnet"));
                         Console.WriteLine("Default Gateway      : " + settings.GetValue("gateway"));
-                        Console.WriteLine("Preferred DNS server : " + settings.GetValue("dns01"));
+                        Console.WriteLine("Preferred DNS server : " + dns_settings.GetValue("primary_dns"));
                         counter1++;
                     }
                     counter1 = 0;
@@ -495,7 +496,7 @@ namespace Aura_OS.System.Translation
                         Console.WriteLine("IP-adres            : " + settings.GetValue("ipaddress"));
                         Console.WriteLine("Subnetmasker        : " + settings.GetValue("subnet"));
                         Console.WriteLine("Standaardgateway    : " + settings.GetValue("gateway"));
-                        Console.WriteLine("Voorkeur DNS-server : " + settings.GetValue("dns01"));
+                        Console.WriteLine("Voorkeur DNS-server : " + dns_settings.GetValue("primary_dns"));
                         counter2++;
                     }
                     counter2 = 0;
@@ -519,7 +520,7 @@ namespace Aura_OS.System.Translation
                         Console.WriteLine("Indirizzo IP          : " + settings.GetValue("ipaddress"));
                         Console.WriteLine("Maschera di sottorete : " + settings.GetValue("subnet"));
                         Console.WriteLine("Gateway predefinito   : " + settings.GetValue("gateway"));
-                        Console.WriteLine("Server DNS preferito  : " + settings.GetValue("dns01"));
+                        Console.WriteLine("Server DNS preferito  : " + dns_settings.GetValue("primary_dns"));
                         counter3++;
                     }
                     counter3 = 0;
