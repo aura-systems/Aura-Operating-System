@@ -4,12 +4,7 @@
 * PROGRAMMER(S):    Valentin Charbonnier <valentinbreiz@gmail.com>
 */
 
-using System;
-using Sys = Cosmos.System;
-using L = Aura_OS.System.Translation;
-using Aura_OS.System.Network.IPV4;
-using Aura_OS.System.Network;
-using Aura_OS.System;
+using IPv4 = Aura_OS.System.Network.IPV4;
 
 namespace Aura_OS.System.Shell.cmdIntr.Network
 {
@@ -40,7 +35,16 @@ namespace Aura_OS.System.Shell.cmdIntr.Network
         public static void c_Ping(string arg, short startIndex = 0, short count = 5)
         {
             string str = arg.Remove(startIndex, count);
-            System.Network.IPV4.ICMP.Ping.Send(str);
+
+            if (Utils.Misc.IsIpv4Address(str))
+            {
+                IPv4.Address destination = IPv4.Address.Parse(str);
+                IPv4.ICMP.Ping.Send(destination);
+            }
+            else
+            {
+                IPv4.ICMP.Ping.Send(str); //Using DNS
+            }            
         }
 
     }
