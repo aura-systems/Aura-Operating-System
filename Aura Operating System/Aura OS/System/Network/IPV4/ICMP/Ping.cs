@@ -9,7 +9,7 @@ namespace Aura_OS.System.Network.IPV4.ICMP
     {
         static Utils.Timer timer = new Utils.Timer();
 
-        public static void Send(Address address)
+        public static void Send(Address address, string servername = null)
         {
             string strAddress = address.ToString();
             string[] items = strAddress.Split('.');
@@ -47,7 +47,16 @@ namespace Aura_OS.System.Network.IPV4.ICMP
                 int _deltaT = 0;
                 int second;
 
-                Console.WriteLine("Sending ping to " + destination.ToString());
+                
+
+                if(servername != null)
+                {
+                    Console.WriteLine("Sending ping to " + servername + " [" + destination.ToString() + "]");
+                }
+                else
+                {
+                    Console.WriteLine("Sending ping to " + destination.ToString());
+                }
 
                 for (int i = 0; i < 4; i++)
                 {
