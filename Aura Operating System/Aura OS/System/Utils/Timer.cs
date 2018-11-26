@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Aura_OS.System.Shell.cmdIntr.Util
+namespace Aura_OS.System.Utils
 {
     class Timer
     {
