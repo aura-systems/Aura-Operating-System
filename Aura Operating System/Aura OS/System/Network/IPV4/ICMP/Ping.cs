@@ -29,21 +29,17 @@ namespace Aura_OS.System.Network.IPV4.ICMP
                 }
             }
 
-            string IPdest = "";
-
             int PacketSent = 0;
             int PacketReceived = 0;
             int PacketLost = 0;
 
             int PercentLoss = 0;
 
+            Address destination = new Address((byte)(Int32.Parse(items[0])), (byte)(Int32.Parse(items[1])), (byte)(Int32.Parse(items[2])), (byte)(Int32.Parse(items[3])));
+            Address source = Config.FindNetwork(destination);
+
             try
-            {
-                Address destination = new Address((byte)(Int32.Parse(items[0])), (byte)(Int32.Parse(items[1])), (byte)(Int32.Parse(items[2])), (byte)(Int32.Parse(items[3])));
-                Address source = Config.FindNetwork(destination);
-
-                IPdest = destination.ToString();
-
+            {   
                 int _deltaT = 0;
                 int second;                
 
@@ -84,22 +80,24 @@ namespace Aura_OS.System.Network.IPV4.ICMP
 
                             break;
                         }
-
-                        if (source == destination) //If we're pinging our interface => Ping ok
+                        else
                         {
-                            Console.WriteLine("Reply received from " + destination.ToString());
-                            ICMPPacket.recvd_reply = null;
+                            if (source == destination) //If we're pinging our interface => Ping ok
+                            {
+                                Console.WriteLine("Reply received from " + destination.ToString());
+                                ICMPPacket.recvd_reply = null;
 
-                            break;
+                                break;
 
-                        }
-                        else if (destination.IsLoopbackAddress()) //Loopback address => Ping ok
-                        {
-                            Console.WriteLine("Reply received from " + destination.ToString());
-                            ICMPPacket.recvd_reply = null;
+                            }
+                            else if (destination.IsLoopbackAddress()) //Loopback address => Ping ok
+                            {
+                                Console.WriteLine("Reply received from " + destination.ToString());
+                                ICMPPacket.recvd_reply = null;
 
-                            break;
-                        }
+                                break;
+                            }
+                        }                        
 
                         if (second >= 5)
                         {
@@ -125,7 +123,7 @@ namespace Aura_OS.System.Network.IPV4.ICMP
                 PercentLoss = (100 / PacketSent) * PacketLost;
 
                 Console.WriteLine();
-                Console.WriteLine("Ping statistics for " + IPdest + ":");
+                Console.WriteLine("Ping statistics for " + destination.ToString() + ":");
                 Console.WriteLine("    Packets: Sent = " + PacketSent + ", Received = " + PacketReceived + ", Lost = " + PacketLost + " (" + PercentLoss + "% loss)");
             }
 
