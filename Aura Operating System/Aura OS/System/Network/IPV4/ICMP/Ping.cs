@@ -87,7 +87,7 @@ namespace Aura_OS.System.Network.IPV4.ICMP
 
                         if (source == destination) //If we're pinging our interface => Ping ok
                         {
-                            Console.WriteLine("Reply received from " + ICMPPacket.recvd_reply.SourceIP.ToString());
+                            Console.WriteLine("Reply received from " + destination.ToString());
                             ICMPPacket.recvd_reply = null;
 
                             break;
@@ -95,7 +95,7 @@ namespace Aura_OS.System.Network.IPV4.ICMP
                         }
                         else if (destination.IsLoopbackAddress()) //Loopback address => Ping ok
                         {
-                            Console.WriteLine("Reply received from " + ICMPPacket.recvd_reply.SourceIP.ToString());
+                            Console.WriteLine("Reply received from " + destination.ToString());
                             ICMPPacket.recvd_reply = null;
 
                             break;
