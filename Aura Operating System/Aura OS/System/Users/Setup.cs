@@ -309,6 +309,8 @@ namespace Aura_OS.System
 
             File.Create(@"0:\System\settings.conf");
             File.Create(@"0:\System\passwd");
+            File.Create(@"0:\System\interfaces.conf");
+            File.Create(@"0:\System\resolv.conf");
 
             Menu.DispInstallationDialog(15);
 
