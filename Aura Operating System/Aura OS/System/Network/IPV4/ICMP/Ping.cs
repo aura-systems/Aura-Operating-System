@@ -99,7 +99,7 @@ namespace Aura_OS.System.Network.IPV4.ICMP
                             }
                         }                        
 
-                        if (second >= 5)
+                        if (second >= 1)
                         {
                             Console.WriteLine("Destination host unreachable.");
                             PacketLost++;
