@@ -39,12 +39,12 @@ namespace Aura_OS.System.Shell.cmdIntr.Network
             if (Utils.Misc.IsIpv4Address(str))
             {
                 IPv4.Address destination = IPv4.Address.Parse(str);
-                IPv4.ICMP.Ping.Send(destination);
+                IPv4.ICMP.PingOld.Send(destination);
             }
             else
             {
-                IPv4.ICMP.Ping.Send(str); //Using DNS
-            }            
+                IPv4.ICMP.PingOld.Send(str); //Using DNS
+            }
         }
 
     }
