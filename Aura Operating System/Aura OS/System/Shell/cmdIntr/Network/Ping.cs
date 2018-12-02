@@ -32,18 +32,34 @@ namespace Aura_OS.System.Shell.cmdIntr.Network
         /// <param name="arg">IP Address</param>
         /// /// <param name="startIndex">The start index for remove.</param>
         /// <param name="count">The count index for remove.</param>
-        public static void c_Ping(string arg, short startIndex = 0, short count = 5)
+        public static void c_Ping(string cmd, short startIndex = 0, short count = 5)
         {
-            string str = arg.Remove(startIndex, count);
+            string[] args = cmd.Split(' ');
+            string IP = args[0];
+            string env = IP.Remove(0, 1);
 
-            if (Utils.Misc.IsIpv4Address(str))
+            //Support of the env variables.
+            if (IP.StartsWith("$"))
             {
-                IPv4.Address destination = IPv4.Address.Parse(str);
-                IPv4.ICMP.PingOld.Send(destination);
+                if (Kernel.environmentvariables.ContainsKey(env))
+                {
+                    Ping.Send(Address.Parse(Kernel.environmentvariables[env]));
+                    return;
+                }
+                else
+                {
+                    return;
+                }
+            }
+
+            if (Utils.Misc.IsIpv4Address(IP))
+            {
+                IPv4.Address destination = IPv4.Address.Parse(IP);
+                IPv4.ICMP.Ping.Send(destination,4);
             }
             else
             {
-                IPv4.ICMP.PingOld.Send(str); //Using DNS
+                IPv4.ICMP.Ping.Send(IP,4); //Using DNS
             }
         }
 
