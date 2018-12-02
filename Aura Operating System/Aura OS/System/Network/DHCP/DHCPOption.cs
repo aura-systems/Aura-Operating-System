@@ -51,7 +51,7 @@ namespace Aura_OS.System.Network.DHCP
                     }
 
                     //get the DNS option
-                    if ((PacketData[a] == 0x06) && (PacketData[a + 1] == 4) || (PacketData[a + 1] == 8) || (PacketData[a + 1] == 12))
+                    if ((PacketData[a] == 0x06) && (Utils.Math.IsDivisible(PacketData[a + 1], 4)))
                     {
                         DNS01Offset = a + 2;
                     }
