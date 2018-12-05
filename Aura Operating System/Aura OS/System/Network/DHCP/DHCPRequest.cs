@@ -76,7 +76,7 @@ namespace Aura_OS.System.Network.DHCP
             //Requested Address
             mRawData[dataOffset + 251] = 50;
             mRawData[dataOffset + 252] = 4;
-            
+
             mRawData[dataOffset + 253] = RequestedAddress.address[0];
             mRawData[dataOffset + 254] = RequestedAddress.address[1];
             mRawData[dataOffset + 255] = RequestedAddress.address[2];
@@ -90,13 +90,17 @@ namespace Aura_OS.System.Network.DHCP
             mRawData[dataOffset + 261] = DHCPServerAddress.address[2];
             mRawData[dataOffset + 262] = DHCPServerAddress.address[3];
 
-            mRawData[dataOffset + 263] = 0xFF;
+            //Parameters start here
+            mRawData[dataOffset + 263] = 0x37;
+            mRawData[dataOffset + 264] = 4;
 
-            //Fill 0
-            //for (int i = 258; i < 272; i++)
-            //{
-            //    mRawData[dataOffset + i] = 0x00;
-            //}
+            //Parameters
+            mRawData[dataOffset + 265] = 0x01;
+            mRawData[dataOffset + 266] = 0x03;
+            mRawData[dataOffset + 267] = 0x0f;
+            mRawData[dataOffset + 268] = 0x06;
+
+            mRawData[dataOffset + 269] = 0xff; //ENDMARK
 
             initFields();
         }
