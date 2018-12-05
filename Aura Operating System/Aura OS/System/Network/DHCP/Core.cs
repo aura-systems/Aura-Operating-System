@@ -39,15 +39,14 @@ namespace Aura_OS.System.Network.DHCP
                 NetworkStack.RemoveAllConfigIP();
 
                 Utils.Settings settings = new Utils.Settings(@"0:\System\" + networkDevice.Name + ".conf");
-                Utils.Settings dns_settings = new Utils.Settings(@"0:\System\resolv.conf");
                 settings.EditValue("ipaddress", "0.0.0.0");
                 settings.EditValue("subnet", "0.0.0.0");
                 settings.EditValue("gateway", "0.0.0.0");
-                dns_settings.Edit("primary_dns", "0.0.0.0");
+                settings.EditValue("dns01", "0.0.0.0");
                 settings.PushValues();
 
                 NetworkInit.Enable();
-            }            
+            }
         }
 
         /// <summary>
@@ -62,7 +61,7 @@ namespace Aura_OS.System.Network.DHCP
                 NetworkStack.Update();
 
                 DHCPAsked = true;
-            }            
+            }
         }
 
         /// <summary>
@@ -98,18 +97,22 @@ namespace Aura_OS.System.Network.DHCP
                 {
                     Console.WriteLine();
                     CustomConsole.WriteLineInfo("[DHCP ACK][" + networkDevice.Name + "] Packet received, applying IP configuration...");
-                    CustomConsole.WriteLineInfo("   IP Address  : " + Options.Address().ToString());
-                    CustomConsole.WriteLineInfo("   Subnet mask : " + Options.Subnet().ToString());
-                    CustomConsole.WriteLineInfo("   Gateway     : " + Options.Gateway().ToString());
-                    CustomConsole.WriteLineInfo("   DNS server  : " + Options.PrimaryDNS().ToString());
+                    CustomConsole.WriteLineInfo("   IP Address   : " + Options.Address().ToString());
+                    CustomConsole.WriteLineInfo("   Subnet mask  : " + Options.Subnet().ToString());
+                    CustomConsole.WriteLineInfo("   Gateway      : " + Options.Gateway().ToString());
+                    CustomConsole.WriteLineInfo("   DNS servers  : ");
+                    foreach (Address DNS in Options.DNS)
+                    {
+                        Console.WriteLine("                : " + DNS.ToString());
+                    }
                 }
 
                 Utils.Settings settings = new Utils.Settings(@"0:\System\" + networkDevice.Name + ".conf");
-                Utils.Settings dns_settings = new Utils.Settings(@"0:\System\resolv.conf");
+                Utils.Settings dns_conf = new Utils.Settings(@"0:\System\resolv.conf");
                 settings.EditValue("ipaddress", Options.Address().ToString());
                 settings.EditValue("subnet", Options.Subnet().ToString());
                 settings.EditValue("gateway", Options.Gateway().ToString());
-                dns_settings.EditValue("primary_dns", Options.PrimaryDNS().ToString());
+                dns_conf.EditValue("nameservers", DNSServersSettings(Options));
                 settings.EditValue("dhcp_server", Options.Server().ToString());
                 settings.PushValues();
 
@@ -124,6 +127,25 @@ namespace Aura_OS.System.Network.DHCP
             }
 
             Kernel.BeforeCommand();
+        }
+
+        private static string DNSServersSettings(DHCPOption Options)
+        {
+            string DNS_servers_string = "";
+            int i = 0;
+            foreach (Address DNS in Options.DNS)
+            {
+                if (i == 0)
+                {
+                    DNS_servers_string = DNS.ToString();
+                }
+                else
+                {
+                    DNS_servers_string = DNS_servers_string + "," + DNS.ToString();
+                }
+                i++;
+            }
+            return DNS_servers_string;
         }
     }
 }
