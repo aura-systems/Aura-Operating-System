@@ -35,7 +35,7 @@ namespace Aura_OS.System.Shell.cmdIntr.Network
         public static void c_Ping(string cmd, short startIndex = 0, short count = 5)
         {
             string[] args = cmd.Split(' ');
-            string IP = args[0];
+            string IP = args[1];
             string env = IP.Remove(0, 1);
 
             //Support of the env variables.
@@ -43,7 +43,7 @@ namespace Aura_OS.System.Shell.cmdIntr.Network
             {
                 if (Kernel.environmentvariables.ContainsKey(env))
                 {
-                    Ping.Send(Address.Parse(Kernel.environmentvariables[env]));
+                    IPv4.ICMP.Ping.Send(IPv4.Address.Parse(Kernel.environmentvariables[env]), 4);
                     return;
                 }
                 else
