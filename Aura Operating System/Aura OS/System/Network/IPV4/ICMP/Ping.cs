@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Aura_OS.System.Utils;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -6,7 +7,6 @@ namespace Aura_OS.System.Network.IPV4.ICMP
 {
     class Ping
     {
-        private static Utils.Timer timer = new Utils.Timer();
 
         public static void Send(Address destination, int NumberOfPing, string servername = null)
         {
@@ -34,8 +34,12 @@ namespace Aura_OS.System.Network.IPV4.ICMP
 
                 PacketSent++;
 
+                Timer pingTimer = new Timer(2);                
+
                 while (true)
                 {
+                    pingTimer.IncrementSecond();
+
                     if (ICMPPacket.recvd_reply != null)
                     {
                         Console.WriteLine("Reply received from " + ICMPPacket.recvd_reply.SourceIP.ToString());
@@ -54,14 +58,6 @@ namespace Aura_OS.System.Network.IPV4.ICMP
 
                             break;
                         }
-                        else
-                        {
-                            timer.BreakWait(2);
-                            if(timer.Status == Utils.Timer.State.Finished)
-                            {
-                                break;
-                            }
-                        }
                     }
                 }
             }
@@ -71,8 +67,6 @@ namespace Aura_OS.System.Network.IPV4.ICMP
             Console.WriteLine();
             Console.WriteLine("Ping statistics for " + destination.ToString() + ":");
             Console.WriteLine("    Packets: Sent = " + PacketSent + ", Received = " + PacketReceived + ", Lost = " + PacketLost + " (" + PercentLoss + "% loss)");
-
-            timer.Status = Utils.Timer.State.None;
         }
 
         public static void Send(string DNSname, int NumberOfPing)
@@ -80,7 +74,7 @@ namespace Aura_OS.System.Network.IPV4.ICMP
             UDP.DNS.DNSClient DNSRequest = new UDP.DNS.DNSClient(53);
             DNSRequest.Ask(DNSname);
 
-            timer.Wait(4, DNSRequest.ReceivedResponse);
+            Timer.Wait(4, DNSRequest.ReceivedResponse);
 
             DNSRequest.Close();
             Send(DNSRequest.address, NumberOfPing, DNSname);
