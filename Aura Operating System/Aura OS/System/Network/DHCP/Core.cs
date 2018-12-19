@@ -101,20 +101,20 @@ namespace Aura_OS.System.Network.DHCP
                     CustomConsole.WriteLineInfo("   Subnet mask  : " + Options.Subnet().ToString());
                     CustomConsole.WriteLineInfo("   Gateway      : " + Options.Gateway().ToString());
                     CustomConsole.WriteLineInfo("   DNS servers  : ");
-                    foreach (Address DNS in Options.DNS)
-                    {
-                        Console.WriteLine("                : " + DNS.ToString());
-                    }
+                    //foreach (Address DNS in Options.DNS)
+                    //{
+                    //    Console.WriteLine("                : " + DNS.ToString());
+                    //}
                 }
 
                 Utils.Settings settings = new Utils.Settings(@"0:\System\" + networkDevice.Name + ".conf");
-                Utils.Settings dns_conf = new Utils.Settings(@"0:\System\resolv.conf");
                 settings.EditValue("ipaddress", Options.Address().ToString());
                 settings.EditValue("subnet", Options.Subnet().ToString());
-                settings.EditValue("gateway", Options.Gateway().ToString());
-                dns_conf.EditValue("nameservers", DNSServersSettings(Options));
+                settings.EditValue("gateway", Options.Gateway().ToString());              
                 settings.EditValue("dhcp_server", Options.Server().ToString());
                 settings.PushValues();
+
+                DNSServersSettings(Options);
 
                 NetworkInit.Enable();
 
@@ -129,23 +129,27 @@ namespace Aura_OS.System.Network.DHCP
             Kernel.BeforeCommand();
         }
 
-        private static string DNSServersSettings(DHCPOption Options)
+        private static void DNSServersSettings(DHCPOption Options)
         {
             string DNS_servers_string = "";
-            int i = 0;
-            foreach (Address DNS in Options.DNS)
-            {
-                if (i == 0)
-                {
-                    DNS_servers_string = DNS.ToString();
-                }
-                else
-                {
-                    DNS_servers_string = DNS_servers_string + "," + DNS.ToString();
-                }
-                i++;
-            }
-            return DNS_servers_string;
+            //int i = 0;
+            //foreach (Address DNS in Options.DNS)
+            //{
+            //    if (i == 0)
+            //    {
+            //        DNS_servers_string = DNS.ToString();
+            //    }
+            //    else
+            //    {
+            //        DNS_servers_string = DNS_servers_string + "," + DNS.ToString();
+            //    }
+            //    i++;
+            //}
+
+            Utils.Settings dns_conf = new Utils.Settings(@"0:\System\resolv.conf");
+            //dns_conf.EditValue("nameservers", DNS_servers_string);
+            dns_conf.EditValue("nameservers", "1.1.1.1");
+            dns_conf.Push();
         }
     }
 }

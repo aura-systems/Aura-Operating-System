@@ -16,8 +16,9 @@ namespace Aura_OS.System.Network.DHCP
         private int SubnetOffset;
         private int DHCPServerIDOffset;
         private int DNSOffset;
-        private int DNSNameservers;
         private int GatewayOffset;
+        
+        private int DNSNameservers;
 
         private static byte[] PacketData;
 
@@ -52,7 +53,7 @@ namespace Aura_OS.System.Network.DHCP
                         DNSNameservers = (PacketData[a + 1] / 4) - 1;
                         for (int i = 0; i < DNSNameservers; i++)
                         {
-                            DNS[i] = new Address(PacketData, DNSOffset);
+                            DNS = DNS + PacketData[a + 2] + PacketData[a + 3] + PacketData[a + 4] + PacketData[a + 5]; 
                             i++;
                         }
                     }
@@ -105,7 +106,7 @@ namespace Aura_OS.System.Network.DHCP
             return new Address(PacketData, SubnetOffset);
         }
 
-        public Address[] DNS;
+        public string DNS;
 
         /// <summary>
         /// Return the DHCP server IP located in the bootstrap options
