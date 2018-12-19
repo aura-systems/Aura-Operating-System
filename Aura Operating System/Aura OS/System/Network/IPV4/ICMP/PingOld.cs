@@ -7,7 +7,6 @@ namespace Aura_OS.System.Network.IPV4.ICMP
 {
     class PingOld
     {
-        static Utils.Timer timer = new Utils.Timer();
 
         public static void Send(Address address, string servername = null)
         {
@@ -134,7 +133,7 @@ namespace Aura_OS.System.Network.IPV4.ICMP
             UDP.DNS.DNSClient DNSRequest = new UDP.DNS.DNSClient(53);
             DNSRequest.Ask(Name);
 
-            timer.Wait(4, DNSRequest.ReceivedResponse);
+            //timer.Wait(4, DNSRequest.ReceivedResponse);
 
             DNSRequest.Close();
             Send(DNSRequest.address);
