@@ -66,12 +66,14 @@ Required repositories :
 - Cosmos
 - IL2CPU
 - XSharp
+
 Pre-requisites :
 - Latest version of VS 2017
 - .NET Core SDK 2.1
 - Inno Quick Start Pack (Free) – Install with defaults, keep Preprocessor option checked
 - Visual Studio 2017 Workload: Visual Studio Extension Development
 - .NET Framework 4.7.1 Developer Pack
+
 You need to put all of the cloned repositories in the same folder, like that :
 ![image](https://user-images.githubusercontent.com/5628290/50374613-0aebe600-05f1-11e9-823b-778b4e23bd33.png)
 
