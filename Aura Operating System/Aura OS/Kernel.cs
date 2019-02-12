@@ -10,7 +10,7 @@
 using System;
 using Cosmos.System.FileSystem;
 using Sys = Cosmos.System;
-using Lang = Aura_OS.System.Translation;
+using Aura_OS.System.Translation;
 using Aura_OS.System;
 using Aura_OS.System.Users;
 using Aura_OS.System.Computer;
@@ -44,6 +44,7 @@ namespace Aura_OS
         public static bool Logged = false;
         public static string ComputerName = "aura-pc";
         public static string UserDir = @"0:\Users\" + userLogged + "\\";
+	public static string SystemDir = @"0:\System\";
         public static bool SystemExists = false;
         public static bool JustInstalled = false;
         public static CosmosVFS vFS = new CosmosVFS();
@@ -55,7 +56,8 @@ namespace Aura_OS
         public static Config LocalNetworkConfig;
         public static Debugger debugger;
         public static string current_volume = @"0:\";
-
+	public static LangManager Lang = new LangManager();
+	    
         #endregion
 
         #region Before Run
@@ -74,8 +76,11 @@ namespace Aura_OS
         {
             try
             {
+		// initialize languages we support
+                addLanguages();    
+		
                 CommandManager.RegisterAllCommands();
-
+		
                 //AConsole = new System.Shell.VGA.VGAConsole(null);
 
                 Encoding.RegisterProvider(CosmosEncodingProvider.Instance);
@@ -114,12 +119,12 @@ namespace Aura_OS
                     if (!JustInstalled)
                     {
 
-                        Settings config = new Settings(@"0:\System\settings.conf");
+                        Settings config = new Settings("settings.conf");
                         langSelected = config.GetValue("language");
 
                         #region Language
-
-                        Lang.Keyboard.Init();
+			
+                        Keyboard.Init();
 
                         #endregion
 
@@ -144,6 +149,17 @@ namespace Aura_OS
                 running = false;
                 Crash.StopKernel(ex);
             }
+        }
+	    
+	 /// <summary>
+        /// Adds all the languages that we support
+        /// </summary>
+        protected void addLanguages()
+        {
+            Lang.addLang("en_US", new Lang("en_US"));
+	    Lang.addLang("fr_FR", new Lang("fr_FR"));
+	    Lang.addLang("nl_NL", new Lang("nl_NL"));
+	    Lang.addLang("it_IT", new Lang("it_IT")):
         }
 
         #endregion
