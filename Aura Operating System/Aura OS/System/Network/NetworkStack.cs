@@ -18,6 +18,7 @@ namespace Aura_OS.System.Network
     public static class NetworkStack
     {
         internal static TempDictionary<NetworkDevice> AddressMap { get; private set; }
+        internal static TempDictionary<NetworkDevice> MACMap { get; private set; }
 
         /// <summary>
         /// Initialize the Network Stack to prepare it for operation
@@ -25,6 +26,7 @@ namespace Aura_OS.System.Network
         public static void Init()
         {
             AddressMap = new TempDictionary<NetworkDevice>();
+            MACMap = new TempDictionary<NetworkDevice>();
 
             // VMT Scanner issue workaround
             ARPPacket.VMTInclude();
@@ -38,6 +40,15 @@ namespace Aura_OS.System.Network
             IPV4.TCP.TCPPacket.VMTInclude();
         }
 
+        public static void SetConfigIP(NetworkDevice nic, IPV4.Config config)
+        {
+            NetworkConfig.Add(nic, config);
+            AddressMap.Add(config.IPAddress.Hash, nic);
+            MACMap.Add(nic.MACAddress.Hash, nic);
+            IPV4.Config.Add(config);
+            nic.DataReceived = HandlePacket;
+        }
+
         /// <summary>
         /// Configure a IP configuration on the given network device.
         /// <remarks>Multiple IP Configurations can be made, like *nix environments</remarks>
@@ -47,10 +58,28 @@ namespace Aura_OS.System.Network
         /// Mask and Default Gateway for the device</param>
         public static void ConfigIP(NetworkDevice nic, IPV4.Config config)
         {
-            NetworkConfig.Add(nic, config);
-            AddressMap.Add(config.IPAddress.Hash, nic);
-            IPV4.Config.Add(config);
-            nic.DataReceived = HandlePacket;
+            if (NetworkConfig.ContainsKey(nic))
+            {
+                CustomConsole.WriteLineInfo("Config existante");
+                IPV4.Config toremove = NetworkConfig.Get(nic);                
+                AddressMap.Remove(toremove.IPAddress.Hash);
+                MACMap.Remove(nic.MACAddress.Hash);
+                IPV4.Config.Remove(config);
+                NetworkConfig.Remove(nic);
+                SetConfigIP(nic, config);
+            }
+            else
+            {
+                SetConfigIP(nic, config);
+            }
+        }
+
+        public static void RemoveAllConfigIP()
+        {
+            AddressMap.Clear();
+            MACMap.Clear();
+            IPV4.Config.RemoveAll();
+            NetworkConfig.Clear();
         }
 
         internal static void HandlePacket(byte[] packetData)

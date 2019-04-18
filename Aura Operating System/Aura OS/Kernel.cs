@@ -35,8 +35,8 @@ namespace Aura_OS
 
         Setup setup = new Setup();
         public static bool running;
-        public static string version = "0.4.5";
-        public static string revision = "280820180021";
+        public static string version = "0.5.0";
+        public static string revision = "240920182105";
         public static string current_directory = @"0:\";
         public static string langSelected = "en_US";
         public static string userLogged;
@@ -114,8 +114,8 @@ namespace Aura_OS
                     if (!JustInstalled)
                     {
 
-                        Settings.LoadValues();
-                        langSelected = Settings.GetValue("language");
+                        Settings config = new Settings(@"0:\System\settings.conf");
+                        langSelected = config.GetValue("language");
 
                         #region Language
 
@@ -124,6 +124,8 @@ namespace Aura_OS
                         #endregion
 
                         Info.getComputerName();
+
+                        System.Network.NetworkInterfaces.Init();
 
                         running = true;
 

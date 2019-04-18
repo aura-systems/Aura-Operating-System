@@ -11,30 +11,28 @@
 */
 
 using Cosmos.Core;
-using Cosmos.HAL;
 using System;
 
 namespace Aura_OS.HAL
 {
     public class PCSpeaker
     {
+
         static IOPort io = new IOPort(0);
         static int PP = 0, D = 0;
+
         static void Outb(ushort port, byte data)
         {
-            if (io.Port != port)
-                io = new IOPort(port);
+            io = new IOPort(port);
             io.Byte = data;
             PP = port;
             D = data;
-
         }
+
         static byte Inb(ushort port)
         {
-            if (io.Port != port)
-                io = new IOPort(port);
+            io = new IOPort(port);
             return io.Byte;
-
         }
 
         //Play sound using built in speaker

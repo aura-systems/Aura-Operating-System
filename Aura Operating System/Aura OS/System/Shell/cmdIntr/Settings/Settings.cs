@@ -73,33 +73,6 @@ namespace Aura_OS.System.Shell.cmdIntr.Settings
                 {
                     Apps.System.DebuggerSettings.RegisterSetting();
                 }
-
-                else if (cmdargs[1].Equals("ipaddress"))
-                {
-                    L.Text.Display("changeipaddress");
-                    Console.Write("IP: ");
-                    string IP = Console.ReadLine();
-
-                    Console.Write("Subnet: ");
-                    string Subnet = Console.ReadLine();
-
-                    Console.Write("Gateway: ");
-                    string Gateway = Console.ReadLine();
-
-                    if (System.Utils.Misc.IsIpv4Address(IP) && System.Utils.Misc.IsIpv4Address(Subnet) && System.Utils.Misc.IsIpv4Address(Gateway))
-                    {
-                        System.Utils.Settings.LoadValues();
-                        System.Utils.Settings.EditValue("ipaddress", IP);
-                        System.Utils.Settings.EditValue("subnet", Subnet);
-                        System.Utils.Settings.EditValue("gateway", Gateway);
-                        System.Utils.Settings.PushValues();
-                        L.Text.Display("pleasereboot");
-                    }
-                    else
-                    {
-                        L.Text.Display("notcorrectaddress");
-                    }
-                }
             }
             else if (cmdargs.Length == 3 ) //One arg
             {
@@ -112,29 +85,28 @@ namespace Aura_OS.System.Shell.cmdIntr.Settings
 
                 else if (cmdargs[1].Equals("setlang"))
                 {
+                    Utils.Settings config = new Utils.Settings(@"0:\System\settings.conf");
+
                     if ((cmdargs[2].Equals("en_US")) || cmdargs[2].Equals("en-US"))
                     {
                         Kernel.langSelected = "en_US";
                         L.Keyboard.Init();
-                        System.Utils.Settings.LoadValues();
-                        System.Utils.Settings.EditValue("language", "en_US");
-                        System.Utils.Settings.PushValues();
+                        config.EditValue("language", "en_US");
+                        config.PushValues();
                     }
                     else if ((cmdargs[2].Equals("fr_FR")) || cmdargs[2].Equals("fr-FR"))
                     {
                         Kernel.langSelected = "fr_FR";
                         L.Keyboard.Init();
-                        System.Utils.Settings.LoadValues();
-                        System.Utils.Settings.EditValue("language", "fr_FR");
-                        System.Utils.Settings.PushValues();
+                        config.EditValue("language", "fr_FR");
+                        config.PushValues();
                     }
                     else if ((cmdargs[2].Equals("nl_NL")) || cmdargs[2].Equals("nl-NL"))
                     {
                         Kernel.langSelected = "nl_NL";
                         L.Keyboard.Init();
-                        System.Utils.Settings.LoadValues();
-                        System.Utils.Settings.EditValue("language", "nl_NL");
-                        System.Utils.Settings.PushValues();
+                        config.EditValue("language", "nl_NL");
+                        config.PushValues();
                     }
                     else
                     {
@@ -185,9 +157,9 @@ namespace Aura_OS.System.Shell.cmdIntr.Settings
             //    bool save = c_Console.TextColor.c_TextColor(cmdargs[2]);
             //    if (save)
             //    {
-            //        System.Utils.Settings.LoadValues();
-            //        System.Utils.Settings.EditValue("foregroundcolor", cmdargs[2]);
-            //        System.Utils.Settings.PushValues();
+            //        config.LoadValues();
+            //        config.EditValue("foregroundcolor", cmdargs[2]);
+            //        config.PushValues();
             //    }
             //}
             //else if (cmdargs[1].Equals("backgroundcolor"))
@@ -195,9 +167,9 @@ namespace Aura_OS.System.Shell.cmdIntr.Settings
             //    bool save = c_Console.BackGroundColor.c_BackGroundColor(cmdargs[2]);
             //    if (save)
             //    {
-            //        System.Utils.Settings.LoadValues();
-            //        System.Utils.Settings.EditValue("backgroundcolor", cmdargs[2]);
-            //        System.Utils.Settings.PushValues();
+            //        config.LoadValues();
+            //        config.EditValue("backgroundcolor", cmdargs[2]);
+            //        config.PushValues();
             //    }
             //}
 

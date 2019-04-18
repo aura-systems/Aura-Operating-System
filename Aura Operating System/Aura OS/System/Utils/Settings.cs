@@ -1,7 +1,7 @@
 ﻿/*
 * PROJECT:          Aura Operating System Development
-* CONTENT:          Settings class
-* PROGRAMMERS:      Valentin Charbonnier <valentinbreiz@gmail.com>
+* CONTENT:          Settings Class v2
+* PROGRAMMERS:      <dacruzalexy@gmail.com> Alexy DA CRUZ
 */
 
 using System;
@@ -10,48 +10,46 @@ using System.IO;
 
 namespace Aura_OS.System.Utils
 {
-    public static class Settings
+    public class Settings
     {
+        static List<string> config = new List<string>();
+        string[] fileContent;
+        string path;
 
-        static List<string> configurationfile = new List<string>();
-        static List<string> usersfile = new List<string>();
-        static string[] file;
-
-        /// <summary>
-        /// Load values from settings.conf.
-        /// </summary>
-        public static void LoadValues()
+        public Settings(string path)
         {
-            //reset of config in memory if there is "something"
-            file = null;
-            //load
+            this.path = path;
+
+            fileContent = null;
             if (Kernel.SystemExists)
             {
-                file = File.ReadAllLines(@"0:\System\settings.conf");
+                if (File.Exists(path))
+                {
+                    fileContent = File.ReadAllLines(path);
+                }
             }
         }
 
-        /// <summary>
-        /// Push values to settings.conf.
-        /// </summary>
-        public static void PushValues()
+        public void Push()
         {
             if (Kernel.SystemExists)
             {
-                File.WriteAllLines(@"0:\System\settings.conf", file);
+                File.WriteAllLines(path, fileContent);
             }
         }
 
-        /// <summary>
-        /// Put a value in settings.
-        /// </summary>
-        public static void PutValue(string parameter, string value)
+        public void PushValues()
+        {
+            Push();
+        }
+
+        public void Add(string parameter, string value)
         {
             bool contains = false;
 
-            foreach (string line in file)
+            foreach (string line in fileContent)
             {
-                configurationfile.Add(line);
+                config.Add(line);
                 if (line.StartsWith(parameter))
                 {
                     contains = true;
@@ -60,53 +58,56 @@ namespace Aura_OS.System.Utils
 
             if (!contains)
             {
-                configurationfile.Add(parameter + "=" + value);
+                config.Add(parameter + "=" + value);
             }
 
-            file = configurationfile.ToArray();
+            fileContent = config.ToArray();
 
-            configurationfile.Clear();
+            config.Clear();
         }
 
-        /// <summary>
-        /// Get a value from settings.
-        /// </summary>
-        public static string GetValue(string parameter)
+        public void PutValue(string parameter, string value)
         {
+            Add(parameter, value);
+        }
 
-            if (file == null)
+        public string Get(string parameter)
+        {
+            if (fileContent == null)
             {
                 return "null";
             }
 
             string value = "null";
 
-            foreach (string line in file)
+            foreach (string line in fileContent)
             {
-                configurationfile.Add(line);
+                config.Add(line);
             }
 
-            foreach (string element in configurationfile)
+            foreach (string element in config)
             {
                 if (element.StartsWith(parameter))
                 {
-                    value = element.Remove(0, parameter.Length + 1 );
+                    value = element.Remove(0, parameter.Length + 1);
                 }
             }
 
-            configurationfile.Clear();
+            config.Clear();
 
             return value;
         }
 
-        /// <summary>
-        /// Edit a value in settings.
-        /// </summary>
-        public static void EditValue(string parameter, string value)
+        public string GetValue(string parameter)
         {
-            foreach (string line in file)
+            return Get(parameter);
+        }
+
+        public void Edit(string parameter, string value)
+        {
+            foreach (string line in fileContent)
             {
-                configurationfile.Add(line);
+                config.Add(line);
             }
 
             int counter = -1;
@@ -114,7 +115,7 @@ namespace Aura_OS.System.Utils
 
             bool exists = false;
 
-            foreach (string element in configurationfile)
+            foreach (string element in config)
             {
                 counter = counter + 1;
                 if (element.Contains(parameter))
@@ -125,76 +126,22 @@ namespace Aura_OS.System.Utils
             }
             if (exists)
             {
-                configurationfile[index] = parameter + "=" + value;
+                config[index] = parameter + "=" + value;
 
-                file = configurationfile.ToArray();
+                fileContent = config.ToArray();
 
-                configurationfile.Clear();
+                config.Clear();
+            }
+            else
+            {
+                Add(parameter, value);
             }
         }
 
-        /** public static void DisableParameter(string parameter)
+        public void EditValue(string parameter, string value)
         {
-            foreach (string line in file)
-            {
-                configurationfile.Add(line);
-            }
-
-            int counter = -1;
-            int index = 0;
-
-            bool exists = false;
-
-            foreach (string element in configurationfile)
-            {
-                counter = counter + 1;
-                if (element.Contains(parameter))
-                {
-                    index = counter;
-                    exists = true;
-                }
-            }
-            if (exists)
-            {
-                configurationfile[index] = "#" + parameter + "=" + GetValue(parameter);
-
-                file = configurationfile.ToArray();
-
-                configurationfile.Clear();
-            }
+            Edit(parameter, value);
         }
-
-        public static void EnableParameter(string parameter)
-        {
-            foreach (string line in file)
-            {
-                configurationfile.Add(line);
-            }
-
-            int counter = -1;
-            int index = 0;
-
-            bool exists = false;
-
-            foreach (string element in configurationfile)
-            {
-                counter = counter + 1;
-                if (element.Contains(parameter))
-                {
-                    index = counter;
-                    exists = true;
-                }
-            }
-            if (exists)
-            {
-                configurationfile[index] = parameter + "=" + GetValue(parameter);
-
-                file = configurationfile.ToArray();
-
-                configurationfile.Clear();
-            }
-        }
-    **/
 
     }
 }

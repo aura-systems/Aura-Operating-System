@@ -7,6 +7,7 @@
 using Aura_OS.System.Utils;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
 using L = Aura_OS.System.Translation;
 
@@ -68,6 +69,7 @@ namespace Aura_OS.System.Shell.cmdIntr
             Register("lspci");
             Register("about");
             Register("debug");
+            Register("cat");
         }
 
         /// <summary>
@@ -81,7 +83,7 @@ namespace Aura_OS.System.Shell.cmdIntr
             {
                 if (Kernel.debugger.enabled)
                 {
-                    Kernel.debugger.Send("Cmd manager: " + cmd);
+                    Kernel.debugger.Send("[Command] > " + cmd);
                 }
             }
 
@@ -173,6 +175,10 @@ namespace Aura_OS.System.Shell.cmdIntr
             {
                 FileSystem.Run.c_Run(cmd);
             }
+            else if (cmd.StartsWith("cat"))
+            {
+                FileSystem.Cat.c_Cat(cmd);
+            }
 
             #endregion FileSystem
 
@@ -211,9 +217,9 @@ namespace Aura_OS.System.Shell.cmdIntr
             {
                 SystemInfomation.Version.c_Version();
             }
-            else if ((cmd.Equals("ipconfig")) || (cmd.Equals("ifconfig")) || (cmd.Equals("netconf")))
+            else if ((cmd.StartsWith("ipconfig")) || (cmd.StartsWith("ifconfig")) || (cmd.StartsWith("netconf")))
             {
-                SystemInfomation.IPConfig.c_IPConfig();
+                SystemInfomation.IPConfig.c_IPConfig(cmd);
             }
             else if ((cmd.Equals("time")) || (cmd.Equals("date")))
             {
@@ -227,13 +233,6 @@ namespace Aura_OS.System.Shell.cmdIntr
             else if (cmd.Equals("crash"))
             {
                 Tests.Crash.c_Crash();
-            }
-
-            else if (cmd.Equals("cmd"))
-            {
-                CMDs.Add("ipconfig");
-                CMDs.Add("netconf");
-                CMDs.Add("help");
             }
 
             else if (cmd.Equals("crashcpu"))
@@ -272,17 +271,6 @@ namespace Aura_OS.System.Shell.cmdIntr
 
             }
 
-            else if (cmd.Equals("dhcp"))
-            {
-                byte[] macb = { 0x00, 0x0C, 0x29, 0x7C, 0x85, 0x28 };
-                HAL.MACAddress mac = new HAL.MACAddress(macb);
-                System.Network.DHCP.DHCPDiscover dhcp_discover = new System.Network.DHCP.DHCPDiscover(mac, System.Network.IPV4.Address.Zero, new System.Network.IPV4.Address(192,168,1,100));
-                //System.Network.DHCP.DHCPRequest dhcp_request = new System.Network.DHCP.DHCPRequest(mac, System.Network.IPV4.Address.Zero, new System.Network.IPV4.Address(192, 168, 1, 100), new System.Network.IPV4.Address(192, 168, 1, 254));
-
-                System.Network.IPV4.OutgoingBuffer.AddPacket(dhcp_discover);
-                System.Network.NetworkStack.Update();
-            }
-
             else if (cmd.Equals("haship"))
             {
                 Console.WriteLine(new HAL.MACAddress(new byte[] { 00, 01, 02, 03, 04, 05 }).Hash);
@@ -295,20 +283,19 @@ namespace Aura_OS.System.Shell.cmdIntr
                 DNSRequest.Ask("perdu.com");
             }
 
-            //else if (cmd.Equals("discover"))
-            //{
-            //    //byte[] mac = { 0x00,0x0C, 0x29,0x7C, 0x85,0x28};                
-            //    foreach (HAL.Drivers.Network.NetworkDevice device in HAL.Drivers.Network.NetworkDevice.Devices)
-            //    {                    
-            //        int a = 296 + System.Computer.Info.HostnameLength();
-            //        ushort b = (ushort)a;
-            //        Console.WriteLine("SRC MAC: " + device.MACAddress.ToString());
-            //        System.Network.DHCP.DHCPDiscoverRequest request = new System.Network.DHCP.DHCPDiscoverRequest(device.MACAddress, b);
-            //        Console.WriteLine("Sending DHCP Discover packet...");
-            //        request.Send(device);
-            //        System.Network.NetworkStack.Update();
-            //    }              
-            //}
+            else if (cmd.Equals("net /refresh"))
+            {
+                foreach (HAL.Drivers.Network.NetworkDevice networkDevice in HAL.Drivers.Network.NetworkDevice.Devices)
+                {
+                    File.Create(@"0:\System\" + networkDevice.Name + ".conf");
+                    Utils.Settings settings = new Utils.Settings(@"0:\System\" + networkDevice.Name + ".conf");
+                    settings.Edit("ipaddress", "0.0.0.0");
+                    settings.Edit("subnet", "0.0.0.0");
+                    settings.Edit("gateway", "0.0.0.0");
+                    settings.Edit("dns01", "0.0.0.0");
+                    settings.Push();
+                }
+            }
 
             //else if (cmd.StartsWith("xml "))
             //{
@@ -387,17 +374,5 @@ namespace Aura_OS.System.Shell.cmdIntr
             #endregion Util
 
         }
-
-        static void ANETSTACKINIT()
-        {
-            while(true)
-            {
-                for (int i=0; i < 50000000; i++)
-                {
-                }
-                Console.WriteLine("thread");
-            }
-        }
-
     }
 }
