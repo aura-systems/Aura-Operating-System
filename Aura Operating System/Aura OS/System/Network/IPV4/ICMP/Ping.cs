@@ -34,30 +34,36 @@ namespace Aura_OS.System.Network.IPV4.ICMP
 
                 PacketSent++;
 
-                Timer pingTimer = new Timer(2);                
+                Timer timer = new Timer();
+                timer.Start(2);
 
                 while (true)
                 {
-                    pingTimer.IncrementSecond();
-
-                    if (ICMPPacket.recvd_reply != null)
+                    if (!timer.AtEnd())
                     {
-                        Console.WriteLine("Reply received from " + ICMPPacket.recvd_reply.SourceIP.ToString());
-                        PacketReceived++;
-                        ICMPPacket.recvd_reply = null;
-
-                        break;
-                    }
-                    else
-                    {
-                        if (destination.IsLoopbackAddress()) //Loopback address => PingOld ok
+                        if (ICMPPacket.recvd_reply != null)
                         {
-                            Console.WriteLine("Reply received from " + destination.ToString());
+                            Console.WriteLine("Reply received from " + ICMPPacket.recvd_reply.SourceIP.ToString());
                             PacketReceived++;
                             ICMPPacket.recvd_reply = null;
 
                             break;
                         }
+                        else
+                        {
+                            if (destination.IsLoopbackAddress()) //Loopback address => PingOld ok
+                            {
+                                Console.WriteLine("Reply received from " + destination.ToString());
+                                PacketReceived++;
+                                ICMPPacket.recvd_reply = null;
+
+                                break;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        break;
                     }
                 }
             }
@@ -74,10 +80,21 @@ namespace Aura_OS.System.Network.IPV4.ICMP
             UDP.DNS.DNSClient DNSRequest = new UDP.DNS.DNSClient(53);
             DNSRequest.Ask(DNSname);
 
-            Timer.Wait(4, DNSRequest.ReceivedResponse);
+            Timer DNStimer = new Timer();
+            DNStimer.Start(4);
 
-            DNSRequest.Close();
-            Send(DNSRequest.address, NumberOfPing, DNSname);
+            if (!DNStimer.AtEnd())
+            {
+                if (DNSRequest.ReceivedResponse)
+                {
+                    DNSRequest.Close();
+                    Send(DNSRequest.address, NumberOfPing, DNSname);
+                }
+            }
+            else
+            {
+                Console.WriteLine("Not able to resolve this name.");
+            }
         }
     }
 }
