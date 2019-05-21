@@ -99,6 +99,7 @@ namespace Aura_OS.System.Network.IPV4
         protected Address address;
         protected Address defaultGateway;
         protected Address subnetMask;
+        protected Address preferreddns;
 
         /// <summary>
         /// Create a IPv4 Configuration with no default gateway
@@ -136,6 +137,12 @@ namespace Aura_OS.System.Network.IPV4
         {
             get { return this.defaultGateway; }
             set { this.defaultGateway = value; }
+        }
+
+        public Address PreferredDNS
+        {
+            get { return this.preferreddns; }
+            set { this.preferreddns = value; }
         }
     }
 }

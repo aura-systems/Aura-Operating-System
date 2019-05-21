@@ -444,10 +444,10 @@ namespace Aura_OS.System.Translation
                         }
                         Utils.Settings settings = new Utils.Settings(@"0:\System\" + device.Name + ".conf");
                         Console.WriteLine("Adresse MAC           : " + device.MACAddress.ToString());
-                        Console.WriteLine("Adresse IP            : " + settings.GetValue("ipaddress"));
-                        Console.WriteLine("Masque de sous-réseau : " + settings.GetValue("subnet"));
-                        Console.WriteLine("Passerelle par défaut : " + settings.GetValue("gateway"));
-                        Console.WriteLine("Serveur DNS préféré   : " + settings.GetValue("dns01"));
+                        Console.WriteLine("Adresse IP            : " + Kernel.LocalNetworkConfig.IPAddress.ToString());
+                        Console.WriteLine("Masque de sous-réseau : " + Kernel.LocalNetworkConfig.SubnetMask.ToString());
+                        Console.WriteLine("Passerelle par défaut : " + Kernel.LocalNetworkConfig.DefaultGateway.ToString());
+                        Console.WriteLine("Serveur DNS préféré   : " + Kernel.LocalNetworkConfig.PreferredDNS.ToString());
                         counter++;
                     }
                     counter = 0;
@@ -468,10 +468,10 @@ namespace Aura_OS.System.Translation
                         }
                         Utils.Settings settings = new Utils.Settings(@"0:\System\" + device.Name + ".conf");
                         Console.WriteLine("MAC Address          : " + device.MACAddress.ToString());
-                        Console.WriteLine("IP Address           : " + settings.GetValue("ipaddress"));
-                        Console.WriteLine("Subnet mask          : " + settings.GetValue("subnet"));
-                        Console.WriteLine("Default Gateway      : " + settings.GetValue("gateway"));
-                        Console.WriteLine("Preferred DNS server : " + settings.GetValue("dns01"));
+                        Console.WriteLine("IP Address           : " + Kernel.LocalNetworkConfig.IPAddress.ToString());
+                        Console.WriteLine("Subnet mask          : " + Kernel.LocalNetworkConfig.SubnetMask.ToString());
+                        Console.WriteLine("Default Gateway      : " + Kernel.LocalNetworkConfig.DefaultGateway.ToString());
+                        Console.WriteLine("Preferred DNS server : " + Kernel.LocalNetworkConfig.PreferredDNS.ToString());
                         counter1++;
                     }
                     counter1 = 0;
@@ -492,10 +492,10 @@ namespace Aura_OS.System.Translation
                         }
                         Utils.Settings settings = new Utils.Settings(@"0:\System\" + device.Name + ".conf");
                         Console.WriteLine("MAC-adres           : " + device.MACAddress.ToString());
-                        Console.WriteLine("IP-adres            : " + settings.GetValue("ipaddress"));
-                        Console.WriteLine("Subnetmasker        : " + settings.GetValue("subnet"));
-                        Console.WriteLine("Standaardgateway    : " + settings.GetValue("gateway"));
-                        Console.WriteLine("Voorkeur DNS-server : " + settings.GetValue("dns01"));
+                        Console.WriteLine("IP-adres            : " + Kernel.LocalNetworkConfig.IPAddress.ToString());
+                        Console.WriteLine("Subnetmasker        : " + Kernel.LocalNetworkConfig.SubnetMask.ToString());
+                        Console.WriteLine("Standaardgateway    : " + Kernel.LocalNetworkConfig.DefaultGateway.ToString());
+                        Console.WriteLine("Voorkeur DNS-server : " + Kernel.LocalNetworkConfig.PreferredDNS.ToString());
                         counter2++;
                     }
                     counter2 = 0;
@@ -516,10 +516,10 @@ namespace Aura_OS.System.Translation
                         }
                         Utils.Settings settings = new Utils.Settings(@"0:\System\" + device.Name + ".conf");
                         Console.WriteLine("Indirizzo MAC         : " + device.MACAddress.ToString());
-                        Console.WriteLine("Indirizzo IP          : " + settings.GetValue("ipaddress"));
-                        Console.WriteLine("Maschera di sottorete : " + settings.GetValue("subnet"));
-                        Console.WriteLine("Gateway predefinito   : " + settings.GetValue("gateway"));
-                        Console.WriteLine("Server DNS preferito  : " + settings.GetValue("dns01"));
+                        Console.WriteLine("Indirizzo IP          : " + Kernel.LocalNetworkConfig.IPAddress.ToString());
+                        Console.WriteLine("Maschera di sottorete : " + Kernel.LocalNetworkConfig.SubnetMask.ToString());
+                        Console.WriteLine("Gateway predefinito   : " + Kernel.LocalNetworkConfig.DefaultGateway.ToString());
+                        Console.WriteLine("Server DNS preferito  : " + Kernel.LocalNetworkConfig.PreferredDNS.ToString());
                         counter3++;
                     }
                     counter3 = 0;
