@@ -26,7 +26,11 @@ namespace Aura_OS.Apps.System
                     string[] lines = File.ReadAllLines(filename);
                     foreach (string line in lines)
                     {
-                        CommandManager._CommandManger(line);
+                        if(!(line.StartsWith("|"))// don't read the line if it start with "|" for comment
+                         {
+
+                             CommandManager._CommandManger(line);
+                         }
                     }
                 }
                 else
