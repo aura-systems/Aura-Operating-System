@@ -14,7 +14,7 @@ using System.Text;
 
 namespace Aura_OS.System.Graphics.VBE
 {
-    unsafe class Graphics
+    class Graphics
     {
 
         public static ManagedVBE Canvas;
@@ -33,18 +33,6 @@ namespace Aura_OS.System.Graphics.VBE
         public static string VBEOEM;
 
         public static List<ushort> Modes = new List<ushort>();
-
-        static void* PtrtoLinear(void* phys)
-        {
-            return (void*)((((uint)phys >> 16) << 4) + (ushort)phys);
-        }
-
-        byte* GetOemString(uint oemstringptr, byte* stringg, int maxlength)
-        {
-            uint offset = (oemstringptr >> 12 & 0xFFFF0) + (oemstringptr & 0xFFFF);
-            Cosmos.Core.MemoryOperations.Copy(stringg, (byte*)offset, maxlength);
-            return stringg;
-        }
 
         public static ushort lfb;
 
@@ -68,7 +56,7 @@ namespace Aura_OS.System.Graphics.VBE
             Pallete[15] = 0xFFFFFF; //White
             Font = Read_font();
 
-            Core.MultiBoot.Header* header = (Core.MultiBoot.Header*)Core.GetMBI.GetMBIAddress();
+            /* Core.MultiBoot.Header* header = (Core.MultiBoot.Header*)Core.GetMBI.GetMBIAddress();
 
             Core.VBE.ModeInfo* modeinfo = (Core.VBE.ModeInfo*)header->vbeModeInfo;
             Core.VBE.ControllerInfo* controllerinfo = (Core.VBE.ControllerInfo*)header->vbeControlInfo;
@@ -211,6 +199,8 @@ namespace Aura_OS.System.Graphics.VBE
             {
                 Canvas = new ManagedVBE(ModeInfo.width, ModeInfo.height, ModeInfo.framebuffer, false);
             }
+
+    */
 
         }
 
