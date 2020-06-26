@@ -34,6 +34,7 @@ jobs:
     - name: Build Aura Operating System
       run: |
         cd "Aura Operating System"
+        tree
         msbuild "Aura OS.sln" 
     - name: Test
       run: dotnet test --no-restore --verbosity normal
