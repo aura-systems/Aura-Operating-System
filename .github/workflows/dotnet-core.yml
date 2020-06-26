@@ -57,6 +57,7 @@ jobs:
         nuget sources Add -Name "Cosmos Local Package Feed" -Source "c:\packages"
     - name: Install files
       run: |
+        tree
         xcopy "Cosmos\IL2CPU\source\IL2CPU\bin\Debug\netcoreapp2.0\win7-x86\*" "C:\Users\runneradmin\AppData\Roaming\Cosmos User Kit\Build\IL2CPU\" /Y/S/R/C
     - name: Build Aura Operating System
       run: |
