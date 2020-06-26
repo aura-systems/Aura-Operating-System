@@ -42,7 +42,7 @@ jobs:
         xcopy /Y /S "Cosmos/Cosmos/Build\VMware\*" "c:\CosmosRun\Build\VMware\"
         xcopy /Y /S "Cosmos/Cosmos/Build\Tools" "c:\CosmosRun\Build\Tools\"
         xcopy /Y "Cosmos\IL2CPU\source\Cosmos.Core.DebugStub\*.xs" "c:\CosmosRun\XSharp\DebugStub\"
-        xcopy /Y /S "Resources\Bochs\*.*" "%ProgramFiles%\Bochs-2.6.8\"
+        xcopy /Y /S "Cosmos/Cosmos/Resources\Bochs\*.*" "%ProgramFiles%\Bochs-2.6.8\"
     - name: Regs add
       run: |
         reg add HKLM\SOFTWARE\WOW6432Node\Cosmos /v UserKit /d c:\CosmosRun\
