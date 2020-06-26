@@ -45,8 +45,7 @@ jobs:
         xcopy /Y /S "Cosmos\Cosmos\Resources\Bochs\*.*" "%ProgramFiles%\Bochs-2.6.8\"
     - name: Regs add
       run: |
-        reg add HKLM\SOFTWARE\WOW6432Node\Cosmos /v UserKit /d c:\CosmosRun\
-        reg add HKCR\BochsConfigFile\shell\Run\command /ve /d "\"C:\Program Files\Bochs-2.6.8\Bochs.exe\" -q -f \"%1\""
+        reg add HKLM\SOFTWARE\WOW6432Node\Cosmos /v UserKit /d "c:\CosmosRun\"
     - name: Build Aura Operating System
       run: |
         cd "Aura Operating System"
