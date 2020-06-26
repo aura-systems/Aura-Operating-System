@@ -28,7 +28,6 @@ jobs:
     - name: Compile Cosmos
       run: |
         cd Cosmos
-        rem %APPVEYOR_BUILD_FOLDER%
         msbuild Build.sln /t:Restore;Build /maxcpucount /verbosity:normal /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
         dotnet publish ..\IL2CPU\source\IL2CPU -r win7-x86 -o "c:\CosmosRun\Build\IL2CPU\"
         xcopy /Y "Build\syslinux\*.*" "c:\CosmosRun\Build\ISO\"
