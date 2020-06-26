@@ -43,7 +43,7 @@ jobs:
       run: |
         cd Cosmos
         msbuild Build.sln /maxcpucount /verbosity:normal /t:Restore
-        dotnet publish ..\IL2CPU\source\IL2CPU -r win7-x86 -o "c:\CosmosRun\Build\IL2CPU\"
+        dotnet publish ..\IL2CPU\source\IL2CPU -r win10-x64 -o "c:\CosmosRun\Build\IL2CPU\"
         xcopy /Y "Build\syslinux\*.*" "c:\CosmosRun\Build\ISO\"
         xcopy /Y /S "Build\VMware\*" "c:\CosmosRun\Build\VMware\"
         xcopy /Y /S "Build\Tools" "c:\CosmosRun\Build\Tools\"
