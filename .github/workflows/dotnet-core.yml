@@ -21,6 +21,7 @@ jobs:
       uses: microsoft/setup-msbuild@v1.0.0
     - name: Clone Cosmos
       run: |
+        mkdir c:\CosmosRun
         mkdir Cosmos
         cd Cosmos
         git clone https://github.com/aura-systems/Common
@@ -29,9 +30,11 @@ jobs:
         git clone https://github.com/aura-systems/XSharp
     - name: Build Cosmos
       run:
-        cd Cosmos/Cosmos && tree && .\install-VS2019.bat
+        cd Cosmos/Cosmos
+        msbuild Build.sln /maxcpucount /verbosity:normal /t:Restore
     - name: Compile Aura Operating System
       run: |
-        cd ../..
+        cd ../../Aura Operating System
+        msbuild Aura OS.sln
     - name: Test
       run: dotnet test --no-restore --verbosity normal
