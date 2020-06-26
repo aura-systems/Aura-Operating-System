@@ -28,10 +28,14 @@ jobs:
         git clone https://github.com/aura-systems/IL2CPU
         git clone https://github.com/aura-systems/Cosmos
         git clone https://github.com/aura-systems/XSharp
-    - name: Building Builder.sln
+    - name: Building Builder.sln [RESTORE]
       run: |
         cd Cosmos/Cosmos
-        msbuild Builder.sln /nologo /maxcpucount /nodeReuse:false /verbosity:minimal /t:Restore;Build
+        msbuild Builder.sln /nologo /maxcpucount /nodeReuse:false /verbosity:minimal /t:Restore
+    - name: Building Builder.sln [BUILD]
+      run: |
+        cd Cosmos/Cosmos
+        msbuild Builder.sln /nologo /maxcpucount /nodeReuse:false /verbosity:minimal
     - name: Start Builder
       run: |
         cd Cosmos/Cosmos
