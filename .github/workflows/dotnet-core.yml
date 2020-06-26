@@ -36,7 +36,7 @@ jobs:
     - name: Publish IL2CPU
       run: |
         dotnet publish Cosmos\IL2CPU\source\IL2CPU -r win10-x64 -o "c:\CosmosRun\Build\IL2CPU\"
-    - name: Pack
+    - name: Pack packages
       run: |
         cd Cosmos/Cosmos/source
         dotnet pack Cosmos.Build.Tasks/Cosmos.Build.Tasks.csproj --output c:\packages
@@ -79,5 +79,3 @@ jobs:
         cd "Aura Operating System"
         msbuild "Aura_OS.sln" /t:Restore
         msbuild "Aura_OS.sln" /maxcpucount
-    - name: Test
-      run: dotnet test --no-restore --verbosity normal
