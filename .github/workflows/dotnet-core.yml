@@ -57,8 +57,8 @@ jobs:
         nuget sources Add -Name "Cosmos Local Package Feed" -Source "c:\packages"
     - name: Install files
       run: |
-        dir "%appdata%/Cosmos User Kit/Build/IL2CPU"
-        xcopy /Y "Cosmos\XSharp\source\XSharp\XSharp\obj\Debug\netstandard2.0\XSharp.*" "%AppData%\Cosmos User Kit\Build\IL2CPU\"
+        dir "%USERPROFILE%\AppData\Roaming\Cosmos User Kit\Build\IL2CPU\"
+        xcopy /Y "Cosmos\XSharp\source\XSharp\XSharp\obj\Debug\netstandard2.0\XSharp.*" "%USERPROFILE%\AppData\Roaming\Cosmos User Kit\Build\IL2CPU\"
     - name: Build Aura Operating System
       run: |
         cd "Aura Operating System"
