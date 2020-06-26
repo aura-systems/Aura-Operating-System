@@ -59,11 +59,21 @@ jobs:
         mkdir "Cosmos User Kit"
         cd "Cosmos User Kit"
         mkdir "Build"
+        mkdir "Kernel"
         cd "Build"
         mkdir "IL2CPU"
     - name: Install files
       run: |
         copy "Cosmos\IL2CPU\source\IL2CPU\bin\Debug\netcoreapp2.0\win10-x64\*" "C:\Users\runneradmin\AppData\Roaming\Cosmos User Kit\Build\IL2CPU\"
+        copy "Cosmos\Cosmos\source\Cosmos.Common\bin\Debug\netstandard2.0\*" "C:\Users\runneradmin\AppData\Roaming\Cosmos User Kit\Kernel\" /Y
+        copy "Cosmos\Cosmos\source\Cosmos.Core_Asm\bin\Debug\netstandard2.0\*" "C:\Users\runneradmin\AppData\Roaming\Cosmos User Kit\Kernel\" /Y
+        copy "Cosmos\Cosmos\source\Cosmos.Core_Plugs\bin\Debug\netstandard2.0\*" "C:\Users\runneradmin\AppData\Roaming\Cosmos User Kit\Kernel\" /Y
+        copy "Cosmos\Cosmos\source\Cosmos.Core\bin\Debug\netstandard2.0\*" "C:\Users\runneradmin\AppData\Roaming\Cosmos User Kit\Kernel\" /Y
+        copy "Cosmos\Cosmos\source\Cosmos.System2\bin\Debug\netstandard2.0\*" "C:\Users\runneradmin\AppData\Roaming\Cosmos User Kit\Kernel\" /Y
+        copy "Cosmos\Cosmos\source\Cosmos.HAL2\bin\Debug\netstandard2.0\*" "C:\Users\runneradmin\AppData\Roaming\Cosmos User Kit\Kernel\" /Y
+        copy "Cosmos\Cosmos\source\Cosmos.System2_Plugs\bin\Debug\netstandard2.0\*" "C:\Users\runneradmin\AppData\Roaming\Cosmos User Kit\Kernel\" /Y
+        copy "Cosmos\Cosmos\source\Cosmos.Debug.Kernel\bin\Debug\netstandard2.0\*" "C:\Users\runneradmin\AppData\Roaming\Cosmos User Kit\Kernel\" /Y
+        copy "Cosmos\Cosmos\source\Cosmos.Debug.Kernel.Plugs.Asm\bin\Debug\netstandard2.0\*" "C:\Users\runneradmin\AppData\Roaming\Cosmos User Kit\Kernel\" /Y
     - name: Build Aura Operating System
       run: |
         cd "Aura Operating System"
