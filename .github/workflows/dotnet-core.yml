@@ -49,6 +49,7 @@ jobs:
     - name: Build Aura Operating System
       run: |
         cd "Aura Operating System"
-        msbuild "Aura_OS.sln"
+        msbuild "Aura_OS.sln" /t:Restore
+        msbuild "Aura_OS.sln" /maxcpucount
     - name: Test
       run: dotnet test --no-restore --verbosity normal
