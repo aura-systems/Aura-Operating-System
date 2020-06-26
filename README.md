@@ -40,12 +40,10 @@ Work in progress:
 ## Contribute
 You want to add awesome features to Aura? Here's how:
 
-
-Fork Aura-Operating-System repo
-
-Commit & push a new feature to the forked repository
-
-Open a pull request so we can merge your work in this repository :)
+- Fork Aura-Operating-System repo
+- Commit & push a new feature to the forked repository
+- Open a pull request from your fork to Aura OS repository
+- We will review it and merging it :)
 
 ## Try Aura
 Download VMWare [at this address](https://my.vmware.com/en/web/vmware/free#desktop_end_user_computing/vmware_workstation_player/12_0). Install and run it.
@@ -57,26 +55,3 @@ Now click on "Other" for "Guest operating system" and "Other" for version, click
 The Virtual File System won't work so go to "C:\Users\username\Documents\Virtual Machines\Other" and replace the "Other.vmdk" by [this file](https://github.com/CosmosOS/Cosmos/raw/master/Build/VMWare/Workstation/Filesystem.vmdk).
 
 Now you can select Aura (Other) and click on "Play Virtual Machine".
-
-## Compile Aura ?
-First, clone [our modified version of Cosmos](https://github.com/aura-systems/Cosmos) and all of the required repositories, run the "install-VS2017.bat" file in the Cosmos folder and wait until the installation is done. 
-Required repositories :
-- Aura OS
-- Common
-- Cosmos
-- IL2CPU
-- XSharp
-
-Pre-requisites :
-- Latest version of VS 2017
-- .NET Core SDK 2.1
-- Inno Quick Start Pack (Free) – Install with defaults, keep Preprocessor option checked
-- Visual Studio 2017 Workload: Visual Studio Extension Development
-- .NET Framework 4.7.1 Developer Pack
-
-You need to put all of the cloned repositories in the same folder, like that :
-![image](https://user-images.githubusercontent.com/5628290/50374613-0aebe600-05f1-11e9-823b-778b4e23bd33.png)
-
-Now clone [this repository](https://github.com/aura-systems/Aura-Operating-System) then inside the folder Aura OS, run Aura OS.sln and select "build" once Visual Studio 2017 has loaded.
-
-If you have an error like "A project with an Output type of Class Library cannot be started directly", right click on "Aura_OSBoot" and select "Set as startup project", now click again on "build"!
