@@ -20,13 +20,25 @@ jobs:
     - name: Add msbuild to PATH
       uses: microsoft/setup-msbuild@v1.0.0
     - name: Clone Cosmos
-      run: |
-        mkdir Cosmos
-        cd Cosmos
-        git clone https://github.com/aura-systems/Common
-        git clone https://github.com/aura-systems/IL2CPU
-        git clone https://github.com/aura-systems/Cosmos
-        git clone https://github.com/aura-systems/XSharp
+      uses: actions/checkout@v2
+      with:
+        repository: aura-systems/Cosmos
+        path: Cosmos
+    - name: Clone IL2CPU
+      uses: actions/checkout@v2
+      with:
+        repository: aura-systems/IL2CPU
+        path: IL2CPU
+    - name: Clone Common
+      uses: actions/checkout@v2
+      with:
+        repository: aura-systems/Common
+        path: Common
+    - name: Clone XSharp
+      uses: actions/checkout@v2
+      with:
+        repository: aura-systems/XSharp
+        path: XSharp
     - name: Compile Cosmos
       run: |
         cd Cosmos
