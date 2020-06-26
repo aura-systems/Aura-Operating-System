@@ -39,11 +39,15 @@ jobs:
       with:
         repository: aura-systems/XSharp
         path: XSharp
-    - name: Compile Cosmos
+    - name: Build Cosmos
       run: |
         cd Cosmos
         msbuild Build.sln /maxcpucount /verbosity:normal /t:Restore
+    - name: dotnet publish
+      run:
         dotnet publish ..\IL2CPU\source\IL2CPU -r win10-x64 -o "c:\CosmosRun\Build\IL2CPU\"
+    - name: copy files
+      run: |
         xcopy /Y "Build\syslinux\*.*" "c:\CosmosRun\Build\ISO\"
         xcopy /Y /S "Build\VMware\*" "c:\CosmosRun\Build\VMware\"
         xcopy /Y /S "Build\Tools" "c:\CosmosRun\Build\Tools\"
