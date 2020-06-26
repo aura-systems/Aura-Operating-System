@@ -21,7 +21,6 @@ jobs:
       uses: microsoft/setup-msbuild@v1.0.0
     - name: Clone Cosmos
       run: |
-        mkdir c:\CosmosRun
         mkdir Cosmos
         cd Cosmos
         git clone https://github.com/aura-systems/Common
@@ -31,6 +30,7 @@ jobs:
     - name: Build Cosmos
       run: |
         cd Cosmos
+        tree
         msbuild Build.sln /maxcpucount /verbosity:normal /t:Restore
     - name: Build Aura Operating System
       run: |
