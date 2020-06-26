@@ -11,6 +11,7 @@ using Aura_OS.System.Network.IPV4;
 using Cosmos.HAL;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using L = Aura_OS.System.Translation;
 
 namespace Aura_OS.System.Shell.cmdIntr.SystemInfomation
@@ -41,6 +42,12 @@ namespace Aura_OS.System.Shell.cmdIntr.SystemInfomation
         public static void c_IPConfig(string cmd)
         {
             string[] args = cmd.Split(' ');
+
+            if (args.Length == 1)
+            {
+                L.List_Translation.Ipconfig();
+                return;
+            }
 
             if (args[1] == "/release")
             {
