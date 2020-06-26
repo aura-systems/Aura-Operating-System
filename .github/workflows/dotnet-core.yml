@@ -22,6 +22,7 @@ jobs:
     - name: Clone Cosmos
       run: |
         mkdir Cosmos
+        mkdir c:/CosmosRun
         cd Cosmos
         git clone https://github.com/aura-systems/Common
         git clone https://github.com/aura-systems/IL2CPU
@@ -29,12 +30,24 @@ jobs:
         git clone https://github.com/aura-systems/XSharp
     - name: Build Cosmos
       run: |
-        cd Cosmos/Cosmos
-        msbuild Build.sln /maxcpucount /verbosity:normal /t:Restore
+        msbuild Build.sln /t:Restore;Build /maxcpucount /verbosity:normal /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
+    - name: Dotnet Publish
+      run: |
+        dotnet publish Cosmos\IL2CPU\source\IL2CPU -r win10-x64 -o "c:\CosmosRun\Build\IL2CPU\"
+    - name: Copy files
+      run: |
+        xcopy /Y "Cosmos/Cosmos/Build\syslinux\*.*" "c:\CosmosRun\Build\ISO\"
+        xcopy /Y /S "Cosmos/Cosmos/Build\VMware\*" "c:\CosmosRun\Build\VMware\"
+        xcopy /Y /S "Cosmos/Cosmos/Build\Tools" "c:\CosmosRun\Build\Tools\"
+        xcopy /Y "Cosmos\IL2CPU\source\Cosmos.Core.DebugStub\*.xs" "c:\CosmosRun\XSharp\DebugStub\"
+        xcopy /Y /S "Resources\Bochs\*.*" "%ProgramFiles%\Bochs-2.6.8\"
+    - name: Regs add
+      run: |
+        reg add HKLM\SOFTWARE\WOW6432Node\Cosmos /v UserKit /d c:\CosmosRun\
+        reg add HKCR\BochsConfigFile\shell\Run\command /ve /d "\"C:\Program Files\Bochs-2.6.8\Bochs.exe\" -q -f \"%1\""
     - name: Build Aura Operating System
       run: |
         cd "Aura Operating System"
-        tree
-        msbuild "Aura_OS.sln" 
+        msbuild "Aura_OS.sln"
     - name: Test
       run: dotnet test --no-restore --verbosity normal
