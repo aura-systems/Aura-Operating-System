@@ -31,21 +31,32 @@ namespace Aura_OS.System.Network.DHCP
         {
             foreach (NetworkDevice networkDevice in NetworkDevice.Devices)
             {
-                Address source = Config.FindNetwork(DHCPServerAddress(networkDevice));
-                DHCPRelease dhcp_release = new DHCPRelease(source, DHCPServerAddress(networkDevice));
-                OutgoingBuffer.AddPacket(dhcp_release);
-                NetworkStack.Update();
-
-                NetworkStack.RemoveAllConfigIP();
-
                 Utils.Settings settings = new Utils.Settings(@"0:\System\" + networkDevice.Name + ".conf");
-                settings.EditValue("ipaddress", "0.0.0.0");
-                settings.EditValue("subnet", "0.0.0.0");
-                settings.EditValue("gateway", "0.0.0.0");
-                settings.EditValue("dns01", "0.0.0.0");
-                settings.PushValues();
+                if ((settings.GetValue("ipaddress") != "0.0.0.0") && (settings.GetValue("subnet") != "0.0.0.0") && (settings.GetValue("gateway") != "0.0.0.0"))
+                {
+                    Address source = Config.FindNetwork(DHCPServerAddress(networkDevice));
+                    DHCPRelease dhcp_release = new DHCPRelease(source, DHCPServerAddress(networkDevice));
+                    OutgoingBuffer.AddPacket(dhcp_release);
+                    NetworkStack.Update();
 
-                NetworkInit.Enable();
+                    NetworkStack.RemoveAllConfigIP();
+                    settings.EditValue("ipaddress", "0.0.0.0");
+                    settings.EditValue("subnet", "0.0.0.0");
+                    settings.EditValue("gateway", "0.0.0.0");
+                    settings.EditValue("dns01", "0.0.0.0");
+                    settings.PushValues();
+
+                    NetworkInit.Enable();
+
+                    Console.WriteLine();
+                    CustomConsole.WriteLineInfo("[DHCP RELEASE][" + networkDevice.Name + "] Packet sent, removing IP configuration...");
+                    CustomConsole.WriteLineInfo("   IP Address  : 0.0.0.0");
+                    CustomConsole.WriteLineInfo("   Subnet mask : 0.0.0.0");
+                    CustomConsole.WriteLineInfo("   Gateway     : 0.0.0.0");
+                    CustomConsole.WriteLineInfo("   DNS server  : 0.0.0.0");
+                    CustomConsole.WriteLineOK("[DHCP CONFIG][" + networkDevice.Name + "] IP configuration removed.");
+                    Console.WriteLine();
+                }
             }            
         }
 
