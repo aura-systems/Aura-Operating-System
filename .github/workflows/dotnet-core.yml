@@ -40,9 +40,8 @@ jobs:
         repository: aura-systems/XSharp
         path: XSharp
     - name: Build Cosmos
-      run: |
-        cd Cosmos
-        install-VS2019.bat
+      run:
+        tree && cd Cosmos && install-VS2019.bat
     - name: Compile Aura Operating System
       run: |
         cd ../..
