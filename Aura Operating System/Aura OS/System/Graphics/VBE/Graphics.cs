@@ -14,7 +14,7 @@ using System.Text;
 
 namespace Aura_OS.System.Graphics.VBE
 {
-    class Graphics
+    unsafe class Graphics
     {
 
         public static ManagedVBE Canvas;
@@ -33,6 +33,18 @@ namespace Aura_OS.System.Graphics.VBE
         public static string VBEOEM;
 
         public static List<ushort> Modes = new List<ushort>();
+
+        static void* PtrtoLinear(void* phys)
+        {
+            return (void*)((((uint)phys >> 16) << 4) + (ushort)phys);
+        }
+
+        byte* GetOemString(uint oemstringptr, byte* stringg, int maxlength)
+        {
+            uint offset = (oemstringptr >> 12 & 0xFFFF0) + (oemstringptr & 0xFFFF);
+            Cosmos.Core.MemoryOperations.Copy(stringg, (byte*)offset, maxlength);
+            return stringg;
+        }
 
         public static ushort lfb;
 
@@ -56,7 +68,7 @@ namespace Aura_OS.System.Graphics.VBE
             Pallete[15] = 0xFFFFFF; //White
             Font = Read_font();
 
-            /* Core.MultiBoot.Header* header = (Core.MultiBoot.Header*)Core.GetMBI.GetMBIAddress();
+            Core.MultiBoot.Header* header = (Core.MultiBoot.Header*)Core.GetMBI.GetMBIAddress();
 
             Core.VBE.ModeInfo* modeinfo = (Core.VBE.ModeInfo*)header->vbeModeInfo;
             Core.VBE.ControllerInfo* controllerinfo = (Core.VBE.ControllerInfo*)header->vbeControlInfo;
@@ -134,7 +146,7 @@ namespace Aura_OS.System.Graphics.VBE
                 VESAVBEConsole.mHeight = (int)ConsoleMode.Mode1280x768.Cols;
                 VESAMode = "Mode1280x768";
             }
-			else if (ModeInfo.width == (1280) &&  ModeInfo.height == (800))
+            else if (ModeInfo.width == (1280) && ModeInfo.height == (800))
             {
                 VESAVBEConsole.mRows = (int)ConsoleMode.Mode1280x800.Rows;
                 VESAVBEConsole.mWidth = (int)ConsoleMode.Mode1280x800.Rows;
@@ -200,8 +212,6 @@ namespace Aura_OS.System.Graphics.VBE
                 Canvas = new ManagedVBE(ModeInfo.width, ModeInfo.height, ModeInfo.framebuffer, false);
             }
 
-    */
-
         }
 
         private byte[] Read_font()
@@ -237,7 +247,7 @@ namespace Aura_OS.System.Graphics.VBE
         {
             int p = 16 * c;
 
-            if(Kernel.AConsole.Background != ConsoleColor.Black)
+            if (Kernel.AConsole.Background != ConsoleColor.Black)
             {
                 for (int cy = 0; cy < 16; cy++)
                 {
