@@ -67,6 +67,9 @@ jobs:
         cd ..
         cd ..
         copy XSharp.dll "Cosmos User Kit/Build/IL2CPU/XSharp.dll"
+    - name: Install files 2
+      run: |
+        xcopy /Y /S "Cosmos\IL2CPU\source\IL2CPU\bin\Debug\netcoreapp2.0\win7-x86\*" "C:\Users\runneradmin\AppData\Roaming\Cosmos User Kit\Build\IL2CPU\"
     - name: Build Aura Operating System
       run: |
         cd "Aura Operating System"
