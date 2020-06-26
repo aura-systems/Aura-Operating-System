@@ -1,0 +1,81 @@
+name: .NET Core
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+
+    runs-on: windows-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 3.1.101
+    - name: Add msbuild to PATH
+      uses: microsoft/setup-msbuild@v1.0.0
+    - name: Clone Cosmos
+      run: |
+        mkdir Cosmos
+        mkdir c:/CosmosRun
+        cd Cosmos
+        git clone https://github.com/aura-systems/Common
+        git clone https://github.com/aura-systems/IL2CPU
+        git clone https://github.com/aura-systems/Cosmos
+        git clone https://github.com/aura-systems/XSharp
+    - name: Build Cosmos
+      run: |
+        cd Cosmos/Cosmos
+        msbuild Build.sln /t:Restore
+        msbuild Build.sln /maxcpucount /verbosity:normal /t:Build
+    - name: Publish IL2CPU
+      run: |
+        dotnet publish Cosmos\IL2CPU\source\IL2CPU -r win10-x64 -o "c:\CosmosRun\Build\IL2CPU\"
+    - name: Pack packages
+      run: |
+        cd Cosmos/Cosmos/source
+        dotnet pack Cosmos.Build.Tasks/Cosmos.Build.Tasks.csproj --output c:\packages
+        dotnet pack Cosmos.Common/Cosmos.Common.csproj --output c:\packages
+        dotnet pack Cosmos.Core/Cosmos.Core.csproj --output c:\packages
+        dotnet pack Cosmos.Core_Plugs/Cosmos.Core_Plugs.csproj --output c:\packages
+        dotnet pack Cosmos.Core_Asm/Cosmos.Core_Asm.csproj --output c:\packages
+        dotnet pack Cosmos.HAL2/Cosmos.HAL2.csproj --output c:\packages
+        dotnet pack Cosmos.System2/Cosmos.System2.csproj --output c:\packages
+        dotnet pack Cosmos.System2_Plugs/Cosmos.System2_Plugs.csproj --output c:\packages
+        dotnet pack Cosmos.Debug.Kernel/Cosmos.Debug.Kernel.csproj --output c:\packages
+        dotnet pack Cosmos.Debug.Kernel.Plugs.Asm/Cosmos.Debug.Kernel.Plugs.Asm.csproj --output c:\packages
+        dotnet pack Cosmos.Debug.Kernel.Plugs.Asm/Cosmos.Debug.Kernel.Plugs.Asm.csproj --output c:\packages
+        cd ../../IL2CPU/source
+        dotnet pack IL2CPU.API/IL2CPU.API.csproj --output c:\packages
+    - name: Install packages
+      run: |
+        nuget sources Add -Name "Cosmos Local Package Feed" -Source "c:\packages"
+        cd "C:\Users\runneradmin\AppData\Roaming\"
+        mkdir "Cosmos User Kit"
+        cd "Cosmos User Kit"
+        mkdir "Build"
+        mkdir "Kernel"
+        cd "Build"
+        mkdir "IL2CPU"
+    - name: Install files
+      run: |
+        copy "Cosmos\IL2CPU\source\IL2CPU\bin\Debug\netcoreapp2.0\win10-x64\*" "C:\Users\runneradmin\AppData\Roaming\Cosmos User Kit\Build\IL2CPU\"
+        Copy-Item -Path "Cosmos\Cosmos\source\Cosmos.Common\bin\Debug\netstandard2.0\*" -Destination "C:\Users\runneradmin\AppData\Roaming\Cosmos User Kit\Kernel\" -Force
+        Copy-Item -Path "Cosmos\Cosmos\source\Cosmos.Core_Asm\bin\Debug\netstandard2.0\*" -Destination "C:\Users\runneradmin\AppData\Roaming\Cosmos User Kit\Kernel\" -Force
+        Copy-Item -Path "Cosmos\Cosmos\source\Cosmos.Core_Plugs\bin\Debug\netstandard2.0\*" -Destination "C:\Users\runneradmin\AppData\Roaming\Cosmos User Kit\Kernel\" -Force
+        Copy-Item -Path "Cosmos\Cosmos\source\Cosmos.Core\bin\Debug\netstandard2.0\*" -Destination "C:\Users\runneradmin\AppData\Roaming\Cosmos User Kit\Kernel\" -Force
+        Copy-Item -Path "Cosmos\Cosmos\source\Cosmos.System2\bin\Debug\netstandard2.0\*" -Destination "C:\Users\runneradmin\AppData\Roaming\Cosmos User Kit\Kernel\" -Force
+        Copy-Item -Path "Cosmos\Cosmos\source\Cosmos.HAL2\bin\Debug\netstandard2.0\*" -Destination "C:\Users\runneradmin\AppData\Roaming\Cosmos User Kit\Kernel\" -Force
+        Copy-Item -Path "Cosmos\Cosmos\source\Cosmos.System2_Plugs\bin\Debug\netstandard2.0\*" -Destination "C:\Users\runneradmin\AppData\Roaming\Cosmos User Kit\Kernel\" -Force
+        Copy-Item -Path "Cosmos\Cosmos\source\Cosmos.Debug.Kernel\bin\Debug\netstandard2.0\*" -Destination "C:\Users\runneradmin\AppData\Roaming\Cosmos User Kit\Kernel\" -Force
+        Copy-Item -Path "Cosmos\Cosmos\source\Cosmos.Debug.Kernel.Plugs.Asm\bin\Debug\netstandard2.0\*" -Destination "C:\Users\runneradmin\AppData\Roaming\Cosmos User Kit\Kernel\" -Force
+    - name: Build Aura Operating System
+      run: |
+        cd "Aura Operating System"
+        msbuild "Aura_OS.sln" /t:Restore
+        msbuild "Aura_OS.sln" /maxcpucount
