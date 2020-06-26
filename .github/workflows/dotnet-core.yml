@@ -48,9 +48,9 @@ jobs:
         xcopy /Y /S "Build\VMware\*" "c:\CosmosRun\Build\VMware\"
         xcopy /Y /S "Build\Tools" "c:\CosmosRun\Build\Tools\"
         xcopy /Y "..\IL2CPU\source\Cosmos.Core.DebugStub\*.xs" "c:\CosmosRun\XSharp\DebugStub\"
-        xcopy /Y /S "Resources\Bochs\*.*" "%ProgramFiles(x86)%\Bochs-2.6.8\"
+        xcopy /Y /S "Resources\Bochs\*.*" "%ProgramFiles%\Bochs-2.6.8\"
         reg add HKLM\SOFTWARE\WOW6432Node\Cosmos /v UserKit /d c:\CosmosRun\
-        reg add HKCR\BochsConfigFile\shell\Run\command /ve /d "\"C:\Program Files (x86)\Bochs-2.6.8\Bochs.exe\" -q -f \"%1\""
+        reg add HKCR\BochsConfigFile\shell\Run\command /ve /d "\"C:\Program Files\Bochs-2.6.8\Bochs.exe\" -q -f \"%1\""
     - name: Compile Aura Operating System
       run: |
         cd ../..
