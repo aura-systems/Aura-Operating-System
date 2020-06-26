@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netcoreapp2.0</TargetFramework>
+    </PropertyGroup>
+
+	<ItemGroup>
+			<Reference Include="IL2CPU.API">
+			<HintPath>..\..\..\..\..\AppData\Roaming\Cosmos User Kit\Build\IL2CPU\IL2CPU.API.dll</HintPath>
+		</Reference>
+	</ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Aura_OS\Aura_OS.csproj" />
+    </ItemGroup>
+
+</Project>

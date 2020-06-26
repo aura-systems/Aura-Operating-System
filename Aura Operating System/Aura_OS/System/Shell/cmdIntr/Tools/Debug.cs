@@ -54,7 +54,7 @@ namespace Aura_OS.System.Shell.cmdIntr.Tools
                 if (cmdargs[1].Equals("vbeinfo"))
                 {
                     DebugConsole.WriteLine("[VBE Mode Information]");
-                    DebugConsole.WriteLine("BPP: " + Graphics.VBE.Graphics.ModeInfo.bpp);
+                    /*DebugConsole.WriteLine("BPP: " + Graphics.VBE.Graphics.ModeInfo.bpp);
                     DebugConsole.WriteLine("Height: " + Graphics.VBE.Graphics.ModeInfo.height);
                     DebugConsole.WriteLine("Width: " + Graphics.VBE.Graphics.ModeInfo.width);
                     DebugConsole.WriteLine("Pitch: " + Graphics.VBE.Graphics.ModeInfo.pitch);
@@ -85,7 +85,7 @@ namespace Aura_OS.System.Shell.cmdIntr.Tools
 
                     DebugConsole.WriteLine("OEM Product Name Pointer: 0x" + Conversion.DecToHex((int)Graphics.VBE.Graphics.ControllerInfo.oemProductNamePtr));
 
-                    DebugConsole.WriteLine("OEM Product Rev Pointer: 0x" + Conversion.DecToHex((int)Graphics.VBE.Graphics.ControllerInfo.oemProductRevPtr));
+                    DebugConsole.WriteLine("OEM Product Rev Pointer: 0x" + Conversion.DecToHex((int)Graphics.VBE.Graphics.ControllerInfo.oemProductRevPtr));*/
                 }
 
                 else if (cmdargs[1].Equals("vbemodes"))
