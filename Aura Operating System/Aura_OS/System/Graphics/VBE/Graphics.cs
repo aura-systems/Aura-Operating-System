@@ -146,7 +146,7 @@ namespace Aura_OS.System.Graphics.VBE
                 VESAVBEConsole.mHeight = (int)ConsoleMode.Mode1280x768.Cols;
                 VESAMode = "Mode1280x768";
             }
-			else if (ModeInfo.width == (1280) &&  ModeInfo.height == (800))
+            else if (ModeInfo.width == (1280) && ModeInfo.height == (800))
             {
                 VESAVBEConsole.mRows = (int)ConsoleMode.Mode1280x800.Rows;
                 VESAVBEConsole.mWidth = (int)ConsoleMode.Mode1280x800.Rows;
@@ -247,7 +247,7 @@ namespace Aura_OS.System.Graphics.VBE
         {
             int p = 16 * c;
 
-            if(Kernel.AConsole.Background != ConsoleColor.Black)
+            if (Kernel.AConsole.Background != ConsoleColor.Black)
             {
                 for (int cy = 0; cy < 16; cy++)
                 {
