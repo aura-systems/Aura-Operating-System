@@ -43,7 +43,7 @@ You want to add awesome features to Aura? Here's how:
 - Fork Aura-Operating-System repo
 - Commit & push a new feature to the forked repository
 - Open a pull request from your fork to Aura OS repository
-- We will review it and merging it :)
+- We will review and merge it :)
 
 ## Try Aura
 Download VMWare [at this address](https://my.vmware.com/en/web/vmware/free#desktop_end_user_computing/vmware_workstation_player/12_0). Install and run it.
