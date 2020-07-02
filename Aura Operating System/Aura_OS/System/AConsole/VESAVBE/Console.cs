@@ -32,6 +32,7 @@ namespace Aura_OS.System.AConsole.VESAVBE
             set
             {
                 mX = value;
+                UpdateCursor();
             }
         }
 
@@ -43,6 +44,7 @@ namespace Aura_OS.System.AConsole.VESAVBE
             set
             {
                 mY = value;
+                UpdateCursor();
             }
         }
 
@@ -94,6 +96,18 @@ namespace Aura_OS.System.AConsole.VESAVBE
             graphics.Clear(0x00);
             mX = 0;
             mY = 0;
+            UpdateCursor();
+        }
+
+        protected void UpdateCursor()
+        {
+            graphics.SetCursorPos(mX, mY);
+        }
+
+        public void Write(byte aChar)
+        {
+            graphics.WriteByte(aChar);
+            UpdateCursor();
         }
 
         public override void Write(byte[] aText)
@@ -108,7 +122,7 @@ namespace Aura_OS.System.AConsole.VESAVBE
                         break;
 
                     default:
-                        graphics.WriteByte(ch);
+                        Write(ch);
                         break;
                 }
             }
@@ -116,10 +130,10 @@ namespace Aura_OS.System.AConsole.VESAVBE
 
         private void DoTab()
         {
-            graphics.WriteByte(Space);
-            graphics.WriteByte(Space);
-            graphics.WriteByte(Space);
-            graphics.WriteByte(Space);
+            Write(Space);
+            Write(Space);
+            Write(Space);
+            Write(Space);
         }
 
         public override void DrawImage(ushort X, ushort Y, ushort Length, ushort height, Image image)

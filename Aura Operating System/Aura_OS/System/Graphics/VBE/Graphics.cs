@@ -214,6 +214,11 @@ namespace Aura_OS.System.Graphics.VBE
 
         }
 
+        public void SetCursorPos(int mX, int mY)
+        {
+            //DrawFilledRectangle(mX, mY, 8, 4);
+        }
+
         private byte[] Read_font()
         {
             byte[] font =
@@ -228,6 +233,43 @@ namespace Aura_OS.System.Graphics.VBE
         internal void Clear(int c)
         {
             Canvas.ClearVRAM((uint)c);
+        }
+
+        private void DrawHorizontalLine(int dx, int x1, int y1)
+        {
+            int i;
+
+            for (i = 0; i < dx; i++)
+            {
+                Canvas.SetPixel(x1 + i, y1, (byte)ConsoleColor.White, false);
+            }
+        }
+
+        public virtual void DrawLine(int x1, int y1, int x2, int y2)
+        {
+            int dx, dy;
+
+            dx = x2 - x1;      /* the horizontal distance of the line */
+            dy = y2 - y1;      /* the vertical distance of the line */
+
+            if (dy == 0) /* The line is horizontal */
+            {
+                DrawHorizontalLine(dx, x1, y1);
+                return;
+            }
+        }
+
+        public void DrawFilledRectangle(int x_start, int y_start, int width, int height)
+        {
+            if (height == -1)
+            {
+                height = width;
+            }
+
+            for (int y = y_start; y < y_start + height; y++)
+            {
+                DrawLine(x_start, y, x_start + width - 1, y);
+            }
         }
 
         public void DrawImage(ushort X, ushort Y, ushort Length, ushort height, Image image)
