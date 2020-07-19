@@ -21,7 +21,7 @@ using Cosmos.System.ExtendedASCII;
 using Aura_OS.Apps.System;
 using Aura_OS.System.Network.IPV4;
 using Cosmos.HAL;
-using Aura_OS.System.Graphics.VBE;
+using Aura_OS.System.Graphics;
 using Aura_OS.System.Shell.cmdIntr;
 
 #endregion
@@ -164,7 +164,7 @@ namespace Aura_OS
                         //TBAR.Start();
                         BeforeCommand();
 
-                        Sys.Console.writecommand = true;
+                        AConsole.writecommand = true;
 
                         var cmd = Console.ReadLine();
                         //TBAR.Stop();

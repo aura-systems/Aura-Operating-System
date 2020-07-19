@@ -14,8 +14,8 @@ namespace Aura_OS.System.Utils
 
         public static void Add(string cmd)
         {
-            Cosmos.System.Console.commands.Add(cmd);
-            CommandsHistory.CHIndex = Cosmos.System.Console.commands.Count - 1;
+            Kernel.AConsole.commands.Add(cmd);
+            CommandsHistory.CHIndex = Kernel.AConsole.commands.Count - 1;
         }
 
         public static void ClearCurrentConsoleLine()

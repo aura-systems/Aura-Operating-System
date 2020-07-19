@@ -5,6 +5,7 @@
 */
 
 using System;
+using System.Collections.Generic;
 using Cosmos.System.Graphics;
 using IL2CPU.API.Attribs;
 
@@ -19,6 +20,11 @@ namespace Aura_OS.System.AConsole
         {
 
         }
+
+        public List<string> commands = new List<string>();
+        public bool writecommand = false;
+        public int commandindex = -1;
+        public string cmd;
 
         public string Name;
 

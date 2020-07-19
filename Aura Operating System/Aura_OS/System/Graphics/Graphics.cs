@@ -4,7 +4,6 @@
 * PROGRAMMERS:      Valentin Charbonnier <valentinbreiz@gmail.com>
 */
 
-using Aura_OS.HAL.Drivers.Video;
 using Aura_OS.System.AConsole;
 using Aura_OS.System.AConsole.VESAVBE;
 using Cosmos.System.Graphics;
@@ -51,8 +50,7 @@ namespace Aura_OS.System.Graphics
             char c = (char)ch;
             if (c != 0 && c != '\n' && c != '\r')
             {
-                if (Kernel.AConsole.Background != ConsoleColor.Black)
-                    canvas.DrawFilledRectangle(backpen, Kernel.AConsole.X * font.Width, Kernel.AConsole.Y * font.Height, font.Width, font.Height);
+                canvas.DrawFilledRectangle(backpen, Kernel.AConsole.X * font.Width, Kernel.AConsole.Y * font.Height, font.Width, font.Height);
                 canvas.DrawChar((char)c, font, frontpen, Kernel.AConsole.X * font.Width, Kernel.AConsole.Y * font.Height);
             }
             else if (c == '\n')
