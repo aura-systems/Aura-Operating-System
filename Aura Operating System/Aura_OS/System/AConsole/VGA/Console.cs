@@ -7,8 +7,8 @@
 
 using System;
 using System.Runtime.CompilerServices;
-using Aura_OS.System.Graphics.Imaging;
 using Cosmos.HAL;
+using Cosmos.System.Graphics;
 
 namespace Aura_OS.System.AConsole.VGA
 {
@@ -69,6 +69,14 @@ namespace Aura_OS.System.AConsole.VGA
         }
 
         public override void Clear()
+        {
+            mText.Clear();
+            mX = 0;
+            mY = 0;
+            UpdateCursor();
+        }
+
+        public override void Clear(uint color)
         {
             mText.Clear();
             mX = 0;
@@ -154,7 +162,7 @@ namespace Aura_OS.System.AConsole.VGA
             }
         }
 
-        public override void DrawImage(ushort X, ushort Y, ushort Length, ushort height, Image image)
+        public override void DrawImage(ushort X, ushort Y, Bitmap image)
         {
             // Do nothing
         }

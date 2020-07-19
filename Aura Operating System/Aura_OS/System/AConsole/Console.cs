@@ -5,7 +5,7 @@
 */
 
 using System;
-using Aura_OS.System.Graphics.Imaging;
+using Cosmos.System.Graphics;
 using IL2CPU.API.Attribs;
 
 namespace Aura_OS.System.AConsole
@@ -33,6 +33,8 @@ namespace Aura_OS.System.AConsole
 
         public abstract void Clear();
 
+        public abstract void Clear(uint color);
+
         public abstract void Write(byte[] aText);
 
         public abstract ConsoleColor Foreground { get; set; }
@@ -43,7 +45,7 @@ namespace Aura_OS.System.AConsole
 
         public abstract bool CursorVisible { get; set; }
 
-        public abstract void DrawImage(ushort X, ushort Y, ushort Length, ushort height, Image image);
+        public abstract void DrawImage(ushort X, ushort Y, Bitmap image);
 
     }
 
