@@ -1397,7 +1397,7 @@ namespace Aura_OS.System.Translation
                     }
                     break;
                     
-                case "pl_PL:
+                case "pl_PL":
                     switch (ToTranslate)
                     {
                         case "setup":
