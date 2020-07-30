@@ -195,6 +195,51 @@ namespace Aura_OS.System.Translation
                     Console.ReadKey();
 
                     break;
+                    
+                    
+                case "pl_PL":
+                    Console.WriteLine("Dostepne komedy (1/2):");
+                    Console.WriteLine("- shutdown (do zmkniecia systemu (ACPI))");
+                    Console.WriteLine("- reboot (do restartu komputera)");
+                    Console.WriteLine("- clear (do czyszczenia konsoli)");
+                    Console.WriteLine("- cd .. (do przejscia do katalogu nadrzednego)");
+                    Console.WriteLine("- cd (do zmiany katalogu)");
+                    Console.WriteLine("- dir (do wyswietlenia wszystkich plikow i katalogow)");
+                    Console.WriteLine("- ls (do wyswietlenia wszystkich plikow i katalogow)");
+                    Console.WriteLine("- cp (do kopiowania plikow)");
+                    Console.WriteLine("- mkdir (do tworzenia katalogow");
+                    Console.WriteLine("- rmdir (do usuwania katalogow)");
+                    Console.WriteLine("- mkfil (do tworzenia plikow)");
+                    Console.WriteLine("- rmfil (do usuwania plikow)");
+                    Console.WriteLine("- edit (do edytowania plikow)");
+                    Console.WriteLine("- vol (do wyswietlania woluminow)");
+                    Console.WriteLine("- echo (do zwracania tekstu)");
+                    Console.WriteLine("- systeminfo (do wyswietlenia informacji o systemie)");
+                    Console.WriteLine("- ver (do wyswietlenia wersji systemu)");
+                    Console.WriteLine("- settings {args} (dostep do ustawien)");
+                    Console.WriteLine("- logout (do wylogowania)");
+
+                    if (AConsole.KeyboardShortcuts.Close())
+                    {
+                        return;
+                    }
+
+                    Console.WriteLine();
+                    Console.WriteLine("Available commands (2/2):");
+                    Console.WriteLine("- time (do wyswietlania daty i godziny)");
+                    Console.WriteLine("- ipconfig (do wyswietlania informacji o sieci");
+                    Console.WriteLine("- snake (do wlaczenia gry Snake)");
+                    Console.WriteLine("- md5 (do wyswietlenia haszu argumentow)");
+                    Console.WriteLine("- sha256 (do wyswietlenia haszu argumentow)");
+                    Console.WriteLine("- crash (do wykonania crashtestu systemu)");
+                    Console.WriteLine("- crashcpu (crash CPU (dzielenie przez 0)");
+                    Console.WriteLine("- lspci (do wyswietlenia urzadzen PCI)");
+                    Console.WriteLine("- beep (beep)");
+                    Console.WriteLine("- debug {args} (informacje do debugowania)");
+
+                    Console.ReadKey();
+
+                    break;
             }
         }
 
@@ -251,6 +296,18 @@ namespace Aura_OS.System.Translation
                     //Console.WriteLine("- consolemode {mode} (om de videomodus van de console te wijzigen)");
                     Console.WriteLine("- debugger {lang} (per configurare il debugger)");
                     Console.WriteLine("- ipaddress (per modificare l'indirizzo IP del PC)");
+                    break;
+                    
+                case "pl_PL":
+                    Console.WriteLine("Dostepne komendy:");
+                    Console.WriteLine("- adduser {user} {pass} (do tworzenia konta)");
+                    Console.WriteLine("- remuser {user} (do usuwania konta)");
+                    Console.WriteLine("- passuser {user} {pass} (do zmiany hasla)");
+                    Console.WriteLine("- setcomputername (do zmiany nazwy komputera)");
+                    Console.WriteLine("- setlang {lang} (do zmiany jezyka)");
+                    //Console.WriteLine("- consolemode {mode} (do zmiany trybu konsoli)");
+                    Console.WriteLine("- debugger (do konfiguracji debugera)");
+                    Console.WriteLine("- ipaddress (do zmiany adresu IP)");
                     break;
             }
         }
@@ -361,6 +418,31 @@ namespace Aura_OS.System.Translation
                     }
                     Computer.CPUInfo.Processors.Clear();
                     break;
+                
+                case "pl_PL":
+                    Console.WriteLine("Nazwa Komputera:           " + Kernel.ComputerName);
+                    Console.WriteLine("Nazwa systemu opr.:         Aura");
+                    Console.WriteLine("Wersja systemu opr.:       " + Kernel.version);
+                    Console.WriteLine("Podwersja systemu opr.:    " + Kernel.revision);
+                    Console.WriteLine("Data i godzina:            " + Time.MonthString() + "/" + Time.DayString() + "/" + Time.YearString() + ", " + Time.TimeString(true, true, true));
+                    if (Kernel.SystemExists)
+                    {
+                        Console.WriteLine("Data instalacji:       " + config.GetValue("setuptime"));
+                    }
+                    Console.WriteLine("Czas od startu:            " + Kernel.boottime);
+                    Console.WriteLine("Pamiec RAM:                " + Core.MemoryManager.TotalMemory + "MB");
+                    Console.WriteLine("RAM w uzyciu:              " + Core.MemoryManager.GetUsedMemory() + "MB");
+                    Console.WriteLine("Wolny RAM:                 " + Core.MemoryManager.GetFreeMemory() + "MB");
+                    Console.WriteLine("Procesor(y):               " + Computer.Info.GetNumberOfCPU() + " zainstalowany(ch) procesor(ów).");
+                    int j = 1;
+                    foreach (Processor processor in Computer.CPUInfo.Processors)
+                    {
+                        Console.WriteLine("[" + j + "] : " + processor.GetBrandName() + (int)processor.Frequency + " Mhz");
+                        j++;
+                    }
+                    Computer.CPUInfo.Processors.Clear();
+                    Console.WriteLine("Tryb konsoli:              " + Kernel.AConsole.Name);
+                    break;
             }
         }
 
@@ -416,6 +498,19 @@ namespace Aura_OS.System.Translation
                     Console.WriteLine("- Og-Rok");
                     Console.WriteLine();
                     Console.WriteLine("Grazie anche ai collaboratori di Cosmos.");
+                    Console.WriteLine("https://github.com/aura-systems/Aura-Operating-System");
+                    break;
+                    
+                case "pl_PL":
+                    Console.WriteLine("O Aura OS:");
+                    Console.WriteLine("Aura Team stworzony przez Valentin CHARBONNIER i Alexy DA CRUZ.");
+                    Console.WriteLine();
+                    Console.WriteLine("Wspoltworcy:");
+                    Console.WriteLine("- djlw78");
+                    Console.WriteLine("- Og-Rok");
+                    Console.WriteLine("Tlumaczenie: KaliMasterDev");
+                    Console.WriteLine();
+                    Console.WriteLine("Dziekujemy rowniez wspierajacym AuraOS.");
                     Console.WriteLine("https://github.com/aura-systems/Aura-Operating-System");
                     break;
 
@@ -523,6 +618,30 @@ namespace Aura_OS.System.Translation
                         counter3++;
                     }
                     counter3 = 0;
+                    break;
+                    
+                case "pl_PL":
+                    int counter4 = 0;
+                    foreach (HAL.Drivers.Network.NetworkDevice device in NetworkConfig.Keys)
+                    {
+                        switch (device.CardType)
+                        {
+                            case HAL.Drivers.Network.CardType.Ethernet:
+                                Console.WriteLine("Karta Sieciowa  " + counter4 + " - " + device.Name);
+                                break;
+                            case HAL.Drivers.Network.CardType.Wireless:
+                                Console.WriteLine("Karta bezprzewodowa " + counter4 + " - " + device.Name);
+                                break;
+                        }
+                        Utils.Settings settings = new Utils.Settings(@"0:\System\" + device.Name + ".conf");
+                        Console.WriteLine("Adres MAC              : " + device.MACAddress.ToString());
+                        Console.WriteLine("Adres IP               : " + settings.GetValue("ipaddress"));
+                        Console.WriteLine("Maska sieciowa         : " + settings.GetValue("subnet"));
+                        Console.WriteLine("Brama sieciowa         : " + settings.GetValue("gateway"));
+                        Console.WriteLine("Preferowany serwer DNS : " + settings.GetValue("dns01"));
+                        counter4++;
+                    }
+                    counte41 = 0;
                     break;
 
             }
