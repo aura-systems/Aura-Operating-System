@@ -641,7 +641,7 @@ namespace Aura_OS.System.Translation
                         Console.WriteLine("Preferowany serwer DNS : " + settings.GetValue("dns01"));
                         counter4++;
                     }
-                    counte4 = 0;
+                    counter4 = 0;
                     break;
 
             }
