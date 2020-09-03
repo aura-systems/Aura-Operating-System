@@ -28,11 +28,11 @@ namespace Aura_Plugs.HAL
             ACPI.Start();
             Aura_OS.System.CustomConsole.WriteLineOK("ACPI Initialization");
 
-            Cosmos.HAL.BlockDevice.IDE.InitDriver();
+            /*Cosmos.HAL.BlockDevice.IDE.InitDriver();
             Aura_OS.System.CustomConsole.WriteLineOK("IDE Driver Initialization");
 
             Cosmos.HAL.BlockDevice.AHCI.InitDriver();
-            Aura_OS.System.CustomConsole.WriteLineOK("AHCI Driver Initialization");
+            Aura_OS.System.CustomConsole.WriteLineOK("AHCI Driver Initialization");*/
 
             Cosmos.HAL.Global.PS2Controller.Initialize();
             Aura_OS.System.CustomConsole.WriteLineOK("PS/2 Controller Initialization");

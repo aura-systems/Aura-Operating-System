@@ -6,23 +6,38 @@
 
 
 using System;
-using Aura_OS.System.Graphics.Imaging;
+using System.Drawing;
+using Cosmos.Debug.Kernel;
+using Cosmos.System.Graphics;
 
 namespace Aura_OS.System.AConsole.VESAVBE
 {
     public class VESAVBEConsole : Console
     {
 
-        Graphics.VBE.Graphics graphics;
+        public Graphics.Graphics graphics;
         private const byte LineFeed = (byte)'\n';
         private const byte CarriageReturn = (byte)'\r';
         private const byte Tab = (byte)'\t';
         private const byte Space = (byte)' ';
 
+        public Debugger debugger = new Debugger("", "");
+
         public VESAVBEConsole()
         {
             Name = "VESA";
-            graphics = new Graphics.VBE.Graphics();
+            graphics = new Graphics.Graphics();
+            mWidth = graphics.canvas.Mode.Columns / graphics.font.Width;
+            mHeight = graphics.canvas.Mode.Rows / graphics.font.Height;
+
+            mCols = mWidth;
+            mRows = mHeight;
+
+            debugger.Send("Height=" + graphics.canvas.Mode.Rows);
+            debugger.Send("rows=" + mRows);
+
+            debugger.Send("Width=" + graphics.canvas.Mode.Columns);
+            debugger.Send("mCols=" + mCols);
         }
 
         protected int mX = 0;
@@ -46,36 +61,39 @@ namespace Aura_OS.System.AConsole.VESAVBE
             }
         }
 
-        public static int mWidth = 110;
+        public static int mWidth;
         public override int Width
         {
-            get { return mWidth; } //141
+            get { return mWidth; }
         }
 
-        public static int mHeight = 48;
+        public static int mHeight;
         public override int Height
         {
-            get { return mHeight; } //48 Perfert for y = 768
+            get { return mHeight; }
         }
 
-        public static int mCols = 48;
+        public static int mCols;
         public override int Cols
         {
-            get { return mCols; } //48
+            get { return mCols; }
         }
 
-        public static int mRows = 110;
+        public static int mRows;
         public override int Rows
         {
-            get { return mRows; } //141
+            get { return mRows; }
         }
 
         public static uint foreground = (byte)ConsoleColor.White;
-
         public override ConsoleColor Foreground
         {
             get { return (ConsoleColor)foreground; }
-            set { foreground = (byte)global::System.Console.ForegroundColor; }
+            set
+            {
+                foreground = (byte)global::System.Console.ForegroundColor;
+                graphics.ChangeForegroundPen(foreground);
+            }
         }
 
         public static uint background = (byte)ConsoleColor.Black;
@@ -83,7 +101,11 @@ namespace Aura_OS.System.AConsole.VESAVBE
         public override ConsoleColor Background
         {
             get { return (ConsoleColor)background; }
-            set { background = (byte)global::System.Console.BackgroundColor; }
+            set
+            {
+                background = (byte)global::System.Console.BackgroundColor;
+                graphics.ChangeBackgroundPen(background);
+            }
         }
 
         public override int CursorSize { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
@@ -91,24 +113,78 @@ namespace Aura_OS.System.AConsole.VESAVBE
 
         public override void Clear()
         {
-            graphics.Clear(0x00);
+            graphics.canvas.Clear();
             mX = 0;
             mY = 0;
         }
 
+        public override void Clear(uint color)
+        {
+            graphics.canvas.Clear(Color.FromArgb((int)color));
+            mX = 0;
+            mY = 0;
+        }
+
+        /// <summary>
+        /// Scroll the console up and move crusor to the start of the line.
+        /// </summary>
+        private void DoLineFeed()
+        {
+            mY++;
+            mX = 0;
+            if (mY == mRows)
+            {
+                graphics.canvas.ScrollUp();
+                mY--;
+            }
+            //UpdateCursor();
+        }
+
+        private void DoCarriageReturn()
+        {
+            mX = 0;
+            //UpdateCursor();
+        }
+
+        /// <summary>
+        /// Write char to the console.
+        /// </summary>
+        /// <param name="aChar">A char to write</param>
+        public void Write(byte aChar)
+        {
+            if (aChar == 0)
+                return;
+
+            graphics.WriteByte(aChar);
+            mX++;
+            if (mX == mCols)
+            {
+                DoLineFeed();
+            }
+            //UpdateCursor();
+        }
+
         public override void Write(byte[] aText)
         {
-            foreach (byte ch in aText)
+            for (int i = 0; i < aText.Length; i++)
             {
-                switch (ch)
+                switch (aText[i])
                 {
+                    case LineFeed:
+                        DoLineFeed();
+                        break;
+
+                    case CarriageReturn:
+                        DoCarriageReturn();
+                        break;
 
                     case Tab:
                         DoTab();
                         break;
 
+                    /* Normal characters, simply write them */
                     default:
-                        graphics.WriteByte(ch);
+                        Write(aText[i]);
                         break;
                 }
             }
@@ -122,9 +198,9 @@ namespace Aura_OS.System.AConsole.VESAVBE
             graphics.WriteByte(Space);
         }
 
-        public override void DrawImage(ushort X, ushort Y, ushort Length, ushort height, Image image)
+        public override void DrawImage(ushort X, ushort Y, Bitmap image)
         {
-            graphics.DrawImage(X, Y, Length, height, image);
+            graphics.canvas.DrawImage(image, X, Y);
         }
 
     }

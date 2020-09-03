@@ -4,13 +4,12 @@
 * PROGRAMMERS:      Valentin Charbonnier <valentinbreiz@gmail.com>
 */
 
-using Cosmos.HAL.PCInformation;
 using System.Collections.Generic;
 
 namespace Aura_OS.System.Computer
 {
     public static class CPUInfo
     {
-        public static List<Processor> Processors = new List<Processor>();
+        //public static List<Processor> Processors = new List<Processor>();
     }
 }

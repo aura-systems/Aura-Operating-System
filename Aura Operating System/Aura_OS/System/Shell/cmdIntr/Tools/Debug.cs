@@ -8,7 +8,7 @@ using System;
 using L = Aura_OS.System.Translation;
 using Aura_OS.System.Utils;
 using Aura_OS.Apps.System;
-using Aura_OS.System.Graphics.VBE;
+using Aura_OS.System.Graphics;
 
 namespace Aura_OS.System.Shell.cmdIntr.Tools
 {
@@ -92,7 +92,7 @@ namespace Aura_OS.System.Shell.cmdIntr.Tools
                 {
                     DebugConsole.WriteLine("[VBE Mode List]");
                     int counter = 0;
-                    foreach (uint mode in Graphics.VBE.Graphics.Modes)
+                    /*foreach (uint mode in Graphics.VBE.Graphics.Modes)
                     {
                         counter++;
                         if (counter == 19)
@@ -197,7 +197,7 @@ namespace Aura_OS.System.Shell.cmdIntr.Tools
                                 DebugConsole.WriteLine("Mode: 0x" + Conversion.DecToHex((int)mode) + " - Unkown mode");
                                 break;
                         }
-                    }
+                    }*/
                 }
                 else
                 {

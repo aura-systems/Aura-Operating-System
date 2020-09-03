@@ -6,7 +6,7 @@
 */
 
 using Shell = Aura_OS.System.Shell;
-using Cosmos.HAL.PCInformation;
+//using Cosmos.HAL.PCInformation;
 using System;
 using Aura_OS.System.Network;
 
@@ -277,14 +277,14 @@ namespace Aura_OS.System.Translation
                     Console.WriteLine("Mémoire totale:                " + Core.MemoryManager.TotalMemory + "MB");
                     Console.WriteLine("Mémoire utilisée:              " + Core.MemoryManager.GetUsedMemory() + "MB");
                     Console.WriteLine("Mémoire restante:              " + Core.MemoryManager.GetFreeMemory() + "MB");
-                    Console.WriteLine("Processeur(s):                 " + Computer.Info.GetNumberOfCPU() + " processeur(s) installé(s).");
+                    /*Console.WriteLine("Processeur(s):                 " + Computer.Info.GetNumberOfCPU() + " processeur(s) installé(s).");
                     int i = 1;
                     foreach (Processor processor in Computer.CPUInfo.Processors)
                     {
                         Console.WriteLine("[" + i + "] : " + processor.GetBrandName() + (int)processor.Frequency + " Mhz");
                         i++;
                     }
-                    Computer.CPUInfo.Processors.Clear();
+                    Computer.CPUInfo.Processors.Clear();*/
                     Console.WriteLine("Mode de la console:            " + Kernel.AConsole.Name);
                     break;
 
@@ -302,14 +302,14 @@ namespace Aura_OS.System.Translation
                     Console.WriteLine("Total memory:              " + Core.MemoryManager.TotalMemory + "MB");
                     Console.WriteLine("Used memory:               " + Core.MemoryManager.GetUsedMemory() + "MB");
                     Console.WriteLine("Free memory:               " + Core.MemoryManager.GetFreeMemory() + "MB");
-                    Console.WriteLine("Processor(s):              " + Computer.Info.GetNumberOfCPU() + " installed processor(s).");
+                    /*Console.WriteLine("Processor(s):              " + Computer.Info.GetNumberOfCPU() + " installed processor(s).");
                     int j = 1;
                     foreach (Processor processor in Computer.CPUInfo.Processors)
                     {
                         Console.WriteLine("[" + j + "] : " + processor.GetBrandName() + (int)processor.Frequency + " Mhz");
                         j++;
                     }
-                    Computer.CPUInfo.Processors.Clear();
+                    Computer.CPUInfo.Processors.Clear();*/
                     Console.WriteLine("Console mode:              " + Kernel.AConsole.Name);
                     break;
 
@@ -327,14 +327,14 @@ namespace Aura_OS.System.Translation
                     Console.WriteLine("Totaal geheugen:           " + Core.MemoryManager.TotalMemory + "MB");
                     Console.WriteLine("Gebruikt geheugen:         " + Core.MemoryManager.GetUsedMemory() + "MB");
                     Console.WriteLine("Gratis geheugen:           " + Core.MemoryManager.GetFreeMemory() + "MB");
-                    Console.WriteLine("Processor(s):              " + Computer.Info.GetNumberOfCPU() + " processor(s) geïnstalleerd.");
+                    /*Console.WriteLine("Processor(s):              " + Computer.Info.GetNumberOfCPU() + " processor(s) geïnstalleerd.");
                     int k = 1;
                     foreach (Processor processor in Computer.CPUInfo.Processors)
                     {
                         Console.WriteLine("[" + k + "] : " + processor.GetBrandName() + (int)processor.Frequency + " Mhz");
                         k++;
                     }
-                    Computer.CPUInfo.Processors.Clear();
+                    Computer.CPUInfo.Processors.Clear();*/
                     Console.WriteLine("Consolewijze:              " + Kernel.AConsole.Name);
                     break;
 
@@ -352,14 +352,14 @@ namespace Aura_OS.System.Translation
                     Console.WriteLine("Memoria totale:                  " + Core.MemoryManager.TotalMemory + "MB");
                     Console.WriteLine("Memoria utilizzata:              " + Core.MemoryManager.GetUsedMemory() + "MB");
                     Console.WriteLine("Memoria libera:                  " + Core.MemoryManager.GetFreeMemory() + "MB");
-                    Console.WriteLine("Processor(s):                    " + Computer.Info.GetNumberOfCPU() + " installed processor(s).");
+                    /*Console.WriteLine("Processor(s):                    " + Computer.Info.GetNumberOfCPU() + " installed processor(s).");
                     int h = 1;
                     foreach (Processor processor in Computer.CPUInfo.Processors)
                     {
                         Console.WriteLine("[" + h + "] : " + processor.GetBrandName() + (int)processor.Frequency + " Mhz");
                         h++;
                     }
-                    Computer.CPUInfo.Processors.Clear();
+                    Computer.CPUInfo.Processors.Clear();*/
                     break;
             }
         }

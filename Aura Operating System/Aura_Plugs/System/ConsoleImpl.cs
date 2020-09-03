@@ -275,7 +275,7 @@ namespace Aura_Plugs
                 // for now:
                 return 25;
             }
-            return GetConsole().Cols;
+            return GetConsole().Rows;
         }
 
         public static void set_WindowHeight(int value)
@@ -313,7 +313,7 @@ namespace Aura_Plugs
                 // for now:
                 return 85;
             }
-            return GetConsole().Rows;
+            return GetConsole().Cols;
         }
 
         public static void set_WindowWidth(int value)
@@ -534,7 +534,7 @@ namespace Aura_Plugs
                 else if (current.Key == ConsoleKeyEx.C && KeyboardManager.ControlPressed)
                 {
                     CMDToComplete = "";
-                    if (Cosmos.System.Console.writecommand)
+                    if (Aura_OS.Kernel.AConsole.writecommand)
                     {
                         CommandsHistory.ClearCurrentConsoleLine();
                         currentCount = 0;
@@ -545,7 +545,7 @@ namespace Aura_Plugs
                 }
                 else if (current.Key == ConsoleKeyEx.UpArrow) //COMMAND HISTORY UP
                 {
-                    if (Cosmos.System.Console.writecommand) //IF SHELL
+                    if (Aura_OS.Kernel.AConsole.writecommand) //IF SHELL
                     {
                         CMDToComplete = "";
                         if (CommandsHistory.CHIndex >= 0)
@@ -556,7 +556,7 @@ namespace Aura_Plugs
 
                             Aura_OS.Kernel.BeforeCommand();
 
-                            string Command = Cosmos.System.Console.commands[CommandsHistory.CHIndex];
+                            string Command = Aura_OS.Kernel.AConsole.commands[CommandsHistory.CHIndex];
                             CommandsHistory.CHIndex = CommandsHistory.CHIndex - 1;
 
                             foreach (char chr in Command)
@@ -603,10 +603,10 @@ namespace Aura_Plugs
                 }
                 else if (current.Key == ConsoleKeyEx.DownArrow) //COMMAND HISTORY UP
                 {
-                    if (Cosmos.System.Console.writecommand) //IF SHELL
+                    if (Aura_OS.Kernel.AConsole.writecommand) //IF SHELL
                     {
                         CMDToComplete = "";
-                        if (CommandsHistory.CHIndex < Cosmos.System.Console.commands.Count - 1)
+                        if (CommandsHistory.CHIndex < Aura_OS.Kernel.AConsole.commands.Count - 1)
                         {
                             CommandsHistory.ClearCurrentConsoleLine();
                             currentCount = 0;
@@ -622,7 +622,7 @@ namespace Aura_Plugs
                                 firstdown = true;
                             }
 
-                            string Command = Cosmos.System.Console.commands[CommandsHistory.CHIndex];
+                            string Command = Aura_OS.Kernel.AConsole.commands[CommandsHistory.CHIndex];
 
                             foreach (char chr in Command)
                             {
