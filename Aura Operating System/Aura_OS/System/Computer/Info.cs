@@ -9,7 +9,7 @@ using System.Collections.Generic;
 using System.Text;
 using Aura_OS.System.Translation;
 using Aura_OS.System.Utils;
-using Cosmos.HAL.PCInformation;
+//using Cosmos.HAL.PCInformation;
 
 namespace Aura_OS.System.Computer
 {
@@ -103,7 +103,7 @@ namespace Aura_OS.System.Computer
         /// <summary>
         /// Number of CPU
         /// </summary>
-        public static int GetNumberOfCPU()
+        /*public static int GetNumberOfCPU()
         {
             int number = 0;
             foreach (var x in ListProcessors)
@@ -128,6 +128,6 @@ namespace Aura_OS.System.Computer
                 }
                 return _listProcessors;
             }
-        }
+        }*/
     }
 }

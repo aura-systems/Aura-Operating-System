@@ -7,6 +7,7 @@
 
 using System;
 using System.Drawing;
+using Cosmos.Debug.Kernel;
 using Cosmos.System.Graphics;
 
 namespace Aura_OS.System.AConsole.VESAVBE
@@ -20,6 +21,8 @@ namespace Aura_OS.System.AConsole.VESAVBE
         private const byte Tab = (byte)'\t';
         private const byte Space = (byte)' ';
 
+        public Debugger debugger = new Debugger("", "");
+
         public VESAVBEConsole()
         {
             Name = "VESA";
@@ -27,8 +30,14 @@ namespace Aura_OS.System.AConsole.VESAVBE
             mWidth = graphics.canvas.Mode.Columns / graphics.font.Width;
             mHeight = graphics.canvas.Mode.Rows / graphics.font.Height;
 
-            mRows = mWidth;
-            mCols = mHeight;
+            mCols = mWidth;
+            mRows = mHeight;
+
+            debugger.Send("Height=" + graphics.canvas.Mode.Rows);
+            debugger.Send("rows=" + mRows);
+
+            debugger.Send("Width=" + graphics.canvas.Mode.Columns);
+            debugger.Send("mCols=" + mCols);
         }
 
         protected int mX = 0;
@@ -116,19 +125,66 @@ namespace Aura_OS.System.AConsole.VESAVBE
             mY = 0;
         }
 
+        /// <summary>
+        /// Scroll the console up and move crusor to the start of the line.
+        /// </summary>
+        private void DoLineFeed()
+        {
+            mY++;
+            mX = 0;
+            if (mY == mRows)
+            {
+                graphics.canvas.ScrollUp();
+                mY--;
+            }
+            //UpdateCursor();
+        }
+
+        private void DoCarriageReturn()
+        {
+            mX = 0;
+            //UpdateCursor();
+        }
+
+        /// <summary>
+        /// Write char to the console.
+        /// </summary>
+        /// <param name="aChar">A char to write</param>
+        public void Write(byte aChar)
+        {
+            if (aChar == 0)
+                return;
+
+            graphics.WriteByte(aChar);
+            mX++;
+            if (mX == mCols)
+            {
+                DoLineFeed();
+            }
+            //UpdateCursor();
+        }
+
         public override void Write(byte[] aText)
         {
-            foreach (byte ch in aText)
+            for (int i = 0; i < aText.Length; i++)
             {
-                switch (ch)
+                switch (aText[i])
                 {
+                    case LineFeed:
+                        DoLineFeed();
+                        break;
+
+                    case CarriageReturn:
+                        DoCarriageReturn();
+                        break;
 
                     case Tab:
                         DoTab();
                         break;
 
+                    /* Normal characters, simply write them */
                     default:
-                        graphics.WriteByte(ch);
+                        Write(aText[i]);
                         break;
                 }
             }

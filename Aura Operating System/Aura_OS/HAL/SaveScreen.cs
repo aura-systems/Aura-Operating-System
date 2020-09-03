@@ -4,11 +4,11 @@
 * PROGRAMMER(S):    Valentin Charbonnier <valentinbreiz@gmail.com>
 */
 
-using Aura_OS.HAL.Drivers.Video;
+using Aura_OS.HAL.Drivers;
 
 namespace Aura_OS.HAL
 {
-    class SaveScreen
+    /*class SaveScreen
     {
 
         static uint[] lastbuffer;
@@ -32,5 +32,5 @@ namespace Aura_OS.HAL
             lastbuffer = null;
         }
 
-    }
+    }*/
 }

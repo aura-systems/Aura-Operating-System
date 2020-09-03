@@ -73,7 +73,7 @@ namespace Aura_OS.Apps.System
         public static void RegisterSetting()
         {
 
-            HAL.SaveScreen.SaveCurrentScreen();
+            //HAL.SaveScreen.SaveCurrentScreen();
 
             string result;
 
@@ -86,7 +86,7 @@ namespace Aura_OS.Apps.System
                 result = DispSettingsDialog(false);
             }
 
-            HAL.SaveScreen.PushLastScreen();
+            //HAL.SaveScreen.PushLastScreen();
 
             if (result.Equals("on"))
             {
