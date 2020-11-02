@@ -449,6 +449,8 @@ namespace Aura_Plugs
 
             string CMDToComplete = "";
 
+            xConsole.CursorVisible = true;
+
             while ((current = KeyboardManager.ReadKey()).Key != ConsoleKeyEx.Enter)
             {
                 if (current.Key == ConsoleKeyEx.NumEnter) break;
@@ -706,6 +708,8 @@ namespace Aura_Plugs
                 }
             }
             WriteLine();
+
+            xConsole.CursorVisible = false;
 
             char[] final = chars.ToArray();
             return new string(final);

@@ -8,7 +8,7 @@
         <StackCorruptionDetectionEnabled>True</StackCorruptionDetectionEnabled>
         <StackCorruptionDetectionLevel>MethodFooters</StackCorruptionDetectionLevel>
         <Deployment>ISO</Deployment>
-        <DebugEnabled>False</DebugEnabled>
+        <DebugEnabled>True</DebugEnabled>
         <DebugMode>Source</DebugMode>
         <IgnoreDebugStubAttribute>False</IgnoreDebugStubAttribute>
         <ISOFile>bin\Debug\netcoreapp2.0\cosmos\Aura_OS.iso</ISOFile>
