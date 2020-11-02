@@ -341,7 +341,7 @@ namespace Aura_OS.System.Shell.cmdIntr
             else if (cmd.Equals("udp"))
             {
                 var xClient = new System.Network.IPV4.UDP.UdpClient(4242);
-                xClient.Connect(new System.Network.IPV4.Address(192,168,1,12), 4242);
+                xClient.Connect(new System.Network.IPV4.Address(192,168,1,30), 4242);
                 xClient.Send(Encoding.ASCII.GetBytes("Hello from Aura Operating System!"));
             }
 

@@ -33,10 +33,10 @@ namespace Aura_OS.System.Network.IPV4
         internal static void IPv4Handler(byte[] packetData)
         {
             IPPacket ip_packet = new IPPacket(packetData);
-            //Apps.System.Debugger.debugger.Send("[Received] " + ip_packet.ToString());
+            Kernel.debugger.Send("[Received] " + ip_packet.ToString());
             if (ip_packet.SourceIP == null)
             {
-                //Apps.System.Debugger.debugger.Send("SourceIP null in IPv4Handler!");
+                Kernel.debugger.Send("SourceIP null in IPv4Handler!");
             }
             ARPCache.Update(ip_packet.SourceIP, ip_packet.SourceMAC);
 

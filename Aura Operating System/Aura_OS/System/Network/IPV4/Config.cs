@@ -137,5 +137,10 @@ namespace Aura_OS.System.Network.IPV4
             get { return this.defaultGateway; }
             set { this.defaultGateway = value; }
         }
+
+        public override string ToString()
+        {
+            return "IPAddress=" + IPAddress + ", SubnetMask=" + SubnetMask + ", DefaultGateway=" + DefaultGateway;
+        }
     }
 }

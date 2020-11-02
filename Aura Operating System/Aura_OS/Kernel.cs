@@ -54,6 +54,8 @@ namespace Aura_OS
         public static Config LocalNetworkConfig;
         public static string current_volume = @"0:\";
 
+        public static Cosmos.Debug.Kernel.Debugger debugger = new Cosmos.Debug.Kernel.Debugger("Aura", "Kernel");
+
         #endregion
 
         #region Before Run

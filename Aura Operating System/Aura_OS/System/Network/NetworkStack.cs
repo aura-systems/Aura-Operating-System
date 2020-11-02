@@ -85,7 +85,7 @@ namespace Aura_OS.System.Network
         {
             if (packetData == null)
             {
-                //Apps.System.Debugger.debugger.Send("Error packet data null");
+                Kernel.debugger.Send("Error packet data null");
                 return;
             }
 

@@ -18,19 +18,20 @@ namespace Aura_OS.System.Network.IPV4
 
         internal static void ICMPHandler(byte[] packetData)
         {
-            //Apps.System.Debugger.debugger.Send("ICMP Handler called");
+            Kernel.debugger.Send("ICMP Handler called");
             ICMPPacket icmp_packet = new ICMPPacket(packetData);
             switch (icmp_packet.ICMP_Type)
             {
                 case 0:
                     recvd_reply = new ICMPEchoReply(packetData);
-                    //Apps.System.Debugger.debugger.Send("Received ICMP Echo reply from " + recvd_reply.SourceIP.ToString());
+                    Kernel.debugger.Send("Received ICMP Echo reply from " + recvd_reply.SourceIP.ToString());
                     break;
                 case 8:
                     ICMPEchoRequest request = new ICMPEchoRequest(packetData);
-                    //Apps.System.Debugger.debugger.Send("Received " + request.ToString());
+                    Kernel.debugger.Send("Received " + request.ToString());
+
                     ICMPEchoReply reply = new ICMPEchoReply(request);
-                    //Apps.System.Debugger.debugger.Send("Sending ICMP Echo reply to " + reply.DestinationIP.ToString());
+                    Kernel.debugger.Send("Sending ICMP Echo reply to " + reply.DestinationIP.ToString());
                     OutgoingBuffer.AddPacket(reply);
                     NetworkStack.Update();
                     break;
@@ -75,7 +76,8 @@ namespace Aura_OS.System.Network.IPV4
             mRawData[this.dataOffset + 6] = (byte)((seq >> 8) & 0xFF);
             mRawData[this.dataOffset + 7] = (byte)((seq >> 0) & 0xFF);
 
-            icmpCRC = CalcICMPCRC((UInt16)(icmpDataSize + 8));
+            icmpCRC = CalcICMPCRC((UInt16)(icmpDataSize));
+
             mRawData[this.dataOffset + 2] = (byte)((icmpCRC >> 8) & 0xFF);
             mRawData[this.dataOffset + 3] = (byte)((icmpCRC >> 0) & 0xFF);
             initFields();
@@ -211,8 +213,7 @@ namespace Aura_OS.System.Network.IPV4
         }
 
         internal ICMPEchoReply(ICMPEchoRequest request)
-            : base(request.DestinationIP, request.SourceIP, 0, 0,
-                    request.ICMP_ID, request.ICMP_Sequence, (UInt16)(request.ICMP_DataLength + 8))
+            : base(request.DestinationIP, request.SourceIP, 0, 0, request.ICMP_ID, request.ICMP_Sequence, (UInt16)(request.ICMP_DataLength))
         {
             for (int b = 0; b < this.ICMP_DataLength; b++)
             {

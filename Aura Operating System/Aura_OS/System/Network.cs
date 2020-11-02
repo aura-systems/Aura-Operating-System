@@ -18,7 +18,7 @@ namespace Aura_OS.System
                 Utils.Settings settings = new Utils.Settings(@"0:\System\" + AMDPCNetIINIC.Name + ".conf");
                 if (!IsSavedConf(AMDPCNetIINIC.Name))
                 {
-                    Kernel.LocalNetworkConfig = new Network.IPV4.Config(new Network.IPV4.Address(0,0,0,0), new Network.IPV4.Address(0,0,0,0), new Network.IPV4.Address(0,0,0,0));
+                    Kernel.LocalNetworkConfig = new Network.IPV4.Config(new Network.IPV4.Address(192, 168, 1, 35), new Network.IPV4.Address(255, 255, 255, 0), new Network.IPV4.Address(192, 168, 1, 1));
                     Network.NetworkStack.ConfigIP(AMDPCNetIINIC, Kernel.LocalNetworkConfig);
                 }
                 else
@@ -26,6 +26,9 @@ namespace Aura_OS.System
                     Kernel.LocalNetworkConfig = new Network.IPV4.Config(Network.IPV4.Address.Parse(settings.GetValue("ipaddress")), Network.IPV4.Address.Parse(settings.GetValue("subnet")), Network.IPV4.Address.Parse(settings.GetValue("gateway")));
                     Network.NetworkStack.ConfigIP(AMDPCNetIINIC, Kernel.LocalNetworkConfig);
                 }
+
+                Kernel.debugger.Send(Kernel.LocalNetworkConfig.ToString());
+
             }
         }
 
