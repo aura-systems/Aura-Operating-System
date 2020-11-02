@@ -83,5 +83,10 @@ namespace Aura_OS.System.Graphics
         {
             canvas.ScrollUp();
         }
+
+        public void SetCursorPos(int mX, int mY)
+        {
+            DrawFilledRectangle(frontpen, Kernel.AConsole.X * font.Width, Kernel.AConsole.Y * font.Height + font.Height, 8, 4);
+        }
     }
 }

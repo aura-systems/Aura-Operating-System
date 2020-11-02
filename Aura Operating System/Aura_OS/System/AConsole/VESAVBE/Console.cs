@@ -47,6 +47,7 @@ namespace Aura_OS.System.AConsole.VESAVBE
             set
             {
                 mX = value;
+                UpdateCursor();
             }
         }
 
@@ -58,6 +59,7 @@ namespace Aura_OS.System.AConsole.VESAVBE
             set
             {
                 mY = value;
+                UpdateCursor();
             }
         }
 
@@ -116,6 +118,7 @@ namespace Aura_OS.System.AConsole.VESAVBE
             graphics.canvas.Clear();
             mX = 0;
             mY = 0;
+            UpdateCursor();
         }
 
         public override void Clear(uint color)
@@ -123,6 +126,12 @@ namespace Aura_OS.System.AConsole.VESAVBE
             graphics.canvas.Clear(Color.FromArgb((int)color));
             mX = 0;
             mY = 0;
+            UpdateCursor();
+        }
+
+        protected void UpdateCursor()
+        {
+            graphics.SetCursorPos(mX, mY);
         }
 
         /// <summary>
@@ -137,13 +146,13 @@ namespace Aura_OS.System.AConsole.VESAVBE
                 graphics.canvas.ScrollUp();
                 mY--;
             }
-            //UpdateCursor();
+            UpdateCursor();
         }
 
         private void DoCarriageReturn()
         {
             mX = 0;
-            //UpdateCursor();
+            UpdateCursor();
         }
 
         /// <summary>
@@ -161,7 +170,7 @@ namespace Aura_OS.System.AConsole.VESAVBE
             {
                 DoLineFeed();
             }
-            //UpdateCursor();
+            UpdateCursor();
         }
 
         public override void Write(byte[] aText)
@@ -192,10 +201,10 @@ namespace Aura_OS.System.AConsole.VESAVBE
 
         private void DoTab()
         {
-            graphics.WriteByte(Space);
-            graphics.WriteByte(Space);
-            graphics.WriteByte(Space);
-            graphics.WriteByte(Space);
+            Write(Space);
+            Write(Space);
+            Write(Space);
+            Write(Space);
         }
 
         public override void DrawImage(ushort X, ushort Y, Bitmap image)
