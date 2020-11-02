@@ -44,6 +44,7 @@ namespace Aura_OS.System.Graphics
             Pallete[14] = 0xFFFFFF55; // Yellow
             Pallete[15] = 0xFFFFFFFF; //White
 
+            lastpen = backpen;
             lastx = 0;
             lasty = 0;
         }
@@ -87,15 +88,21 @@ namespace Aura_OS.System.Graphics
             canvas.ScrollUp();
         }
 
+        public Pen lastpen;
         public int lastx;
         public int lasty;
 
         public void SetCursorPos(int mX, int mY)
         {
-            DrawFilledRectangle(frontpen, mX * font.Width, mY * font.Height + font.Height, 8, 4);
-            DrawFilledRectangle(backpen, lastx, lasty, 8, 4);
-            lastx = mX * font.Width;
-            lasty = mY * font.Height + font.Height;
+            if (Kernel.AConsole.CursorVisible)
+            {
+                DrawFilledRectangle(frontpen, mX * font.Width, mY * font.Height + font.Height, 8, 4);
+                DrawFilledRectangle(lastpen, lastx, lasty, 8, 4);
+
+                lastx = mX * font.Width;
+                lasty = mY * font.Height + font.Height;
+                lastpen = backpen;
+            }
         }
     }
 }

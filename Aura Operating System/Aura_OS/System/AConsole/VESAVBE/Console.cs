@@ -111,7 +111,9 @@ namespace Aura_OS.System.AConsole.VESAVBE
         }
 
         public override int CursorSize { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-        public override bool CursorVisible { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+
+        public static bool cursorvisible = true;
+        public override bool CursorVisible { get => cursorvisible; set => cursorvisible = value; }
 
         public override void Clear()
         {
