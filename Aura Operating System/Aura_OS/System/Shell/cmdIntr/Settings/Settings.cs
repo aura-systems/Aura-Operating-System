@@ -68,11 +68,6 @@ namespace Aura_OS.System.Shell.cmdIntr.Settings
                 {
                     L.Text.Display("_passuser");
                 }
-
-                else if (cmdargs[1].Equals("debugger"))
-                {
-                    Apps.System.DebuggerSettings.RegisterSetting();
-                }
             }
             else if (cmdargs.Length == 3 ) //One arg
             {

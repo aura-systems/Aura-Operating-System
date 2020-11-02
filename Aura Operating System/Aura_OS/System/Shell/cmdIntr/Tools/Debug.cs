@@ -47,13 +47,13 @@ namespace Aura_OS.System.Shell.cmdIntr.Tools
 
             if (cmd.StartsWith("debugger "))
             {
-                Kernel.debugger.Send(cmd.Remove(0, 9));
+                
             }
             else if (cmdargs.Length == 2) //No arg
             {
                 if (cmdargs[1].Equals("vbeinfo"))
                 {
-                    DebugConsole.WriteLine("[VBE Mode Information]");
+                    //DebugConsole.WriteLine("[VBE Mode Information]");
                     /*DebugConsole.WriteLine("BPP: " + Graphics.VBE.Graphics.ModeInfo.bpp);
                     DebugConsole.WriteLine("Height: " + Graphics.VBE.Graphics.ModeInfo.height);
                     DebugConsole.WriteLine("Width: " + Graphics.VBE.Graphics.ModeInfo.width);
@@ -90,7 +90,7 @@ namespace Aura_OS.System.Shell.cmdIntr.Tools
 
                 else if (cmdargs[1].Equals("vbemodes"))
                 {
-                    DebugConsole.WriteLine("[VBE Mode List]");
+                    //DebugConsole.WriteLine("[VBE Mode List]");
                     int counter = 0;
                     /*foreach (uint mode in Graphics.VBE.Graphics.Modes)
                     {

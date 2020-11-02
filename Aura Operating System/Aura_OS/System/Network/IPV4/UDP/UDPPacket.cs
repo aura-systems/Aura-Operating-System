@@ -23,7 +23,7 @@ namespace Aura_OS.System.Network.IPV4.UDP
         {
             UDPPacket udp_packet = new UDPPacket(packetData);
 
-            Apps.System.Debugger.debugger.Send("Received UDP packet from " + udp_packet.SourceIP.ToString() + ":" + udp_packet.SourcePort.ToString());
+            //Apps.System.Debugger.debugger.Send("Received UDP packet from " + udp_packet.SourceIP.ToString() + ":" + udp_packet.SourcePort.ToString());
 
             if (CheckCRC(udp_packet))
             {
@@ -39,7 +39,7 @@ namespace Aura_OS.System.Network.IPV4.UDP
                     return;
                 }
 
-                Apps.System.Debugger.debugger.Send("Content: " + Encoding.ASCII.GetString(udp_packet.UDP_Data));
+                //Apps.System.Debugger.debugger.Send("Content: " + Encoding.ASCII.GetString(udp_packet.UDP_Data));
                 UdpClient receiver = UdpClient.Client(udp_packet.DestinationPort);
                 if (receiver != null)
                 {
@@ -48,7 +48,7 @@ namespace Aura_OS.System.Network.IPV4.UDP
             }
             else
             {
-                Apps.System.Debugger.debugger.Send("But checksum incorrect... Packet Passed.");
+                //Apps.System.Debugger.debugger.Send("But checksum incorrect... Packet Passed.");
             }
         }
 
@@ -94,8 +94,8 @@ namespace Aura_OS.System.Network.IPV4.UDP
         {
             byte[] header = MakeHeader(packet.sourceIP.address, packet.destIP.address, packet.udpLen, packet.sourcePort, packet.destPort, packet.UDP_Data);
             UInt16 calculatedcrc = Check(header, 0, header.Length);
-            Apps.System.Debugger.debugger.Send("Calculated: 0x" + Utils.Conversion.DecToHex(calculatedcrc));
-            Apps.System.Debugger.debugger.Send("Received:  0x" + Utils.Conversion.DecToHex(packet.udpCRC));
+            //Apps.System.Debugger.debugger.Send("Calculated: 0x" + Utils.Conversion.DecToHex(calculatedcrc));
+            //Apps.System.Debugger.debugger.Send("Received:  0x" + Utils.Conversion.DecToHex(packet.udpCRC));
             if (calculatedcrc == packet.udpCRC)
             {
                 return true;

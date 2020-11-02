@@ -53,7 +53,6 @@ namespace Aura_OS
         public static System.AConsole.Console AConsole;
         public static string Consolemode = "VGATextmode";
         public static Config LocalNetworkConfig;
-        public static Debugger debugger;
         public static string current_volume = @"0:\";
 
         #endregion

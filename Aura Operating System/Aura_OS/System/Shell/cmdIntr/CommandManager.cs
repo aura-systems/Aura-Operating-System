@@ -79,14 +79,6 @@ namespace Aura_OS.System.Shell.cmdIntr
         public static void _CommandManger(string cmd)
         {
 
-            if (Kernel.debugger != null)
-            {
-                if (Kernel.debugger.enabled)
-                {
-                    Kernel.debugger.Send("[Command] > " + cmd);
-                }
-            }
-
             #region Power
 
             if (cmd.Equals("shutdown") || cmd.Equals("sd"))
@@ -257,18 +249,6 @@ namespace Aura_OS.System.Shell.cmdIntr
                 var xClient = new System.Network.IPV4.UDP.UdpClient(4242);
                 xClient.Connect(new System.Network.IPV4.Address(192,168,1,12), 4242);
                 xClient.Send(Encoding.ASCII.GetBytes("Hello from Aura Operating System!"));
-            }
-
-            else if (cmd.Equals("tcp"))
-            {
-                var xClient = new System.Network.IPV4.TCP.TCPClient(4343);
-                xClient.Connect(new System.Network.IPV4.Address(192, 168, 1, 12), 4224);
-                xClient.Send(Encoding.ASCII.GetBytes("1"));
-                xClient.Send(Encoding.ASCII.GetBytes("2"));
-                xClient.Send(Encoding.ASCII.GetBytes("3"));
-                xClient.Send(Encoding.ASCII.GetBytes("4"));
-                xClient.Send(Encoding.ASCII.GetBytes("5"));
-
             }
 
             else if (cmd.Equals("haship"))

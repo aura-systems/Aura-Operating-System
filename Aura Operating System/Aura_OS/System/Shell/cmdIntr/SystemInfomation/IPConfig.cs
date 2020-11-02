@@ -34,8 +34,6 @@ namespace Aura_OS.System.Shell.cmdIntr.SystemInfomation
         /// </summary>
         public IPConfig() { }
 
-        static HAL.Drivers.Network.RTL8168 RTL8168NIC;
-
         /// <summary>
         /// c = command, c_SystemInfomation
         /// </summary>

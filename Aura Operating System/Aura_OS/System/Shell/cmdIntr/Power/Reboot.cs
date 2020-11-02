@@ -34,13 +34,6 @@ namespace Aura_OS.System.Shell.cmdIntr.Power
         /// </summary>
         public static void c_Reboot()
         {
-            if (Kernel.debugger != null)
-            {
-                if (Kernel.debugger.enabled)
-                {
-                    Kernel.debugger.Stop();
-                }
-            }
             Kernel.running = false;
             Console.Clear();
             L.Text.Display("restart");

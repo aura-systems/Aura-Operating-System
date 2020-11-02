@@ -18,19 +18,19 @@ namespace Aura_OS.System.Network.IPV4
 
         internal static void ICMPHandler(byte[] packetData)
         {
-            Apps.System.Debugger.debugger.Send("ICMP Handler called");
+            //Apps.System.Debugger.debugger.Send("ICMP Handler called");
             ICMPPacket icmp_packet = new ICMPPacket(packetData);
             switch (icmp_packet.ICMP_Type)
             {
                 case 0:
                     recvd_reply = new ICMPEchoReply(packetData);
-                    Apps.System.Debugger.debugger.Send("Received ICMP Echo reply from " + recvd_reply.SourceIP.ToString());
+                    //Apps.System.Debugger.debugger.Send("Received ICMP Echo reply from " + recvd_reply.SourceIP.ToString());
                     break;
                 case 8:
                     ICMPEchoRequest request = new ICMPEchoRequest(packetData);
-                    Apps.System.Debugger.debugger.Send("Received " + request.ToString());
+                    //Apps.System.Debugger.debugger.Send("Received " + request.ToString());
                     ICMPEchoReply reply = new ICMPEchoReply(request);
-                    Apps.System.Debugger.debugger.Send("Sending ICMP Echo reply to " + reply.DestinationIP.ToString());
+                    //Apps.System.Debugger.debugger.Send("Sending ICMP Echo reply to " + reply.DestinationIP.ToString());
                     OutgoingBuffer.AddPacket(reply);
                     NetworkStack.Update();
                     break;

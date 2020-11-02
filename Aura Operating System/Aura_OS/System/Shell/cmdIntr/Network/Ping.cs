@@ -153,7 +153,7 @@ namespace Aura_OS.System.Shell.cmdIntr.Network
 
                     if (second >= 4)
                     {
-                        Apps.System.Debugger.debugger.Send("No response in 4 secondes...");
+                        //Apps.System.Debugger.debugger.Send("No response in 4 secondes...");
                         break;
                     }
                 }

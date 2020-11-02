@@ -37,7 +37,6 @@ namespace Aura_OS.System.Network
             ICMPEchoReply.VMTInclude();
             ICMPEchoRequest.VMTInclude();
             IPV4.UDP.UDPPacket.VMTInclude();
-            IPV4.TCP.TCPPacket.VMTInclude();
         }
 
         public static void SetConfigIP(NetworkDevice nic, IPV4.Config config)
@@ -86,7 +85,7 @@ namespace Aura_OS.System.Network
         {
             if (packetData == null)
             {
-                Apps.System.Debugger.debugger.Send("Error packet data null");
+                //Apps.System.Debugger.debugger.Send("Error packet data null");
                 return;
             }
 

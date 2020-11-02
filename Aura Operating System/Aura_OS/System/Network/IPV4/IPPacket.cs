@@ -8,7 +8,6 @@
 using System;
 using Aura_OS.HAL;
 using Aura_OS.System.Network.ARP;
-using Aura_OS.System.Network.IPV4.TCP;
 using Aura_OS.System.Network.IPV4.UDP;
 
 namespace Aura_OS.System.Network.IPV4
@@ -34,10 +33,10 @@ namespace Aura_OS.System.Network.IPV4
         internal static void IPv4Handler(byte[] packetData)
         {
             IPPacket ip_packet = new IPPacket(packetData);
-            Apps.System.Debugger.debugger.Send("[Received] " + ip_packet.ToString());
+            //Apps.System.Debugger.debugger.Send("[Received] " + ip_packet.ToString());
             if (ip_packet.SourceIP == null)
             {
-                Apps.System.Debugger.debugger.Send("SourceIP null in IPv4Handler!");
+                //Apps.System.Debugger.debugger.Send("SourceIP null in IPv4Handler!");
             }
             ARPCache.Update(ip_packet.SourceIP, ip_packet.SourceMAC);
 
@@ -49,9 +48,9 @@ namespace Aura_OS.System.Network.IPV4
                     case 1:
                         ICMPPacket.ICMPHandler(packetData);
                         break;
-                    case 6:
+                    /*case 6:
                         TCPPacket.TCPHandler(packetData);
-                        break;
+                        break;*/
                     case 17:
                         UDPPacket.UDPHandler(packetData);
                         break;
