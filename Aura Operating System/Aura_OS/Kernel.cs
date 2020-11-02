@@ -48,7 +48,6 @@ namespace Aura_OS
         public static bool JustInstalled = false;
         public static CosmosVFS vFS = new CosmosVFS();
 		public static Dictionary<string, string> environmentvariables = new Dictionary<string, string>();
-        public static HAL.PCSpeaker speaker = new HAL.PCSpeaker();
         public static string boottime = Time.MonthString() + "/" + Time.DayString() + "/" + Time.YearString() + ", " + Time.TimeString(true, true, true);
         public static System.AConsole.Console AConsole;
         public static string Consolemode = "VGATextmode";

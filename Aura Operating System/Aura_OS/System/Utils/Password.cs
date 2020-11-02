@@ -55,7 +55,7 @@ namespace Aura_OS.System.Utils
                     }
                     else
                     {
-                        Aura_OS.Kernel.speaker.beep();
+                        Cosmos.System.PCSpeaker.Beep();
                     }
                     continue;
                 }

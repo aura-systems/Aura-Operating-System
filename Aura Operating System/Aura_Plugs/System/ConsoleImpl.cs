@@ -321,8 +321,11 @@ namespace Aura_Plugs
             WriteLine("Not implemented: set_WindowWidth");
         }
 
-        // Beep() is pure CIL
-
+        /// <summary>
+        /// The ArgumentOutOfRangeException check is now done at driver level in PCSpeaker - is it still needed here?
+        /// </summary>
+        /// <param name="aFrequency"></param>
+        /// <param name="aDuration"></param>
         public static void Beep(int aFrequency, int aDuration)
         {
             if (aFrequency < 37 || aFrequency > 32767)
@@ -335,13 +338,19 @@ namespace Aura_Plugs
                 throw new ArgumentOutOfRangeException("Duration must be more than 0");
             }
 
-            WriteLine("Not implemented: Beep");
+            PCSpeaker.Beep((uint)aFrequency, (uint)aDuration);
+        }
 
-            //var xPIT = Hardware.Global.PIT;
-            //xPIT.EnableSound();
-            //xPIT.T2Frequency = (uint)aFrequency;
-            //xPIT.Wait((uint)aDuration);
-            //xPIT.DisableSound();
+        /// <summary>
+        /// Beep() is pure CIL
+        /// Default implementation beeps for 200 milliseconds at 800 hertz
+        /// In Cosmos, these are Cosmos.System.Duration.Default and Cosmos.System.Notes.Default respectively,
+        /// and are used when there are no params 
+        /// https://docs.microsoft.com/en-us/dotnet/api/system.console.beep?view=netcore-2.0
+        /// </summary>
+        public static void Beep()
+        {
+            PCSpeaker.Beep();
         }
 
         //TODO: Console uses TextWriter - intercept and plug it instead
@@ -478,7 +487,7 @@ namespace Aura_Plugs
                     }
                     else
                     {
-                        Aura_OS.Kernel.speaker.beep();
+                        Beep();
                     }
                     continue;
                 }

@@ -236,12 +236,106 @@ namespace Aura_OS.System.Shell.cmdIntr
 
             else if (cmd.Equals("beep"))
             {
-                Kernel.speaker.beep();
+                Cosmos.System.PCSpeaker.Beep();
             }
 
             else if (cmd.Equals("play"))
             {
-                Kernel.speaker.playmusic();
+                Cosmos.System.PCSpeaker.Beep((uint)Cosmos.System.Notes.F5, 432);
+
+                Cosmos.System.PCSpeaker.Beep((uint)Cosmos.System.Notes.A5, 432);
+                Cosmos.System.PCSpeaker.Beep((uint)Cosmos.System.Notes.B5, 432);
+                Cosmos.System.PCSpeaker.Beep((uint)Cosmos.System.Notes.F5, 432);
+                Cosmos.System.PCSpeaker.Beep((uint)Cosmos.System.Notes.A5, 432);
+                Cosmos.System.PCSpeaker.Beep((uint)Cosmos.System.Notes.B5, 432);
+
+                Cosmos.System.PCSpeaker.Beep((uint)Cosmos.System.Notes.F5, 432);
+                Cosmos.System.PCSpeaker.Beep((uint)Cosmos.System.Notes.A5, 432);
+                Cosmos.System.PCSpeaker.Beep((uint)Cosmos.System.Notes.B5, 432);
+                Cosmos.System.PCSpeaker.Beep((uint)Cosmos.System.Notes.E6, 432);
+                Cosmos.System.PCSpeaker.Beep((uint)Cosmos.System.Notes.D6, 432);
+                Cosmos.System.PCSpeaker.Beep((uint)Cosmos.System.Notes.B5, 432);
+                Cosmos.System.PCSpeaker.Beep((uint)Cosmos.System.Notes.C6, 432);
+
+                Cosmos.System.PCSpeaker.Beep((uint)Cosmos.System.Notes.B5, 432);
+                Cosmos.System.PCSpeaker.Beep((uint)Cosmos.System.Notes.G5, 432);
+                Cosmos.System.PCSpeaker.Beep((uint)Cosmos.System.Notes.E5, 432);
+                Cosmos.System.PCSpeaker.Beep((uint)Cosmos.System.Notes.D5, 432);
+                Cosmos.System.PCSpeaker.Beep((uint)Cosmos.System.Notes.E5, 432);
+                Cosmos.System.PCSpeaker.Beep((uint)Cosmos.System.Notes.G5, 432);
+                Cosmos.System.PCSpeaker.Beep((uint)Cosmos.System.Notes.E5, 432);
+
+                Cosmos.System.PCSpeaker.Beep((uint)Cosmos.System.Notes.F5, 432);
+                Cosmos.System.PCSpeaker.Beep((uint)Cosmos.System.Notes.A5, 432);
+                Cosmos.System.PCSpeaker.Beep((uint)Cosmos.System.Notes.B5, 432);
+                Cosmos.System.PCSpeaker.Beep((uint)Cosmos.System.Notes.F5, 432);
+                Cosmos.System.PCSpeaker.Beep((uint)Cosmos.System.Notes.A5, 432);
+                Cosmos.System.PCSpeaker.Beep((uint)Cosmos.System.Notes.B5, 432);
+
+                Cosmos.System.PCSpeaker.Beep((uint)Cosmos.System.Notes.F5, 432);
+                Cosmos.System.PCSpeaker.Beep((uint)Cosmos.System.Notes.A5, 432);
+                Cosmos.System.PCSpeaker.Beep((uint)Cosmos.System.Notes.B5, 432);
+                Cosmos.System.PCSpeaker.Beep((uint)Cosmos.System.Notes.E6, 432);
+                Cosmos.System.PCSpeaker.Beep((uint)Cosmos.System.Notes.D6, 432);
+                Cosmos.System.PCSpeaker.Beep((uint)Cosmos.System.Notes.B5, 432);
+                Cosmos.System.PCSpeaker.Beep((uint)Cosmos.System.Notes.C6, 432);
+                Cosmos.System.PCSpeaker.Beep((uint)Cosmos.System.Notes.E6, 432);
+                Cosmos.System.PCSpeaker.Beep((uint)Cosmos.System.Notes.B5, 432);
+                Cosmos.System.PCSpeaker.Beep((uint)Cosmos.System.Notes.G5, 432);
+                Cosmos.System.PCSpeaker.Beep((uint)Cosmos.System.Notes.B5, 432);
+
+                Cosmos.System.PCSpeaker.Beep((uint)Cosmos.System.Notes.G5, 432);
+                Cosmos.System.PCSpeaker.Beep((uint)Cosmos.System.Notes.D5, 432);
+                Cosmos.System.PCSpeaker.Beep((uint)Cosmos.System.Notes.E5, 432);
+                Cosmos.System.PCSpeaker.Beep((uint)Cosmos.System.Notes.D5, 432);
+                Cosmos.System.PCSpeaker.Beep((uint)Cosmos.System.Notes.E5, 432);
+                Cosmos.System.PCSpeaker.Beep((uint)Cosmos.System.Notes.F5, 432);
+                Cosmos.System.PCSpeaker.Beep((uint)Cosmos.System.Notes.G5, 432);
+                Cosmos.System.PCSpeaker.Beep((uint)Cosmos.System.Notes.A5, 432);
+                Cosmos.System.PCSpeaker.Beep((uint)Cosmos.System.Notes.B5, 432);
+
+                Cosmos.System.PCSpeaker.Beep((uint)Cosmos.System.Notes.C6, 432);
+                Cosmos.System.PCSpeaker.Beep((uint)Cosmos.System.Notes.B5, 432);
+                Cosmos.System.PCSpeaker.Beep((uint)Cosmos.System.Notes.E5, 432);
+                Cosmos.System.PCSpeaker.Beep((uint)Cosmos.System.Notes.D5, 432);
+                Cosmos.System.PCSpeaker.Beep((uint)Cosmos.System.Notes.E5, 432);
+                Cosmos.System.PCSpeaker.Beep((uint)Cosmos.System.Notes.F5, 432);
+                Cosmos.System.PCSpeaker.Beep((uint)Cosmos.System.Notes.G5, 432);
+                Cosmos.System.PCSpeaker.Beep((uint)Cosmos.System.Notes.A5, 432);
+                Cosmos.System.PCSpeaker.Beep((uint)Cosmos.System.Notes.B5, 432);
+
+                Cosmos.System.PCSpeaker.Beep((uint)Cosmos.System.Notes.C6, 432);
+                Cosmos.System.PCSpeaker.Beep((uint)Cosmos.System.Notes.D6, 432);
+                Cosmos.System.PCSpeaker.Beep((uint)Cosmos.System.Notes.E6, 432);
+                Cosmos.System.PCSpeaker.Beep((uint)Cosmos.System.Notes.D5, 432);
+                Cosmos.System.PCSpeaker.Beep((uint)Cosmos.System.Notes.E5, 432);
+                Cosmos.System.PCSpeaker.Beep((uint)Cosmos.System.Notes.F5, 432);
+                Cosmos.System.PCSpeaker.Beep((uint)Cosmos.System.Notes.G5, 432);
+                Cosmos.System.PCSpeaker.Beep((uint)Cosmos.System.Notes.A5, 432);
+                Cosmos.System.PCSpeaker.Beep((uint)Cosmos.System.Notes.B5, 432);
+
+                Cosmos.System.PCSpeaker.Beep((uint)Cosmos.System.Notes.C6, 432);
+                Cosmos.System.PCSpeaker.Beep((uint)Cosmos.System.Notes.B5, 432);
+                Cosmos.System.PCSpeaker.Beep((uint)Cosmos.System.Notes.E5, 432);
+                Cosmos.System.PCSpeaker.Beep((uint)Cosmos.System.Notes.D5, 432);
+                Cosmos.System.PCSpeaker.Beep((uint)Cosmos.System.Notes.C6, 432);
+                Cosmos.System.PCSpeaker.Beep((uint)Cosmos.System.Notes.F5, 432);
+                Cosmos.System.PCSpeaker.Beep((uint)Cosmos.System.Notes.E5, 432);
+                Cosmos.System.PCSpeaker.Beep((uint)Cosmos.System.Notes.G5, 432);
+                Cosmos.System.PCSpeaker.Beep((uint)Cosmos.System.Notes.F5, 432);
+                Cosmos.System.PCSpeaker.Beep((uint)Cosmos.System.Notes.A5, 432);
+                Cosmos.System.PCSpeaker.Beep((uint)Cosmos.System.Notes.G5, 432);
+
+                Cosmos.System.PCSpeaker.Beep((uint)Cosmos.System.Notes.B5, 432);
+                Cosmos.System.PCSpeaker.Beep((uint)Cosmos.System.Notes.A5, 432);
+                Cosmos.System.PCSpeaker.Beep((uint)Cosmos.System.Notes.C6, 432);
+                Cosmos.System.PCSpeaker.Beep((uint)Cosmos.System.Notes.B5, 432);
+                Cosmos.System.PCSpeaker.Beep((uint)Cosmos.System.Notes.D6, 432);
+                Cosmos.System.PCSpeaker.Beep((uint)Cosmos.System.Notes.C6, 432);
+                Cosmos.System.PCSpeaker.Beep((uint)Cosmos.System.Notes.E6, 432);
+                Cosmos.System.PCSpeaker.Beep((uint)Cosmos.System.Notes.F6, 432);
+                Cosmos.System.PCSpeaker.Beep((uint)Cosmos.System.Notes.D6, 432);
+                Cosmos.System.PCSpeaker.Beep((uint)Cosmos.System.Notes.E6, 432);
             }
 
             else if (cmd.Equals("udp"))
