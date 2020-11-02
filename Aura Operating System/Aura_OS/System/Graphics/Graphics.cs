@@ -43,6 +43,9 @@ namespace Aura_OS.System.Graphics
             Pallete[13] = 0xFFFF00FF; // Magenta
             Pallete[14] = 0xFFFFFF55; // Yellow
             Pallete[15] = 0xFFFFFFFF; //White
+
+            lastx = 0;
+            lasty = 0;
         }
 
         public Pen frontpen = new Pen(Color.FromArgb((int)Pallete[VESAVBEConsole.foreground]));
@@ -84,9 +87,15 @@ namespace Aura_OS.System.Graphics
             canvas.ScrollUp();
         }
 
+        public int lastx;
+        public int lasty;
+
         public void SetCursorPos(int mX, int mY)
         {
-            DrawFilledRectangle(frontpen, Kernel.AConsole.X * font.Width, Kernel.AConsole.Y * font.Height + font.Height, 8, 4);
+            DrawFilledRectangle(frontpen, mX * font.Width, mY * font.Height + font.Height, 8, 4);
+            DrawFilledRectangle(backpen, lastx, lasty, 8, 4);
+            lastx = mX * font.Width;
+            lasty = mY * font.Height + font.Height;
         }
     }
 }
