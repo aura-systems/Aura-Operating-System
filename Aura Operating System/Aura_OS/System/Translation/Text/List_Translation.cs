@@ -433,14 +433,14 @@ namespace Aura_OS.System.Translation
                     Console.WriteLine("Pamiec RAM:                " + Core.MemoryManager.TotalMemory + "MB");
                     Console.WriteLine("RAM w uzyciu:              " + Core.MemoryManager.GetUsedMemory() + "MB");
                     Console.WriteLine("Wolny RAM:                 " + Core.MemoryManager.GetFreeMemory() + "MB");
-                    Console.WriteLine("Procesor(y):               " + Computer.Info.GetNumberOfCPU() + " zainstalowany(ch) procesor(ów).");
+                    /*Console.WriteLine("Procesor(y):               " + Computer.Info.GetNumberOfCPU() + " zainstalowany(ch) procesor(ów).");
                     int index = 1;
                     foreach (Processor processor in Computer.CPUInfo.Processors)
                     {
                         Console.WriteLine("[" + index + "] : " + processor.GetBrandName() + (int)processor.Frequency + " Mhz");
                         index++;
                     }
-                    Computer.CPUInfo.Processors.Clear();
+                    Computer.CPUInfo.Processors.Clear();*/
                     Console.WriteLine("Tryb konsoli:              " + Kernel.AConsole.Name);
                     break;
             }
