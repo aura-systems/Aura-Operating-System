@@ -43,10 +43,17 @@ namespace Aura_OS.System.Graphics
             Pallete[13] = 0xFFFF00FF; // Magenta
             Pallete[14] = 0xFFFFFF55; // Yellow
             Pallete[15] = 0xFFFFFFFF; //White
+
+            frontpen = new Pen(Color.FromArgb((int)Pallete[VESAVBEConsole.foreground]));
+            backpen = new Pen(Color.FromArgb((int)Pallete[VESAVBEConsole.background]));
+
+            lastpen = backpen;
+            lastx = 0;
+            lasty = font.Height;
         }
 
-        public Pen frontpen = new Pen(Color.FromArgb((int)Pallete[VESAVBEConsole.foreground]));
-        public Pen backpen = new Pen(Color.FromArgb((int)Pallete[VESAVBEConsole.background]));
+        public Pen frontpen;
+        public Pen backpen;
 
         Cosmos.Debug.Kernel.Debugger debug = new Cosmos.Debug.Kernel.Debugger("", "");
 
@@ -82,6 +89,23 @@ namespace Aura_OS.System.Graphics
         public void ScrollUp()
         {
             canvas.ScrollUp();
+        }
+
+        public Pen lastpen;
+        public int lastx;
+        public int lasty;
+
+        public void SetCursorPos(int mX, int mY)
+        {
+            if (Kernel.AConsole.CursorVisible)
+            {
+                DrawFilledRectangle(lastpen, lastx, lasty, 8, 4);
+                DrawFilledRectangle(frontpen, mX * font.Width, mY * font.Height + font.Height, 8, 4);
+
+                lastx = mX * font.Width;
+                lasty = mY * font.Height + font.Height;
+                lastpen = backpen;
+            }
         }
     }
 }
