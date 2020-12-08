@@ -19,6 +19,8 @@ jobs:
         dotnet-version: 3.1.101
     - name: Add msbuild to PATH
       uses: microsoft/setup-msbuild@v1.0.0
+      env:
+        ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
     - name: Clone Cosmos
       run: |
         mkdir Cosmos
