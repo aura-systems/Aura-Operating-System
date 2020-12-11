@@ -23,12 +23,11 @@ namespace Aura_OS.System.Network.IPV4.UDP
         {
             UDPPacket udp_packet = new UDPPacket(packetData);
 
-            //Apps.System.Debugger.debugger.Send("Received UDP packet from " + udp_packet.SourceIP.ToString() + ":" + udp_packet.SourcePort.ToString());
+            Kernel.debugger.Send("[Received] UDP packet from " + udp_packet.SourceIP.ToString() + ":" + udp_packet.SourcePort.ToString());
 
             if (CheckCRC(udp_packet))
             {
-            
-                if(udp_packet.SourcePort == 68) 
+                if (udp_packet.SourcePort == 68) 
                 {
                     Network.DHCP.DHCPPacket.DHCPHandler(packetData);
                     return;
@@ -39,7 +38,6 @@ namespace Aura_OS.System.Network.IPV4.UDP
                     return;
                 }
 
-                //Apps.System.Debugger.debugger.Send("Content: " + Encoding.ASCII.GetString(udp_packet.UDP_Data));
                 UdpClient receiver = UdpClient.Client(udp_packet.DestinationPort);
                 if (receiver != null)
                 {
@@ -48,7 +46,7 @@ namespace Aura_OS.System.Network.IPV4.UDP
             }
             else
             {
-                //Apps.System.Debugger.debugger.Send("But checksum incorrect... Packet Passed.");
+                Kernel.debugger.Send("But checksum incorrect... Packet Passed.");
             }
         }
 
@@ -93,17 +91,20 @@ namespace Aura_OS.System.Network.IPV4.UDP
         public static bool CheckCRC(UDPPacket packet)
         {
             byte[] header = MakeHeader(packet.sourceIP.address, packet.destIP.address, packet.udpLen, packet.sourcePort, packet.destPort, packet.UDP_Data);
-            UInt16 calculatedcrc = Check(header, 0, header.Length);
+            return true;
+            /*UInt16 calculatedcrc = Check(header, 0, header.Length);
             //Apps.System.Debugger.debugger.Send("Calculated: 0x" + Utils.Conversion.DecToHex(calculatedcrc));
             //Apps.System.Debugger.debugger.Send("Received:  0x" + Utils.Conversion.DecToHex(packet.udpCRC));
             if (calculatedcrc == packet.udpCRC)
             {
+                Console.WriteLine("crc ok");
                 return true;
             }
             else
             {
+                Console.WriteLine("crc not ok");
                 return false;
-            }
+            }*/
         }
 
         protected static UInt16 Check(byte[] buffer, UInt16 offset, int length)
