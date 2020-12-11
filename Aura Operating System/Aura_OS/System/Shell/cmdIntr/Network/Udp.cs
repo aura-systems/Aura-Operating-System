@@ -53,20 +53,15 @@ namespace Aura_OS.System.Shell.cmdIntr.Network
             }
             else if (cmdargs[0] == "-s")
             {
-                string ip = cmdargs[1];
-
-                Kernel.debugger.Send("ip=" + ip);
+                Address ip = Address.Parse(cmdargs[1]);
 
                 int port = Int32.Parse(cmdargs[2]);
 
-                Kernel.debugger.Send("port=" + port);
-
                 string message = cmdargs[3];
 
-                Kernel.debugger.Send("message=" + message);
-
                 var xClient = new System.Network.IPV4.UDP.UdpClient(port);
-                xClient.Connect(Address.Parse(ip), port);
+
+                xClient.Connect(ip, port);
                 xClient.Send(Encoding.ASCII.GetBytes(message));
                 xClient.Close();
             }
