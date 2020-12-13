@@ -1,6 +1,10 @@
-﻿using System;
+﻿/*
+* PROJECT:          Aura Operating System Development
+* CONTENT:          Base Command Class
+* PROGRAMMER(S):    Valentin Charbonnier <valentinbreiz@gmail.com>
+*/
+
 using System.Collections.Generic;
-using System.Text;
 
 namespace Aura_OS.System.Shell.cmdIntr
 {
@@ -55,7 +59,7 @@ namespace Aura_OS.System.Shell.cmdIntr
     /// <summary>
     /// Base class for commands
     /// </summary>
-    public abstract class ICommand
+    public class ICommand
     {
         /// <summary>
         /// Text values
@@ -71,12 +75,26 @@ namespace Aura_OS.System.Shell.cmdIntr
         }
 
         /// <summary>
+        /// Execute command without args
+        /// </summary>
+        /// <param name="txt">The string you wish to pass in. (to be echoed)</param>
+        /// <param name="startIndex">The start index for remove.</param>
+        /// <param name="count">The count index for remove.</param>
+        public virtual ReturnInfo Execute()
+        {
+            return new ReturnInfo(this, ReturnCode.OK);
+        }
+
+        /// <summary>
         /// Execute command
         /// </summary>
         /// <param name="txt">The string you wish to pass in. (to be echoed)</param>
         /// <param name="startIndex">The start index for remove.</param>
         /// <param name="count">The count index for remove.</param>
-        public abstract ReturnInfo Execute(List<string> arguments);
+        public virtual ReturnInfo Execute(List<string> arguments)
+        {
+            return new ReturnInfo(this, ReturnCode.OK);
+        }
 
         /// <summary>
         /// Used by the CommandManager

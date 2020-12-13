@@ -5,6 +5,7 @@
 */
 
 using Aura_OS.System.Shell.cmdIntr.c_Console;
+using Aura_OS.System.Shell.cmdIntr.Power;
 using Aura_OS.System.Utils;
 using System;
 using System.Collections.Generic;
@@ -32,6 +33,7 @@ namespace Aura_OS.System.Shell.cmdIntr
         public static void RegisterAllCommands()
         {
             CMDs.Add(new CommandEcho(new string[] { "echo" }));
+            CMDs.Add(new CommandReboot(new string[] { "reboot", "rb" }));
             /*Register("shutdown");
             Register("reboot");
             Register("sha256");
@@ -97,7 +99,16 @@ namespace Aura_OS.System.Shell.cmdIntr
                 if (command.ContainsCommand(firstarg))
                 {
 
-                    ReturnInfo result = command.Execute(arguments);
+                    ReturnInfo result;
+
+                    if (arguments.Count == 0)
+                    {
+                        result = command.Execute();
+                    }
+                    else
+                    {
+                        result = command.Execute(arguments);
+                    }
 
                     if (result.Code == ReturnCode.ERROR_ARG)
                     {

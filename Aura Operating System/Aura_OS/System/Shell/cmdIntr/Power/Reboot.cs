@@ -10,34 +10,26 @@ using L = Aura_OS.System.Translation;
 
 namespace Aura_OS.System.Shell.cmdIntr.Power
 {
-    class Reboot
+    class CommandReboot : ICommand
     {
-        private static string HelpInfo = "";
 
         /// <summary>
-        /// Getter and Setters for Help Info.
+        /// Empty constructor.
         /// </summary>
-        public static string HI
+        public CommandReboot(string[] commandvalues) : base(commandvalues)
         {
-            get { return HelpInfo; }
-            set { HelpInfo = value; /*PUSHED OUT VALUE (in)*/}
         }
 
-
         /// <summary>
-        /// Empty constructor. (Good for debug)
+        /// RebootCommand
         /// </summary>
-        public Reboot() { }
-
-        /// <summary>
-        /// c = commnad, c_Reboot
-        /// </summary>
-        public static void c_Reboot()
+        public override ReturnInfo Execute()
         {
             Kernel.running = false;
             Console.Clear();
             L.Text.Display("restart");
             Sys.Power.Reboot();
+            return new ReturnInfo(this, ReturnCode.OK);
         }
     }
 }
