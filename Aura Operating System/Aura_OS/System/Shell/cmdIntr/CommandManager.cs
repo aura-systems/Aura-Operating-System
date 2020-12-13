@@ -181,12 +181,7 @@ namespace Aura_OS.System.Shell.cmdIntr
                 return;
             }
 
-            List<string> arguments = new List<string>();
-
-            foreach (string arg in cmd.Split(' ')) //TODO parse quotes too
-            {
-                arguments.Add(arg);
-            }
+            List<string> arguments = Misc.ParseCommandLine(cmd);
 
             string firstarg = arguments[0]; //command name
 

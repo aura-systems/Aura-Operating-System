@@ -64,7 +64,6 @@ namespace Aura_OS.System
             else if (FileSystem() == "true")
             {
                 Kernel.SystemExists = true;
-                Kernel.FilesystemExists = true;
             }
             else if (FileSystem() == "continue")
             {
@@ -235,7 +234,6 @@ namespace Aura_OS.System
             Kernel.SystemExists = false;
             Kernel.userLogged = "root";
             Kernel.Logged = true;
-            Kernel.FilesystemExists = false;
             Console.Clear();
             //switch (Video.GetVideo())
             //{
