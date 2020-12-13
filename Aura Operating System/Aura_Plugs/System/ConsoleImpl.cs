@@ -511,7 +511,7 @@ namespace Aura_Plugs
                 }
                 else if (current.Key == ConsoleKeyEx.Tab)
                 {   
-                    if (currentCount >= 1)
+                    /*if (currentCount >= 1)
                     {
                         int index = -1;
 
@@ -540,7 +540,7 @@ namespace Aura_Plugs
                             }
                         }
                         continue;
-                    }
+                    }*/
                 }
                 else if (current.Key == ConsoleKeyEx.C && KeyboardManager.ControlPressed)
                 {

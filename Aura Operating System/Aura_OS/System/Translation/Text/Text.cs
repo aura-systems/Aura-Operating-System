@@ -293,6 +293,9 @@ namespace Aura_OS.System.Translation
                         case "volumeinvalid":
                             Console.WriteLine("Le lecteur spécifié est introuvable.");
                             break;
+                        case "invalidargcommand":
+                            Console.WriteLine("Les arguments de la commande sont mal formatés.");
+                            break;
                     }
                     break;
 
@@ -540,6 +543,9 @@ namespace Aura_OS.System.Translation
                             break;
                         case "volumeinvalid":
                             Console.WriteLine("The specified drive is not found.");
+                            break;
+                        case "invalidargcommand":
+                            Console.WriteLine("Command arguments are incorrectly formatted.");
                             break;
                     }
                     break;
@@ -789,6 +795,9 @@ namespace Aura_OS.System.Translation
                         case "volumeinvalid":
                             Console.WriteLine("De opgegeven aandrijving wordt niet gevonden.");
                             break;
+                        case "invalidargcommand":
+                            Console.WriteLine("Commando-argumenten zijn verkeerd geformatteerd.");
+                            break;
                     }
                     break;
                     
@@ -1027,6 +1036,9 @@ namespace Aura_OS.System.Translation
                             break;
                         case "volumeinvalid":
                             Console.WriteLine("L'unità specificata non viene trovata.");
+                            break;
+                        case "invalidargcommand":
+                            Console.WriteLine("Gli argomenti dei comandi sono formattati in modo errato.");
                             break;
                     }
                     
@@ -1275,6 +1287,9 @@ namespace Aura_OS.System.Translation
                             break;
                         case "volumeinvalid":
                             Console.WriteLine("Nie znaleziono okreslonego woluminu.");
+                            break;
+                        case "invalidargcommand":
+                            Console.WriteLine("Argumenty dotyczace polecen sa nieprawidlowo sformatowane.");
                             break;
                     }
                     break;

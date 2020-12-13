@@ -4,6 +4,7 @@
 * PROGRAMMER(S):    John Welsh <djlw78@gmail.com>
 */
 
+using Aura_OS.System.Shell.cmdIntr.c_Console;
 using Aura_OS.System.Utils;
 using System;
 using System.Collections.Generic;
@@ -26,16 +27,12 @@ namespace Aura_OS.System.Shell.cmdIntr
         /// </summary>
         public CommandManager() { }
 
-        public static List<String> CMDs = new List<string>();
-
-        private static void Register(string cmd)
-        {
-            CMDs.Add(cmd);
-        }
+        public static List<ICommand> CMDs = new List<ICommand>();
 
         public static void RegisterAllCommands()
         {
-            Register("shutdown");
+            CMDs.Add(new CommandEcho(new string[] { "echo" }));
+            /*Register("shutdown");
             Register("reboot");
             Register("sha256");
             Register("clear");
@@ -69,7 +66,7 @@ namespace Aura_OS.System.Shell.cmdIntr
             Register("lspci");
             Register("about");
             Register("debug");
-            Register("cat");
+            Register("cat");*/
         }
 
         /// <summary>
@@ -79,6 +76,55 @@ namespace Aura_OS.System.Shell.cmdIntr
         public static void _CommandManger(string cmd)
         {
 
+            CommandsHistory.Add(cmd); //adding last command to the commands history
+
+            List<string> arguments = new List<string>();
+
+            foreach (string arg in cmd.Split(' ')) //TODO parse quotes too
+            {
+                arguments.Add(arg);
+            }
+
+            string firstarg = arguments[0]; //command name
+
+            if (arguments.Count > 0)
+            {
+                arguments.RemoveAt(0); //get only arguments
+            }
+
+            foreach (var command in CMDs)
+            {
+                if (command.ContainsCommand(firstarg))
+                {
+
+                    ReturnInfo result = command.Execute(arguments);
+
+                    if (result.Code == ReturnCode.ERROR_ARG)
+                    {
+                        Console.ForegroundColor = ConsoleColor.DarkRed;
+                        L.Text.Display("invalidargcommand");
+                        Console.ForegroundColor = ConsoleColor.White;
+                    }
+                    else if (result.Code == ReturnCode.ERROR)
+                    {
+                        Console.ForegroundColor = ConsoleColor.DarkRed;
+                        Console.WriteLine("Error: " + result.Info);
+                        Console.ForegroundColor = ConsoleColor.White;
+                    }
+
+                    Console.WriteLine();
+
+                    return;
+                }
+            }
+
+            Console.ForegroundColor = ConsoleColor.DarkRed;
+            L.Text.Display("UnknownCommand");
+            Console.ForegroundColor = ConsoleColor.White;
+
+            Console.WriteLine();
+
+            /*
             #region Power
 
             if (cmd.Equals("shutdown") || cmd.Equals("sd"))
@@ -430,13 +476,9 @@ namespace Aura_OS.System.Shell.cmdIntr
                 {
                     Util.CmdNotFound.c_CmdNotFound();
                 }
-            }
+            } */
 
-            CommandsHistory.Add(cmd); //adding last command to the commands history   
-
-            Console.WriteLine();
-
-            #endregion Util
+            //#endregion Util
 
         }
     }

@@ -5,27 +5,20 @@
 *                   Valentin Charbonnier <valentinbreiz@gmail.com>
 */
 
-//NOTE: Console conflicted with Console so now it is c_Console. (Still readable)
 using System;
+using System.Collections.Generic;
+
 namespace Aura_OS.System.Shell.cmdIntr.c_Console
 {
-    class Echo
+    class CommandEcho : ICommand
     {
-        private static string HelpInfo = "";
 
         /// <summary>
-        /// Getter and Setters for Help Info.
+        /// Empty constructor.
         /// </summary>
-        public static string HI
+        public CommandEcho(string[] commandvalues) : base(commandvalues)
         {
-            get { return HelpInfo; }
-            set { HelpInfo = value; /*PUSHED OUT VALUE (in)*/}
         }
-
-        /// <summary>
-        /// Empty constructor. (Good for debug)
-        /// </summary>
-        public Echo() { }
 
         /// <summary>
         /// c = Command, c_Echo
@@ -33,22 +26,31 @@ namespace Aura_OS.System.Shell.cmdIntr.c_Console
         /// <param name="txt">The string you wish to pass in. (to be echoed)</param>
         /// <param name="startIndex">The start index for remove.</param>
         /// <param name="count">The count index for remove.</param>
-        public static void c_Echo(string txt, short startIndex = 0, int count = 5)
+        public override ReturnInfo Execute(List<string> arguments)
         {
-            txt = txt.Remove(startIndex, count);
-			if (txt.StartsWith("$"))
-			{
-                try
-                {
-                    txt = txt.Remove(0, 1);
-                    Console.WriteLine(Kernel.environmentvariables[txt]);
-                }
-                catch { }
+            if (arguments.Count == 0)
+            {
+                return new ReturnInfo(this, ReturnCode.ERROR_ARG);
             }
-			else 
-			{
-				Console.WriteLine(txt);
-			}
+            foreach (var argument in arguments)
+            {
+                if (argument.StartsWith("$"))
+                {
+                    try
+                    {
+                        Console.WriteLine(Kernel.environmentvariables[argument.Remove(0, 1)]);
+                    }
+                    catch
+                    {
+                        return new ReturnInfo(this, ReturnCode.ERROR, "Variable does not exist.");
+                    }
+                }
+                else
+                {
+                    Console.WriteLine(argument);
+                }
+            }
+            return new ReturnInfo(this, ReturnCode.OK);
         }
     }
 }

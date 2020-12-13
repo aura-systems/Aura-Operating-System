@@ -1,0 +1,96 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace Aura_OS.System.Shell.cmdIntr
+{
+
+    /// <summary>
+    /// Enum of all return codes that can be used by commands
+    /// </summary>
+    public enum ReturnCode
+    {
+        ERROR_ARG,
+        ERROR,
+        CRASH,
+        OK
+    }
+
+    /// <summary>
+    /// Class used to return info
+    /// </summary>
+    public class ReturnInfo
+    {
+        private ICommand _command;
+        internal ICommand Command
+        {
+            get { return _command; }
+        }
+
+        private ReturnCode _code;
+        internal ReturnCode Code
+        {
+            get { return _code; }
+        }
+
+        private string _info;
+        public string Info
+        {
+            get { return _info; }
+        }
+
+        /// <summary>
+        /// Constructor for ReturnInfo class
+        /// </summary>
+        /// <param name="command">Current command</param>
+        /// <param name="code">Code returned by the command.</param>
+        public ReturnInfo(ICommand command, ReturnCode code, string info = "")
+        {
+            _command = command;
+            _code = code;
+            _info = info;
+        }
+    }
+
+    /// <summary>
+    /// Base class for commands
+    /// </summary>
+    public abstract class ICommand
+    {
+        /// <summary>
+        /// Text values
+        /// </summary>
+        public string[] CommandValues;
+
+        /// <summary>
+        /// Command constructor
+        /// </summary>
+        public ICommand(string[] commandvalues)
+        {
+            CommandValues = commandvalues;
+        }
+
+        /// <summary>
+        /// Execute command
+        /// </summary>
+        /// <param name="txt">The string you wish to pass in. (to be echoed)</param>
+        /// <param name="startIndex">The start index for remove.</param>
+        /// <param name="count">The count index for remove.</param>
+        public abstract ReturnInfo Execute(List<string> arguments);
+
+        /// <summary>
+        /// Used by the CommandManager
+        /// </summary>
+        public bool ContainsCommand(string command)
+        {
+            foreach (string commandvalue in CommandValues)
+            {
+                if (commandvalue == command)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+    }
+}
