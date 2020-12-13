@@ -50,6 +50,11 @@ namespace Aura_OS.System.Shell.cmdIntr
             CMDs.Add(new CommandEnv(new string[] { "export", "set" }));
             CMDs.Add(new CommandAbout(new string[] { "about" }));
             CMDs.Add(new CommandCrash(new string[] { "crash" }));
+
+            CMDs.Add(new CommandAction(new string[] { "beep" }, () =>
+            {
+                Cosmos.System.PCSpeaker.Beep();
+            }));
             /*
             Register("sha256");
             Register("help");
