@@ -64,6 +64,7 @@ namespace Aura_OS.System
             else if (FileSystem() == "true")
             {
                 Kernel.SystemExists = true;
+                Kernel.FilesystemExists = true;
             }
             else if (FileSystem() == "continue")
             {
@@ -234,6 +235,7 @@ namespace Aura_OS.System
             Kernel.SystemExists = false;
             Kernel.userLogged = "root";
             Kernel.Logged = true;
+            Kernel.FilesystemExists = false;
             Console.Clear();
             //switch (Video.GetVideo())
             //{
@@ -250,7 +252,6 @@ namespace Aura_OS.System
             //        //Kernel.AConsole = new System.Shell.VGA.VGAConsole(null);
             //        break;
             //}
-            NetworkInit.Enable();
             WelcomeMessage.Display();
             Text.Display("logged", "root");
             Text.Display("nofilesystem");
@@ -285,7 +286,6 @@ namespace Aura_OS.System
             //        //Kernel.AConsole = new System.Shell.VGA.VGAConsole(null);
             //        break;
             //}
-            NetworkInit.Enable();
             WelcomeMessage.Display();
             Text.Display("logged", username);
 
