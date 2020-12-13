@@ -73,7 +73,7 @@ namespace Aura_OS.System.Shell.cmdIntr.SystemInfomation
             }
             else
             {
-                L.List_Translation.Ipconfig();
+                return new ReturnInfo(this, ReturnCode.ERROR, "Usage : ipconfig /set {interface} {IPv4} {Subnet} -g {Gateway} -d {PrimaryDNS}");
             }
             return new ReturnInfo(this, ReturnCode.OK);
         }

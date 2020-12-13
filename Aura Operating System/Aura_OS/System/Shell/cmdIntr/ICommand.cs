@@ -48,7 +48,7 @@ namespace Aura_OS.System.Shell.cmdIntr
         /// </summary>
         /// <param name="command">Current command</param>
         /// <param name="code">Code returned by the command.</param>
-        public ReturnInfo(ICommand command, ReturnCode code, string info = "")
+        public ReturnInfo(ICommand command, ReturnCode code, string info = "Unknown error.")
         {
             _command = command;
             _code = code;

@@ -5,41 +5,35 @@
 */
 
 using System;
+using System.Collections.Generic;
 using L = Aura_OS.System.Translation;
 
 namespace Aura_OS.System.Shell.cmdIntr.Util
 {
-    class EnvVar
+    class CommandEnv : ICommand
     {
-        private static string HelpInfo = "";
-
         /// <summary>
-        /// Getter and Setters for Help Info.
+        /// Empty constructor.
         /// </summary>
-        public static string HI
+        public CommandEnv(string[] commandvalues) : base(commandvalues)
         {
-            get { return HelpInfo; }
-            set { HelpInfo = value; /*PUSHED OUT VALUE (in)*/}
         }
 
         /// <summary>
-        /// Empty constructor. (Good for debug)
+        /// CommandEcho
         /// </summary>
-        public EnvVar() { }
-
-        /// <summary>
-        /// c = command, c_Export
-        /// </summary>
-        /// <param name="arg">The command</param>
-        /// <param name="startIndex">The start index for remove.</param>
-        /// <param name="count">The count index for remove.</param>
-        public static void c_Export(string arg, short startIndex = 0, short count = 7)
+        /// <param name="arguments">Arguments</param>
+        public override ReturnInfo Execute(List<string> arguments)
         {
-			string str = arg.Remove(startIndex, count);
-			string[] exportcmd = str.Split('=');
+			string[] exportcmd = arguments[0].Split('=');
+            if (exportcmd.Length != 2)
+            {
+                return new ReturnInfo(this, ReturnCode.ERROR);
+            }
 			string var = exportcmd[0];
 			string value = exportcmd[1];
             Kernel.environmentvariables.Add(var, value);
-		}
+            return new ReturnInfo(this, ReturnCode.OK);
+        }
     }
 }
