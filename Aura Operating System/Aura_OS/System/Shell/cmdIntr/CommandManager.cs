@@ -41,6 +41,8 @@ namespace Aura_OS.System.Shell.cmdIntr
             CMDs.Add(new CommandPing(new string[] { "ping" }));
             CMDs.Add(new CommandUdp(new string[] { "udp" }));
             CMDs.Add(new CommandVersion(new string[] { "version", "about" }));
+            CMDs.Add(new CommandSystemInfo(new string[] { "systeminfo", "sysinfo" }));
+            CMDs.Add(new CommandTime(new string[] { "time" }));
             /*
             Register("sha256");
             Register("help");
