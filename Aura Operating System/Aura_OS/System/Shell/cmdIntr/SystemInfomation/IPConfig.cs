@@ -26,17 +26,20 @@ namespace Aura_OS.System.Shell.cmdIntr.SystemInfomation
         }
 
         /// <summary>
-        /// CommandEcho
+        /// CommandIPConfig without args
+        /// </summary>
+        public override ReturnInfo Execute()
+        {
+            L.List_Translation.Ipconfig();
+            return new ReturnInfo(this, ReturnCode.OK);
+        }
+
+        /// <summary>
+        /// CommandIPConfig
         /// </summary>
         /// <param name="arguments">Arguments</param>
         public override ReturnInfo Execute(List<string> arguments)
         {
-            if (arguments.Count == 0)
-            {
-                L.List_Translation.Ipconfig();
-                return new ReturnInfo(this, ReturnCode.OK);
-            }
-
             if (arguments[0] == "/release")
             {
                 System.Network.DHCP.Core.SendReleasePacket();
