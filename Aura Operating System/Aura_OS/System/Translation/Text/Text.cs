@@ -279,7 +279,7 @@ namespace Aura_OS.System.Translation
                             Console.WriteLine("Aucun volume détecté, le sytème de fichiers est désactivé!");
                             break;
                         case "time":
-                            Console.WriteLine("L'heure actuelle est :  " + Time.MonthString() + "/" + Time.DayString() + "/" + Time.YearString() + ", " + Time.TimeString(true, true, true));
+                            Console.WriteLine("L'heure actuelle est:  " + Time.DayString() + "/" + Time.MonthString() + "/" + Time.YearString() + ", " + Time.TimeString(true, true, true));
                             break;
                         case "changeipaddress":
                             Console.WriteLine("Nouvelle adresse IP du PC (actuellement " + Kernel.LocalNetworkConfig.IPAddress.ToString() + ") :");

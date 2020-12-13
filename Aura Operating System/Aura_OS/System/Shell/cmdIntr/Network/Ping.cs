@@ -33,21 +33,25 @@ namespace Aura_OS.System.Shell.cmdIntr.Network
             {
                 return new ReturnInfo(this, ReturnCode.ERROR, "No network configuration detected! Use ipconfig /set.");
             }
-            if (System.Utils.Misc.IsIpv4Address(arguments[0]))
+
+            int PacketSent = 0;
+            int PacketReceived = 0;
+            int PacketLost = 0;
+            int PercentLoss = 0;
+
+            Address destination = Address.Parse(arguments[0]);
+            Address source = Config.FindNetwork(destination);
+
+            string IPdest = "";
+
+            if (destination == null)
             {
-                string IPdest = "";
-
-                int PacketSent = 0;
-                int PacketReceived = 0;
-                int PacketLost = 0;
-
-                int PercentLoss = 0;
-
+                return new ReturnInfo(this, ReturnCode.ERROR, "Can't parse IP addresses (make sure they are well formated).");
+            }
+            else
+            {
                 try
                 {
-                    Address destination = Address.Parse(arguments[0]);
-                    Address source = Config.FindNetwork(destination);
-
                     IPdest = destination.ToString();
 
                     int _deltaT = 0;
@@ -58,13 +62,10 @@ namespace Aura_OS.System.Shell.cmdIntr.Network
                     for (int i = 0; i < 4; i++)
                     {
                         second = 0;
-                        //CustomConsole.WriteLineInfo("Sending ping to " + destination.ToString() + "...");
 
                         try
                         {
-                            //replace address by source
-                            //System.Network.IPV4.Address address = new System.Network.IPV4.Address(192, 168, 1, 70);
-                            ICMPEchoRequest request = new ICMPEchoRequest(source , destination, 0x0001, 0x50); //this is working
+                            ICMPEchoRequest request = new ICMPEchoRequest(source, destination, 0x0001, 0x50); //this is working
                             OutgoingBuffer.AddPacket(request); //Aura doesn't work when this is called.
                             NetworkStack.Update();
                         }
@@ -80,8 +81,6 @@ namespace Aura_OS.System.Shell.cmdIntr.Network
 
                             if (ICMPPacket.recvd_reply != null)
                             {
-                                //if (ICMPPacket.recvd_reply.SourceIP == destination)
-                                //{
 
                                 if (second < 1)
                                 {
@@ -96,7 +95,6 @@ namespace Aura_OS.System.Shell.cmdIntr.Network
 
                                 ICMPPacket.recvd_reply = null;
                                 break;
-                                //}
                             }
 
                             if (second >= 5)
@@ -118,19 +116,13 @@ namespace Aura_OS.System.Shell.cmdIntr.Network
                 {
                     return new ReturnInfo(this, ReturnCode.ERROR, "Ping process error.");
                 }
-                finally
-                {
-                    PercentLoss = 25 * PacketLost;
 
-                    Console.WriteLine();
-                    Console.WriteLine("Ping statistics for " + IPdest + ":");
-                    Console.WriteLine("    Packets: Sent = " + PacketSent + ", Received = " + PacketReceived + ", Lost = " + PacketLost + " (" + PercentLoss + "% loss)");
-                }
+                PercentLoss = 25 * PacketLost;
+
+                Console.WriteLine();
+                Console.WriteLine("Ping statistics for " + IPdest + ":");
+                Console.WriteLine("    Packets: Sent = " + PacketSent + ", Received = " + PacketReceived + ", Lost = " + PacketLost + " (" + PercentLoss + "% loss)");
                 return new ReturnInfo(this, ReturnCode.OK);
-            }
-            else
-            {
-                return new ReturnInfo(this, ReturnCode.ERROR, "Not a IPv4 address."); //L.Text notcorrectaddress
             }
         }
     }
