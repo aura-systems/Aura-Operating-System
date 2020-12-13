@@ -29,6 +29,10 @@ namespace Aura_OS.System.Shell.cmdIntr.Network
         /// <param name="arguments">Arguments</param>
         public override ReturnInfo Execute(List<string> arguments)
         {
+            if (NetworkStack.ConfigEmpty())
+            {
+                return new ReturnInfo(this, ReturnCode.ERROR, "No network configuration detected! Use ipconfig /set.");
+            }
             if (System.Utils.Misc.IsIpv4Address(arguments[0]))
             {
                 string IPdest = "";

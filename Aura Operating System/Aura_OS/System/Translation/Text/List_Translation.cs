@@ -526,6 +526,11 @@ namespace Aura_OS.System.Translation
             {
                 case "fr_FR":
                     int counter = 0;
+                    if (NetworkStack.ConfigEmpty())
+                    {
+                        Console.WriteLine("Aucune configuration réseau détectée! Utilisez ipconfig /set");
+                        break;
+                    }
                     foreach (HAL.Drivers.Network.NetworkDevice device in NetworkConfig.Keys)
                     {
                         switch (device.CardType)
@@ -545,14 +550,15 @@ namespace Aura_OS.System.Translation
                         Console.WriteLine("Serveur DNS préféré   : " + settings.GetValue("dns01"));
                         counter++;
                     }
-                    if (counter == 0)
-                    {
-                        Console.WriteLine("Aucune configuration réseau détectée! Utilisez ipconfig /set");
-                    }
                     break;
 
                 case "en_US":
                     int counter1 = 0;
+                    if (NetworkStack.ConfigEmpty())
+                    {
+                        Console.WriteLine("No network configuration detected! Use ipconfig /set");
+                        break;
+                    }
                     foreach (HAL.Drivers.Network.NetworkDevice device in NetworkConfig.Keys)
                     {
                         switch (device.CardType)
@@ -572,14 +578,15 @@ namespace Aura_OS.System.Translation
                         Console.WriteLine("Preferred DNS server : " + settings.GetValue("dns01"));
                         counter1++;
                     }
-                    if (counter1 == 0)
-                    {
-                        Console.WriteLine("No network configuration detected! Use ipconfig /set");
-                    }
                     break;
 
                 case "nl_NL":
                     int counter2 = 0;
+                    if (NetworkStack.ConfigEmpty())
+                    {
+                        Console.WriteLine("Geen netwerkconfiguratie gedetecteerd! Gebruik ipconfig /set");
+                        break;
+                    }
                     foreach (HAL.Drivers.Network.NetworkDevice device in NetworkConfig.Keys)
                     {
                         switch (device.CardType)
@@ -599,14 +606,15 @@ namespace Aura_OS.System.Translation
                         Console.WriteLine("Voorkeur DNS-server : " + settings.GetValue("dns01"));
                         counter2++;
                     }
-                    if (counter2 == 0)
-                    {
-                        Console.WriteLine("Geen netwerkconfiguratie gedetecteerd! Gebruik ipconfig /set");
-                    }
                     break;
 
                 case "it_IT":
                     int counter3 = 0;
+                    if (NetworkStack.ConfigEmpty())
+                    {
+                        Console.WriteLine("Nessuna configurazione di rete rilevata! Utilizzare ipconfig /set");
+                        break;
+                    }
                     foreach (HAL.Drivers.Network.NetworkDevice device in NetworkConfig.Keys)
                     {
                         switch (device.CardType)
@@ -626,14 +634,15 @@ namespace Aura_OS.System.Translation
                         Console.WriteLine("Server DNS preferito  : " + settings.GetValue("dns01"));
                         counter3++;
                     }
-                    if (counter3 == 0)
-                    {
-                        Console.WriteLine("Nessuna configurazione di rete rilevata! Utilizzare ipconfig /set");
-                    }
                     break;
                     
                 case "pl_PL":
                     int counter4 = 0;
+                    if (NetworkStack.ConfigEmpty())
+                    {
+                        Console.WriteLine("Nie wykryto zadnej konfiguracji sieci! Uzyj ipconfig /set");
+                        break;
+                    }
                     foreach (HAL.Drivers.Network.NetworkDevice device in NetworkConfig.Keys)
                     {
                         switch (device.CardType)
@@ -652,10 +661,6 @@ namespace Aura_OS.System.Translation
                         Console.WriteLine("Brama sieciowa         : " + settings.GetValue("gateway"));
                         Console.WriteLine("Preferowany serwer DNS : " + settings.GetValue("dns01"));
                         counter4++;
-                    }
-                    if (counter4 == 0)
-                    {
-                        Console.WriteLine("Nie wykryto zadnej konfiguracji sieci! Uzyj ipconfig /set");
                     }
                     break;
 

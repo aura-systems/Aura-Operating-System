@@ -73,6 +73,24 @@ namespace Aura_OS.System.Network
             }
         }
 
+        public static bool ConfigEmpty()
+        {
+            int counter = 0;
+
+            foreach (NetworkDevice device in NetworkConfig.Keys)
+            {
+                counter++;
+            }
+            if (counter == 0)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
         public static void RemoveAllConfigIP()
         {
             AddressMap.Clear();
