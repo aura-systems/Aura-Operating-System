@@ -43,6 +43,7 @@ namespace Aura_OS.System.Shell.cmdIntr.Network
                 int port = Int32.Parse(arguments[1]);
                 Console.WriteLine("Listening at " + port + "...");
                 new System.Network.IPV4.UDP.UdpClient(port);
+                return new ReturnInfo(this, ReturnCode.OK);
             }
             else if (arguments[0] == "-s")
             {
@@ -61,8 +62,12 @@ namespace Aura_OS.System.Shell.cmdIntr.Network
                 xClient.Connect(ip, port);
                 xClient.Send(Encoding.ASCII.GetBytes(message));
                 xClient.Close();
+                return new ReturnInfo(this, ReturnCode.OK);
             }
-            return new ReturnInfo(this, ReturnCode.OK);
+            else
+            {
+                return new ReturnInfo(this, ReturnCode.ERROR_ARG);
+            }
         }
     }
 }
