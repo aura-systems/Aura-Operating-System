@@ -11,53 +11,50 @@ using Aura_OS.System.Network.IPV4;
 using Aura_OS.System.Network;
 using Aura_OS.System;
 using System.Text;
+using System.Collections.Generic;
 
 namespace Aura_OS.System.Shell.cmdIntr.Network
 {
-    class Udp
+    class CommandUdp : ICommand
     {
-        private static string HelpInfo = "";
-
         /// <summary>
-        /// Getter and Setters for Help Info.
+        /// Empty constructor.
         /// </summary>
-        public static string HI
+        public CommandUdp(string[] commandvalues) : base(commandvalues)
         {
-            get { return HelpInfo; }
-            set { HelpInfo = value; /*PUSHED OUT VALUE (in)*/}
         }
 
         /// <summary>
-        /// Empty constructor. (Good for debug)
+        /// CommandEcho
         /// </summary>
-        public Udp() { }
-
-        /// <summary>
-        /// c = command, c_Ping
-        /// </summary>
-        /// <param name="arg">IP Address</param>
-        /// /// <param name="startIndex">The start index for remove.</param>
-        /// <param name="count">The count index for remove.</param>
-        public static void c_Udp(string arg, short startIndex = 0, short count = 4)
+        /// <param name="arguments">Arguments</param>
+        public override ReturnInfo Execute(List<string> arguments)
         {
-            string str = arg.Remove(startIndex, count);
-
-            Char separator = ' ';
-            string[] cmdargs = str.Split(separator);
-
-            if (cmdargs[0] == "-l")
+            if (arguments.Count == 0)
             {
-                int port = Int32.Parse(cmdargs[1]);
+                return new ReturnInfo(this, ReturnCode.ERROR_ARG);
+            }
+            if (arguments[0] == "-l")
+            {
+                if (arguments.Count <= 1)
+                {
+                    return new ReturnInfo(this, ReturnCode.ERROR_ARG);
+                }
+                int port = Int32.Parse(arguments[1]);
                 Console.WriteLine("Listening at " + port + "...");
                 new System.Network.IPV4.UDP.UdpClient(port);
             }
-            else if (cmdargs[0] == "-s")
+            else if (arguments[0] == "-s")
             {
-                Address ip = Address.Parse(cmdargs[1]);
+                if (arguments.Count <= 3)
+                {
+                    return new ReturnInfo(this, ReturnCode.ERROR_ARG);
+                }
+                Address ip = Address.Parse(arguments[1]);
 
-                int port = Int32.Parse(cmdargs[2]);
+                int port = Int32.Parse(arguments[2]);
 
-                string message = cmdargs[3];
+                string message = arguments[3];
 
                 var xClient = new System.Network.IPV4.UDP.UdpClient(port);
 
@@ -65,7 +62,7 @@ namespace Aura_OS.System.Shell.cmdIntr.Network
                 xClient.Send(Encoding.ASCII.GetBytes(message));
                 xClient.Close();
             }
+            return new ReturnInfo(this, ReturnCode.OK);
         }
-
     }
 }

@@ -5,6 +5,7 @@
 */
 
 using Aura_OS.System.Shell.cmdIntr.c_Console;
+using Aura_OS.System.Shell.cmdIntr.Network;
 using Aura_OS.System.Shell.cmdIntr.Power;
 using Aura_OS.System.Utils;
 using System;
@@ -34,12 +35,12 @@ namespace Aura_OS.System.Shell.cmdIntr
         {
             CMDs.Add(new CommandEcho(new string[] { "echo" }));
             CMDs.Add(new CommandReboot(new string[] { "reboot", "rb" }));
+            CMDs.Add(new CommandShutdown(new string[] { "shutdown", "sd" }));
             CMDs.Add(new CommandClear(new string[] { "clear", "clr" }));
-            /*Register("shutdown");
-            Register("reboot");
+            CMDs.Add(new CommandPing(new string[] { "ping" }));
+            CMDs.Add(new CommandUdp(new string[] { "udp" }));
+            /*
             Register("sha256");
-            Register("clear");
-            Register("echo");
             Register("help");
             Register("cd");
             Register("cp");

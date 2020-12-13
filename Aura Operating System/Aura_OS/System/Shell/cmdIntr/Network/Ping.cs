@@ -10,39 +10,26 @@ using L = Aura_OS.System.Translation;
 using Aura_OS.System.Network.IPV4;
 using Aura_OS.System.Network;
 using Aura_OS.System;
+using System.Collections.Generic;
 
 namespace Aura_OS.System.Shell.cmdIntr.Network
 {
-    class Ping
+    class CommandPing : ICommand
     {
-        private static string HelpInfo = "";
-
         /// <summary>
-        /// Getter and Setters for Help Info.
+        /// Empty constructor.
         /// </summary>
-        public static string HI
+        public CommandPing(string[] commandvalues) : base(commandvalues)
         {
-            get { return HelpInfo; }
-            set { HelpInfo = value; /*PUSHED OUT VALUE (in)*/}
         }
 
         /// <summary>
-        /// Empty constructor. (Good for debug)
+        /// CommandEcho
         /// </summary>
-        public Ping() { }
-
-        /// <summary>
-        /// c = command, c_Ping
-        /// </summary>
-        /// <param name="arg">IP Address</param>
-        /// /// <param name="startIndex">The start index for remove.</param>
-        /// <param name="count">The count index for remove.</param>
-        public static void c_Ping(string arg, short startIndex = 0, short count = 5)
+        /// <param name="arguments">Arguments</param>
+        public override ReturnInfo Execute(List<string> arguments)
         {
-            string str = arg.Remove(startIndex, count);
-            string[] items = str.Split('.');
-
-            if (System.Utils.Misc.IsIpv4Address(items))
+            if (System.Utils.Misc.IsIpv4Address(arguments[0]))
             {
                 string IPdest = "";
 
@@ -54,9 +41,8 @@ namespace Aura_OS.System.Shell.cmdIntr.Network
 
                 try
                 {
-                    Address destination = new Address((byte)(Int32.Parse(items[0])), (byte)(Int32.Parse(items[1])), (byte)(Int32.Parse(items[2])), (byte)(Int32.Parse(items[3])));
+                    Address destination = Address.Parse(arguments[0]);
                     Address source = Config.FindNetwork(destination);
-
 
                     IPdest = destination.ToString();
 
@@ -80,7 +66,7 @@ namespace Aura_OS.System.Shell.cmdIntr.Network
                         }
                         catch (Exception ex)
                         {
-                            CustomConsole.WriteLineError(ex.ToString());
+                            return new ReturnInfo(this, ReturnCode.ERROR, ex.ToString());
                         }
 
                         PacketSent++;
@@ -126,7 +112,7 @@ namespace Aura_OS.System.Shell.cmdIntr.Network
                 }
                 catch
                 {
-                    L.Text.Display("notcorrectaddress");
+                    return new ReturnInfo(this, ReturnCode.ERROR, "Ping process error.");
                 }
                 finally
                 {
@@ -136,8 +122,12 @@ namespace Aura_OS.System.Shell.cmdIntr.Network
                     Console.WriteLine("Ping statistics for " + IPdest + ":");
                     Console.WriteLine("    Packets: Sent = " + PacketSent + ", Received = " + PacketReceived + ", Lost = " + PacketLost + " (" + PercentLoss + "% loss)");
                 }
+                return new ReturnInfo(this, ReturnCode.OK);
+            }
+            else
+            {
+                return new ReturnInfo(this, ReturnCode.ERROR, "Not a IPv4 address."); //L.Text notcorrectaddress
             }
         }
-
     }
 }

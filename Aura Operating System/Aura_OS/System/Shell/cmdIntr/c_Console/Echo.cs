@@ -20,11 +20,9 @@ namespace Aura_OS.System.Shell.cmdIntr.c_Console
         }
 
         /// <summary>
-        /// c = Command, c_Echo
+        /// CommandEcho
         /// </summary>
-        /// <param name="txt">The string you wish to pass in. (to be echoed)</param>
-        /// <param name="startIndex">The start index for remove.</param>
-        /// <param name="count">The count index for remove.</param>
+        /// <param name="arguments">Arguments</param>
         public override ReturnInfo Execute(List<string> arguments)
         {
             if (arguments.Count == 0)
