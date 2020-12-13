@@ -12,7 +12,6 @@ namespace Aura_OS.System.Shell.cmdIntr.c_Console
 {
     class CommandEcho : ICommand
     {
-
         /// <summary>
         /// Empty constructor.
         /// </summary>

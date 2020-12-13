@@ -34,6 +34,7 @@ namespace Aura_OS.System.Shell.cmdIntr
         {
             CMDs.Add(new CommandEcho(new string[] { "echo" }));
             CMDs.Add(new CommandReboot(new string[] { "reboot", "rb" }));
+            CMDs.Add(new CommandClear(new string[] { "clear", "clr" }));
             /*Register("shutdown");
             Register("reboot");
             Register("sha256");
