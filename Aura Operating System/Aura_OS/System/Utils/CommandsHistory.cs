@@ -20,7 +20,7 @@ namespace Aura_OS.System.Utils
 
         public static void ClearCurrentConsoleLine()
         {
-            int currentLineCursor = Console.CursorTop;
+            int currentLineCursor = Console.CursorTop - 1;
             Console.SetCursorPosition(0, Console.CursorTop);
             Console.Write(new string(' ', Console.WindowWidth));
             Console.SetCursorPosition(0, Console.CursorTop);

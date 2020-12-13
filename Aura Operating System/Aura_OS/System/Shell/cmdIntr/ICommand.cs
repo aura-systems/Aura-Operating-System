@@ -4,6 +4,7 @@
 * PROGRAMMER(S):    Valentin Charbonnier <valentinbreiz@gmail.com>
 */
 
+using System;
 using System.Collections.Generic;
 
 namespace Aura_OS.System.Shell.cmdIntr
@@ -109,6 +110,18 @@ namespace Aura_OS.System.Shell.cmdIntr
                 }
             }
             return false;
+        }
+
+        public string CommandStarts(string cMDToComplete)
+        {
+            foreach (string value in CommandValues)
+            {
+                if (value.StartsWith(cMDToComplete))
+                {
+                    return value;
+                }
+            }
+            return null;
         }
     }
 }

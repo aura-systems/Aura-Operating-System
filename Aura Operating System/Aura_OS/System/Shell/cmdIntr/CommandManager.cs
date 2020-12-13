@@ -37,7 +37,7 @@ namespace Aura_OS.System.Shell.cmdIntr
             CMDs.Add(new CommandClear(new string[] { "clear", "clr" }));
             CMDs.Add(new CommandPing(new string[] { "ping" }));
             CMDs.Add(new CommandUdp(new string[] { "udp" }));
-            CMDs.Add(new CommandVersion(new string[] { "version", "version" }));
+            CMDs.Add(new CommandVersion(new string[] { "version", "ver" }));
             CMDs.Add(new CommandSystemInfo(new string[] { "systeminfo", "sysinfo" }));
             CMDs.Add(new CommandTime(new string[] { "time", "date" }));
             CMDs.Add(new CommandIPConfig(new string[] { "ipconfig", "ifconfig", "netconf" }));
@@ -165,39 +165,6 @@ namespace Aura_OS.System.Shell.cmdIntr
                     settings.Push();
                 }
             }));
-
-            /*
-            Register("sha256");
-            Register("help");
-            Register("cd");
-            Register("cp");
-            Register("dir");
-            Register("ls");
-            Register("mkdir");
-            Register("rmdir");
-            Register("rmfil");
-            Register("mkfil");
-            Register("edit");
-            Register("vol");
-            Register("run");
-            Register("logout");
-            Register("passwd");
-            Register("settings");
-            Register("systeminfo");
-            Register("version");
-            Register("ipconfig");
-            Register("ifconfig");
-            Register("netconf");
-            Register("time");
-            Register("date");
-            Register("beep");
-            Register("snake");
-            Register("md5");
-            Register("export");
-            Register("lspci");
-            Register("about");
-            Register("debug");
-            Register("cat");*/
         }
 
         /// <summary>

@@ -511,7 +511,7 @@ namespace Aura_Plugs
                 }
                 else if (current.Key == ConsoleKeyEx.Tab)
                 {   
-                    /*if (currentCount >= 1)
+                    if (currentCount >= 1)
                     {
                         int index = -1;
 
@@ -520,11 +520,12 @@ namespace Aura_Plugs
                             CMDToComplete = CMDToComplete + ch.ToString();
                         }                    
 
-                        foreach (string c in CommandManager.CMDs)
+                        foreach (ICommand command in CommandManager.CMDs)
                         {
                             index++;
-                            if (c.StartsWith(CMDToComplete))
-                            {                            
+                            string c = command.CommandStarts(CMDToComplete);
+                            if (c != null)
+                            {
                                 CommandsHistory.ClearCurrentConsoleLine();
                                 currentCount = 0;
                                 chars.Clear();
@@ -540,7 +541,7 @@ namespace Aura_Plugs
                             }
                         }
                         continue;
-                    }*/
+                    }
                 }
                 else if (current.Key == ConsoleKeyEx.C && KeyboardManager.ControlPressed)
                 {
