@@ -545,7 +545,10 @@ namespace Aura_OS.System.Translation
                         Console.WriteLine("Serveur DNS préféré   : " + settings.GetValue("dns01"));
                         counter++;
                     }
-                    counter = 0;
+                    if (counter == 0)
+                    {
+                        Console.WriteLine("Aucune configuration réseau détectée! Utilisez ipconfig /set");
+                    }
                     break;
 
                 case "en_US":
@@ -569,7 +572,10 @@ namespace Aura_OS.System.Translation
                         Console.WriteLine("Preferred DNS server : " + settings.GetValue("dns01"));
                         counter1++;
                     }
-                    counter1 = 0;
+                    if (counter1 == 0)
+                    {
+                        Console.WriteLine("No network configuration detected! Use ipconfig /set");
+                    }
                     break;
 
                 case "nl_NL":
@@ -593,7 +599,10 @@ namespace Aura_OS.System.Translation
                         Console.WriteLine("Voorkeur DNS-server : " + settings.GetValue("dns01"));
                         counter2++;
                     }
-                    counter2 = 0;
+                    if (counter2 == 0)
+                    {
+                        Console.WriteLine("Geen netwerkconfiguratie gedetecteerd! Gebruik ipconfig /set");
+                    }
                     break;
 
                 case "it_IT":
@@ -617,7 +626,10 @@ namespace Aura_OS.System.Translation
                         Console.WriteLine("Server DNS preferito  : " + settings.GetValue("dns01"));
                         counter3++;
                     }
-                    counter3 = 0;
+                    if (counter3 == 0)
+                    {
+                        Console.WriteLine("Nessuna configurazione di rete rilevata! Utilizzare ipconfig /set");
+                    }
                     break;
                     
                 case "pl_PL":
@@ -641,7 +653,10 @@ namespace Aura_OS.System.Translation
                         Console.WriteLine("Preferowany serwer DNS : " + settings.GetValue("dns01"));
                         counter4++;
                     }
-                    counter4 = 0;
+                    if (counter4 == 0)
+                    {
+                        Console.WriteLine("Nie wykryto zadnej konfiguracji sieci! Uzyj ipconfig /set");
+                    }
                     break;
 
             }

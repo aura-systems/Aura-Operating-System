@@ -46,26 +46,39 @@ namespace Aura_OS.System.Shell.cmdIntr.SystemInfomation
             }
             else if (arguments[0] == "/set")
             {
-                if(arguments.Count <= 2)
+                if (arguments.Count < 4)
                 {
-                    return new ReturnInfo(this, ReturnCode.ERROR, "Usage : ipconfig /set {interface} {IPv4} {Subnet} -g {Gateway} -d {PrimaryDNS}");
+                    return new ReturnInfo(this, ReturnCode.ERROR, "Usage : ipconfig /set {IPv4} {Subnet} {Gateway}");
                     //ipconfig /set PCNETII 192.168.1.32 255.255.255.0 -g 192.168.1.254 -d 8.8.8.8
                 }
                 else
                 {
-                    if (NetworkInterfaces.Interface(arguments[1]) != "null")
+                    Address ip = Address.Parse(arguments[1]);
+                    Address subnet = Address.Parse(arguments[2]);
+                    Address gw = Address.Parse(arguments[3]);
+
+                    if (ip != null && subnet != null && gw != null)
+                    {
+                        NetworkInit.Enable(ip, subnet, gw);
+                        Console.WriteLine("Config OK!");
+                    }
+                    else
+                    {
+                        return new ReturnInfo(this, ReturnCode.ERROR, "Can't parse IP addresses (make sure they are well formated).");
+                    }
+
+                    /*if (NetworkInterfaces.Interface(arguments[1]) != "null")
                     {
                         Utils.Settings settings = new Utils.Settings(@"0:\System\" + NetworkInterfaces.Interface(arguments[1]) + ".conf");
                         NetworkStack.RemoveAllConfigIP();
                         ApplyIP(arguments.ToArray(), settings); //TODO Fix that (arguments)
                         settings.Push();
-                        NetworkInit.Enable();
                     }
                     else
                     {
                         Console.WriteLine("This interface doesn't exists.");
-                    }
-                }                
+                    } */
+                }
             }
             else if (arguments[0] == "/renew")
             {
@@ -73,7 +86,7 @@ namespace Aura_OS.System.Shell.cmdIntr.SystemInfomation
             }
             else
             {
-                return new ReturnInfo(this, ReturnCode.ERROR, "Usage : ipconfig /set {interface} {IPv4} {Subnet} -g {Gateway} -d {PrimaryDNS}");
+                return new ReturnInfo(this, ReturnCode.ERROR, "Usage : ipconfig /set {IPv4} {Subnet} {Gateway}");
             }
             return new ReturnInfo(this, ReturnCode.OK);
         }

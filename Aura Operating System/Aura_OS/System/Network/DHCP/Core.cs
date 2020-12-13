@@ -45,7 +45,7 @@ namespace Aura_OS.System.Network.DHCP
                 settings.EditValue("dns01", "0.0.0.0");
                 settings.PushValues();
 
-                NetworkInit.Enable();
+                //NetworkInit.Enable();
             }            
         }
 
@@ -111,7 +111,7 @@ namespace Aura_OS.System.Network.DHCP
                 settings.EditValue("dhcp_server", Options.Server().ToString());
                 settings.PushValues();
 
-                NetworkInit.Enable();
+                //NetworkInit.Enable();
 
                 if (message)
                 {

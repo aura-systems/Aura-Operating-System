@@ -4,6 +4,7 @@
 * PROGRAMMERS:      Valentin Charbonnier <valentinbreiz@gmail.com>
 */
 
+using Aura_OS.System.Network.IPV4;
 using Cosmos.HAL;
 
 namespace Aura_OS.System
@@ -11,14 +12,16 @@ namespace Aura_OS.System
     class NetworkInit
     {
 
-        public static void Enable()
+        static HAL.Drivers.Network.AMDPCNetII AMDPCNetIINIC;
+
+        public static bool Enable(Address ip, Address subnet, Address gw)
         {            
             if (AMDPCNetIINIC != null)
             {
                 Utils.Settings settings = new Utils.Settings(@"0:\System\" + AMDPCNetIINIC.Name + ".conf");
                 if (!IsSavedConf(AMDPCNetIINIC.Name))
                 {
-                    Kernel.LocalNetworkConfig = new Network.IPV4.Config(new Network.IPV4.Address(192, 168, 1, 35), new Network.IPV4.Address(255, 255, 255, 0), new Network.IPV4.Address(192, 168, 1, 1));
+                    Kernel.LocalNetworkConfig = new Network.IPV4.Config(ip, subnet, gw);
                     Network.NetworkStack.ConfigIP(AMDPCNetIINIC, Kernel.LocalNetworkConfig);
                 }
                 else
@@ -26,13 +29,11 @@ namespace Aura_OS.System
                     Kernel.LocalNetworkConfig = new Network.IPV4.Config(Network.IPV4.Address.Parse(settings.GetValue("ipaddress")), Network.IPV4.Address.Parse(settings.GetValue("subnet")), Network.IPV4.Address.Parse(settings.GetValue("gateway")));
                     Network.NetworkStack.ConfigIP(AMDPCNetIINIC, Kernel.LocalNetworkConfig);
                 }
-
                 Kernel.debugger.Send(Kernel.LocalNetworkConfig.ToString());
-
+                return true;
             }
+            return false;
         }
-
-        static HAL.Drivers.Network.AMDPCNetII AMDPCNetIINIC;
 
         public static void Init(bool debug = true)
         {
