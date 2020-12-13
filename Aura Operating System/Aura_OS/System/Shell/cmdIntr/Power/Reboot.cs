@@ -12,7 +12,6 @@ namespace Aura_OS.System.Shell.cmdIntr.Power
 {
     class CommandReboot : ICommand
     {
-
         /// <summary>
         /// Empty constructor.
         /// </summary>
