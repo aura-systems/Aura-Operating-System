@@ -8,6 +8,7 @@ using Aura_OS.System.Shell.cmdIntr.c_Console;
 using Aura_OS.System.Shell.cmdIntr.Network;
 using Aura_OS.System.Shell.cmdIntr.Power;
 using Aura_OS.System.Shell.cmdIntr.SystemInfomation;
+using Aura_OS.System.Shell.cmdIntr.Tests;
 using Aura_OS.System.Shell.cmdIntr.Util;
 using Aura_OS.System.Utils;
 using System;
@@ -41,12 +42,14 @@ namespace Aura_OS.System.Shell.cmdIntr
             CMDs.Add(new CommandClear(new string[] { "clear", "clr" }));
             CMDs.Add(new CommandPing(new string[] { "ping" }));
             CMDs.Add(new CommandUdp(new string[] { "udp" }));
-            CMDs.Add(new CommandVersion(new string[] { "version", "about" }));
+            CMDs.Add(new CommandVersion(new string[] { "version" }));
             CMDs.Add(new CommandSystemInfo(new string[] { "systeminfo", "sysinfo" }));
             CMDs.Add(new CommandTime(new string[] { "time" }));
             CMDs.Add(new CommandIPConfig(new string[] { "ipconfig" }));
             CMDs.Add(new CommandLspci(new string[] { "lspci" }));
             CMDs.Add(new CommandEnv(new string[] { "export", "set" }));
+            CMDs.Add(new CommandAbout(new string[] { "about" }));
+            CMDs.Add(new CommandCrash(new string[] { "crash" }));
             /*
             Register("sha256");
             Register("help");

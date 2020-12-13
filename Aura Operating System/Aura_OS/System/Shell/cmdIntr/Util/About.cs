@@ -4,33 +4,22 @@ using System.Text;
 
 namespace Aura_OS.System.Shell.cmdIntr.Util
 {
-    class About
+    class CommandAbout : ICommand
     {
-        private static string HelpInfo = "";
-
         /// <summary>
-        /// Getter and Setters for Help Info.
+        /// Empty constructor.
         /// </summary>
-        public static string HI
+        public CommandAbout(string[] commandvalues) : base(commandvalues)
         {
-            get { return HelpInfo; }
-            set { HelpInfo = value; /*PUSHED OUT VALUE (in)*/}
         }
 
         /// <summary>
-        /// Empty constructor. (Good for debug)
+        /// RebootCommand
         /// </summary>
-        public About() { }
-
-        /// <summary>
-        /// c = command, c_About
-        /// </summary>
-        /// <param name="arg">The command</param>
-        /// <param name="startIndex">The start index for remove.</param>
-        /// <param name="count">The count index for remove.</param>
-        public static void c_About()
+        public override ReturnInfo Execute()
         {
             Aura_OS.System.Translation.List_Translation.About();
+            return new ReturnInfo(this, ReturnCode.OK);
         }
     }
 }
