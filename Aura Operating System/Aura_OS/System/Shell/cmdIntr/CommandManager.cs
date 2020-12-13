@@ -43,6 +43,7 @@ namespace Aura_OS.System.Shell.cmdIntr
             CMDs.Add(new CommandVersion(new string[] { "version", "about" }));
             CMDs.Add(new CommandSystemInfo(new string[] { "systeminfo", "sysinfo" }));
             CMDs.Add(new CommandTime(new string[] { "time" }));
+            CMDs.Add(new CommandIPConfig(new string[] { "ipconfig" }));
             /*
             Register("sha256");
             Register("help");

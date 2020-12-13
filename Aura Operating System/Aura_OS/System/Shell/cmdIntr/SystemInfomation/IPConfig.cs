@@ -16,55 +16,45 @@ using L = Aura_OS.System.Translation;
 
 namespace Aura_OS.System.Shell.cmdIntr.SystemInfomation
 {
-    class IPConfig
+    class CommandIPConfig : ICommand
     {
-        private static string HelpInfo = "";
-
         /// <summary>
-        /// Getter and Setters for Help Info.
+        /// Empty constructor.
         /// </summary>
-        public static string HI
+        public CommandIPConfig(string[] commandvalues) : base(commandvalues)
         {
-            get { return HelpInfo; }
-            set { HelpInfo = value; /*PUSHED OUT VALUE (in)*/}
         }
 
         /// <summary>
-        /// Empty constructor. (Good for debug)
+        /// CommandEcho
         /// </summary>
-        public IPConfig() { }
-
-        /// <summary>
-        /// c = command, c_SystemInfomation
-        /// </summary>
-        public static void c_IPConfig(string cmd)
+        /// <param name="arguments">Arguments</param>
+        public override ReturnInfo Execute(List<string> arguments)
         {
-            string[] args = cmd.Split(' ');
-
-            if (args.Length == 1)
+            if (arguments.Count == 0)
             {
                 L.List_Translation.Ipconfig();
-                return;
+                return new ReturnInfo(this, ReturnCode.OK);
             }
 
-            if (args[1] == "/release")
+            if (arguments[0] == "/release")
             {
                 System.Network.DHCP.Core.SendReleasePacket();
             }
-            else if (args[1] == "/set")
+            else if (arguments[0] == "/set")
             {
-                if(args.Length <= 3)
+                if(arguments.Count <= 2)
                 {
-                    Console.WriteLine("Usage : " + args[0] + " /set {interface} {IPv4} {Subnet} -g {Gateway} -d {PrimaryDNS}");
+                    return new ReturnInfo(this, ReturnCode.ERROR, "Usage : ipconfig /set {interface} {IPv4} {Subnet} -g {Gateway} -d {PrimaryDNS}");
                     //ipconfig /set PCNETII 192.168.1.32 255.255.255.0 -g 192.168.1.254 -d 8.8.8.8
                 }
                 else
                 {
-                    if (NetworkInterfaces.Interface(args[2]) != "null")
+                    if (NetworkInterfaces.Interface(arguments[1]) != "null")
                     {
-                        Utils.Settings settings = new Utils.Settings(@"0:\System\" + NetworkInterfaces.Interface(args[2]) + ".conf");
+                        Utils.Settings settings = new Utils.Settings(@"0:\System\" + NetworkInterfaces.Interface(arguments[1]) + ".conf");
                         NetworkStack.RemoveAllConfigIP();
-                        ApplyIP(args, settings);
+                        ApplyIP(arguments.ToArray(), settings); //TODO Fix that (arguments)
                         settings.Push();
                         NetworkInit.Enable();
                     }
@@ -74,7 +64,7 @@ namespace Aura_OS.System.Shell.cmdIntr.SystemInfomation
                     }
                 }                
             }
-            else if (args[1] == "/renew")
+            else if (arguments[0] == "/renew")
             {
                 System.Network.DHCP.Core.SendDiscoverPacket();
             }
@@ -82,6 +72,7 @@ namespace Aura_OS.System.Shell.cmdIntr.SystemInfomation
             {
                 L.List_Translation.Ipconfig();
             }
+            return new ReturnInfo(this, ReturnCode.OK);
         }
 
         private static void ApplyIP(string[] args, Utils.Settings settings)
