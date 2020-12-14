@@ -54,6 +54,8 @@ namespace Aura_OS.System.Network.DHCP
         /// </summary>
         public static void SendDiscoverPacket()
         {
+            NetworkStack.RemoveAllConfigIP();
+
             foreach (NetworkDevice networkDevice in NetworkDevice.Devices)
             {
 

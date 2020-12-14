@@ -86,6 +86,8 @@ namespace Aura_OS.System.Shell.cmdIntr.SystemInfomation
                     Address gw = Address.Parse(arguments[4]);
                     NetworkDevice nic = NetworkDevice.GetDeviceByName(arguments[1]);
 
+                    NetworkStack.RemoveAllConfigIP();
+
                     if (nic == null)
                     {
                         return new ReturnInfo(this, ReturnCode.ERROR, "Couldn't find network device: " + arguments[1]);
