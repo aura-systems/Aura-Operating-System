@@ -31,19 +31,24 @@ namespace Aura_OS.System
 
             #region AMDPCNETII
 
-            CustomConsole.WriteLineInfo("Searching for AMDPCNETII...");
-            Cosmos.HAL.PCIDevice AMDPCNETII = Cosmos.HAL.PCI.GetDevice(Cosmos.HAL.VendorID.AMD, Cosmos.HAL.DeviceID.PCNETII);
-            if (AMDPCNETII != null)
+            CustomConsole.WriteLineInfo("Searching for Ethernet Controller...");
+            foreach (Cosmos.HAL.PCIDevice device in Cosmos.HAL.PCI.Devices)
             {
-                CustomConsole.WriteLineOK("Found AMDPCNETII NIC on PCI " + AMDPCNETII.bus + ":" + AMDPCNETII.slot + ":" + AMDPCNETII.function);
-                CustomConsole.WriteLineInfo("NIC IRQ: " + AMDPCNETII.InterruptLine);
+                if ((device.ClassCode == 0x02) && (device.Subclass == 0x00)) // is Ethernet Controller
+                {
+                    if (device == Cosmos.HAL.PCI.GetDevice(device.bus, device.slot, device.function))
+                    {
+                        CustomConsole.WriteLineOK("Found AMDPCNETII NIC on PCI " + device.bus + ":" + device.slot + ":" + device.function);
+                        CustomConsole.WriteLineInfo("NIC IRQ: " + device.InterruptLine);
 
-                new AMDPCNetII(AMDPCNETII);
+                        var AMDPCNetIIDevice = new AMDPCNetII(device);
 
-                CustomConsole.WriteLineInfo("NIC MAC Address: " + NetworkDevice.Devices[0].MACAddress.ToString());
+                        CustomConsole.WriteLineInfo("NIC MAC Address: " + AMDPCNetIIDevice.MACAddress.ToString());
 
-                Network.NetworkStack.Init();
-                NetworkDevice.Devices[0].Enable();
+                        Network.NetworkStack.Init();
+                        AMDPCNetIIDevice.Enable();   
+                    }                    
+                }
             }
 
             #endregion
