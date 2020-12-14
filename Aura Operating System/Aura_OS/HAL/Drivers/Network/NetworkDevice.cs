@@ -59,6 +59,11 @@ namespace Aura_OS.HAL.Drivers.Network
             get;
         }
 
+        public string NameID
+        {
+            get; set;
+        }
+
         public abstract string Name
         {
             get;

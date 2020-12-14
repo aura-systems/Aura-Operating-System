@@ -12,7 +12,6 @@ namespace Aura_OS.System
 {
     class NetworkInit
     {
-
         public static bool Enable(NetworkDevice device, Address ip, Address subnet, Address gw)
         {            
             if (device != null)
@@ -31,6 +30,8 @@ namespace Aura_OS.System
 
             #region AMDPCNETII
 
+            int NetworkDeviceID = 0;
+
             CustomConsole.WriteLineInfo("Searching for Ethernet Controller...");
             foreach (Cosmos.HAL.PCIDevice device in Cosmos.HAL.PCI.Devices)
             {
@@ -43,10 +44,14 @@ namespace Aura_OS.System
 
                         var AMDPCNetIIDevice = new AMDPCNetII(device);
 
+                        AMDPCNetIIDevice.NameID = ("eth" + NetworkDeviceID);
+
                         CustomConsole.WriteLineInfo("NIC MAC Address: " + AMDPCNetIIDevice.MACAddress.ToString());
 
                         Network.NetworkStack.Init();
-                        AMDPCNetIIDevice.Enable();   
+                        AMDPCNetIIDevice.Enable();
+
+                        NetworkDeviceID++;
                     }                    
                 }
             }

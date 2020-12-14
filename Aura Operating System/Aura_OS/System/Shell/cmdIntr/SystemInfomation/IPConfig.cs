@@ -58,19 +58,17 @@ namespace Aura_OS.System.Shell.cmdIntr.SystemInfomation
             }
             else if (arguments[0] == "/listnic")
             {
-                int counter = 0;
                 foreach (var device in NetworkDevice.Devices)
                 {
                     switch (device.CardType)
                     {
                         case CardType.Ethernet:
-                            Console.WriteLine("Ethernet Card " + counter + " - " + device.Name + " (" + device.MACAddress + ")");
+                            Console.WriteLine("Ethernet Card - " + device.NameID + " - " + device.Name + " (" + device.MACAddress + ")");
                             break;
                         case CardType.Wireless:
-                            Console.WriteLine("Wireless Card " + counter + " - " + device.Name + " (" + device.MACAddress + ")");
+                            Console.WriteLine("Wireless Card - " + device.NameID + " - " + device.Name + " (" + device.MACAddress + ")");
                             break;
                     }
-                    counter++;
                 }
             }
             else if (arguments[0] == "/set")
