@@ -117,7 +117,7 @@ namespace Aura_OS
 
                 setup.InitSetup();
 
-                if (SystemExists)
+                /*if (SystemExists)
                 {
                     if (!JustInstalled)
                     {
@@ -142,7 +142,9 @@ namespace Aura_OS
                 else
                 {
                     running = true;
-                }
+                }*/
+
+                running = true;
 
                 #endregion
 

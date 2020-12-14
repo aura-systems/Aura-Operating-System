@@ -57,7 +57,8 @@ namespace Aura_OS.System
         /// </summary>
         public void InitSetup()
         {
-            if (FileSystem() == "false")
+            RunWithoutFS(false); //TODO enable installation back
+            /*if (FileSystem() == "false")
             {
                 RunWithoutFS(false);
             }
@@ -74,7 +75,7 @@ namespace Aura_OS.System
                     RegisterHostname();
                     Installation();
                 }
-            }
+            }*/
         }
 
         /// <summary>
