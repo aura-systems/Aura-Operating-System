@@ -4,66 +4,55 @@
 * PROGRAMMERS:      Valentin Charbonnier <valentinbreiz@gmail.com>
 */
 
+using Aura_OS.HAL.Drivers.Network;
 using Aura_OS.System.Network.IPV4;
-using Cosmos.HAL;
+using System.Collections.Generic;
 
 namespace Aura_OS.System
 {
     class NetworkInit
     {
 
-        static HAL.Drivers.Network.AMDPCNetII AMDPCNetIINIC;
-
-        public static bool Enable(Address ip, Address subnet, Address gw)
+        public static bool Enable(NetworkDevice device, Address ip, Address subnet, Address gw)
         {            
-            if (AMDPCNetIINIC != null)
+            if (device != null)
             {
-                Utils.Settings settings = new Utils.Settings(@"0:\System\" + AMDPCNetIINIC.Name + ".conf");
-                if (!IsSavedConf(AMDPCNetIINIC.Name))
-                {
-                    Kernel.LocalNetworkConfig = new Network.IPV4.Config(ip, subnet, gw);
-                    Network.NetworkStack.ConfigIP(AMDPCNetIINIC, Kernel.LocalNetworkConfig);
-                }
-                else
-                {
-                    Kernel.LocalNetworkConfig = new Network.IPV4.Config(Network.IPV4.Address.Parse(settings.GetValue("ipaddress")), Network.IPV4.Address.Parse(settings.GetValue("subnet")), Network.IPV4.Address.Parse(settings.GetValue("gateway")));
-                    Network.NetworkStack.ConfigIP(AMDPCNetIINIC, Kernel.LocalNetworkConfig);
-                }
+                Kernel.LocalNetworkConfig = new Config(ip, subnet, gw);
+                Network.NetworkStack.ConfigIP(device, Kernel.LocalNetworkConfig);
                 Kernel.debugger.Send(Kernel.LocalNetworkConfig.ToString());
                 return true;
             }
             return false;
         }
 
-        public static void Init(bool debug = true)
+        public static void Init()
         {
-            if (debug)
-            {
-                CustomConsole.WriteLineInfo("Finding nic...");
-            }
+            CustomConsole.WriteLineInfo("Searching for Network cards...");
 
-            PCIDevice AMDPCNETII = PCI.GetDevice(VendorID.AMD, DeviceID.PCNETII);
+            #region AMDPCNETII
+
+            CustomConsole.WriteLineInfo("Searching for AMDPCNETII...");
+            Cosmos.HAL.PCIDevice AMDPCNETII = Cosmos.HAL.PCI.GetDevice(Cosmos.HAL.VendorID.AMD, Cosmos.HAL.DeviceID.PCNETII);
             if (AMDPCNETII != null)
             {
-                if (debug)
-                {
-                    CustomConsole.WriteLineOK("Found AMDPCNETII NIC on PCI " + AMDPCNETII.bus + ":" + AMDPCNETII.slot + ":" + AMDPCNETII.function);
-                    CustomConsole.WriteLineInfo("NIC IRQ: " + AMDPCNETII.InterruptLine);
-                }
-                AMDPCNetIINIC = new HAL.Drivers.Network.AMDPCNetII(AMDPCNETII);
-                if (debug)
-                {
-                    CustomConsole.WriteLineInfo("NIC MAC Address: " + AMDPCNetIINIC.MACAddress.ToString());
-                }
+                CustomConsole.WriteLineOK("Found AMDPCNETII NIC on PCI " + AMDPCNETII.bus + ":" + AMDPCNETII.slot + ":" + AMDPCNETII.function);
+                CustomConsole.WriteLineInfo("NIC IRQ: " + AMDPCNETII.InterruptLine);
+
+                new AMDPCNetII(AMDPCNETII);
+
+                CustomConsole.WriteLineInfo("NIC MAC Address: " + NetworkDevice.Devices[0].MACAddress.ToString());
+
                 Network.NetworkStack.Init();
-                AMDPCNetIINIC.Enable();
+                NetworkDevice.Devices[0].Enable();
             }
-            if (AMDPCNETII == null)
+
+            #endregion
+
+            if (NetworkDevice.Devices.Count == 0)
             {
                 CustomConsole.WriteLineError("No supported network card found!!");
-                return;
             }
-            if (debug)
+            else
             {
                 CustomConsole.WriteLineOK("Network initialization done!");
             }

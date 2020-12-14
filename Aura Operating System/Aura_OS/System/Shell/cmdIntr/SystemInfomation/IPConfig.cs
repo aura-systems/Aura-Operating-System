@@ -5,10 +5,10 @@
 */
 
 
+using Aura_OS.HAL.Drivers.Network;
 using Aura_OS.System.Network;
 using Aura_OS.System.Network.DHCP;
 using Aura_OS.System.Network.IPV4;
-using Cosmos.HAL;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -40,26 +40,59 @@ namespace Aura_OS.System.Shell.cmdIntr.SystemInfomation
         /// <param name="arguments">Arguments</param>
         public override ReturnInfo Execute(List<string> arguments)
         {
-            if (arguments[0] == "/release")
+            if (arguments[0] == "/help")
+            {
+                Console.WriteLine("Available commands:");
+                Console.WriteLine("- ipconfig /listnic    List network devices");
+                Console.WriteLine("- ipconfig /set        Manually set an IP Address");
+                Console.WriteLine("- ipconfig /ask        Find the DHCP server and ask a new IP address");
+                Console.WriteLine("- ipconfig /release    Tell the DHCP server to make the IP adress available");
+            }
+            else if (arguments[0] == "/release")
             {
                 System.Network.DHCP.Core.SendReleasePacket();
             }
+            else if (arguments[0] == "/ask")
+            {
+                System.Network.DHCP.Core.SendDiscoverPacket();
+            }
+            else if (arguments[0] == "/listnic")
+            {
+                int counter = 0;
+                foreach (var device in NetworkDevice.Devices)
+                {
+                    switch (device.CardType)
+                    {
+                        case CardType.Ethernet:
+                            Console.WriteLine("Ethernet Card " + counter + " - " + device.Name + " (" + device.MACAddress + ")");
+                            break;
+                        case CardType.Wireless:
+                            Console.WriteLine("Wireless Card " + counter + " - " + device.Name + " (" + device.MACAddress + ")");
+                            break;
+                    }
+                    counter++;
+                }
+            }
             else if (arguments[0] == "/set")
             {
-                if (arguments.Count < 4)
+                if (arguments.Count < 5)
                 {
-                    return new ReturnInfo(this, ReturnCode.ERROR, "Usage : ipconfig /set {IPv4} {Subnet} {Gateway}");
-                    //ipconfig /set PCNETII 192.168.1.32 255.255.255.0 -g 192.168.1.254 -d 8.8.8.8
+                    return new ReturnInfo(this, ReturnCode.ERROR, "Usage : ipconfig /set {device} {IPv4} {Subnet} {Gateway}");
                 }
                 else
                 {
-                    Address ip = Address.Parse(arguments[1]);
-                    Address subnet = Address.Parse(arguments[2]);
-                    Address gw = Address.Parse(arguments[3]);
+                    Address ip = Address.Parse(arguments[2]);
+                    Address subnet = Address.Parse(arguments[3]);
+                    Address gw = Address.Parse(arguments[4]);
+                    NetworkDevice nic = NetworkDevice.GetDeviceByName(arguments[1]);
 
+                    if (nic == null)
+                    {
+                        return new ReturnInfo(this, ReturnCode.ERROR, "Couldn't find network device: " + arguments[1]);
+                    }
                     if (ip != null && subnet != null && gw != null)
                     {
-                        NetworkInit.Enable(ip, subnet, gw);
+                        NetworkInit.Enable(nic, ip, subnet, gw);
                         Console.WriteLine("Config OK!");
                     }
                     else
@@ -80,13 +113,9 @@ namespace Aura_OS.System.Shell.cmdIntr.SystemInfomation
                     } */
                 }
             }
-            else if (arguments[0] == "/renew")
-            {
-                System.Network.DHCP.Core.SendDiscoverPacket();
-            }
             else
             {
-                return new ReturnInfo(this, ReturnCode.ERROR, "Usage : ipconfig /set {IPv4} {Subnet} {Gateway}");
+                return new ReturnInfo(this, ReturnCode.ERROR, "Wrong usage, please type: ipconfig /help");
             }
             return new ReturnInfo(this, ReturnCode.OK);
         }
