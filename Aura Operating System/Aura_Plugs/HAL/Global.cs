@@ -28,14 +28,14 @@ namespace Aura_Plugs.HAL
             ACPI.Start();
             Aura_OS.System.CustomConsole.WriteLineOK("ACPI Initialization");
 
-            /*Cosmos.HAL.BlockDevice.IDE.InitDriver();
+            Cosmos.HAL.Global.PS2Controller.Initialize();
+            Aura_OS.System.CustomConsole.WriteLineOK("PS/2 Controller Initialization");
+
+            Cosmos.HAL.BlockDevice.IDE.InitDriver();
             Aura_OS.System.CustomConsole.WriteLineOK("IDE Driver Initialization");
 
             Cosmos.HAL.BlockDevice.AHCI.InitDriver();
-            Aura_OS.System.CustomConsole.WriteLineOK("AHCI Driver Initialization");*/
-
-            Cosmos.HAL.Global.PS2Controller.Initialize();
-            Aura_OS.System.CustomConsole.WriteLineOK("PS/2 Controller Initialization");
+            Aura_OS.System.CustomConsole.WriteLineOK("AHCI Driver Initialization");
 
             //Cosmos.Core.Processing.ProcessorScheduler.Initialize();
             //Aura_OS.System.CustomConsole.WriteLineOK("Processor Scheduler Initialization");

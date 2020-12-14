@@ -74,24 +74,25 @@ namespace Aura_OS
         {
             try
             {
-                CommandManager.RegisterAllCommands();
 
-                //AConsole = new System.Shell.VGA.VGAConsole(null);
+                #region Console Encoding Provider
 
                 Encoding.RegisterProvider(CosmosEncodingProvider.Instance);
                 Console.InputEncoding = Encoding.GetEncoding(437);
                 Console.OutputEncoding = Encoding.GetEncoding(437);
 
+                #endregion
+
+                #region Commmand Manager Init
+
+                CommandManager.RegisterAllCommands();
+
+                #endregion
+
                 System.CustomConsole.WriteLineInfo("Booting Aura Operating System...");
 
-                /*System.CustomConsole.WriteLineInfo("VBE Informations:");
-                System.CustomConsole.WriteLineInfo("VBE Version: " + Graphics.VBEVersion);
-                System.CustomConsole.WriteLineInfo("VBE Signature: " + Graphics.VBESignature);
-                System.CustomConsole.WriteLineInfo("BPP: " + Graphics.ModeInfo.bpp);
-                System.CustomConsole.WriteLineInfo("Height: " + Graphics.ModeInfo.height);
-                System.CustomConsole.WriteLineInfo("Width: " + Graphics.ModeInfo.width);*/
+                #region Filesystem Init
 
-                #region Register Filesystem
                 Sys.FileSystem.VFS.VFSManager.RegisterVFS(vFS);
                 if (ContainsVolumes())
                 {
@@ -101,11 +102,20 @@ namespace Aura_OS
                 {
                     System.CustomConsole.WriteLineError("FileSystem Registration");
                 }
+
+                Console.ReadKey();
+
                 #endregion
+
+                #region Network Init
 
                 NetworkInit.Init();
 
+                #endregion
+
                 System.CustomConsole.WriteLineOK("Aura successfully started!");
+
+                #region Installation Init
 
                 setup.InitSetup();
 
@@ -135,6 +145,8 @@ namespace Aura_OS
                 {
                     running = true;
                 }
+
+                #endregion
 
                 boottime = Time.MonthString() + "/" + Time.DayString() + "/" + Time.YearString() + ", " + Time.TimeString(true, true, true);
 
