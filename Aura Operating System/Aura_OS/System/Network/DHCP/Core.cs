@@ -20,9 +20,7 @@ namespace Aura_OS.System.Network.DHCP
         /// <returns></returns>
         public static Address DHCPServerAddress(NetworkDevice networkDevice)
         {
-            //Utils.Settings settings = new Utils.Settings(@"0:\System\" + networkDevice.Name + ".conf");
-            //return Address.Parse(settings.GetValue("dhcp_server"));
-            return Address.Parse("192.168.1.1"); //TODO Get packet from NicConfig
+            return NetworkConfig.Get(networkDevice).DefaultGateway;
         }
 
         /// <summary>

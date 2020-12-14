@@ -44,7 +44,17 @@ namespace Aura_OS.System.Network
 
         public static Config Get(NetworkDevice key)
         {
-            int index = Keys.IndexOf(key);
+            int index = 0;
+
+            foreach (var device in Keys)
+            {
+                if (key == device)
+                {
+                    break;
+                }
+                index++;
+            }
+
             return Values[index];
         }
 
