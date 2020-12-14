@@ -48,6 +48,9 @@ namespace Aura_OS.System.Shell.cmdIntr
             CMDs.Add(new CommandCrash(new string[] { "crash" }));
             CMDs.Add(new CommandVol(new string[] { "vol" }));
             CMDs.Add(new CommandDir(new string[] { "dir", "ls", "l" }));
+            CMDs.Add(new CommandMkdir(new string[] { "mkdir", "md" }));
+            CMDs.Add(new CommandRmdir(new string[] { "rmdir", "rmd" }));
+            CMDs.Add(new CommandCat(new string[] { "rmdir", "rmd" }));
 
             CMDs.Add(new CommandAction(new string[] { "beep" }, () =>
             {
