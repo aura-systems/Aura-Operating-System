@@ -32,7 +32,7 @@ namespace Aura_OS.System.Shell.cmdIntr.FileSystem
         }
 
         /// <summary>
-        /// CommandClear
+        /// CommandDir
         /// </summary>
         public override ReturnInfo Execute(List<string> arguments)
         {
