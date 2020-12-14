@@ -39,7 +39,7 @@ namespace Aura_OS.System.Network
             IPV4.UDP.UDPPacket.VMTInclude();
         }
 
-        public static void SetConfigIP(NetworkDevice nic, IPV4.Config config)
+        private static void SetConfigIP(NetworkDevice nic, IPV4.Config config)
         {
             NetworkConfig.Add(nic, config);
             AddressMap.Add(config.IPAddress.Hash, nic);
@@ -59,16 +59,13 @@ namespace Aura_OS.System.Network
         {
             if (NetworkConfig.ContainsKey(nic))
             {
-                CustomConsole.WriteLineInfo("Config existante");
-                IPV4.Config toremove = NetworkConfig.Get(nic);                
-                AddressMap.Remove(toremove.IPAddress.Hash);
-                MACMap.Remove(nic.MACAddress.Hash);
-                IPV4.Config.Remove(config);
-                NetworkConfig.Remove(nic);
+                CustomConsole.WriteLineInfo("Config already exists.");
+                RemoveIPConfig(nic);
                 SetConfigIP(nic, config);
             }
             else
             {
+                CustomConsole.WriteLineInfo("Config does not exist.");
                 SetConfigIP(nic, config);
             }
         }
@@ -97,6 +94,15 @@ namespace Aura_OS.System.Network
             MACMap.Clear();
             IPV4.Config.RemoveAll();
             NetworkConfig.Clear();
+        }
+
+        public static void RemoveIPConfig(NetworkDevice nic)
+        {
+            IPV4.Config config = NetworkConfig.Get(nic);
+            AddressMap.Remove(config.IPAddress.Hash);
+            MACMap.Remove(nic.MACAddress.Hash);
+            IPV4.Config.Remove(config);
+            NetworkConfig.Remove(nic);
         }
 
         internal static void HandlePacket(byte[] packetData)

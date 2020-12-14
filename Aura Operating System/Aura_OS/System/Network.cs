@@ -16,9 +16,9 @@ namespace Aura_OS.System
         {            
             if (device != null)
             {
-                Kernel.LocalNetworkConfig = new Config(ip, subnet, gw);
-                Network.NetworkStack.ConfigIP(device, Kernel.LocalNetworkConfig);
-                Kernel.debugger.Send(Kernel.LocalNetworkConfig.ToString());
+                Config config = new Config(ip, subnet, gw);
+                Network.NetworkStack.ConfigIP(device, config);
+                Kernel.debugger.Send(config.ToString());
                 return true;
             }
             return false;

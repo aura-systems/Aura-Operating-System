@@ -39,7 +39,14 @@ namespace Aura_OS.System.Network
 
         public static bool ContainsKey(NetworkDevice k)
         {
-            return Keys.Contains(k);
+            foreach (var device in Keys)
+            {
+                if (k == device)
+                {
+                    return true;
+                }
+            }
+            return false;
         }
 
         public static Config Get(NetworkDevice key)

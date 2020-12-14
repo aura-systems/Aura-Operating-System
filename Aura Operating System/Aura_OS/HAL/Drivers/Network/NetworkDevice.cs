@@ -24,11 +24,11 @@ namespace Aura_OS.HAL.Drivers.Network
     {
         public static List<NetworkDevice> Devices { get; private set; }
 
-        public static NetworkDevice GetDeviceByName(string name)
+        public static NetworkDevice GetDeviceByName(string nameID)
         {
             foreach (var device in Devices)
             {
-                if (device.Name == name)
+                if (device.NameID == nameID)
                 {
                     return device;
                 }
