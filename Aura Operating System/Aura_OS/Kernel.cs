@@ -167,22 +167,17 @@ namespace Aura_OS
             try
             {
 
-                //Sys.Thread TBAR = new Sys.Thread(TaskBar);
-
                 while (running)
                 {
                     if (Logged) //If logged
                     {
-                        //TBAR.Start();
                         BeforeCommand();
 
                         AConsole.writecommand = true;
 
                         var cmd = Console.ReadLine();
-                        //TBAR.Stop();
-                        CommandManager._CommandManger(cmd);
-                        //Console.WriteLine();
 
+                        CommandManager._CommandManger(cmd);
                     }
                     else
                     {
@@ -196,31 +191,6 @@ namespace Aura_OS
                 Crash.StopKernel(ex);
             }
         }
-
-        //int _deltaT = 0;
-
-        //private void TaskBar()
-        //{
-        //
-        //    int oldx = 0;
-        //    int oldy = 0;
-        //
-        //    while (true)
-        //    {
-        //        if (_deltaT != RTC.Second)
-        //        {
-        //            oldx = AConsole.X;
-        //            oldy = AConsole.Y;
-        //            _deltaT = RTC.Second;
-        //            AConsole.X = AConsole.Width - 8;
-        //            AConsole.Y = 0;
-        //            AConsole.Write(Encoding.ASCII.GetBytes(Time.TimeString(true, true, true)));
-        //            AConsole.X = oldx;
-        //            AConsole.Y = oldy;
-        //        }
-        //    }
-        //    
-        //}
 
         #endregion
 
