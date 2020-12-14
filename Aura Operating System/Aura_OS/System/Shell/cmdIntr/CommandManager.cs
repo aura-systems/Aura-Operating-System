@@ -47,6 +47,7 @@ namespace Aura_OS.System.Shell.cmdIntr
             CMDs.Add(new CommandAbout(new string[] { "about" }));
             CMDs.Add(new CommandCrash(new string[] { "crash" }));
             CMDs.Add(new CommandVol(new string[] { "vol" }));
+            CMDs.Add(new CommandDir(new string[] { "dir", "ls", "l" }));
 
             CMDs.Add(new CommandAction(new string[] { "beep" }, () =>
             {

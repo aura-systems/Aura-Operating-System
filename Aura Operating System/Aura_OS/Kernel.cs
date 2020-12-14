@@ -103,8 +103,6 @@ namespace Aura_OS
                     System.CustomConsole.WriteLineError("FileSystem Registration");
                 }
 
-                Console.ReadKey();
-
                 #endregion
 
                 #region Network Init
