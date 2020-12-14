@@ -9,28 +9,19 @@ using L = Aura_OS.System.Translation;
 
 namespace Aura_OS.System.Shell.cmdIntr.FileSystem
 {
-    class Vol
+    class CommandVol : ICommand
     {
-        private static string HelpInfo = "";
-
         /// <summary>
-        /// Getter and Setters for Help Info.
+        /// Empty constructor.
         /// </summary>
-        public static string HI
+        public CommandVol(string[] commandvalues) : base(commandvalues)
         {
-            get { return HelpInfo; }
-            set { HelpInfo = value; /*PUSHED OUT VALUE (in)*/}
         }
 
         /// <summary>
-        /// Empty constructor. (Good for debug)
+        /// CommandVol
         /// </summary>
-        public Vol() { }
-
-        /// <summary>
-        /// c = command, c_Vol
-        /// </summary>
-        public static void c_Vol()
+        public override ReturnInfo Execute()
         {
             var vols = Kernel.vFS.GetVolumes();
 
@@ -47,7 +38,7 @@ namespace Aura_OS.System.Shell.cmdIntr.FileSystem
                     Console.WriteLine("  " + vol.mName + "\t   \t" + Kernel.vFS.GetFileSystemType(vol.mName) + " \t" + vol.mSize + " MB\t" + vol.mParent);
                 }
             }
-
+            return new ReturnInfo(this, ReturnCode.OK);
         }
     }
 }

@@ -27,7 +27,6 @@ namespace Aura_OS.System.Plugs
             Cosmos.System.Global.NumLock = false;
             Cosmos.System.Global.CapsLock = false;
             Cosmos.System.Global.ScrollLock = false;
-            //Network.NetworkStack.Init();
         }
     }
 }

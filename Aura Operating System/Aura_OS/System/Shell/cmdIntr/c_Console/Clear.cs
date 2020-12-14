@@ -18,7 +18,7 @@ namespace Aura_OS.System.Shell.cmdIntr.c_Console
         }
 
         /// <summary>
-        /// RebootCommand
+        /// CommandClear
         /// </summary>
         public override ReturnInfo Execute()
         {
