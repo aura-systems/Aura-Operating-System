@@ -20,8 +20,7 @@ namespace Aura_OS.System.AConsole
         {
 
         }
-
-        public List<string> commands = new List<string>();
+        
         public bool writecommand = false;
         public int commandindex = -1;
         public string cmd;

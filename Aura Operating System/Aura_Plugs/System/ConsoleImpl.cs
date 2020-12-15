@@ -8,7 +8,6 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using Aura_OS.Shell.cmdIntr;
 using Aura_OS.System.Utils;
 using Cosmos.System;
 using IL2CPU.API.Attribs;
@@ -560,7 +559,7 @@ namespace Aura_Plugs
                     if (Aura_OS.Kernel.AConsole.writecommand) //IF SHELL
                     {
                         CMDToComplete = "";
-                        if (CommandsHistory.CHIndex >= 0)
+                        if (CommandsHistory.CHIndex >= 0 && CommandsHistory.commands.Count > 0)
                         {
                             CommandsHistory.ClearCurrentConsoleLine();
                             currentCount = 0;
@@ -568,7 +567,7 @@ namespace Aura_Plugs
 
                             Aura_OS.Kernel.BeforeCommand();
 
-                            string Command = Aura_OS.Kernel.AConsole.commands[CommandsHistory.CHIndex];
+                            string Command = CommandsHistory.commands[CommandsHistory.CHIndex];
                             CommandsHistory.CHIndex = CommandsHistory.CHIndex - 1;
 
                             foreach (char chr in Command)
@@ -618,7 +617,7 @@ namespace Aura_Plugs
                     if (Aura_OS.Kernel.AConsole.writecommand) //IF SHELL
                     {
                         CMDToComplete = "";
-                        if (CommandsHistory.CHIndex < Aura_OS.Kernel.AConsole.commands.Count - 1)
+                        if (CommandsHistory.CHIndex < CommandsHistory.commands.Count - 1)
                         {
                             CommandsHistory.ClearCurrentConsoleLine();
                             currentCount = 0;
@@ -634,7 +633,7 @@ namespace Aura_Plugs
                                 firstdown = true;
                             }
 
-                            string Command = Aura_OS.Kernel.AConsole.commands[CommandsHistory.CHIndex];
+                            string Command = CommandsHistory.commands[CommandsHistory.CHIndex];
 
                             foreach (char chr in Command)
                             {
