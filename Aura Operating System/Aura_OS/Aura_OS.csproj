@@ -70,6 +70,7 @@
 
   <ItemGroup>
     <PlugsReference Include="$(MSBuildProjectDirectory)\..\Aura_Plugs\bin\Debug\netcoreapp2.0\Aura_Plugs.dll" />
+    <Folder Include="System\UI\Console\" />
   </ItemGroup>
 
 </Project>
