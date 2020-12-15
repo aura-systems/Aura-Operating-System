@@ -95,22 +95,34 @@ namespace Aura_OS.System.Shell.cmdIntr.Network
             }
             else if (arguments[0] == "/set")
             {
-                if (arguments.Count < 5)
+                if ((arguments.Count == 3) || (arguments.Count == 4)) // ipconfig /set eth0 192.168.1.2/24 {gw}
                 {
-                    return new ReturnInfo(this, ReturnCode.ERROR, "Usage : ipconfig /set {device} {IPv4} {Subnet} {Gateway}");
-                }
-                else
-                {
-                    Address ip = Address.Parse(arguments[2]);
-                    Address subnet = Address.Parse(arguments[3]);
-                    Address gw = Address.Parse(arguments[4]);
+                    string[] adrnetwork = arguments[2].Split('/');
+                    Address ip = Address.Parse(adrnetwork[0]);
                     NetworkDevice nic = NetworkDevice.GetDeviceByName(arguments[1]);
+                    Address gw = null;
+                    if (arguments.Count == 4)
+                    {
+                        gw = Address.Parse(arguments[3]);
+                    }
+
+                    int cidr;
+                    try
+                    {
+                        cidr = int.Parse(adrnetwork[1]);
+                    }
+                    catch (Exception ex)
+                    {
+                        return new ReturnInfo(this, ReturnCode.ERROR, ex.Message);
+                    }
+                    Address subnet = Address.CIDRToAddress(cidr);
 
                     if (nic == null)
                     {
                         return new ReturnInfo(this, ReturnCode.ERROR, "Couldn't find network device: " + arguments[1]);
                     }
-                    if (ip != null && subnet != null && gw != null)
+
+                    if (ip != null && subnet != null)
                     {
                         NetworkInit.Enable(nic, ip, subnet, gw);
                         Console.WriteLine("Config OK!");
@@ -131,6 +143,10 @@ namespace Aura_OS.System.Shell.cmdIntr.Network
                     {
                         Console.WriteLine("This interface doesn't exists.");
                     } */
+                }                
+                else
+                {
+                    return new ReturnInfo(this, ReturnCode.ERROR, "Usage : ipconfig /set {device} {IPv4/CIDR} {Gateway|null}");
                 }
             }
             else
