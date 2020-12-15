@@ -55,6 +55,7 @@ namespace Aura_OS.System.Shell.cmdIntr
             CMDs.Add(new CommandChangeVol(new string[] { "chgvol", "cv" }));
             CMDs.Add(new CommandMkfil(new string[] { "touch", "mkfil", "mf" }));
             CMDs.Add(new CommandRmfil(new string[] { "rmfil", "rmf" }));
+            CMDs.Add(new CommandKeyboardMap(new string[] { "setkeyboardmap", "setkeyboard" }));
 
             CMDs.Add(new CommandAction(new string[] { "beep" }, () =>
             {
