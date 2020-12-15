@@ -4,11 +4,11 @@
 * PROGRAMMERS:      Haydend <haydendunnicliffe@gmail.com>
 */
 
+/*
 using ConsoleDraw.Inputs.Base;
 using ConsoleDraw.Windows.Base;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace ConsoleDraw.Inputs
 {
@@ -34,7 +34,7 @@ namespace ConsoleDraw.Inputs
             Xpostion = x;
             Ypostion = y;
             Options = options;
-            Text = Options.First();
+            Text = Options[0];
             Length = length;
             BackgroudColour = parentWindow.BackgroundColour;
 
@@ -76,3 +76,5 @@ namespace ConsoleDraw.Inputs
         
     }
 }
+
+*/

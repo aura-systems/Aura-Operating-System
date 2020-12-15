@@ -8,7 +8,6 @@ using ConsoleDraw.Inputs.Base;
 using ConsoleDraw.Windows.Base;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace ConsoleDraw.Inputs
 {
@@ -24,7 +23,7 @@ namespace ConsoleDraw.Inputs
         public List<MenuItem> MenuItems = new List<MenuItem>();
         public MenuDropdown MenuDropdown;
 
-        public Menu(String text, int x, int y, String iD, Window parentWindow) : base(x, y, 1, text.Count() + 2, parentWindow, iD)
+        public Menu(String text, int x, int y, String iD, Window parentWindow) : base(x, y, 1, text.Length + 2, parentWindow, iD)
         {
             Text = text;
             Xpostion = x;

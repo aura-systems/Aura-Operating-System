@@ -13,6 +13,8 @@ using Aura_OS.System.Shell.cmdIntr.Tests;
 using Aura_OS.System.Shell.cmdIntr.Util;
 using Aura_OS.System.Translation;
 using Aura_OS.System.Utils;
+using ConsoleDraw;
+using ConsoleDraw.Windows;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -175,6 +177,14 @@ namespace Aura_OS.System.Shell.cmdIntr
                     settings.Edit("dns01", "0.0.0.0");
                     settings.Push();
                 }
+            }));
+            CMDs.Add(new CommandAction(new string[] { "ui" }, () =>
+            {
+                Console.Clear();
+                WindowManager.SetupWindow();
+                new Alert("This is an alert!", null);
+                WindowManager.EndWindow();
+                Console.WriteLine("That was the Alert");
             }));
         }
 

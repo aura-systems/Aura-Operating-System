@@ -7,7 +7,6 @@
 using ConsoleDraw.Inputs;
 using ConsoleDraw.Windows.Base;
 using System;
-using System.Linq;
 
 namespace ConsoleDraw.Windows
 {
@@ -18,19 +17,19 @@ namespace ConsoleDraw.Windows
 
 
         public Alert(String Message, Window parentWindow)
-            : base("Message", 6, (Console.WindowWidth / 2) - 25, 50, 5 + (int)Math.Ceiling(((Double)Message.Count() / textLength)), parentWindow)
+            : base("Message", 6, (Console.WindowWidth / 2) - 25, 50, 5 + (int)Math.Ceiling(((Double)Message.Length / textLength)), parentWindow)
         {
             Create(Message, parentWindow);
         }
 
         public Alert(String Message, Window parentWindow, String Title)
-            : base(Title, 6, (Console.WindowWidth / 2) - 30, 25, 5 + (int)Math.Ceiling(((Double)Message.Count() / textLength)), parentWindow)
+            : base(Title, 6, (Console.WindowWidth / 2) - 30, 25, 5 + (int)Math.Ceiling(((Double)Message.Length / textLength)), parentWindow)
         {
             Create(Message, parentWindow);
         }
 
         public Alert(String Message, Window parentWindow, ConsoleColor backgroundColour)
-            : base("Message", 6, (Console.WindowWidth / 2) - 25, 50, 5 + (int)Math.Ceiling(((Double)Message.Count() / textLength)), parentWindow)
+            : base("Message", 6, (Console.WindowWidth / 2) - 25, 50, 5 + (int)Math.Ceiling(((Double)Message.Length / textLength)), parentWindow)
         {
             BackgroundColour = backgroundColour;
 
@@ -38,7 +37,7 @@ namespace ConsoleDraw.Windows
         }
 
         public Alert(String Message, Window parentWindow, ConsoleColor backgroundColour, String Title)
-            : base(Title, 6, (Console.WindowWidth / 2) - 25, 50, 5 + (int)Math.Ceiling(((Double)Message.Count() / textLength)), parentWindow)
+            : base(Title, 6, (Console.WindowWidth / 2) - 25, 50, 5 + (int)Math.Ceiling(((Double)Message.Length / textLength)), parentWindow)
         {
             BackgroundColour = backgroundColour;
 
@@ -48,7 +47,7 @@ namespace ConsoleDraw.Windows
         private void Create(String Message, Window parentWindow)
         {
             var count = 0;
-            while ((count*45) < Message.Count())
+            while ((count*45) < Message.Length)
             {
                 var splitMessage = Message.PadRight(textLength * (count + 1), ' ').Substring((count * textLength), textLength);
                 var messageLabel = new Label(splitMessage, PostionX + 2 + count, PostionY + 2, "messageLabel", this);

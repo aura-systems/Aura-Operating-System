@@ -4,13 +4,13 @@
 * PROGRAMMERS:      Haydend <haydendunnicliffe@gmail.com>
 */
 
+/*
 using ConsoleDraw.Inputs.Base;
 using ConsoleDraw.Windows;
 using ConsoleDraw.Windows.Base;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 
 namespace ConsoleDraw.Inputs
 {
@@ -313,3 +313,4 @@ namespace ConsoleDraw.Inputs
         }
     }
 }
+*/

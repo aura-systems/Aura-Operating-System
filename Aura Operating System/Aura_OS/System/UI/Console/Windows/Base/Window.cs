@@ -4,10 +4,10 @@
 * PROGRAMMERS:      Haydend <haydendunnicliffe@gmail.com>
 */
 
+using Aura_OS.System.Utils.Linq;
 using ConsoleDraw.Inputs.Base;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace ConsoleDraw.Windows.Base
 {
@@ -324,7 +324,7 @@ namespace ConsoleDraw.Windows.Base
 
         private int MoveIndexAlongOne(int index)
         {
-            if (Inputs.Count() == index + 1)
+            if (Inputs.Count == index + 1)
                 return 0;
 
             return index + 1;
@@ -333,7 +333,7 @@ namespace ConsoleDraw.Windows.Base
         private int MoveIndexBackOne(int index)
         {
             if (index == 0)
-                return Inputs.Count() - 1;
+                return Inputs.Count - 1;
 
             return index - 1;
         }

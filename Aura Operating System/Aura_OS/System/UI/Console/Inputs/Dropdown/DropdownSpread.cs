@@ -4,10 +4,10 @@
 * PROGRAMMERS:      Haydend <haydendunnicliffe@gmail.com>
 */
 
+/*
 using ConsoleDraw.Windows.Base;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace ConsoleDraw.Inputs
 {
@@ -17,9 +17,9 @@ namespace ConsoleDraw.Inputs
         public Dropdown root;
 
         public DropdownSpread(int Xpostion, int Ypostion, List<String> options, Window parentWindow, Dropdown root)
-            : base(Xpostion, Ypostion, 20, options.Count(), parentWindow)
+            : base(Xpostion, Ypostion, 20, options.Count, parentWindow)
         {
-            for (var i = 0; i < options.Count(); i++)
+            for (var i = 0; i < options.Count; i++)
             {
                 var item = new DropdownItem(options[i], Xpostion + i, "option" + i, this);
 
@@ -33,7 +33,11 @@ namespace ConsoleDraw.Inputs
 
             Inputs.AddRange(DropdownItems);
 
-            CurrentlySelected = DropdownItems.FirstOrDefault(x => x.Text == root.Text);
+            if (DropdownItems.Count > 0)
+            {
+                CurrentlySelected = DropdownItems[0];
+            } //TODO: Check if that is working
+            //CurrentlySelected = DropdownItems.FirstOrDefault(x => x.Text == root.Text);
 
             BackgroundColour = ConsoleColor.DarkGray;
             Draw();
@@ -41,3 +45,5 @@ namespace ConsoleDraw.Inputs
         }
     }
 }
+
+*/

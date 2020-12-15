@@ -4,6 +4,8 @@
 * PROGRAMMERS:      Haydend <haydendunnicliffe@gmail.com>
 */
 
+/*
+
 using System;
 using System.IO;
 using ConsoleDraw.Windows.Base;
@@ -82,3 +84,5 @@ namespace ConsoleDraw.Windows
         }
     }
 }
+
+*/

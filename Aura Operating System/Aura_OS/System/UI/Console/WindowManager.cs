@@ -54,7 +54,7 @@ namespace ConsoleDraw
             if (Console.BufferHeight < whereToMove + Console.WindowHeight) //Buffer is too small
                 Console.BufferHeight = whereToMove + Console.WindowHeight;
 
-            Console.MoveBufferArea(0, 0, Console.WindowWidth, Console.WindowHeight, 0, whereToMove);
+            //Console.MoveBufferArea(0, 0, Console.WindowWidth, Console.WindowHeight, 0, whereToMove); TODO: Implement MoveBufferArea
 
             Console.CursorVisible = false;
             startingX = Console.CursorTop;
@@ -74,7 +74,8 @@ namespace ConsoleDraw
             var whereToGet = startingX + 1; //Move one line below visible
             if (whereToGet < Console.WindowHeight) //If cursor is not on bottom line of visible
                 whereToGet = Console.WindowHeight + 1;
-            Console.MoveBufferArea(0, whereToGet, Console.WindowWidth, Console.WindowHeight, 0, 0);
+
+            //Console.MoveBufferArea(0, whereToGet, Console.WindowWidth, Console.WindowHeight, 0, 0); TODO: Implement MoveBufferArea
 
             Console.CursorTop = startingX;
             Console.CursorLeft = startingY;

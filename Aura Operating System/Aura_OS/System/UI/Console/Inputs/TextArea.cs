@@ -4,11 +4,11 @@
 * PROGRAMMERS:      Haydend <haydendunnicliffe@gmail.com>
 */
 
+/*
 using ConsoleDraw.Inputs.Base;
 using ConsoleDraw.Windows.Base;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace ConsoleDraw.Inputs
 {
@@ -114,13 +114,13 @@ namespace ConsoleDraw.Inputs
             var newCursor = 0;
             for (var i = 0; i < cursorDisplayX + 1; i++)
             {
-                newCursor += splitText[i].Count();
+                newCursor += splitText[i].Length;
             }
 
-            if (nextLine.Count() > CursorDisplayY)
+            if (nextLine.Length > CursorDisplayY)
                 newCursor += CursorDisplayY;
             else
-                newCursor += nextLine.Where(x => x != '\n').Count();
+                newCursor += nextLine.Where(x => x != '\n').Length;
 
 
             CursorPostion = newCursor;
@@ -143,13 +143,13 @@ namespace ConsoleDraw.Inputs
             var newCursor = 0;
             for (var i = 0; i < cursorDisplayX - 1; i++)
             {
-                newCursor += splitText[i].Count();
+                newCursor += splitText[i].Length;
             }
 
-            if (nextLine.Count() >= CursorDisplayY)
+            if (nextLine.Length >= CursorDisplayY)
                 newCursor += CursorDisplayY;
             else
-                newCursor += nextLine.Where(x => x!='\n').Count();
+                newCursor += nextLine.Where(x => x!='\n').Length;
 
             CursorPostion = newCursor;
             Draw();
@@ -162,7 +162,7 @@ namespace ConsoleDraw.Inputs
             var newCursor = 0;
             for (var i = 0; i < cursorDisplayX; i++)
             {
-                newCursor += splitText[i].Count();
+                newCursor += splitText[i].Length;
             }
 
             CursorPostion = newCursor;
@@ -177,7 +177,7 @@ namespace ConsoleDraw.Inputs
             var newCursor = 0;
             for (var i = 0; i < cursorDisplayX + 1; i++)
             {
-                newCursor += splitText[i].Count();
+                newCursor += splitText[i].Length;
             }
 
             CursorPostion = newCursor - currentLine.Count(x => x == '\n');
@@ -240,7 +240,7 @@ namespace ConsoleDraw.Inputs
             //Draw Scroll Bar
             WindowManager.DrawColourBlock(ConsoleColor.White, Xpostion, Ypostion + Width, Xpostion + Height, Ypostion + Width + 1);
             
-            double linesPerPixel = (double)lines.Count() / (Height);
+            double linesPerPixel = (double)lines.Length / (Height);
             var postion = 0;
             if(linesPerPixel > 0)
               postion = (int)Math.Floor(cursorDisplayX / linesPerPixel);
@@ -253,9 +253,9 @@ namespace ConsoleDraw.Inputs
             List<String> splitText = new List<String>();
             
             var lastSplit = 0;
-            for (var i = 0; i < Text.Count() + 1; i++)
+            for (var i = 0; i < Text.Length + 1; i++)
             {
-                if (Text.Count() > i && Text[i] == '\n')
+                if (Text.Length > i && Text[i] == '\n')
                 {
                     splitText.Add(Text.Substring(lastSplit, i - lastSplit + 1));
                     lastSplit = i + 1;
@@ -266,8 +266,8 @@ namespace ConsoleDraw.Inputs
                     lastSplit = i;
                 }
                 
-                if (i == Text.Count())
-                    splitText.Add(Text.Substring(lastSplit, Text.Count() - lastSplit));
+                if (i == Text.Length)
+                    splitText.Add(Text.Substring(lastSplit, Text.Length - lastSplit));
             }
 
             return splitText.Select(x => x.Replace('\r', ' ')).ToList();
@@ -286,14 +286,14 @@ namespace ConsoleDraw.Inputs
 
             for (var i = 0; i < CursorPostion; i++)
             {
-                if (lines[displayX].Count() > displayY && lines[displayX][displayY] == '\n') //Skip NewLine characters
+                if (lines[displayX].Length > displayY && lines[displayX][displayY] == '\n') //Skip NewLine characters
                 {
                     displayY++;
                 }
 
                 if (lines.Count > displayX)
                 {
-                    if (lines[displayX].Count() > displayY)
+                    if (lines[displayX].Length > displayY)
                         displayY++;
                     else if (lines.Count - 1 > displayX)
                     {
@@ -346,3 +346,4 @@ namespace ConsoleDraw.Inputs
         }
     }
 }
+*/

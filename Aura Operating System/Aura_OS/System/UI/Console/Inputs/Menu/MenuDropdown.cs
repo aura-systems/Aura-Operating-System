@@ -7,7 +7,6 @@
 using ConsoleDraw.Windows.Base;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace ConsoleDraw.Inputs
 {
@@ -16,10 +15,10 @@ namespace ConsoleDraw.Inputs
         private List<MenuItem> MenuItems;
         
         public MenuDropdown(int Xpostion, int Ypostion, List<MenuItem> menuItems, Window parentWindow)
-            : base(Xpostion, Ypostion, 20, menuItems.Count() + 2, parentWindow)
+            : base(Xpostion, Ypostion, 20, menuItems.Count + 2, parentWindow)
         {
 
-            for (var i = 0; i < menuItems.Count(); i++)
+            for (var i = 0; i < menuItems.Count; i++)
             {
                 menuItems[i].ParentWindow = this;
                 menuItems[i].Width = this.Width - 2;
@@ -32,7 +31,11 @@ namespace ConsoleDraw.Inputs
 
             Inputs.AddRange(MenuItems);
             
-            CurrentlySelected = MenuItems.FirstOrDefault();
+            //CurrentlySelected = MenuItems.FirstOrDefault();
+            if (MenuItems.Count != 0)
+            {
+                CurrentlySelected = MenuItems[0];
+            }
 
             BackgroundColour = ConsoleColor.DarkGray;
             Draw();

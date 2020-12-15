@@ -4,6 +4,7 @@
 * PROGRAMMERS:      Haydend <haydendunnicliffe@gmail.com>
 */
 
+/*
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -91,9 +92,9 @@ namespace ConsoleDraw.Windows
             var file = Path.Combine(fileSelect.CurrentPath, fileSelect.CurrentlySelectedFile);
             String text = System.IO.File.ReadAllText(file);
 
-            /*var mainWindow = (MainWindow)ParentWindow;
-            mainWindow.textArea.SetText(text);
-            mainWindow.fileLabel.SetText(fileSelect.CurrentlySelectedFile);*/
+            //var mainWindow = (MainWindow)ParentWindow;
+            //mainWindow.textArea.SetText(text);
+            //mainWindow.fileLabel.SetText(fileSelect.CurrentlySelectedFile);
 
             DataLoaded = true;
             Data = text;
@@ -104,3 +105,4 @@ namespace ConsoleDraw.Windows
         }
     }
 }
+*/
