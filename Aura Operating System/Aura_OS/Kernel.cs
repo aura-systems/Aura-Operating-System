@@ -51,7 +51,6 @@ namespace Aura_OS
         public static string boottime = Time.MonthString() + "/" + Time.DayString() + "/" + Time.YearString() + ", " + Time.TimeString(true, true, true);
         public static System.AConsole.Console AConsole;
         public static string Consolemode = "VGATextmode";
-        public static Config LocalNetworkConfig;
         public static string current_volume = @"0:\";
 
         public static Cosmos.Debug.Kernel.Debugger debugger = new Cosmos.Debug.Kernel.Debugger("Aura", "Kernel");

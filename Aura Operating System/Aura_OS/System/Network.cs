@@ -12,14 +12,13 @@ namespace Aura_OS.System
 {
     class NetworkInit
     {
-
         public static bool Enable(NetworkDevice device, Address ip, Address subnet, Address gw)
         {            
             if (device != null)
             {
-                Kernel.LocalNetworkConfig = new Config(ip, subnet, gw);
-                Network.NetworkStack.ConfigIP(device, Kernel.LocalNetworkConfig);
-                Kernel.debugger.Send(Kernel.LocalNetworkConfig.ToString());
+                Config config = new Config(ip, subnet, gw);
+                Network.NetworkStack.ConfigIP(device, config);
+                Kernel.debugger.Send(config.ToString());
                 return true;
             }
             return false;
@@ -31,19 +30,30 @@ namespace Aura_OS.System
 
             #region AMDPCNETII
 
-            CustomConsole.WriteLineInfo("Searching for AMDPCNETII...");
-            Cosmos.HAL.PCIDevice AMDPCNETII = Cosmos.HAL.PCI.GetDevice(Cosmos.HAL.VendorID.AMD, Cosmos.HAL.DeviceID.PCNETII);
-            if (AMDPCNETII != null)
+            int NetworkDeviceID = 0;
+
+            CustomConsole.WriteLineInfo("Searching for Ethernet Controller...");
+            foreach (Cosmos.HAL.PCIDevice device in Cosmos.HAL.PCI.Devices)
             {
-                CustomConsole.WriteLineOK("Found AMDPCNETII NIC on PCI " + AMDPCNETII.bus + ":" + AMDPCNETII.slot + ":" + AMDPCNETII.function);
-                CustomConsole.WriteLineInfo("NIC IRQ: " + AMDPCNETII.InterruptLine);
+                if ((device.ClassCode == 0x02) && (device.Subclass == 0x00)) // is Ethernet Controller
+                {
+                    if (device == Cosmos.HAL.PCI.GetDevice(device.bus, device.slot, device.function))
+                    {
+                        CustomConsole.WriteLineOK("Found AMDPCNETII NIC on PCI " + device.bus + ":" + device.slot + ":" + device.function);
+                        CustomConsole.WriteLineInfo("NIC IRQ: " + device.InterruptLine);
 
-                new AMDPCNetII(AMDPCNETII);
+                        var AMDPCNetIIDevice = new AMDPCNetII(device);
 
-                CustomConsole.WriteLineInfo("NIC MAC Address: " + NetworkDevice.Devices[0].MACAddress.ToString());
+                        AMDPCNetIIDevice.NameID = ("eth" + NetworkDeviceID);
 
-                Network.NetworkStack.Init();
-                NetworkDevice.Devices[0].Enable();
+                        CustomConsole.WriteLineInfo("NIC MAC Address: " + AMDPCNetIIDevice.MACAddress.ToString());
+
+                        Network.NetworkStack.Init();
+                        AMDPCNetIIDevice.Enable();
+
+                        NetworkDeviceID++;
+                    }                    
+                }
             }
 
             #endregion

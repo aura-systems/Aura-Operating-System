@@ -30,7 +30,29 @@ namespace Aura_OS.System.Shell.cmdIntr.SystemInfomation
         /// </summary>
         public override ReturnInfo Execute()
         {
-            L.List_Translation.Ipconfig();
+            if (NetworkStack.ConfigEmpty())
+            {
+                Console.WriteLine("No network configuration detected! Use ipconfig /help");
+            }
+            foreach (HAL.Drivers.Network.NetworkDevice device in NetworkConfig.Keys)
+            {
+                switch (device.CardType)
+                {
+                    case HAL.Drivers.Network.CardType.Ethernet:
+                        Console.WriteLine("Ethernet Card : " + device.NameID + " - " + device.Name);
+                        break;
+                    case HAL.Drivers.Network.CardType.Wireless:
+                        Console.WriteLine("Wireless Card : " + device.NameID + " - " + device.Name);
+                        break;
+                }
+                Utils.Settings settings = new Utils.Settings(@"0:\System\" + device.Name + ".conf");
+                Console.WriteLine("MAC Address          : " + device.MACAddress.ToString());
+                Console.WriteLine("IP Address           : " + NetworkConfig.Get(device).IPAddress.ToString());
+                Console.WriteLine("Subnet mask          : " + NetworkConfig.Get(device).SubnetMask.ToString());
+                Console.WriteLine("Default Gateway      : " + NetworkConfig.Get(device).DefaultGateway.ToString());
+                Console.WriteLine("Preferred DNS server : " + settings.GetValue("dns01"));
+            }
+
             return new ReturnInfo(this, ReturnCode.OK);
         }
 
@@ -46,7 +68,7 @@ namespace Aura_OS.System.Shell.cmdIntr.SystemInfomation
                 Console.WriteLine("- ipconfig /listnic    List network devices");
                 Console.WriteLine("- ipconfig /set        Manually set an IP Address");
                 Console.WriteLine("- ipconfig /ask        Find the DHCP server and ask a new IP address");
-                Console.WriteLine("- ipconfig /release    Tell the DHCP server to make the IP adress available");
+                Console.WriteLine("- ipconfig /release    Tell the DHCP server to make the IP address available");
             }
             else if (arguments[0] == "/release")
             {
@@ -58,19 +80,17 @@ namespace Aura_OS.System.Shell.cmdIntr.SystemInfomation
             }
             else if (arguments[0] == "/listnic")
             {
-                int counter = 0;
                 foreach (var device in NetworkDevice.Devices)
                 {
                     switch (device.CardType)
                     {
                         case CardType.Ethernet:
-                            Console.WriteLine("Ethernet Card " + counter + " - " + device.Name + " (" + device.MACAddress + ")");
+                            Console.WriteLine("Ethernet Card - " + device.NameID + " - " + device.Name + " (" + device.MACAddress + ")");
                             break;
                         case CardType.Wireless:
-                            Console.WriteLine("Wireless Card " + counter + " - " + device.Name + " (" + device.MACAddress + ")");
+                            Console.WriteLine("Wireless Card - " + device.NameID + " - " + device.Name + " (" + device.MACAddress + ")");
                             break;
                     }
-                    counter++;
                 }
             }
             else if (arguments[0] == "/set")
@@ -85,8 +105,6 @@ namespace Aura_OS.System.Shell.cmdIntr.SystemInfomation
                     Address subnet = Address.Parse(arguments[3]);
                     Address gw = Address.Parse(arguments[4]);
                     NetworkDevice nic = NetworkDevice.GetDeviceByName(arguments[1]);
-
-                    NetworkStack.RemoveAllConfigIP();
 
                     if (nic == null)
                     {
