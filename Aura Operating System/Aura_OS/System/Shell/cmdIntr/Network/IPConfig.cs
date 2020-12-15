@@ -14,7 +14,7 @@ using System.Collections.Generic;
 using System.Linq;
 using L = Aura_OS.System.Translation;
 
-namespace Aura_OS.System.Shell.cmdIntr.SystemInfomation
+namespace Aura_OS.System.Shell.cmdIntr.Network
 {
     class CommandIPConfig : ICommand
     {
