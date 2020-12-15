@@ -9,7 +9,7 @@ using System.Text;
 * PROGRAMMER(S):    Alexy DA CRUZ <dacruzalexy@gmail.com>
 */
 
-namespace Aura_OS.System.Network.DHCP
+namespace Aura_OS.System.Network.UDP.DHCP
 {
     class DHCPOption
     {

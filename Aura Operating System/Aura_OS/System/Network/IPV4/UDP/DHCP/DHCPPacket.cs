@@ -10,7 +10,7 @@ using System.Text;
 * PROGRAMMERS:      Alexy DA CRUZ <dacruzalexy@gmail.com>
 */
 
-namespace Aura_OS.System.Network.DHCP
+namespace Aura_OS.System.Network.UDP.DHCP
 {
     public class DHCPPacket : IPPacket
     {

@@ -4,19 +4,17 @@ using Aura_OS.HAL;
 
 /*
 * PROJECT:          Aura Operating System Development
-* CONTENT:          DHCP - DHCP Request packet
-* PROGRAMMERS:      Alexy DA CRUZ <dacruzalexy@gmail.com>
+* CONTENT:          DHCP - DHCP Discover Packet
+* PROGRAMMER(S):    Alexy DA CRUZ <dacruzalexy@gmail.com>
 */
 
-namespace Aura_OS.System.Network.DHCP
+namespace Aura_OS.System.Network.UDP.DHCP
 {
-    public class DHCPRequest : DHCPPacket
+    public class DHCPDiscover : DHCPPacket
     {
         protected int xID;
 
-        public static int PacketSize { get; set; }
-
-        public DHCPRequest(MACAddress mac_src, Address RequestedAddress, Address DHCPServerAddress)
+        public DHCPDiscover(MACAddress mac_src)
             : base(Address.Zero, mac_src)
         {
             //Request
@@ -46,7 +44,7 @@ namespace Aura_OS.System.Network.DHCP
                 mRawData[dataOffset + i] = 0x00;
             }
 
-            //SourceMAC mac
+            //Src mac
             mRawData[dataOffset + 36] = mac_src.bytes[0];
             mRawData[dataOffset + 37] = mac_src.bytes[1];
             mRawData[dataOffset + 38] = mac_src.bytes[2];
@@ -68,39 +66,28 @@ namespace Aura_OS.System.Network.DHCP
 
             //options
 
-            //Request
-            mRawData[dataOffset + 248] = 53;
-            mRawData[dataOffset + 249] = 1;
-            mRawData[dataOffset + 250] = 3;
-
-            //Requested Address
-            mRawData[dataOffset + 251] = 50;
-            mRawData[dataOffset + 252] = 4;
-            
-            mRawData[dataOffset + 253] = RequestedAddress.address[0];
-            mRawData[dataOffset + 254] = RequestedAddress.address[1];
-            mRawData[dataOffset + 255] = RequestedAddress.address[2];
-            mRawData[dataOffset + 256] = RequestedAddress.address[3];
-
-            mRawData[dataOffset + 257] = 54;
-            mRawData[dataOffset + 258] = 4;
-
-            mRawData[dataOffset + 259] = DHCPServerAddress.address[0];
-            mRawData[dataOffset + 260] = DHCPServerAddress.address[1];
-            mRawData[dataOffset + 261] = DHCPServerAddress.address[2];
-            mRawData[dataOffset + 262] = DHCPServerAddress.address[3];
+            //Discover
+            mRawData[dataOffset + 248] = 0x35;
+            mRawData[dataOffset + 249] = 0x01;
+            mRawData[dataOffset + 250] = 0x01;
 
             //Parameters start here
-            mRawData[dataOffset + 263] = 0x37;
-            mRawData[dataOffset + 264] = 4;
+            mRawData[dataOffset + 251] = 0x37;
+            mRawData[dataOffset + 252] = 4;
 
             //Parameters
-            mRawData[dataOffset + 265] = 0x01;
-            mRawData[dataOffset + 266] = 0x03;
-            mRawData[dataOffset + 267] = 0x0f;
-            mRawData[dataOffset + 268] = 0x06;
+            mRawData[dataOffset + 253] = 0x01;
+            mRawData[dataOffset + 254] = 0x03;
+            mRawData[dataOffset + 255] = 0x0f;
+            mRawData[dataOffset + 256] = 0x06;
 
-            mRawData[dataOffset + 269] = 0xff; //ENDMARK
+            mRawData[dataOffset + 257] = 0xff; //ENDMARK
+
+            //Fill 0
+            //for (int i = 258; i < 272; i++)
+            //{
+            //    mRawData[dataOffset + i] = 0x00;
+            //}
 
             initFields();
         }
