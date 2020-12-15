@@ -44,24 +44,26 @@ namespace Aura_Plugs
 
         public static int get_BufferHeight()
         {
-            WriteLine("Not implemented: get_BufferHeight");
-            return -1;
+            return GetConsole().Height;
+            //WriteLine("Not implemented: get_BufferHeight");
+            //return -1;
         }
 
         public static void set_BufferHeight(int aHeight)
         {
-            WriteLine("Not implemented: set_BufferHeight");
+            //WriteLine("Not implemented: set_BufferHeight");
         }
 
         public static int get_BufferWidth()
         {
-            WriteLine("Not implemented: get_BufferWidth");
-            return -1;
+            return GetConsole().Width;
+            //WriteLine("Not implemented: get_BufferWidth");
+            //return -1;
         }
 
         public static void set_BufferWidth(int aWidth)
         {
-            WriteLine("Not implemented: set_BufferWidth");
+            //WriteLine("Not implemented: set_BufferWidth");
         }
 
         public static bool get_CapsLock()

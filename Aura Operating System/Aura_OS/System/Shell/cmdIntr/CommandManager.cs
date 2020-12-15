@@ -182,7 +182,9 @@ namespace Aura_OS.System.Shell.cmdIntr
             {
                 Console.Clear();
                 WindowManager.SetupWindow();
-                new Alert("This is an alert!", null);
+                
+                //new Alert("This is an alert!", null);
+                
                 WindowManager.EndWindow();
                 Console.WriteLine("That was the Alert");
             }));
