@@ -1,5 +1,6 @@
 ﻿using Aura_OS.HAL;
 using Aura_OS.System.Network.IPV4;
+using Aura_OS.System.Network.IPV4.UDP;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -12,71 +13,71 @@ using System.Text;
 
 namespace Aura_OS.System.Network.UDP.DHCP
 {
-    public class DHCPPacket : IPPacket
+    public class DHCPPacket : UDPPacket
     {
-        public DHCPPacket(byte[] rawData)
-            : base(rawData)
-        { }
+
+        protected byte MessageType;
+        protected byte HardwareType;
+        protected byte HardwareAddressLength;
+        protected byte Hops;
+        protected uint TransactionID;
+        protected ushort SecondsElapsed;
+        protected ushort BootpFlags;
+        protected Address ClientIp;
+        protected Address YourClient;
+        protected Address NextServer;
+        protected Address RelayAgent;
+        protected MACAddress Client;
+        protected uint MagicCookie;
 
         public static void DHCPHandler(byte[] packetData)
-        {            
-            DHCPOption Options = new DHCPOption(packetData);
+        {
+            Kernel.debugger.Send("DHCP Handler called");
+            DHCPPacket packet = new DHCPPacket(packetData);
 
-            if (Options.Type == 0x02)
-            {
-                //Offert packet received
-                Core.SendRequestPacket(Options.Address(), Options.Server());
-            }
-
-            if (Options.Type == 0x05 || Options.Type == 0x06)
-            {
-                //ACK or NAK DHCP packet received
-                if (Core.DHCPAsked)
-                {
-                    Core.Apply(Options, true);
-                }
-                else
-                {
-                    Core.Apply(Options);
-                }
-            }
+            //TODO: check dhcp packet type
         }
 
+        /// <summary>
+        /// Work around to make VMT scanner include the initFields method
+        /// </summary>
+        public static void VMTInclude()
+        {
+            new DHCPPacket();
+        }
+
+        internal DHCPPacket()
+            : base()
+        { }
+
+        internal DHCPPacket(byte[] rawData)
+            : base(rawData)
+        {
+        }
         protected override void initFields()
         {
             base.initFields();
+            MessageType = mRawData[this.dataOffset];
+            HardwareType = mRawData[this.dataOffset + 1];
+            HardwareAddressLength = mRawData[this.dataOffset + 2];
+            Hops = mRawData[this.dataOffset + 3];
+            TransactionID = (uint)((mRawData[4] << 24) | (mRawData[5] << 16) | (mRawData[6] << 8) | mRawData[7]);
+            SecondsElapsed = (ushort)((mRawData[this.dataOffset + 8] << 8) | mRawData[this.dataOffset + 9]);
+            BootpFlags = (ushort)((mRawData[this.dataOffset + 10] << 8) | mRawData[this.dataOffset + 11]);
+            ClientIp = new Address((byte)(mRawData[12] << 24), (byte)(mRawData[13] << 16), (byte)(mRawData[14] << 8), (byte)(mRawData[15]));
+            //TODO le reste
         }
 
-        public static int PacketSize { get; set; }
-
-        public DHCPPacket(Address source, MACAddress mac)
-            : base(mac, MACAddress.Broadcast, 300, 0x11, source, Address.Broadcast, 0x00)
+        internal DHCPPacket(Address source, Address destination, MACAddress sourcemac, MACAddress destinationmac, byte sourceport, byte destinationport)
+            : base(sourcemac, source, destination, sourceport, destinationport)
         {
-            //UDP
-
-            //Source Port 68
-            mRawData[dataOffset + 0] = 0x00;
-            mRawData[dataOffset + 1] = 0x44;
-
-            //Destination Port 67
-            mRawData[dataOffset + 2] = 0x00;
-            mRawData[dataOffset + 3] = 0x43;
-
-            //Length
-            PacketSize = 271;
-            mRawData[dataOffset + 4] = (byte)((PacketSize >> 8) & 0xFF);
-            mRawData[dataOffset + 5] = (byte)((PacketSize >> 0) & 0xFF);
-
-            //Checksum
-            mRawData[dataOffset + 6] = 0x00;
-            mRawData[dataOffset + 7] = 0x00;
-
+            
             initFields();
         }
 
-        public override string ToString()
-        {
-            return "DHCP Packet Src=" + srcMAC + ", Dest=" + destMAC + ", ";
-        }
+        //TODO Getter setter
+
     }
+
+    // Other DHCP Packets that inherit DHCPPacket
 }
