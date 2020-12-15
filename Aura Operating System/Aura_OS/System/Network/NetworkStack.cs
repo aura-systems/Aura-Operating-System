@@ -59,13 +59,11 @@ namespace Aura_OS.System.Network
         {
             if (NetworkConfig.ContainsKey(nic))
             {
-                CustomConsole.WriteLineInfo("Config already exists.");
                 RemoveIPConfig(nic);
                 SetConfigIP(nic, config);
             }
             else
             {
-                CustomConsole.WriteLineInfo("Config does not exist.");
                 SetConfigIP(nic, config);
             }
         }

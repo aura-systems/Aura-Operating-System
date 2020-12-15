@@ -90,7 +90,16 @@ namespace Aura_OS.System.Network
 
         public static void Remove(NetworkDevice key)
         {
-            int index = Keys.IndexOf(key);
+            int index = 0;
+
+            foreach (var device in Keys)
+            {
+                if (key == device)
+                {
+                    break;
+                }
+                index++;
+            }
             Keys.RemoveAt(index);
             Values.RemoveAt(index);
         }
