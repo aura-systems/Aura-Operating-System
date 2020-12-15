@@ -66,7 +66,7 @@ namespace Aura_OS.System.Network.DHCP
                 NetworkStack.Update();
 
                 DHCPAsked = true;
-            }            
+            }
         }
 
         /// <summary>

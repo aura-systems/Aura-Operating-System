@@ -26,37 +26,41 @@ namespace Aura_OS.System
 
         public static void Init()
         {
-            CustomConsole.WriteLineInfo("Searching for Network cards...");
-
-            #region AMDPCNETII
-
             int NetworkDeviceID = 0;
 
-            CustomConsole.WriteLineInfo("Searching for Ethernet Controller...");
+            CustomConsole.WriteLineInfo("Searching for Ethernet Controllers...");
+
             foreach (Cosmos.HAL.PCIDevice device in Cosmos.HAL.PCI.Devices)
             {
-                if ((device.ClassCode == 0x02) && (device.Subclass == 0x00)) // is Ethernet Controller
+                if ((device.ClassCode == 0x02) && (device.Subclass == 0x00) && // is Ethernet Controller
+                    device == Cosmos.HAL.PCI.GetDevice(device.bus, device.slot, device.function))
                 {
-                    if (device == Cosmos.HAL.PCI.GetDevice(device.bus, device.slot, device.function))
+
+                    CustomConsole.WriteLineInfo("Found " + Cosmos.HAL.PCIDevice.DeviceClass.GetDeviceString(device) + " on PCI " + device.bus + ":" + device.slot + ":" + device.function);
+
+                    #region PCNETII
+
+                    if (device.VendorID == (ushort)Cosmos.HAL.VendorID.AMD && device.DeviceID == (ushort)Cosmos.HAL.DeviceID.PCNETII)
                     {
-                        CustomConsole.WriteLineOK("Found AMDPCNETII NIC on PCI " + device.bus + ":" + device.slot + ":" + device.function);
+                            
                         CustomConsole.WriteLineInfo("NIC IRQ: " + device.InterruptLine);
 
                         var AMDPCNetIIDevice = new AMDPCNetII(device);
 
                         AMDPCNetIIDevice.NameID = ("eth" + NetworkDeviceID);
 
-                        CustomConsole.WriteLineInfo("NIC MAC Address: " + AMDPCNetIIDevice.MACAddress.ToString());
+                        CustomConsole.WriteLineInfo("Registered at " + AMDPCNetIIDevice.NameID + " (" + AMDPCNetIIDevice.MACAddress.ToString() + ")");
 
                         Network.NetworkStack.Init();
                         AMDPCNetIIDevice.Enable();
 
                         NetworkDeviceID++;
-                    }                    
+                    }
+
+                    #endregion
+
                 }
             }
-
-            #endregion
 
             if (NetworkDevice.Devices.Count == 0)
             {
