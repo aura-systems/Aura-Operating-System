@@ -24,6 +24,18 @@ namespace Aura_OS.HAL.Drivers.Network
     {
         public static List<NetworkDevice> Devices { get; private set; }
 
+        public static NetworkDevice GetDeviceByName(string nameID)
+        {
+            foreach (var device in Devices)
+            {
+                if (device.NameID == nameID)
+                {
+                    return device;
+                }
+            }
+            return null;
+        }
+
         static NetworkDevice()
         {
             Devices = new List<NetworkDevice>();
@@ -45,6 +57,11 @@ namespace Aura_OS.HAL.Drivers.Network
         public abstract MACAddress MACAddress
         {
             get;
+        }
+
+        public string NameID
+        {
+            get; set;
         }
 
         public abstract string Name

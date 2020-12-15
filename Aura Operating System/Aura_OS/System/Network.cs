@@ -4,93 +4,69 @@
 * PROGRAMMERS:      Valentin Charbonnier <valentinbreiz@gmail.com>
 */
 
-using Cosmos.HAL;
+using Aura_OS.HAL.Drivers.Network;
+using Aura_OS.System.Network.IPV4;
+using System.Collections.Generic;
 
 namespace Aura_OS.System
 {
     class NetworkInit
     {
-
-        public static void Enable()
+        public static bool Enable(NetworkDevice device, Address ip, Address subnet, Address gw)
         {            
-            if (RTL8168NIC != null)
+            if (device != null)
             {
-                Utils.Settings settings = new Utils.Settings(@"0:\System\" + RTL8168NIC.Name + ".conf");
-                if (!IsSavedConf(RTL8168NIC.Name))
-                {
-                    Kernel.LocalNetworkConfig = new Network.IPV4.Config(new Network.IPV4.Address(0,0,0,0), new Network.IPV4.Address(0,0,0,0), new Network.IPV4.Address(0,0,0,0));
-                    Network.NetworkStack.ConfigIP(RTL8168NIC, Kernel.LocalNetworkConfig);
-                }
-                else
-                {
-                    Kernel.LocalNetworkConfig = new Network.IPV4.Config(Network.IPV4.Address.Parse(settings.GetValue("ipaddress")), Network.IPV4.Address.Parse(settings.GetValue("subnet")), Network.IPV4.Address.Parse(settings.GetValue("gateway")));
-                    Network.NetworkStack.ConfigIP(RTL8168NIC, Kernel.LocalNetworkConfig);
-                }
+                Config config = new Config(ip, subnet, gw);
+                Network.NetworkStack.ConfigIP(device, config);
+                Kernel.debugger.Send(config.ToString());
+                return true;
             }
-            if (AMDPCNetIINIC != null)
-            {
-                Utils.Settings settings = new Utils.Settings(@"0:\System\" + AMDPCNetIINIC.Name + ".conf");
-                if (!IsSavedConf(AMDPCNetIINIC.Name))
-                {
-                    Kernel.LocalNetworkConfig = new Network.IPV4.Config(new Network.IPV4.Address(0,0,0,0), new Network.IPV4.Address(0,0,0,0), new Network.IPV4.Address(0,0,0,0));
-                    Network.NetworkStack.ConfigIP(AMDPCNetIINIC, Kernel.LocalNetworkConfig);
-                }
-                else
-                {
-                    Kernel.LocalNetworkConfig = new Network.IPV4.Config(Network.IPV4.Address.Parse(settings.GetValue("ipaddress")), Network.IPV4.Address.Parse(settings.GetValue("subnet")), Network.IPV4.Address.Parse(settings.GetValue("gateway")));
-                    Network.NetworkStack.ConfigIP(AMDPCNetIINIC, Kernel.LocalNetworkConfig);
-                }
-            }
+            return false;
         }
 
-        static HAL.Drivers.Network.RTL8168 RTL8168NIC;
-        static HAL.Drivers.Network.AMDPCNetII AMDPCNetIINIC;
-
-        public static void Init(bool debug = true)
+        public static void Init()
         {
-            if (debug)
+            int NetworkDeviceID = 0;
+
+            CustomConsole.WriteLineInfo("Searching for Ethernet Controllers...");
+
+            foreach (Cosmos.HAL.PCIDevice device in Cosmos.HAL.PCI.Devices)
             {
-                CustomConsole.WriteLineInfo("Finding nic...");
+                if ((device.ClassCode == 0x02) && (device.Subclass == 0x00) && // is Ethernet Controller
+                    device == Cosmos.HAL.PCI.GetDevice(device.bus, device.slot, device.function))
+                {
+
+                    CustomConsole.WriteLineInfo("Found " + Cosmos.HAL.PCIDevice.DeviceClass.GetDeviceString(device) + " on PCI " + device.bus + ":" + device.slot + ":" + device.function);
+
+                    #region PCNETII
+
+                    if (device.VendorID == (ushort)Cosmos.HAL.VendorID.AMD && device.DeviceID == (ushort)Cosmos.HAL.DeviceID.PCNETII)
+                    {
+                            
+                        CustomConsole.WriteLineInfo("NIC IRQ: " + device.InterruptLine);
+
+                        var AMDPCNetIIDevice = new AMDPCNetII(device);
+
+                        AMDPCNetIIDevice.NameID = ("eth" + NetworkDeviceID);
+
+                        CustomConsole.WriteLineInfo("Registered at " + AMDPCNetIIDevice.NameID + " (" + AMDPCNetIIDevice.MACAddress.ToString() + ")");
+
+                        Network.NetworkStack.Init();
+                        AMDPCNetIIDevice.Enable();
+
+                        NetworkDeviceID++;
+                    }
+
+                    #endregion
+
+                }
             }
 
-            PCIDevice RTL8168 = PCI.GetDevice((VendorID)0x10EC, (DeviceID)0x8168);
-            if (RTL8168 != null)
-            {
-                if (debug)
-                {
-                    CustomConsole.WriteLineOK("Found RTL8168 NIC on PCI " + RTL8168.bus + ":" + RTL8168.slot + ":" + RTL8168.function);
-                    CustomConsole.WriteLineInfo("NIC IRQ: " + RTL8168.InterruptLine);
-                }
-                RTL8168NIC = new HAL.Drivers.Network.RTL8168(RTL8168);
-                if (debug)
-                {
-                    CustomConsole.WriteLineInfo("NIC MAC Address: " + RTL8168NIC.MACAddress.ToString());
-                }
-                Network.NetworkStack.Init();
-                RTL8168NIC.Enable();
-            }
-            PCIDevice AMDPCNETII = PCI.GetDevice(VendorID.AMD, DeviceID.PCNETII);
-            if (AMDPCNETII != null)
-            {
-                if (debug)
-                {
-                    CustomConsole.WriteLineOK("Found AMDPCNETII NIC on PCI " + AMDPCNETII.bus + ":" + AMDPCNETII.slot + ":" + AMDPCNETII.function);
-                    CustomConsole.WriteLineInfo("NIC IRQ: " + AMDPCNETII.InterruptLine);
-                }
-                AMDPCNetIINIC = new HAL.Drivers.Network.AMDPCNetII(AMDPCNETII);
-                if (debug)
-                {
-                    CustomConsole.WriteLineInfo("NIC MAC Address: " + AMDPCNetIINIC.MACAddress.ToString());
-                }
-                Network.NetworkStack.Init();
-                AMDPCNetIINIC.Enable();
-            }
-            if (RTL8168 == null && AMDPCNETII == null)
+            if (NetworkDevice.Devices.Count == 0)
             {
                 CustomConsole.WriteLineError("No supported network card found!!");
-                return;
             }
-            if (debug)
+            else
             {
                 CustomConsole.WriteLineOK("Network initialization done!");
             }

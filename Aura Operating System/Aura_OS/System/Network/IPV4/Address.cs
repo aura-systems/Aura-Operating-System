@@ -52,12 +52,18 @@ namespace Aura_OS.System.Network.IPV4
             string[] fragments = adr.Split('.');
             if (fragments.Length == 4)
             {
-                byte first = byte.Parse(fragments[0]);
-                byte second = byte.Parse(fragments[1]);
-                byte third = byte.Parse(fragments[2]);
-                byte fourth = byte.Parse(fragments[3]);
-
-                return new Address(first, second, third, fourth);
+                try
+                {
+                    byte first = byte.Parse(fragments[0]);
+                    byte second = byte.Parse(fragments[1]);
+                    byte third = byte.Parse(fragments[2]);
+                    byte fourth = byte.Parse(fragments[3]);
+                    return new Address(first, second, third, fourth);
+                }
+                catch
+                {
+                    return null;
+                }
             }
             else
             {

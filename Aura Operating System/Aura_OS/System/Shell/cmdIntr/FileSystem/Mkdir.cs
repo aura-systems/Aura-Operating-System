@@ -5,46 +5,36 @@
 */
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using L = Aura_OS.System.Translation;
 
 namespace Aura_OS.System.Shell.cmdIntr.FileSystem
 {
-    class Mkdir
+    class CommandMkdir : ICommand
     {
-        private static string HelpInfo = "";
-
         /// <summary>
-        /// Getter and Setters for Help Info.
+        /// Empty constructor.
         /// </summary>
-        public static string HI
+        public CommandMkdir(string[] commandvalues) : base(commandvalues)
         {
-            get { return HelpInfo; }
-            set { HelpInfo = value; /*PUSHED OUT VALUE (in)*/}
         }
 
         /// <summary>
-        /// Empty constructor. (Good for debug)
+        /// CommandMkdir
         /// </summary>
-        public Mkdir() { }
-
-        /// <summary>
-        /// c = commnad, c_Mkdir
-        /// </summary>
-        public static void c_Mkdir()
+        public override ReturnInfo Execute()
         {
             L.Text.Display("mkdir");
+            return new ReturnInfo(this, ReturnCode.OK);
         }
 
         /// <summary>
-        /// c = command, c_Mkdir
+        /// CommandMkdir
         /// </summary>
-        /// <param name="mkdir">The file you wish to create.</param>
-        /// <param name="startIndex">The start index for remove.</param>
-        /// <param name="count">The count index for remove.</param>
-        public static void c_Mkdir(string mkdir, short startIndex = 0, short count = 6)
+        public override ReturnInfo Execute(List<string> arguments)
         {
-            string dir = mkdir.Remove(startIndex, count);
+            string dir = arguments[0];
 
             if (dir.Contains("."))
             {
@@ -109,7 +99,7 @@ namespace Aura_OS.System.Shell.cmdIntr.FileSystem
                     }
                 }
             }
-
+            return new ReturnInfo(this, ReturnCode.OK);
         }
     }
 }

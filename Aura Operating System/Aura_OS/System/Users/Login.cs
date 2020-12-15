@@ -112,13 +112,6 @@ namespace Aura_OS.System.Users
 
             string debugger = config.GetValue("debugger");
 
-            if (debugger == "on")
-            {
-                Kernel.debugger.enabled = true;
-            }
-
-            NetworkInit.Enable();
-
             WelcomeMessage.Display();
             Text.Display("logged", username);
 

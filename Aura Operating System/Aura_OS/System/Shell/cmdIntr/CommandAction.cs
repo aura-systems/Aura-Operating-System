@@ -2,15 +2,19 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Aura_OS.System.Shell.cmdIntr.Util
+namespace Aura_OS.System.Shell.cmdIntr
 {
-    class CommandAbout : ICommand
+    class CommandAction : ICommand
     {
+
+        private Action _action;
+
         /// <summary>
         /// Empty constructor.
         /// </summary>
-        public CommandAbout(string[] commandvalues) : base(commandvalues)
+        public CommandAction(string[] commandvalues, Action action) : base(commandvalues)
         {
+            _action = action;
         }
 
         /// <summary>
@@ -18,7 +22,7 @@ namespace Aura_OS.System.Shell.cmdIntr.Util
         /// </summary>
         public override ReturnInfo Execute()
         {
-            Aura_OS.System.Translation.List_Translation.About();
+            _action();
             return new ReturnInfo(this, ReturnCode.OK);
         }
     }

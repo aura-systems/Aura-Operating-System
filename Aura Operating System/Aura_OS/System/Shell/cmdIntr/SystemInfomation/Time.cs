@@ -9,30 +9,22 @@ using L = Aura_OS.System.Translation;
 
 namespace Aura_OS.System.Shell.cmdIntr.SystemInfomation
 {
-    class Time
+    class CommandTime : ICommand
     {
-        private static string HelpInfo = "";
-
         /// <summary>
-        /// Getter and Setters for Help Info.
+        /// Empty constructor.
         /// </summary>
-        public static string HI
+        public CommandTime(string[] commandvalues) : base(commandvalues)
         {
-            get { return HelpInfo; }
-            set { HelpInfo = value; /*PUSHED OUT VALUE (in)*/}
         }
 
         /// <summary>
-        /// Empty constructor. (Good for debug)
+        /// RebootCommand
         /// </summary>
-        public Time() { }
-
-        /// <summary>
-        /// c = command, c_Time
-        /// </summary>
-        public static void c_Time()
+        public override ReturnInfo Execute()
         {
             L.Text.Display("time");
+            return new ReturnInfo(this, ReturnCode.OK);
         }
     }
 }

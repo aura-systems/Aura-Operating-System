@@ -57,7 +57,8 @@ namespace Aura_OS.System
         /// </summary>
         public void InitSetup()
         {
-            if (FileSystem() == "false")
+            RunWithoutFS(false); //TODO enable installation back
+            /*if (FileSystem() == "false")
             {
                 RunWithoutFS(false);
             }
@@ -74,7 +75,7 @@ namespace Aura_OS.System
                     RegisterHostname();
                     Installation();
                 }
-            }
+            }*/
         }
 
         /// <summary>
@@ -250,10 +251,9 @@ namespace Aura_OS.System
             //        //Kernel.AConsole = new System.Shell.VGA.VGAConsole(null);
             //        break;
             //}
-            NetworkInit.Enable();
             WelcomeMessage.Display();
             Text.Display("logged", "root");
-            Text.Display("nofilesystem");
+            //Text.Display("nofilesystem");
             Console.WriteLine();
             Kernel.running = true;
         }
@@ -285,7 +285,6 @@ namespace Aura_OS.System
             //        //Kernel.AConsole = new System.Shell.VGA.VGAConsole(null);
             //        break;
             //}
-            NetworkInit.Enable();
             WelcomeMessage.Display();
             Text.Display("logged", username);
 

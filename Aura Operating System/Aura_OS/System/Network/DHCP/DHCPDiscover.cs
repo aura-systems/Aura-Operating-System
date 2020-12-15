@@ -14,8 +14,6 @@ namespace Aura_OS.System.Network.DHCP
     {
         protected int xID;
 
-        public static int PacketSize { get; set; }
-
         public DHCPDiscover(MACAddress mac_src)
             : base(Address.Zero, mac_src)
         {

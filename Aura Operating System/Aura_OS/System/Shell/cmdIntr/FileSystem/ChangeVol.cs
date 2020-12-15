@@ -5,41 +5,30 @@
 */
 
 using System;
+using System.Collections.Generic;
 using L = Aura_OS.System.Translation;
 
 namespace Aura_OS.System.Shell.cmdIntr.FileSystem
 {
-    class ChangeVol
+    class CommandChangeVol : ICommand
     {
-        private static string HelpInfo = "";
-
         /// <summary>
-        /// Getter and Setters for Help Info.
+        /// Empty constructor.
         /// </summary>
-        public static string HI
+        public CommandChangeVol(string[] commandvalues) : base(commandvalues)
         {
-            get { return HelpInfo; }
-            set { HelpInfo = value; /*PUSHED OUT VALUE (in)*/}
         }
 
         /// <summary>
-        /// Empty constructor. (Good for debug)
+        /// CommandChangeVol
         /// </summary>
-        public ChangeVol() { }
-
-        /// <summary>
-        /// c = command, c_ChangeVol
-        /// </summary>
-        /// <param name="cmd">The command</param>
-        /// <param name="startIndex">The start index for remove.</param>
-        /// <param name="count">The count index for remove.</param>
-        public static void c_ChangeVol(string cmd, short startIndex = 0, short count = 0)
+        public override ReturnInfo Execute(List<string> arguments)
         {
-            if (cmd.Remove(0, 1) == ":")
+            if (arguments[0].Remove(0, 1) == ":")
             {
                 try
                 {
-                    string volume = cmd.Remove(1, 1);
+                    string volume = arguments[0].Remove(1, 1);
 
                     bool exist = false;
 
@@ -66,6 +55,7 @@ namespace Aura_OS.System.Shell.cmdIntr.FileSystem
             {
                 L.Text.Display("volumeinvalid");
             }
+            return new ReturnInfo(this, ReturnCode.OK);
         }
     }
 }

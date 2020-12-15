@@ -5,85 +5,139 @@
 */
 
 
+using Aura_OS.HAL.Drivers.Network;
 using Aura_OS.System.Network;
 using Aura_OS.System.Network.DHCP;
 using Aura_OS.System.Network.IPV4;
-using Cosmos.HAL;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using L = Aura_OS.System.Translation;
 
-namespace Aura_OS.System.Shell.cmdIntr.SystemInfomation
+namespace Aura_OS.System.Shell.cmdIntr.Network
 {
-    class IPConfig
+    class CommandIPConfig : ICommand
     {
-        private static string HelpInfo = "";
-
         /// <summary>
-        /// Getter and Setters for Help Info.
+        /// Empty constructor.
         /// </summary>
-        public static string HI
+        public CommandIPConfig(string[] commandvalues) : base(commandvalues)
         {
-            get { return HelpInfo; }
-            set { HelpInfo = value; /*PUSHED OUT VALUE (in)*/}
         }
 
         /// <summary>
-        /// Empty constructor. (Good for debug)
+        /// CommandIPConfig without args
         /// </summary>
-        public IPConfig() { }
-
-        static HAL.Drivers.Network.RTL8168 RTL8168NIC;
-
-        /// <summary>
-        /// c = command, c_SystemInfomation
-        /// </summary>
-        public static void c_IPConfig(string cmd)
+        public override ReturnInfo Execute()
         {
-            string[] args = cmd.Split(' ');
-
-            if (args.Length == 1)
+            if (NetworkStack.ConfigEmpty())
             {
-                L.List_Translation.Ipconfig();
-                return;
+                Console.WriteLine("No network configuration detected! Use ipconfig /help");
+            }
+            foreach (HAL.Drivers.Network.NetworkDevice device in NetworkConfig.Keys)
+            {
+                switch (device.CardType)
+                {
+                    case HAL.Drivers.Network.CardType.Ethernet:
+                        Console.WriteLine("Ethernet Card : " + device.NameID + " - " + device.Name);
+                        break;
+                    case HAL.Drivers.Network.CardType.Wireless:
+                        Console.WriteLine("Wireless Card : " + device.NameID + " - " + device.Name);
+                        break;
+                }
+                Utils.Settings settings = new Utils.Settings(@"0:\System\" + device.Name + ".conf");
+                Console.WriteLine("MAC Address          : " + device.MACAddress.ToString());
+                Console.WriteLine("IP Address           : " + NetworkConfig.Get(device).IPAddress.ToString());
+                Console.WriteLine("Subnet mask          : " + NetworkConfig.Get(device).SubnetMask.ToString());
+                Console.WriteLine("Default Gateway      : " + NetworkConfig.Get(device).DefaultGateway.ToString());
+                Console.WriteLine("Preferred DNS server : " + settings.GetValue("dns01"));
             }
 
-            if (args[1] == "/release")
+            return new ReturnInfo(this, ReturnCode.OK);
+        }
+
+        /// <summary>
+        /// CommandIPConfig
+        /// </summary>
+        /// <param name="arguments">Arguments</param>
+        public override ReturnInfo Execute(List<string> arguments)
+        {
+            if (arguments[0] == "/help")
+            {
+                Console.WriteLine("Available commands:");
+                Console.WriteLine("- ipconfig /listnic    List network devices");
+                Console.WriteLine("- ipconfig /set        Manually set an IP Address");
+                Console.WriteLine("- ipconfig /ask        Find the DHCP server and ask a new IP address");
+                Console.WriteLine("- ipconfig /release    Tell the DHCP server to make the IP address available");
+            }
+            else if (arguments[0] == "/release")
             {
                 System.Network.DHCP.Core.SendReleasePacket();
             }
-            else if (args[1] == "/set")
+            else if (arguments[0] == "/ask")
             {
-                if(args.Length <= 3)
+                System.Network.DHCP.Core.SendDiscoverPacket();
+            }
+            else if (arguments[0] == "/listnic")
+            {
+                foreach (var device in NetworkDevice.Devices)
                 {
-                    Console.WriteLine("Usage : " + args[0] + " /set {interface} {IPv4} {Subnet} -g {Gateway} -d {PrimaryDNS}");
-                    //ipconfig /set PCNETII 192.168.1.32 255.255.255.0 -g 192.168.1.254 -d 8.8.8.8
+                    switch (device.CardType)
+                    {
+                        case CardType.Ethernet:
+                            Console.WriteLine("Ethernet Card - " + device.NameID + " - " + device.Name + " (" + device.MACAddress + ")");
+                            break;
+                        case CardType.Wireless:
+                            Console.WriteLine("Wireless Card - " + device.NameID + " - " + device.Name + " (" + device.MACAddress + ")");
+                            break;
+                    }
+                }
+            }
+            else if (arguments[0] == "/set")
+            {
+                if (arguments.Count < 5)
+                {
+                    return new ReturnInfo(this, ReturnCode.ERROR, "Usage : ipconfig /set {device} {IPv4} {Subnet} {Gateway}");
                 }
                 else
                 {
-                    if (NetworkInterfaces.Interface(args[2]) != "null")
+                    Address ip = Address.Parse(arguments[2]);
+                    Address subnet = Address.Parse(arguments[3]);
+                    Address gw = Address.Parse(arguments[4]);
+                    NetworkDevice nic = NetworkDevice.GetDeviceByName(arguments[1]);
+
+                    if (nic == null)
                     {
-                        Utils.Settings settings = new Utils.Settings(@"0:\System\" + NetworkInterfaces.Interface(args[2]) + ".conf");
+                        return new ReturnInfo(this, ReturnCode.ERROR, "Couldn't find network device: " + arguments[1]);
+                    }
+                    if (ip != null && subnet != null && gw != null)
+                    {
+                        NetworkInit.Enable(nic, ip, subnet, gw);
+                        Console.WriteLine("Config OK!");
+                    }
+                    else
+                    {
+                        return new ReturnInfo(this, ReturnCode.ERROR, "Can't parse IP addresses (make sure they are well formated).");
+                    }
+
+                    /*if (NetworkInterfaces.Interface(arguments[1]) != "null")
+                    {
+                        Utils.Settings settings = new Utils.Settings(@"0:\System\" + NetworkInterfaces.Interface(arguments[1]) + ".conf");
                         NetworkStack.RemoveAllConfigIP();
-                        ApplyIP(args, settings);
+                        ApplyIP(arguments.ToArray(), settings); //TODO Fix that (arguments)
                         settings.Push();
-                        NetworkInit.Enable();
                     }
                     else
                     {
                         Console.WriteLine("This interface doesn't exists.");
-                    }
-                }                
-            }
-            else if (args[1] == "/renew")
-            {
-                System.Network.DHCP.Core.SendDiscoverPacket();
+                    } */
+                }
             }
             else
             {
-                L.List_Translation.Ipconfig();
+                return new ReturnInfo(this, ReturnCode.ERROR, "Wrong usage, please type: ipconfig /help");
             }
+            return new ReturnInfo(this, ReturnCode.OK);
         }
 
         private static void ApplyIP(string[] args, Utils.Settings settings)

@@ -8,7 +8,6 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using Aura_OS.Shell.cmdIntr;
 using Aura_OS.System.Utils;
 using Cosmos.System;
 using IL2CPU.API.Attribs;
@@ -321,8 +320,11 @@ namespace Aura_Plugs
             WriteLine("Not implemented: set_WindowWidth");
         }
 
-        // Beep() is pure CIL
-
+        /// <summary>
+        /// The ArgumentOutOfRangeException check is now done at driver level in PCSpeaker - is it still needed here?
+        /// </summary>
+        /// <param name="aFrequency"></param>
+        /// <param name="aDuration"></param>
         public static void Beep(int aFrequency, int aDuration)
         {
             if (aFrequency < 37 || aFrequency > 32767)
@@ -335,13 +337,19 @@ namespace Aura_Plugs
                 throw new ArgumentOutOfRangeException("Duration must be more than 0");
             }
 
-            WriteLine("Not implemented: Beep");
+            PCSpeaker.Beep((uint)aFrequency, (uint)aDuration);
+        }
 
-            //var xPIT = Hardware.Global.PIT;
-            //xPIT.EnableSound();
-            //xPIT.T2Frequency = (uint)aFrequency;
-            //xPIT.Wait((uint)aDuration);
-            //xPIT.DisableSound();
+        /// <summary>
+        /// Beep() is pure CIL
+        /// Default implementation beeps for 200 milliseconds at 800 hertz
+        /// In Cosmos, these are Cosmos.System.Duration.Default and Cosmos.System.Notes.Default respectively,
+        /// and are used when there are no params 
+        /// https://docs.microsoft.com/en-us/dotnet/api/system.console.beep?view=netcore-2.0
+        /// </summary>
+        public static void Beep()
+        {
+            PCSpeaker.Beep();
         }
 
         //TODO: Console uses TextWriter - intercept and plug it instead
@@ -478,7 +486,7 @@ namespace Aura_Plugs
                     }
                     else
                     {
-                        Aura_OS.Kernel.speaker.beep();
+                        Beep();
                     }
                     continue;
                 }
@@ -511,11 +519,12 @@ namespace Aura_Plugs
                             CMDToComplete = CMDToComplete + ch.ToString();
                         }                    
 
-                        foreach (string c in CommandManager.CMDs)
+                        foreach (ICommand command in CommandManager.CMDs)
                         {
                             index++;
-                            if (c.StartsWith(CMDToComplete))
-                            {                            
+                            string c = command.CommandStarts(CMDToComplete);
+                            if (c != null)
+                            {
                                 CommandsHistory.ClearCurrentConsoleLine();
                                 currentCount = 0;
                                 chars.Clear();
@@ -550,7 +559,7 @@ namespace Aura_Plugs
                     if (Aura_OS.Kernel.AConsole.writecommand) //IF SHELL
                     {
                         CMDToComplete = "";
-                        if (CommandsHistory.CHIndex >= 0)
+                        if (CommandsHistory.CHIndex >= 0 && CommandsHistory.commands.Count > 0)
                         {
                             CommandsHistory.ClearCurrentConsoleLine();
                             currentCount = 0;
@@ -558,7 +567,7 @@ namespace Aura_Plugs
 
                             Aura_OS.Kernel.BeforeCommand();
 
-                            string Command = Aura_OS.Kernel.AConsole.commands[CommandsHistory.CHIndex];
+                            string Command = CommandsHistory.commands[CommandsHistory.CHIndex];
                             CommandsHistory.CHIndex = CommandsHistory.CHIndex - 1;
 
                             foreach (char chr in Command)
@@ -608,7 +617,7 @@ namespace Aura_Plugs
                     if (Aura_OS.Kernel.AConsole.writecommand) //IF SHELL
                     {
                         CMDToComplete = "";
-                        if (CommandsHistory.CHIndex < Aura_OS.Kernel.AConsole.commands.Count - 1)
+                        if (CommandsHistory.CHIndex < CommandsHistory.commands.Count - 1)
                         {
                             CommandsHistory.ClearCurrentConsoleLine();
                             currentCount = 0;
@@ -624,7 +633,7 @@ namespace Aura_Plugs
                                 firstdown = true;
                             }
 
-                            string Command = Aura_OS.Kernel.AConsole.commands[CommandsHistory.CHIndex];
+                            string Command = CommandsHistory.commands[CommandsHistory.CHIndex];
 
                             foreach (char chr in Command)
                             {

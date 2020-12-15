@@ -20,8 +20,7 @@ namespace Aura_OS.System.Network.DHCP
         /// <returns></returns>
         public static Address DHCPServerAddress(NetworkDevice networkDevice)
         {
-            Utils.Settings settings = new Utils.Settings(@"0:\System\" + networkDevice.Name + ".conf");
-            return Address.Parse(settings.GetValue("dhcp_server"));
+            return NetworkConfig.Get(networkDevice).DefaultGateway;
         }
 
         /// <summary>
@@ -38,14 +37,15 @@ namespace Aura_OS.System.Network.DHCP
 
                 NetworkStack.RemoveAllConfigIP();
 
+                NetworkInit.Enable(networkDevice, new Network.IPV4.Address(0, 0, 0, 0), new Network.IPV4.Address(0, 0, 0, 0), new Network.IPV4.Address(0, 0, 0, 0));
+
+                /*
                 Utils.Settings settings = new Utils.Settings(@"0:\System\" + networkDevice.Name + ".conf");
                 settings.EditValue("ipaddress", "0.0.0.0");
                 settings.EditValue("subnet", "0.0.0.0");
                 settings.EditValue("gateway", "0.0.0.0");
                 settings.EditValue("dns01", "0.0.0.0");
-                settings.PushValues();
-
-                NetworkInit.Enable();
+                settings.PushValues();*/
             }            
         }
 
@@ -54,14 +54,19 @@ namespace Aura_OS.System.Network.DHCP
         /// </summary>
         public static void SendDiscoverPacket()
         {
+            NetworkStack.RemoveAllConfigIP();
+
             foreach (NetworkDevice networkDevice in NetworkDevice.Devices)
             {
+
+                NetworkInit.Enable(networkDevice, new Network.IPV4.Address(0, 0, 0, 0), new Network.IPV4.Address(0, 0, 0, 0), new Network.IPV4.Address(0, 0, 0, 0));
+
                 DHCPDiscover dhcp_discover = new DHCPDiscover(networkDevice.MACAddress);
                 OutgoingBuffer.AddPacket(dhcp_discover);
                 NetworkStack.Update();
 
                 DHCPAsked = true;
-            }            
+            }
         }
 
         /// <summary>
@@ -111,7 +116,7 @@ namespace Aura_OS.System.Network.DHCP
                 settings.EditValue("dhcp_server", Options.Server().ToString());
                 settings.PushValues();
 
-                NetworkInit.Enable();
+                NetworkInit.Enable(networkDevice, Options.Address(), Options.Subnet(), Options.Gateway());
 
                 if (message)
                 {

@@ -4,36 +4,28 @@
 * PROGRAMMER(S):    John Welsh <djlw78@gmail.com>
 */
 
+using System.Collections.Generic;
 using System.IO;
 using L = Aura_OS.System.Translation;
 
 namespace Aura_OS.System.Shell.cmdIntr.FileSystem
 {
-    class Rmfil
+    class CommandRmfil : ICommand
     {
-        private static string HelpInfo = "";
-
         /// <summary>
-        /// Getter and Setters for Help Info.
+        /// Empty constructor.
         /// </summary>
-        public static string HI
+        public CommandRmfil(string[] commandvalues) : base(commandvalues)
         {
-            get { return HelpInfo; }
-            set { HelpInfo = value; /*PUSHED OUT VALUE (in)*/}
         }
 
-
         /// <summary>
-        /// Empty constructor. (Good for debug)
+        /// CommandMkfil
         /// </summary>
-        public Rmfil() { }
-
-        /// <summary>
-        /// c = commnad, c_Rmfil
-        /// </summary>
-        public static void c_Rmfil(string rmfil, short startIndex = 0, short count = 6)
+        public override ReturnInfo Execute(List<string> arguments)
         {
-            string file = rmfil.Remove(startIndex, count);
+            string file = arguments[0];
+
             if (File.Exists(Kernel.current_directory + file))
             {
                 File.Delete(Kernel.current_directory + file);
@@ -42,6 +34,7 @@ namespace Aura_OS.System.Shell.cmdIntr.FileSystem
             {
                 L.Text.Display("doesnotexist", file);
             }
+            return new ReturnInfo(this, ReturnCode.OK);
         }
     }
 }

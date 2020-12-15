@@ -526,6 +526,10 @@ namespace Aura_OS.System.Translation
             {
                 case "fr_FR":
                     int counter = 0;
+                    if (NetworkStack.ConfigEmpty())
+                    {
+                        Console.WriteLine("Aucune configuration réseau détectée! Utilisez ipconfig /help");
+                    }
                     foreach (HAL.Drivers.Network.NetworkDevice device in NetworkConfig.Keys)
                     {
                         switch (device.CardType)
@@ -539,17 +543,20 @@ namespace Aura_OS.System.Translation
                         }
                         Utils.Settings settings = new Utils.Settings(@"0:\System\" + device.Name + ".conf");
                         Console.WriteLine("Adresse MAC           : " + device.MACAddress.ToString());
-                        Console.WriteLine("Adresse IP            : " + settings.GetValue("ipaddress"));
-                        Console.WriteLine("Masque de sous-réseau : " + settings.GetValue("subnet"));
-                        Console.WriteLine("Passerelle par défaut : " + settings.GetValue("gateway"));
+                        Console.WriteLine("Adresse IP            : " + NetworkConfig.Get(device).IPAddress.ToString());
+                        Console.WriteLine("Masque de sous-réseau : " + NetworkConfig.Get(device).SubnetMask.ToString());
+                        Console.WriteLine("Passerelle par défaut : " + NetworkConfig.Get(device).DefaultGateway.ToString());
                         Console.WriteLine("Serveur DNS préféré   : " + settings.GetValue("dns01"));
                         counter++;
                     }
-                    counter = 0;
                     break;
 
                 case "en_US":
                     int counter1 = 0;
+                    if (NetworkStack.ConfigEmpty())
+                    {
+                        Console.WriteLine("No network configuration detected! Use ipconfig /help");
+                    }
                     foreach (HAL.Drivers.Network.NetworkDevice device in NetworkConfig.Keys)
                     {
                         switch (device.CardType)
@@ -563,17 +570,20 @@ namespace Aura_OS.System.Translation
                         }
                         Utils.Settings settings = new Utils.Settings(@"0:\System\" + device.Name + ".conf");
                         Console.WriteLine("MAC Address          : " + device.MACAddress.ToString());
-                        Console.WriteLine("IP Address           : " + settings.GetValue("ipaddress"));
-                        Console.WriteLine("Subnet mask          : " + settings.GetValue("subnet"));
-                        Console.WriteLine("Default Gateway      : " + settings.GetValue("gateway"));
+                        Console.WriteLine("IP Address           : " + NetworkConfig.Get(device).IPAddress.ToString());
+                        Console.WriteLine("Subnet mask          : " + NetworkConfig.Get(device).SubnetMask.ToString());
+                        Console.WriteLine("Default Gateway      : " + NetworkConfig.Get(device).DefaultGateway.ToString());
                         Console.WriteLine("Preferred DNS server : " + settings.GetValue("dns01"));
                         counter1++;
                     }
-                    counter1 = 0;
                     break;
 
                 case "nl_NL":
                     int counter2 = 0;
+                    if (NetworkStack.ConfigEmpty())
+                    {
+                        Console.WriteLine("Geen netwerkconfiguratie gedetecteerd! Gebruik ipconfig /help");
+                    }
                     foreach (HAL.Drivers.Network.NetworkDevice device in NetworkConfig.Keys)
                     {
                         switch (device.CardType)
@@ -587,17 +597,20 @@ namespace Aura_OS.System.Translation
                         }
                         Utils.Settings settings = new Utils.Settings(@"0:\System\" + device.Name + ".conf");
                         Console.WriteLine("MAC-adres           : " + device.MACAddress.ToString());
-                        Console.WriteLine("IP-adres            : " + settings.GetValue("ipaddress"));
-                        Console.WriteLine("Subnetmasker        : " + settings.GetValue("subnet"));
-                        Console.WriteLine("Standaardgateway    : " + settings.GetValue("gateway"));
+                        Console.WriteLine("IP-adres            : " + NetworkConfig.Get(device).IPAddress.ToString());
+                        Console.WriteLine("Subnetmasker        : " + NetworkConfig.Get(device).SubnetMask.ToString());
+                        Console.WriteLine("Standaardgateway    : " + NetworkConfig.Get(device).DefaultGateway.ToString());
                         Console.WriteLine("Voorkeur DNS-server : " + settings.GetValue("dns01"));
                         counter2++;
                     }
-                    counter2 = 0;
                     break;
 
                 case "it_IT":
                     int counter3 = 0;
+                    if (NetworkStack.ConfigEmpty())
+                    {
+                        Console.WriteLine("Nessuna configurazione di rete rilevata! Utilizzare ipconfig /help");
+                    }
                     foreach (HAL.Drivers.Network.NetworkDevice device in NetworkConfig.Keys)
                     {
                         switch (device.CardType)
@@ -611,17 +624,20 @@ namespace Aura_OS.System.Translation
                         }
                         Utils.Settings settings = new Utils.Settings(@"0:\System\" + device.Name + ".conf");
                         Console.WriteLine("Indirizzo MAC         : " + device.MACAddress.ToString());
-                        Console.WriteLine("Indirizzo IP          : " + settings.GetValue("ipaddress"));
-                        Console.WriteLine("Maschera di sottorete : " + settings.GetValue("subnet"));
-                        Console.WriteLine("Gateway predefinito   : " + settings.GetValue("gateway"));
+                        Console.WriteLine("Indirizzo IP          : " + NetworkConfig.Get(device).IPAddress.ToString());
+                        Console.WriteLine("Maschera di sottorete : " + NetworkConfig.Get(device).SubnetMask.ToString());
+                        Console.WriteLine("Gateway predefinito   : " + NetworkConfig.Get(device).DefaultGateway.ToString());
                         Console.WriteLine("Server DNS preferito  : " + settings.GetValue("dns01"));
                         counter3++;
                     }
-                    counter3 = 0;
                     break;
                     
                 case "pl_PL":
                     int counter4 = 0;
+                    if (NetworkStack.ConfigEmpty())
+                    {
+                        Console.WriteLine("Nie wykryto zadnej konfiguracji sieci! Uzyj ipconfig /help");
+                    }
                     foreach (HAL.Drivers.Network.NetworkDevice device in NetworkConfig.Keys)
                     {
                         switch (device.CardType)
@@ -635,13 +651,12 @@ namespace Aura_OS.System.Translation
                         }
                         Utils.Settings settings = new Utils.Settings(@"0:\System\" + device.Name + ".conf");
                         Console.WriteLine("Adres MAC              : " + device.MACAddress.ToString());
-                        Console.WriteLine("Adres IP               : " + settings.GetValue("ipaddress"));
-                        Console.WriteLine("Maska sieciowa         : " + settings.GetValue("subnet"));
-                        Console.WriteLine("Brama sieciowa         : " + settings.GetValue("gateway"));
+                        Console.WriteLine("Adres IP               : " + NetworkConfig.Get(device).IPAddress.ToString());
+                        Console.WriteLine("Maska sieciowa         : " + NetworkConfig.Get(device).SubnetMask.ToString());
+                        Console.WriteLine("Brama sieciowa         : " + NetworkConfig.Get(device).DefaultGateway.ToString());
                         Console.WriteLine("Preferowany serwer DNS : " + settings.GetValue("dns01"));
                         counter4++;
                     }
-                    counter4 = 0;
                     break;
 
             }

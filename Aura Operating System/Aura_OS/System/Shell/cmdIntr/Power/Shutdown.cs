@@ -10,41 +10,25 @@ using L = Aura_OS.System.Translation;
 
 namespace Aura_OS.System.Shell.cmdIntr.Power
 {
-    class Shutdown
+    class CommandShutdown : ICommand
     {
-        private static string HelpInfo = "";
-
         /// <summary>
-        /// Getter and Setters for Help Info.
+        /// Empty constructor.
         /// </summary>
-        public static string HI
+        public CommandShutdown(string[] commandvalues) : base(commandvalues)
         {
-            get { return HelpInfo; }
-            set { HelpInfo = value; /*PUSHED OUT VALUE (in)*/}
         }
 
-
         /// <summary>
-        /// Empty constructor. (Good for debug)
+        /// ShutdownCommand
         /// </summary>
-        public Shutdown() { }
-
-        /// <summary>
-        /// c = commnad, c_Shutdown
-        /// </summary>
-        public static void c_Shutdown()
+        public override ReturnInfo Execute()
         {
-            if (Kernel.debugger != null)
-            {
-                if (Kernel.debugger.enabled)
-                {
-                    Kernel.debugger.Stop();
-                }
-            }
             Kernel.running = false;
             Console.Clear();
             L.Text.Display("shutdown");
             Sys.Power.Shutdown();
+            return new ReturnInfo(this, ReturnCode.OK);
         }
     }
 }

@@ -8,29 +8,19 @@ using System;
 
 namespace Aura_OS.System.Shell.cmdIntr.Tests
 {
-    class Crash
+    class CommandCrash : ICommand
     {
-        private static string HelpInfo = "";
-
         /// <summary>
-        /// Getter and Setters for Help Info.
+        /// Empty constructor.
         /// </summary>
-        public static string HI
+        public CommandCrash(string[] commandvalues) : base(commandvalues)
         {
-            get { return HelpInfo; }
-            set { HelpInfo = value; /*PUSHED OUT VALUE (in)*/}
         }
 
-
         /// <summary>
-        /// Empty constructor. (Good for debug)
+        /// RebootCommand
         /// </summary>
-        public Crash() { }
-
-        /// <summary>
-        /// c = command, c_Crash
-        /// </summary>
-        public static void c_Crash()
+        public override ReturnInfo Execute()
         {
             throw new Exception("Crash test");
         }

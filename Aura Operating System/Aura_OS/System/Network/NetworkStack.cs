@@ -37,10 +37,9 @@ namespace Aura_OS.System.Network
             ICMPEchoReply.VMTInclude();
             ICMPEchoRequest.VMTInclude();
             IPV4.UDP.UDPPacket.VMTInclude();
-            IPV4.TCP.TCPPacket.VMTInclude();
         }
 
-        public static void SetConfigIP(NetworkDevice nic, IPV4.Config config)
+        private static void SetConfigIP(NetworkDevice nic, IPV4.Config config)
         {
             NetworkConfig.Add(nic, config);
             AddressMap.Add(config.IPAddress.Hash, nic);
@@ -60,17 +59,30 @@ namespace Aura_OS.System.Network
         {
             if (NetworkConfig.ContainsKey(nic))
             {
-                CustomConsole.WriteLineInfo("Config existante");
-                IPV4.Config toremove = NetworkConfig.Get(nic);                
-                AddressMap.Remove(toremove.IPAddress.Hash);
-                MACMap.Remove(nic.MACAddress.Hash);
-                IPV4.Config.Remove(config);
-                NetworkConfig.Remove(nic);
+                RemoveIPConfig(nic);
                 SetConfigIP(nic, config);
             }
             else
             {
                 SetConfigIP(nic, config);
+            }
+        }
+
+        public static bool ConfigEmpty()
+        {
+            int counter = 0;
+
+            foreach (NetworkDevice device in NetworkConfig.Keys)
+            {
+                counter++;
+            }
+            if (counter == 0)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
             }
         }
 
@@ -82,11 +94,20 @@ namespace Aura_OS.System.Network
             NetworkConfig.Clear();
         }
 
+        public static void RemoveIPConfig(NetworkDevice nic)
+        {
+            IPV4.Config config = NetworkConfig.Get(nic);
+            AddressMap.Remove(config.IPAddress.Hash);
+            MACMap.Remove(nic.MACAddress.Hash);
+            IPV4.Config.Remove(config);
+            NetworkConfig.Remove(nic);
+        }
+
         internal static void HandlePacket(byte[] packetData)
         {
             if (packetData == null)
             {
-                Apps.System.Debugger.debugger.Send("Error packet data null");
+                Kernel.debugger.Send("Error packet data null");
                 return;
             }
 

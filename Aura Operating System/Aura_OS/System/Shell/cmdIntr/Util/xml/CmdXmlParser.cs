@@ -9,6 +9,8 @@ using System.IO;
 using System.Text;
 using System;
 
+//TODO convert this class to new command system
+
 namespace Aura_OS.System.Shell.cmdIntr.Util.xml
 {
     public class CmdXmlParser

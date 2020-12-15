@@ -10,54 +10,48 @@ using L = Aura_OS.System.Translation;
 using Aura_OS.System.Network.IPV4;
 using Aura_OS.System.Network;
 using Aura_OS.System;
+using System.Collections.Generic;
 
 namespace Aura_OS.System.Shell.cmdIntr.Network
 {
-    class Ping
+    class CommandPing : ICommand
     {
-        private static string HelpInfo = "";
-
         /// <summary>
-        /// Getter and Setters for Help Info.
+        /// Empty constructor.
         /// </summary>
-        public static string HI
+        public CommandPing(string[] commandvalues) : base(commandvalues)
         {
-            get { return HelpInfo; }
-            set { HelpInfo = value; /*PUSHED OUT VALUE (in)*/}
         }
 
         /// <summary>
-        /// Empty constructor. (Good for debug)
+        /// CommandEcho
         /// </summary>
-        public Ping() { }
-
-        /// <summary>
-        /// c = command, c_Ping
-        /// </summary>
-        /// <param name="arg">IP Address</param>
-        /// /// <param name="startIndex">The start index for remove.</param>
-        /// <param name="count">The count index for remove.</param>
-        public static void c_Ping(string arg, short startIndex = 0, short count = 5)
+        /// <param name="arguments">Arguments</param>
+        public override ReturnInfo Execute(List<string> arguments)
         {
-            string str = arg.Remove(startIndex, count);
-            string[] items = str.Split('.');
-
-            if (System.Utils.Misc.IsIpv4Address(items))
+            if (NetworkStack.ConfigEmpty())
             {
-                string IPdest = "";
+                return new ReturnInfo(this, ReturnCode.ERROR, "No network configuration detected! Use ipconfig /set.");
+            }
 
-                int PacketSent = 0;
-                int PacketReceived = 0;
-                int PacketLost = 0;
+            int PacketSent = 0;
+            int PacketReceived = 0;
+            int PacketLost = 0;
+            int PercentLoss = 0;
 
-                int PercentLoss = 0;
+            Address destination = Address.Parse(arguments[0]);
+            Address source = Config.FindNetwork(destination);
 
+            string IPdest = "";
+
+            if (destination == null)
+            {
+                return new ReturnInfo(this, ReturnCode.ERROR, "Can't parse IP addresses (make sure they are well formated).");
+            }
+            else
+            {
                 try
                 {
-                    Address destination = new Address((byte)(Int32.Parse(items[0])), (byte)(Int32.Parse(items[1])), (byte)(Int32.Parse(items[2])), (byte)(Int32.Parse(items[3])));
-                    Address source = Config.FindNetwork(destination);
-
-
                     IPdest = destination.ToString();
 
                     int _deltaT = 0;
@@ -68,19 +62,16 @@ namespace Aura_OS.System.Shell.cmdIntr.Network
                     for (int i = 0; i < 4; i++)
                     {
                         second = 0;
-                        //CustomConsole.WriteLineInfo("Sending ping to " + destination.ToString() + "...");
 
                         try
                         {
-                            //replace address by source
-                            //System.Network.IPV4.Address address = new System.Network.IPV4.Address(192, 168, 1, 70);
-                            ICMPEchoRequest request = new ICMPEchoRequest(source , destination, 0x0001, 0x50); //this is working
+                            ICMPEchoRequest request = new ICMPEchoRequest(source, destination, 0x0001, 0x50); //this is working
                             OutgoingBuffer.AddPacket(request); //Aura doesn't work when this is called.
                             NetworkStack.Update();
                         }
                         catch (Exception ex)
                         {
-                            CustomConsole.WriteLineError(ex.ToString());
+                            return new ReturnInfo(this, ReturnCode.ERROR, ex.ToString());
                         }
 
                         PacketSent++;
@@ -90,8 +81,6 @@ namespace Aura_OS.System.Shell.cmdIntr.Network
 
                             if (ICMPPacket.recvd_reply != null)
                             {
-                                //if (ICMPPacket.recvd_reply.SourceIP == destination)
-                                //{
 
                                 if (second < 1)
                                 {
@@ -106,7 +95,6 @@ namespace Aura_OS.System.Shell.cmdIntr.Network
 
                                 ICMPPacket.recvd_reply = null;
                                 break;
-                                //}
                             }
 
                             if (second >= 5)
@@ -126,41 +114,16 @@ namespace Aura_OS.System.Shell.cmdIntr.Network
                 }
                 catch
                 {
-                    L.Text.Display("notcorrectaddress");
+                    return new ReturnInfo(this, ReturnCode.ERROR, "Ping process error.");
                 }
-                finally
-                {
-                    PercentLoss = 25 * PacketLost;
 
-                    Console.WriteLine();
-                    Console.WriteLine("Ping statistics for " + IPdest + ":");
-                    Console.WriteLine("    Packets: Sent = " + PacketSent + ", Received = " + PacketReceived + ", Lost = " + PacketLost + " (" + PercentLoss + "% loss)");
-                }
-            }
-            else
-            {
-                System.Network.IPV4.UDP.DNS.DNSClient DNSRequest = new System.Network.IPV4.UDP.DNS.DNSClient(53);
-                DNSRequest.Ask(str);
-                int _deltaT = 0;
-                int second = 0;
-                while (!DNSRequest.ReceivedResponse)
-                {
-                    if (_deltaT != Cosmos.HAL.RTC.Second)
-                    {
-                        second++;
-                        _deltaT = Cosmos.HAL.RTC.Second;
-                    }
+                PercentLoss = 25 * PacketLost;
 
-                    if (second >= 4)
-                    {
-                        Apps.System.Debugger.debugger.Send("No response in 4 secondes...");
-                        break;
-                    }
-                }
-                DNSRequest.Close();
-                c_Ping("     " + DNSRequest.address.ToString());
+                Console.WriteLine();
+                Console.WriteLine("Ping statistics for " + IPdest + ":");
+                Console.WriteLine("    Packets: Sent = " + PacketSent + ", Received = " + PacketReceived + ", Lost = " + PacketLost + " (" + PercentLoss + "% loss)");
+                return new ReturnInfo(this, ReturnCode.OK);
             }
         }
-
     }
 }

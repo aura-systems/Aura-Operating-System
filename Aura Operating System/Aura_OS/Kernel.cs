@@ -36,7 +36,7 @@ namespace Aura_OS
         Setup setup = new Setup();
         public static bool running;
         public static string version = "0.5.0";
-        public static string revision = "240920182105";
+        public static string revision = VersionInfo.revision;
         public static string current_directory = @"0:\";
         public static string langSelected = "en_US";
         public static string userLogged;
@@ -48,13 +48,12 @@ namespace Aura_OS
         public static bool JustInstalled = false;
         public static CosmosVFS vFS = new CosmosVFS();
 		public static Dictionary<string, string> environmentvariables = new Dictionary<string, string>();
-        public static HAL.PCSpeaker speaker = new HAL.PCSpeaker();
         public static string boottime = Time.MonthString() + "/" + Time.DayString() + "/" + Time.YearString() + ", " + Time.TimeString(true, true, true);
         public static System.AConsole.Console AConsole;
         public static string Consolemode = "VGATextmode";
-        public static Config LocalNetworkConfig;
-        public static Debugger debugger;
         public static string current_volume = @"0:\";
+
+        public static Cosmos.Debug.Kernel.Debugger debugger = new Cosmos.Debug.Kernel.Debugger("Aura", "Kernel");
 
         #endregion
 
@@ -74,24 +73,25 @@ namespace Aura_OS
         {
             try
             {
-                CommandManager.RegisterAllCommands();
 
-                //AConsole = new System.Shell.VGA.VGAConsole(null);
+                #region Console Encoding Provider
 
                 Encoding.RegisterProvider(CosmosEncodingProvider.Instance);
                 Console.InputEncoding = Encoding.GetEncoding(437);
                 Console.OutputEncoding = Encoding.GetEncoding(437);
 
+                #endregion
+
+                #region Commmand Manager Init
+
+                CommandManager.RegisterAllCommands();
+
+                #endregion
+
                 System.CustomConsole.WriteLineInfo("Booting Aura Operating System...");
 
-                /*System.CustomConsole.WriteLineInfo("VBE Informations:");
-                System.CustomConsole.WriteLineInfo("VBE Version: " + Graphics.VBEVersion);
-                System.CustomConsole.WriteLineInfo("VBE Signature: " + Graphics.VBESignature);
-                System.CustomConsole.WriteLineInfo("BPP: " + Graphics.ModeInfo.bpp);
-                System.CustomConsole.WriteLineInfo("Height: " + Graphics.ModeInfo.height);
-                System.CustomConsole.WriteLineInfo("Width: " + Graphics.ModeInfo.width);*/
+                #region Filesystem Init
 
-                #region Register Filesystem
                 Sys.FileSystem.VFS.VFSManager.RegisterVFS(vFS);
                 if (ContainsVolumes())
                 {
@@ -101,15 +101,22 @@ namespace Aura_OS
                 {
                     System.CustomConsole.WriteLineError("FileSystem Registration");
                 }
+
                 #endregion
+
+                #region Network Init
 
                 NetworkInit.Init();
 
+                #endregion
+
                 System.CustomConsole.WriteLineOK("Aura successfully started!");
+
+                #region Installation Init
 
                 setup.InitSetup();
 
-                if (SystemExists)
+                /*if (SystemExists)
                 {
                     if (!JustInstalled)
                     {
@@ -134,7 +141,11 @@ namespace Aura_OS
                 else
                 {
                     running = true;
-                }
+                }*/
+
+                running = true;
+
+                #endregion
 
                 boottime = Time.MonthString() + "/" + Time.DayString() + "/" + Time.YearString() + ", " + Time.TimeString(true, true, true);
 
@@ -155,22 +166,17 @@ namespace Aura_OS
             try
             {
 
-                //Sys.Thread TBAR = new Sys.Thread(TaskBar);
-
                 while (running)
                 {
                     if (Logged) //If logged
                     {
-                        //TBAR.Start();
                         BeforeCommand();
 
                         AConsole.writecommand = true;
 
                         var cmd = Console.ReadLine();
-                        //TBAR.Stop();
-                        CommandManager._CommandManger(cmd);
-                        //Console.WriteLine();
 
+                        CommandManager._CommandManger(cmd);
                     }
                     else
                     {
@@ -184,31 +190,6 @@ namespace Aura_OS
                 Crash.StopKernel(ex);
             }
         }
-
-        //int _deltaT = 0;
-
-        //private void TaskBar()
-        //{
-        //
-        //    int oldx = 0;
-        //    int oldy = 0;
-        //
-        //    while (true)
-        //    {
-        //        if (_deltaT != RTC.Second)
-        //        {
-        //            oldx = AConsole.X;
-        //            oldy = AConsole.Y;
-        //            _deltaT = RTC.Second;
-        //            AConsole.X = AConsole.Width - 8;
-        //            AConsole.Y = 0;
-        //            AConsole.Write(Encoding.ASCII.GetBytes(Time.TimeString(true, true, true)));
-        //            AConsole.X = oldx;
-        //            AConsole.Y = oldy;
-        //        }
-        //    }
-        //    
-        //}
 
         #endregion
 

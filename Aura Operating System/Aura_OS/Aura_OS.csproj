@@ -1,5 +1,26 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project InitialTargets="GetVersion" Sdk="Microsoft.NET.Sdk">
 
+    <PropertyGroup>
+      <Year>$([System.DateTime]::Now.ToString("yyyy"))</Year>
+      <Month>$([System.DateTime]::Now.ToString("MM"))</Month>
+      <Date>$([System.DateTime]::Now.ToString("dd"))</Date>
+      <Time>$([System.DateTime]::Now.ToString("HHmm"))</Time>
+      <SomeThing>
+        <![CDATA[
+        namespace Aura_OS
+{
+    public class VersionInfo
+    {
+        public static string revision = "$(Date)$(Month)$(Year)$(Time)"%3b
+    }
+}
+       ]]>
+      </SomeThing>
+    </PropertyGroup>
+    <Target Name="GetVersion">
+      <WriteLinesToFile File="Properties\VersionInfo.cs" Lines="$(SomeThing)" Overwrite="true"></WriteLinesToFile>
+    </Target>
+  
     <PropertyGroup>
         <TargetFramework>netcoreapp2.0</TargetFramework>
         <RuntimeIdentifier>cosmos</RuntimeIdentifier>
@@ -26,7 +47,7 @@
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-      <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+      <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
     </PropertyGroup>
 
     <ItemGroup>

@@ -10,7 +10,7 @@ using System.Collections.Generic;
 
 namespace Aura_OS.System.Network
 {
-    internal class TempDictionary<TValue>
+    public class TempDictionary<TValue>
     {
         private List<UInt32> mKeys;
         private List<TValue> mValues;

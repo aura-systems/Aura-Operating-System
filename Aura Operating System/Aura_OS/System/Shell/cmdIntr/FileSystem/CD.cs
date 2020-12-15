@@ -4,40 +4,30 @@
 * PROGRAMMER(S):    John Welsh <djlw78@gmail.com>
 */
 
+using System;
+using System.Collections.Generic;
 using System.IO;
 using L = Aura_OS.System.Translation;
 namespace Aura_OS.System.Shell.cmdIntr.FileSystem
 {
-    class CD
+    class CommandCD : ICommand
     {
-        private static string HelpInfo = "";
-
         /// <summary>
-        /// Getter and Setters for Help Info.
+        /// Empty constructor.
         /// </summary>
-        public static string HI
+        public CommandCD(string[] commandvalues) : base(commandvalues)
         {
-            get { return HelpInfo; }
-            set { HelpInfo = value; /*PUSHED OUT VALUE (in)*/}
         }
 
         /// <summary>
-        /// Empty constructor. (Good for debug)
+        /// CommandCd
         /// </summary>
-        public CD() { }
-
-        /// <summary>
-        /// c = commnad, c_CD
-        /// </summary>
-        /// <param name="cd">The directory you wish to pass in</param>
-        /// <param name="startIndex">The start index for remove.</param>
-        /// <param name="count">The count index for remove.</param>
-        public static void c_CD(string cd, short startIndex = 0, short count = 3)
+        public override ReturnInfo Execute(List<string> arguments)
         {
-            string dir = cd.Remove(startIndex, count);
+            string dir = arguments[0];
             try
             {
-                if(dir == "..")
+                if (dir == "..")
                 {
                     Directory.SetCurrentDirectory(Kernel.current_directory);
                     var root = Kernel.vFS.GetDirectory(Kernel.current_directory);
@@ -68,8 +58,13 @@ namespace Aura_OS.System.Shell.cmdIntr.FileSystem
                     {
                         L.Text.Display("directorydoesntexist");
                     }
-                }                
-            } catch { }
+                }
+                return new ReturnInfo(this, ReturnCode.OK);
+            }
+            catch (Exception ex)
+            {
+                return new ReturnInfo(this, ReturnCode.ERROR, ex.Message);
+            }
         }
     }
 }

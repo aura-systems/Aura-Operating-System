@@ -279,10 +279,10 @@ namespace Aura_OS.System.Translation
                             Console.WriteLine("Aucun volume détecté, le sytème de fichiers est désactivé!");
                             break;
                         case "time":
-                            Console.WriteLine("L'heure actuelle est :  " + Time.MonthString() + "/" + Time.DayString() + "/" + Time.YearString() + ", " + Time.TimeString(true, true, true));
+                            Console.WriteLine("L'heure actuelle est:  " + Time.DayString() + "/" + Time.MonthString() + "/" + Time.YearString() + ", " + Time.TimeString(true, true, true));
                             break;
                         case "changeipaddress":
-                            Console.WriteLine("Nouvelle adresse IP du PC (actuellement " + Kernel.LocalNetworkConfig.IPAddress.ToString() + ") :");
+                            //Console.WriteLine("Nouvelle adresse IP du PC (actuellement " + Kernel.LocalNetworkConfig.IPAddress.ToString() + ") :");
                             break;
                         case "notcorrectaddress":
                             Console.WriteLine("Ce n'est pas une adresse IP correcte !");
@@ -292,6 +292,9 @@ namespace Aura_OS.System.Translation
                             break;
                         case "volumeinvalid":
                             Console.WriteLine("Le lecteur spécifié est introuvable.");
+                            break;
+                        case "invalidargcommand":
+                            Console.WriteLine("Les arguments de la commande sont mal formatés.");
                             break;
                     }
                     break;
@@ -530,7 +533,7 @@ namespace Aura_OS.System.Translation
                             Console.WriteLine("The current time is:  " + Time.MonthString() + "/" + Time.DayString() + "/" + Time.YearString() + ", " + Time.TimeString(true, true, true));
                             break;
                         case "changeipaddress":
-                            Console.WriteLine("New IP address of the PC (now " + Kernel.LocalNetworkConfig.IPAddress.ToString() + ") :");
+                            //Console.WriteLine("New IP address of the PC (now " + Kernel.LocalNetworkConfig.IPAddress.ToString() + ") :");
                             break;
                         case "notcorrectaddress":
                             Console.WriteLine("This is not a correct IP address!");
@@ -540,6 +543,9 @@ namespace Aura_OS.System.Translation
                             break;
                         case "volumeinvalid":
                             Console.WriteLine("The specified drive is not found.");
+                            break;
+                        case "invalidargcommand":
+                            Console.WriteLine("Command arguments are incorrectly formatted.");
                             break;
                     }
                     break;
@@ -778,7 +784,7 @@ namespace Aura_OS.System.Translation
                             Console.WriteLine("De huidige tijd is:  " + Time.MonthString() + "/" + Time.DayString() + "/" + Time.YearString() + ", " + Time.TimeString(true, true, true));
                             break;
                         case "changeipaddress":
-                            Console.WriteLine("Nieuw IP-adres van de PC (nu " + Kernel.LocalNetworkConfig.IPAddress.ToString() + ") :");
+                            //Console.WriteLine("Nieuw IP-adres van de PC (nu " + Kernel.LocalNetworkConfig.IPAddress.ToString() + ") :");
                             break;
                         case "notcorrectaddress":
                             Console.WriteLine("Dit is geen correct IP adres!");
@@ -788,6 +794,9 @@ namespace Aura_OS.System.Translation
                             break;
                         case "volumeinvalid":
                             Console.WriteLine("De opgegeven aandrijving wordt niet gevonden.");
+                            break;
+                        case "invalidargcommand":
+                            Console.WriteLine("Commando-argumenten zijn verkeerd geformatteerd.");
                             break;
                     }
                     break;
@@ -1017,7 +1026,7 @@ namespace Aura_OS.System.Translation
                             Console.WriteLine("Data e ora attuali sono: " + Time.MonthString() + "/" + Time.DayString() + "/" + Time.YearString() + ", " + Time.TimeString(true, true, true));
                             break;
                         case "changeipaddress":
-                            Console.WriteLine("Nuovo indirizzo IP del PC (ora " + Kernel.LocalNetworkConfig.IPAddress.ToString() + ") :");
+                            //Console.WriteLine("Nuovo indirizzo IP del PC (ora " + Kernel.LocalNetworkConfig.IPAddress.ToString() + ") :");
                             break;
                         case "notcorrectaddress":
                             Console.WriteLine("Questo non è un indirizzo IP corretto!");
@@ -1027,6 +1036,9 @@ namespace Aura_OS.System.Translation
                             break;
                         case "volumeinvalid":
                             Console.WriteLine("L'unità specificata non viene trovata.");
+                            break;
+                        case "invalidargcommand":
+                            Console.WriteLine("Gli argomenti dei comandi sono formattati in modo errato.");
                             break;
                     }
                     
@@ -1265,7 +1277,7 @@ namespace Aura_OS.System.Translation
                             Console.WriteLine("Obecny czas:  " + Time.MonthString() + "/" + Time.DayString() + "/" + Time.YearString() + ", " + Time.TimeString(true, true, true));
                             break;
                         case "changeipaddress":
-                            Console.WriteLine("Nowy adres IP tej maszyny (teraz " + Kernel.LocalNetworkConfig.IPAddress.ToString() + ") :");
+                            //Console.WriteLine("Nowy adres IP tej maszyny (teraz " + Kernel.LocalNetworkConfig.IPAddress.ToString() + ") :");
                             break;
                         case "notcorrectaddress":
                             Console.WriteLine("To nie jest poprawny adres IP!");
@@ -1275,6 +1287,9 @@ namespace Aura_OS.System.Translation
                             break;
                         case "volumeinvalid":
                             Console.WriteLine("Nie znaleziono okreslonego woluminu.");
+                            break;
+                        case "invalidargcommand":
+                            Console.WriteLine("Argumenty dotyczace polecen sa nieprawidlowo sformatowane.");
                             break;
                     }
                     break;

@@ -5,54 +5,42 @@
 */
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using L = Aura_OS.System.Translation;
 
 namespace Aura_OS.System.Shell.cmdIntr.FileSystem
 {
-    class Dir
+    class CommandDir : ICommand
     {
-        private static string HelpInfo = "";
-
         /// <summary>
-        /// Getter and Setters for Help Info.
+        /// Empty constructor.
         /// </summary>
-        public static string HI
+        public CommandDir(string[] commandvalues) : base(commandvalues)
         {
-            get { return HelpInfo; }
-            set { HelpInfo = value; /*PUSHED OUT VALUE (in)*/}
         }
 
         /// <summary>
-        /// Empty constructor. (Good for debug)
+        /// CommandClear
         /// </summary>
-        public Dir() { }
-
-        /// <summary>
-        /// c = commnad, c_Dir
-        /// </summary>
-        public static void c_Dir()
+        public override ReturnInfo Execute()
         {
             DirectoryListing.DispDirectories(Kernel.current_directory);
             DirectoryListing.DispFiles(Kernel.current_directory);
             Console.WriteLine();
+            return new ReturnInfo(this, ReturnCode.OK);
         }
 
         /// <summary>
-        /// c = command, c_Dir
+        /// CommandDir
         /// </summary>
-        /// <param name="dir">The directory path that you wish to pass in</param>
-        public static void c_Dir(string dir)
+        public override ReturnInfo Execute(List<string> arguments)
         {
             string directory;
 
-            //args commands
-            Char cmdargschar = ' ';
-            string[] cmdargs = dir.Split(cmdargschar);
-
-            if (!cmdargs[1].StartsWith("-"))
+            if (!arguments[0].StartsWith("-"))
             {
-                directory = cmdargs[1];
+                directory = arguments[0];
 
                 if (Directory.Exists(Kernel.current_directory + directory))
                 {
@@ -63,14 +51,14 @@ namespace Aura_OS.System.Shell.cmdIntr.FileSystem
 
             else
             {
-                if (cmdargs[1].Equals("-a"))
+                if (arguments[0].Equals("-a"))
                 {
                     DirectoryListing.DispDirectories(Kernel.current_directory);
                     DirectoryListing.DispHiddenFiles(Kernel.current_directory);
 
-                    if (cmdargs.Length == 3)
+                    if (arguments.Count == 2)
                     {
-                        directory = cmdargs[2];
+                        directory = arguments[1];
 
                         DirectoryListing.DispDirectories(Kernel.current_directory + directory);
                         DirectoryListing.DispHiddenFiles(Kernel.current_directory + directory);
@@ -78,11 +66,12 @@ namespace Aura_OS.System.Shell.cmdIntr.FileSystem
                 }
                 else
                 {
-                    L.Text.Display("invalidargument");
+                    return new ReturnInfo(this, ReturnCode.ERROR_ARG);
                 }
             }
 
             Console.WriteLine();
+            return new ReturnInfo(this, ReturnCode.OK);
         }
     }
 }

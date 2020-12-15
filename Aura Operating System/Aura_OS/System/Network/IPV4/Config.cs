@@ -30,7 +30,17 @@ namespace Aura_OS.System.Network.IPV4
 
         internal static void Remove(Config config)
         {
-            ipConfigs.Remove(config);
+            int counter = 0;
+
+            foreach (var ipconfig in ipConfigs)
+            {
+                if (ipconfig == config)
+                {
+                    ipConfigs.RemoveAt(counter);
+                    return;
+                }
+                counter++;
+            }
         }
 
         internal static void RemoveAll()
@@ -136,6 +146,11 @@ namespace Aura_OS.System.Network.IPV4
         {
             get { return this.defaultGateway; }
             set { this.defaultGateway = value; }
+        }
+
+        public override string ToString()
+        {
+            return "IPAddress=" + IPAddress + ", SubnetMask=" + SubnetMask + ", DefaultGateway=" + DefaultGateway;
         }
     }
 }

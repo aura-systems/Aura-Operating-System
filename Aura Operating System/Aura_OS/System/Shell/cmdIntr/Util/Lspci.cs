@@ -10,43 +10,32 @@ using static Cosmos.HAL.PCIDevice;
 
 namespace Aura_OS.System.Shell.cmdIntr.Util
 {
-    class Lspci
+    class CommandLspci : ICommand
     {
-        private static string HelpInfo = "";
-
         /// <summary>
-        /// Getter and Setters for Help Info.
+        /// Empty constructor.
         /// </summary>
-        public static string HI
+        public CommandLspci(string[] commandvalues) : base(commandvalues)
         {
-            get { return HelpInfo; }
-            set { HelpInfo = value; /*PUSHED OUT VALUE (in)*/}
         }
 
         /// <summary>
-        /// Empty constructor. (Good for debug)
+        /// CommandLspci
         /// </summary>
-        public Lspci() { }
-
-        /// <summary>
-        /// c = command, c_Export
-        /// </summary>
-        /// <param name="arg">The command</param>
-        /// <param name="startIndex">The start index for remove.</param>
-        /// <param name="count">The count index for remove.</param>
-        public static void c_Lspci()
+        public override ReturnInfo Execute()
         {
             int count = 0;
             foreach (Cosmos.HAL.PCIDevice device in Cosmos.HAL.PCI.Devices)
             {
                 Console.WriteLine(Conversion.D2(device.bus) + ":" + Conversion.D2(device.slot) + ":" + Conversion.D2(device.function) + " - " + "0x" + Conversion.D4(Conversion.DecToHex(device.VendorID)) + ":0x" + Conversion.D4(Conversion.DecToHex(device.DeviceID)) + " : " + DeviceClass.GetTypeString(device) + ": " + DeviceClass.GetDeviceString(device));
                 count++;
-                if (count==19)
+                if (count == Console.WindowHeight)
                 {
                     Console.ReadKey();
                     count = 0;
                 }
             }
+            return new ReturnInfo(this, ReturnCode.OK);
         }
     }
 }

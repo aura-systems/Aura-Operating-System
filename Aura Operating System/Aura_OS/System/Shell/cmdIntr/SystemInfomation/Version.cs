@@ -8,30 +8,22 @@ using L = Aura_OS.System.Translation;
 
 namespace Aura_OS.System.Shell.cmdIntr.SystemInfomation
 {
-    class Version
+    class CommandVersion : ICommand
     {
-        private static string HelpInfo = "";
-
         /// <summary>
-        /// Getter and Setters for Help Info.
+        /// Empty constructor.
         /// </summary>
-        public static string HI
+        public CommandVersion(string[] commandvalues) : base(commandvalues)
         {
-            get { return HelpInfo; }
-            set { HelpInfo = value; /*PUSHED OUT VALUE (in)*/}
         }
 
         /// <summary>
-        /// Empty constructor. (Good for debug)
+        /// RebootCommand
         /// </summary>
-        public Version() { }
-
-        /// <summary>
-        /// c = command, c_Version
-        /// </summary>
-        public static void c_Version()
+        public override ReturnInfo Execute()
         {
             L.Text.Display("about");
+            return new ReturnInfo(this, ReturnCode.OK);
         }
     }
 }

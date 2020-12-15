@@ -72,12 +72,6 @@ namespace Aura_OS.System.Network.IPV4
 
         internal static void Send()
         {
-            bool wasenabled = false;
-            if (Kernel.debugger.enabled)
-            {
-                Kernel.debugger.enabled = false;
-                wasenabled = true;
-            }
             ensureQueueExists();
             int _deltaT = 0;
             int second = 0;
@@ -176,10 +170,6 @@ namespace Aura_OS.System.Network.IPV4
                         i++;
                     }
                 }
-            }
-            if (wasenabled)
-            {
-                Kernel.debugger.enabled = true;
             }
         }
 

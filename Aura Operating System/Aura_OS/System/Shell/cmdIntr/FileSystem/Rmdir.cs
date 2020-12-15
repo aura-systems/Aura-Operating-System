@@ -4,46 +4,37 @@
 * PROGRAMMER(S):    John Welsh <djlw78@gmail.com>
 */
 
+using System.Collections.Generic;
 using System.IO;
 using L = Aura_OS.System.Translation;
 
 namespace Aura_OS.System.Shell.cmdIntr.FileSystem
 {
-    class Rmdir
+    class CommandRmdir : ICommand
     {
-        private static string HelpInfo = "";
-
         /// <summary>
-        /// Getter and Setters for Help Info.
+        /// Empty constructor.
         /// </summary>
-        public static string HI
+        public CommandRmdir(string[] commandvalues) : base(commandvalues)
         {
-            get { return HelpInfo; }
-            set { HelpInfo = value; /*PUSHED OUT VALUE (in)*/}
         }
 
-
         /// <summary>
-        /// Empty constructor. (Good for debug)
+        /// CommandMkdir
         /// </summary>
-        public Rmdir() { }
-
-        /// <summary>
-        /// c = commnad, c_Rmdir
-        /// </summary>
-        /// <param name="startIndex">The start index for remove.</param>
-        /// <param name="count">The count index for remove.</param>
-        public static void c_Rmdir(string rmdir, short startIndex = 0, short count = 6)
+        public override ReturnInfo Execute(List<string> arguments)
         {
-            string dir = rmdir.Remove(startIndex, count);
+            string dir = arguments[0];
             if (Directory.Exists(Kernel.current_directory + dir))
             {
                 Directory.Delete(Kernel.current_directory + dir, true);
+                return new ReturnInfo(this, ReturnCode.OK);
             }
             else
             {
                 L.Text.Display("doesnotexist", dir);
             }
+            return new ReturnInfo(this, ReturnCode.OK);
         }
 
     }

@@ -8,30 +8,22 @@
 using System;
 namespace Aura_OS.System.Shell.cmdIntr.c_Console
 {
-    class Clear
+    class CommandClear : ICommand
     {
-        private static string HelpInfo = "";
-
         /// <summary>
-        /// Getter and Setters for Help Info.
+        /// Empty constructor.
         /// </summary>
-        public static string HI
+        public CommandClear(string[] commandvalues) : base(commandvalues)
         {
-            get { return HelpInfo; }
-            set { HelpInfo = value; /*PUSHED OUT VALUE (in)*/}
         }
 
         /// <summary>
-        /// Empty constructor. (Good for debug)
+        /// CommandClear
         /// </summary>
-        public Clear() { }
-
-        /// <summary>
-        /// c = commnad, c_Clear
-        /// </summary>
-        public static void c_Clear()
+        public override ReturnInfo Execute()
         {
             Console.Clear();
+            return new ReturnInfo(this, ReturnCode.OK);
         }
     }
 }
