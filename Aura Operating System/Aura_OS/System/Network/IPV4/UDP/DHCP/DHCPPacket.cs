@@ -73,12 +73,11 @@ namespace Aura_OS.System.Network.UDP.DHCP
             SecondsElapsed = (ushort)((mRawData[this.dataOffset + 8] << 8) | mRawData[this.dataOffset + 9]);
             BootpFlags = (ushort)((mRawData[this.dataOffset + 10] << 8) | mRawData[this.dataOffset + 11]);
             ClientIp = new Address((byte)(mRawData[12] << 24), (byte)(mRawData[13] << 16), (byte)(mRawData[14] << 8), (byte)(mRawData[15]));
-            dataOffset += 240;
             //TODO: le reste
         }
 
-        internal DHCPPacket(MACAddress mac_src, UInt16 icmpDataSize)
-            : base(Address.Zero, Address.Broadcast, 68, 67, icmpDataSize, MACAddress.Broadcast)
+        internal DHCPPacket(MACAddress mac_src, UInt16 dhcpDataSize)
+            : base(Address.Zero, Address.Broadcast, 68, 67, dhcpDataSize, MACAddress.Broadcast)
         {
             //Request
             mRawData[dataOffset] = 0x01;
@@ -126,6 +125,8 @@ namespace Aura_OS.System.Network.UDP.DHCP
             mRawData[dataOffset + 240] = 0x63;
 
             initFields();
+
+            dataOffset += 241;
         }
 
         //TODO Getter setter
@@ -159,6 +160,10 @@ namespace Aura_OS.System.Network.UDP.DHCP
             mRawData[dataOffset + 8] = 0x06;
 
             mRawData[dataOffset + 9] = 0xff; //ENDMARK
+
+            initFields();
+
+            dataOffset += 10;
         }
 
         /// <summary>
@@ -172,7 +177,6 @@ namespace Aura_OS.System.Network.UDP.DHCP
         protected override void initFields()
         {
             base.initFields();
-            dataOffset += 10;
         }
 
     }
