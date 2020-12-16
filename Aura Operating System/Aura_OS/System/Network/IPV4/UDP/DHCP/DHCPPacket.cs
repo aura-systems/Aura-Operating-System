@@ -73,6 +73,7 @@ namespace Aura_OS.System.Network.UDP.DHCP
             SecondsElapsed = (ushort)((mRawData[this.dataOffset + 8] << 8) | mRawData[this.dataOffset + 9]);
             BootpFlags = (ushort)((mRawData[this.dataOffset + 10] << 8) | mRawData[this.dataOffset + 11]);
             ClientIp = new Address((byte)(mRawData[12] << 24), (byte)(mRawData[13] << 16), (byte)(mRawData[14] << 8), (byte)(mRawData[15]));
+            dataOffset += 240;
             //TODO: le reste
         }
 
@@ -170,8 +171,8 @@ namespace Aura_OS.System.Network.UDP.DHCP
 
         protected override void initFields()
         {
-            //TODO: nothing for now
             base.initFields();
+            dataOffset += 10;
         }
 
     }

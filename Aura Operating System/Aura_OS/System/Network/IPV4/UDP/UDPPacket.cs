@@ -18,8 +18,6 @@ namespace Aura_OS.System.Network.IPV4.UDP
         protected UInt16 udpLen;
         protected UInt16 udpCRC;
 
-        public static string DHCP;
-
         internal static void UDPHandler(byte[] packetData)
         {
             UDPPacket udp_packet = new UDPPacket(packetData);
@@ -190,7 +188,7 @@ namespace Aura_OS.System.Network.IPV4.UDP
             destPort = (UInt16)((mRawData[this.dataOffset + 2] << 8) | mRawData[this.dataOffset + 3]);
             udpLen = (UInt16)((mRawData[this.dataOffset + 4] << 8) | mRawData[this.dataOffset + 5]);
             udpCRC = (UInt16)((mRawData[this.dataOffset + 6] << 8) | mRawData[this.dataOffset + 7]);
-            dataOffset = (UInt16)(HeaderLength + 8);
+            dataOffset += 8;
         }
 
         internal UInt16 DestinationPort
