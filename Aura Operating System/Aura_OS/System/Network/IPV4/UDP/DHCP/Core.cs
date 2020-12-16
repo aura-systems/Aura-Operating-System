@@ -23,6 +23,7 @@ namespace Aura_OS.System.Network.UDP.DHCP
             return NetworkConfig.Get(networkDevice).DefaultGateway;
         }
 
+        /*
         /// <summary>
         /// Send a packet to the DHCP server to make the address available again
         /// </summary>
@@ -39,15 +40,15 @@ namespace Aura_OS.System.Network.UDP.DHCP
 
                 NetworkInit.Enable(networkDevice, new Network.IPV4.Address(0, 0, 0, 0), new Network.IPV4.Address(0, 0, 0, 0), new Network.IPV4.Address(0, 0, 0, 0));
 
-                /*
-                Utils.Settings settings = new Utils.Settings(@"0:\System\" + networkDevice.Name + ".conf");
-                settings.EditValue("ipaddress", "0.0.0.0");
-                settings.EditValue("subnet", "0.0.0.0");
-                settings.EditValue("gateway", "0.0.0.0");
-                settings.EditValue("dns01", "0.0.0.0");
-                settings.PushValues();*/
+                
+                //Utils.Settings settings = new Utils.Settings(@"0:\System\" + networkDevice.Name + ".conf");
+                //settings.EditValue("ipaddress", "0.0.0.0");
+                //settings.EditValue("subnet", "0.0.0.0");
+                //settings.EditValue("gateway", "0.0.0.0");
+                //settings.EditValue("dns01", "0.0.0.0");
+                //settings.PushValues();
             }            
-        }
+        }*/
 
         /// <summary>
         /// Send a packet to find the DHCP server and tell that we want a new IP address
@@ -58,8 +59,7 @@ namespace Aura_OS.System.Network.UDP.DHCP
 
             foreach (NetworkDevice networkDevice in NetworkDevice.Devices)
             {
-
-                NetworkInit.Enable(networkDevice, new Network.IPV4.Address(0, 0, 0, 0), new Network.IPV4.Address(0, 0, 0, 0), new Network.IPV4.Address(0, 0, 0, 0));
+                NetworkInit.Enable(networkDevice, new Address(0, 0, 0, 0), new Address(0, 0, 0, 0), new Address(0, 0, 0, 0));
 
                 DHCPDiscover dhcp_discover = new DHCPDiscover(networkDevice.MACAddress);
                 OutgoingBuffer.AddPacket(dhcp_discover);
@@ -69,6 +69,7 @@ namespace Aura_OS.System.Network.UDP.DHCP
             }
         }
 
+        /*
         /// <summary>
         /// Send a request to apply the new IP configuration
         /// </summary>
@@ -80,7 +81,7 @@ namespace Aura_OS.System.Network.UDP.DHCP
                 OutgoingBuffer.AddPacket(dhcp_request);
                 NetworkStack.Update();
             }
-        }
+        }*/
 
         /*
          * Method called to applied the differents options received in the DHCP packet ACK

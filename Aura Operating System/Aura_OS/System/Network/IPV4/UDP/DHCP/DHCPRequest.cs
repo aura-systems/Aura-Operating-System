@@ -8,6 +8,8 @@ using Aura_OS.HAL;
 * PROGRAMMERS:      Alexy DA CRUZ <dacruzalexy@gmail.com>
 */
 
+/*
+
 namespace Aura_OS.System.Network.UDP.DHCP
 {
     public class DHCPRequest : DHCPPacket
@@ -106,3 +108,5 @@ namespace Aura_OS.System.Network.UDP.DHCP
         }
     }
 }
+
+*/
