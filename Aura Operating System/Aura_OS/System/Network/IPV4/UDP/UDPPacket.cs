@@ -134,9 +134,27 @@ namespace Aura_OS.System.Network.IPV4.UDP
             : base()
         { }
 
-        public UDPPacket(byte[] rawData)
+        internal UDPPacket(byte[] rawData)
             : base(rawData)
         {}
+
+        public UDPPacket(Address source, Address dest, UInt16 srcPort, UInt16 destPort, UInt16 dataLength)
+            : base(dataLength, 17, source, dest, 0x00)
+        {
+            mRawData[this.dataOffset + 0] = (byte)((srcPort >> 8) & 0xFF);
+            mRawData[this.dataOffset + 1] = (byte)((srcPort >> 0) & 0xFF);
+            mRawData[this.dataOffset + 2] = (byte)((destPort >> 8) & 0xFF);
+            mRawData[this.dataOffset + 3] = (byte)((destPort >> 0) & 0xFF);
+            udpLen = (UInt16)(dataLength + 8);
+
+            mRawData[this.dataOffset + 4] = (byte)((udpLen >> 8) & 0xFF);
+            mRawData[this.dataOffset + 5] = (byte)((udpLen >> 0) & 0xFF);
+
+            mRawData[this.dataOffset + 6] = (byte)((0 >> 8) & 0xFF);
+            mRawData[this.dataOffset + 7] = (byte)((0 >> 0) & 0xFF);
+
+            initFields();
+        }
 
         public UDPPacket(Address source, Address dest, UInt16 srcPort, UInt16 destPort, byte[] data)
             : base((UInt16)(data.Length + 8), 17, source, dest, 0x00)
@@ -147,32 +165,6 @@ namespace Aura_OS.System.Network.IPV4.UDP
             mRawData[this.dataOffset + 3] = (byte)((destPort >> 0) & 0xFF);
             udpLen = (UInt16)(data.Length + 8);
             
-            mRawData[this.dataOffset + 4] = (byte)((udpLen >> 8) & 0xFF);
-            mRawData[this.dataOffset + 5] = (byte)((udpLen >> 0) & 0xFF);
-
-            byte[] header = MakeHeader(source.address, dest.address, udpLen, srcPort, destPort, data);
-            //UInt16 calculatedcrc = Check(header, 0, header.Length);
-
-            mRawData[this.dataOffset + 6] = (byte)((0 >> 8) & 0xFF);
-            mRawData[this.dataOffset + 7] = (byte)((0 >> 0) & 0xFF);
-
-            for (int b = 0; b < data.Length; b++)
-            {
-                mRawData[this.dataOffset + 8 + b] = data[b];
-            }
-
-            initFields();
-        }
-
-        public UDPPacket(MACAddress mac, Address source, Address dest, UInt16 srcPort, UInt16 destPort)
-            : base(mac, MACAddress.Broadcast, 300, 0x11, source, Address.Broadcast, 0x00)
-        {
-            mRawData[this.dataOffset + 0] = (byte)((srcPort >> 8) & 0xFF);
-            mRawData[this.dataOffset + 1] = (byte)((srcPort >> 0) & 0xFF);
-            mRawData[this.dataOffset + 2] = (byte)((destPort >> 8) & 0xFF);
-            mRawData[this.dataOffset + 3] = (byte)((destPort >> 0) & 0xFF);
-            udpLen = (UInt16)(data.Length + 8);
-
             mRawData[this.dataOffset + 4] = (byte)((udpLen >> 8) & 0xFF);
             mRawData[this.dataOffset + 5] = (byte)((udpLen >> 0) & 0xFF);
 

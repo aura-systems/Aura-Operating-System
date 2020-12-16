@@ -29,6 +29,7 @@ namespace Aura_OS.System.Network.UDP.DHCP
         protected Address RelayAgent;
         protected MACAddress Client;
         protected uint MagicCookie;
+        int xID;
 
         public static void DHCPHandler(byte[] packetData)
         {
@@ -37,12 +38,12 @@ namespace Aura_OS.System.Network.UDP.DHCP
 
             if (packet.MessageType == 0x02)
             {
-                //Offert packet received
+                Console.WriteLine("Offert packet received");
             }
 
             if (packet.MessageType == 0x05 || packet.MessageType == 0x06)
             {
-                //ACK or NAK DHCP packet received
+                Console.WriteLine("ACK or NAK DHCP packet received");
             }
         }
 
@@ -72,12 +73,16 @@ namespace Aura_OS.System.Network.UDP.DHCP
             SecondsElapsed = (ushort)((mRawData[this.dataOffset + 8] << 8) | mRawData[this.dataOffset + 9]);
             BootpFlags = (ushort)((mRawData[this.dataOffset + 10] << 8) | mRawData[this.dataOffset + 11]);
             ClientIp = new Address((byte)(mRawData[12] << 24), (byte)(mRawData[13] << 16), (byte)(mRawData[14] << 8), (byte)(mRawData[15]));
-            //TODO le reste
+            //TODO: le reste
         }
 
-        internal DHCPPacket(Address source, MACAddress mac_src)
-            : base(mac_src, MACAddress.Broadcast, 300, 0x11, source, Address.Broadcast, 0x00)
+        internal DHCPPacket(MACAddress mac_src, UInt16 icmpDataSize)
+            : base(Address.Zero, Address.Broadcast, 68, 67, icmpDataSize)
         {
+            this.Client = mac_src;
+            base.SourceMAC = mac_src;
+            base.DestinationMAC = MACAddress.Broadcast;
+
             //Request
             mRawData[dataOffset] = 0x01;
 
@@ -91,12 +96,11 @@ namespace Aura_OS.System.Network.UDP.DHCP
             mRawData[dataOffset + 3] = 0x00;
 
             Random rnd = new Random();
-            int xID = rnd.Next(0, Int32.MaxValue);
+            xID = rnd.Next(0, Int32.MaxValue);
             mRawData[dataOffset + 4] = (byte)((xID >> 24) & 0xFF);
             mRawData[dataOffset + 5] = (byte)((xID >> 16) & 0xFF);
             mRawData[dataOffset + 6] = (byte)((xID >> 8) & 0xFF);
             mRawData[dataOffset + 7] = (byte)((xID >> 0) & 0xFF);
-
 
             //option bootp
             for (int i = 8; i < 27; i++)
@@ -139,7 +143,7 @@ namespace Aura_OS.System.Network.UDP.DHCP
         internal DHCPDiscover(byte[] rawData) : base(rawData)
         { }
 
-        internal DHCPDiscover(MACAddress mac_src) : base(Address.Zero, mac_src)
+        internal DHCPDiscover(MACAddress mac_src) : base(mac_src, 300) //discover packet size
         {
             //Discover
             mRawData[dataOffset] = 0x35;
