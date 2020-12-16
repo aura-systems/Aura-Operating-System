@@ -72,7 +72,7 @@ namespace Aura_OS.System.Shell.cmdIntr.Network
             }
             else if (arguments[0] == "/release")
             {
-                System.Network.UDP.DHCP.Core.SendReleasePacket();
+                //System.Network.UDP.DHCP.Core.SendReleasePacket();
             }
             else if (arguments[0] == "/ask")
             {
