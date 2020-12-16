@@ -65,19 +65,19 @@ namespace Aura_OS.System.Network.UDP.DHCP
         protected override void initFields()
         {
             base.initFields();
-            MessageType = mRawData[this.dataOffset];
+            /*MessageType = mRawData[this.dataOffset];
             HardwareType = mRawData[this.dataOffset + 1];
             HardwareAddressLength = mRawData[this.dataOffset + 2];
             Hops = mRawData[this.dataOffset + 3];
             TransactionID = (uint)((mRawData[4] << 24) | (mRawData[5] << 16) | (mRawData[6] << 8) | mRawData[7]);
             SecondsElapsed = (ushort)((mRawData[this.dataOffset + 8] << 8) | mRawData[this.dataOffset + 9]);
             BootpFlags = (ushort)((mRawData[this.dataOffset + 10] << 8) | mRawData[this.dataOffset + 11]);
-            ClientIp = new Address((byte)(mRawData[12] << 24), (byte)(mRawData[13] << 16), (byte)(mRawData[14] << 8), (byte)(mRawData[15]));
+            ClientIp = new Address((byte)(mRawData[12] << 24), (byte)(mRawData[13] << 16), (byte)(mRawData[14] << 8), (byte)(mRawData[15]));*/
             //TODO: le reste
         }
 
         internal DHCPPacket(MACAddress mac_src, ushort dhcpDataSize)
-            : base(Address.Zero, Address.Broadcast, 68, 67, (ushort)(dhcpDataSize + 253), MACAddress.Broadcast)
+            : base(Address.Zero, Address.Broadcast, 68, 67, (ushort)(dhcpDataSize + 240), MACAddress.Broadcast)
         {
             //Request
             mRawData[dataOffset] = 0x01;
@@ -101,7 +101,7 @@ namespace Aura_OS.System.Network.UDP.DHCP
             //option bootp
             for (int i = 0; i < 20; i++)
             {
-                mRawData[dataOffset + i] = 0x00;
+                mRawData[dataOffset + 8 + i] = 0x00;
             }
 
             //Src mac
@@ -115,7 +115,7 @@ namespace Aura_OS.System.Network.UDP.DHCP
             //Fill 0
             for (int i = 0; i < 202; i++)
             {
-                mRawData[dataOffset + i] = 0x00;
+                mRawData[dataOffset + 43 + i] = 0x00;
             }
 
             //DHCP Magic cookie
@@ -126,7 +126,7 @@ namespace Aura_OS.System.Network.UDP.DHCP
 
             initFields();
 
-            dataOffset += 253;
+            dataOffset += 240;
         }
 
         //TODO Getter setter
@@ -153,17 +153,13 @@ namespace Aura_OS.System.Network.UDP.DHCP
             mRawData[dataOffset + 3] = 0x37;
             mRawData[dataOffset + 4] = 4;
 
-            //Parameters
+            //Parameters*
             mRawData[dataOffset + 5] = 0x01;
             mRawData[dataOffset + 6] = 0x03;
             mRawData[dataOffset + 7] = 0x0f;
             mRawData[dataOffset + 8] = 0x06;
 
             mRawData[dataOffset + 9] = 0xff; //ENDMARK
-
-            initFields();
-
-            dataOffset += 10;
         }
 
         /// <summary>

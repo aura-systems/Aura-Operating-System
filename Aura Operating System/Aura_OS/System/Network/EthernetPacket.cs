@@ -17,6 +17,7 @@ namespace Aura_OS.System.Network
         protected MACAddress srcMAC;
         protected MACAddress destMAC;
         protected UInt16 aEtherType;
+        protected UInt16 dataOffset = 0;
 
         protected EthernetPacket()
         { }
@@ -41,7 +42,7 @@ namespace Aura_OS.System.Network
 
         protected EthernetPacket(MACAddress dest, MACAddress src, UInt16 type, int packet_size)
         {
-            mRawData = new byte[packet_size];
+            mRawData = new byte[packet_size + 14];
             for (int i = 0; i < 6; i++)
             {
                 mRawData[i] = dest.bytes[i];
@@ -51,6 +52,8 @@ namespace Aura_OS.System.Network
             mRawData[12] = (byte)(type >> 8);
             mRawData[13] = (byte)(type >> 0);
             initFields();
+
+            dataOffset += 14;
         }
 
         internal MACAddress SourceMAC

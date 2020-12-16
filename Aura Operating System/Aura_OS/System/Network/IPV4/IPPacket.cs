@@ -26,7 +26,6 @@ namespace Aura_OS.System.Network.IPV4
         protected UInt16 ipCRC;
         protected Address sourceIP;
         protected Address destIP;
-        protected UInt16 dataOffset;
 
         private static UInt16 sNextFragmentID;
 
@@ -93,7 +92,6 @@ namespace Aura_OS.System.Network.IPV4
             ipCRC = (UInt16)((mRawData[24] << 8) | mRawData[25]);
             sourceIP = new Address(mRawData, 26);
             destIP = new Address(mRawData, 30);
-            dataOffset = (UInt16)(14 + HeaderLength);
         }
 
         protected IPPacket(UInt16 dataLength, byte protocol, Address source, Address dest, byte Flags)
@@ -106,34 +104,36 @@ namespace Aura_OS.System.Network.IPV4
 
         public IPPacket(MACAddress srcMAC, MACAddress destMAC, UInt16 dataLength, byte protocol,
             Address source, Address dest, byte Flags)
-            : base(destMAC, srcMAC, 0x0800, dataLength + 14 + 20)
+            : base(destMAC, srcMAC, 0x0800, dataLength + 20)
         {
-            mRawData[14] = 0x45;
-            mRawData[15] = 0;
+            mRawData[dataOffset] = 0x45;
+            mRawData[dataOffset + 1] = 0;
             ipLength = (UInt16)(dataLength + 20);
             ipHeaderLength = 5;
 
-            mRawData[16] = (byte)((ipLength >> 8) & 0xFF);
-            mRawData[17] = (byte)((ipLength >> 0) & 0xFF);
+            mRawData[dataOffset + 2] = (byte)((ipLength >> 8) & 0xFF);
+            mRawData[dataOffset + 3] = (byte)((ipLength >> 0) & 0xFF);
             fragmentID = NextIPFragmentID;
-            mRawData[18] = (byte)((fragmentID >> 8) & 0xFF);
-            mRawData[19] = (byte)((fragmentID >> 0) & 0xFF);
-            mRawData[20] = Flags;
-            mRawData[21] = 0x00;
-            mRawData[22] = 0x80;
-            mRawData[23] = protocol;
-            mRawData[24] = 0x00;
-            mRawData[25] = 0x00;
+            mRawData[dataOffset + 4] = (byte)((fragmentID >> 8) & 0xFF);
+            mRawData[dataOffset + 5] = (byte)((fragmentID >> 0) & 0xFF);
+            mRawData[dataOffset + 6] = Flags;
+            mRawData[dataOffset + 7] = 0x00;
+            mRawData[dataOffset + 8] = 0x80;
+            mRawData[dataOffset + 9] = protocol;
+            mRawData[dataOffset + 10] = 0x00;
+            mRawData[dataOffset + 11] = 0x00;
             for (int b = 0; b < 4; b++)
             {
-                mRawData[26 + b] = source.address[b];
-                mRawData[30 + b] = dest.address[b];
+                mRawData[dataOffset + 12 + b] = source.address[b];
+                mRawData[dataOffset + 16 + b] = dest.address[b];
             }
             ipCRC = CalcIPCRC(20);
-            mRawData[24] = (byte)((ipCRC >> 8) & 0xFF);
-            mRawData[25] = (byte)((ipCRC >> 0) & 0xFF);
+            mRawData[dataOffset + 10] = (byte)((ipCRC >> 8) & 0xFF);
+            mRawData[dataOffset + 11] = (byte)((ipCRC >> 0) & 0xFF);
 
             initFields();
+
+            dataOffset += 20;
         }
 
         protected UInt16 CalcOcCRC(UInt16 offset, UInt16 length)
