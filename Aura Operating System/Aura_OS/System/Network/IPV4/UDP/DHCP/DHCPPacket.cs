@@ -35,7 +35,15 @@ namespace Aura_OS.System.Network.UDP.DHCP
             Kernel.debugger.Send("DHCP Handler called");
             DHCPPacket packet = new DHCPPacket(packetData);
 
-            //TODO: check dhcp packet type
+            if (packet.MessageType == 0x02)
+            {
+                //Offert packet received
+            }
+
+            if (packet.MessageType == 0x05 || packet.MessageType == 0x06)
+            {
+                //ACK or NAK DHCP packet received
+            }
         }
 
         /// <summary>
@@ -76,6 +84,49 @@ namespace Aura_OS.System.Network.UDP.DHCP
         }
 
         //TODO Getter setter
+
+    }
+
+    internal class DHCPDiscover : DHCPPacket
+    {
+
+        internal DHCPDiscover(byte[] rawData) : base(rawData)
+        {
+        }
+
+        internal DHCPDiscover() : base()
+        {
+            //Discover
+            mRawData[dataOffset + 0] = 0x35;
+            mRawData[dataOffset + 1] = 0x01;
+            mRawData[dataOffset + 2] = 0x01;
+
+            //Parameters start here
+            mRawData[dataOffset + 3] = 0x37;
+            mRawData[dataOffset + 4] = 4;
+
+            //Parameters
+            mRawData[dataOffset + 5] = 0x01;
+            mRawData[dataOffset + 6] = 0x03;
+            mRawData[dataOffset + 7] = 0x0f;
+            mRawData[dataOffset + 8] = 0x06;
+
+            mRawData[dataOffset + 9] = 0xff; //ENDMARK
+        }
+
+        /// <summary>
+        /// Work around to make VMT scanner include the initFields method
+        /// </summary>
+        public new static void VMTInclude()
+        {
+            new DHCPDiscover();
+        }
+
+        protected override void initFields()
+        {
+            //TODO: nothing for now
+            base.initFields();
+        }
 
     }
 

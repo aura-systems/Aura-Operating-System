@@ -8,6 +8,7 @@ using Aura_OS.HAL;
 * PROGRAMMER(S):    Alexy DA CRUZ <dacruzalexy@gmail.com>
 */
 
+/*
 namespace Aura_OS.System.Network.UDP.DHCP
 {
     public class DHCPDiscover : DHCPPacket
@@ -93,3 +94,4 @@ namespace Aura_OS.System.Network.UDP.DHCP
         }
     }
 }
+*/
