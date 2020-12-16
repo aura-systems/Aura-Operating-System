@@ -138,8 +138,9 @@ namespace Aura_OS.System.Network.IPV4.UDP
             : base(rawData)
         {}
 
-        public UDPPacket(Address source, Address dest, UInt16 srcPort, UInt16 destPort, UInt16 dataLength)
-            : base(dataLength, 17, source, dest, 0x00)
+        //usefull for DHCP
+        public UDPPacket(Address source, Address dest, UInt16 srcPort, UInt16 destPort, UInt16 dataLength, MACAddress destmac)
+            : base(dataLength, 17, source, dest, 0x00, destmac)
         {
             mRawData[this.dataOffset + 0] = (byte)((srcPort >> 8) & 0xFF);
             mRawData[this.dataOffset + 1] = (byte)((srcPort >> 0) & 0xFF);
@@ -189,6 +190,7 @@ namespace Aura_OS.System.Network.IPV4.UDP
             destPort = (UInt16)((mRawData[this.dataOffset + 2] << 8) | mRawData[this.dataOffset + 3]);
             udpLen = (UInt16)((mRawData[this.dataOffset + 4] << 8) | mRawData[this.dataOffset + 5]);
             udpCRC = (UInt16)((mRawData[this.dataOffset + 6] << 8) | mRawData[this.dataOffset + 7]);
+            dataOffset = (UInt16)(HeaderLength + 8);
         }
 
         internal UInt16 DestinationPort

@@ -77,12 +77,8 @@ namespace Aura_OS.System.Network.UDP.DHCP
         }
 
         internal DHCPPacket(MACAddress mac_src, UInt16 icmpDataSize)
-            : base(Address.Zero, Address.Broadcast, 68, 67, icmpDataSize)
+            : base(Address.Zero, Address.Broadcast, 68, 67, icmpDataSize, MACAddress.Broadcast)
         {
-            this.Client = mac_src;
-            base.SourceMAC = mac_src;
-            base.DestinationMAC = MACAddress.Broadcast;
-
             //Request
             mRawData[dataOffset] = 0x01;
 
@@ -127,6 +123,7 @@ namespace Aura_OS.System.Network.UDP.DHCP
             mRawData[dataOffset + 238] = 0x82;
             mRawData[dataOffset + 239] = 0x53;
             mRawData[dataOffset + 240] = 0x63;
+
             initFields();
         }
 
