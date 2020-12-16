@@ -76,8 +76,8 @@ namespace Aura_OS.System.Network.UDP.DHCP
             //TODO: le reste
         }
 
-        internal DHCPPacket(MACAddress mac_src, UInt16 dhcpDataSize)
-            : base(Address.Zero, Address.Broadcast, 68, 67, dhcpDataSize, MACAddress.Broadcast)
+        internal DHCPPacket(MACAddress mac_src, ushort dhcpDataSize)
+            : base(Address.Zero, Address.Broadcast, 68, 67, (ushort)(dhcpDataSize + 253), MACAddress.Broadcast)
         {
             //Request
             mRawData[dataOffset] = 0x01;
@@ -99,7 +99,7 @@ namespace Aura_OS.System.Network.UDP.DHCP
             mRawData[dataOffset + 7] = (byte)((xID >> 0) & 0xFF);
 
             //option bootp
-            for (int i = 8; i < 27; i++)
+            for (int i = 0; i < 20; i++)
             {
                 mRawData[dataOffset + i] = 0x00;
             }
@@ -107,26 +107,26 @@ namespace Aura_OS.System.Network.UDP.DHCP
             //Src mac
             mRawData[dataOffset + 28] = mac_src.bytes[0];
             mRawData[dataOffset + 29] = mac_src.bytes[1];
-            mRawData[dataOffset + 31] = mac_src.bytes[2];
-            mRawData[dataOffset + 32] = mac_src.bytes[3];
-            mRawData[dataOffset + 33] = mac_src.bytes[4];
-            mRawData[dataOffset + 34] = mac_src.bytes[5];
+            mRawData[dataOffset + 30] = mac_src.bytes[2];
+            mRawData[dataOffset + 31] = mac_src.bytes[3];
+            mRawData[dataOffset + 32] = mac_src.bytes[4];
+            mRawData[dataOffset + 33] = mac_src.bytes[5];
 
             //Fill 0
-            for (int i = 35; i < 236; i++)
+            for (int i = 0; i < 202; i++)
             {
                 mRawData[dataOffset + i] = 0x00;
             }
 
             //DHCP Magic cookie
-            mRawData[dataOffset + 237] = 0x63;
-            mRawData[dataOffset + 238] = 0x82;
-            mRawData[dataOffset + 239] = 0x53;
-            mRawData[dataOffset + 240] = 0x63;
+            mRawData[dataOffset + 236] = 0x63;
+            mRawData[dataOffset + 237] = 0x82;
+            mRawData[dataOffset + 238] = 0x53;
+            mRawData[dataOffset + 239] = 0x63;
 
             initFields();
 
-            dataOffset += 241;
+            dataOffset += 253;
         }
 
         //TODO Getter setter
@@ -142,7 +142,7 @@ namespace Aura_OS.System.Network.UDP.DHCP
         internal DHCPDiscover(byte[] rawData) : base(rawData)
         { }
 
-        internal DHCPDiscover(MACAddress mac_src) : base(mac_src, 300) //discover packet size
+        internal DHCPDiscover(MACAddress mac_src) : base(mac_src, 10) //discover packet size
         {
             //Discover
             mRawData[dataOffset] = 0x35;
