@@ -34,7 +34,7 @@ namespace Aura_OS.System.Network.IPV4.UDP
                 }
                 else if (udp_packet.SourcePort == 53)
                 {
-                    //DNS.DNSPacket.DNSHandler(packetData);
+                    DNS.DNSPacket.DNSHandler(packetData);
                     return;
                 }
 
