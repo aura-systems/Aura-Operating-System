@@ -26,7 +26,17 @@ namespace Aura_OS.System.Shell.cmdIntr.Network
         }
 
         /// <summary>
-        /// CommandEcho
+        /// CommandDns
+        /// </summary>
+        /// <param name="arguments">Arguments</param>
+        public override ReturnInfo Execute()
+        {
+            Console.WriteLine("Usage: dns {dns_server_ip} {url}");
+            return new ReturnInfo(this, ReturnCode.OK);
+        }
+
+        /// <summary>
+        /// CommandDns
         /// </summary>
         /// <param name="arguments">Arguments</param>
         public override ReturnInfo Execute(List<string> arguments)
@@ -35,12 +45,12 @@ namespace Aura_OS.System.Shell.cmdIntr.Network
             {
                 return new ReturnInfo(this, ReturnCode.ERROR, "No network configuration detected! Use ipconfig /set.");
             }
-            if (arguments.Count == 0)
+            if (arguments.Count < 2)
             {
                 return new ReturnInfo(this, ReturnCode.ERROR_ARG);
             }
 
-            DNSClient.SendAskPacket(arguments[0]);
+            DNSClient.SendAskPacket(Address.Parse(arguments[0]), arguments[1]);
 
             return new ReturnInfo(this, ReturnCode.OK);
         }

@@ -18,14 +18,14 @@ namespace Aura_OS.System.Network.IPV4.UDP.DNS
         /// <summary>
         /// Send a packet to ask DNS server the IP from an url
         /// </summary>
-        public static void SendAskPacket(string url)
+        public static void SendAskPacket(Address dnsserver, string url)
         {
-            //Address dest = Address.Parse("192.168.1.1");
-            //Address source = IPV4.Config.FindNetwork(dest);
+            Address source = IPV4.Config.FindNetwork(dnsserver);
 
-            DNSPacketAsk askpacket = new DNSPacketAsk(Address.Parse("192.168.1.43"), Address.Parse("192.168.1.1"), url);
+            DNSPacketAsk askpacket = new DNSPacketAsk(source, dnsserver, url);
 
             OutgoingBuffer.AddPacket(askpacket);
+
             NetworkStack.Update();
         }
 

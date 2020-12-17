@@ -122,7 +122,7 @@ namespace Aura_OS.System.Network.IPV4.UDP.DNS
         { }
 
         public DNSPacketAsk(Address source, Address dest, string url)
-            : base(source, dest, 1, (ushort)(5 + url.Length))
+            : base(source, dest, 1, (ushort)(5 + url.Length + 1))
         {
             int b = 0;
 
