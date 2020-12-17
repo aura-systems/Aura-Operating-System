@@ -164,19 +164,6 @@ namespace Aura_OS.System.Shell.cmdIntr
                 Cosmos.System.PCSpeaker.Beep((uint)Cosmos.System.Notes.D6, 432);
                 Cosmos.System.PCSpeaker.Beep((uint)Cosmos.System.Notes.E6, 432);
             }));
-            CMDs.Add(new CommandAction(new string[] { "netrefresh" }, () =>
-            {
-                foreach (HAL.Drivers.Network.NetworkDevice networkDevice in HAL.Drivers.Network.NetworkDevice.Devices)
-                {
-                    File.Create(@"0:\System\" + networkDevice.Name + ".conf");
-                    Utils.Settings settings = new Utils.Settings(@"0:\System\" + networkDevice.Name + ".conf");
-                    settings.Edit("ipaddress", "0.0.0.0");
-                    settings.Edit("subnet", "0.0.0.0");
-                    settings.Edit("gateway", "0.0.0.0");
-                    settings.Edit("dns01", "0.0.0.0");
-                    settings.Push();
-                }
-            }));
         }
 
         /// <summary>
