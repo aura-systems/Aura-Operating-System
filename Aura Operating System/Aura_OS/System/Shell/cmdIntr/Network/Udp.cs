@@ -12,6 +12,7 @@ using Aura_OS.System.Network;
 using Aura_OS.System;
 using System.Text;
 using System.Collections.Generic;
+using Aura_OS.System.Network.IPV4.UDP;
 
 namespace Aura_OS.System.Shell.cmdIntr.Network
 {
@@ -45,8 +46,17 @@ namespace Aura_OS.System.Shell.cmdIntr.Network
                     return new ReturnInfo(this, ReturnCode.ERROR_ARG);
                 }
                 int port = Int32.Parse(arguments[1]);
+
                 Console.WriteLine("Listening at " + port + "...");
-                new System.Network.IPV4.UDP.UdpClient(port);
+
+                var client = new UdpClient(port);
+
+                EndPoint RemoteIpEndPoint = new EndPoint(Address.Zero, 0);
+
+                byte[] received = client.Receive(ref RemoteIpEndPoint);
+
+                Console.WriteLine("Received from " + RemoteIpEndPoint.address.ToString() + ":" + Encoding.ASCII.GetString(received));
+
                 return new ReturnInfo(this, ReturnCode.OK);
             }
             else if (arguments[0] == "-s")
