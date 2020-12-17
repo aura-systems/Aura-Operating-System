@@ -153,8 +153,6 @@ namespace Aura_OS.System.Network.IPV4.UDP
             mRawData[this.dataOffset + 7] = (byte)((0 >> 0) & 0xFF);
 
             initFields();
-
-            dataOffset += 8;
         }
 
         public UDPPacket(Address source, Address dest, UInt16 srcPort, UInt16 destPort, byte[] data)
@@ -181,8 +179,6 @@ namespace Aura_OS.System.Network.IPV4.UDP
             }
 
             initFields();
-
-            dataOffset += 8;
         }
 
         protected override void initFields()

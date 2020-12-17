@@ -65,8 +65,8 @@ namespace Aura_OS.System.Network.UDP.DHCP
         protected override void initFields()
         {
             base.initFields();
-            /*MessageType = mRawData[this.dataOffset];
-            HardwareType = mRawData[this.dataOffset + 1];
+            MessageType = mRawData[42];
+            /*HardwareType = mRawData[this.dataOffset + 1];
             HardwareAddressLength = mRawData[this.dataOffset + 2];
             Hops = mRawData[this.dataOffset + 3];
             TransactionID = (uint)((mRawData[4] << 24) | (mRawData[5] << 16) | (mRawData[6] << 8) | mRawData[7]);
@@ -80,53 +80,51 @@ namespace Aura_OS.System.Network.UDP.DHCP
             : base(Address.Zero, Address.Broadcast, 68, 67, (ushort)(dhcpDataSize + 240), MACAddress.Broadcast)
         {
             //Request
-            mRawData[dataOffset] = 0x01;
+            mRawData[42] = 0x01;
 
             //ethernet
-            mRawData[dataOffset + 1] = 0x01;
+            mRawData[43] = 0x01;
 
             //Length mac
-            mRawData[dataOffset + 2] = 0x06;
+            mRawData[44] = 0x06;
 
             //hops
-            mRawData[dataOffset + 3] = 0x00;
+            mRawData[45] = 0x00;
 
             Random rnd = new Random();
             xID = rnd.Next(0, Int32.MaxValue);
-            mRawData[dataOffset + 4] = (byte)((xID >> 24) & 0xFF);
-            mRawData[dataOffset + 5] = (byte)((xID >> 16) & 0xFF);
-            mRawData[dataOffset + 6] = (byte)((xID >> 8) & 0xFF);
-            mRawData[dataOffset + 7] = (byte)((xID >> 0) & 0xFF);
+            mRawData[46] = (byte)((xID >> 24) & 0xFF);
+            mRawData[47] = (byte)((xID >> 16) & 0xFF);
+            mRawData[48] = (byte)((xID >> 8) & 0xFF);
+            mRawData[49] = (byte)((xID >> 0) & 0xFF);
 
             //option bootp
             for (int i = 0; i < 20; i++)
             {
-                mRawData[dataOffset + 8 + i] = 0x00;
+                mRawData[50 + i] = 0x00;
             }
 
             //Src mac
-            mRawData[dataOffset + 28] = mac_src.bytes[0];
-            mRawData[dataOffset + 29] = mac_src.bytes[1];
-            mRawData[dataOffset + 30] = mac_src.bytes[2];
-            mRawData[dataOffset + 31] = mac_src.bytes[3];
-            mRawData[dataOffset + 32] = mac_src.bytes[4];
-            mRawData[dataOffset + 33] = mac_src.bytes[5];
+            mRawData[70] = mac_src.bytes[0];
+            mRawData[71] = mac_src.bytes[1];
+            mRawData[72] = mac_src.bytes[2];
+            mRawData[73] = mac_src.bytes[3];
+            mRawData[74] = mac_src.bytes[4];
+            mRawData[75] = mac_src.bytes[5];
 
             //Fill 0
             for (int i = 0; i < 202; i++)
             {
-                mRawData[dataOffset + 43 + i] = 0x00;
+                mRawData[76 + i] = 0x00;
             }
 
             //DHCP Magic cookie
-            mRawData[dataOffset + 236] = 0x63;
-            mRawData[dataOffset + 237] = 0x82;
-            mRawData[dataOffset + 238] = 0x53;
-            mRawData[dataOffset + 239] = 0x63;
+            mRawData[278] = 0x63;
+            mRawData[279] = 0x82;
+            mRawData[280] = 0x53;
+            mRawData[281] = 0x63;
 
             initFields();
-
-            dataOffset += 240;
         }
 
         //TODO Getter setter
@@ -145,21 +143,21 @@ namespace Aura_OS.System.Network.UDP.DHCP
         internal DHCPDiscover(MACAddress mac_src) : base(mac_src, 10) //discover packet size
         {
             //Discover
-            mRawData[dataOffset] = 0x35;
-            mRawData[dataOffset + 1] = 0x01;
-            mRawData[dataOffset + 2] = 0x01;
+            mRawData[282] = 0x35;
+            mRawData[283] = 0x01;
+            mRawData[284] = 0x01;
 
             //Parameters start here
-            mRawData[dataOffset + 3] = 0x37;
-            mRawData[dataOffset + 4] = 4;
+            mRawData[285] = 0x37;
+            mRawData[286] = 4;
 
             //Parameters*
-            mRawData[dataOffset + 5] = 0x01;
-            mRawData[dataOffset + 6] = 0x03;
-            mRawData[dataOffset + 7] = 0x0f;
-            mRawData[dataOffset + 8] = 0x06;
+            mRawData[287] = 0x01;
+            mRawData[288] = 0x03;
+            mRawData[289] = 0x0f;
+            mRawData[290] = 0x06;
 
-            mRawData[dataOffset + 9] = 0xff; //ENDMARK
+            mRawData[291] = 0xff; //ENDMARK
         }
 
         /// <summary>
