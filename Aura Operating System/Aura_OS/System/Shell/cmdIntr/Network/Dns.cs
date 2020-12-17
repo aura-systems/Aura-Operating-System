@@ -40,7 +40,7 @@ namespace Aura_OS.System.Shell.cmdIntr.Network
                 return new ReturnInfo(this, ReturnCode.ERROR_ARG);
             }
 
-            DNSClient.SendAskPacket("google.com");
+            DNSClient.SendAskPacket(arguments[0]);
 
             return new ReturnInfo(this, ReturnCode.OK);
         }
