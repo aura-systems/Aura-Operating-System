@@ -327,7 +327,7 @@ namespace Aura_OS.System.Network.UDP.DHCP
         /// </summary>
         public new static void VMTInclude()
         {
-            new DHCPRequest();
+            new DHCPRelease();
         }
 
         protected override void initFields()
