@@ -90,13 +90,12 @@ namespace Aura_OS.System.Network.IPV4.UDP
             NetworkStack.Update();
         }
 
-        public void Send(byte[] data, IPV4.Address dest, Int32 destPort)
+        public void Send(byte[] data, Address dest, int destPort)
         {
-            IPV4.Address source = IPV4.Config.FindNetwork(dest);
-            IPV4.UDP.UDPPacket packet = new IPV4.UDP.UDPPacket(source, dest, (UInt16)this.localPort, (UInt16)destPort, data);
-
-            Console.WriteLine("Sending " + packet.ToString());
-            IPV4.OutgoingBuffer.AddPacket(packet);
+            Address source = Config.FindNetwork(dest);
+            UDPPacket packet = new UDPPacket(source, dest, (ushort)localPort, (ushort)destPort, data);
+            Console.WriteLine(Utils.Conversion.HexDump(packet.RawData));
+            OutgoingBuffer.AddPacket(packet);
         }
 
         public void Close()

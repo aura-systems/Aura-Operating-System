@@ -71,7 +71,7 @@ namespace Aura_OS.System.Shell.cmdIntr.Network
 
                 string message = arguments[3];
 
-                var xClient = new System.Network.IPV4.UDP.UdpClient(port);
+                var xClient = new UdpClient(port);
 
                 xClient.Connect(ip, port);
                 xClient.Send(Encoding.ASCII.GetBytes(message));
