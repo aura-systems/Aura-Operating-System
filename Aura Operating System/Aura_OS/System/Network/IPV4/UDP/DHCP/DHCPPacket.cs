@@ -83,12 +83,9 @@ namespace Aura_OS.System.Network.UDP.DHCP
 
             if (mRawData[282] != 0)
             {
-
-                Console.Write("parsing options");
-
                 options = new List<DHCPOption>();
 
-                for (int i = 0; i < mRawData.Length - 282 && mRawData[282 + i] == 0xFF; i += 2) //0xFF is DHCP packet end
+                for (int i = 0; i < mRawData.Length - 282 && mRawData[282 + i] != 0xFF; i += 2) //0xFF is DHCP packet end
                 {
                     DHCPOption option = new DHCPOption();
                     option.Type = mRawData[282 + i];
@@ -102,9 +99,7 @@ namespace Aura_OS.System.Network.UDP.DHCP
 
                     i += option.Length;
                 }
-
-                Console.Write("options count=" + options.Count);
-            }
+            }    
         }
 
         internal DHCPPacket(MACAddress mac_src, ushort dhcpDataSize)
@@ -311,16 +306,8 @@ namespace Aura_OS.System.Network.UDP.DHCP
 
             if (Options != null)
             {
-                Console.WriteLine("Option count:" + Options.Count);
-                Console.ReadKey();
-
                 foreach (var option in Options)
                 {
-                    Console.WriteLine("Option type: " + option.Type);
-                    Console.ReadKey();
-                    Console.WriteLine("Option length: " + option.Length);
-                    Console.ReadKey();
-
                     if (option.Type == 1) //Mask
                     {
                         subnetMask = new Address(option.Data, 0);
