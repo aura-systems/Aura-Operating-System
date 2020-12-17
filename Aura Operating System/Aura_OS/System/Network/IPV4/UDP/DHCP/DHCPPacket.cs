@@ -281,4 +281,59 @@ namespace Aura_OS.System.Network.UDP.DHCP
         }
 
     }
+
+    internal class DHCPRelease : DHCPPacket
+    {
+
+        internal DHCPRelease() : base()
+        { }
+
+        internal DHCPRelease(byte[] rawData) : base(rawData)
+        { }
+
+        internal DHCPRelease(Address source, Address dhcp_server) : base(MACAddress.None, 19)
+        {
+            //Release
+            mRawData[282] = 0x35;
+            mRawData[283] = 0x01;
+            mRawData[284] = 0x07;
+
+            //DHCP Server ID
+            mRawData[285] = 0x36;
+            mRawData[286] = 0x04;
+
+            mRawData[287] = dhcp_server.address[0];
+            mRawData[288] = dhcp_server.address[1];
+            mRawData[289] = dhcp_server.address[2];
+            mRawData[290] = dhcp_server.address[3];
+
+            //Client ID
+            mRawData[291] = 0x3d;
+            mRawData[292] = 7;
+            mRawData[293] = 1;
+
+            mRawData[294] = SourceMAC.bytes[0];
+            mRawData[295] = SourceMAC.bytes[1];
+            mRawData[296] = SourceMAC.bytes[2];
+            mRawData[297] = SourceMAC.bytes[3];
+            mRawData[298] = SourceMAC.bytes[4];
+            mRawData[299] = SourceMAC.bytes[5];
+
+            mRawData[300] = 0xff; //ENDMARK
+        }
+
+        /// <summary>
+        /// Work around to make VMT scanner include the initFields method
+        /// </summary>
+        public new static void VMTInclude()
+        {
+            new DHCPRequest();
+        }
+
+        protected override void initFields()
+        {
+            base.initFields();
+        }
+
+    }
 }

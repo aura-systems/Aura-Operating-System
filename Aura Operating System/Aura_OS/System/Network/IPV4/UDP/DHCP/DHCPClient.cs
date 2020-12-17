@@ -23,7 +23,6 @@ namespace Aura_OS.System.Network.UDP.DHCP
             return NetworkConfig.Get(networkDevice).DefaultGateway;
         }
 
-        /*
         /// <summary>
         /// Send a packet to the DHCP server to make the address available again
         /// </summary>
@@ -48,7 +47,7 @@ namespace Aura_OS.System.Network.UDP.DHCP
                 //settings.EditValue("dns01", "0.0.0.0");
                 //settings.PushValues();
             }            
-        }*/
+        }
 
         /// <summary>
         /// Send a packet to find the DHCP server and tell that we want a new IP address

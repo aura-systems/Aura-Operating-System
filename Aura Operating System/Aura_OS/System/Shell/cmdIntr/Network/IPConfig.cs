@@ -72,11 +72,11 @@ namespace Aura_OS.System.Shell.cmdIntr.Network
             }
             else if (arguments[0] == "/release")
             {
-                //System.Network.UDP.DHCP.Core.SendReleasePacket();
+                DHCPClient.SendReleasePacket();
             }
             else if (arguments[0] == "/ask")
             {
-                System.Network.UDP.DHCP.DHCPClient.SendDiscoverPacket();
+                DHCPClient.SendDiscoverPacket();
             }
             else if (arguments[0] == "/listnic")
             {
