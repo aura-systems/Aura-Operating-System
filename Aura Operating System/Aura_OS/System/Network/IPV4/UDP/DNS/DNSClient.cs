@@ -20,10 +20,13 @@ namespace Aura_OS.System.Network.IPV4.UDP.DNS
         /// </summary>
         public static void SendAskPacket(string url)
         {
-            //DNSPacketAsk askpacket = new DNSPacketAsk(source, gateway, url);
+            //Address dest = Address.Parse("192.168.1.1");
+            //Address source = IPV4.Config.FindNetwork(dest);
 
-            //OutgoingBuffer.AddPacket(askpacket);
-            //NetworkStack.Update();
+            DNSPacketAsk askpacket = new DNSPacketAsk(Address.Parse("192.168.1.43"), Address.Parse("192.168.1.1"), url);
+
+            OutgoingBuffer.AddPacket(askpacket);
+            NetworkStack.Update();
         }
 
     }

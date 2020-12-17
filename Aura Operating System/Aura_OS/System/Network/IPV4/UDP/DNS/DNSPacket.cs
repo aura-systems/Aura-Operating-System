@@ -46,7 +46,7 @@ namespace Aura_OS.System.Network.IPV4.UDP.DNS
         { }
 
         public DNSPacket(Address source, Address dest, ushort urlnb, ushort len)
-            : base(source, dest, 53, 53, len)
+            : base(source, dest, 53, 53, (ushort)(len + 12))
         {
             Random rnd = new Random();
             byte transactionID = (byte)rnd.Next(0, Int32.MaxValue);
