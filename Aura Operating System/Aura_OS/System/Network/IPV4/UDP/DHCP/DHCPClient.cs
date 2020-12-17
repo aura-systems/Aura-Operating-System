@@ -31,7 +31,8 @@ namespace Aura_OS.System.Network.UDP.DHCP
             foreach (NetworkDevice networkDevice in NetworkDevice.Devices)
             {
                 Address source = Config.FindNetwork(DHCPServerAddress(networkDevice));
-                DHCPRelease dhcp_release = new DHCPRelease(source, DHCPServerAddress(networkDevice));
+                DHCPRelease dhcp_release = new DHCPRelease(source, DHCPServerAddress(networkDevice), networkDevice.MACAddress);
+
                 OutgoingBuffer.AddPacket(dhcp_release);
                 NetworkStack.Update();
 

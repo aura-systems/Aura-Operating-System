@@ -103,7 +103,11 @@ namespace Aura_OS.System.Network.UDP.DHCP
         }
 
         internal DHCPPacket(MACAddress mac_src, ushort dhcpDataSize)
-            : base(Address.Zero, Address.Broadcast, 68, 67, (ushort)(dhcpDataSize + 240), MACAddress.Broadcast)
+            : this(Address.Zero, Address.Broadcast, mac_src, dhcpDataSize)
+        { }
+
+        internal DHCPPacket(Address client, Address server, MACAddress mac_src, ushort dhcpDataSize)
+            : base(client, server, 68, 67, (ushort)(dhcpDataSize + 240), MACAddress.Broadcast)
         {
             //Request
             mRawData[42] = 0x01;
@@ -124,10 +128,23 @@ namespace Aura_OS.System.Network.UDP.DHCP
             mRawData[48] = (byte)((xID >> 8) & 0xFF);
             mRawData[49] = (byte)((xID >> 0) & 0xFF);
 
+            //second elapsed
+            mRawData[50] = 0x00;
+            mRawData[51] = 0x00;
+
             //option bootp
-            for (int i = 0; i < 20; i++)
+            mRawData[52] = 0x00;
+            mRawData[53] = 0x00;
+
+            //client ip address
+            mRawData[54] = client.address[0];
+            mRawData[55] = client.address[1];
+            mRawData[56] = client.address[2];
+            mRawData[57] = client.address[3];
+
+            for (int i = 0; i < 13; i++)
             {
-                mRawData[50 + i] = 0x00;
+                mRawData[58 + i] = 0x00;
             }
 
             //Src mac
@@ -304,18 +321,15 @@ namespace Aura_OS.System.Network.UDP.DHCP
         {
             base.initFields();
 
-            if (Options != null)
+            foreach (var option in Options)
             {
-                foreach (var option in Options)
+                if (option.Type == 1) //Mask
                 {
-                    if (option.Type == 1) //Mask
-                    {
-                        subnetMask = new Address(option.Data, 0);
-                    }
-                    else if (option.Type == 6) //DNS
-                    {
-                        domainNameServer = new Address(option.Data, 0);
-                    }
+                    subnetMask = new Address(option.Data, 0);
+                }
+                else if (option.Type == 6) //DNS
+                {
+                    domainNameServer = new Address(option.Data, 0);
                 }
             }
         }
@@ -341,7 +355,7 @@ namespace Aura_OS.System.Network.UDP.DHCP
         internal DHCPRelease(byte[] rawData) : base(rawData)
         { }
 
-        internal DHCPRelease(Address source, Address dhcp_server) : base(MACAddress.None, 19)
+        internal DHCPRelease(Address client, Address server, MACAddress source) : base(client, server, source, 19)
         {
             //Release
             mRawData[282] = 0x35;
@@ -352,22 +366,22 @@ namespace Aura_OS.System.Network.UDP.DHCP
             mRawData[285] = 0x36;
             mRawData[286] = 0x04;
 
-            mRawData[287] = dhcp_server.address[0];
-            mRawData[288] = dhcp_server.address[1];
-            mRawData[289] = dhcp_server.address[2];
-            mRawData[290] = dhcp_server.address[3];
+            mRawData[287] = server.address[0];
+            mRawData[288] = server.address[1];
+            mRawData[289] = server.address[2];
+            mRawData[290] = server.address[3];
 
             //Client ID
             mRawData[291] = 0x3d;
             mRawData[292] = 7;
             mRawData[293] = 1;
 
-            mRawData[294] = SourceMAC.bytes[0];
-            mRawData[295] = SourceMAC.bytes[1];
-            mRawData[296] = SourceMAC.bytes[2];
-            mRawData[297] = SourceMAC.bytes[3];
-            mRawData[298] = SourceMAC.bytes[4];
-            mRawData[299] = SourceMAC.bytes[5];
+            mRawData[294] = source.bytes[0];
+            mRawData[295] = source.bytes[1];
+            mRawData[296] = source.bytes[2];
+            mRawData[297] = source.bytes[3];
+            mRawData[298] = source.bytes[4];
+            mRawData[299] = source.bytes[5];
 
             mRawData[300] = 0xff; //ENDMARK
         }

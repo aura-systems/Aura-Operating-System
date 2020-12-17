@@ -57,9 +57,13 @@ namespace Aura_OS.System.Network.IPV4
 
         internal static void AddPacket(IPPacket packet)
         {
+            Console.WriteLine("ensureQueueExists");
             ensureQueueExists();
+            Console.WriteLine("QueueExists");
             NetworkDevice nic = Config.FindInterface(packet.SourceIP);
+            Console.WriteLine("FindInterface done " + nic.Name);
             packet.SourceMAC = nic.MACAddress;
+            Console.WriteLine("blyat");
             queue.Add(new BufferEntry(nic, packet));
         }
 
