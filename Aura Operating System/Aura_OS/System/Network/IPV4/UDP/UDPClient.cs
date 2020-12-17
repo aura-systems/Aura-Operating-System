@@ -94,7 +94,6 @@ namespace Aura_OS.System.Network.IPV4.UDP
         {
             Address source = Config.FindNetwork(dest);
             UDPPacket packet = new UDPPacket(source, dest, (ushort)localPort, (ushort)destPort, data);
-            Console.WriteLine(Utils.Conversion.HexDump(packet.RawData));
             OutgoingBuffer.AddPacket(packet);
         }
 
