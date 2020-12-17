@@ -16,6 +16,20 @@
 }
        ]]>
       </SomeThing>
+      <VMware_StackCorruptionDetectionEnabled>True</VMware_StackCorruptionDetectionEnabled>
+      <VMware_StackCorruptionDetectionLevel>MethodFooters</VMware_StackCorruptionDetectionLevel>
+      <VMware_Description>Use VMware Player or Workstation to deploy and debug.</VMware_Description>
+      <VMware_Deployment>ISO</VMware_Deployment>
+      <VMware_Launch>VMware</VMware_Launch>
+      <VMware_DebugEnabled>False</VMware_DebugEnabled>
+      <VMware_DebugMode>Source</VMware_DebugMode>
+      <VMware_IgnoreDebugStubAttribute>False</VMware_IgnoreDebugStubAttribute>
+      <VMware_CosmosDebugPort>Serial: COM1</VMware_CosmosDebugPort>
+      <VMware_VisualStudioDebugPort>Pipe: Cosmos\Serial</VMware_VisualStudioDebugPort>
+      <VMware_PxeInterface>192.168.0.8</VMware_PxeInterface>
+      <VMware_EnableGDB>False</VMware_EnableGDB>
+      <VMware_StartCosmosGDB>False</VMware_StartCosmosGDB>
+      <VMware_ISOFile>bin\Debug\netcoreapp2.0\cosmos\Aura_OS.iso</VMware_ISOFile>
     </PropertyGroup>
     <Target Name="GetVersion">
       <WriteLinesToFile File="Properties\VersionInfo.cs" Lines="$(SomeThing)" Overwrite="true"></WriteLinesToFile>
@@ -40,9 +54,9 @@
         <StartCosmosGDB>False</StartCosmosGDB>
         <VisualStudioDebugPort>Pipe: Cosmos\Serial</VisualStudioDebugPort>
         <CosmosDebugPort>Serial: COM1</CosmosDebugPort>
-        <Launch>VMware</Launch>
-        <Profile>VMware</Profile>
-        <Description>Use VMware Player or Workstation to deploy and debug.</Description>
+        <Launch>None</Launch>
+        <Profile>ISO</Profile>
+        <Description>Creates a bootable ISO image which can be burned to a DVD. After running the selected project, an explorer window will open containing the ISO file. The ISO file can then be burned to a CD or DVD and used to boot a physical or virtual system.</Description>
         <PxeInterface>192.168.0.8</PxeInterface>
     </PropertyGroup>
 

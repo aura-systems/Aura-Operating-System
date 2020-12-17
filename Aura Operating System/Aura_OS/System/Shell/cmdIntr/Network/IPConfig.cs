@@ -7,7 +7,7 @@
 
 using Aura_OS.HAL.Drivers.Network;
 using Aura_OS.System.Network;
-using Aura_OS.System.Network.DHCP;
+using Aura_OS.System.Network.UDP.DHCP;
 using Aura_OS.System.Network.IPV4;
 using System;
 using System.Collections.Generic;
@@ -72,11 +72,11 @@ namespace Aura_OS.System.Shell.cmdIntr.Network
             }
             else if (arguments[0] == "/release")
             {
-                System.Network.DHCP.Core.SendReleasePacket();
+                DHCPClient.SendReleasePacket();
             }
             else if (arguments[0] == "/ask")
             {
-                System.Network.DHCP.Core.SendDiscoverPacket();
+                DHCPClient.SendDiscoverPacket();
             }
             else if (arguments[0] == "/listnic")
             {

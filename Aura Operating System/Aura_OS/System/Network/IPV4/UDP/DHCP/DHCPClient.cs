@@ -8,9 +8,9 @@ using Aura_OS.HAL.Drivers.Network;
 * PROGRAMMER(S):    Alexy DA CRUZ <dacruzalexy@gmail.com>
 */
 
-namespace Aura_OS.System.Network.DHCP
+namespace Aura_OS.System.Network.UDP.DHCP
 {
-    class Core
+    class DHCPClient
     {
         public static bool DHCPAsked = false;
 
@@ -31,7 +31,8 @@ namespace Aura_OS.System.Network.DHCP
             foreach (NetworkDevice networkDevice in NetworkDevice.Devices)
             {
                 Address source = Config.FindNetwork(DHCPServerAddress(networkDevice));
-                DHCPRelease dhcp_release = new DHCPRelease(source, DHCPServerAddress(networkDevice));
+                DHCPRelease dhcp_release = new DHCPRelease(source, DHCPServerAddress(networkDevice), networkDevice.MACAddress);
+
                 OutgoingBuffer.AddPacket(dhcp_release);
                 NetworkStack.Update();
 
@@ -39,13 +40,13 @@ namespace Aura_OS.System.Network.DHCP
 
                 NetworkInit.Enable(networkDevice, new Network.IPV4.Address(0, 0, 0, 0), new Network.IPV4.Address(0, 0, 0, 0), new Network.IPV4.Address(0, 0, 0, 0));
 
-                /*
-                Utils.Settings settings = new Utils.Settings(@"0:\System\" + networkDevice.Name + ".conf");
-                settings.EditValue("ipaddress", "0.0.0.0");
-                settings.EditValue("subnet", "0.0.0.0");
-                settings.EditValue("gateway", "0.0.0.0");
-                settings.EditValue("dns01", "0.0.0.0");
-                settings.PushValues();*/
+                
+                //Utils.Settings settings = new Utils.Settings(@"0:\System\" + networkDevice.Name + ".conf");
+                //settings.EditValue("ipaddress", "0.0.0.0");
+                //settings.EditValue("subnet", "0.0.0.0");
+                //settings.EditValue("gateway", "0.0.0.0");
+                //settings.EditValue("dns01", "0.0.0.0");
+                //settings.PushValues();
             }            
         }
 
@@ -58,8 +59,7 @@ namespace Aura_OS.System.Network.DHCP
 
             foreach (NetworkDevice networkDevice in NetworkDevice.Devices)
             {
-
-                NetworkInit.Enable(networkDevice, new Network.IPV4.Address(0, 0, 0, 0), new Network.IPV4.Address(0, 0, 0, 0), new Network.IPV4.Address(0, 0, 0, 0));
+                NetworkInit.Enable(networkDevice, new Address(0, 0, 0, 0), new Address(0, 0, 0, 0), new Address(0, 0, 0, 0));
 
                 DHCPDiscover dhcp_discover = new DHCPDiscover(networkDevice.MACAddress);
                 OutgoingBuffer.AddPacket(dhcp_discover);
@@ -69,6 +69,7 @@ namespace Aura_OS.System.Network.DHCP
             }
         }
 
+        
         /// <summary>
         /// Send a request to apply the new IP configuration
         /// </summary>
@@ -91,38 +92,48 @@ namespace Aura_OS.System.Network.DHCP
         /// <param name="Options">DHCPOption class using the packetData from the received dhcp packet.</param>
         /// <param name="message">Enable/Disable the displaying of messages about DHCP applying and conf. Disabled by default.
         /// </param>
-        public static void Apply(DHCPOption Options, bool message = false)
+        public static void Apply(DHCPAck packet, bool message = false)
         {
             NetworkStack.RemoveAllConfigIP();
 
             //cf. Roadmap. (have to change this, because some network interfaces are not configured in dhcp mode) [have to be done in 0.5.x]
             foreach (NetworkDevice networkDevice in NetworkDevice.Devices)
             {
-                if (message)
+                if (packet.Client.ToString() == null ||
+                    packet.Client.ToString() == null ||
+                    packet.Client.ToString() == null ||
+                    packet.Client.ToString() == null)
                 {
-                    Console.WriteLine();
-                    CustomConsole.WriteLineInfo("[DHCP ACK][" + networkDevice.Name + "] Packet received, applying IP configuration...");
-                    CustomConsole.WriteLineInfo("   IP Address  : " + Options.Address().ToString());
-                    CustomConsole.WriteLineInfo("   Subnet mask : " + Options.Subnet().ToString());
-                    CustomConsole.WriteLineInfo("   Gateway     : " + Options.Gateway().ToString());
-                    CustomConsole.WriteLineInfo("   DNS server  : " + Options.DNS01().ToString());
+                    CustomConsole.WriteLineError("Parsing DHCP ACK Packet failed, can't apply network configuration.");
                 }
-
-                Utils.Settings settings = new Utils.Settings(@"0:\System\" + networkDevice.Name + ".conf");
-                settings.EditValue("ipaddress", Options.Address().ToString());
-                settings.EditValue("subnet", Options.Subnet().ToString());
-                settings.EditValue("gateway", Options.Gateway().ToString());
-                settings.EditValue("dns01", Options.DNS01().ToString());
-                settings.EditValue("dhcp_server", Options.Server().ToString());
-                settings.PushValues();
-
-                NetworkInit.Enable(networkDevice, Options.Address(), Options.Subnet(), Options.Gateway());
-
-                if (message)
+                else
                 {
-                    CustomConsole.WriteLineOK("[DHCP CONFIG][" + networkDevice.Name + "] IP configuration applied.");
-                    Console.WriteLine();
-                    DHCPAsked = false;
+                    if (message)
+                    {
+                        Console.WriteLine();
+                        CustomConsole.WriteLineInfo("[DHCP ACK][" + networkDevice.Name + "] Packet received, applying IP configuration...");
+                        CustomConsole.WriteLineInfo("   IP Address  : " + packet.Client.ToString());
+                        CustomConsole.WriteLineInfo("   Subnet mask : " + packet.Subnet.ToString());
+                        CustomConsole.WriteLineInfo("   Gateway     : " + packet.Server.ToString());
+                        CustomConsole.WriteLineInfo("   DNS server  : " + packet.DNS.ToString());
+                    }
+
+                    Utils.Settings settings = new Utils.Settings(@"0:\System\" + networkDevice.Name + ".conf");
+                    settings.EditValue("ipaddress", packet.Client.ToString());
+                    settings.EditValue("subnet", packet.Subnet.ToString());
+                    settings.EditValue("gateway", packet.Server.ToString());
+                    settings.EditValue("dns01", packet.DNS.ToString());
+                    settings.EditValue("dhcp_server", packet.Server.ToString());
+                    settings.PushValues();
+
+                    NetworkInit.Enable(networkDevice, packet.Client, packet.Subnet, packet.Server);
+
+                    if (message)
+                    {
+                        CustomConsole.WriteLineOK("[DHCP CONFIG][" + networkDevice.Name + "] IP configuration applied.");
+                        Console.WriteLine();
+                        DHCPAsked = false;
+                    }
                 }
             }
 
