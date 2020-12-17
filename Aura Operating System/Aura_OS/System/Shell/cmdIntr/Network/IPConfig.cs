@@ -76,7 +76,7 @@ namespace Aura_OS.System.Shell.cmdIntr.Network
             }
             else if (arguments[0] == "/ask")
             {
-                System.Network.UDP.DHCP.Core.SendDiscoverPacket();
+                System.Network.UDP.DHCP.DHCPClient.SendDiscoverPacket();
             }
             else if (arguments[0] == "/listnic")
             {

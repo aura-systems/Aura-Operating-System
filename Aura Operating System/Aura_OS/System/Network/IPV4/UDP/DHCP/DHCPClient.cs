@@ -10,7 +10,7 @@ using Aura_OS.HAL.Drivers.Network;
 
 namespace Aura_OS.System.Network.UDP.DHCP
 {
-    class Core
+    class DHCPClient
     {
         public static bool DHCPAsked = false;
 
