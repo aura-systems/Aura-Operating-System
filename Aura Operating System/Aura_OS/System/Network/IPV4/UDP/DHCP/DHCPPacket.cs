@@ -16,19 +16,10 @@ namespace Aura_OS.System.Network.UDP.DHCP
     public class DHCPPacket : UDPPacket
     {
 
-        protected byte MessageType;
-        protected byte HardwareType;
-        protected byte HardwareAddressLength;
-        protected byte Hops;
-        protected uint TransactionID;
-        protected ushort SecondsElapsed;
-        protected ushort BootpFlags;
-        protected Address ClientIp;
-        protected Address YourClient;
-        protected Address NextServer;
-        protected Address RelayAgent;
-        protected MACAddress Client;
-        protected uint MagicCookie;
+        protected byte messageType;
+        protected Address yourClient;
+        protected Address nextServer;
+
         int xID;
 
         public static void DHCPHandler(byte[] packetData)
@@ -36,14 +27,22 @@ namespace Aura_OS.System.Network.UDP.DHCP
             Kernel.debugger.Send("DHCP Handler called");
             DHCPPacket packet = new DHCPPacket(packetData);
 
-            if (packet.MessageType == 0x02)
+            if (packet.messageType == 0x02) //Offer packet received
             {
-                Console.WriteLine("Offert packet received");
+                Core.SendRequestPacket(packet.yourClient, packet.nextServer);
             }
 
-            if (packet.MessageType == 0x05 || packet.MessageType == 0x06)
+            if (packet.messageType == 0x05 || packet.messageType == 0x06) //ACK or NAK DHCP packet received
             {
-                Console.WriteLine("ACK or NAK DHCP packet received");
+                DHCPAck ack = new DHCPAck(packetData);
+                if (Core.DHCPAsked)
+                {
+                    Core.Apply(ack, true);
+                }
+                else
+                {
+                    Core.Apply(ack);
+                }
             }
         }
 
@@ -65,15 +64,9 @@ namespace Aura_OS.System.Network.UDP.DHCP
         protected override void initFields()
         {
             base.initFields();
-            MessageType = mRawData[42];
-            /*HardwareType = mRawData[this.dataOffset + 1];
-            HardwareAddressLength = mRawData[this.dataOffset + 2];
-            Hops = mRawData[this.dataOffset + 3];
-            TransactionID = (uint)((mRawData[4] << 24) | (mRawData[5] << 16) | (mRawData[6] << 8) | mRawData[7]);
-            SecondsElapsed = (ushort)((mRawData[this.dataOffset + 8] << 8) | mRawData[this.dataOffset + 9]);
-            BootpFlags = (ushort)((mRawData[this.dataOffset + 10] << 8) | mRawData[this.dataOffset + 11]);
-            ClientIp = new Address((byte)(mRawData[12] << 24), (byte)(mRawData[13] << 16), (byte)(mRawData[14] << 8), (byte)(mRawData[15]));*/
-            //TODO: le reste
+            messageType = mRawData[42];
+            yourClient = new Address(mRawData, 58);
+            nextServer = new Address(mRawData, 62);
         }
 
         internal DHCPPacket(MACAddress mac_src, ushort dhcpDataSize)
@@ -127,7 +120,20 @@ namespace Aura_OS.System.Network.UDP.DHCP
             initFields();
         }
 
-        //TODO Getter setter
+        internal byte MessageType
+        {
+            get { return this.messageType; }
+        }
+
+        internal Address Client
+        {
+            get { return this.yourClient; }
+        }
+
+        internal Address Server
+        {
+            get { return this.nextServer; }
+        }
 
     }
 
@@ -175,5 +181,103 @@ namespace Aura_OS.System.Network.UDP.DHCP
 
     }
 
-    // Other DHCP Packets that inherit DHCPPacket
+    internal class DHCPRequest : DHCPPacket
+    {
+
+        internal DHCPRequest() : base()
+        { }
+
+        internal DHCPRequest(byte[] rawData) : base(rawData)
+        { }
+
+        internal DHCPRequest(MACAddress mac_src, Address RequestedAddress, Address DHCPServerAddress) : base(mac_src, 22)
+        {
+            //Request
+            mRawData[282] = 53;
+            mRawData[283] = 1;
+            mRawData[284] = 3;
+
+            //Requested Address
+            mRawData[285] = 50;
+            mRawData[286] = 4;
+
+            mRawData[287] = RequestedAddress.address[0];
+            mRawData[288] = RequestedAddress.address[1];
+            mRawData[289] = RequestedAddress.address[2];
+            mRawData[290] = RequestedAddress.address[3];
+
+            mRawData[291] = 54;
+            mRawData[292] = 4;
+
+            mRawData[293] = DHCPServerAddress.address[0];
+            mRawData[294] = DHCPServerAddress.address[1];
+            mRawData[295] = DHCPServerAddress.address[2];
+            mRawData[296] = DHCPServerAddress.address[3];
+
+            //Parameters start here
+            mRawData[297] = 0x37;
+            mRawData[298] = 4;
+
+            //Parameters
+            mRawData[299] = 0x01;
+            mRawData[300] = 0x03;
+            mRawData[301] = 0x0f;
+            mRawData[302] = 0x06;
+
+            mRawData[303] = 0xff; //ENDMARK
+        }
+
+        /// <summary>
+        /// Work around to make VMT scanner include the initFields method
+        /// </summary>
+        public new static void VMTInclude()
+        {
+            new DHCPRequest();
+        }
+
+        protected override void initFields()
+        {
+            base.initFields();
+        }
+
+    }
+
+    internal class DHCPAck : DHCPPacket
+    {
+
+        protected Address subnetMask;
+        protected Address domainNameServer;
+
+        internal DHCPAck() : base()
+        { }
+
+        internal DHCPAck(byte[] rawData) : base(rawData)
+        { }
+
+        /// <summary>
+        /// Work around to make VMT scanner include the initFields method
+        /// </summary>
+        public new static void VMTInclude()
+        {
+            new DHCPRequest();
+        }
+
+        protected override void initFields()
+        {
+            base.initFields();
+            subnetMask = new Address(mRawData, 311);
+            domainNameServer = new Address(mRawData, 322);
+        }
+
+        internal Address Subnet
+        {
+            get { return this.subnetMask; }
+        }
+
+        internal Address DNS
+        {
+            get { return this.domainNameServer; }
+        }
+
+    }
 }
