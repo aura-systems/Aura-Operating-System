@@ -13,12 +13,24 @@ using System.Text;
 
 namespace Aura_OS.System.Network.UDP.DHCP
 {
+
+    /// <summary>
+    /// DHCP Option
+    /// </summary>
+    public class DHCPOption
+    {
+        public byte Type { get; set; }
+        public byte Length { get; set; }
+        public byte[] Data { get; set; }
+    }
+
     public class DHCPPacket : UDPPacket
     {
 
         protected byte messageType;
         protected Address yourClient;
         protected Address nextServer;
+        protected List<DHCPOption> options = null;
 
         int xID;
 
@@ -68,6 +80,31 @@ namespace Aura_OS.System.Network.UDP.DHCP
             messageType = mRawData[42];
             yourClient = new Address(mRawData, 58);
             nextServer = new Address(mRawData, 62);
+
+            if (mRawData[282] != 0)
+            {
+
+                Console.Write("parsing options");
+
+                options = new List<DHCPOption>();
+
+                for (int i = 0; i < mRawData.Length - 282 && mRawData[282 + i] == 0xFF; i += 2) //0xFF is DHCP packet end
+                {
+                    DHCPOption option = new DHCPOption();
+                    option.Type = mRawData[282 + i];
+                    option.Length = mRawData[282 + i + 1];
+                    option.Data = new byte[option.Length];
+                    for (int j = 0; j < option.Length; j++)
+                    {
+                        option.Data[j] = mRawData[282 + i + j + 2];
+                    }
+                    options.Add(option);
+
+                    i += option.Length;
+                }
+
+                Console.Write("options count=" + options.Count);
+            }
         }
 
         internal DHCPPacket(MACAddress mac_src, ushort dhcpDataSize)
@@ -134,6 +171,11 @@ namespace Aura_OS.System.Network.UDP.DHCP
         internal Address Server
         {
             get { return this.nextServer; }
+        }
+
+        internal List<DHCPOption> Options
+        {
+            get { return this.options; }
         }
 
     }
@@ -246,8 +288,8 @@ namespace Aura_OS.System.Network.UDP.DHCP
     internal class DHCPAck : DHCPPacket
     {
 
-        protected Address subnetMask;
-        protected Address domainNameServer;
+        protected Address subnetMask = null;
+        protected Address domainNameServer = null;
 
         internal DHCPAck() : base()
         { }
@@ -260,14 +302,35 @@ namespace Aura_OS.System.Network.UDP.DHCP
         /// </summary>
         public new static void VMTInclude()
         {
-            new DHCPRequest();
+            new DHCPAck();
         }
 
         protected override void initFields()
         {
             base.initFields();
-            subnetMask = new Address(mRawData, 311);
-            domainNameServer = new Address(mRawData, 323);
+
+            if (Options != null)
+            {
+                Console.WriteLine("Option count:" + Options.Count);
+                Console.ReadKey();
+
+                foreach (var option in Options)
+                {
+                    Console.WriteLine("Option type: " + option.Type);
+                    Console.ReadKey();
+                    Console.WriteLine("Option length: " + option.Length);
+                    Console.ReadKey();
+
+                    if (option.Type == 1) //Mask
+                    {
+                        subnetMask = new Address(option.Data, 0);
+                    }
+                    else if (option.Type == 6) //DNS
+                    {
+                        domainNameServer = new Address(option.Data, 0);
+                    }
+                }
+            }
         }
 
         internal Address Subnet
