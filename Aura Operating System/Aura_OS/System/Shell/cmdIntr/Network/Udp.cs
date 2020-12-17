@@ -55,7 +55,7 @@ namespace Aura_OS.System.Shell.cmdIntr.Network
 
                 byte[] received = client.Receive(ref RemoteIpEndPoint);
 
-                Console.WriteLine("Received from " + RemoteIpEndPoint.address.ToString() + ": \"" + Encoding.ASCII.GetString(received) + "\"");
+                Console.WriteLine("Received UDP packet from " + RemoteIpEndPoint.address.ToString() + ": \"" + Encoding.ASCII.GetString(received) + "\"");
 
                 return new ReturnInfo(this, ReturnCode.OK);
             }
@@ -75,8 +75,8 @@ namespace Aura_OS.System.Shell.cmdIntr.Network
 
                 xClient.Connect(ip, port);
 
-                Console.WriteLine("Sending UDP packet to " + ip.ToString() + ":" + port);
                 xClient.Send(Encoding.ASCII.GetBytes(message));
+                Console.WriteLine("Sent UDP packet to " + ip.ToString() + ":" + port);
 
                 xClient.Close();
                 return new ReturnInfo(this, ReturnCode.OK);
