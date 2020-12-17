@@ -24,24 +24,26 @@ namespace Aura_OS.System.Network.UDP.DHCP
 
         public static void DHCPHandler(byte[] packetData)
         {
-            Kernel.debugger.Send("DHCP Handler called");
             DHCPPacket packet = new DHCPPacket(packetData);
+            Console.WriteLine("DHCP Handler called (type: " + packet.MessageType + ")");
 
-            if (packet.messageType == 0x02) //Offer packet received
+            if (packet.messageType == 2) //Boot Reply
             {
-                Core.SendRequestPacket(packet.yourClient, packet.nextServer);
-            }
-
-            if (packet.messageType == 0x05 || packet.messageType == 0x06) //ACK or NAK DHCP packet received
-            {
-                DHCPAck ack = new DHCPAck(packetData);
-                if (Core.DHCPAsked)
+                if (packet.RawData[284] == 0x02) //Offer packet received
                 {
-                    Core.Apply(ack, true);
+                    DHCPClient.SendRequestPacket(packet.yourClient, packet.nextServer);
                 }
-                else
+                else if (packet.RawData[284] == 0x05 || packet.RawData[284] == 0x06) //ACK or NAK DHCP packet received
                 {
-                    Core.Apply(ack);
+                    DHCPAck ack = new DHCPAck(packetData);
+                    if (DHCPClient.DHCPAsked)
+                    {
+                        DHCPClient.Apply(ack, true);
+                    }
+                    else
+                    {
+                        DHCPClient.Apply(ack);
+                    }
                 }
             }
         }
