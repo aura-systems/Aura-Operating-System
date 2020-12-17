@@ -25,7 +25,6 @@ namespace Aura_OS.System.Network.UDP.DHCP
         public static void DHCPHandler(byte[] packetData)
         {
             DHCPPacket packet = new DHCPPacket(packetData);
-            Console.WriteLine("DHCP Handler called (type: " + packet.MessageType + ")");
 
             if (packet.messageType == 2) //Boot Reply
             {
@@ -268,7 +267,7 @@ namespace Aura_OS.System.Network.UDP.DHCP
         {
             base.initFields();
             subnetMask = new Address(mRawData, 311);
-            domainNameServer = new Address(mRawData, 322);
+            domainNameServer = new Address(mRawData, 323);
         }
 
         internal Address Subnet
