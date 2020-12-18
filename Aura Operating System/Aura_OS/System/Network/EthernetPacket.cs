@@ -98,7 +98,7 @@ namespace Aura_OS.System.Network
         public virtual void PrepareForSending()
         {
 
-            
+
         }
 
         public override string ToString()

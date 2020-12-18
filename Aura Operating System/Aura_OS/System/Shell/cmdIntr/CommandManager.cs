@@ -57,6 +57,7 @@ namespace Aura_OS.System.Shell.cmdIntr
             CMDs.Add(new CommandMkfil(new string[] { "touch", "mkfil", "mf" }));
             CMDs.Add(new CommandRmfil(new string[] { "rmfil", "rmf" }));
             CMDs.Add(new CommandKeyboardMap(new string[] { "setkeyboardmap", "setkeyboard" }));
+            CMDs.Add(new CommandHex(new string[] { "hex" }));
 
             CMDs.Add(new CommandAction(new string[] { "beep" }, () =>
             {
@@ -163,19 +164,6 @@ namespace Aura_OS.System.Shell.cmdIntr
                 Cosmos.System.PCSpeaker.Beep((uint)Cosmos.System.Notes.F6, 432);
                 Cosmos.System.PCSpeaker.Beep((uint)Cosmos.System.Notes.D6, 432);
                 Cosmos.System.PCSpeaker.Beep((uint)Cosmos.System.Notes.E6, 432);
-            }));
-            CMDs.Add(new CommandAction(new string[] { "netrefresh" }, () =>
-            {
-                foreach (HAL.Drivers.Network.NetworkDevice networkDevice in HAL.Drivers.Network.NetworkDevice.Devices)
-                {
-                    File.Create(@"0:\System\" + networkDevice.Name + ".conf");
-                    Utils.Settings settings = new Utils.Settings(@"0:\System\" + networkDevice.Name + ".conf");
-                    settings.Edit("ipaddress", "0.0.0.0");
-                    settings.Edit("subnet", "0.0.0.0");
-                    settings.Edit("gateway", "0.0.0.0");
-                    settings.Edit("dns01", "0.0.0.0");
-                    settings.Push();
-                }
             }));
         }
 

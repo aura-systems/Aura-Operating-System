@@ -90,13 +90,11 @@ namespace Aura_OS.System.Network.IPV4.UDP
             NetworkStack.Update();
         }
 
-        public void Send(byte[] data, IPV4.Address dest, Int32 destPort)
+        public void Send(byte[] data, Address dest, int destPort)
         {
-            IPV4.Address source = IPV4.Config.FindNetwork(dest);
-            IPV4.UDP.UDPPacket packet = new IPV4.UDP.UDPPacket(source, dest, (UInt16)this.localPort, (UInt16)destPort, data);
-
-            Console.WriteLine("Sending " + packet.ToString());
-            IPV4.OutgoingBuffer.AddPacket(packet);
+            Address source = Config.FindNetwork(dest);
+            UDPPacket packet = new UDPPacket(source, dest, (ushort)localPort, (ushort)destPort, data);
+            OutgoingBuffer.AddPacket(packet);
         }
 
         public void Close()
@@ -107,7 +105,7 @@ namespace Aura_OS.System.Network.IPV4.UDP
             }
         }
 
-        public byte[] Receive(ref IPV4.EndPoint source)
+        public byte[] NonBlockingReceive(ref IPV4.EndPoint source)
         {
             if (this.rxBuffer.Count < 1)
             {
@@ -121,13 +119,21 @@ namespace Aura_OS.System.Network.IPV4.UDP
             return packet.data;
         }
 
+        public byte[] Receive(ref IPV4.EndPoint source)
+        {
+            while (this.rxBuffer.Count < 1);
+
+            DataGram packet = rxBuffer.Dequeue();
+            source.address = packet.source.address;
+            source.port = packet.source.port;
+
+            return packet.data;
+        }
+
         internal void receiveData(IPV4.UDP.UDPPacket packet)
         {
             byte[] data = packet.UDP_Data;
             IPV4.EndPoint source = new IPV4.EndPoint(packet.SourceIP, packet.SourcePort);
-
-            Console.WriteLine("\nReceived UDP Packet (" + data.Length + "bytes) from " + source.ToString());
-            Console.WriteLine("Content: " + Encoding.ASCII.GetString(data));
 
             this.rxBuffer.Enqueue(new DataGram(data, source));
         }

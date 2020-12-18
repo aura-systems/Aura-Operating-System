@@ -1,12 +1,12 @@
 ﻿<Project InitialTargets="GetVersion" Sdk="Microsoft.NET.Sdk">
 
-    <PropertyGroup>
-      <Year>$([System.DateTime]::Now.ToString("yyyy"))</Year>
-      <Month>$([System.DateTime]::Now.ToString("MM"))</Month>
-      <Date>$([System.DateTime]::Now.ToString("dd"))</Date>
-      <Time>$([System.DateTime]::Now.ToString("HHmm"))</Time>
-      <SomeThing>
-        <![CDATA[
+  <PropertyGroup>
+    <Year>$([System.DateTime]::Now.ToString("yyyy"))</Year>
+    <Month>$([System.DateTime]::Now.ToString("MM"))</Month>
+    <Date>$([System.DateTime]::Now.ToString("dd"))</Date>
+    <Time>$([System.DateTime]::Now.ToString("HHmm"))</Time>
+    <SomeThing>
+      <![CDATA[
         namespace Aura_OS
 {
     public class VersionInfo
@@ -15,58 +15,58 @@
     }
 }
        ]]>
-      </SomeThing>
-    </PropertyGroup>
-    <Target Name="GetVersion">
-      <WriteLinesToFile File="Properties\VersionInfo.cs" Lines="$(SomeThing)" Overwrite="true"></WriteLinesToFile>
-    </Target>
-  
-    <PropertyGroup>
-        <TargetFramework>netcoreapp2.0</TargetFramework>
-        <RuntimeIdentifier>cosmos</RuntimeIdentifier>
-        <SelfContained>True</SelfContained>
-        <BinFormat>ELF</BinFormat>
-        <StackCorruptionDetectionEnabled>True</StackCorruptionDetectionEnabled>
-        <StackCorruptionDetectionLevel>MethodFooters</StackCorruptionDetectionLevel>
-        <Deployment>ISO</Deployment>
-        <DebugEnabled>False</DebugEnabled>
-        <DebugMode>Source</DebugMode>
-        <IgnoreDebugStubAttribute>False</IgnoreDebugStubAttribute>
-        <ISOFile>bin\Debug\netcoreapp2.0\cosmos\Aura_OS.iso</ISOFile>
-    </PropertyGroup>
+    </SomeThing>
+  </PropertyGroup>
+  <Target Name="GetVersion">
+    <WriteLinesToFile File="Properties\VersionInfo.cs" Lines="$(SomeThing)" Overwrite="true"></WriteLinesToFile>
+  </Target>
 
-    <PropertyGroup>
-        <EnableGDB>False</EnableGDB>
-        <StartCosmosGDB>False</StartCosmosGDB>
-        <VisualStudioDebugPort>Pipe: Cosmos\Serial</VisualStudioDebugPort>
-        <CosmosDebugPort>Serial: COM1</CosmosDebugPort>
-        <Launch>VMware</Launch>
-        <Profile>VMware</Profile>
-        <Description>Use VMware Player or Workstation to deploy and debug.</Description>
-        <PxeInterface>192.168.0.8</PxeInterface>
-    </PropertyGroup>
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
+    <RuntimeIdentifier>cosmos</RuntimeIdentifier>
+    <SelfContained>True</SelfContained>
+    <BinFormat>ELF</BinFormat>
+    <StackCorruptionDetectionEnabled>True</StackCorruptionDetectionEnabled>
+    <StackCorruptionDetectionLevel>MethodFooters</StackCorruptionDetectionLevel>
+    <Deployment>ISO</Deployment>
+    <DebugEnabled>False</DebugEnabled>
+    <DebugMode>Source</DebugMode>
+    <IgnoreDebugStubAttribute>False</IgnoreDebugStubAttribute>
+    <ISOFile>bin\Debug\netcoreapp2.0\cosmos\Aura_OS.iso</ISOFile>
+  </PropertyGroup>
 
-    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-      <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
-    </PropertyGroup>
+  <PropertyGroup>
+    <EnableGDB>False</EnableGDB>
+    <StartCosmosGDB>False</StartCosmosGDB>
+    <VisualStudioDebugPort>Pipe: Cosmos\Serial</VisualStudioDebugPort>
+    <CosmosDebugPort>Serial: COM1</CosmosDebugPort>
+    <Launch>VMware</Launch>
+    <Profile>VMware</Profile>
+    <Description>Use VMware Player or Workstation to deploy and debug.</Description>
+    <PxeInterface>192.168.0.8</PxeInterface>
+  </PropertyGroup>
 
-    <ItemGroup>
-        <PackageReference Include="Cosmos.Build" Version="0-*" NoWarn="NU1604" />
-        <PackageReference Include="Cosmos.Debug.Kernel" Version="0-*" NoWarn="NU1604" />
-        <PackageReference Include="Cosmos.System2" Version="0-*" NoWarn="NU1604" />
-    </ItemGroup>
-	
-	<ItemGroup>
-		<Reference Include="IL2CPU.API">
-			<HintPath>$(AppData)\Cosmos User Kit\Build\IL2CPU\IL2CPU.API.dll</HintPath>
-		</Reference>
-		<Reference Include="XSharp">
-			<HintPath>$(AppData)\Cosmos User Kit\Build\IL2CPU\XSharp.dll</HintPath>
-		</Reference>
-		<Reference Include="IL2CPU">
-			<HintPath>$(AppData)\Cosmos User Kit\Build\IL2CPU\IL2CPU.dll</HintPath>
-		</Reference>
-	</ItemGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Cosmos.Build" Version="0-*" NoWarn="NU1604" />
+    <PackageReference Include="Cosmos.Debug.Kernel" Version="0-*" NoWarn="NU1604" />
+    <PackageReference Include="Cosmos.System2" Version="0-*" NoWarn="NU1604" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="IL2CPU.API">
+      <HintPath>$(AppData)\Cosmos User Kit\Build\IL2CPU\IL2CPU.API.dll</HintPath>
+    </Reference>
+    <Reference Include="XSharp">
+      <HintPath>$(AppData)\Cosmos User Kit\Build\IL2CPU\XSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="IL2CPU">
+      <HintPath>$(AppData)\Cosmos User Kit\Build\IL2CPU\IL2CPU.dll</HintPath>
+    </Reference>
+  </ItemGroup>
 
   <ItemGroup>
     <PlugsReference Include="$(MSBuildProjectDirectory)\..\Aura_Plugs\bin\Debug\netcoreapp2.0\Aura_Plugs.dll" />
