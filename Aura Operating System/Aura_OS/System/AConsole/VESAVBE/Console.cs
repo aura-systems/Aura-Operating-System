@@ -131,7 +131,7 @@ namespace Aura_OS.System.AConsole.VESAVBE
             UpdateCursor();
         }
 
-        protected void UpdateCursor()
+        public override void UpdateCursor()
         {
             graphics.SetCursorPos(mX, mY);
         }
