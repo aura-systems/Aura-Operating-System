@@ -802,8 +802,7 @@ namespace Aura_Plugs
                 return;
             }
 
-            byte[] aTextEncoded = ConsoleOutputEncoding.GetBytes(aText);
-            GetConsole().Write(aTextEncoded);
+            GetConsole().Write(aText.ToCharArray());
         }
 
         public static void Write(uint aInt) => Write(aInt.ToString());
