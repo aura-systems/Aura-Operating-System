@@ -459,6 +459,8 @@ namespace Aura_Plugs
 
             xConsole.CursorVisible = true;
 
+            GetConsole().UpdateCursor();
+
             while ((current = KeyboardManager.ReadKey()).Key != ConsoleKeyEx.Enter)
             {
                 if (current.Key == ConsoleKeyEx.NumEnter) break;

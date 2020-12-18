@@ -85,7 +85,7 @@ namespace Aura_OS.System.AConsole.VGA
         }
 
         //TODO: This is slow, batch it and only do it at end of updates
-        protected void UpdateCursor()
+        public override void UpdateCursor()
         {
             mText.SetCursorPos(mX, mY);
         }

@@ -40,6 +40,8 @@ namespace Aura_OS.System.AConsole
 
         public abstract void Clear(uint color);
 
+        public abstract void UpdateCursor();
+
         public abstract void Write(byte[] aText);
 
         public abstract ConsoleColor Foreground { get; set; }
