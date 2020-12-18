@@ -10,23 +10,36 @@ using System.Text;
 
 namespace Aura_OS.System.Network.IPV4.UDP.DNS
 {
-    class DNSClient
+    class DnsClient : BaseClient
     {
 
-        public static bool DNSAsked = false;
-
-        /// <summary>
-        /// Send a packet to ask DNS server the IP from an url
-        /// </summary>
-        public static void SendAskPacket(Address dnsserver, string url)
+        public DnsClient() : base(53)
         {
-            Address source = IPV4.Config.FindNetwork(dnsserver);
+        }
 
-            DNSPacketAsk askpacket = new DNSPacketAsk(source, dnsserver, url);
+        public void Connect(Address address)
+        {
+            Connect(address, 53);
+        }
+
+        public void SendAsk(string url)
+        {
+            Address source = Config.FindNetwork(destination);
+
+            DNSPacketAsk askpacket = new DNSPacketAsk(source, destination, url);
 
             OutgoingBuffer.AddPacket(askpacket);
 
             NetworkStack.Update();
+        }
+
+        public string Receive()
+        {
+            while (rxBuffer.Count < 1) ;
+
+            DNSPacket packet = (DNSPacket)rxBuffer.Dequeue();
+
+            return packet.UDP_Data.ToString();
         }
 
     }

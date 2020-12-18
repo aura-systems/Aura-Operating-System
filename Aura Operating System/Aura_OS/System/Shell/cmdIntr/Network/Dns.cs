@@ -13,6 +13,7 @@ using Aura_OS.System;
 using System.Text;
 using System.Collections.Generic;
 using Aura_OS.System.Network.IPV4.UDP.DNS;
+using Aura_OS.System.Network.IPV4.UDP;
 
 namespace Aura_OS.System.Shell.cmdIntr.Network
 {
@@ -50,7 +51,17 @@ namespace Aura_OS.System.Shell.cmdIntr.Network
                 return new ReturnInfo(this, ReturnCode.ERROR_ARG);
             }
 
-            DNSClient.SendAskPacket(Address.Parse(arguments[0]), arguments[1]);
+            var xClient = new DnsClient();
+
+            xClient.Connect(Address.Parse(arguments[0]));
+
+            xClient.SendAsk("google.com");
+
+            string url = xClient.Receive();
+
+            Console.WriteLine(url);
+
+            xClient.Close();
 
             return new ReturnInfo(this, ReturnCode.OK);
         }

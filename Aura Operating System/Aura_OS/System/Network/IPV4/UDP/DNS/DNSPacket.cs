@@ -25,7 +25,11 @@ namespace Aura_OS.System.Network.IPV4.UDP.DNS
 
             if (dns_packet.Questions == 1 && dns_packet.answerRRs == 1)
             {
-                Console.WriteLine(dns_packet.ToString());
+                DnsClient receiver = (DnsClient)BaseClient.Client(dns_packet.DestinationPort);
+                if (receiver != null)
+                {
+                    receiver.receiveData(dns_packet);
+                }
             }
         }
 

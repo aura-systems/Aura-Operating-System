@@ -35,7 +35,7 @@ namespace Aura_OS.System.Network.IPV4.UDP
                 return;
             }
 
-            UdpClient receiver = UdpClient.Client(udp_packet.DestinationPort);
+            UdpClient receiver = (UdpClient)BaseClient.Client(udp_packet.DestinationPort);
             if (receiver != null)
             {
                 receiver.receiveData(udp_packet);
