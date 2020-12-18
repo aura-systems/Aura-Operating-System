@@ -41,7 +41,7 @@ namespace Aura_OS.System.Network.IPV4.UDP.DNS
         {
             while (rxBuffer.Count < 1);
 
-            DNSPacketAnswer packet = (DNSPacketAnswer)rxBuffer.Dequeue();
+            DNSPacketAnswer packet = new DNSPacketAnswer(rxBuffer.Dequeue().RawData);
 
             if (packet.Queries.Count > 0 && packet.Queries[0].Name == queryurl)
             {

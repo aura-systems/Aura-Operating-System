@@ -55,7 +55,7 @@ namespace Aura_OS.System.Shell.cmdIntr.Network
 
             xClient.Connect(Address.Parse(arguments[0]));
 
-            xClient.SendAsk("google.com");
+            xClient.SendAsk(arguments[1]);
 
             string url = xClient.Receive().ToString();
 
@@ -65,7 +65,7 @@ namespace Aura_OS.System.Shell.cmdIntr.Network
             }
             else
             {
-                Console.WriteLine(url);
+                Console.WriteLine("google.com is " + url);
             }
 
             xClient.Close();

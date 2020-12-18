@@ -42,7 +42,7 @@ namespace Aura_OS.System.Network.IPV4.UDP
                 return null;
             }
 
-            UDPPacket packet = (UDPPacket)rxBuffer.Dequeue();
+            UDPPacket packet = new UDPPacket(rxBuffer.Dequeue().RawData);
             source.address = packet.SourceIP;
             source.port = packet.SourcePort;
 
@@ -53,7 +53,7 @@ namespace Aura_OS.System.Network.IPV4.UDP
         {
             while (rxBuffer.Count < 1) ;
 
-            UDPPacket packet = (UDPPacket)rxBuffer.Dequeue();
+            UDPPacket packet = new UDPPacket(rxBuffer.Dequeue().RawData);
             source.address = packet.SourceIP;
             source.port = packet.SourcePort;
 
