@@ -59,7 +59,14 @@ namespace Aura_OS.System.Shell.cmdIntr.Network
 
             string url = xClient.Receive().ToString();
 
-            Console.WriteLine(url);
+            if (url == null)
+            {
+                return new ReturnInfo(this, ReturnCode.ERROR, "Unable to get URL for " + arguments[0]);
+            }
+            else
+            {
+                Console.WriteLine(url);
+            }
 
             xClient.Close();
 
