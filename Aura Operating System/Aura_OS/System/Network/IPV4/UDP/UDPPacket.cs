@@ -31,7 +31,7 @@ namespace Aura_OS.System.Network.IPV4.UDP
             }
             else if (udp_packet.SourcePort == 53)
             {
-                Network.UDP.DNS.DNSPacket.DNSHandler(packetData);
+                DNS.DNSPacket.DNSHandler(packetData);
                 return;
             }
 
@@ -57,6 +57,13 @@ namespace Aura_OS.System.Network.IPV4.UDP
         internal UDPPacket(byte[] rawData)
             : base(rawData)
         { }
+
+        public UDPPacket(Address source, Address dest, UInt16 srcport, UInt16 destport, UInt16 datalength)
+            : base((ushort)(datalength + 8), 17, source, dest, 0x00)
+        {
+            MakePacket(srcport, destport, datalength);
+            initFields();
+        }
 
         public UDPPacket(Address source, Address dest, UInt16 srcport, UInt16 destport, UInt16 datalength, MACAddress destmac)
             : base((ushort)(datalength + 8), 17, source, dest, 0x00, destmac)
