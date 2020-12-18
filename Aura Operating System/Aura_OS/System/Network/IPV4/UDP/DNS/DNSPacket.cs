@@ -10,6 +10,30 @@ using System.Text;
 
 namespace Aura_OS.System.Network.IPV4.UDP.DNS
 {
+
+    /// <summary>
+    /// DNS Query
+    /// </summary>
+    public class DNSQuery
+    {
+        public string Name { get; set; }
+        public ushort Type { get; set; }
+        public ushort Class { get; set; }
+    }
+
+/// <summary>
+    /// DNS Answer
+    /// </summary>
+    public class DNSAnswer
+    {
+        public ushort Name { get; set; }
+        public ushort Type { get; set; }
+        public ushort Class { get; set; }
+        public int TimeToLive { get; set; }
+        public ushort DataLenght { get; set; }
+        public byte[] Address { get; set; }
+    }
+
     public class DNSPacket : UDPPacket
     {
         protected ushort transactionID;
@@ -18,6 +42,8 @@ namespace Aura_OS.System.Network.IPV4.UDP.DNS
         protected ushort answerRRs;
         protected ushort authorityRRs;
         protected ushort additionalRRs;
+        protected List<DNSQuery> queries;
+        protected List<DNSAnswer> answers;
 
         internal static void DNSHandler(byte[] packetData)
         {
@@ -84,6 +110,63 @@ namespace Aura_OS.System.Network.IPV4.UDP.DNS
             answerRRs = (UInt16)((mRawData[this.dataOffset + 14] << 8) | mRawData[this.dataOffset + 15]);
             authorityRRs = (UInt16)((mRawData[this.dataOffset + 16] << 8) | mRawData[this.dataOffset + 17]);
             additionalRRs = (UInt16)((mRawData[this.dataOffset + 18] << 8) | mRawData[this.dataOffset + 19]);
+
+            int index = dataOffset + 20;
+
+            if (questions > 0)
+            {
+                queries = new List<DNSQuery>();
+
+                for (int i = 0; i < questions; i++)
+                {
+                    DNSQuery query = new DNSQuery();
+                    query.Name = parseName(mRawData, ref index);
+                    query.Type = (ushort)((mRawData[index + 0] << 8) | mRawData[index + 1]);
+                    query.Class = (ushort)((mRawData[index + 2] << 8) | mRawData[index + 3]);
+                    queries.Add(query);
+                    index += 4;
+                }
+            }
+            if (answerRRs > 0)
+            {
+                answers = new List<DNSAnswer>();
+
+                for (int i = 0; i < answerRRs; i++)
+                {
+                    DNSAnswer answer = new DNSAnswer();
+                    answer.Name = (ushort)((mRawData[index + 0] << 8) | mRawData[index + 1]);
+                    answer.Type = (ushort)((mRawData[index + 2] << 8) | mRawData[index + 3]);
+                    answer.Class = (ushort)((mRawData[index + 4] << 8) | mRawData[index + 5]);
+                    answer.TimeToLive = (mRawData[index + 6] << 24) | (mRawData[index + 7] << 16) | (mRawData[index + 8] << 8) | mRawData[index + 9];
+                    answer.DataLenght = (ushort)((mRawData[index + 10] << 8) | mRawData[index + 11]);
+                    index += 12;
+                    answer.Address = new byte[answer.DataLenght];
+                    for (int j = 0; j < answer.DataLenght; j++, index++)
+                    {
+                        answer.Address[j] = mRawData[index];
+                    }
+                    answers.Add(answer);
+                }
+            }
+        }
+
+        public string parseName(byte[] mRawData, ref int index)
+        {
+            StringBuilder url = new StringBuilder();
+
+            while (mRawData[index] != 0x00 && index < mRawData.Length)
+            {
+                byte wordlength = mRawData[index];
+                index++;
+                for (int j = 0; j < wordlength; j++)
+                {
+                    url.Append((char)mRawData[index]);
+                    index++;
+                }
+                url.Append('.');
+            }
+            index++; //End 0x00
+            return (url.ToString().Remove(url.Length - 1, 1));
         }
 
         internal ushort TransactionID
@@ -99,6 +182,16 @@ namespace Aura_OS.System.Network.IPV4.UDP.DNS
         internal ushort Questions
         {
             get { return this.questions; }
+        }
+
+        internal List<DNSQuery> Queries
+        {
+            get { return this.queries;  }
+        }
+
+        internal List<DNSAnswer> Answers
+        {
+            get { return this.answers; }
         }
 
         public override string ToString()
@@ -159,5 +252,30 @@ namespace Aura_OS.System.Network.IPV4.UDP.DNS
         {
             base.initFields();
         }
+    }
+
+    public class DNSPacketAnswer : DNSPacket
+    {
+        /// <summary>
+        /// Work around to make VMT scanner include the initFields method
+        /// </summary>
+        public static void VMTInclude()
+        {
+            new DNSPacketAnswer();
+        }
+
+        internal DNSPacketAnswer()
+            : base()
+        { }
+
+        public DNSPacketAnswer(byte[] rawData)
+            : base(rawData)
+        { }
+
+        protected override void initFields()
+        {
+            base.initFields();
+        }
+
     }
 }

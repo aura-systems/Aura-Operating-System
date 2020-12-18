@@ -57,7 +57,7 @@ namespace Aura_OS.System.Shell.cmdIntr.Network
 
             xClient.SendAsk("google.com");
 
-            string url = xClient.Receive();
+            string url = xClient.Receive().ToString();
 
             Console.WriteLine(url);
 

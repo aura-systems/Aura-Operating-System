@@ -13,6 +13,8 @@ namespace Aura_OS.System.Network.IPV4.UDP.DNS
     class DnsClient : BaseClient
     {
 
+        private string queryurl;
+
         public DnsClient() : base(53)
         {
         }
@@ -26,6 +28,8 @@ namespace Aura_OS.System.Network.IPV4.UDP.DNS
         {
             Address source = Config.FindNetwork(destination);
 
+            queryurl = url;
+
             DNSPacketAsk askpacket = new DNSPacketAsk(source, destination, url);
 
             OutgoingBuffer.AddPacket(askpacket);
@@ -33,13 +37,20 @@ namespace Aura_OS.System.Network.IPV4.UDP.DNS
             NetworkStack.Update();
         }
 
-        public string Receive()
+        public Address Receive()
         {
-            while (rxBuffer.Count < 1) ;
+            while (rxBuffer.Count < 1);
 
-            DNSPacket packet = (DNSPacket)rxBuffer.Dequeue();
+            DNSPacketAnswer packet = (DNSPacketAnswer)rxBuffer.Dequeue();
 
-            return packet.UDP_Data.ToString();
+            if (packet.Queries.Count > 0 && packet.Queries[0].Name == queryurl)
+            {
+                if (packet.Answers.Count > 0 && packet.Answers[0].Address.Length == 4)
+                {
+                    return new Address(packet.Answers[0].Address, 0);
+                }
+            }
+            return null;
         }
 
     }
