@@ -65,7 +65,7 @@ namespace Aura_OS.System.Shell.cmdIntr.Network
             }
             else
             {
-                Console.WriteLine("google.com is " + url);
+                Console.WriteLine(arguments[1] + " is " + url);
             }
 
             xClient.Close();
