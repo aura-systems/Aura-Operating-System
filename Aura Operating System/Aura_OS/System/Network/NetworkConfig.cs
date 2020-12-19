@@ -16,6 +16,7 @@ namespace Aura_OS.System.Network
     {
         public static List<NetworkDevice> Keys = new List<NetworkDevice>();
         public static List<Config> Values = new List<Config>();
+        public static KeyValuePair<NetworkDevice, Config> CurrentConfig;
 
         public Config this[NetworkDevice key]
         {

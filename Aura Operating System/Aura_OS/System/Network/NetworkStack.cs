@@ -9,6 +9,7 @@ using System;
 using Aura_OS.HAL.Drivers.Network;
 using Aura_OS.System.Network.ARP;
 using Aura_OS.System.Network.IPV4;
+using System.Collections.Generic;
 
 namespace Aura_OS.System.Network
 {
@@ -55,7 +56,7 @@ namespace Aura_OS.System.Network
         /// <param name="nic"><see cref="NetworkDevice"/> that will have the assigned configuration</param>
         /// <param name="config"><see cref="IPV4.Config"/> instance that defines the IP Address, Subnet
         /// Mask and Default Gateway for the device</param>
-        public static void ConfigIP(NetworkDevice nic, IPV4.Config config)
+        public static void ConfigIP(NetworkDevice nic, Config config)
         {
             if (NetworkConfig.ContainsKey(nic))
             {
@@ -66,6 +67,7 @@ namespace Aura_OS.System.Network
             {
                 SetConfigIP(nic, config);
             }
+            NetworkConfig.CurrentConfig = new KeyValuePair<NetworkDevice, Config>(nic, config);
         }
 
         public static bool ConfigEmpty()
