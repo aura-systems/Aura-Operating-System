@@ -12,6 +12,19 @@ namespace Aura_OS.System.Network.IPV4.UDP.DNS
 {
 
     /// <summary>
+    ///  ReplyCode set in Flags
+    /// </summary>
+    public enum ReplyCode
+    {
+        OK = 0000,
+        FormatError = 0001,
+        ServerFailure = 0010,
+        NameError = 0011,
+        NotSupported = 0100,
+        Refused = 0101
+    }
+
+    /// <summary>
     /// DNS Query
     /// </summary>
     public class DNSQuery
@@ -49,14 +62,10 @@ namespace Aura_OS.System.Network.IPV4.UDP.DNS
         {
             DNSPacket dns_packet = new DNSPacket(packetData);
 
-            if (dns_packet.Questions == 1 && dns_packet.answerRRs == 1)
+            DnsClient receiver = (DnsClient)BaseClient.Client(dns_packet.DestinationPort);
+            if (receiver != null)
             {
-                DnsClient receiver = (DnsClient)BaseClient.Client(dns_packet.DestinationPort);
-
-                if (receiver != null)
-                {
-                    receiver.receiveData(dns_packet);
-                }
+                receiver.receiveData(dns_packet);
             }
         }
 
@@ -238,6 +247,12 @@ namespace Aura_OS.System.Network.IPV4.UDP.DNS
         protected override void initFields()
         {
             base.initFields();
+
+            if ((ushort)(DNSFlags & 0x0F) != (ushort)ReplyCode.OK)
+            {
+                Console.WriteLine("DNS Packet response not OK. Passing packet.");
+                return;
+            }
 
             int index = dataOffset + 20;
             if (questions > 0)

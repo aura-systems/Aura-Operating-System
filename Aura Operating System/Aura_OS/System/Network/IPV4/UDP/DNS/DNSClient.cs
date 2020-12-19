@@ -39,15 +39,18 @@ namespace Aura_OS.System.Network.IPV4.UDP.DNS
 
         public Address Receive()
         {
-            while (rxBuffer.Count < 1);
+            while (rxBuffer.Count < 1); //TODO: Make a timer with timeout value
 
             DNSPacketAnswer packet = new DNSPacketAnswer(rxBuffer.Dequeue().RawData);
 
-            if (packet.Queries.Count > 0 && packet.Queries[0].Name == queryurl)
+            if ((ushort)(packet.DNSFlags & 0x0F) == (ushort)ReplyCode.OK)
             {
-                if (packet.Answers.Count > 0 && packet.Answers[0].Address.Length == 4)
+                if (packet.Queries.Count > 0 && packet.Queries[0].Name == queryurl)
                 {
-                    return new Address(packet.Answers[0].Address, 0);
+                    if (packet.Answers.Count > 0 && packet.Answers[0].Address.Length == 4)
+                    {
+                        return new Address(packet.Answers[0].Address, 0);
+                    }
                 }
             }
             return null;
