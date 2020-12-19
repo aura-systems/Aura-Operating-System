@@ -54,6 +54,7 @@ namespace Aura_OS.System.Shell.cmdIntr.Network
                 xClient.SendAsk(arguments[0]);
                 destination = xClient.Receive();
                 source = Config.FindNetwork(destination);
+                xClient.Close();
             }
 
             try
