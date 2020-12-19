@@ -50,7 +50,7 @@ namespace Aura_OS.System.Shell.cmdIntr.Network
             else //Make a DNS request if it's not an IP
             {
                 var xClient = new DnsClient();
-                xClient.Connect(Address.Parse("192.168.1.1")); //TODO: https://github.com/aura-systems/Aura-Operating-System/issues/173
+                xClient.Connect(NetworkConfig.CurrentConfig.Value.DefaultDNSServer);
                 xClient.SendAsk(arguments[0]);
                 destination = xClient.Receive();
                 source = Config.FindNetwork(destination);

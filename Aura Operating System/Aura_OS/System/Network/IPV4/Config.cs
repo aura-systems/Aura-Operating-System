@@ -163,6 +163,11 @@ namespace Aura_OS.System.Network.IPV4
             get { return this.defaultGateway; }
             set { this.defaultGateway = value; }
         }
+        public Address DefaultDNSServer
+        {
+            get { return this.defaultDns; }
+            set { this.defaultDns = value; }
+        }
 
         public override string ToString()
         {

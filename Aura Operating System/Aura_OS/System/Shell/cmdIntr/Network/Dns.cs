@@ -46,26 +46,36 @@ namespace Aura_OS.System.Shell.cmdIntr.Network
             {
                 return new ReturnInfo(this, ReturnCode.ERROR, "No network configuration detected! Use ipconfig /set.");
             }
+
+            var xClient = new DnsClient();
+            string domainname;
+
             if (arguments.Count < 2)
             {
                 return new ReturnInfo(this, ReturnCode.ERROR_ARG);
             }
+            else if (arguments.Count == 1)
+            {
+                xClient.Connect(NetworkConfig.CurrentConfig.Value.DefaultDNSServer);
+                xClient.SendAsk(arguments[0]);
+                domainname = arguments[0];
+            }
+            else
+            {
+                xClient.Connect(Address.Parse(arguments[0]));
+                xClient.SendAsk(arguments[1]);
+                domainname = arguments[1];
+            }
 
-            var xClient = new DnsClient();
+            Address address = xClient.Receive();
 
-            xClient.Connect(Address.Parse(arguments[0]));
-
-            xClient.SendAsk(arguments[1]);
-
-            Address url = xClient.Receive();
-
-            if (url == null)
+            if (address == null)
             {
                 return new ReturnInfo(this, ReturnCode.ERROR, "Unable to get URL for " + arguments[0]);
             }
             else
             {
-                Console.WriteLine(arguments[1] + " is " + url.ToString());
+                Console.WriteLine(domainname + " is " + address.ToString());
             }
 
             xClient.Close();
