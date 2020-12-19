@@ -39,12 +39,21 @@ namespace Aura_OS.System.Shell.cmdIntr.Network
                 switch (device.CardType)
                 {
                     case HAL.Drivers.Network.CardType.Ethernet:
-                        Console.WriteLine("Ethernet Card : " + device.NameID + " - " + device.Name);
+                        Console.Write("Ethernet Card : " + device.NameID + " - " + device.Name);
                         break;
                     case HAL.Drivers.Network.CardType.Wireless:
-                        Console.WriteLine("Wireless Card : " + device.NameID + " - " + device.Name);
+                        Console.Write("Wireless Card : " + device.NameID + " - " + device.Name);
                         break;
                 }
+                if (NetworkConfig.CurrentConfig.Key == device)
+                {
+                    Console.WriteLine(" (current)");
+                }
+                else
+                {
+                    Console.WriteLine();
+                }
+               
                 Utils.Settings settings = new Utils.Settings(@"0:\System\" + device.Name + ".conf");
                 Console.WriteLine("MAC Address          : " + device.MACAddress.ToString());
                 Console.WriteLine("IP Address           : " + NetworkConfig.Get(device).IPAddress.ToString());
