@@ -59,7 +59,7 @@ namespace Aura_OS.System.Shell.cmdIntr.Network
                 Console.WriteLine("IP Address           : " + NetworkConfig.Get(device).IPAddress.ToString());
                 Console.WriteLine("Subnet mask          : " + NetworkConfig.Get(device).SubnetMask.ToString());
                 Console.WriteLine("Default Gateway      : " + NetworkConfig.Get(device).DefaultGateway.ToString());
-                Console.WriteLine("Preferred DNS server : " + settings.GetValue("dns01"));
+                Console.WriteLine("Preferred DNS server : " + NetworkConfig.Get(device).DefaultDNSServer.ToString());
             }
 
             return new ReturnInfo(this, ReturnCode.OK);

@@ -53,6 +53,12 @@ namespace Aura_OS.System.Shell.cmdIntr.Network
                 xClient.Connect(NetworkConfig.CurrentConfig.Value.DefaultDNSServer);
                 xClient.SendAsk(arguments[0]);
                 destination = xClient.Receive();
+
+                if (destination == null)
+                {
+                    return new ReturnInfo(this, ReturnCode.ERROR, "Unable to get URL for " + arguments[0]);
+                }
+
                 source = Config.FindNetwork(destination);
                 xClient.Close();
             }
