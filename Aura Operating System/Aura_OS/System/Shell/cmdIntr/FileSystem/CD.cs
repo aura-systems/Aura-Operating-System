@@ -24,6 +24,11 @@ namespace Aura_OS.System.Shell.cmdIntr.FileSystem
         /// </summary>
         public override ReturnInfo Execute(List<string> arguments)
         {
+            if (Kernel.ContainsVolumes() == false)
+            {
+                return new ReturnInfo(this, ReturnCode.ERROR, "No volume detected!");
+            }
+
             string dir = arguments[0];
             try
             {

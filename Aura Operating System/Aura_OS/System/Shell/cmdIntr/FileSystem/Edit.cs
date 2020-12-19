@@ -4,6 +4,7 @@
 * PROGRAMMER(S):    John Welsh <djlw78@gmail.com>
 */
 
+/*
 using System.IO;
 using L = Aura_OS.System.Translation;
 
@@ -19,7 +20,7 @@ namespace Aura_OS.System.Shell.cmdIntr.FileSystem
         public static string HI
         {
             get { return HelpInfo; }
-            set { HelpInfo = value; /*PUSHED OUT VALUE (in)*/}
+            set { HelpInfo = value; }
         }
 
         /// <summary>
@@ -49,3 +50,4 @@ namespace Aura_OS.System.Shell.cmdIntr.FileSystem
 
     }
 }
+*/

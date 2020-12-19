@@ -25,6 +25,11 @@ namespace Aura_OS.System.Shell.cmdIntr.FileSystem
         /// </summary>
         public override ReturnInfo Execute()
         {
+            if (Kernel.ContainsVolumes() == false)
+            {
+                return new ReturnInfo(this, ReturnCode.ERROR, "No volume detected!");
+            }
+
             L.Text.Display("mkdir");
             return new ReturnInfo(this, ReturnCode.OK);
         }
@@ -34,6 +39,11 @@ namespace Aura_OS.System.Shell.cmdIntr.FileSystem
         /// </summary>
         public override ReturnInfo Execute(List<string> arguments)
         {
+            if (Kernel.ContainsVolumes() == false)
+            {
+                return new ReturnInfo(this, ReturnCode.ERROR, "No volume detected!");
+            }
+
             string dir = arguments[0];
 
             if (dir.Contains("."))
