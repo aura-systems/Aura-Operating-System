@@ -112,7 +112,7 @@ namespace Aura_OS.System.Shell.cmdIntr.Network
                     }
                     if (ip != null && subnet != null && gw != null)
                     {
-                        NetworkInit.Enable(nic, ip, subnet, gw);
+                        NetworkInit.Enable(nic, ip, subnet, gw, gw);
                         Console.WriteLine("Config OK!");
                     }
                     else
