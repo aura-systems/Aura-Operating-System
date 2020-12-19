@@ -55,14 +55,9 @@ namespace Aura_OS.System.Shell.cmdIntr.Network
 
             xClient.Connect(Address.Parse(arguments[0]));
 
-
             xClient.SendAsk(arguments[1]);
 
-            Console.WriteLine("asked");
-
             Address url = xClient.Receive();
-
-            Console.WriteLine("hm");
 
             if (url == null)
             {
