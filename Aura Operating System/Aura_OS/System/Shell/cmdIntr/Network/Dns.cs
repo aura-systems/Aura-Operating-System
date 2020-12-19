@@ -50,7 +50,7 @@ namespace Aura_OS.System.Shell.cmdIntr.Network
             var xClient = new DnsClient();
             string domainname;
 
-            if (arguments.Count < 2)
+            if (arguments.Count < 1 || arguments.Count > 2)
             {
                 return new ReturnInfo(this, ReturnCode.ERROR_ARG);
             }
