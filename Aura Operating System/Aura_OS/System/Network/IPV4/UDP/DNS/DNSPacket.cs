@@ -62,7 +62,7 @@ namespace Aura_OS.System.Network.IPV4.UDP.DNS
         {
             DNSPacket dns_packet = new DNSPacket(packetData);
 
-            DnsClient receiver = (DnsClient)BaseClient.Client(dns_packet.DestinationPort);
+            DnsClient receiver = (DnsClient)UdpClient.Client(dns_packet.DestinationPort);
             if (receiver != null)
             {
                 receiver.receiveData(dns_packet);

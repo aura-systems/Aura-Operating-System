@@ -11,11 +11,70 @@ using System.Text;
 
 namespace Aura_OS.System.Network.IPV4.UDP
 {
-    public class UdpClient : BaseClient
+    public class UdpClient
     {
+        private static TempDictionary<UdpClient> clients;
 
-        public UdpClient(int localPort) : base(localPort)
+        protected int localPort;
+        protected int destinationPort;
+
+        protected Address destination;
+
+        protected Queue<UDPPacket> rxBuffer;
+
+        static UdpClient()
+        {
+            clients = new TempDictionary<UdpClient>();
+        }
+
+        internal static UdpClient Client(ushort destport)
+        {
+            if (clients.ContainsKey((uint)destport) == true)
+            {
+                return clients[(uint)destport];
+            }
+
+            return null;
+        }
+
+        public UdpClient() : this(0)
         { }
+
+        public UdpClient(int localPort)
+        {
+            rxBuffer = new Queue<UDPPacket>(8);
+
+            this.localPort = localPort;
+            if (localPort > 0)
+            {
+                clients.Add((uint)localPort, this);
+            }
+        }
+
+        public UdpClient(Address dest, int destPort) : this(0)
+        {
+            destination = dest;
+            destinationPort = destPort;
+        }
+
+        public void Connect(Address dest, int destPort)
+        {
+            destination = dest;
+            destinationPort = destPort;
+        }
+
+        public void Close()
+        {
+            if (clients.ContainsKey((uint)this.localPort) == true)
+            {
+                clients.Remove((uint)this.localPort);
+            }
+        }
+
+        public void receiveData(UDPPacket packet)
+        {
+            rxBuffer.Enqueue(packet);
+        }
 
         public void Send(byte[] data)
         {

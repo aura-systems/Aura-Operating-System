@@ -10,7 +10,7 @@ using System.Text;
 
 namespace Aura_OS.System.Network.IPV4.UDP.DNS
 {
-    class DnsClient : BaseClient
+    class DnsClient : UdpClient
     {
 
         private string queryurl;
