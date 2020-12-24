@@ -67,7 +67,7 @@ namespace Aura_OS
             }
             else
             {
-                return false;
+                return true;
             }
         }
 
