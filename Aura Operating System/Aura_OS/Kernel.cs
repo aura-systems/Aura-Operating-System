@@ -61,12 +61,14 @@ namespace Aura_OS
 
         public static bool ContainsVolumes()
         {
-            var vols = vFS.GetVolumes();
-            foreach (var vol in vols)
+            if (vFS.GetVolumes().Count == 0)
             {
-                return true;
+                return false;
             }
-            return false;
+            else
+            {
+                return false;
+            }
         }
 
         protected override void BeforeRun()

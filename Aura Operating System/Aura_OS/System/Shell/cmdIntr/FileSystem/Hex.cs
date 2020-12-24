@@ -15,7 +15,7 @@ namespace Aura_OS.System.Shell.cmdIntr.FileSystem
         /// <summary>
         /// Empty constructor.
         /// </summary>
-        public CommandHex(string[] commandvalues) : base(commandvalues)
+        public CommandHex(string[] commandvalues) : base(commandvalues, CommandType.Filesystem)
         {
         }
 
@@ -24,11 +24,6 @@ namespace Aura_OS.System.Shell.cmdIntr.FileSystem
         /// </summary>
         public override ReturnInfo Execute(List<string> arguments)
         {
-            if (Kernel.ContainsVolumes() == false)
-            {
-                return new ReturnInfo(this, ReturnCode.ERROR, "No volume detected!");
-            }
-
             try
             {
                 string file = arguments[0];
