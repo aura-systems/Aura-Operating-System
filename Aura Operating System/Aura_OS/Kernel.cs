@@ -79,8 +79,8 @@ namespace Aura_OS
                 #region Console Encoding Provider
 
                 Encoding.RegisterProvider(CosmosEncodingProvider.Instance);
-                Console.InputEncoding = Encoding.GetEncoding(437);
-                Console.OutputEncoding = Encoding.GetEncoding(437);
+                Console.InputEncoding = Encoding.Unicode;
+                Console.OutputEncoding = Encoding.Unicode;
 
                 #endregion
 
