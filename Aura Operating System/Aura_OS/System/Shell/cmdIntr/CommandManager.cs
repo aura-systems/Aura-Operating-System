@@ -194,16 +194,18 @@ namespace Aura_OS.System.Shell.cmdIntr
             {
                 if (command.ContainsCommand(firstarg))
                 {
+                    ReturnInfo result = DoCheck(command);
 
-                    ReturnInfo result;
-
-                    if (arguments.Count == 0)
+                    if (result.Code == ReturnCode.OK)
                     {
-                        result = command.Execute();
-                    }
-                    else
-                    {
-                        result = command.Execute(arguments);
+                        if (arguments.Count == 0)
+                        {
+                            result = command.Execute();
+                        }
+                        else
+                        {
+                            result = command.Execute(arguments);
+                        }
                     }
 
                     if (result.Code == ReturnCode.ERROR_ARG)
@@ -230,125 +232,19 @@ namespace Aura_OS.System.Shell.cmdIntr
             Console.ForegroundColor = ConsoleColor.White;
 
             Console.WriteLine();
-
-            /*
-
-            #region FileSystem
-
-            else if (cmd.StartsWith("cd "))
-            {
-                FileSystem.CD.c_CD(cmd);
-            }
-            else if (cmd.Equals("cp"))
-            {
-                FileSystem.CP.c_CP_only();
-            }
-            else if (cmd.StartsWith("cp "))
-            {
-                FileSystem.CP.c_CP(cmd);
-            }
-            else if ((cmd.Equals("dir")) || (cmd.Equals("ls")))
-            {
-                FileSystem.Dir.c_Dir();
-            }
-            else if ((cmd.StartsWith("dir ")) || (cmd.StartsWith("ls ")))
-            {
-                FileSystem.Dir.c_Dir(cmd);
-            }
-            else if (cmd.Equals("mkdir"))
-            {
-                FileSystem.Mkdir.c_Mkdir();
-            }
-            else if (cmd.StartsWith("mkdir "))
-            {
-                FileSystem.Mkdir.c_Mkdir(cmd);
-            }
-            else if (cmd.StartsWith("rmdir "))
-            {
-                FileSystem.Rmdir.c_Rmdir(cmd);
-            }//TODO: orgainize
-            else if (cmd.StartsWith("rmfil "))
-            {
-                FileSystem.Rmfil.c_Rmfil(cmd);
-            }
-            else if (cmd.Equals("mkfil"))
-            {
-                FileSystem.Mkfil.c_mkfil();
-            }
-            else if (cmd.StartsWith("mkfil "))
-            {
-                FileSystem.Mkfil.c_mkfil(cmd);
-            }
-            else if (cmd.StartsWith("edit "))
-            {
-                FileSystem.Edit.c_Edit(cmd);
-            }
-            else if (cmd.Equals("vol"))
-            {
-                FileSystem.Vol.c_Vol();
-            }
-            else if (cmd.StartsWith("run "))
-            {
-                FileSystem.Run.c_Run(cmd);
-            }
-            else if (cmd.StartsWith("cat"))
-            {
-                FileSystem.Cat.c_Cat(cmd);
-            }
-
-            #endregion FileSystem
-
-            #region Settings
-
-            else if (cmd.Equals("logout"))
-            {
-                Settings.Logout.c_Logout();
-            }
-            else if (cmd.Equals("settings"))
-            {
-                Settings.Settings.c_Settings();
-            }
-            else if (cmd.StartsWith("settings "))
-            {
-                Settings.Settings.c_Settings(cmd);
-            }
-            else if (cmd.StartsWith("passwd "))
-            {
-                Settings.Passwd.c_Passwd(cmd);
-            }
-            else if (cmd.Equals("passwd"))
-            {
-                Settings.Passwd.c_Passwd(Kernel.userLogged);
-            }
-
-            #endregion Settings
-
-            #region Tools
-
-            else if (cmd.Equals("snake"))
-            {
-                Tools.Snake.c_Snake();
-            }
-            else if (cmd.StartsWith("md5"))
-            {
-                Tools.MD5.c_MD5(cmd);
-            }
-            else if (cmd.StartsWith("sha256"))
-            {
-                Tools.SHA256.c_SHA256(cmd);
-            }
-            else if (cmd.Equals("debug"))
-            {
-                Tools.Debug.c_Debug();
-            }
-            else if (cmd.StartsWith("debug "))
-            {
-                Tools.Debug.c_Debug(cmd);
-            }
-
-            #endregion
-            */
-
         }
+
+        private static ReturnInfo DoCheck(ICommand command)
+        {
+            if (command.Type == CommandType.Filesystem)
+            {
+                if (Kernel.ContainsVolumes() == false)
+                {
+                    return new ReturnInfo(command, ReturnCode.ERROR, "No volume detected!");
+                }
+            }
+            return new ReturnInfo(command, ReturnCode.OK);
+        }
+
     }
 }

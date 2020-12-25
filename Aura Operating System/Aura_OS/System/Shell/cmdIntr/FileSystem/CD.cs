@@ -15,7 +15,7 @@ namespace Aura_OS.System.Shell.cmdIntr.FileSystem
         /// <summary>
         /// Empty constructor.
         /// </summary>
-        public CommandCD(string[] commandvalues) : base(commandvalues)
+        public CommandCD(string[] commandvalues) : base(commandvalues, CommandType.Filesystem)
         {
         }
 

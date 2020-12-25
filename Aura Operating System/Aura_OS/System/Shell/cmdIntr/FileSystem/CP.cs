@@ -4,6 +4,7 @@
 * PROGRAMMER(S):    Alexy DA CRUZ <dacruzalexy@gmail.com>
 */
 
+/*
 using System;
 using System.IO;
 using L = Aura_OS.System.Translation;
@@ -20,7 +21,7 @@ namespace Aura_OS.System.Shell.cmdIntr.FileSystem
         public static string HI
         {
             get { return HelpInfo; }
-            set { HelpInfo = value; /*PUSHED OUT VALUE (in)*/}
+            set { HelpInfo = value; }
         }
 
 
@@ -151,3 +152,5 @@ namespace Aura_OS.System.Shell.cmdIntr.FileSystem
         }
     }
 }
+
+*/
