@@ -81,5 +81,14 @@ namespace Aura_OS.System.Shell.cmdIntr.Util
             Console.WriteLine("You can see more information about a specific command by typing: {command} /help");
             return new ReturnInfo(this, ReturnCode.OK);
         }
+
+        /// <summary>
+        /// Print /help information
+        /// </summary>
+        public override void PrintHelp()
+        {
+            Console.WriteLine("Available command:");
+            Console.WriteLine("- help /alias    show command aliases.");
+        }
     }
 }
