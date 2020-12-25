@@ -8,7 +8,7 @@ using Aura_OS.HAL.Drivers.Network;
 * PROGRAMMER(S):    Alexy DA CRUZ <dacruzalexy@gmail.com>
 */
 
-namespace Aura_OS.System.Network.UDP.DHCP
+namespace Aura_OS.System.Network.IPV4.UDP.DHCP
 {
     class DHCPClient
     {

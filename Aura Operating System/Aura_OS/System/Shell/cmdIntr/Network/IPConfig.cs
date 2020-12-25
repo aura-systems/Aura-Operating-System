@@ -7,7 +7,7 @@
 
 using Aura_OS.HAL.Drivers.Network;
 using Aura_OS.System.Network;
-using Aura_OS.System.Network.UDP.DHCP;
+using Aura_OS.System.Network.IPV4.UDP.DHCP;
 using Aura_OS.System.Network.IPV4;
 using System;
 using System.Collections.Generic;

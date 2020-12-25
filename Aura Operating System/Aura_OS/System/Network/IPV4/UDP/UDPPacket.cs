@@ -26,7 +26,7 @@ namespace Aura_OS.System.Network.IPV4.UDP
 
             if (udp_packet.SourcePort == 67)
             {
-                Network.UDP.DHCP.DHCPPacket.DHCPHandler(packetData);
+                DHCP.DHCPPacket.DHCPHandler(packetData);
                 return;
             }
             else if (udp_packet.SourcePort == 53)
