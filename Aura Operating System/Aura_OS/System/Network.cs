@@ -12,11 +12,11 @@ namespace Aura_OS.System
 {
     class NetworkInit
     {
-        public static bool Enable(NetworkDevice device, Address ip, Address subnet, Address gw)
+        public static bool Enable(NetworkDevice device, Address ip, Address subnet, Address gw, Address dns)
         {            
             if (device != null)
             {
-                Config config = new Config(ip, subnet, gw);
+                Config config = new Config(ip, subnet, gw, dns);
                 Network.NetworkStack.ConfigIP(device, config);
                 Kernel.debugger.Send(config.ToString());
                 return true;

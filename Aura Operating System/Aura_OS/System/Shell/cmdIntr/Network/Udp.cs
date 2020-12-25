@@ -57,6 +57,8 @@ namespace Aura_OS.System.Shell.cmdIntr.Network
 
                 Console.WriteLine("Received UDP packet from " + RemoteIpEndPoint.address.ToString() + ": \"" + Encoding.ASCII.GetString(received) + "\"");
 
+                client.Close();
+
                 return new ReturnInfo(this, ReturnCode.OK);
             }
             else if (arguments[0] == "-s")
