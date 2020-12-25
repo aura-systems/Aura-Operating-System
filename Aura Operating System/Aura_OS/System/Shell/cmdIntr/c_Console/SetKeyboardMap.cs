@@ -12,6 +12,7 @@ namespace Aura_OS.System.Shell.cmdIntr.c_Console
         /// </summary>
         public CommandKeyboardMap(string[] commandvalues) : base(commandvalues)
         {
+            Description = "to change keyboard map";
         }
 
         /// <summary>

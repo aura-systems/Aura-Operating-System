@@ -18,6 +18,7 @@ namespace Aura_OS.System.Shell.cmdIntr.FileSystem
         /// </summary>
         public CommandMkdir(string[] commandvalues) : base(commandvalues, CommandType.Filesystem)
         {
+            Description = "to create a directory";
         }
 
         /// <summary>

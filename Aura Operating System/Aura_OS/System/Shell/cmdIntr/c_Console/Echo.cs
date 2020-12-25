@@ -17,6 +17,7 @@ namespace Aura_OS.System.Shell.cmdIntr.c_Console
         /// </summary>
         public CommandEcho(string[] commandvalues) : base(commandvalues)
         {
+            Description = "to echo text";
         }
 
         /// <summary>

@@ -17,6 +17,7 @@ namespace Aura_OS.System.Shell.cmdIntr.Power
         /// </summary>
         public CommandShutdown(string[] commandvalues) : base(commandvalues)
         {
+            Description = "to do an ACPI shutdown";
         }
 
         /// <summary>

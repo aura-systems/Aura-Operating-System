@@ -23,6 +23,7 @@ namespace Aura_OS.System.Shell.cmdIntr.Network
         /// </summary>
         public CommandIPConfig(string[] commandvalues) : base(commandvalues)
         {
+            Description = "to set a static IP or get an IP from the DHCP server";
         }
 
         /// <summary>

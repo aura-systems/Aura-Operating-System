@@ -79,6 +79,11 @@ namespace Aura_OS.System.Shell.cmdIntr
         public CommandType Type { get; set; }
 
         /// <summary>
+        /// Command description
+        /// </summary>
+        public string Description { get; set; }
+
+        /// <summary>
         /// Text values
         /// </summary>
         public string[] CommandValues;
@@ -90,6 +95,7 @@ namespace Aura_OS.System.Shell.cmdIntr
         {
             CommandValues = commandvalues;
             Type = type;
+            Description = "unknown";
         }
 
         /// <summary>

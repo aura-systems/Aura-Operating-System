@@ -23,6 +23,7 @@ namespace Aura_OS.System.Shell.cmdIntr.Network
         /// </summary>
         public CommandUdp(string[] commandvalues) : base(commandvalues, CommandType.Network)
         {
+            Description = "to send or received UDP packets";
         }
 
         /// <summary>

@@ -18,6 +18,7 @@ namespace Aura_OS.System.Shell.cmdIntr.FileSystem
         /// </summary>
         public CommandDir(string[] commandvalues) : base(commandvalues, CommandType.Filesystem)
         {
+            Description = "to list directories and files";
         }
 
         /// <summary>

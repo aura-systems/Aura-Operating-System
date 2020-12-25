@@ -1,23 +1,24 @@
 ﻿/*
 * PROJECT:          Aura Operating System Development
-* CONTENT:          List PCI Devices
+* CONTENT:          Help command
 * PROGRAMMER(S):    Valentin Charbonnier <valentinbreiz@gmail.com>
 */
 
-using Aura_OS.System.Utils;
+using Aura_OS.System.Translation;
 using System;
-using static Cosmos.HAL.PCIDevice;
+using System.Collections.Generic;
+using System.Text;
 
 namespace Aura_OS.System.Shell.cmdIntr.Util
 {
-    class CommandLspci : ICommand
+    class CommandHelp : ICommand
     {
         /// <summary>
         /// Empty constructor.
         /// </summary>
-        public CommandLspci(string[] commandvalues) : base(commandvalues)
+        public CommandHelp(string[] commandvalues) : base(commandvalues)
         {
-            Description = "list pci devices";
+            Description = "to show all available commands and their description";
         }
 
         /// <summary>
@@ -26,9 +27,9 @@ namespace Aura_OS.System.Shell.cmdIntr.Util
         public override ReturnInfo Execute()
         {
             int count = 0;
-            foreach (Cosmos.HAL.PCIDevice device in Cosmos.HAL.PCI.Devices)
+            foreach (var command in CommandManager.CMDs)
             {
-                Console.WriteLine(Conversion.D2(device.bus) + ":" + Conversion.D2(device.slot) + ":" + Conversion.D2(device.function) + " - " + "0x" + Conversion.D4(Conversion.DecToHex(device.VendorID)) + ":0x" + Conversion.D4(Conversion.DecToHex(device.DeviceID)) + " : " + DeviceClass.GetTypeString(device) + ": " + DeviceClass.GetDeviceString(device));
+                Console.WriteLine("- " + command.CommandValues[0] + " (" + command.Description +  ")");
                 count++;
                 if (count == Console.WindowHeight)
                 {

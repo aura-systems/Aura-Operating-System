@@ -17,6 +17,7 @@ namespace Aura_OS.System.Shell.cmdIntr.FileSystem
         /// </summary>
         public CommandCat(string[] commandvalues) : base(commandvalues, CommandType.Filesystem)
         {
+            Description = "to display a text file";
         }
 
         /// <summary>

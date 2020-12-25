@@ -59,14 +59,11 @@ namespace Aura_OS.System.Shell.cmdIntr
             CMDs.Add(new CommandRmfil(new string[] { "rmfil", "rmf" }));
             CMDs.Add(new CommandKeyboardMap(new string[] { "setkeyboardmap", "setkeyboard" }));
             CMDs.Add(new CommandHex(new string[] { "hex" }));
+            CMDs.Add(new CommandHelp(new string[] { "help" }));
 
             CMDs.Add(new CommandAction(new string[] { "beep" }, () =>
             {
                 Cosmos.System.PCSpeaker.Beep();
-            }));
-            CMDs.Add(new CommandAction(new string[] { "help" }, () =>
-            {
-                List_Translation._Help();
             }));
             CMDs.Add(new CommandAction(new string[] { "play" }, () =>
             {

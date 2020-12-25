@@ -22,6 +22,7 @@ namespace Aura_OS.System.Shell.cmdIntr.Network
         /// </summary>
         public CommandPing(string[] commandvalues) : base(commandvalues, CommandType.Network)
         {
+            Description = "to send ping requests to an IP or domain name using ICMP";
         }
 
         /// <summary>

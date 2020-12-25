@@ -17,6 +17,7 @@ namespace Aura_OS.System.Shell.cmdIntr.FileSystem
         /// </summary>
         public CommandMkfil(string[] commandvalues) : base(commandvalues, CommandType.Filesystem)
         {
+            Description = "to create a file";
         }
 
         /// <summary>

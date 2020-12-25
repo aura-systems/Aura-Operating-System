@@ -24,6 +24,7 @@ namespace Aura_OS.System.Shell.cmdIntr.Network
         /// </summary>
         public CommandDns(string[] commandvalues) : base(commandvalues, CommandType.Network)
         {
+            Description = "to send a DNS ask request";
         }
 
         /// <summary>

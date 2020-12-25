@@ -17,6 +17,7 @@ namespace Aura_OS.System.Shell.cmdIntr.Util
         /// </summary>
         public CommandEnv(string[] commandvalues) : base(commandvalues)
         {
+            Description = "to set environment variables";
         }
 
         /// <summary>

@@ -17,6 +17,7 @@ namespace Aura_OS.System.Shell.cmdIntr.FileSystem
         /// </summary>
         public CommandHex(string[] commandvalues) : base(commandvalues, CommandType.Filesystem)
         {
+            Description = "to print an a file in hexadecimal";
         }
 
         /// <summary>

@@ -15,6 +15,7 @@ namespace Aura_OS.System.Shell.cmdIntr.Tests
         /// </summary>
         public CommandCrash(string[] commandvalues) : base(commandvalues)
         {
+            Description = "make a test crash";
         }
 
         /// <summary>

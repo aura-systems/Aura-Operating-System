@@ -17,6 +17,7 @@ namespace Aura_OS.System.Shell.cmdIntr.FileSystem
         /// </summary>
         public CommandChangeVol(string[] commandvalues) : base(commandvalues, CommandType.Filesystem)
         {
+            Description = "to change current volume";
         }
 
         /// <summary>
