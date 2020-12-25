@@ -205,9 +205,7 @@ namespace Aura_OS.System.Shell.cmdIntr
 
                     if (arguments.Count > 0 && arguments[0] == "/help")
                     {
-                        Console.WriteLine("Description: " + command.Description + ".");
-                        Console.WriteLine();
-                        command.PrintHelp();
+                        ShowHelp(command);
                         result = new ReturnInfo(command, ReturnCode.OK);
                     }
                     else
@@ -238,6 +236,34 @@ namespace Aura_OS.System.Shell.cmdIntr
             Console.ForegroundColor = ConsoleColor.White;
 
             Console.WriteLine();
+        }
+
+        /// <summary>
+        /// Check command availability to avoid unwanted behavior.
+        /// </summary>
+        /// <param name="command">Command</param>
+        private static void ShowHelp(ICommand command)
+        {
+            Console.WriteLine("Description: " + command.Description + ".");
+            Console.WriteLine();
+            if (command.CommandValues.Length > 1)
+            {
+                Console.Write("Aliases: ");
+                for (int i = 0; i < command.CommandValues.Length; i++)
+                {
+                    if (i != command.CommandValues.Length - 1)
+                    {
+                        Console.Write(command.CommandValues[i] + ", ");
+                    }
+                    else
+                    {
+                        Console.Write(command.CommandValues[i]);
+                    }
+                }
+                Console.WriteLine();
+                Console.WriteLine();
+            }
+            command.PrintHelp();
         }
 
         /// <summary>
