@@ -179,6 +179,8 @@ namespace Aura_OS.System.Shell.cmdIntr
                 return;
             }
 
+            #region Parse command
+
             List<string> arguments = Misc.ParseCommandLine(cmd);
 
             string firstarg = arguments[0]; //command name
@@ -188,26 +190,30 @@ namespace Aura_OS.System.Shell.cmdIntr
                 arguments.RemoveAt(0); //get only arguments
             }
 
+            #endregion
+
             foreach (var command in CMDs)
             {
                 if (command.ContainsCommand(firstarg))
                 {
-                    ReturnInfo result = DoCheck(command);
+                    ReturnInfo result;
 
-                    if (result.Code == ReturnCode.OK)
+                    if (arguments[0] == "/help")
                     {
-                        if (arguments.Count == 0)
+                        Console.WriteLine("Description: " + command.Description + ".");
+                        Console.WriteLine();
+                        command.PrintHelp();
+                        result = new ReturnInfo(command, ReturnCode.OK);
+                    }
+                    else
+                    {
+                        result = CheckCommand(command);
+
+                        if (result.Code == ReturnCode.OK)
                         {
-                            result = command.Execute();
-                        }
-                        else
-                        {
-                            if (arguments[0] == "/help")
+                            if (arguments.Count == 0)
                             {
-                                Console.WriteLine("Description: " + command.Description + ".");
-                                Console.WriteLine();
-                                command.PrintHelp();
-                                result = new ReturnInfo(command, ReturnCode.OK);
+                                result = command.Execute();
                             }
                             else
                             {
@@ -216,20 +222,7 @@ namespace Aura_OS.System.Shell.cmdIntr
                         }
                     }
 
-                    if (result.Code == ReturnCode.ERROR_ARG)
-                    {
-                        Console.ForegroundColor = ConsoleColor.DarkRed;
-                        L.Text.Display("invalidargcommand");
-                        Console.ForegroundColor = ConsoleColor.White;
-                    }
-                    else if (result.Code == ReturnCode.ERROR)
-                    {
-                        Console.ForegroundColor = ConsoleColor.DarkRed;
-                        Console.WriteLine("Error: " + result.Info);
-                        Console.ForegroundColor = ConsoleColor.White;
-                    }
-
-                    Console.WriteLine();
+                    ProcessCommandResult(result);
 
                     return;
                 }
@@ -242,7 +235,11 @@ namespace Aura_OS.System.Shell.cmdIntr
             Console.WriteLine();
         }
 
-        private static ReturnInfo DoCheck(ICommand command)
+        /// <summary>
+        /// Check command availability to avoid unwanted behavior.
+        /// </summary>
+        /// <param name="command">Command</param>
+        private static ReturnInfo CheckCommand(ICommand command)
         {
             if (command.Type == CommandType.Filesystem)
             {
@@ -259,6 +256,28 @@ namespace Aura_OS.System.Shell.cmdIntr
                 }
             }
             return new ReturnInfo(command, ReturnCode.OK);
+        }
+
+        /// <summary>
+        /// Process result info of the command
+        /// </summary>
+        /// <param name="result">Result information</param>
+        private static void ProcessCommandResult(ReturnInfo result)
+        {
+            if (result.Code == ReturnCode.ERROR_ARG)
+            {
+                Console.ForegroundColor = ConsoleColor.DarkRed;
+                L.Text.Display("invalidargcommand");
+                Console.ForegroundColor = ConsoleColor.White;
+            }
+            else if (result.Code == ReturnCode.ERROR)
+            {
+                Console.ForegroundColor = ConsoleColor.DarkRed;
+                Console.WriteLine("Error: " + result.Info);
+                Console.ForegroundColor = ConsoleColor.White;
+            }
+
+            Console.WriteLine();
         }
 
     }
