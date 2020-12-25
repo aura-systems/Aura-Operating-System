@@ -13,80 +13,77 @@ namespace Aura_OS.System.Network.IPV4.UDP
 {
     public class UdpClient
     {
-        // TODO: Once we support more than just IPv4, we really need to base all the IPv4 classes on abstract classes
-        // that represent the required functionality, then we can generalize the stack to be independent from IPv4 or IPv6
-        internal class DataGram
-        {
-            internal byte[] data;
-            internal IPV4.EndPoint source;
-
-            internal DataGram(byte[] data, IPV4.EndPoint src)
-            {
-                this.data = data;
-                this.source = src;
-            }
-        }
-
         private static TempDictionary<UdpClient> clients;
 
-        protected Int32 localPort;
-        protected IPV4.Address destination;
-        protected Int32 destinationPort;
+        protected int localPort;
+        protected int destinationPort;
 
-        private Queue<DataGram> rxBuffer;
+        protected Address destination;
+
+        protected Queue<UDPPacket> rxBuffer;
 
         static UdpClient()
         {
             clients = new TempDictionary<UdpClient>();
         }
 
-        internal static UdpClient Client(ushort destPort)
+        internal static UdpClient Client(ushort destport)
         {
-            if (clients.ContainsKey((UInt32)destPort) == true)
+            if (clients.ContainsKey((uint)destport) == true)
             {
-                return clients[(UInt32)destPort];
+                return clients[(uint)destport];
             }
 
             return null;
         }
 
-        public UdpClient()
-            :this(0)
+        public UdpClient() : this(0)
         { }
 
-        public UdpClient(Int32 localPort)
+        public UdpClient(int localPort)
         {
-            this.rxBuffer = new Queue<DataGram>(8);
+            rxBuffer = new Queue<UDPPacket>(8);
 
             this.localPort = localPort;
             if (localPort > 0)
             {
-                UdpClient.clients.Add((UInt32)localPort, this);
+                clients.Add((uint)localPort, this);
             }
         }
 
-        public UdpClient(IPV4.Address dest, Int32 destPort)
-            : this(0)
+        public UdpClient(Address dest, int destPort) : this(0)
         {
-            this.destination = dest;
-            this.destinationPort = destPort;
+            destination = dest;
+            destinationPort = destPort;
         }
 
-        public void Connect(IPV4.Address dest, Int32 destPort)
+        public void Connect(Address dest, int destPort)
         {
-            this.destination = dest;
-            this.destinationPort = destPort;
+            destination = dest;
+            destinationPort = destPort;
+        }
+
+        public void Close()
+        {
+            if (clients.ContainsKey((uint)this.localPort) == true)
+            {
+                clients.Remove((uint)this.localPort);
+            }
+        }
+
+        public void receiveData(UDPPacket packet)
+        {
+            rxBuffer.Enqueue(packet);
         }
 
         public void Send(byte[] data)
         {
-            if ((this.destination == null) ||
-                (this.destinationPort == 0))
+            if ((destination == null) || (destinationPort == 0))
             {
                 throw new Exception("Must establish a default remote host by calling Connect() before using this Send() overload");
             }
 
-            Send(data, this.destination, this.destinationPort);
+            Send(data, destination, destinationPort);
             NetworkStack.Update();
         }
 
@@ -97,45 +94,30 @@ namespace Aura_OS.System.Network.IPV4.UDP
             OutgoingBuffer.AddPacket(packet);
         }
 
-        public void Close()
+        public byte[] NonBlockingReceive(ref EndPoint source)
         {
-            if (UdpClient.clients.ContainsKey((UInt32)this.localPort) == true)
-            {
-                UdpClient.clients.Remove((UInt32)this.localPort);
-            }
-        }
-
-        public byte[] NonBlockingReceive(ref IPV4.EndPoint source)
-        {
-            if (this.rxBuffer.Count < 1)
+            if (rxBuffer.Count < 1)
             {
                 return null;
             }
 
-            DataGram packet = rxBuffer.Dequeue();
-            source.address = packet.source.address;
-            source.port = packet.source.port;
+            UDPPacket packet = new UDPPacket(rxBuffer.Dequeue().RawData);
+            source.address = packet.SourceIP;
+            source.port = packet.SourcePort;
 
-            return packet.data;
+            return packet.UDP_Data;
         }
 
-        public byte[] Receive(ref IPV4.EndPoint source)
+        public byte[] Receive(ref EndPoint source)
         {
-            while (this.rxBuffer.Count < 1);
+            while (rxBuffer.Count < 1) ;
 
-            DataGram packet = rxBuffer.Dequeue();
-            source.address = packet.source.address;
-            source.port = packet.source.port;
+            UDPPacket packet = new UDPPacket(rxBuffer.Dequeue().RawData);
+            source.address = packet.SourceIP;
+            source.port = packet.SourcePort;
 
-            return packet.data;
+            return packet.UDP_Data;
         }
 
-        internal void receiveData(IPV4.UDP.UDPPacket packet)
-        {
-            byte[] data = packet.UDP_Data;
-            IPV4.EndPoint source = new IPV4.EndPoint(packet.SourceIP, packet.SourcePort);
-
-            this.rxBuffer.Enqueue(new DataGram(data, source));
-        }
     }
 }
