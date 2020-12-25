@@ -33,7 +33,7 @@ namespace Aura_OS.System.Shell.cmdIntr.Network
         /// <param name="arguments">Arguments</param>
         public override ReturnInfo Execute()
         {
-            Console.WriteLine("Usage: dns {dns_server_ip} {url}");
+            PrintHelp();
             return new ReturnInfo(this, ReturnCode.OK);
         }
 
@@ -77,6 +77,16 @@ namespace Aura_OS.System.Shell.cmdIntr.Network
             xClient.Close();
 
             return new ReturnInfo(this, ReturnCode.OK);
+        }
+
+        /// <summary>
+        /// Print /help information
+        /// </summary>
+        public override void PrintHelp()
+        {
+            Console.WriteLine("Usage:");
+            Console.WriteLine(" - dns {domain_name}");
+            Console.WriteLine(" - dns {dns_server_ip} {domain_name}");
         }
     }
 }

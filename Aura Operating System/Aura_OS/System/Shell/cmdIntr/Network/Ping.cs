@@ -132,5 +132,15 @@ namespace Aura_OS.System.Shell.cmdIntr.Network
 
             return new ReturnInfo(this, ReturnCode.OK);
         }
+
+        /// <summary>
+        /// Print /help information
+        /// </summary>
+        public override void PrintHelp()
+        {
+            Console.WriteLine("Usage:");
+            Console.WriteLine(" - ping {ip}");
+            Console.WriteLine(" - ping {domain_name}");
+        }
     }
 }

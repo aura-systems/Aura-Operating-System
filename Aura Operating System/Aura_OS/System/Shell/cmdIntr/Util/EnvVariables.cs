@@ -36,5 +36,14 @@ namespace Aura_OS.System.Shell.cmdIntr.Util
             Kernel.environmentvariables.Add(var, value);
             return new ReturnInfo(this, ReturnCode.OK);
         }
+
+        /// <summary>
+        /// Print /help information
+        /// </summary>
+        public override void PrintHelp()
+        {
+            Console.WriteLine("Usage:");
+            Console.WriteLine(" - export {var_name} {var_value}");
+        }
     }
 }

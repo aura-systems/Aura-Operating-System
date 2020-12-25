@@ -102,5 +102,14 @@ namespace Aura_OS.System.Shell.cmdIntr.FileSystem
             }
             return new ReturnInfo(this, ReturnCode.OK);
         }
+
+        /// <summary>
+        /// Print /help information
+        /// </summary>
+        public override void PrintHelp()
+        {
+            Console.WriteLine("Usage:");
+            Console.WriteLine(" - mkdir {directory}");
+        }
     }
 }
