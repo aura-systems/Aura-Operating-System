@@ -4,6 +4,7 @@
 * PROGRAMMER(S):    John Welsh <djlw78@gmail.com>
 */
 
+using Aura_OS.System.Network;
 using Aura_OS.System.Shell.cmdIntr.c_Console;
 using Aura_OS.System.Shell.cmdIntr.FileSystem;
 using Aura_OS.System.Shell.cmdIntr.Network;
@@ -241,6 +242,13 @@ namespace Aura_OS.System.Shell.cmdIntr
                 if (Kernel.ContainsVolumes() == false)
                 {
                     return new ReturnInfo(command, ReturnCode.ERROR, "No volume detected!");
+                }
+            }
+            if (command.Type == CommandType.Network)
+            {
+                if (NetworkStack.ConfigEmpty())
+                {
+                    return new ReturnInfo(command, ReturnCode.ERROR, "No network configuration detected! Use ipconfig /set.");
                 }
             }
             return new ReturnInfo(command, ReturnCode.OK);

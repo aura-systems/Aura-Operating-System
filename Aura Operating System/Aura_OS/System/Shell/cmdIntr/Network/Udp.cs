@@ -21,7 +21,7 @@ namespace Aura_OS.System.Shell.cmdIntr.Network
         /// <summary>
         /// Empty constructor.
         /// </summary>
-        public CommandUdp(string[] commandvalues) : base(commandvalues)
+        public CommandUdp(string[] commandvalues) : base(commandvalues, CommandType.Network)
         {
         }
 
@@ -31,10 +31,6 @@ namespace Aura_OS.System.Shell.cmdIntr.Network
         /// <param name="arguments">Arguments</param>
         public override ReturnInfo Execute(List<string> arguments)
         {
-            if (NetworkStack.ConfigEmpty())
-            {
-                return new ReturnInfo(this, ReturnCode.ERROR, "No network configuration detected! Use ipconfig /set.");
-            }
             if (arguments.Count == 0)
             {
                 return new ReturnInfo(this, ReturnCode.ERROR_ARG);

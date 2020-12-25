@@ -20,7 +20,7 @@ namespace Aura_OS.System.Shell.cmdIntr.Network
         /// <summary>
         /// Empty constructor.
         /// </summary>
-        public CommandPing(string[] commandvalues) : base(commandvalues)
+        public CommandPing(string[] commandvalues) : base(commandvalues, CommandType.Network)
         {
         }
 
@@ -30,11 +30,6 @@ namespace Aura_OS.System.Shell.cmdIntr.Network
         /// <param name="arguments">Arguments</param>
         public override ReturnInfo Execute(List<string> arguments)
         {
-            if (NetworkStack.ConfigEmpty())
-            {
-                return new ReturnInfo(this, ReturnCode.ERROR, "No network configuration detected! Use ipconfig /set.");
-            }
-
             int PacketSent = 0;
             int PacketReceived = 0;
             int PacketLost = 0;
