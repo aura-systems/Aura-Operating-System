@@ -33,21 +33,28 @@ namespace Aura_OS.System.Shell.cmdIntr
 
         public static void RegisterAllCommands()
         {
-            CMDs.Add(new CommandEcho(new string[] { "echo" }));
             CMDs.Add(new CommandReboot(new string[] { "reboot", "rb" }));
             CMDs.Add(new CommandShutdown(new string[] { "shutdown", "sd" }));
+
             CMDs.Add(new CommandClear(new string[] { "clear", "clr" }));
+            CMDs.Add(new CommandKeyboardMap(new string[] { "setkeyboardmap", "setkeyboard" }));
+            CMDs.Add(new CommandEnv(new string[] { "export", "set" }));
+            CMDs.Add(new CommandEcho(new string[] { "echo" }));
+
+            CMDs.Add(new CommandIPConfig(new string[] { "ipconfig", "ifconfig", "netconf" }));
             CMDs.Add(new CommandPing(new string[] { "ping" }));
             CMDs.Add(new CommandUdp(new string[] { "udp" }));
             CMDs.Add(new CommandDns(new string[] { "dns" }));
+
             CMDs.Add(new CommandVersion(new string[] { "version", "ver" }));
             CMDs.Add(new CommandSystemInfo(new string[] { "systeminfo", "sysinfo" }));
             CMDs.Add(new CommandTime(new string[] { "time", "date" }));
-            CMDs.Add(new CommandIPConfig(new string[] { "ipconfig", "ifconfig", "netconf" }));
-            CMDs.Add(new CommandLspci(new string[] { "lspci" }));
-            CMDs.Add(new CommandEnv(new string[] { "export", "set" }));
             CMDs.Add(new CommandAbout(new string[] { "about" }));
+            CMDs.Add(new CommandHelp(new string[] { "help" }));
+
+            CMDs.Add(new CommandLspci(new string[] { "lspci" }));
             CMDs.Add(new CommandCrash(new string[] { "crash" }));
+
             CMDs.Add(new CommandVol(new string[] { "vol" }));
             CMDs.Add(new CommandDir(new string[] { "dir", "ls", "l" }));
             CMDs.Add(new CommandMkdir(new string[] { "mkdir", "md" }));
@@ -57,9 +64,7 @@ namespace Aura_OS.System.Shell.cmdIntr
             CMDs.Add(new CommandChangeVol(new string[] { "chgvol", "cv" }));
             CMDs.Add(new CommandMkfil(new string[] { "touch", "mkfil", "mf" }));
             CMDs.Add(new CommandRmfil(new string[] { "rmfil", "rmf" }));
-            CMDs.Add(new CommandKeyboardMap(new string[] { "setkeyboardmap", "setkeyboard" }));
             CMDs.Add(new CommandHex(new string[] { "hex" }));
-            CMDs.Add(new CommandHelp(new string[] { "help" }));
 
             CMDs.Add(new CommandAction(new string[] { "beep" }, () =>
             {
