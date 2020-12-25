@@ -67,5 +67,15 @@ namespace Aura_OS.System.Shell.cmdIntr.FileSystem
                 return new ReturnInfo(this, ReturnCode.ERROR, ex.Message);
             }
         }
+
+        /// <summary>
+        /// Print /help information
+        /// </summary>
+        public override void PrintHelp()
+        {
+            Console.WriteLine("Available commands:");
+            Console.WriteLine("- cd {directory}    change current directory");
+            Console.WriteLine("- cd ..             go to last directory");
+        }
     }
 }

@@ -21,35 +21,29 @@ namespace Aura_OS.System.Shell.cmdIntr.c_Console
         /// <param name="arguments">Arguments</param>
         public override ReturnInfo Execute(List<string> arguments)
         {
-            if (arguments.Count == 0)
+            switch (arguments[0])
             {
-                return new ReturnInfo(this, ReturnCode.ERROR_ARG);
-            }
-            else
-            {
-                if (arguments[0] == "/help")
-                {
-                    Console.WriteLine("Available keyboards map:");
-                    Console.WriteLine("- setkeyboardmap azerty");
-                    Console.WriteLine("- setkeyboardmap qwerty");
-                }
-                else
-                {
-                    switch (arguments[0])
-                    {
-                        case "azerty":
-                            Sys.KeyboardManager.SetKeyLayout(new Sys.ScanMaps.FR_Standard());
-                            break;
+                case "azerty":
+                    Sys.KeyboardManager.SetKeyLayout(new Sys.ScanMaps.FR_Standard());
+                    break;
 
-                        case "qwerty":
-                            Sys.KeyboardManager.SetKeyLayout(new Sys.ScanMaps.US_Standard());
-                            break;
-                        default:
-                            return new ReturnInfo(this, ReturnCode.ERROR, "This keyboardmap isn't supported, please type: setkeyboardmap /help");                            
-                    }
-                }
-                return new ReturnInfo(this, ReturnCode.OK);
-            }            
+                case "qwerty":
+                    Sys.KeyboardManager.SetKeyLayout(new Sys.ScanMaps.US_Standard());
+                    break;
+                default:
+                    return new ReturnInfo(this, ReturnCode.ERROR, "This keyboardmap isn't supported, please type: setkeyboardmap /help");                            
+            }
+            return new ReturnInfo(this, ReturnCode.OK);            
+        }
+
+        /// <summary>
+        /// Print /help information
+        /// </summary>
+        public override void PrintHelp()
+        {
+            Console.WriteLine("Available keyboards map:");
+            Console.WriteLine("- setkeyboardmap azerty");
+            Console.WriteLine("- setkeyboardmap qwerty");
         }
     }
 }

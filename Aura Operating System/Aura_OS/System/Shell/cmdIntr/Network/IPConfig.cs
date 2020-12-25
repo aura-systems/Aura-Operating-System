@@ -72,15 +72,7 @@ namespace Aura_OS.System.Shell.cmdIntr.Network
         /// <param name="arguments">Arguments</param>
         public override ReturnInfo Execute(List<string> arguments)
         {
-            if (arguments[0] == "/help")
-            {
-                Console.WriteLine("Available commands:");
-                Console.WriteLine("- ipconfig /listnic    List network devices");
-                Console.WriteLine("- ipconfig /set        Manually set an IP Address");
-                Console.WriteLine("- ipconfig /ask        Find the DHCP server and ask a new IP address");
-                Console.WriteLine("- ipconfig /release    Tell the DHCP server to make the IP address available");
-            }
-            else if (arguments[0] == "/release")
+            if (arguments[0] == "/release")
             {
                 DHCPClient.SendReleasePacket();
             }
@@ -148,6 +140,18 @@ namespace Aura_OS.System.Shell.cmdIntr.Network
                 return new ReturnInfo(this, ReturnCode.ERROR, "Wrong usage, please type: ipconfig /help");
             }
             return new ReturnInfo(this, ReturnCode.OK);
+        }
+
+        /// <summary>
+        /// Print /help information
+        /// </summary>
+        public override void PrintHelp()
+        {
+            Console.WriteLine("Available commands:");
+            Console.WriteLine("- ipconfig /listnic    List network devices");
+            Console.WriteLine("- ipconfig /set        Manually set an IP Address");
+            Console.WriteLine("- ipconfig /ask        Find the DHCP server and ask a new IP address");
+            Console.WriteLine("- ipconfig /release    Tell the DHCP server to make the IP address available");
         }
 
         private static void ApplyIP(string[] args, Utils.Settings settings)

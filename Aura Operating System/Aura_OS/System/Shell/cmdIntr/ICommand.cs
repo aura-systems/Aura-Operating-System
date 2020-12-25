@@ -106,7 +106,7 @@ namespace Aura_OS.System.Shell.cmdIntr
         /// <param name="count">The count index for remove.</param>
         public virtual ReturnInfo Execute()
         {
-            return new ReturnInfo(this, ReturnCode.OK);
+            return new ReturnInfo(this, ReturnCode.ERROR_ARG);
         }
 
         /// <summary>
@@ -117,7 +117,15 @@ namespace Aura_OS.System.Shell.cmdIntr
         /// <param name="count">The count index for remove.</param>
         public virtual ReturnInfo Execute(List<string> arguments)
         {
-            return new ReturnInfo(this, ReturnCode.OK);
+            return new ReturnInfo(this, ReturnCode.ERROR_ARG);
+        }
+
+        /// <summary>
+        /// Print help information
+        /// </summary>
+        public virtual void PrintHelp()
+        {
+            Console.WriteLine("No help information for this command!");
         }
 
         /// <summary>

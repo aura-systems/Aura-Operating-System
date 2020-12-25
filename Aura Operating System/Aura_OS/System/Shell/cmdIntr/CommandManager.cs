@@ -202,7 +202,17 @@ namespace Aura_OS.System.Shell.cmdIntr
                         }
                         else
                         {
-                            result = command.Execute(arguments);
+                            if (arguments[0] == "/help")
+                            {
+                                Console.WriteLine("Description: " + command.Description + ".");
+                                Console.WriteLine();
+                                command.PrintHelp();
+                                result = new ReturnInfo(command, ReturnCode.OK);
+                            }
+                            else
+                            {
+                                result = command.Execute(arguments);
+                            }
                         }
                     }
 
