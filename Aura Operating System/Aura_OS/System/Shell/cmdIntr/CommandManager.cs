@@ -239,7 +239,7 @@ namespace Aura_OS.System.Shell.cmdIntr
         }
 
         /// <summary>
-        /// Check command availability to avoid unwanted behavior.
+        /// Show command description
         /// </summary>
         /// <param name="command">Command</param>
         private static void ShowHelp(ICommand command)
