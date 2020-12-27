@@ -17,6 +17,7 @@ namespace Aura_OS.System.Shell.cmdIntr.FileSystem
         /// </summary>
         public CommandChangeVol(string[] commandvalues) : base(commandvalues, CommandType.Filesystem)
         {
+            Description = "to change current volume";
         }
 
         /// <summary>
@@ -56,6 +57,15 @@ namespace Aura_OS.System.Shell.cmdIntr.FileSystem
                 L.Text.Display("volumeinvalid");
             }
             return new ReturnInfo(this, ReturnCode.OK);
+        }
+
+        /// <summary>
+        /// Print /help information
+        /// </summary>
+        public override void PrintHelp()
+        {
+            Console.WriteLine("Usage:");
+            Console.WriteLine(" - chgvol {vol_name}");
         }
     }
 }

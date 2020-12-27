@@ -17,6 +17,7 @@ namespace Aura_OS.System.Shell.cmdIntr.Util
         /// </summary>
         public CommandLspci(string[] commandvalues) : base(commandvalues)
         {
+            Description = "list pci devices";
         }
 
         /// <summary>

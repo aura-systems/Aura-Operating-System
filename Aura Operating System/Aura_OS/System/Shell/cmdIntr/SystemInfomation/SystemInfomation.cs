@@ -15,6 +15,7 @@ namespace Aura_OS.System.Shell.cmdIntr.SystemInfomation
         /// </summary>
         public CommandSystemInfo(string[] commandvalues) : base(commandvalues)
         {
+            Description = "to display system information";
         }
 
         /// <summary>

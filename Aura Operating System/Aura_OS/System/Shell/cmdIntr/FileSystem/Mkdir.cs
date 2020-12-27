@@ -18,6 +18,7 @@ namespace Aura_OS.System.Shell.cmdIntr.FileSystem
         /// </summary>
         public CommandMkdir(string[] commandvalues) : base(commandvalues, CommandType.Filesystem)
         {
+            Description = "to create a directory";
         }
 
         /// <summary>
@@ -100,6 +101,15 @@ namespace Aura_OS.System.Shell.cmdIntr.FileSystem
                 }
             }
             return new ReturnInfo(this, ReturnCode.OK);
+        }
+
+        /// <summary>
+        /// Print /help information
+        /// </summary>
+        public override void PrintHelp()
+        {
+            Console.WriteLine("Usage:");
+            Console.WriteLine(" - mkdir {directory}");
         }
     }
 }

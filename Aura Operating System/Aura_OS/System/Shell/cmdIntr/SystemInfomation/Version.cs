@@ -15,6 +15,7 @@ namespace Aura_OS.System.Shell.cmdIntr.SystemInfomation
         /// </summary>
         public CommandVersion(string[] commandvalues) : base(commandvalues)
         {
+            Description = "to display system version";
         }
 
         /// <summary>

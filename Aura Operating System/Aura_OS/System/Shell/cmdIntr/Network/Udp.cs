@@ -23,6 +23,7 @@ namespace Aura_OS.System.Shell.cmdIntr.Network
         /// </summary>
         public CommandUdp(string[] commandvalues) : base(commandvalues, CommandType.Network)
         {
+            Description = "to send or received UDP packets";
         }
 
         /// <summary>
@@ -35,7 +36,7 @@ namespace Aura_OS.System.Shell.cmdIntr.Network
             {
                 return new ReturnInfo(this, ReturnCode.ERROR_ARG);
             }
-            if (arguments[0] == "-l")
+            if (arguments[0] == "/l")
             {
                 if (arguments.Count <= 1)
                 {
@@ -57,7 +58,7 @@ namespace Aura_OS.System.Shell.cmdIntr.Network
 
                 return new ReturnInfo(this, ReturnCode.OK);
             }
-            else if (arguments[0] == "-s")
+            else if (arguments[0] == "/s")
             {
                 if (arguments.Count <= 3)
                 {
@@ -83,6 +84,16 @@ namespace Aura_OS.System.Shell.cmdIntr.Network
             {
                 return new ReturnInfo(this, ReturnCode.ERROR_ARG);
             }
+        }
+
+        /// <summary>
+        /// Print /help information
+        /// </summary>
+        public override void PrintHelp()
+        {
+            Console.WriteLine("Usage:");
+            Console.WriteLine(" - udp /l {port}                       listen for an UDP packet at a specific port");
+            Console.WriteLine(" - udp /s {ip} {port} {text_message}   send an UDP packet to and IP/port");
         }
     }
 }
