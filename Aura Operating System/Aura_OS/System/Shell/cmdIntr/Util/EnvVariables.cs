@@ -17,6 +17,7 @@ namespace Aura_OS.System.Shell.cmdIntr.Util
         /// </summary>
         public CommandEnv(string[] commandvalues) : base(commandvalues)
         {
+            Description = "to set environment variables";
         }
 
         /// <summary>
@@ -34,6 +35,15 @@ namespace Aura_OS.System.Shell.cmdIntr.Util
 			string value = exportcmd[1];
             Kernel.environmentvariables.Add(var, value);
             return new ReturnInfo(this, ReturnCode.OK);
+        }
+
+        /// <summary>
+        /// Print /help information
+        /// </summary>
+        public override void PrintHelp()
+        {
+            Console.WriteLine("Usage:");
+            Console.WriteLine(" - export {var_name} {var_value}");
         }
     }
 }

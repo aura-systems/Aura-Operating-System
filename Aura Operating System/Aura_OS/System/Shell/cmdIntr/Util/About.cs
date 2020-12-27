@@ -11,6 +11,7 @@ namespace Aura_OS.System.Shell.cmdIntr.Util
         /// </summary>
         public CommandAbout(string[] commandvalues) : base(commandvalues)
         {
+            Description = "to show informations about Aura Operating System";
         }
 
         /// <summary>

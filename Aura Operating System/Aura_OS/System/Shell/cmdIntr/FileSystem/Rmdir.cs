@@ -4,6 +4,7 @@
 * PROGRAMMER(S):    John Welsh <djlw78@gmail.com>
 */
 
+using System;
 using System.Collections.Generic;
 using System.IO;
 using L = Aura_OS.System.Translation;
@@ -17,6 +18,7 @@ namespace Aura_OS.System.Shell.cmdIntr.FileSystem
         /// </summary>
         public CommandRmdir(string[] commandvalues) : base(commandvalues, CommandType.Filesystem)
         {
+            Description = "to remove a directory";
         }
 
         /// <summary>
@@ -37,5 +39,13 @@ namespace Aura_OS.System.Shell.cmdIntr.FileSystem
             return new ReturnInfo(this, ReturnCode.OK);
         }
 
+        /// <summary>
+        /// Print /help information
+        /// </summary>
+        public override void PrintHelp()
+        {
+            Console.WriteLine("Usage:");
+            Console.WriteLine(" - rmdir {dir}");
+        }
     }
 }

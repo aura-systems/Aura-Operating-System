@@ -18,6 +18,7 @@ namespace Aura_OS.System.Shell.cmdIntr.FileSystem
         /// </summary>
         public CommandDir(string[] commandvalues) : base(commandvalues, CommandType.Filesystem)
         {
+            Description = "to list directories and files";
         }
 
         /// <summary>
@@ -72,6 +73,15 @@ namespace Aura_OS.System.Shell.cmdIntr.FileSystem
 
             Console.WriteLine();
             return new ReturnInfo(this, ReturnCode.OK);
+        }
+
+        /// <summary>
+        /// Print /help information
+        /// </summary>
+        public override void PrintHelp()
+        {
+            Console.WriteLine("Usage:");
+            Console.WriteLine(" - dir {directory}");
         }
     }
 }

@@ -17,6 +17,7 @@ namespace Aura_OS.System.Shell.cmdIntr.FileSystem
         /// </summary>
         public CommandCD(string[] commandvalues) : base(commandvalues, CommandType.Filesystem)
         {
+            Description = "to change current directory";
         }
 
         /// <summary>
@@ -65,6 +66,16 @@ namespace Aura_OS.System.Shell.cmdIntr.FileSystem
             {
                 return new ReturnInfo(this, ReturnCode.ERROR, ex.Message);
             }
+        }
+
+        /// <summary>
+        /// Print /help information
+        /// </summary>
+        public override void PrintHelp()
+        {
+            Console.WriteLine("Available commands:");
+            Console.WriteLine("- cd {directory}    change current directory");
+            Console.WriteLine("- cd ..             go to last directory");
         }
     }
 }

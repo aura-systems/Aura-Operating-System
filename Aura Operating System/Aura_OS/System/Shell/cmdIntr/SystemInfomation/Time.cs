@@ -16,6 +16,7 @@ namespace Aura_OS.System.Shell.cmdIntr.SystemInfomation
         /// </summary>
         public CommandTime(string[] commandvalues) : base(commandvalues)
         {
+            Description = "to get time and date";
         }
 
         /// <summary>

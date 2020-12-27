@@ -22,6 +22,7 @@ namespace Aura_OS.System.Shell.cmdIntr.Network
         /// </summary>
         public CommandPing(string[] commandvalues) : base(commandvalues, CommandType.Network)
         {
+            Description = "to send ping requests to an IP or domain name using ICMP";
         }
 
         /// <summary>
@@ -130,6 +131,16 @@ namespace Aura_OS.System.Shell.cmdIntr.Network
             Console.WriteLine("    Packets: Sent = " + PacketSent + ", Received = " + PacketReceived + ", Lost = " + PacketLost + " (" + PercentLoss + "% loss)");
 
             return new ReturnInfo(this, ReturnCode.OK);
+        }
+
+        /// <summary>
+        /// Print /help information
+        /// </summary>
+        public override void PrintHelp()
+        {
+            Console.WriteLine("Usage:");
+            Console.WriteLine(" - ping {ip}");
+            Console.WriteLine(" - ping {domain_name}");
         }
     }
 }
