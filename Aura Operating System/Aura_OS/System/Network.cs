@@ -12,30 +12,6 @@ namespace Aura_OS.System
 {
     class NetworkInit
     {
-        public static bool Enable(NetworkDevice device, Address ip, Address subnet)
-        {
-            if (device != null)
-            {
-                Config config = new Config(ip, subnet);
-                Network.NetworkStack.ConfigIP(device, config);
-                Kernel.debugger.Send(config.ToString());
-                return true;
-            }
-            return false;
-        }
-
-        public static bool Enable(NetworkDevice device, Address ip, Address subnet, Address gw)
-        {
-            if (device != null)
-            {
-                Config config = new Config(ip, subnet, gw);
-                Network.NetworkStack.ConfigIP(device, config);
-                Kernel.debugger.Send(config.ToString());
-                return true;
-            }
-            return false;
-        }
-
         public static bool Enable(NetworkDevice device, Address ip, Address subnet, Address gw, Address dns)
         {            
             if (device != null)
