@@ -131,9 +131,14 @@ namespace Aura_OS.System.Shell.cmdIntr.Network
                         return new ReturnInfo(this, ReturnCode.ERROR, "Couldn't find network device: " + arguments[1]);
                     }
 
-                    if (ip != null && subnet != null)
+                    if (ip != null && subnet != null && gw != null)
                     {
-                        NetworkInit.Enable(nic, ip, subnet, gw, gw);
+                        NetworkInit.Enable(nic, ip, subnet, gw);
+                        Console.WriteLine("Config OK!");
+                    }
+                    else if (ip != null && subnet != null)
+                    {
+                        NetworkInit.Enable(nic, ip, subnet);
                         Console.WriteLine("Config OK!");
                     }
                     else

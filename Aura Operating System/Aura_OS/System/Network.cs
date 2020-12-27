@@ -1,7 +1,7 @@
 ﻿/*
 * PROJECT:          Aura Operating System Development
 * CONTENT:          Init networking
-* PROGRAMMERS:      Valentin Charbonnier <valentinbreiz@gmail.com>
+* PROGRAMMERS:      Valentin Charbonnier <valentinbreiz@gmail.com>; Alexy DA CRUZ <dacruzalexy@gmail.com>
 */
 
 using Aura_OS.HAL.Drivers.Network;
@@ -12,6 +12,30 @@ namespace Aura_OS.System
 {
     class NetworkInit
     {
+        public static bool Enable(NetworkDevice device, Address ip, Address subnet)
+        {
+            if (device != null)
+            {
+                Config config = new Config(ip, subnet);
+                Network.NetworkStack.ConfigIP(device, config);
+                Kernel.debugger.Send(config.ToString());
+                return true;
+            }
+            return false;
+        }
+
+        public static bool Enable(NetworkDevice device, Address ip, Address subnet, Address gw)
+        {
+            if (device != null)
+            {
+                Config config = new Config(ip, subnet, gw);
+                Network.NetworkStack.ConfigIP(device, config);
+                Kernel.debugger.Send(config.ToString());
+                return true;
+            }
+            return false;
+        }
+
         public static bool Enable(NetworkDevice device, Address ip, Address subnet, Address gw, Address dns)
         {            
             if (device != null)
