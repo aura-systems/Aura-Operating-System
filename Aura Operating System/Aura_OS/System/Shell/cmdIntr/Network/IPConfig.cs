@@ -7,7 +7,7 @@
 
 using Aura_OS.HAL.Drivers.Network;
 using Aura_OS.System.Network;
-using Aura_OS.System.Network.DHCP;
+using Aura_OS.System.Network.IPV4.UDP.DHCP;
 using Aura_OS.System.Network.IPV4;
 using System;
 using System.Collections.Generic;
@@ -39,18 +39,27 @@ namespace Aura_OS.System.Shell.cmdIntr.Network
                 switch (device.CardType)
                 {
                     case HAL.Drivers.Network.CardType.Ethernet:
-                        Console.WriteLine("Ethernet Card : " + device.NameID + " - " + device.Name);
+                        Console.Write("Ethernet Card : " + device.NameID + " - " + device.Name);
                         break;
                     case HAL.Drivers.Network.CardType.Wireless:
-                        Console.WriteLine("Wireless Card : " + device.NameID + " - " + device.Name);
+                        Console.Write("Wireless Card : " + device.NameID + " - " + device.Name);
                         break;
                 }
+                if (NetworkConfig.CurrentConfig.Key == device)
+                {
+                    Console.WriteLine(" (current)");
+                }
+                else
+                {
+                    Console.WriteLine();
+                }
+               
                 Utils.Settings settings = new Utils.Settings(@"0:\System\" + device.Name + ".conf");
                 Console.WriteLine("MAC Address          : " + device.MACAddress.ToString());
                 Console.WriteLine("IP Address           : " + NetworkConfig.Get(device).IPAddress.ToString());
                 Console.WriteLine("Subnet mask          : " + NetworkConfig.Get(device).SubnetMask.ToString());
                 Console.WriteLine("Default Gateway      : " + NetworkConfig.Get(device).DefaultGateway.ToString());
-                Console.WriteLine("Preferred DNS server : " + settings.GetValue("dns01"));
+                Console.WriteLine("Preferred DNS server : " + NetworkConfig.Get(device).DefaultDNSServer.ToString());
             }
 
             return new ReturnInfo(this, ReturnCode.OK);
@@ -72,11 +81,11 @@ namespace Aura_OS.System.Shell.cmdIntr.Network
             }
             else if (arguments[0] == "/release")
             {
-                System.Network.DHCP.Core.SendReleasePacket();
+                DHCPClient.SendReleasePacket();
             }
             else if (arguments[0] == "/ask")
             {
-                System.Network.DHCP.Core.SendDiscoverPacket();
+                DHCPClient.SendDiscoverPacket();
             }
             else if (arguments[0] == "/listnic")
             {
@@ -124,7 +133,7 @@ namespace Aura_OS.System.Shell.cmdIntr.Network
 
                     if (ip != null && subnet != null)
                     {
-                        NetworkInit.Enable(nic, ip, subnet, gw);
+                        NetworkInit.Enable(nic, ip, subnet, gw, gw);
                         Console.WriteLine("Config OK!");
                     }
                     else

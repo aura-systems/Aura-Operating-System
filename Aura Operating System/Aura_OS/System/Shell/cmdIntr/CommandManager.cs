@@ -4,6 +4,7 @@
 * PROGRAMMER(S):    John Welsh <djlw78@gmail.com>
 */
 
+using Aura_OS.System.Network;
 using Aura_OS.System.Shell.cmdIntr.c_Console;
 using Aura_OS.System.Shell.cmdIntr.FileSystem;
 using Aura_OS.System.Shell.cmdIntr.Network;
@@ -38,6 +39,7 @@ namespace Aura_OS.System.Shell.cmdIntr
             CMDs.Add(new CommandClear(new string[] { "clear", "clr" }));
             CMDs.Add(new CommandPing(new string[] { "ping" }));
             CMDs.Add(new CommandUdp(new string[] { "udp" }));
+            CMDs.Add(new CommandDns(new string[] { "dns" }));
             CMDs.Add(new CommandVersion(new string[] { "version", "ver" }));
             CMDs.Add(new CommandSystemInfo(new string[] { "systeminfo", "sysinfo" }));
             CMDs.Add(new CommandTime(new string[] { "time", "date" }));
@@ -56,6 +58,7 @@ namespace Aura_OS.System.Shell.cmdIntr
             CMDs.Add(new CommandMkfil(new string[] { "touch", "mkfil", "mf" }));
             CMDs.Add(new CommandRmfil(new string[] { "rmfil", "rmf" }));
             CMDs.Add(new CommandKeyboardMap(new string[] { "setkeyboardmap", "setkeyboard" }));
+            CMDs.Add(new CommandHex(new string[] { "hex" }));
 
             CMDs.Add(new CommandAction(new string[] { "beep" }, () =>
             {
@@ -163,19 +166,6 @@ namespace Aura_OS.System.Shell.cmdIntr
                 Cosmos.System.PCSpeaker.Beep((uint)Cosmos.System.Notes.D6, 432);
                 Cosmos.System.PCSpeaker.Beep((uint)Cosmos.System.Notes.E6, 432);
             }));
-            CMDs.Add(new CommandAction(new string[] { "netrefresh" }, () =>
-            {
-                foreach (HAL.Drivers.Network.NetworkDevice networkDevice in HAL.Drivers.Network.NetworkDevice.Devices)
-                {
-                    File.Create(@"0:\System\" + networkDevice.Name + ".conf");
-                    Utils.Settings settings = new Utils.Settings(@"0:\System\" + networkDevice.Name + ".conf");
-                    settings.Edit("ipaddress", "0.0.0.0");
-                    settings.Edit("subnet", "0.0.0.0");
-                    settings.Edit("gateway", "0.0.0.0");
-                    settings.Edit("dns01", "0.0.0.0");
-                    settings.Push();
-                }
-            }));
         }
 
         /// <summary>
@@ -205,16 +195,18 @@ namespace Aura_OS.System.Shell.cmdIntr
             {
                 if (command.ContainsCommand(firstarg))
                 {
+                    ReturnInfo result = DoCheck(command);
 
-                    ReturnInfo result;
-
-                    if (arguments.Count == 0)
+                    if (result.Code == ReturnCode.OK)
                     {
-                        result = command.Execute();
-                    }
-                    else
-                    {
-                        result = command.Execute(arguments);
+                        if (arguments.Count == 0)
+                        {
+                            result = command.Execute();
+                        }
+                        else
+                        {
+                            result = command.Execute(arguments);
+                        }
                     }
 
                     if (result.Code == ReturnCode.ERROR_ARG)
@@ -241,125 +233,26 @@ namespace Aura_OS.System.Shell.cmdIntr
             Console.ForegroundColor = ConsoleColor.White;
 
             Console.WriteLine();
-
-            /*
-
-            #region FileSystem
-
-            else if (cmd.StartsWith("cd "))
-            {
-                FileSystem.CD.c_CD(cmd);
-            }
-            else if (cmd.Equals("cp"))
-            {
-                FileSystem.CP.c_CP_only();
-            }
-            else if (cmd.StartsWith("cp "))
-            {
-                FileSystem.CP.c_CP(cmd);
-            }
-            else if ((cmd.Equals("dir")) || (cmd.Equals("ls")))
-            {
-                FileSystem.Dir.c_Dir();
-            }
-            else if ((cmd.StartsWith("dir ")) || (cmd.StartsWith("ls ")))
-            {
-                FileSystem.Dir.c_Dir(cmd);
-            }
-            else if (cmd.Equals("mkdir"))
-            {
-                FileSystem.Mkdir.c_Mkdir();
-            }
-            else if (cmd.StartsWith("mkdir "))
-            {
-                FileSystem.Mkdir.c_Mkdir(cmd);
-            }
-            else if (cmd.StartsWith("rmdir "))
-            {
-                FileSystem.Rmdir.c_Rmdir(cmd);
-            }//TODO: orgainize
-            else if (cmd.StartsWith("rmfil "))
-            {
-                FileSystem.Rmfil.c_Rmfil(cmd);
-            }
-            else if (cmd.Equals("mkfil"))
-            {
-                FileSystem.Mkfil.c_mkfil();
-            }
-            else if (cmd.StartsWith("mkfil "))
-            {
-                FileSystem.Mkfil.c_mkfil(cmd);
-            }
-            else if (cmd.StartsWith("edit "))
-            {
-                FileSystem.Edit.c_Edit(cmd);
-            }
-            else if (cmd.Equals("vol"))
-            {
-                FileSystem.Vol.c_Vol();
-            }
-            else if (cmd.StartsWith("run "))
-            {
-                FileSystem.Run.c_Run(cmd);
-            }
-            else if (cmd.StartsWith("cat"))
-            {
-                FileSystem.Cat.c_Cat(cmd);
-            }
-
-            #endregion FileSystem
-
-            #region Settings
-
-            else if (cmd.Equals("logout"))
-            {
-                Settings.Logout.c_Logout();
-            }
-            else if (cmd.Equals("settings"))
-            {
-                Settings.Settings.c_Settings();
-            }
-            else if (cmd.StartsWith("settings "))
-            {
-                Settings.Settings.c_Settings(cmd);
-            }
-            else if (cmd.StartsWith("passwd "))
-            {
-                Settings.Passwd.c_Passwd(cmd);
-            }
-            else if (cmd.Equals("passwd"))
-            {
-                Settings.Passwd.c_Passwd(Kernel.userLogged);
-            }
-
-            #endregion Settings
-
-            #region Tools
-
-            else if (cmd.Equals("snake"))
-            {
-                Tools.Snake.c_Snake();
-            }
-            else if (cmd.StartsWith("md5"))
-            {
-                Tools.MD5.c_MD5(cmd);
-            }
-            else if (cmd.StartsWith("sha256"))
-            {
-                Tools.SHA256.c_SHA256(cmd);
-            }
-            else if (cmd.Equals("debug"))
-            {
-                Tools.Debug.c_Debug();
-            }
-            else if (cmd.StartsWith("debug "))
-            {
-                Tools.Debug.c_Debug(cmd);
-            }
-
-            #endregion
-            */
-
         }
+
+        private static ReturnInfo DoCheck(ICommand command)
+        {
+            if (command.Type == CommandType.Filesystem)
+            {
+                if (Kernel.ContainsVolumes() == false)
+                {
+                    return new ReturnInfo(command, ReturnCode.ERROR, "No volume detected!");
+                }
+            }
+            if (command.Type == CommandType.Network)
+            {
+                if (NetworkStack.ConfigEmpty())
+                {
+                    return new ReturnInfo(command, ReturnCode.ERROR, "No network configuration detected! Use ipconfig /set.");
+                }
+            }
+            return new ReturnInfo(command, ReturnCode.OK);
+        }
+
     }
 }

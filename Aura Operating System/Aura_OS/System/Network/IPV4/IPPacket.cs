@@ -9,6 +9,7 @@ using System;
 using Aura_OS.HAL;
 using Aura_OS.System.Network.ARP;
 using Aura_OS.System.Network.IPV4.UDP;
+using Aura_OS.System.Network.IPV4.UDP.DHCP;
 
 namespace Aura_OS.System.Network.IPV4
 {
@@ -58,7 +59,7 @@ namespace Aura_OS.System.Network.IPV4
             }
             else if (NetworkStack.MACMap.ContainsKey(ip_packet.DestinationMAC.Hash))
             {
-                DHCP.DHCPPacket.DHCPHandler(packetData);
+                DHCPPacket.DHCPHandler(packetData);
             }
         }
 

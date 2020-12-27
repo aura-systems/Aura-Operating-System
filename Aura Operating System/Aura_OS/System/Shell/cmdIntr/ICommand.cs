@@ -11,6 +11,17 @@ namespace Aura_OS.System.Shell.cmdIntr
 {
 
     /// <summary>
+    /// Enum of all command types;
+    /// </summary>
+    public enum CommandType
+    {
+        Filesystem,
+        Network,
+        Utils,
+        Unknown
+    }
+
+    /// <summary>
     /// Enum of all return codes that can be used by commands
     /// </summary>
     public enum ReturnCode
@@ -63,6 +74,11 @@ namespace Aura_OS.System.Shell.cmdIntr
     public class ICommand
     {
         /// <summary>
+        /// Command type
+        /// </summary>
+        public CommandType Type { get; set; }
+
+        /// <summary>
         /// Text values
         /// </summary>
         public string[] CommandValues;
@@ -70,9 +86,10 @@ namespace Aura_OS.System.Shell.cmdIntr
         /// <summary>
         /// Command constructor
         /// </summary>
-        public ICommand(string[] commandvalues)
+        public ICommand(string[] commandvalues, CommandType type = CommandType.Unknown)
         {
             CommandValues = commandvalues;
+            Type = type;
         }
 
         /// <summary>

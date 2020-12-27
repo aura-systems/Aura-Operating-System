@@ -459,6 +459,8 @@ namespace Aura_Plugs
 
             xConsole.CursorVisible = true;
 
+            GetConsole().UpdateCursor();
+
             while ((current = KeyboardManager.ReadKey()).Key != ConsoleKeyEx.Enter)
             {
                 if (current.Key == ConsoleKeyEx.NumEnter) break;
@@ -802,8 +804,7 @@ namespace Aura_Plugs
                 return;
             }
 
-            byte[] aTextEncoded = ConsoleOutputEncoding.GetBytes(aText);
-            GetConsole().Write(aTextEncoded);
+            GetConsole().Write(aText.ToCharArray());
         }
 
         public static void Write(uint aInt) => Write(aInt.ToString());

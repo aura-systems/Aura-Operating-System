@@ -16,7 +16,7 @@ namespace Aura_OS.System.Shell.cmdIntr.FileSystem
         /// <summary>
         /// Empty constructor.
         /// </summary>
-        public CommandMkdir(string[] commandvalues) : base(commandvalues)
+        public CommandMkdir(string[] commandvalues) : base(commandvalues, CommandType.Filesystem)
         {
         }
 

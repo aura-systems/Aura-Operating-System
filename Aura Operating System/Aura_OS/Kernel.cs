@@ -61,12 +61,14 @@ namespace Aura_OS
 
         public static bool ContainsVolumes()
         {
-            var vols = vFS.GetVolumes();
-            foreach (var vol in vols)
+            if (vFS.GetVolumes().Count == 0)
+            {
+                return false;
+            }
+            else
             {
                 return true;
             }
-            return false;
         }
 
         protected override void BeforeRun()
@@ -77,8 +79,8 @@ namespace Aura_OS
                 #region Console Encoding Provider
 
                 Encoding.RegisterProvider(CosmosEncodingProvider.Instance);
-                Console.InputEncoding = Encoding.GetEncoding(437);
-                Console.OutputEncoding = Encoding.GetEncoding(437);
+                Console.InputEncoding = Encoding.Unicode;
+                Console.OutputEncoding = Encoding.Unicode;
 
                 #endregion
 

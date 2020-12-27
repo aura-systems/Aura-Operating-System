@@ -12,6 +12,7 @@ using Aura_OS.System.Network;
 using Aura_OS.System;
 using System.Text;
 using System.Collections.Generic;
+using Aura_OS.System.Network.IPV4.UDP;
 
 namespace Aura_OS.System.Shell.cmdIntr.Network
 {
@@ -20,7 +21,7 @@ namespace Aura_OS.System.Shell.cmdIntr.Network
         /// <summary>
         /// Empty constructor.
         /// </summary>
-        public CommandUdp(string[] commandvalues) : base(commandvalues)
+        public CommandUdp(string[] commandvalues) : base(commandvalues, CommandType.Network)
         {
         }
 
@@ -30,10 +31,6 @@ namespace Aura_OS.System.Shell.cmdIntr.Network
         /// <param name="arguments">Arguments</param>
         public override ReturnInfo Execute(List<string> arguments)
         {
-            if (NetworkStack.ConfigEmpty())
-            {
-                return new ReturnInfo(this, ReturnCode.ERROR, "No network configuration detected! Use ipconfig /set.");
-            }
             if (arguments.Count == 0)
             {
                 return new ReturnInfo(this, ReturnCode.ERROR_ARG);
@@ -45,8 +42,19 @@ namespace Aura_OS.System.Shell.cmdIntr.Network
                     return new ReturnInfo(this, ReturnCode.ERROR_ARG);
                 }
                 int port = Int32.Parse(arguments[1]);
+
                 Console.WriteLine("Listening at " + port + "...");
-                new System.Network.IPV4.UDP.UdpClient(port);
+
+                var client = new UdpClient(port);
+
+                EndPoint RemoteIpEndPoint = new EndPoint(Address.Zero, 0);
+
+                byte[] received = client.Receive(ref RemoteIpEndPoint);
+
+                Console.WriteLine("Received UDP packet from " + RemoteIpEndPoint.address.ToString() + ": \"" + Encoding.ASCII.GetString(received) + "\"");
+
+                client.Close();
+
                 return new ReturnInfo(this, ReturnCode.OK);
             }
             else if (arguments[0] == "-s")
@@ -57,14 +65,17 @@ namespace Aura_OS.System.Shell.cmdIntr.Network
                 }
                 Address ip = Address.Parse(arguments[1]);
 
-                int port = Int32.Parse(arguments[2]);
+                int port = int.Parse(arguments[2]);
 
                 string message = arguments[3];
 
-                var xClient = new System.Network.IPV4.UDP.UdpClient(port);
+                var xClient = new UdpClient(port);
 
                 xClient.Connect(ip, port);
+
                 xClient.Send(Encoding.ASCII.GetBytes(message));
+                Console.WriteLine("Sent UDP packet to " + ip.ToString() + ":" + port);
+
                 xClient.Close();
                 return new ReturnInfo(this, ReturnCode.OK);
             }

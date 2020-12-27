@@ -232,6 +232,7 @@ namespace Aura_OS.System
             {
                 RegisterLanguage();
             }
+
             Kernel.SystemExists = false;
             Kernel.userLogged = "root";
             Kernel.Logged = true;
@@ -253,7 +254,12 @@ namespace Aura_OS.System
             //}
             WelcomeMessage.Display();
             Text.Display("logged", "root");
-            //Text.Display("nofilesystem");
+
+            if (Kernel.ContainsVolumes() == false)
+            {
+                Text.Display("nofilesystem");
+            }
+
             Console.WriteLine();
             Kernel.running = true;
         }

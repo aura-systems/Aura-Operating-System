@@ -15,10 +15,10 @@ namespace Aura_OS.System.AConsole.VGA
 
     public class VGAConsole : Console
     {
-        private const byte LineFeed = (byte)'\n';
-        private const byte CarriageReturn = (byte)'\r';
-        private const byte Tab = (byte)'\t';
-        private const byte Space = (byte)' ';
+        private const char LineFeed = '\n';
+        private const char CarriageReturn = '\r';
+        private const char Tab = '\t';
+        private const char Space = ' ';
 
         protected int mX = 0;
         public override int X
@@ -85,7 +85,7 @@ namespace Aura_OS.System.AConsole.VGA
         }
 
         //TODO: This is slow, batch it and only do it at end of updates
-        protected void UpdateCursor()
+        public override void UpdateCursor()
         {
             mText.SetCursorPos(mX, mY);
         }
@@ -118,9 +118,9 @@ namespace Aura_OS.System.AConsole.VGA
             Write(Space);
         }
 
-        public void Write(byte aChar)
+        public void Write(char aChar)
         {
-            mText[mX, mY] = aChar;
+            mText[mX, mY] = (byte)aChar;
             mX++;
             if (mX == mText.Cols)
             {
@@ -131,7 +131,7 @@ namespace Aura_OS.System.AConsole.VGA
 
         //TODO: Optimize this
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public override void Write(byte[] aText)
+        public override void Write(char[] aText)
         {
             if (aText == null)
             {

@@ -10,17 +10,17 @@ using System.IO;
 using L = Aura_OS.System.Translation;
 namespace Aura_OS.System.Shell.cmdIntr.FileSystem
 {
-    class CommandCat : ICommand
+    class CommandHex : ICommand
     {
         /// <summary>
         /// Empty constructor.
         /// </summary>
-        public CommandCat(string[] commandvalues) : base(commandvalues, CommandType.Filesystem)
+        public CommandHex(string[] commandvalues) : base(commandvalues, CommandType.Filesystem)
         {
         }
 
         /// <summary>
-        /// CommandMkdir
+        /// CommandHex
         /// </summary>
         public override ReturnInfo Execute(List<string> arguments)
         {
@@ -29,10 +29,9 @@ namespace Aura_OS.System.Shell.cmdIntr.FileSystem
                 string file = arguments[0];
                 if (File.Exists(Kernel.current_directory + file))
                 {
-                    foreach (string line in File.ReadAllLines(Kernel.current_directory + file))
-                    {
-                        Console.WriteLine(line);
-                    }
+                    Console.WriteLine("Offset(h)  00 01 02 03 04 05 06 07  08 09 0A 0B 0C 0D 0E 0F");
+                    Console.WriteLine();
+                    Console.WriteLine(Utils.Conversion.HexDump(File.ReadAllBytes(Kernel.current_directory + file)));
                 }
                 else
                 {
