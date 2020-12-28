@@ -4,6 +4,7 @@
 * PROGRAMMERS:      Valentin Charbonnier <valentinbreiz@gmail.com>
 */
 
+using Cosmos.HAL;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -37,9 +38,23 @@ namespace Aura_OS.System.Network.IPV4.UDP.DNS
             NetworkStack.Update();
         }
 
-        public Address Receive()
+        public Address Receive(int timeout = 5000)
         {
-            while (rxBuffer.Count < 1); //TODO: Make a timer with timeout value
+            int second = 0;
+            int _deltaT = 0;
+
+            while (rxBuffer.Count < 1)
+            {
+                if (second < (timeout / 1000))
+                {
+                    return null;
+                }
+                if (_deltaT != RTC.Second)
+                {
+                    second++;
+                    _deltaT = RTC.Second;
+                }
+            }
 
             DNSPacketAnswer packet = new DNSPacketAnswer(rxBuffer.Dequeue().RawData);
 
