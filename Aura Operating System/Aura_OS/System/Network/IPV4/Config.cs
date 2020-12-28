@@ -52,21 +52,21 @@ namespace Aura_OS.System.Network.IPV4
         {
             Address default_gw = null;
 
-            for (int c = 0; c < ipConfigs.Count; c++)
+            foreach (Config ipConfig in ipConfigs)
             {
-                if ((ipConfigs[c].IPAddress.Hash & ipConfigs[c].SubnetMask.Hash) ==
-                    (destIP.Hash & ipConfigs[c].SubnetMask.Hash))
+                if ((ipConfig.IPAddress.Hash & ipConfig.SubnetMask.Hash) ==
+                    (destIP.Hash & ipConfig.SubnetMask.Hash))
                 {
-                    return ipConfigs[c].IPAddress;
+                    return ipConfig.IPAddress;
                 }
-                if ((default_gw == null) && (ipConfigs[c].DefaultGateway.CompareTo(Address.Zero) != 0))
+                if ((default_gw == null) && (ipConfig.DefaultGateway.CompareTo(Address.Zero) != 0))
                 {
-                    default_gw = ipConfigs[c].IPAddress;
+                    default_gw = ipConfig.IPAddress;
                 }
 
                 if (!IsLocalAddress(destIP))
                 {
-                    return ipConfigs[c].IPAddress;
+                    return ipConfig.IPAddress;
                 }
             }
 
