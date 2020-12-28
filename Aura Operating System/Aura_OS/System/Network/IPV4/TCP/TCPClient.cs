@@ -129,9 +129,40 @@ namespace Aura_OS.System.Network.IPV4.TCP
         {
             Console.WriteLine("FLAG: SYN, New connection");
 
+            List<TCPOption> options = new List<TCPOption>();
+
+            var option = new TCPOption();
+            option.Kind = 2;
+            option.Length = 4;
+            option.Data = new byte[2] { 0x05, 0xb4 };
+            options.Add(option);
+
+            var option2 = new TCPOption();
+            option2.Kind = 1;
+            options.Add(option2);
+
+            var option3 = new TCPOption();
+            option3.Kind = 3;
+            option3.Length = 3;
+            option3.Data = new byte[1] { 0x08 };
+            options.Add(option3);
+
+            var option4 = new TCPOption();
+            option2.Kind = 1;
+            options.Add(option4);
+
+            var option5 = new TCPOption();
+            option2.Kind = 1;
+            options.Add(option5);
+
+            var option6 = new TCPOption();
+            option2.Kind = 4;
+            option2.Length = 2;
+            options.Add(option6);
+
             TCPacketSyn synpacket = new TCPacketSyn(packet.DestinationIP, packet.SourceIP, 
                 packet.DestinationPort, packet.SourcePort, 3455719727, packet.SequenceNumber + 1,
-                0x12, 1024);
+                0x12, 1024, options, 12);
 
             OutgoingBuffer.AddPacket(synpacket);
 

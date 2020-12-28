@@ -44,6 +44,8 @@ namespace Aura_OS.System.Network.IPV4.TCP
         public bool PSH;
         public bool RST;
 
+        protected ushort optionLen;
+
         internal static void TCPHandler(byte[] packetData)
         {
             TCPPacket packet = new TCPPacket(packetData);
@@ -78,6 +80,8 @@ namespace Aura_OS.System.Network.IPV4.TCP
             ushort WSValue, ushort UrgentPointer, ushort len)
             : base((ushort)(20 + len), 6, source, dest, 0x40)
         {
+            optionLen = len;
+
             //ports
             mRawData[this.dataOffset + 0] = (byte)((sourcePort >> 8) & 0xFF);
             mRawData[this.dataOffset + 1] = (byte)((srcPort >> 0) & 0xFF);
@@ -137,7 +141,8 @@ namespace Aura_OS.System.Network.IPV4.TCP
             PSH = (mRawData[47] & (1 << 3)) != 0;
             RST = (mRawData[47] & (1 << 2)) != 0;
 
-            if (mRawData[dataOffset + 20] != 0)
+            //options
+            /*if (mRawData[dataOffset + 20] != 0)
             {
                 options = new List<TCPOption>();
 
@@ -164,7 +169,7 @@ namespace Aura_OS.System.Network.IPV4.TCP
                         i += option.Length - 1;
                     }
                 }
-            }
+            }*/
         }
 
         internal ushort DestinationPort
@@ -202,11 +207,30 @@ namespace Aura_OS.System.Network.IPV4.TCP
 
         public TCPacketSyn(Address Source, Address Destination, ushort SourcePort,
             ushort DestinationPort, ulong SequenceNumber, ulong ACKNumber,
-            ushort Flags, ushort WSValue)
+            ushort Flags, ushort WSValue, List<TCPOption> options, ushort optionslen)
             : base(Source, Destination, SourcePort, DestinationPort, SequenceNumber,
-                  ACKNumber, 0x50, Flags, WSValue, 0x0000, 0)
+                  ACKNumber, 0x50, Flags, WSValue, 0x0000, optionslen)
         {
-            
+            int counter = 0;
+            foreach (var option in options)
+            {
+                mRawData[dataOffset + 20 + counter] = option.Kind;
+
+                if (option.Kind != 1) //NOP
+                {
+                    mRawData[dataOffset + 20 + counter + 1] = option.Length;
+
+                    if (option.Length != 2)
+                    {
+                        for (int j = 0; j < option.Length - 2; j++)
+                        {
+                            mRawData[dataOffset + 20 + counter + 2 + j] = option.Data[j];
+                        }
+                    }
+                }
+
+                counter += option.Length;
+            }
         }
 
         protected override void initFields()
