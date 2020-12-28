@@ -136,6 +136,35 @@ namespace Aura_OS.System.Network.IPV4.TCP
             FIN = (mRawData[47] & (1 << 0)) != 0;
             PSH = (mRawData[47] & (1 << 3)) != 0;
             RST = (mRawData[47] & (1 << 2)) != 0;
+
+            if (mRawData[dataOffset + 20] != 0)
+            {
+                options = new List<TCPOption>();
+
+                for (int i = 0; i < mRawData.Length - (dataOffset + 20); i++)
+                {
+                    TCPOption option = new TCPOption();
+                    option.Kind = mRawData[dataOffset + 20 + i];
+
+                    if (option.Kind != 1) //NOP
+                    {
+                        option.Length = mRawData[dataOffset + 20 + i + 1];
+
+                        if (option.Length != 2)
+                        {
+                            option.Data = new byte[option.Length - 2];
+                            for (int j = 0; j < option.Length - 2; j++)
+                            {
+                                option.Data[j] = mRawData[dataOffset + 20 + i + 2 + j];
+                            }
+                        }
+
+                        options.Add(option);
+
+                        i += option.Length - 1;
+                    }
+                }
+            }
         }
 
         internal ushort DestinationPort
