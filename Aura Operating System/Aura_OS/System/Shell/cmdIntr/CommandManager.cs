@@ -5,6 +5,8 @@
 */
 
 using Aura_OS.System.Network;
+using Aura_OS.System.Network.IPV4;
+using Aura_OS.System.Network.IPV4.TCP;
 using Aura_OS.System.Shell.cmdIntr.c_Console;
 using Aura_OS.System.Shell.cmdIntr.FileSystem;
 using Aura_OS.System.Shell.cmdIntr.Network;
@@ -167,6 +169,23 @@ namespace Aura_OS.System.Shell.cmdIntr
                 Cosmos.System.PCSpeaker.Beep((uint)Cosmos.System.Notes.F6, 432);
                 Cosmos.System.PCSpeaker.Beep((uint)Cosmos.System.Notes.D6, 432);
                 Cosmos.System.PCSpeaker.Beep((uint)Cosmos.System.Notes.E6, 432);
+            }));
+            CMDs.Add(new CommandAction(new string[] { "tcp" }, () =>
+            {
+                var xClient = new TcpClient(4242);
+
+                xClient.Connect(new Address(192, 168, 1, 31), 4242);
+
+                EndPoint RemoteIpEndPoint = new EndPoint(Address.Zero, 0);
+
+                xClient.Receive(ref RemoteIpEndPoint);
+
+                Console.WriteLine("Received TCP packet from " + RemoteIpEndPoint.address.ToString());
+
+                //xClient.Send(Encoding.ASCII.GetBytes("Hello from TCP!"));
+
+
+                xClient.Close();
             }));
         }
 

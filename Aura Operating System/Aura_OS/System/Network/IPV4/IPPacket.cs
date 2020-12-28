@@ -8,6 +8,7 @@
 using System;
 using Aura_OS.HAL;
 using Aura_OS.System.Network.ARP;
+using Aura_OS.System.Network.IPV4.TCP;
 using Aura_OS.System.Network.IPV4.UDP;
 using Aura_OS.System.Network.IPV4.UDP.DHCP;
 
@@ -49,9 +50,9 @@ namespace Aura_OS.System.Network.IPV4
                     case 1:
                         ICMPPacket.ICMPHandler(packetData);
                         break;
-                    /*case 6:
+                    case 6:
                         TCPPacket.TCPHandler(packetData);
-                        break;*/
+                        break;
                     case 17:
                         UDPPacket.UDPHandler(packetData);
                         break;
