@@ -13,6 +13,8 @@ namespace Aura_OS.System.Network.IPV4.TCP
 {
     public class TcpClient
     {
+        private TcpConnection tcpConnection;
+
         private static TempDictionary<TcpClient> clients;
 
         protected int localPort;
@@ -73,7 +75,14 @@ namespace Aura_OS.System.Network.IPV4.TCP
 
         public void receiveData(TCPPacket packet)
         {
-            rxBuffer.Enqueue(packet);
+            if (packet.SYN && !packet.ACK)
+            {
+                tcpConnection = new TcpConnection();
+                tcpConnection.SynPacket(packet);
+            }
+
+
+            //rxBuffer.Enqueue(packet);
         }
 
         public void Send(byte[] data)
@@ -107,5 +116,26 @@ namespace Aura_OS.System.Network.IPV4.TCP
             return null;
         }
 
+    }
+
+    class TcpConnection
+    {
+        public TcpConnection()
+        {
+
+        }
+
+        public void SynPacket(TCPPacket packet)
+        {
+            Console.WriteLine("FLAG: SYN, New connection");
+
+            TCPacketSyn synpacket = new TCPacketSyn(packet.DestinationIP, packet.SourceIP, 
+                packet.DestinationPort, packet.SourcePort, 3455719727, packet.SequenceNumber + 1,
+                0x12, 1024);
+
+            OutgoingBuffer.AddPacket(synpacket);
+
+            NetworkStack.Update();
+        }
     }
 }
