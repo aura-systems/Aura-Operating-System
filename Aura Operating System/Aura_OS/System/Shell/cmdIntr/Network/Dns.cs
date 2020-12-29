@@ -52,7 +52,7 @@ namespace Aura_OS.System.Shell.cmdIntr.Network
             }
             else if (arguments.Count == 1)
             {
-                xClient.Connect(NetworkConfig.CurrentConfig.Value.DefaultDNSServer);
+                xClient.Connect(DNSConfig.Server(0));
                 xClient.SendAsk(arguments[0]);
                 domainname = arguments[0];
             }
