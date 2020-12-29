@@ -70,7 +70,7 @@ namespace Aura_OS.System.Shell.cmdIntr.Network
 
             if (address == null)
             {
-                return new ReturnInfo(this, ReturnCode.ERROR, "Unable to get URL for " + arguments[0]);
+                return new ReturnInfo(this, ReturnCode.ERROR, "Unable to find " + arguments[0]);
             }
             else
             {
