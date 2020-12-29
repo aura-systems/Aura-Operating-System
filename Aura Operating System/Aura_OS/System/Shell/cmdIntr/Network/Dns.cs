@@ -65,6 +65,8 @@ namespace Aura_OS.System.Shell.cmdIntr.Network
 
             Address address = xClient.Receive();
 
+            xClient.Close();
+
             if (address == null)
             {
                 return new ReturnInfo(this, ReturnCode.ERROR, "Unable to get URL for " + arguments[0]);
@@ -73,8 +75,6 @@ namespace Aura_OS.System.Shell.cmdIntr.Network
             {
                 Console.WriteLine(domainname + " is " + address.ToString());
             }
-
-            xClient.Close();
 
             return new ReturnInfo(this, ReturnCode.OK);
         }

@@ -49,6 +49,7 @@ namespace Aura_OS.System.Shell.cmdIntr.Network
                 xClient.Connect(NetworkConfig.CurrentConfig.Value.DefaultDNSServer);
                 xClient.SendAsk(arguments[0]);
                 destination = xClient.Receive();
+                xClient.Close();
 
                 if (destination == null)
                 {
@@ -56,7 +57,6 @@ namespace Aura_OS.System.Shell.cmdIntr.Network
                 }
 
                 source = Config.FindNetwork(destination);
-                xClient.Close();
             }
 
             try
