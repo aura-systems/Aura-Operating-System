@@ -152,12 +152,12 @@ namespace Aura_OS.System.Shell.cmdIntr.Network
             {
                 if (arguments[1] == "add")
                 {
-                    Config.DNSNameservers.Add(Address.Parse(arguments[2]));
+                    DNSConfig.Add(Address.Parse(arguments[2]));
                     Console.WriteLine(arguments[2] + " has been added to nameservers.");
                 }
                 else if (arguments[1] == "remove")
                 {
-                    Config.DNSNameservers.Remove(Address.Parse(arguments[2]));
+                    DNSConfig.Remove(Address.Parse(arguments[2]));
                     Console.WriteLine(arguments[2] + " has been removed from nameservers list.");
                 }
                 else
