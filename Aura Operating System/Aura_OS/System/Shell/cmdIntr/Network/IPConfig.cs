@@ -60,7 +60,11 @@ namespace Aura_OS.System.Shell.cmdIntr.Network
                 Console.WriteLine("IP Address           : " + NetworkConfig.Get(device).IPAddress.ToString());
                 Console.WriteLine("Subnet mask          : " + NetworkConfig.Get(device).SubnetMask.ToString());
                 Console.WriteLine("Default Gateway      : " + NetworkConfig.Get(device).DefaultGateway.ToString());
-                Console.WriteLine("Preferred DNS server : " + NetworkConfig.Get(device).DefaultDNSServer.ToString());
+                Console.WriteLine("DNS Nameservers      : ");
+                foreach (Address dnsnameserver in DNSConfig.DNSNameservers)
+                {
+                    Console.WriteLine("                     : " + dnsnameserver.ToString());
+                }
             }
 
             return new ReturnInfo(this, ReturnCode.OK);
@@ -143,6 +147,23 @@ namespace Aura_OS.System.Shell.cmdIntr.Network
                 {
                     return new ReturnInfo(this, ReturnCode.ERROR, "Usage : ipconfig /set {device} {IPv4/CIDR} {Gateway|null}");
                 }
+            }
+            else if (arguments[0] == "/nameserver")
+            {
+                if (arguments[1] == "add")
+                {
+                    Config.DNSNameservers.Add(Address.Parse(arguments[2]));
+                    Console.WriteLine(arguments[2] + " has been added to nameservers.");
+                }
+                else if (arguments[1] == "remove")
+                {
+                    Config.DNSNameservers.Remove(Address.Parse(arguments[2]));
+                    Console.WriteLine(arguments[2] + " has been removed from nameservers list.");
+                }
+                else
+                {
+                    return new ReturnInfo(this, ReturnCode.ERROR, "Usage : ipconfig /nameserver {add|remove} {IP}");
+                }                
             }
             else
             {
