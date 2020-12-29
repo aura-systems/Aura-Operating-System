@@ -127,6 +127,7 @@ namespace Aura_OS.System.Network.IPV4.UDP.DHCP
                     settings.PushValues();
 
                     NetworkInit.Enable(networkDevice, packet.Client, packet.Subnet, packet.Server);
+                    DNSConfig.Add(packet.DNS);
 
                     if (message)
                     {
