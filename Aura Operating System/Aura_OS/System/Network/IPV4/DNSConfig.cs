@@ -10,17 +10,20 @@ namespace Aura_OS.System.Network.IPV4
 
         public static void Add(Address nameserver)
         {
-            if (!DNSNameservers.Contains(nameserver))
-            {
-                DNSNameservers.Add(nameserver);
-            }         
+            DNSNameservers.Add(nameserver);
         }
 
         public static void Remove(Address nameserver)
         {
-            if (DNSNameservers.Contains(nameserver))
+            int counter = 0;
+
+            foreach (var ns in DNSNameservers)
             {
-                DNSNameservers.Remove(nameserver);
+                if (ns == nameserver)
+                {
+                    DNSNameservers.RemoveAt(counter);
+                }
+                counter++;
             }
         }
 
