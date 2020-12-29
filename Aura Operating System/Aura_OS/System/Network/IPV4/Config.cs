@@ -133,21 +133,6 @@ namespace Aura_OS.System.Network.IPV4
             this.defaultGateway = gw;
         }
 
-        /// <summary>
-        /// Create a IPv4 Configuration
-        /// </summary>
-        /// <param name="ip">IP Address</param>
-        /// <param name="subnet">Subnet Mask</param>
-        /// <param name="dns">Default gateway</param>
-        /// /// <param name="gw">Default DNS server</param>
-        public Config(Address ip, Address subnet, Address gw, Address dns)
-        {
-            this.address = ip;
-            this.subnetMask = subnet;
-            this.defaultGateway = gw;
-            this.defaultDns = dns;
-        }
-
         public Address IPAddress
         {
             get { return this.address; }
