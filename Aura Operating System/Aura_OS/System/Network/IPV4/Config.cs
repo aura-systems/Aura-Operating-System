@@ -52,21 +52,21 @@ namespace Aura_OS.System.Network.IPV4
         {
             Address default_gw = null;
 
-            for (int c = 0; c < ipConfigs.Count; c++)
+            foreach (Config ipConfig in ipConfigs)
             {
-                if ((ipConfigs[c].IPAddress.Hash & ipConfigs[c].SubnetMask.Hash) ==
-                    (destIP.Hash & ipConfigs[c].SubnetMask.Hash))
+                if ((ipConfig.IPAddress.Hash & ipConfig.SubnetMask.Hash) ==
+                    (destIP.Hash & ipConfig.SubnetMask.Hash))
                 {
-                    return ipConfigs[c].IPAddress;
+                    return ipConfig.IPAddress;
                 }
-                if ((default_gw == null) && (ipConfigs[c].DefaultGateway.CompareTo(Address.Zero) != 0))
+                if ((default_gw == null) && (ipConfig.DefaultGateway.CompareTo(Address.Zero) != 0))
                 {
-                    default_gw = ipConfigs[c].IPAddress;
+                    default_gw = ipConfig.IPAddress;
                 }
 
                 if (!IsLocalAddress(destIP))
                 {
-                    return ipConfigs[c].IPAddress;
+                    return ipConfig.IPAddress;
                 }
             }
 
@@ -109,7 +109,6 @@ namespace Aura_OS.System.Network.IPV4
         protected Address address;
         protected Address defaultGateway;
         protected Address subnetMask;
-        protected Address defaultDns;
 
         /// <summary>
         /// Create a IPv4 Configuration with no default gateway
@@ -133,21 +132,6 @@ namespace Aura_OS.System.Network.IPV4
             this.defaultGateway = gw;
         }
 
-        /// <summary>
-        /// Create a IPv4 Configuration
-        /// </summary>
-        /// <param name="ip">IP Address</param>
-        /// <param name="subnet">Subnet Mask</param>
-        /// <param name="dns">Default gateway</param>
-        /// /// <param name="gw">Default DNS server</param>
-        public Config(Address ip, Address subnet, Address gw, Address dns)
-        {
-            this.address = ip;
-            this.subnetMask = subnet;
-            this.defaultGateway = gw;
-            this.defaultDns = dns;
-        }
-
         public Address IPAddress
         {
             get { return this.address; }
@@ -162,11 +146,6 @@ namespace Aura_OS.System.Network.IPV4
         {
             get { return this.defaultGateway; }
             set { this.defaultGateway = value; }
-        }
-        public Address DefaultDNSServer
-        {
-            get { return this.defaultDns; }
-            set { this.defaultDns = value; }
         }
 
         public override string ToString()

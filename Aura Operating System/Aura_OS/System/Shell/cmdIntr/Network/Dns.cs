@@ -52,7 +52,8 @@ namespace Aura_OS.System.Shell.cmdIntr.Network
             }
             else if (arguments.Count == 1)
             {
-                xClient.Connect(NetworkConfig.CurrentConfig.Value.DefaultDNSServer);
+                xClient.Connect(DNSConfig.Server(0));
+                Console.WriteLine("DNS used : " + DNSConfig.Server(0).ToString());
                 xClient.SendAsk(arguments[0]);
                 domainname = arguments[0];
             }
@@ -69,7 +70,7 @@ namespace Aura_OS.System.Shell.cmdIntr.Network
 
             if (address == null)
             {
-                return new ReturnInfo(this, ReturnCode.ERROR, "Unable to get URL for " + arguments[0]);
+                return new ReturnInfo(this, ReturnCode.ERROR, "Unable to find " + arguments[0]);
             }
             else
             {

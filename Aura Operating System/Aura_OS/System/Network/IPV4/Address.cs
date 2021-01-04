@@ -71,6 +71,19 @@ namespace Aura_OS.System.Network.IPV4
             }
         }
 
+        public static Address CIDRToAddress(int cidr)
+        {
+            try
+            {
+                uint mask = 0xffffffff << (32 - cidr);
+                return new Address((byte)(mask >> 24), (byte)(mask >> 16 & 0xff), (byte)(mask >> 8 & 0xff), (byte)(mask & 0xff));
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
         public bool IsLoopbackAddress()
         {
             if (address[0] == 127)

@@ -46,14 +46,14 @@ namespace Aura_OS.System.Shell.cmdIntr.Network
             else //Make a DNS request if it's not an IP
             {
                 var xClient = new DnsClient();
-                xClient.Connect(NetworkConfig.CurrentConfig.Value.DefaultDNSServer);
+                xClient.Connect(DNSConfig.Server(0));
                 xClient.SendAsk(arguments[0]);
                 destination = xClient.Receive();
                 xClient.Close();
 
                 if (destination == null)
                 {
-                    return new ReturnInfo(this, ReturnCode.ERROR, "Unable to get URL for " + arguments[0]);
+                    return new ReturnInfo(this, ReturnCode.ERROR, "Failed to get DNS response for " + arguments[0]);
                 }
 
                 source = Config.FindNetwork(destination);
