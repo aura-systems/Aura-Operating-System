@@ -53,7 +53,7 @@ namespace Aura_OS.System.Shell.cmdIntr.Network
 
                 if (destination == null)
                 {
-                    return new ReturnInfo(this, ReturnCode.ERROR, "Unable to get URL for " + arguments[0]);
+                    return new ReturnInfo(this, ReturnCode.ERROR, "Failed to get DNS response for " + arguments[0]);
                 }
 
                 source = Config.FindNetwork(destination);

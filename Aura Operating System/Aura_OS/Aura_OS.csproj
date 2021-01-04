@@ -30,6 +30,20 @@
     <VMware_EnableGDB>False</VMware_EnableGDB>
     <VMware_StartCosmosGDB>False</VMware_StartCosmosGDB>
     <VMware_ISOFile>bin\Debug\netcoreapp2.0\cosmos\Aura_OS.iso</VMware_ISOFile>
+    <ISO_StackCorruptionDetectionEnabled>True</ISO_StackCorruptionDetectionEnabled>
+    <ISO_StackCorruptionDetectionLevel>MethodFooters</ISO_StackCorruptionDetectionLevel>
+    <ISO_Description>Creates a bootable ISO image which can be burned to a DVD. After running the selected project, an explorer window will open containing the ISO file. The ISO file can then be burned to a CD or DVD and used to boot a physical or virtual system.</ISO_Description>
+    <ISO_Deployment>ISO</ISO_Deployment>
+    <ISO_Launch>None</ISO_Launch>
+    <ISO_DebugEnabled>False</ISO_DebugEnabled>
+    <ISO_DebugMode>Source</ISO_DebugMode>
+    <ISO_IgnoreDebugStubAttribute>False</ISO_IgnoreDebugStubAttribute>
+    <ISO_CosmosDebugPort>Serial: COM1</ISO_CosmosDebugPort>
+    <ISO_VisualStudioDebugPort>Pipe: Cosmos\Serial</ISO_VisualStudioDebugPort>
+    <ISO_PxeInterface>192.168.0.8</ISO_PxeInterface>
+    <ISO_EnableGDB>False</ISO_EnableGDB>
+    <ISO_StartCosmosGDB>False</ISO_StartCosmosGDB>
+    <ISO_ISOFile>bin\Debug\netcoreapp2.0\cosmos\Aura_OS.iso</ISO_ISOFile>
   </PropertyGroup>
   <Target Name="GetVersion">
     <WriteLinesToFile File="Properties\VersionInfo.cs" Lines="$(SomeThing)" Overwrite="true"></WriteLinesToFile>
@@ -54,9 +68,9 @@
     <StartCosmosGDB>False</StartCosmosGDB>
     <VisualStudioDebugPort>Pipe: Cosmos\Serial</VisualStudioDebugPort>
     <CosmosDebugPort>Serial: COM1</CosmosDebugPort>
-    <Launch>None</Launch>
-    <Profile>ISO</Profile>
-    <Description>Creates a bootable ISO image which can be burned to a DVD. After running the selected project, an explorer window will open containing the ISO file. The ISO file can then be burned to a CD or DVD and used to boot a physical or virtual system.</Description>
+    <Launch>VMware</Launch>
+    <Profile>VMware</Profile>
+    <Description>Use VMware Player or Workstation to deploy and debug.</Description>
     <PxeInterface>192.168.0.8</PxeInterface>
   </PropertyGroup>
 

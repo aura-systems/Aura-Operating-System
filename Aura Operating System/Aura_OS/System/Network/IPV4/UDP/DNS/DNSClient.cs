@@ -45,7 +45,7 @@ namespace Aura_OS.System.Network.IPV4.UDP.DNS
 
             while (rxBuffer.Count < 1)
             {
-                if (second < (timeout / 1000))
+                if (second > (timeout / 1000))
                 {
                     return null;
                 }
