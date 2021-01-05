@@ -1,6 +1,9 @@
 ﻿using Aura_OS.System.Network.IPV4;
 using System;
 using Aura_OS.HAL.Drivers.Network;
+using Aura_OS.System.Network.IPV4.UDP.DNS;
+using Aura_OS.System.Network.Config;
+using System.Collections.Generic;
 
 /*
 * PROJECT:          Aura Operating System Development
@@ -10,9 +13,14 @@ using Aura_OS.HAL.Drivers.Network;
 
 namespace Aura_OS.System.Network.IPV4.UDP.DHCP
 {
+
     class DHCPClient
     {
-        public static bool DHCPAsked = false;
+        public static DHCPClient currentClient;
+
+        protected Queue<DHCPPacket> rxBuffer;
+
+        protected bool asked = false;
 
         /// <summary>
         /// Get the IP address of the DHCP server
@@ -23,14 +31,73 @@ namespace Aura_OS.System.Network.IPV4.UDP.DHCP
             return NetworkConfig.Get(networkDevice).DefaultGateway;
         }
 
+        public DHCPClient()
+        {
+            rxBuffer = new Queue<DHCPPacket>(8);
+            currentClient = this;
+        }
+
+        public void Close()
+        {
+            currentClient = null;
+        }
+
+        public void receiveData(DHCPPacket packet)
+        {
+            rxBuffer.Enqueue(packet);
+        }
+
+        private int Receive(int timeout = 5000)
+        {
+            int second = 0;
+            int _deltaT = 0;
+
+            while (rxBuffer.Count < 1)
+            {
+                if (second > (timeout / 1000))
+                {
+                    return -1;
+                }
+                if (_deltaT != Cosmos.HAL.RTC.Second)
+                {
+                    second++;
+                    _deltaT = Cosmos.HAL.RTC.Second;
+                }
+            }
+
+            var packet = rxBuffer.Dequeue();
+
+            if (packet.MessageType == 2) //Boot Reply
+            {
+                if (packet.RawData[284] == 0x02) //Offer packet received
+                {
+                    SendRequestPacket(packet.Client, packet.Server);
+                }
+                else if (packet.RawData[284] == 0x05 || packet.RawData[284] == 0x06) //ACK or NAK DHCP packet received
+                {
+                    DHCPAck ack = new DHCPAck(packet.RawData);
+                    if (asked)
+                    {
+                        Apply(ack, true);
+                    }
+                    else
+                    {
+                        Apply(ack);
+                    }
+                }
+            }
+
+            return second;
+        }
+
         /// <summary>
         /// Send a packet to the DHCP server to make the address available again
         /// </summary>
-        public static void SendReleasePacket()
+        public void SendReleasePacket()
         {
             foreach (NetworkDevice networkDevice in NetworkDevice.Devices)
             {
-                Address source = Config.FindNetwork(DHCPServerAddress(networkDevice));
+                Address source = IPConfig.FindNetwork(DHCPServerAddress(networkDevice));
                 DHCPRelease dhcp_release = new DHCPRelease(source, DHCPServerAddress(networkDevice), networkDevice.MACAddress);
 
                 OutgoingBuffer.AddPacket(dhcp_release);
@@ -40,20 +107,21 @@ namespace Aura_OS.System.Network.IPV4.UDP.DHCP
 
                 NetworkInit.Enable(networkDevice, new Address(0, 0, 0, 0), new Address(0, 0, 0, 0), new Address(0, 0, 0, 0));
 
-                
+
                 //Utils.Settings settings = new Utils.Settings(@"0:\System\" + networkDevice.Name + ".conf");
                 //settings.EditValue("ipaddress", "0.0.0.0");
                 //settings.EditValue("subnet", "0.0.0.0");
                 //settings.EditValue("gateway", "0.0.0.0");
                 //settings.EditValue("dns01", "0.0.0.0");
                 //settings.PushValues();
-            }            
+            }
+            Close();
         }
 
         /// <summary>
         /// Send a packet to find the DHCP server and tell that we want a new IP address
         /// </summary>
-        public static void SendDiscoverPacket()
+        public void SendDiscoverPacket()
         {
             NetworkStack.RemoveAllConfigIP();
 
@@ -65,15 +133,16 @@ namespace Aura_OS.System.Network.IPV4.UDP.DHCP
                 OutgoingBuffer.AddPacket(dhcp_discover);
                 NetworkStack.Update();
 
-                DHCPAsked = true;
+                asked = true;
             }
+
+            Receive();
         }
 
-        
         /// <summary>
         /// Send a request to apply the new IP configuration
         /// </summary>
-        public static void SendRequestPacket(Address RequestedAddress, Address DHCPServerAddress)
+        private void SendRequestPacket(Address RequestedAddress, Address DHCPServerAddress)
         {
             foreach (NetworkDevice networkDevice in NetworkDevice.Devices)
             {
@@ -81,6 +150,7 @@ namespace Aura_OS.System.Network.IPV4.UDP.DHCP
                 OutgoingBuffer.AddPacket(dhcp_request);
                 NetworkStack.Update();
             }
+            Receive();
         }
 
         /*
@@ -92,7 +162,7 @@ namespace Aura_OS.System.Network.IPV4.UDP.DHCP
         /// <param name="Options">DHCPOption class using the packetData from the received dhcp packet.</param>
         /// <param name="message">Enable/Disable the displaying of messages about DHCP applying and conf. Disabled by default.
         /// </param>
-        public static void Apply(DHCPAck packet, bool message = false)
+        private void Apply(DHCPAck packet, bool message = false)
         {
             NetworkStack.RemoveAllConfigIP();
 
@@ -110,7 +180,6 @@ namespace Aura_OS.System.Network.IPV4.UDP.DHCP
                 {
                     if (message)
                     {
-                        Console.WriteLine();
                         CustomConsole.WriteLineInfo("[DHCP ACK][" + networkDevice.Name + "] Packet received, applying IP configuration...");
                         CustomConsole.WriteLineInfo("   IP Address  : " + packet.Client.ToString());
                         CustomConsole.WriteLineInfo("   Subnet mask : " + packet.Subnet.ToString());
@@ -132,13 +201,12 @@ namespace Aura_OS.System.Network.IPV4.UDP.DHCP
                     if (message)
                     {
                         CustomConsole.WriteLineOK("[DHCP CONFIG][" + networkDevice.Name + "] IP configuration applied.");
-                        Console.WriteLine();
-                        DHCPAsked = false;
+                        asked = false;
                     }
                 }
             }
 
-            Kernel.BeforeCommand();
+            Close();
         }
     }
 }

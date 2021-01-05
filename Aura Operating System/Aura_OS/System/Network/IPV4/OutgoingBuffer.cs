@@ -12,6 +12,7 @@ using Aura_OS.HAL;
 using Aura_OS.System.Network.ARP;
 using System;
 using Cosmos.Debug.Kernel;
+using Aura_OS.System.Network.Config;
 
 namespace Aura_OS.System.Network.IPV4
 {
@@ -58,7 +59,7 @@ namespace Aura_OS.System.Network.IPV4
         internal static void AddPacket(IPPacket packet)
         {
             ensureQueueExists();
-            NetworkDevice nic = Config.FindInterface(packet.SourceIP);
+            NetworkDevice nic = IPConfig.FindInterface(packet.SourceIP);
             packet.SourceMAC = nic.MACAddress;
             queue.Add(new BufferEntry(nic, packet));
         }
@@ -98,9 +99,9 @@ namespace Aura_OS.System.Network.IPV4
                     {
                         
                         //Need to figure how this is working
-                        if (Config.IsLocalAddress(entry.Packet.DestinationIP) == false)
+                        if (IPConfig.IsLocalAddress(entry.Packet.DestinationIP) == false)
                         {
-                            entry.nextHop = Config.FindRoute(entry.Packet.DestinationIP);
+                            entry.nextHop = IPConfig.FindRoute(entry.Packet.DestinationIP);
                             if (entry.nextHop == null)
                             {
                                 entry.Status = BufferEntry.EntryStatus.DONE;

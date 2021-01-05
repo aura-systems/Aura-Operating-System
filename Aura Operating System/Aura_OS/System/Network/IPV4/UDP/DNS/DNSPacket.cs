@@ -250,7 +250,7 @@ namespace Aura_OS.System.Network.IPV4.UDP.DNS
 
             if ((ushort)(DNSFlags & 0x0F) != (ushort)ReplyCode.OK)
             {
-                Console.WriteLine("DNS Packet response not OK. Passing packet.");
+                Kernel.debugger.Send("DNS Packet response not OK. Passing packet.");
                 return;
             }
 

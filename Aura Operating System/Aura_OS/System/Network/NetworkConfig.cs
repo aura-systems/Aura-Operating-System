@@ -8,6 +8,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Aura_OS.HAL.Drivers.Network;
+using Aura_OS.System.Network.Config;
 using Aura_OS.System.Network.IPV4;
 
 namespace Aura_OS.System.Network
@@ -15,10 +16,10 @@ namespace Aura_OS.System.Network
     public class NetworkConfig
     {
         public static List<NetworkDevice> Keys = new List<NetworkDevice>();
-        public static List<Config> Values = new List<Config>();
-        public static KeyValuePair<NetworkDevice, Config> CurrentConfig;
+        public static List<IPConfig> Values = new List<IPConfig>();
+        public static KeyValuePair<NetworkDevice, IPConfig> CurrentConfig;
 
-        public Config this[NetworkDevice key]
+        public IPConfig this[NetworkDevice key]
         {
             get
             {
@@ -50,7 +51,7 @@ namespace Aura_OS.System.Network
             return false;
         }
 
-        public static Config Get(NetworkDevice key)
+        public static IPConfig Get(NetworkDevice key)
         {
             int index = 0;
 
@@ -66,7 +67,7 @@ namespace Aura_OS.System.Network
             return Values[index];
         }
 
-        public static void Add(NetworkDevice key, Config value)
+        public static void Add(NetworkDevice key, IPConfig value)
         {
             Keys.Add(key);
             Values.Add(value);
@@ -77,12 +78,12 @@ namespace Aura_OS.System.Network
             return Keys.ToArray();
         }
 
-        public static Config[] GetValues()
+        public static IPConfig[] GetValues()
         {
             return Values.ToArray();
         }
 
-        public static NetworkDevice GetKeyByValue(Config value)
+        public static NetworkDevice GetKeyByValue(IPConfig value)
         {
             var x = Values.IndexOf(value);
             var x_ = Keys[x];
@@ -108,7 +109,7 @@ namespace Aura_OS.System.Network
         public static void Clear()
         {
             Keys = new List<NetworkDevice>();
-            Values = new List<Config>();
+            Values = new List<IPConfig>();
         }
 
         /// <summary>

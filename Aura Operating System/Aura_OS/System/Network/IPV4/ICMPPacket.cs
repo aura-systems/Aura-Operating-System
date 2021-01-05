@@ -9,12 +9,11 @@ using System;
 
 namespace Aura_OS.System.Network.IPV4
 {
-    internal class ICMPPacket : IPPacket
+    public class ICMPPacket : IPPacket
     {
         protected byte icmpType;
         protected byte icmpCode;
         protected UInt16 icmpCRC;
-        public static ICMPEchoReply recvd_reply;
 
         internal static void ICMPHandler(byte[] packetData)
         {
@@ -23,13 +22,15 @@ namespace Aura_OS.System.Network.IPV4
             switch (icmp_packet.ICMP_Type)
             {
                 case 0:
-                    recvd_reply = new ICMPEchoReply(packetData);
-                    Kernel.debugger.Send("Received ICMP Echo reply from " + recvd_reply.SourceIP.ToString());
+                    ICMPClient receiver = ICMPClient.Client(icmp_packet.SourceIP.Hash);
+                    if (receiver != null)
+                    {
+                        receiver.receiveData(icmp_packet);
+                    }
+                    Kernel.debugger.Send("Received ICMP Echo reply from " + icmp_packet.SourceIP.ToString());
                     break;
                 case 8:
                     ICMPEchoRequest request = new ICMPEchoRequest(packetData);
-                    Kernel.debugger.Send("Received " + request.ToString());
-
                     ICMPEchoReply reply = new ICMPEchoReply(request);
                     Kernel.debugger.Send("Sending ICMP Echo reply to " + reply.DestinationIP.ToString());
                     OutgoingBuffer.AddPacket(reply);

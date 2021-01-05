@@ -5,6 +5,7 @@
 */
 
 using Aura_OS.HAL.Drivers.Network;
+using Aura_OS.System.Network.Config;
 using Aura_OS.System.Network.IPV4;
 using System.Collections.Generic;
 
@@ -16,7 +17,7 @@ namespace Aura_OS.System
         {            
             if (device != null)
             {
-                Config config = new Config(ip, subnet, gw);
+                IPConfig config = new IPConfig(ip, subnet, gw);
                 Network.NetworkStack.ConfigIP(device, config);
                 Kernel.debugger.Send(config.ToString());
                 return true;
