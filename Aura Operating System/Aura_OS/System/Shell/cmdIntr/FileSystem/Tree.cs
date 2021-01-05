@@ -36,6 +36,22 @@ namespace Aura_OS.System.Shell.cmdIntr.FileSystem
             }
         }
 
+        /// <summary>
+        /// CommandTree
+        /// </summary>
+        public override ReturnInfo Execute(List<string> arguments)
+        {
+            try
+            {
+                DoTree(Kernel.current_directory + "/" + arguments[0], 0);
+                return new ReturnInfo(this, ReturnCode.OK);
+            }
+            catch (Exception ex)
+            {
+                return new ReturnInfo(this, ReturnCode.ERROR, ex.Message);
+            }
+        }
+
         private void DoTree(string directory, int depth)
         {
             var directories = Directory.GetDirectories(directory);
