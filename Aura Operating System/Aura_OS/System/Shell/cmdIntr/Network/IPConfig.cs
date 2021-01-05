@@ -158,7 +158,7 @@ namespace Aura_OS.System.Shell.cmdIntr.Network
                     DNSConfig.Add(Address.Parse(arguments[2]));
                     Console.WriteLine(arguments[2] + " has been added to nameservers.");
                 }
-                else if (arguments[1] == "rem")
+                else if (arguments[1] == "-rem")
                 {
                     DNSConfig.Remove(Address.Parse(arguments[2]));
                     Console.WriteLine(arguments[2] + " has been removed from nameservers list.");
