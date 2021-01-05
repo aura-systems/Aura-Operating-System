@@ -41,7 +41,16 @@ namespace Aura_OS.System.Shell.cmdIntr.FileSystem
             var directories = Directory.GetDirectories(directory);
             string dir;
 
-            
+            Console.ForegroundColor = ConsoleColor.Blue;
+            foreach (string file in Directory.GetFiles(directory))
+            {
+                for (int i = 0; i < depth; i++)
+                {
+                    Console.Write(" ");
+                }
+                Console.WriteLine(file);
+            }
+            Console.ForegroundColor = ConsoleColor.White;
 
             for (int j = 0; j < directories.Length; j++)
             {
