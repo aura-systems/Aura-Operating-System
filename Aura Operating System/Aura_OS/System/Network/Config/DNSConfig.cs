@@ -13,7 +13,7 @@ namespace Aura_OS.System.Network.Config
         {
             foreach (var ns in DNSNameservers)
             {
-                if (ns.address == nameserver.address)
+                if (ns.address.ToString() == nameserver.address.ToString())
                 {
                     return;
                 }
