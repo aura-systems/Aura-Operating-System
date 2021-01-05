@@ -75,9 +75,14 @@ namespace Aura_OS.System.Shell.cmdIntr.Network
 
                     var endpoint = new EndPoint(Address.Zero, 0);
 
-                    int second = xClient.Receive(ref endpoint); //wait 5sec
+                    int second = xClient.Receive(ref endpoint, 4000);
 
-                    if (second != -1)
+                    if (second == -1)
+                    {
+                        Console.WriteLine("Destination host unreachable.");
+                        PacketLost++;
+                    }
+                    else
                     {
                         if (second < 1)
                         {
@@ -89,12 +94,6 @@ namespace Aura_OS.System.Shell.cmdIntr.Network
                         }
 
                         PacketReceived++;
-                    }
-                    else if (second == -1 || second >= 5)
-                    {
-                        Console.WriteLine("Destination host unreachable.");
-                        PacketLost++;
-                        break;
                     }
                 }
 
