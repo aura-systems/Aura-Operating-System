@@ -64,7 +64,7 @@ namespace Aura_OS.System.Shell.cmdIntr.Network
                 Console.WriteLine("DNS Nameservers      : ");
                 foreach (Address dnsnameserver in DNSConfig.DNSNameservers)
                 {
-                    Console.WriteLine("                     : " + dnsnameserver.ToString());
+                    Console.WriteLine("                       " + dnsnameserver.ToString());
                 }
             }
 
