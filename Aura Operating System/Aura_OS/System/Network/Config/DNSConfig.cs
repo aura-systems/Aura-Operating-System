@@ -27,7 +27,7 @@ namespace Aura_OS.System.Network.Config
 
             foreach (var ns in DNSNameservers)
             {
-                if (ns == nameserver)
+                if (ns.address.ToString() == nameserver.address.ToString())
                 {
                     DNSNameservers.RemoveAt(counter);
                 }
