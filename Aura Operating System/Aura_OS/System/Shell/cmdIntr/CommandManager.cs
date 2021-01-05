@@ -65,6 +65,7 @@ namespace Aura_OS.System.Shell.cmdIntr
             CMDs.Add(new CommandMkfil(new string[] { "touch", "mkfil", "mf" }));
             CMDs.Add(new CommandRmfil(new string[] { "rmfil", "rmf" }));
             CMDs.Add(new CommandHex(new string[] { "hex" }));
+            CMDs.Add(new CommandTree(new string[] { "tree" }));
 
             CMDs.Add(new CommandAction(new string[] { "beep" }, () =>
             {
