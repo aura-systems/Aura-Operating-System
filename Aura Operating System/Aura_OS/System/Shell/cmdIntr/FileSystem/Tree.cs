@@ -27,7 +27,7 @@ namespace Aura_OS.System.Shell.cmdIntr.FileSystem
         {
             try
             {
-                DoTree(Kernel.current_directory, 4);
+                DoTree(Kernel.current_directory, 0);
                 return new ReturnInfo(this, ReturnCode.OK);
             }
             catch (Exception ex)
@@ -41,6 +41,8 @@ namespace Aura_OS.System.Shell.cmdIntr.FileSystem
             var directories = Directory.GetDirectories(directory);
             string dir;
 
+            
+
             for (int j = 0; j < directories.Length; j++)
             {
                 Console.ForegroundColor = ConsoleColor.Yellow;
@@ -49,26 +51,6 @@ namespace Aura_OS.System.Shell.cmdIntr.FileSystem
                     Console.Write(" ");
                 }
                 Console.WriteLine(directories[j]);
-                Console.ForegroundColor = ConsoleColor.Blue;
-
-                if (depth == 4)
-                {
-                    dir = directory;
-                }
-                else
-                {
-                    dir = directory + "/" + directories[j];
-                }
-
-                foreach (string file in Directory.GetFiles(dir))
-                {
-                    for (int i = 0; i < depth + 4; i++)
-                    {
-                        Console.Write(" ");
-                    }
-                    Console.WriteLine(file);
-                }
-                Console.ForegroundColor = ConsoleColor.White;
                 DoTree(directory + "/" + directories[j], depth + 4);
             }
         }
