@@ -1,8 +1,9 @@
-﻿using System;
+﻿using Aura_OS.System.Network.IPV4;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Aura_OS.System.Network.IPV4
+namespace Aura_OS.System.Network.Config
 {
     class DNSConfig
     {

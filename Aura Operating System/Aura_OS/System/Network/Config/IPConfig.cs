@@ -8,27 +8,28 @@
 
 using System.Collections.Generic;
 using System;
+using Aura_OS.System.Network.IPV4;
 
-namespace Aura_OS.System.Network.IPV4
+namespace Aura_OS.System.Network.Config
 {
     /// <summary>
     /// Contains a IPv4 configuration
     /// </summary>
-    public class Config
+    public class IPConfig
     {
-        internal static List<Config> ipConfigs;
+        internal static List<IPConfig> ipConfigs;
 
-        static Config()
+        static IPConfig()
         {
-            ipConfigs = new List<Config>();
+            ipConfigs = new List<IPConfig>();
         }
 
-        internal static void Add(Config config)
+        internal static void Add(IPConfig config)
         {
             ipConfigs.Add(config);
         }
 
-        internal static void Remove(Config config)
+        internal static void Remove(IPConfig config)
         {
             int counter = 0;
 
@@ -52,7 +53,7 @@ namespace Aura_OS.System.Network.IPV4
         {
             Address default_gw = null;
 
-            foreach (Config ipConfig in ipConfigs)
+            foreach (IPConfig ipConfig in ipConfigs)
             {
                 if ((ipConfig.IPAddress.Hash & ipConfig.SubnetMask.Hash) ==
                     (destIP.Hash & ipConfig.SubnetMask.Hash))
@@ -115,7 +116,7 @@ namespace Aura_OS.System.Network.IPV4
         /// </summary>
         /// <param name="ip">IP Address</param>
         /// <param name="subnet">Subnet Mask</param>
-        public Config(Address ip, Address subnet)
+        public IPConfig(Address ip, Address subnet)
             : this(ip, subnet, Address.Zero)
         { }
 
@@ -125,7 +126,7 @@ namespace Aura_OS.System.Network.IPV4
         /// <param name="ip">IP Address</param>
         /// <param name="subnet">Subnet Mask</param>
         /// <param name="gw">Default gateway</param>
-        public Config(Address ip, Address subnet, Address gw)
+        public IPConfig(Address ip, Address subnet, Address gw)
         {
             this.address = ip;
             this.subnetMask = subnet;

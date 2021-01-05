@@ -10,6 +10,7 @@ using Aura_OS.HAL.Drivers.Network;
 using Aura_OS.System.Network.ARP;
 using Aura_OS.System.Network.IPV4;
 using System.Collections.Generic;
+using Aura_OS.System.Network.Config;
 
 namespace Aura_OS.System.Network
 {
@@ -40,12 +41,12 @@ namespace Aura_OS.System.Network
             IPV4.UDP.UDPPacket.VMTInclude();
         }
 
-        private static void SetConfigIP(NetworkDevice nic, IPV4.Config config)
+        private static void SetConfigIP(NetworkDevice nic, IPConfig config)
         {
             NetworkConfig.Add(nic, config);
             AddressMap.Add(config.IPAddress.Hash, nic);
             MACMap.Add(nic.MACAddress.Hash, nic);
-            IPV4.Config.Add(config);
+            IPConfig.Add(config);
             nic.DataReceived = HandlePacket;
         }
 
@@ -54,9 +55,9 @@ namespace Aura_OS.System.Network
         /// <remarks>Multiple IP Configurations can be made, like *nix environments</remarks>
         /// </summary>
         /// <param name="nic"><see cref="NetworkDevice"/> that will have the assigned configuration</param>
-        /// <param name="config"><see cref="IPV4.Config"/> instance that defines the IP Address, Subnet
+        /// <param name="config"><see cref="IPV4.IPConfig"/> instance that defines the IP Address, Subnet
         /// Mask and Default Gateway for the device</param>
-        public static void ConfigIP(NetworkDevice nic, Config config)
+        public static void ConfigIP(NetworkDevice nic, IPConfig config)
         {
             if (NetworkConfig.ContainsKey(nic))
             {
@@ -67,7 +68,7 @@ namespace Aura_OS.System.Network
             {
                 SetConfigIP(nic, config);
             }
-            NetworkConfig.CurrentConfig = new KeyValuePair<NetworkDevice, Config>(nic, config);
+            NetworkConfig.CurrentConfig = new KeyValuePair<NetworkDevice, IPConfig>(nic, config);
         }
 
         public static bool ConfigEmpty()
@@ -92,16 +93,16 @@ namespace Aura_OS.System.Network
         {
             AddressMap.Clear();
             MACMap.Clear();
-            IPV4.Config.RemoveAll();
+            IPConfig.RemoveAll();
             NetworkConfig.Clear();
         }
 
         public static void RemoveIPConfig(NetworkDevice nic)
         {
-            IPV4.Config config = NetworkConfig.Get(nic);
+            IPConfig config = NetworkConfig.Get(nic);
             AddressMap.Remove(config.IPAddress.Hash);
             MACMap.Remove(nic.MACAddress.Hash);
-            IPV4.Config.Remove(config);
+            IPConfig.Remove(config);
             NetworkConfig.Remove(nic);
         }
 

@@ -1,6 +1,8 @@
 ﻿using Aura_OS.System.Network.IPV4;
 using System;
 using Aura_OS.HAL.Drivers.Network;
+using Aura_OS.System.Network.IPV4.UDP.DNS;
+using Aura_OS.System.Network.Config;
 
 /*
 * PROJECT:          Aura Operating System Development
@@ -30,7 +32,7 @@ namespace Aura_OS.System.Network.IPV4.UDP.DHCP
         {
             foreach (NetworkDevice networkDevice in NetworkDevice.Devices)
             {
-                Address source = Config.FindNetwork(DHCPServerAddress(networkDevice));
+                Address source = IPConfig.FindNetwork(DHCPServerAddress(networkDevice));
                 DHCPRelease dhcp_release = new DHCPRelease(source, DHCPServerAddress(networkDevice), networkDevice.MACAddress);
 
                 OutgoingBuffer.AddPacket(dhcp_release);

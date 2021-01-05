@@ -12,6 +12,7 @@ using Aura_OS.System.Network;
 using Aura_OS.System;
 using System.Collections.Generic;
 using Aura_OS.System.Network.IPV4.UDP.DNS;
+using Aura_OS.System.Network.Config;
 
 namespace Aura_OS.System.Shell.cmdIntr.Network
 {
@@ -41,7 +42,7 @@ namespace Aura_OS.System.Shell.cmdIntr.Network
 
             if (destination != null)
             {
-                source = Config.FindNetwork(destination);
+                source = IPConfig.FindNetwork(destination);
             }
             else //Make a DNS request if it's not an IP
             {
@@ -56,7 +57,7 @@ namespace Aura_OS.System.Shell.cmdIntr.Network
                     return new ReturnInfo(this, ReturnCode.ERROR, "Failed to get DNS response for " + arguments[0]);
                 }
 
-                source = Config.FindNetwork(destination);
+                source = IPConfig.FindNetwork(destination);
             }
 
             try

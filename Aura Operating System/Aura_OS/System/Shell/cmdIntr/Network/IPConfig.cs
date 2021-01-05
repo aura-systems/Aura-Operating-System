@@ -13,6 +13,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using L = Aura_OS.System.Translation;
+using Aura_OS.System.Network.Config;
 
 namespace Aura_OS.System.Shell.cmdIntr.Network
 {
