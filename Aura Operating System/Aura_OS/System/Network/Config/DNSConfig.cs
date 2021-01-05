@@ -1,8 +1,9 @@
-﻿using System;
+﻿using Aura_OS.System.Network.IPV4;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Aura_OS.System.Network.IPV4
+namespace Aura_OS.System.Network.Config
 {
     class DNSConfig
     {
@@ -10,6 +11,13 @@ namespace Aura_OS.System.Network.IPV4
 
         public static void Add(Address nameserver)
         {
+            foreach (var ns in DNSNameservers)
+            {
+                if (ns.address.ToString() == nameserver.address.ToString())
+                {
+                    return;
+                }
+            }
             DNSNameservers.Add(nameserver);
         }
 
@@ -19,7 +27,7 @@ namespace Aura_OS.System.Network.IPV4
 
             foreach (var ns in DNSNameservers)
             {
-                if (ns == nameserver)
+                if (ns.address.ToString() == nameserver.address.ToString())
                 {
                     DNSNameservers.RemoveAt(counter);
                 }

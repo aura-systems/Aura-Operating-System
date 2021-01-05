@@ -12,6 +12,7 @@ using Aura_OS.System.Network;
 using Aura_OS.System;
 using System.Collections.Generic;
 using Aura_OS.System.Network.IPV4.UDP.DNS;
+using Aura_OS.System.Network.Config;
 
 namespace Aura_OS.System.Shell.cmdIntr.Network
 {
@@ -41,7 +42,7 @@ namespace Aura_OS.System.Shell.cmdIntr.Network
 
             if (destination != null)
             {
-                source = Config.FindNetwork(destination);
+                source = IPConfig.FindNetwork(destination);
             }
             else //Make a DNS request if it's not an IP
             {
@@ -56,68 +57,47 @@ namespace Aura_OS.System.Shell.cmdIntr.Network
                     return new ReturnInfo(this, ReturnCode.ERROR, "Failed to get DNS response for " + arguments[0]);
                 }
 
-                source = Config.FindNetwork(destination);
+                source = IPConfig.FindNetwork(destination);
             }
 
             try
             {
-                int _deltaT = 0;
-                int second;
-
                 Console.WriteLine("Sending ping to " + destination.ToString());
+
+                var xClient = new ICMPClient();
+                xClient.Connect(destination);
 
                 for (int i = 0; i < 4; i++)
                 {
-                    second = 0;
-
-                    try
-                    {
-                        ICMPEchoRequest request = new ICMPEchoRequest(source, destination, 0x0001, 0x50); //this is working
-                        OutgoingBuffer.AddPacket(request); //Aura doesn't work when this is called.
-                        NetworkStack.Update();
-                    }
-                    catch (Exception ex)
-                    {
-                        return new ReturnInfo(this, ReturnCode.ERROR, ex.ToString());
-                    }
+                    xClient.SendEcho();
 
                     PacketSent++;
 
-                    while (true)
+                    var endpoint = new EndPoint(Address.Zero, 0);
+
+                    int second = xClient.Receive(ref endpoint, 4000);
+
+                    if (second == -1)
                     {
-
-                        if (ICMPPacket.recvd_reply != null)
+                        Console.WriteLine("Destination host unreachable.");
+                        PacketLost++;
+                    }
+                    else
+                    {
+                        if (second < 1)
                         {
-
-                            if (second < 1)
-                            {
-                                Console.WriteLine("Reply received from " + ICMPPacket.recvd_reply.SourceIP.ToString() + " time < 1s");
-                            }
-                            else if (second >= 1)
-                            {
-                                Console.WriteLine("Reply received from " + ICMPPacket.recvd_reply.SourceIP.ToString() + " time " + second + "s");
-                            }
-
-                            PacketReceived++;
-
-                            ICMPPacket.recvd_reply = null;
-                            break;
+                            Console.WriteLine("Reply received from " + endpoint.address.ToString() + " time < 1s");
+                        }
+                        else if (second >= 1)
+                        {
+                            Console.WriteLine("Reply received from " + endpoint.address.ToString() + " time " + second + "s");
                         }
 
-                        if (second >= 5)
-                        {
-                            Console.WriteLine("Destination host unreachable.");
-                            PacketLost++;
-                            break;
-                        }
-
-                        if (_deltaT != Cosmos.HAL.RTC.Second)
-                        {
-                            second++;
-                            _deltaT = Cosmos.HAL.RTC.Second;
-                        }
+                        PacketReceived++;
                     }
                 }
+
+                xClient.Close();
             }
             catch
             {

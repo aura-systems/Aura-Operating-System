@@ -36,26 +36,12 @@ namespace Aura_OS.System.Network.IPV4.UDP.DHCP
 
         public static void DHCPHandler(byte[] packetData)
         {
-            DHCPPacket packet = new DHCPPacket(packetData);
+            DHCPPacket dhcp_packet = new DHCPPacket(packetData);
 
-            if (packet.messageType == 2) //Boot Reply
+            DHCPClient receiver = DHCPClient.currentClient;
+            if (receiver != null)
             {
-                if (packet.RawData[284] == 0x02) //Offer packet received
-                {
-                    DHCPClient.SendRequestPacket(packet.yourClient, packet.nextServer);
-                }
-                else if (packet.RawData[284] == 0x05 || packet.RawData[284] == 0x06) //ACK or NAK DHCP packet received
-                {
-                    DHCPAck ack = new DHCPAck(packetData);
-                    if (DHCPClient.DHCPAsked)
-                    {
-                        DHCPClient.Apply(ack, true);
-                    }
-                    else
-                    {
-                        DHCPClient.Apply(ack);
-                    }
-                }
+                receiver.receiveData(dhcp_packet);
             }
         }
 

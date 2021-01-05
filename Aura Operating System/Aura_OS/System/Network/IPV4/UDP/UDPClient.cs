@@ -5,6 +5,7 @@
 *                   Port of Cosmos Code.
 */
 
+using Aura_OS.System.Network.Config;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -89,7 +90,7 @@ namespace Aura_OS.System.Network.IPV4.UDP
 
         public void Send(byte[] data, Address dest, int destPort)
         {
-            Address source = Config.FindNetwork(dest);
+            Address source = IPConfig.FindNetwork(dest);
             UDPPacket packet = new UDPPacket(source, dest, (ushort)localPort, (ushort)destPort, data);
             OutgoingBuffer.AddPacket(packet);
         }

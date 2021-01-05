@@ -4,6 +4,7 @@
 * PROGRAMMERS:      Valentin Charbonnier <valentinbreiz@gmail.com>
 */
 
+using Aura_OS.System.Network.Config;
 using Cosmos.HAL;
 using System;
 using System.Collections.Generic;
@@ -27,7 +28,7 @@ namespace Aura_OS.System.Network.IPV4.UDP.DNS
 
         public void SendAsk(string url)
         {
-            Address source = Config.FindNetwork(destination);
+            Address source = IPConfig.FindNetwork(destination);
 
             queryurl = url;
 
