@@ -77,13 +77,15 @@ namespace Aura_OS.System.Shell.cmdIntr.Network
         /// <param name="arguments">Arguments</param>
         public override ReturnInfo Execute(List<string> arguments)
         {
+            var xClient = new DHCPClient();
+
             if (arguments[0] == "/release")
             {
-                DHCPClient.SendReleasePacket();
+                xClient.SendReleasePacket();
             }
             else if (arguments[0] == "/ask")
             {
-                DHCPClient.SendDiscoverPacket();
+                xClient.SendDiscoverPacket();
             }
             else if (arguments[0] == "/listnic")
             {
