@@ -11,6 +11,13 @@ namespace Aura_OS.System.Network.Config
 
         public static void Add(Address nameserver)
         {
+            foreach (var ns in DNSNameservers)
+            {
+                if (ns.address == nameserver.address)
+                {
+                    return;
+                }
+            }
             DNSNameservers.Add(nameserver);
         }
 

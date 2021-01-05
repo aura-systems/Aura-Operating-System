@@ -115,6 +115,7 @@ namespace Aura_OS.System.Network.IPV4.UDP.DHCP
                 //settings.EditValue("dns01", "0.0.0.0");
                 //settings.PushValues();
             }
+            Close();
         }
 
         /// <summary>
@@ -179,7 +180,6 @@ namespace Aura_OS.System.Network.IPV4.UDP.DHCP
                 {
                     if (message)
                     {
-                        Console.WriteLine();
                         CustomConsole.WriteLineInfo("[DHCP ACK][" + networkDevice.Name + "] Packet received, applying IP configuration...");
                         CustomConsole.WriteLineInfo("   IP Address  : " + packet.Client.ToString());
                         CustomConsole.WriteLineInfo("   Subnet mask : " + packet.Subnet.ToString());
@@ -201,7 +201,6 @@ namespace Aura_OS.System.Network.IPV4.UDP.DHCP
                     if (message)
                     {
                         CustomConsole.WriteLineOK("[DHCP CONFIG][" + networkDevice.Name + "] IP configuration applied.");
-                        Console.WriteLine();
                         asked = false;
                     }
                 }

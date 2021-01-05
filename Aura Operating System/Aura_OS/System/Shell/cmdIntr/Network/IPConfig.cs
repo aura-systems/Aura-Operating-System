@@ -153,12 +153,12 @@ namespace Aura_OS.System.Shell.cmdIntr.Network
             }
             else if (arguments[0] == "/nameserver")
             {
-                if (arguments[1] == "add")
+                if (arguments[1] == "-add")
                 {
                     DNSConfig.Add(Address.Parse(arguments[2]));
                     Console.WriteLine(arguments[2] + " has been added to nameservers.");
                 }
-                else if (arguments[1] == "remove")
+                else if (arguments[1] == "rem")
                 {
                     DNSConfig.Remove(Address.Parse(arguments[2]));
                     Console.WriteLine(arguments[2] + " has been removed from nameservers list.");
@@ -181,12 +181,16 @@ namespace Aura_OS.System.Shell.cmdIntr.Network
         public override void PrintHelp()
         {
             Console.WriteLine("Available commands:");
-            Console.WriteLine("- ipconfig /listnic    List network devices");
-            Console.WriteLine("- ipconfig /set        Manually set an IP Address");
+            Console.WriteLine("- ipconfig /listnic      List network devices");
+            Console.WriteLine("- ipconfig /set          Manually set an IP Address");
             Console.WriteLine("     Usage:");
             Console.WriteLine("     - ipconfig /set {device} {IPv4} {Subnet} {Gateway}");
-            Console.WriteLine("- ipconfig /ask        Find the DHCP server and ask a new IP address");
-            Console.WriteLine("- ipconfig /release    Tell the DHCP server to make the IP address available");
+            Console.WriteLine("- ipconfig /ask          Find the DHCP server and ask a new IP address");
+            Console.WriteLine("- ipconfig /release      Tell the DHCP server to make the IP address available");
+            Console.WriteLine("- ipconfig /nameserver   Manually set an DNS server");
+            Console.WriteLine("     Usage:");
+            Console.WriteLine("     - ipconfig /nameserver {-add|-rem} {IPv4}");
+            Console.WriteLine("- ipconfig /release      Tell the DHCP server to make the IP address available");
         }
     }
 }
