@@ -56,6 +56,11 @@ namespace Aura_OS.System.Network
             //TCPPacket.VMTInclude();
         }
 
+        /// <summary>
+        /// Set ConfigIP for NetworkDevice
+        /// </summary>
+        /// <param name="nic">Network device.</param>
+        ///  /// <param name="config">IP Config</param>
         private static void SetConfigIP(NetworkDevice nic, IPConfig config)
         {
             NetworkConfig.Add(nic, config);
@@ -95,6 +100,10 @@ namespace Aura_OS.System.Network
             NetworkConfig.CurrentConfig = new KeyValuePair<NetworkDevice, IPConfig>(nic, config);
         }
 
+        /// <summary>
+        /// Check if Config is empty
+        /// <returns>bool value.</returns>
+        /// </summary>
         public static bool ConfigEmpty()
         {
             int counter = 0;
@@ -113,6 +122,9 @@ namespace Aura_OS.System.Network
             }
         }
 
+        /// <summary>
+        /// Remove All IPConfig
+        /// </summary>
         public static void RemoveAllConfigIP()
         {
             AddressMap.Clear();
@@ -121,6 +133,10 @@ namespace Aura_OS.System.Network
             NetworkConfig.Clear();
         }
 
+        /// <summary>
+        /// Remove IPConfig
+        /// </summary>
+        /// <param name="nic">Network device.</param>
         public static void RemoveIPConfig(NetworkDevice nic)
         {
             IPConfig config = NetworkConfig.Get(nic);
