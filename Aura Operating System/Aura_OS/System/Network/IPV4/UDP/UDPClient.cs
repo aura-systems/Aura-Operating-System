@@ -12,35 +12,73 @@ using System.Text;
 
 namespace Aura_OS.System.Network.IPv4.UDP
 {
+    /// <summary>
+    /// UdpClient class. Used to manage the UDP connection to a client.
+    /// </summary>
     public class UdpClient
     {
+        /// <summary>
+        /// Clients dictionary.
+        /// </summary>
         private static TempDictionary<UdpClient> clients;
 
-        protected int localPort;
-        protected int destinationPort;
+        /// <summary>
+        /// Local port.
+        /// </summary>
+        protected Int32 localPort;
+        /// <summary>
+        /// Destination address.
+        /// </summary>
+        protected IPv4.Address destination;
+        /// <summary>
+        /// Destination port.
+        /// </summary>
+        protected Int32 destinationPort;
 
-        protected Address destination;
-
+        /// <summary>
+        /// RX buffer queue.
+        /// </summary>
         protected Queue<UDPPacket> rxBuffer;
 
+        /// <summary>
+        /// Assign clients dictionary.
+        /// </summary>
+        /// <exception cref="ArgumentOutOfRangeException">Thrown on fatal error (contact support).</exception>
         static UdpClient()
         {
             clients = new TempDictionary<UdpClient>();
         }
 
-        internal static UdpClient Client(ushort destport)
+        /// <summary>
+        /// Get client.
+        /// </summary>
+        /// <param name="destPort">Destination port.</param>
+        /// <returns>UdpClient</returns>
+        internal static UdpClient Client(ushort destPort)
         {
-            if (clients.ContainsKey((uint)destport) == true)
+            if (clients.ContainsKey((uint)destPort) == true)
             {
-                return clients[(uint)destport];
+                return clients[(uint)destPort];
             }
 
             return null;
         }
 
-        public UdpClient() : this(0)
+        /// <summary>
+        /// Create new inctanse of the <see cref="UdpClient"/> class.
+        /// </summary>
+        /// <exception cref="ArgumentOutOfRangeException">Thrown on fatal error (contact support).</exception>
+        /// <exception cref="ArgumentException">Thrown if UdpClient with localPort 0 exists.</exception>
+        public UdpClient()
+            : this(0)
         { }
 
+        /// <summary>
+        /// Create new inctanse of the <see cref="UdpClient"/> class.
+        /// </summary>
+        /// <param name="localPort">Local port.</param>
+        /// <exception cref="ArgumentOutOfRangeException">Thrown on fatal error (contact support).</exception>
+        /// <exception cref="ArgumentException">Thrown if localPort already exists.</exception>
         public UdpClient(int localPort)
         {
             rxBuffer = new Queue<UDPPacket>(8);
@@ -52,31 +90,39 @@ namespace Aura_OS.System.Network.IPv4.UDP
             }
         }
 
-        public UdpClient(Address dest, int destPort) : this(0)
+        /// <summary>
+        /// Create new inctanse of the <see cref="UdpClient"/> class.
+        /// </summary>
+        /// <param name="dest">Destination address.</param>
+        /// <param name="destPort">Destination port.</param>
+        /// <exception cref="ArgumentOutOfRangeException">Thrown on fatal error (contact support).</exception>
+        /// <exception cref="ArgumentException">Thrown if UdpClient with localPort 0 exists.</exception>
+        public UdpClient(Address dest, int destPort)
+            : this(0)
         {
             destination = dest;
             destinationPort = destPort;
         }
 
+        /// <summary>
+        /// Connect to client.
+        /// </summary>
+        /// <param name="dest">Destination address.</param>
+        /// <param name="destPort">Destination port.</param>
         public void Connect(Address dest, int destPort)
         {
             destination = dest;
             destinationPort = destPort;
         }
 
-        public void Close()
-        {
-            if (clients.ContainsKey((uint)this.localPort) == true)
-            {
-                clients.Remove((uint)this.localPort);
-            }
-        }
-
-        public void receiveData(UDPPacket packet)
-        {
-            rxBuffer.Enqueue(packet);
-        }
-
+        /// <summary>
+        /// Send data to client.
+        /// </summary>
+        /// <param name="data">Data array to send.</param>
+        /// <exception cref="Exception">Thrown if destination is null or destinationPort is 0.</exception>
+        /// <exception cref="ArgumentException">Thrown on fatal error (contact support).</exception>
+        /// <exception cref="OverflowException">Thrown if data array length is greater than Int32.MaxValue.</exception>
+        /// <exception cref="Sys.IO.IOException">Thrown on IO error.</exception>
         public void Send(byte[] data)
         {
             if ((destination == null) || (destinationPort == 0))
@@ -88,6 +134,15 @@ namespace Aura_OS.System.Network.IPv4.UDP
             NetworkStack.Update();
         }
 
+        /// <summary>
+        /// Send data.
+        /// </summary>
+        /// <param name="data">Data array.</param>
+        /// <param name="dest">Destination address.</param>
+        /// <param name="destPort">Destination port.</param>
+        /// <exception cref="ArgumentException">Thrown on fatal error (contact support).</exception>
+        /// <exception cref="OverflowException">Thrown if data array length is greater than Int32.MaxValue.</exception>
+        /// <exception cref="Sys.IO.IOException">Thrown on IO error.</exception>
         public void Send(byte[] data, Address dest, int destPort)
         {
             Address source = IPConfig.FindNetwork(dest);
@@ -95,6 +150,24 @@ namespace Aura_OS.System.Network.IPv4.UDP
             OutgoingBuffer.AddPacket(packet);
         }
 
+        /// <summary>
+        /// Close connection.
+        /// </summary>
+        /// <exception cref="ArgumentOutOfRangeException">Thrown on fatal error (contact support).</exception>
+        public void Close()
+        {
+            if (clients.ContainsKey((uint)localPort) == true)
+            {
+                clients.Remove((uint)localPort);
+            }
+        }
+
+        /// <summary>
+        /// Receive data from end point.
+        /// </summary>
+        /// <param name="source">Source end point.</param>
+        /// <returns>byte array value.</returns>
+        /// <exception cref="InvalidOperationException">Thrown on fatal error (contact support).</exception>
         public byte[] NonBlockingReceive(ref EndPoint source)
         {
             if (rxBuffer.Count < 1)
@@ -109,6 +182,12 @@ namespace Aura_OS.System.Network.IPv4.UDP
             return packet.UDP_Data;
         }
 
+        /// <summary>
+        /// Receive data from end point.
+        /// </summary>
+        /// <param name="source">Source end point.</param>
+        /// <returns>byte array value.</returns>
+        /// <exception cref="InvalidOperationException">Thrown on fatal error (contact support).</exception>
         public byte[] Receive(ref EndPoint source)
         {
             while (rxBuffer.Count < 1) ;
@@ -120,5 +199,15 @@ namespace Aura_OS.System.Network.IPv4.UDP
             return packet.UDP_Data;
         }
 
+        /// <summary>
+        /// Receive data from packet.
+        /// </summary>
+        /// <param name="packet">Packet to receive.</param>
+        /// <exception cref="OverflowException">Thrown on fatal error (contact support).</exception>
+        /// <exception cref="Sys.IO.IOException">Thrown on IO error.</exception>
+        public void receiveData(UDPPacket packet)
+        {
+            rxBuffer.Enqueue(packet);
+        }
     }
 }
