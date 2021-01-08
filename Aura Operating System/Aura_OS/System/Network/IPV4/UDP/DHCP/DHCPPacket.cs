@@ -19,21 +19,35 @@ namespace Aura_OS.System.Network.IPv4.UDP.DHCP
     /// </summary>
     public class DHCPOption
     {
+        /// <summary>
+        /// DHCP Option Type
+        /// </summary>
         public byte Type { get; set; }
+
+        /// <summary>
+        /// DHCP Option Length
+        /// </summary>
         public byte Length { get; set; }
+
+        /// <summary>
+        /// DHCP Option Data
+        /// </summary>
         public byte[] Data { get; set; }
     }
 
+    /// <summary>
+    /// DHCPPacket class.
+    /// </summary>
     public class DHCPPacket : UDPPacket
     {
-
-        protected byte messageType;
-        protected Address yourClient;
-        protected Address nextServer;
-        protected List<DHCPOption> options = null;
-
         int xID;
 
+        /// <summary>
+        /// DHCP handler.
+        /// </summary>
+        /// <param name="packetData">Packet data.</param>
+        /// <exception cref="OverflowException">Thrown if UDP_Data array length is greater than Int32.MaxValue.</exception>
+        /// <exception cref="sysIO.IOException">Thrown on IO error.</exception>
         public static void DHCPHandler(byte[] packetData)
         {
             DHCPPacket dhcp_packet = new DHCPPacket(packetData);
@@ -53,45 +67,38 @@ namespace Aura_OS.System.Network.IPv4.UDP.DHCP
             new DHCPPacket();
         }
 
+        /// <summary>
+        /// Create new inctanse of the <see cref="DHCPPacket"/> class.
+        /// </summary>
         internal DHCPPacket() : base()
         { }
 
+        /// <summary>
+        /// Create new inctanse of the <see cref="DHCPPacket"/> class.
+        /// </summary>
+        /// <param name="rawData">Raw data.</param>
         internal DHCPPacket(byte[] rawData)
             : base(rawData)
         { }
 
-        protected override void initFields()
-        {
-            base.initFields();
-            messageType = RawData[42];
-            yourClient = new Address(RawData, 58);
-            nextServer = new Address(RawData, 62);
-
-            if (RawData[282] != 0)
-            {
-                options = new List<DHCPOption>();
-
-                for (int i = 0; i < RawData.Length - 282 && RawData[282 + i] != 0xFF; i += 2) //0xFF is DHCP packet end
-                {
-                    DHCPOption option = new DHCPOption();
-                    option.Type = RawData[282 + i];
-                    option.Length = RawData[282 + i + 1];
-                    option.Data = new byte[option.Length];
-                    for (int j = 0; j < option.Length; j++)
-                    {
-                        option.Data[j] = RawData[282 + i + j + 2];
-                    }
-                    options.Add(option);
-
-                    i += option.Length;
-                }
-            }    
-        }
-
+        /// <summary>
+        /// Create new inctanse of the <see cref="DHCPPacket"/> class.
+        /// </summary>
+        /// <param name="mac_src">Source MAC Address.</param>
+        /// <param name="dhcpDataSize">DHCP Data size</param>
         internal DHCPPacket(MACAddress mac_src, ushort dhcpDataSize)
             : this(Address.Zero, Address.Broadcast, mac_src, dhcpDataSize)
         { }
 
+        /// <summary>
+        /// Create new inctanse of the <see cref="DHCPPacket"/> class.
+        /// </summary>
+        /// <param name="client">Client IPv4 Address.</param>
+        /// <param name="server">Server IPv4 Address.</param>
+        /// <param name="mac_src">Source MAC Address.</param>
+        /// <param name="dhcpDataSize">DHCP Data size</param>
+        /// <exception cref="OverflowException">Thrown if data array length is greater than Int32.MaxValue.</exception>
+        /// <exception cref="ArgumentException">Thrown if RawData is invalid or null.</exception>
         internal DHCPPacket(Address client, Address server, MACAddress mac_src, ushort dhcpDataSize)
             : base(client, server, 68, 67, (ushort)(dhcpDataSize + 240), MACAddress.Broadcast)
         {
@@ -156,37 +163,83 @@ namespace Aura_OS.System.Network.IPv4.UDP.DHCP
             initFields();
         }
 
-        internal byte MessageType
+        /// <summary>
+        /// Init DHCPPacket fields.
+        /// </summary>
+        /// <exception cref="ArgumentException">Thrown if RawData is invalid or null.</exception>
+        protected override void initFields()
         {
-            get { return this.messageType; }
+            base.initFields();
+            MessageType = RawData[42];
+            Client = new Address(RawData, 58);
+            Server = new Address(RawData, 62);
+
+            if (RawData[282] != 0)
+            {
+                Options = new List<DHCPOption>();
+
+                for (int i = 0; i < RawData.Length - 282 && RawData[282 + i] != 0xFF; i += 2) //0xFF is DHCP packet end
+                {
+                    DHCPOption option = new DHCPOption();
+                    option.Type = RawData[282 + i];
+                    option.Length = RawData[282 + i + 1];
+                    option.Data = new byte[option.Length];
+                    for (int j = 0; j < option.Length; j++)
+                    {
+                        option.Data[j] = RawData[282 + i + j + 2];
+                    }
+                    Options.Add(option);
+
+                    i += option.Length;
+                }
+            }
         }
 
-        internal Address Client
-        {
-            get { return this.yourClient; }
-        }
+        /// <summary>
+        /// Get DHCP message type
+        /// </summary>
+        internal byte MessageType { get; private set; }
 
-        internal Address Server
-        {
-            get { return this.nextServer; }
-        }
+        /// <summary>
+        /// Get Client IPv4 Address
+        /// </summary>
+        internal Address Client { get; private set; }
 
-        internal List<DHCPOption> Options
-        {
-            get { return this.options; }
-        }
+        /// <summary>
+        /// Get DHCP Server IPv4 Address
+        /// </summary>
+        internal Address Server { get; private set; }
+
+        /// <summary>
+        /// Get DHCP Options
+        /// </summary>
+        internal List<DHCPOption> Options { get; private set; }
 
     }
 
+    /// <summary>
+    /// DHCPDiscover class.
+    /// </summary>
     internal class DHCPDiscover : DHCPPacket
     {
-
+        /// <summary>
+        /// Create new inctanse of the <see cref="DHCPDiscover"/> class.
+        /// </summary>
         internal DHCPDiscover() : base()
         { }
 
+        /// <summary>
+        /// Create new inctanse of the <see cref="DHCPDiscover"/> class.
+        /// </summary>
+        /// <param name="rawData">Raw data.</param>
         internal DHCPDiscover(byte[] rawData) : base(rawData)
         { }
 
+        /// <summary>
+        /// Create new inctanse of the <see cref="DHCPDiscover"/> class.
+        /// </summary>
+        /// <param name="mac_src">Source MAC Address.</param>
+        /// <exception cref="ArgumentException">Thrown if RawData is invalid or null.</exception>
         internal DHCPDiscover(MACAddress mac_src) : base(mac_src, 10) //discover packet size
         {
             //Discover
@@ -222,15 +275,33 @@ namespace Aura_OS.System.Network.IPv4.UDP.DHCP
 
     }
 
+    /// <summary>
+    /// DHCPRequest class.
+    /// </summary>
     internal class DHCPRequest : DHCPPacket
     {
 
+        /// <summary>
+        /// Create new inctanse of the <see cref="DHCPRequest"/> class.
+        /// </summary>
         internal DHCPRequest() : base()
         { }
 
+        /// <summary>
+        /// Create new inctanse of the <see cref="DHCPRequest"/> class.
+        /// </summary>
+        /// <param name="rawData">Raw data.</param>
         internal DHCPRequest(byte[] rawData) : base(rawData)
         { }
 
+        /// <summary>
+        /// Create new inctanse of the <see cref="DHCPRequest"/> class.
+        /// </summary>
+        /// <param name="mac_src">Source MAC Address.</param>
+        /// <param name="RequestedAddress">Requested Address.</param>
+        /// <param name="DHCPServerAddress">DHCP server IPv4 Address.</param>
+        /// <exception cref="OverflowException">Thrown if data array length is greater than Int32.MaxValue.</exception>
+        /// <exception cref="ArgumentException">Thrown if RawData is invalid or null.</exception>
         internal DHCPRequest(MACAddress mac_src, Address RequestedAddress, Address DHCPServerAddress) : base(mac_src, 22)
         {
             //Request
@@ -276,6 +347,10 @@ namespace Aura_OS.System.Network.IPv4.UDP.DHCP
             new DHCPRequest();
         }
 
+        /// <summary>
+        /// Init DHCPRequest fields.
+        /// </summary>
+        /// <exception cref="ArgumentException">Thrown if RawData is invalid or null.</exception>
         protected override void initFields()
         {
             base.initFields();
@@ -283,15 +358,21 @@ namespace Aura_OS.System.Network.IPv4.UDP.DHCP
 
     }
 
+    /// <summary>
+    /// DHCPAck class.
+    /// </summary>
     internal class DHCPAck : DHCPPacket
     {
-
-        protected Address subnetMask = null;
-        protected Address domainNameServer = null;
-
+        /// <summary>
+        /// Create new inctanse of the <see cref="DHCPAck"/> class.
+        /// </summary>
         internal DHCPAck() : base()
         { }
 
+        /// <summary>
+        /// Create new inctanse of the <see cref="DHCPAck"/> class.
+        /// </summary>
+        /// <param name="rawData">Raw data.</param>
         internal DHCPAck(byte[] rawData) : base(rawData)
         { }
 
@@ -303,6 +384,10 @@ namespace Aura_OS.System.Network.IPv4.UDP.DHCP
             new DHCPAck();
         }
 
+        /// <summary>
+        /// Init DHCPAck fields.
+        /// </summary>
+        /// <exception cref="ArgumentException">Thrown if RawData is invalid or null.</exception>
         protected override void initFields()
         {
             base.initFields();
@@ -311,36 +396,53 @@ namespace Aura_OS.System.Network.IPv4.UDP.DHCP
             {
                 if (option.Type == 1) //Mask
                 {
-                    subnetMask = new Address(option.Data, 0);
+                    Subnet = new Address(option.Data, 0);
                 }
                 else if (option.Type == 6) //DNS
                 {
-                    domainNameServer = new Address(option.Data, 0);
+                    DNS = new Address(option.Data, 0);
                 }
             }
         }
 
-        internal Address Subnet
-        {
-            get { return this.subnetMask; }
-        }
+        /// <summary>
+        /// Get Subnet IPv4 Address
+        /// </summary>
+        internal Address Subnet { get; private set; }
 
-        internal Address DNS
-        {
-            get { return this.domainNameServer; }
-        }
+        /// <summary>
+        /// Get DNS IPv4 Address
+        /// </summary>
+        internal Address DNS { get; private set; }
 
     }
 
+    /// <summary>
+    /// DHCPRelease class.
+    /// </summary>
     internal class DHCPRelease : DHCPPacket
     {
-
+        /// <summary>
+        /// Create new inctanse of the <see cref="DHCPRelease"/> class.
+        /// </summary>
         internal DHCPRelease() : base()
         { }
 
+        /// <summary>
+        /// Create new inctanse of the <see cref="DHCPRelease"/> class.
+        /// </summary>
+        /// <param name="rawData">Raw data.</param>
         internal DHCPRelease(byte[] rawData) : base(rawData)
         { }
 
+        /// <summary>
+        /// Create new inctanse of the <see cref="DHCPRelease"/> class.
+        /// </summary>
+        /// <param name="client">Client IPv4 Address.</param>
+        /// <param name="server">DHCP Server IPv4 Address.</param>
+        /// <param name="source">Source MAC Address.</param>
+        /// <exception cref="OverflowException">Thrown if data array length is greater than Int32.MaxValue.</exception>
+        /// <exception cref="ArgumentException">Thrown if RawData is invalid or null.</exception>
         internal DHCPRelease(Address client, Address server, MACAddress source) : base(client, server, source, 19)
         {
             //Release
@@ -380,6 +482,10 @@ namespace Aura_OS.System.Network.IPv4.UDP.DHCP
             new DHCPRelease();
         }
 
+        /// <summary>
+        /// Init DHCPRelease fields.
+        /// </summary>
+        /// <exception cref="ArgumentException">Thrown if RawData is invalid or null.</exception>
         protected override void initFields()
         {
             base.initFields();

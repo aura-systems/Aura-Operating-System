@@ -116,6 +116,18 @@ namespace Aura_OS.System.Network.IPv4.UDP
         }
 
         /// <summary>
+        /// Close connection.
+        /// </summary>
+        /// <exception cref="ArgumentOutOfRangeException">Thrown on fatal error (contact support).</exception>
+        public void Close()
+        {
+            if (clients.ContainsKey((uint)localPort) == true)
+            {
+                clients.Remove((uint)localPort);
+            }
+        }
+
+        /// <summary>
         /// Send data to client.
         /// </summary>
         /// <param name="data">Data array to send.</param>
@@ -148,18 +160,6 @@ namespace Aura_OS.System.Network.IPv4.UDP
             Address source = IPConfig.FindNetwork(dest);
             UDPPacket packet = new UDPPacket(source, dest, (ushort)localPort, (ushort)destPort, data);
             OutgoingBuffer.AddPacket(packet);
-        }
-
-        /// <summary>
-        /// Close connection.
-        /// </summary>
-        /// <exception cref="ArgumentOutOfRangeException">Thrown on fatal error (contact support).</exception>
-        public void Close()
-        {
-            if (clients.ContainsKey((uint)localPort) == true)
-            {
-                clients.Remove((uint)localPort);
-            }
         }
 
         /// <summary>

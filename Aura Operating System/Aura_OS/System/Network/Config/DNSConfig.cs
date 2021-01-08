@@ -5,10 +5,20 @@ using System.Text;
 
 namespace Aura_OS.System.Network.Config
 {
+    /// <summary>
+    /// Contains DNS configuration
+    /// </summary>
     class DNSConfig
     {
+        /// <summary>
+        /// DNS Addresses list.
+        /// </summary>
         public static List<Address> DNSNameservers = new List<Address>();
 
+        /// <summary>
+        /// Add IPv4 configuration.
+        /// </summary>
+        /// <param name="config"></param>
         public static void Add(Address nameserver)
         {
             foreach (var ns in DNSNameservers)
@@ -21,6 +31,10 @@ namespace Aura_OS.System.Network.Config
             DNSNameservers.Add(nameserver);
         }
 
+        /// <summary>
+        /// Remove IPv4 configuration.
+        /// </summary>
+        /// <param name="config"></param>
         public static void Remove(Address nameserver)
         {
             int counter = 0;
