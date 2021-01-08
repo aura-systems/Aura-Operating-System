@@ -58,7 +58,7 @@ namespace Aura_OS.System.Network.ARP
                     Kernel.debugger.Send("ARP Reply Recvd from " + arp_reply.SenderIP.ToString());
                     ARPCache.Update(arp_reply.SenderIP, arp_reply.SenderMAC);
 
-                    IPV4.OutgoingBuffer.ARPCache_Update(arp_reply);
+                    IPv4.OutgoingBuffer.ARPCache_Update(arp_reply);
                 }
             }
         }

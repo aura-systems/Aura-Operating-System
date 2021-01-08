@@ -1,7 +1,7 @@
-﻿using Aura_OS.System.Network.IPV4;
+﻿using Aura_OS.System.Network.IPv4;
 using System;
 using Aura_OS.HAL.Drivers.Network;
-using Aura_OS.System.Network.IPV4.UDP.DNS;
+using Aura_OS.System.Network.IPv4.UDP.DNS;
 using Aura_OS.System.Network.Config;
 using System.Collections.Generic;
 
@@ -11,7 +11,7 @@ using System.Collections.Generic;
 * PROGRAMMER(S):    Alexy DA CRUZ <dacruzalexy@gmail.com>
 */
 
-namespace Aura_OS.System.Network.IPV4.UDP.DHCP
+namespace Aura_OS.System.Network.IPv4.UDP.DHCP
 {
 
     class DHCPClient

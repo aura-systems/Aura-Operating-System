@@ -14,7 +14,7 @@ using System;
 using Cosmos.Debug.Kernel;
 using Aura_OS.System.Network.Config;
 
-namespace Aura_OS.System.Network.IPV4
+namespace Aura_OS.System.Network.IPv4
 {
     /// <summary>
     /// OutgoingBuffer class.

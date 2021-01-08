@@ -11,7 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Aura_OS.System.Network.IPV4
+namespace Aura_OS.System.Network.IPv4
 {
     public class ICMPClient
     {

@@ -10,7 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Aura_OS.System.Network.IPV4.UDP
+namespace Aura_OS.System.Network.IPv4.UDP
 {
     public class UdpClient
     {

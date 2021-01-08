@@ -8,7 +8,7 @@
 
 using System.Collections.Generic;
 using System;
-using Aura_OS.System.Network.IPV4;
+using Aura_OS.System.Network.IPv4;
 using Aura_OS.HAL.Drivers.Network;
 
 namespace Aura_OS.System.Network.Config

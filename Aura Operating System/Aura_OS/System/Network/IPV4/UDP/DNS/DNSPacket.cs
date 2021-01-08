@@ -8,7 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Aura_OS.System.Network.IPV4.UDP.DNS
+namespace Aura_OS.System.Network.IPv4.UDP.DNS
 {
 
     /// <summary>

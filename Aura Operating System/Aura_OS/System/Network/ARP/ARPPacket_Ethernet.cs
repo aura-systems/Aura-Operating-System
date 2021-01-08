@@ -8,7 +8,7 @@
 using System;
 using Aura_OS.HAL;
 using Aura_OS.System.Network.ARP;
-using Aura_OS.System.Network.IPV4;
+using Aura_OS.System.Network.IPv4;
 using Sys = System;
 
 namespace Aura_OS.System.Network

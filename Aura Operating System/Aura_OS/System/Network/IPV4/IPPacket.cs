@@ -8,10 +8,10 @@
 using System;
 using Aura_OS.HAL;
 using Aura_OS.System.Network.ARP;
-using Aura_OS.System.Network.IPV4.UDP;
-using Aura_OS.System.Network.IPV4.UDP.DHCP;
+using Aura_OS.System.Network.IPv4.UDP;
+using Aura_OS.System.Network.IPv4.UDP.DHCP;
 
-namespace Aura_OS.System.Network.IPV4
+namespace Aura_OS.System.Network.IPv4
 {
     /// <summary>
     /// IPPacket class. See also: <seealso cref="EthernetPacket"/>.

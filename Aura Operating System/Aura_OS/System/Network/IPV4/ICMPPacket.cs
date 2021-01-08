@@ -7,7 +7,7 @@
 
 using System;
 
-namespace Aura_OS.System.Network.IPV4
+namespace Aura_OS.System.Network.IPv4
 {
     public class ICMPPacket : IPPacket
     {

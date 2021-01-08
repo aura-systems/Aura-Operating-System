@@ -9,7 +9,7 @@ using Aura_OS.HAL;
 using System;
 using System.Text;
 
-namespace Aura_OS.System.Network.IPV4.UDP
+namespace Aura_OS.System.Network.IPv4.UDP
 {
     public class UDPPacket : IPPacket
     {
