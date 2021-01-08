@@ -24,10 +24,6 @@ namespace Aura_OS.System.Network
         /// Destination MAC address.
         /// </summary>
         protected MACAddress destMAC;
-        /// <summary>
-        /// Raw packet data
-        /// </summary>
-        protected byte[] mRawData;
 
         /// <summary>
         /// Create new inctanse of the <see cref="EthernetPacket"/> class.

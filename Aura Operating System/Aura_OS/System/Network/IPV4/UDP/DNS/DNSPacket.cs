@@ -90,23 +90,23 @@ namespace Aura_OS.System.Network.IPV4.UDP.DNS
         {
             Random rnd = new Random();
             byte transactionID = (byte)rnd.Next(0, Int32.MaxValue);
-            mRawData[this.dataOffset + 8] = (byte)((transactionID >> 8) & 0xFF);
-            mRawData[this.dataOffset + 9] = (byte)((transactionID >> 0) & 0xFF);
+            RawData[this.dataOffset + 8] = (byte)((transactionID >> 8) & 0xFF);
+            RawData[this.dataOffset + 9] = (byte)((transactionID >> 0) & 0xFF);
 
-            mRawData[this.dataOffset + 10] = (byte)((0x0100 >> 8) & 0xFF);
-            mRawData[this.dataOffset + 11] = (byte)((0x0100 >> 0) & 0xFF);
+            RawData[this.dataOffset + 10] = (byte)((0x0100 >> 8) & 0xFF);
+            RawData[this.dataOffset + 11] = (byte)((0x0100 >> 0) & 0xFF);
 
-            mRawData[this.dataOffset + 12] = (byte)((urlnb >> 8) & 0xFF);
-            mRawData[this.dataOffset + 13] = (byte)((urlnb >> 0) & 0xFF);
+            RawData[this.dataOffset + 12] = (byte)((urlnb >> 8) & 0xFF);
+            RawData[this.dataOffset + 13] = (byte)((urlnb >> 0) & 0xFF);
 
-            mRawData[this.dataOffset + 14] = (byte)((0 >> 8) & 0xFF);
-            mRawData[this.dataOffset + 15] = (byte)((0 >> 0) & 0xFF);
+            RawData[this.dataOffset + 14] = (byte)((0 >> 8) & 0xFF);
+            RawData[this.dataOffset + 15] = (byte)((0 >> 0) & 0xFF);
 
-            mRawData[this.dataOffset + 16] = (byte)((0 >> 8) & 0xFF);
-            mRawData[this.dataOffset + 17] = (byte)((0 >> 0) & 0xFF);
+            RawData[this.dataOffset + 16] = (byte)((0 >> 8) & 0xFF);
+            RawData[this.dataOffset + 17] = (byte)((0 >> 0) & 0xFF);
 
-            mRawData[this.dataOffset + 18] = (byte)((0 >> 8) & 0xFF);
-            mRawData[this.dataOffset + 19] = (byte)((0 >> 0) & 0xFF);
+            RawData[this.dataOffset + 18] = (byte)((0 >> 8) & 0xFF);
+            RawData[this.dataOffset + 19] = (byte)((0 >> 0) & 0xFF);
 
             initFields();
         }
@@ -114,25 +114,25 @@ namespace Aura_OS.System.Network.IPV4.UDP.DNS
         protected override void initFields()
         {
             base.initFields();
-            transactionID = (UInt16)((mRawData[this.dataOffset + 8] << 8) | mRawData[this.dataOffset + 9]);
-            dNSFlags = (UInt16)((mRawData[this.dataOffset + 10] << 8) | mRawData[this.dataOffset + 11]);
-            questions = (UInt16)((mRawData[this.dataOffset + 12] << 8) | mRawData[this.dataOffset + 13]);
-            answerRRs = (UInt16)((mRawData[this.dataOffset + 14] << 8) | mRawData[this.dataOffset + 15]);
-            authorityRRs = (UInt16)((mRawData[this.dataOffset + 16] << 8) | mRawData[this.dataOffset + 17]);
-            additionalRRs = (UInt16)((mRawData[this.dataOffset + 18] << 8) | mRawData[this.dataOffset + 19]);
+            transactionID = (UInt16)((RawData[this.dataOffset + 8] << 8) | RawData[this.dataOffset + 9]);
+            dNSFlags = (UInt16)((RawData[this.dataOffset + 10] << 8) | RawData[this.dataOffset + 11]);
+            questions = (UInt16)((RawData[this.dataOffset + 12] << 8) | RawData[this.dataOffset + 13]);
+            answerRRs = (UInt16)((RawData[this.dataOffset + 14] << 8) | RawData[this.dataOffset + 15]);
+            authorityRRs = (UInt16)((RawData[this.dataOffset + 16] << 8) | RawData[this.dataOffset + 17]);
+            additionalRRs = (UInt16)((RawData[this.dataOffset + 18] << 8) | RawData[this.dataOffset + 19]);
         }
 
-        public string parseName(byte[] mRawData, ref int index)
+        public string parseName(byte[] RawData, ref int index)
         {
             StringBuilder url = new StringBuilder();
 
-            while (mRawData[index] != 0x00 && index < mRawData.Length)
+            while (RawData[index] != 0x00 && index < RawData.Length)
             {
-                byte wordlength = mRawData[index];
+                byte wordlength = RawData[index];
                 index++;
                 for (int j = 0; j < wordlength; j++)
                 {
-                    url.Append((char)mRawData[index]);
+                    url.Append((char)RawData[index]);
                     index++;
                 }
                 url.Append('.');
@@ -199,25 +199,25 @@ namespace Aura_OS.System.Network.IPV4.UDP.DNS
             {
                 byte[] word = Encoding.ASCII.GetBytes(item);
 
-                mRawData[this.dataOffset + 20 + b] = (byte)word.Length; //set word length
+                RawData[this.dataOffset + 20 + b] = (byte)word.Length; //set word length
 
                 b++;
 
                 foreach (byte letter in word)
                 {
-                    mRawData[this.dataOffset + 20 + b] = letter;
+                    RawData[this.dataOffset + 20 + b] = letter;
                     b++;
                 }
 
             }
 
-            mRawData[this.dataOffset + 20 + b] = 0x00;
+            RawData[this.dataOffset + 20 + b] = 0x00;
 
-            mRawData[this.dataOffset + 20 + b + 1] = 0x00;
-            mRawData[this.dataOffset + 20 + b + 2] = 0x01;
+            RawData[this.dataOffset + 20 + b + 1] = 0x00;
+            RawData[this.dataOffset + 20 + b + 2] = 0x01;
 
-            mRawData[this.dataOffset + 20 + b + 3] = 0x00;
-            mRawData[this.dataOffset + 20 + b + 4] = 0x01;
+            RawData[this.dataOffset + 20 + b + 3] = 0x00;
+            RawData[this.dataOffset + 20 + b + 4] = 0x01;
         }
 
         protected override void initFields()
@@ -262,9 +262,9 @@ namespace Aura_OS.System.Network.IPV4.UDP.DNS
                 for (int i = 0; i < questions; i++)
                 {
                     DNSQuery query = new DNSQuery();
-                    query.Name = parseName(mRawData, ref index);
-                    query.Type = (ushort)((mRawData[index + 0] << 8) | mRawData[index + 1]);
-                    query.Class = (ushort)((mRawData[index + 2] << 8) | mRawData[index + 3]);
+                    query.Name = parseName(RawData, ref index);
+                    query.Type = (ushort)((RawData[index + 0] << 8) | RawData[index + 1]);
+                    query.Class = (ushort)((RawData[index + 2] << 8) | RawData[index + 3]);
                     queries.Add(query);
                     index += 4;
                 }
@@ -276,16 +276,16 @@ namespace Aura_OS.System.Network.IPV4.UDP.DNS
                 for (int i = 0; i < answerRRs; i++)
                 {
                     DNSAnswer answer = new DNSAnswer();
-                    answer.Name = (ushort)((mRawData[index + 0] << 8) | mRawData[index + 1]);
-                    answer.Type = (ushort)((mRawData[index + 2] << 8) | mRawData[index + 3]);
-                    answer.Class = (ushort)((mRawData[index + 4] << 8) | mRawData[index + 5]);
-                    answer.TimeToLive = (mRawData[index + 6] << 24) | (mRawData[index + 7] << 16) | (mRawData[index + 8] << 8) | mRawData[index + 9];
-                    answer.DataLenght = (ushort)((mRawData[index + 10] << 8) | mRawData[index + 11]);
+                    answer.Name = (ushort)((RawData[index + 0] << 8) | RawData[index + 1]);
+                    answer.Type = (ushort)((RawData[index + 2] << 8) | RawData[index + 3]);
+                    answer.Class = (ushort)((RawData[index + 4] << 8) | RawData[index + 5]);
+                    answer.TimeToLive = (RawData[index + 6] << 24) | (RawData[index + 7] << 16) | (RawData[index + 8] << 8) | RawData[index + 9];
+                    answer.DataLenght = (ushort)((RawData[index + 10] << 8) | RawData[index + 11]);
                     index += 12;
                     answer.Address = new byte[answer.DataLenght];
                     for (int j = 0; j < answer.DataLenght; j++, index++)
                     {
-                        answer.Address[j] = mRawData[index];
+                        answer.Address[j] = RawData[index];
                     }
                     answers.Add(answer);
                 }

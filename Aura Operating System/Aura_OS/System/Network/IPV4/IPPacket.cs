@@ -82,18 +82,18 @@ namespace Aura_OS.System.Network.IPV4
         protected override void initFields()
         {
             base.initFields();
-            ipVersion = (byte)((mRawData[14] & 0xF0) >> 4);
-            ipHeaderLength = (byte)(mRawData[14] & 0x0F);
-            tos = mRawData[15];
-            ipLength = (UInt16)((mRawData[16] << 8) | mRawData[17]);
-            fragmentID = (UInt16)((mRawData[18] << 8) | mRawData[19]);
-            flags = (byte)((mRawData[20] & 0xE0) >> 5);
-            fragmentOffset = (UInt16)(((mRawData[20] & 0x1F) << 8) | mRawData[21]);
-            ttl = mRawData[22];
-            proto = mRawData[23];
-            ipCRC = (UInt16)((mRawData[24] << 8) | mRawData[25]);
-            sourceIP = new Address(mRawData, 26);
-            destIP = new Address(mRawData, 30);
+            ipVersion = (byte)((RawData[14] & 0xF0) >> 4);
+            ipHeaderLength = (byte)(RawData[14] & 0x0F);
+            tos = RawData[15];
+            ipLength = (UInt16)((RawData[16] << 8) | RawData[17]);
+            fragmentID = (UInt16)((RawData[18] << 8) | RawData[19]);
+            flags = (byte)((RawData[20] & 0xE0) >> 5);
+            fragmentOffset = (UInt16)(((RawData[20] & 0x1F) << 8) | RawData[21]);
+            ttl = RawData[22];
+            proto = RawData[23];
+            ipCRC = (UInt16)((RawData[24] << 8) | RawData[25]);
+            sourceIP = new Address(RawData, 26);
+            destIP = new Address(RawData, 30);
             dataOffset = (UInt16)(14 + HeaderLength);
         }
 
@@ -109,30 +109,30 @@ namespace Aura_OS.System.Network.IPV4
             Address source, Address dest, byte Flags)
             : base(destMAC, srcMAC, 0x0800, dataLength + 14 + 20)
         {
-            mRawData[14] = 0x45;
-            mRawData[15] = 0;
+            RawData[14] = 0x45;
+            RawData[15] = 0;
             ipLength = (UInt16)(dataLength + 20);
             ipHeaderLength = 5;
 
-            mRawData[16] = (byte)((ipLength >> 8) & 0xFF);
-            mRawData[17] = (byte)((ipLength >> 0) & 0xFF);
+            RawData[16] = (byte)((ipLength >> 8) & 0xFF);
+            RawData[17] = (byte)((ipLength >> 0) & 0xFF);
             fragmentID = NextIPFragmentID;
-            mRawData[18] = (byte)((fragmentID >> 8) & 0xFF);
-            mRawData[19] = (byte)((fragmentID >> 0) & 0xFF);
-            mRawData[20] = Flags;
-            mRawData[21] = 0x00;
-            mRawData[22] = 0x80;
-            mRawData[23] = protocol;
-            mRawData[24] = 0x00;
-            mRawData[25] = 0x00;
+            RawData[18] = (byte)((fragmentID >> 8) & 0xFF);
+            RawData[19] = (byte)((fragmentID >> 0) & 0xFF);
+            RawData[20] = Flags;
+            RawData[21] = 0x00;
+            RawData[22] = 0x80;
+            RawData[23] = protocol;
+            RawData[24] = 0x00;
+            RawData[25] = 0x00;
             for (int b = 0; b < 4; b++)
             {
-                mRawData[26 + b] = source.address[b];
-                mRawData[30 + b] = dest.address[b];
+                RawData[26 + b] = source.address[b];
+                RawData[30 + b] = dest.address[b];
             }
             ipCRC = CalcIPCRC(20);
-            mRawData[24] = (byte)((ipCRC >> 8) & 0xFF);
-            mRawData[25] = (byte)((ipCRC >> 0) & 0xFF);
+            RawData[24] = (byte)((ipCRC >> 8) & 0xFF);
+            RawData[25] = (byte)((ipCRC >> 0) & 0xFF);
 
             initFields();
         }

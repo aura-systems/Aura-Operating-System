@@ -63,23 +63,23 @@ namespace Aura_OS.System.Network.IPV4.UDP.DHCP
         protected override void initFields()
         {
             base.initFields();
-            messageType = mRawData[42];
-            yourClient = new Address(mRawData, 58);
-            nextServer = new Address(mRawData, 62);
+            messageType = RawData[42];
+            yourClient = new Address(RawData, 58);
+            nextServer = new Address(RawData, 62);
 
-            if (mRawData[282] != 0)
+            if (RawData[282] != 0)
             {
                 options = new List<DHCPOption>();
 
-                for (int i = 0; i < mRawData.Length - 282 && mRawData[282 + i] != 0xFF; i += 2) //0xFF is DHCP packet end
+                for (int i = 0; i < RawData.Length - 282 && RawData[282 + i] != 0xFF; i += 2) //0xFF is DHCP packet end
                 {
                     DHCPOption option = new DHCPOption();
-                    option.Type = mRawData[282 + i];
-                    option.Length = mRawData[282 + i + 1];
+                    option.Type = RawData[282 + i];
+                    option.Length = RawData[282 + i + 1];
                     option.Data = new byte[option.Length];
                     for (int j = 0; j < option.Length; j++)
                     {
-                        option.Data[j] = mRawData[282 + i + j + 2];
+                        option.Data[j] = RawData[282 + i + j + 2];
                     }
                     options.Add(option);
 
@@ -96,62 +96,62 @@ namespace Aura_OS.System.Network.IPV4.UDP.DHCP
             : base(client, server, 68, 67, (ushort)(dhcpDataSize + 240), MACAddress.Broadcast)
         {
             //Request
-            mRawData[42] = 0x01;
+            RawData[42] = 0x01;
 
             //ethernet
-            mRawData[43] = 0x01;
+            RawData[43] = 0x01;
 
             //Length mac
-            mRawData[44] = 0x06;
+            RawData[44] = 0x06;
 
             //hops
-            mRawData[45] = 0x00;
+            RawData[45] = 0x00;
 
             Random rnd = new Random();
             xID = rnd.Next(0, Int32.MaxValue);
-            mRawData[46] = (byte)((xID >> 24) & 0xFF);
-            mRawData[47] = (byte)((xID >> 16) & 0xFF);
-            mRawData[48] = (byte)((xID >> 8) & 0xFF);
-            mRawData[49] = (byte)((xID >> 0) & 0xFF);
+            RawData[46] = (byte)((xID >> 24) & 0xFF);
+            RawData[47] = (byte)((xID >> 16) & 0xFF);
+            RawData[48] = (byte)((xID >> 8) & 0xFF);
+            RawData[49] = (byte)((xID >> 0) & 0xFF);
 
             //second elapsed
-            mRawData[50] = 0x00;
-            mRawData[51] = 0x00;
+            RawData[50] = 0x00;
+            RawData[51] = 0x00;
 
             //option bootp
-            mRawData[52] = 0x00;
-            mRawData[53] = 0x00;
+            RawData[52] = 0x00;
+            RawData[53] = 0x00;
 
             //client ip address
-            mRawData[54] = client.address[0];
-            mRawData[55] = client.address[1];
-            mRawData[56] = client.address[2];
-            mRawData[57] = client.address[3];
+            RawData[54] = client.address[0];
+            RawData[55] = client.address[1];
+            RawData[56] = client.address[2];
+            RawData[57] = client.address[3];
 
             for (int i = 0; i < 13; i++)
             {
-                mRawData[58 + i] = 0x00;
+                RawData[58 + i] = 0x00;
             }
 
             //Src mac
-            mRawData[70] = mac_src.bytes[0];
-            mRawData[71] = mac_src.bytes[1];
-            mRawData[72] = mac_src.bytes[2];
-            mRawData[73] = mac_src.bytes[3];
-            mRawData[74] = mac_src.bytes[4];
-            mRawData[75] = mac_src.bytes[5];
+            RawData[70] = mac_src.bytes[0];
+            RawData[71] = mac_src.bytes[1];
+            RawData[72] = mac_src.bytes[2];
+            RawData[73] = mac_src.bytes[3];
+            RawData[74] = mac_src.bytes[4];
+            RawData[75] = mac_src.bytes[5];
 
             //Fill 0
             for (int i = 0; i < 202; i++)
             {
-                mRawData[76 + i] = 0x00;
+                RawData[76 + i] = 0x00;
             }
 
             //DHCP Magic cookie
-            mRawData[278] = 0x63;
-            mRawData[279] = 0x82;
-            mRawData[280] = 0x53;
-            mRawData[281] = 0x63;
+            RawData[278] = 0x63;
+            RawData[279] = 0x82;
+            RawData[280] = 0x53;
+            RawData[281] = 0x63;
 
             initFields();
         }
@@ -190,21 +190,21 @@ namespace Aura_OS.System.Network.IPV4.UDP.DHCP
         internal DHCPDiscover(MACAddress mac_src) : base(mac_src, 10) //discover packet size
         {
             //Discover
-            mRawData[282] = 0x35;
-            mRawData[283] = 0x01;
-            mRawData[284] = 0x01;
+            RawData[282] = 0x35;
+            RawData[283] = 0x01;
+            RawData[284] = 0x01;
 
             //Parameters start here
-            mRawData[285] = 0x37;
-            mRawData[286] = 4;
+            RawData[285] = 0x37;
+            RawData[286] = 4;
 
             //Parameters*
-            mRawData[287] = 0x01;
-            mRawData[288] = 0x03;
-            mRawData[289] = 0x0f;
-            mRawData[290] = 0x06;
+            RawData[287] = 0x01;
+            RawData[288] = 0x03;
+            RawData[289] = 0x0f;
+            RawData[290] = 0x06;
 
-            mRawData[291] = 0xff; //ENDMARK
+            RawData[291] = 0xff; //ENDMARK
         }
 
         /// <summary>
@@ -234,38 +234,38 @@ namespace Aura_OS.System.Network.IPV4.UDP.DHCP
         internal DHCPRequest(MACAddress mac_src, Address RequestedAddress, Address DHCPServerAddress) : base(mac_src, 22)
         {
             //Request
-            mRawData[282] = 53;
-            mRawData[283] = 1;
-            mRawData[284] = 3;
+            RawData[282] = 53;
+            RawData[283] = 1;
+            RawData[284] = 3;
 
             //Requested Address
-            mRawData[285] = 50;
-            mRawData[286] = 4;
+            RawData[285] = 50;
+            RawData[286] = 4;
 
-            mRawData[287] = RequestedAddress.address[0];
-            mRawData[288] = RequestedAddress.address[1];
-            mRawData[289] = RequestedAddress.address[2];
-            mRawData[290] = RequestedAddress.address[3];
+            RawData[287] = RequestedAddress.address[0];
+            RawData[288] = RequestedAddress.address[1];
+            RawData[289] = RequestedAddress.address[2];
+            RawData[290] = RequestedAddress.address[3];
 
-            mRawData[291] = 54;
-            mRawData[292] = 4;
+            RawData[291] = 54;
+            RawData[292] = 4;
 
-            mRawData[293] = DHCPServerAddress.address[0];
-            mRawData[294] = DHCPServerAddress.address[1];
-            mRawData[295] = DHCPServerAddress.address[2];
-            mRawData[296] = DHCPServerAddress.address[3];
+            RawData[293] = DHCPServerAddress.address[0];
+            RawData[294] = DHCPServerAddress.address[1];
+            RawData[295] = DHCPServerAddress.address[2];
+            RawData[296] = DHCPServerAddress.address[3];
 
             //Parameters start here
-            mRawData[297] = 0x37;
-            mRawData[298] = 4;
+            RawData[297] = 0x37;
+            RawData[298] = 4;
 
             //Parameters
-            mRawData[299] = 0x01;
-            mRawData[300] = 0x03;
-            mRawData[301] = 0x0f;
-            mRawData[302] = 0x06;
+            RawData[299] = 0x01;
+            RawData[300] = 0x03;
+            RawData[301] = 0x0f;
+            RawData[302] = 0x06;
 
-            mRawData[303] = 0xff; //ENDMARK
+            RawData[303] = 0xff; //ENDMARK
         }
 
         /// <summary>
@@ -344,32 +344,32 @@ namespace Aura_OS.System.Network.IPV4.UDP.DHCP
         internal DHCPRelease(Address client, Address server, MACAddress source) : base(client, server, source, 19)
         {
             //Release
-            mRawData[282] = 0x35;
-            mRawData[283] = 0x01;
-            mRawData[284] = 0x07;
+            RawData[282] = 0x35;
+            RawData[283] = 0x01;
+            RawData[284] = 0x07;
 
             //DHCP Server ID
-            mRawData[285] = 0x36;
-            mRawData[286] = 0x04;
+            RawData[285] = 0x36;
+            RawData[286] = 0x04;
 
-            mRawData[287] = server.address[0];
-            mRawData[288] = server.address[1];
-            mRawData[289] = server.address[2];
-            mRawData[290] = server.address[3];
+            RawData[287] = server.address[0];
+            RawData[288] = server.address[1];
+            RawData[289] = server.address[2];
+            RawData[290] = server.address[3];
 
             //Client ID
-            mRawData[291] = 0x3d;
-            mRawData[292] = 7;
-            mRawData[293] = 1;
+            RawData[291] = 0x3d;
+            RawData[292] = 7;
+            RawData[293] = 1;
 
-            mRawData[294] = source.bytes[0];
-            mRawData[295] = source.bytes[1];
-            mRawData[296] = source.bytes[2];
-            mRawData[297] = source.bytes[3];
-            mRawData[298] = source.bytes[4];
-            mRawData[299] = source.bytes[5];
+            RawData[294] = source.bytes[0];
+            RawData[295] = source.bytes[1];
+            RawData[296] = source.bytes[2];
+            RawData[297] = source.bytes[3];
+            RawData[298] = source.bytes[4];
+            RawData[299] = source.bytes[5];
 
-            mRawData[300] = 0xff; //ENDMARK
+            RawData[300] = 0xff; //ENDMARK
         }
 
         /// <summary>

@@ -82,25 +82,25 @@ namespace Aura_OS.System.Network.ARP
         protected override void initFields()
         {
             base.initFields();
-            aHardwareType = (UInt16)((mRawData[14] << 8) | mRawData[15]);
-            aProtocolType = (UInt16)((mRawData[16] << 8) | mRawData[17]);
-            aHardwareLen = mRawData[18];
-            aProtocolLen = mRawData[19];
-            aOperation = (UInt16)((mRawData[20] << 8) | mRawData[21]);
+            aHardwareType = (UInt16)((RawData[14] << 8) | RawData[15]);
+            aProtocolType = (UInt16)((RawData[16] << 8) | RawData[17]);
+            aHardwareLen = RawData[18];
+            aProtocolLen = RawData[19];
+            aOperation = (UInt16)((RawData[20] << 8) | RawData[21]);
         }
 
         protected ARPPacket(MACAddress dest, MACAddress src, UInt16 hwType, UInt16 protoType,
             byte hwLen, byte protoLen, UInt16 operation, int packet_size)
             : base(dest, src, 0x0806, packet_size)
         {
-            mRawData[14] = (byte)(hwType >> 8);
-            mRawData[15] = (byte)(hwType >> 0);
-            mRawData[16] = (byte)(protoType >> 8);
-            mRawData[17] = (byte)(protoType >> 0);
-            mRawData[18] = hwLen;
-            mRawData[19] = protoLen;
-            mRawData[20] = (byte)(operation >> 8);
-            mRawData[21] = (byte)(operation >> 0);
+            RawData[14] = (byte)(hwType >> 8);
+            RawData[15] = (byte)(hwType >> 0);
+            RawData[16] = (byte)(protoType >> 8);
+            RawData[17] = (byte)(protoType >> 0);
+            RawData[18] = hwLen;
+            RawData[19] = protoLen;
+            RawData[20] = (byte)(operation >> 8);
+            RawData[21] = (byte)(operation >> 0);
 
             initFields();
         }
