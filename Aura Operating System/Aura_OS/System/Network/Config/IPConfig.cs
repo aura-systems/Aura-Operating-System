@@ -9,6 +9,7 @@
 using System.Collections.Generic;
 using System;
 using Aura_OS.System.Network.IPV4;
+using Aura_OS.HAL.Drivers.Network;
 
 namespace Aura_OS.System.Network.Config
 {
@@ -17,18 +18,24 @@ namespace Aura_OS.System.Network.Config
     /// </summary>
     public class IPConfig
     {
-        internal static List<IPConfig> ipConfigs;
+        /// <summary>
+        /// IPv4 configurations list.
+        /// </summary>
+        private static readonly List<IPConfig> ipConfigs = new List<IPConfig>();
 
-        static IPConfig()
-        {
-            ipConfigs = new List<IPConfig>();
-        }
-
+        /// <summary>
+        /// Add IPv4 configuration.
+        /// </summary>
+        /// <param name="config"></param>
         internal static void Add(IPConfig config)
         {
             ipConfigs.Add(config);
         }
 
+        /// <summary>
+        /// Remove IPv4 configuration.
+        /// </summary>
+        /// <param name="config"></param>
         internal static void Remove(IPConfig config)
         {
             int counter = 0;
@@ -44,11 +51,20 @@ namespace Aura_OS.System.Network.Config
             }
         }
 
+        /// <summary>
+        /// Remove All IPv4 configuration.
+        /// </summary>
         internal static void RemoveAll()
         {
             ipConfigs.Clear();
         }
 
+        /// <summary>
+        /// Find network.
+        /// </summary>
+        /// <param name="destIP">Destination IP address.</param>
+        /// <returns>Address value.</returns>
+        /// <exception cref="ArgumentException">Thrown on fatal error (contact support).</exception>
         internal static Address FindNetwork(Address destIP)
         {
             Address default_gw = null;
@@ -74,6 +90,11 @@ namespace Aura_OS.System.Network.Config
             return default_gw;
         }
 
+        /// <summary>
+        /// Check if address is local address.
+        /// </summary>
+        /// <param name="destIP">Address to check.</param>
+        /// <returns>bool value.</returns>
         internal static bool IsLocalAddress(Address destIP)
         {
             for (int c = 0; c < ipConfigs.Count; c++)
@@ -88,28 +109,34 @@ namespace Aura_OS.System.Network.Config
             return false;
         }
 
-        internal static HAL.Drivers.Network.NetworkDevice FindInterface(Address sourceIP)
+        /// <summary>
+        /// Find interface.
+        /// </summary>
+        /// <param name="sourceIP">Source IP.</param>
+        /// <returns>NetworkDevice value.</returns>
+        internal static NetworkDevice FindInterface(Address sourceIP)
         {
             return NetworkStack.AddressMap[sourceIP.Hash];
         }
 
+        /// <summary>
+        /// Find route to address.
+        /// </summary>
+        /// <param name="destIP">Destination IP.</param>
+        /// <returns>Address value.</returns>
+        /// <exception cref="ArgumentException">Thrown on fatal error (contact support).</exception>
         internal static Address FindRoute(Address destIP)
         {
             for (int c = 0; c < ipConfigs.Count; c++)
             {
                 //if (ipConfigs[c].DefaultGateway.CompareTo(Address.Zero) != 0)
                 //{
-                //    return ipConfigs[c].DefaultGateway;
+                    return ipConfigs[c].DefaultGateway;
                 //}
-                return ipConfigs[c].DefaultGateway;
             }
 
             return null;
         }
-
-        protected Address address;
-        protected Address defaultGateway;
-        protected Address subnetMask;
 
         /// <summary>
         /// Create a IPv4 Configuration with no default gateway
@@ -118,7 +145,8 @@ namespace Aura_OS.System.Network.Config
         /// <param name="subnet">Subnet Mask</param>
         public IPConfig(Address ip, Address subnet)
             : this(ip, subnet, Address.Zero)
-        { }
+        {
+        }
 
         /// <summary>
         /// Create a IPv4 Configuration
@@ -128,30 +156,22 @@ namespace Aura_OS.System.Network.Config
         /// <param name="gw">Default gateway</param>
         public IPConfig(Address ip, Address subnet, Address gw)
         {
-            this.address = ip;
-            this.subnetMask = subnet;
-            this.defaultGateway = gw;
+            IPAddress = ip;
+            SubnetMask = subnet;
+            DefaultGateway = gw;
         }
 
-        public Address IPAddress
-        {
-            get { return this.address; }
-            set { this.address = value; }
-        }
-        public Address SubnetMask
-        {
-            get { return this.subnetMask; }
-            set { this.subnetMask = value; }
-        }
-        public Address DefaultGateway
-        {
-            get { return this.defaultGateway; }
-            set { this.defaultGateway = value; }
-        }
-
-        public override string ToString()
-        {
-            return "IPAddress=" + IPAddress + ", SubnetMask=" + SubnetMask + ", DefaultGateway=" + DefaultGateway;
-        }
+        /// <summary>
+        /// Get IP address.
+        /// </summary>
+        public Address IPAddress { get; }
+        /// <summary>
+        /// Get subnet mask.
+        /// </summary>
+        public Address SubnetMask { get; }
+        /// <summary>
+        /// Get default gateway.
+        /// </summary>
+        public Address DefaultGateway { get; }
     }
 }
