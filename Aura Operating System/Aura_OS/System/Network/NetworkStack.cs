@@ -29,11 +29,11 @@ namespace Aura_OS.System.Network
         /// <summary>
         /// Get address dictionary.
         /// </summary>
-        internal static TempDictionary<NetworkDevice> AddressMap { get; private set; }
+        internal static TempDictionary<uint, NetworkDevice> AddressMap { get; private set; }
         /// <summary>
         /// Get address dictionary.
         /// </summary>
-        internal static TempDictionary<NetworkDevice> MACMap { get; private set; }
+        internal static TempDictionary<uint, NetworkDevice> MACMap { get; private set; }
 
         /// <summary>
         /// Initialize the Network Stack to prepare it for operation.
@@ -41,8 +41,8 @@ namespace Aura_OS.System.Network
         /// <exception cref="ArgumentOutOfRangeException">Thrown on fatal error (contact support).</exception>
         public static void Init()
         {
-            AddressMap = new TempDictionary<NetworkDevice>();
-            MACMap = new TempDictionary<NetworkDevice>();
+            AddressMap = new TempDictionary<uint, NetworkDevice>();
+            MACMap = new TempDictionary<uint, NetworkDevice>();
 
             // VMT Scanner issue workaround
             ARPPacket.VMTInclude();

@@ -15,7 +15,7 @@ namespace Aura_OS.System.Network.IPv4
 {
     public class ICMPClient
     {
-        private static TempDictionary<ICMPClient> clients;
+        private static TempDictionary<uint, ICMPClient> clients;
 
         protected Address destination;
 
@@ -23,7 +23,7 @@ namespace Aura_OS.System.Network.IPv4
 
         static ICMPClient()
         {
-            clients = new TempDictionary<ICMPClient>();
+            clients = new TempDictionary<uint, ICMPClient>();
         }
 
         internal static ICMPClient Client(uint iphash)

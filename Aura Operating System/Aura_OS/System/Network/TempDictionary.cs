@@ -14,9 +14,9 @@ namespace Aura_OS.System.Network
     /// TempDictionary template class.
     /// </summary>
     /// <typeparam name="TValue">TempDictionary type name.</typeparam>
-    internal class TempDictionary<TValue>
+    internal class TempDictionary<TKey, TValue>
     {
-        private List<UInt32> mKeys;
+        private List<TKey> mKeys;
         private List<TValue> mValues;
 
         /// <summary>
@@ -39,14 +39,14 @@ namespace Aura_OS.System.Network
         /// <exception cref="ArgumentOutOfRangeException">Thrown if initialSize is less than 0.</exception>
         public TempDictionary(int initialSize)
         {
-            this.mKeys = new List<UInt32>(initialSize);
+            this.mKeys = new List<TKey>(initialSize);
             this.mValues = new List<TValue>(initialSize);
         }
 
         /// <summary>
         /// Get TempDictionary{TValue} keys array.
         /// </summary>
-        public UInt32[] Keys
+        public TKey[] Keys
         {
             get
             {
@@ -77,7 +77,7 @@ namespace Aura_OS.System.Network
             {
                 for (int i = 0; i < mKeys.Count; i++)
                 {
-                    if (mKeys[i].CompareTo(key) == 0)
+                    if (mKeys[i].Equals(key))
                     {
                         return mValues[i];
                     }
@@ -89,7 +89,7 @@ namespace Aura_OS.System.Network
             {
                 for (int i = 0; i < mKeys.Count; i++)
                 {
-                    if (mKeys[i].CompareTo(key) == 0)
+                    if (mKeys[i].Equals(key))
                     {
                         mValues[i] = value;
                         return;
@@ -105,11 +105,11 @@ namespace Aura_OS.System.Network
         /// </summary>
         /// <param name="key">Key to check if exists.</param>
         /// <returns>bool value.</returns>
-        public bool ContainsKey(UInt32 key)
+        public bool ContainsKey(TKey key)
         {
             for (int i = 0; i < mKeys.Count; i++)
             {
-                if (mKeys[i] == key)
+                if (mKeys[i].Equals(key))
                 {
                     return true;
                 }
@@ -124,7 +124,7 @@ namespace Aura_OS.System.Network
         /// <param name="key">Object key.</param>
         /// <param name="val">Object value.</param>
         /// <exception cref="ArgumentException">Thrown if key already exists.</exception>
-        public void Add(UInt32 key, TValue val)
+        public void Add(TKey key, TValue val)
         {
             if (ContainsKey(key) == true)
             {
@@ -140,7 +140,7 @@ namespace Aura_OS.System.Network
         /// </summary>
         /// <param name="key">Key of the item to remove.</param>
         /// <exception cref="ArgumentOutOfRangeException">Thrown on fatal error (contact support).</exception>
-        public void Remove(UInt32 key)
+        public void Remove(TKey key)
         {
             int idx = mKeys.IndexOf(key);
             if (idx != -1)

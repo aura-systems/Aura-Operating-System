@@ -18,7 +18,7 @@ namespace Aura_OS.System.Network.ARP
         /// <summary>
         /// Cache.
         /// </summary>
-        private static TempDictionary<MACAddress> cache;
+        private static TempDictionary<uint, MACAddress> cache;
 
         /// <summary>
         /// Ensure cache exists.
@@ -28,7 +28,7 @@ namespace Aura_OS.System.Network.ARP
         {
             if (cache == null)
             {
-                cache = new TempDictionary<MACAddress>();
+                cache = new TempDictionary<uint, MACAddress>();
             }
         }
 

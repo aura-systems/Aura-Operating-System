@@ -20,7 +20,7 @@ namespace Aura_OS.System.Network.IPv4.UDP
         /// <summary>
         /// Clients dictionary.
         /// </summary>
-        private static TempDictionary<UdpClient> clients;
+        private static TempDictionary<uint, UdpClient> clients;
 
         /// <summary>
         /// Local port.
@@ -46,7 +46,7 @@ namespace Aura_OS.System.Network.IPv4.UDP
         /// <exception cref="ArgumentOutOfRangeException">Thrown on fatal error (contact support).</exception>
         static UdpClient()
         {
-            clients = new TempDictionary<UdpClient>();
+            clients = new TempDictionary<uint, UdpClient>();
         }
 
         /// <summary>
