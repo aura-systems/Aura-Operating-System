@@ -11,6 +11,8 @@ using Aura_OS.System.Network.ARP;
 using Aura_OS.System.Network.IPV4;
 using System.Collections.Generic;
 using Aura_OS.System.Network.Config;
+using Cosmos.Debug.Kernel;
+using Aura_OS.System.Network.IPV4.UDP;
 
 namespace Aura_OS.System.Network
 {
@@ -19,12 +21,24 @@ namespace Aura_OS.System.Network
     /// </summary>
     public static class NetworkStack
     {
+        /// <summary>
+        /// Debugger inctanse of the "System" ring, with the "NetworkStack" tag.
+        /// </summary>
+        public static Debugger debugger = new Debugger("System", "NetworkStack");
+
+        /// <summary>
+        /// Get address dictionary.
+        /// </summary>
         internal static TempDictionary<NetworkDevice> AddressMap { get; private set; }
+        /// <summary>
+        /// Get address dictionary.
+        /// </summary>
         internal static TempDictionary<NetworkDevice> MACMap { get; private set; }
 
         /// <summary>
-        /// Initialize the Network Stack to prepare it for operation
+        /// Initialize the Network Stack to prepare it for operation.
         /// </summary>
+        /// <exception cref="ArgumentOutOfRangeException">Thrown on fatal error (contact support).</exception>
         public static void Init()
         {
             AddressMap = new TempDictionary<NetworkDevice>();
@@ -38,7 +52,8 @@ namespace Aura_OS.System.Network
             ICMPPacket.VMTInclude();
             ICMPEchoReply.VMTInclude();
             ICMPEchoRequest.VMTInclude();
-            IPV4.UDP.UDPPacket.VMTInclude();
+            UDPPacket.VMTInclude();
+            //TCPPacket.VMTInclude();
         }
 
         private static void SetConfigIP(NetworkDevice nic, IPConfig config)
@@ -55,8 +70,17 @@ namespace Aura_OS.System.Network
         /// <remarks>Multiple IP Configurations can be made, like *nix environments</remarks>
         /// </summary>
         /// <param name="nic"><see cref="NetworkDevice"/> that will have the assigned configuration</param>
-        /// <param name="config"><see cref="IPV4.IPConfig"/> instance that defines the IP Address, Subnet
+        /// <param name="config"><see cref="Config"/> instance that defines the IP Address, Subnet
         /// Mask and Default Gateway for the device</param>
+        /// <exception cref="ArgumentException">
+        /// <list type="bullet">
+        /// <item>Thrown if configuration with the given config.IPAddress.Hash already exists.</item>
+        /// <item>Thrown on fatal error (contact support).</item>
+        /// </list>
+        /// </exception>
+        /// <exception cref="ArgumentOutOfRangeException">Thrown on fatal error (contact support).</exception>
+        /// <exception cref="Sys.IO.IOException">Thrown on IO error.</exception>
+        /// <exception cref="OverflowException">Thrown on fatal error (contact support).</exception>
         public static void ConfigIP(NetworkDevice nic, IPConfig config)
         {
             if (NetworkConfig.ContainsKey(nic))
@@ -106,11 +130,20 @@ namespace Aura_OS.System.Network
             NetworkConfig.Remove(nic);
         }
 
+        /// <summary>
+        /// Handle packet.
+        /// </summary>
+        /// <param name="packetData">Packet data array.</param>
+        /// <exception cref="ArgumentOutOfRangeException">Thrown on fatal error (contact support).</exception>
+        /// <exception cref="Sys.IO.IOException">Thrown on IO error.</exception>
+        /// <exception cref="ArgumentException">Thrown on fatal error (contact support).</exception>
+        /// <exception cref="OverflowException">Thrown on fatal error (contact support).</exception>
         internal static void HandlePacket(byte[] packetData)
         {
+            debugger.Send("Packet Received Length=" + packetData.Length.ToString());
             if (packetData == null)
             {
-                Kernel.debugger.Send("Error packet data null");
+                debugger.Send("Error packet data null");
                 return;
             }
 
@@ -121,7 +154,7 @@ namespace Aura_OS.System.Network
                     ARPPacket.ARPHandler(packetData);
                     break;
                 case 0x0800:
-                    IPV4.IPPacket.IPv4Handler(packetData);
+                    IPPacket.IPv4Handler(packetData);
                     break;
             }
         }
@@ -129,9 +162,12 @@ namespace Aura_OS.System.Network
         /// <summary>
         /// Called continously to keep the Network Stack going.
         /// </summary>
+        /// <exception cref="ArgumentException">Thrown on fatal error (contact support).</exception>
+        /// <exception cref="ArgumentOutOfRangeException">Thrown on memory error.</exception>
+        /// <exception cref="OverflowException">Thrown if data length of any packet in the queue is bigger than Int32.MaxValue.</exception>
         public static void Update()
         {
-            IPV4.OutgoingBuffer.Send();
+            OutgoingBuffer.Send();
         }
     }
 }
