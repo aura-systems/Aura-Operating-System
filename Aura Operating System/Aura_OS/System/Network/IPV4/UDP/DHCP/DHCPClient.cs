@@ -13,7 +13,9 @@ using System.Collections.Generic;
 
 namespace Aura_OS.System.Network.IPv4.UDP.DHCP
 {
-
+    /// <summary>
+    /// DHCPClient class. Used to manage the DHCP connection to a server.
+    /// </summary>
     class DHCPClient
     {
         /// <summary>
