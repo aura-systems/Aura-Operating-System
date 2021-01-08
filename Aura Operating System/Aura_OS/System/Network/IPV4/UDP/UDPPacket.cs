@@ -79,7 +79,7 @@ namespace Aura_OS.System.Network.IPV4.UDP
 
             for (int b = 0; b < data.Length; b++)
             {
-                RawData[this.dataOffset + 8 + b] = data[b];
+                RawData[this.DataOffset + 8 + b] = data[b];
             }
 
             initFields();
@@ -87,26 +87,26 @@ namespace Aura_OS.System.Network.IPV4.UDP
 
         private void MakePacket(ushort srcport, ushort destport, ushort length)
         {
-            RawData[this.dataOffset + 0] = (byte)((srcport >> 8) & 0xFF);
-            RawData[this.dataOffset + 1] = (byte)((srcport >> 0) & 0xFF);
-            RawData[this.dataOffset + 2] = (byte)((destport >> 8) & 0xFF);
-            RawData[this.dataOffset + 3] = (byte)((destport >> 0) & 0xFF);
+            RawData[this.DataOffset + 0] = (byte)((srcport >> 8) & 0xFF);
+            RawData[this.DataOffset + 1] = (byte)((srcport >> 0) & 0xFF);
+            RawData[this.DataOffset + 2] = (byte)((destport >> 8) & 0xFF);
+            RawData[this.DataOffset + 3] = (byte)((destport >> 0) & 0xFF);
             udpLen = (ushort)(length + 8);
 
-            RawData[this.dataOffset + 4] = (byte)((udpLen >> 8) & 0xFF);
-            RawData[this.dataOffset + 5] = (byte)((udpLen >> 0) & 0xFF);
+            RawData[this.DataOffset + 4] = (byte)((udpLen >> 8) & 0xFF);
+            RawData[this.DataOffset + 5] = (byte)((udpLen >> 0) & 0xFF);
 
-            RawData[this.dataOffset + 6] = (byte)((0 >> 8) & 0xFF);
-            RawData[this.dataOffset + 7] = (byte)((0 >> 0) & 0xFF);
+            RawData[this.DataOffset + 6] = (byte)((0 >> 8) & 0xFF);
+            RawData[this.DataOffset + 7] = (byte)((0 >> 0) & 0xFF);
         }
 
         protected override void initFields()
         {
             base.initFields();
-            sourcePort = (UInt16)((RawData[this.dataOffset] << 8) | RawData[this.dataOffset + 1]);
-            destPort = (UInt16)((RawData[this.dataOffset + 2] << 8) | RawData[this.dataOffset + 3]);
-            udpLen = (UInt16)((RawData[this.dataOffset + 4] << 8) | RawData[this.dataOffset + 5]);
-            udpCRC = (UInt16)((RawData[this.dataOffset + 6] << 8) | RawData[this.dataOffset + 7]);
+            sourcePort = (UInt16)((RawData[this.DataOffset] << 8) | RawData[this.DataOffset + 1]);
+            destPort = (UInt16)((RawData[this.DataOffset + 2] << 8) | RawData[this.DataOffset + 3]);
+            udpLen = (UInt16)((RawData[this.DataOffset + 4] << 8) | RawData[this.DataOffset + 5]);
+            udpCRC = (UInt16)((RawData[this.DataOffset + 6] << 8) | RawData[this.DataOffset + 7]);
         }
 
         internal UInt16 DestinationPort
@@ -133,7 +133,7 @@ namespace Aura_OS.System.Network.IPV4.UDP
 
                 for (int b = 0; b < data.Length; b++)
                 {
-                    data[b] = this.RawData[this.dataOffset + 8 + b];
+                    data[b] = this.RawData[this.DataOffset + 8 + b];
                 }
 
                 return data;
@@ -142,7 +142,7 @@ namespace Aura_OS.System.Network.IPV4.UDP
 
         public override string ToString()
         {
-            return "UDP Packet Src=" + sourceIP + ":" + sourcePort + ", Dest=" + destIP + ":" + destPort + ", DataLen=" + UDP_DataLength;
+            return "UDP Packet Src=" + SourceIP + ":" + sourcePort + ", Dest=" + DestinationIP + ":" + destPort + ", DataLen=" + UDP_DataLength;
         }
     }
 }
