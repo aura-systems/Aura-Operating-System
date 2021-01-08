@@ -1,4 +1,4 @@
-﻿using Aura_OS.HAL.Drivers.Network;
+﻿/*using Aura_OS.HAL.Drivers.Network;
 using Aura_OS.System.Utils;
 using System.Collections.Generic;
 
@@ -46,3 +46,4 @@ namespace Aura_OS.System.Network
         }
     }
 }
+*/
