@@ -91,9 +91,9 @@ namespace Aura_OS.System.Network.IPv4
         {
             //Sys.Console.WriteLine("ICMPPacket.initFields() called;");
             base.initFields();
-            icmpType = RawData[this.DataOffset];
-            icmpCode = RawData[this.DataOffset + 1];
-            icmpCRC = (UInt16)((RawData[this.DataOffset + 2] << 8) | RawData[this.DataOffset + 3]);
+            icmpType = RawData[DataOffset];
+            icmpCode = RawData[DataOffset + 1];
+            icmpCRC = (ushort)((RawData[DataOffset + 2] << 8) | RawData[DataOffset + 3]);
         }
 
         /// <summary>
@@ -107,22 +107,22 @@ namespace Aura_OS.System.Network.IPv4
         /// <param name="seq">SEQ.</param>
         /// <param name="icmpDataSize">Data size.</param>
         /// <exception cref="ArgumentException">Thrown if RawData is invalid or null.</exception>
-        internal ICMPPacket(Address source, Address dest, byte type, byte code, UInt16 id, UInt16 seq, UInt16 icmpDataSize)
+        internal ICMPPacket(Address source, Address dest, byte type, byte code, ushort id, ushort seq, ushort icmpDataSize)
             : base(icmpDataSize, 1, source, dest, 0x00)
         {
-            RawData[this.DataOffset] = type;
-            RawData[this.DataOffset + 1] = code;
-            RawData[this.DataOffset + 2] = 0x00;
-            RawData[this.DataOffset + 3] = 0x00;
-            RawData[this.DataOffset + 4] = (byte)((id >> 8) & 0xFF);
-            RawData[this.DataOffset + 5] = (byte)((id >> 0) & 0xFF);
-            RawData[this.DataOffset + 6] = (byte)((seq >> 8) & 0xFF);
-            RawData[this.DataOffset + 7] = (byte)((seq >> 0) & 0xFF);
+            RawData[DataOffset] = type;
+            RawData[DataOffset + 1] = code;
+            RawData[DataOffset + 2] = 0x00;
+            RawData[DataOffset + 3] = 0x00;
+            RawData[DataOffset + 4] = (byte)((id >> 8) & 0xFF);
+            RawData[DataOffset + 5] = (byte)((id >> 0) & 0xFF);
+            RawData[DataOffset + 6] = (byte)((seq >> 8) & 0xFF);
+            RawData[DataOffset + 7] = (byte)((seq >> 0) & 0xFF);
 
-            icmpCRC = CalcICMPCRC((UInt16)(icmpDataSize));
+            icmpCRC = CalcICMPCRC((ushort)(icmpDataSize));
 
-            RawData[this.DataOffset + 2] = (byte)((icmpCRC >> 8) & 0xFF);
-            RawData[this.DataOffset + 3] = (byte)((icmpCRC >> 0) & 0xFF);
+            RawData[DataOffset + 2] = (byte)((icmpCRC >> 8) & 0xFF);
+            RawData[DataOffset + 3] = (byte)((icmpCRC >> 0) & 0xFF);
             initFields();
         }
 
@@ -131,9 +131,9 @@ namespace Aura_OS.System.Network.IPv4
         /// </summary>
         /// <param name="length">Lenght.</param>
         /// <returns></returns>
-        protected UInt16 CalcICMPCRC(UInt16 length)
+        protected ushort CalcICMPCRC(ushort length)
         {
-            return CalcOcCRC(this.DataOffset, length);
+            return CalcOcCRC(DataOffset, length);
         }
 
         /// <summary>
@@ -141,28 +141,28 @@ namespace Aura_OS.System.Network.IPv4
         /// </summary>
         internal byte ICMP_Type
         {
-            get { return this.icmpType; }
+            get { return icmpType; }
         }
         /// <summary>
         /// Get ICMP code.
         /// </summary>
         internal byte ICMP_Code
         {
-            get { return this.icmpCode; }
+            get { return icmpCode; }
         }
         /// <summary>
         /// Get ICMP CRC.
         /// </summary>
-        internal UInt16 ICMP_CRC
+        internal ushort ICMP_CRC
         {
-            get { return this.icmpCRC; }
+            get { return icmpCRC; }
         }
         /// <summary>
         /// Get ICMP data length.
         /// </summary>
-        internal UInt16 ICMP_DataLength
+        internal ushort ICMP_DataLength
         {
-            get { return (UInt16)(this.DataLength - 8); }
+            get { return (ushort)(DataLength - 8); }
         }
 
         /// <summary>
@@ -175,7 +175,7 @@ namespace Aura_OS.System.Network.IPv4
 
             for (int b = 0; b < ICMP_DataLength; b++)
             {
-                data[b] = RawData[this.DataOffset + 8 + b];
+                data[b] = RawData[DataOffset + 8 + b];
             }
 
             return data;
@@ -196,8 +196,8 @@ namespace Aura_OS.System.Network.IPv4
     /// </summary>
     internal class ICMPEchoRequest : ICMPPacket
     {
-        protected UInt16 icmpID;
-        protected UInt16 icmpSequence;
+        protected ushort icmpID;
+        protected ushort icmpSequence;
 
         /// <summary>
         /// Create new inctanse of the <see cref="ICMPEchoRequest"/> class.
@@ -215,19 +215,19 @@ namespace Aura_OS.System.Network.IPv4
         {
         }
 
-        internal ICMPEchoRequest(Address source, Address dest, UInt16 id, UInt16 sequence)
+        internal ICMPEchoRequest(Address source, Address dest, ushort id, ushort sequence)
             : base(source, dest, 8, 0, id, sequence, 40)
         {
-            for (int b = 8; b < this.ICMP_DataLength; b++)
+            for (int b = 8; b < ICMP_DataLength; b++)
             {
-                RawData[this.DataOffset + b] = (byte)b;
+                RawData[DataOffset + b] = (byte)b;
             }
 
-            RawData[this.DataOffset + 2] = 0x00;
-            RawData[this.DataOffset + 3] = 0x00;
-            icmpCRC = CalcICMPCRC((UInt16)(this.ICMP_DataLength + 8));
-            RawData[this.DataOffset + 2] = (byte)((icmpCRC >> 8) & 0xFF);
-            RawData[this.DataOffset + 3] = (byte)((icmpCRC >> 0) & 0xFF);
+            RawData[DataOffset + 2] = 0x00;
+            RawData[DataOffset + 3] = 0x00;
+            icmpCRC = CalcICMPCRC((ushort)(ICMP_DataLength + 8));
+            RawData[DataOffset + 2] = (byte)((icmpCRC >> 8) & 0xFF);
+            RawData[DataOffset + 3] = (byte)((icmpCRC >> 0) & 0xFF);
         }
 
         /// <summary>
@@ -242,17 +242,17 @@ namespace Aura_OS.System.Network.IPv4
         {
             //Sys.Console.WriteLine("ICMPEchoRequest.initFields() called;");
             base.initFields();
-            icmpID = (UInt16)((RawData[this.DataOffset + 4] << 8) | RawData[this.DataOffset + 5]);
-            icmpSequence = (UInt16)((RawData[this.DataOffset + 6] << 8) | RawData[this.DataOffset + 7]);
+            icmpID = (ushort)((RawData[DataOffset + 4] << 8) | RawData[DataOffset + 5]);
+            icmpSequence = (ushort)((RawData[DataOffset + 6] << 8) | RawData[DataOffset + 7]);
         }
 
-        internal UInt16 ICMP_ID
+        internal ushort ICMP_ID
         {
-            get { return this.icmpID; }
+            get { return icmpID; }
         }
-        internal UInt16 ICMP_Sequence
+        internal ushort ICMP_Sequence
         {
-            get { return this.icmpSequence; }
+            get { return icmpSequence; }
         }
 
         /// <summary>
@@ -270,8 +270,8 @@ namespace Aura_OS.System.Network.IPv4
     /// </summary>
     internal class ICMPEchoReply : ICMPPacket
     {
-        protected UInt16 icmpID;
-        protected UInt16 icmpSequence;
+        protected ushort icmpID;
+        protected ushort icmpSequence;
 
         /// <summary>
         /// Create new inctanse of the <see cref="ICMPEchoReply"/> class.
@@ -305,8 +305,8 @@ namespace Aura_OS.System.Network.IPv4
         {
             //Sys.Console.WriteLine("ICMPEchoReply.initFields() called;");
             base.initFields();
-            icmpID = (UInt16)((RawData[this.DataOffset + 4] << 8) | RawData[this.DataOffset + 5]);
-            icmpSequence = (UInt16)((RawData[this.DataOffset + 6] << 8) | RawData[this.DataOffset + 7]);
+            icmpID = (ushort)((RawData[DataOffset + 4] << 8) | RawData[DataOffset + 5]);
+            icmpSequence = (ushort)((RawData[DataOffset + 6] << 8) | RawData[DataOffset + 7]);
         }
 
         /// <summary>
@@ -315,33 +315,33 @@ namespace Aura_OS.System.Network.IPv4
         /// <param name="request">ICMP echo request.</param>
         /// <exception cref="ArgumentException">Thrown if RawData is invalid or null.</exception>
         internal ICMPEchoReply(ICMPEchoRequest request)
-            : base(request.DestinationIP, request.SourceIP, 0, 0, request.ICMP_ID, request.ICMP_Sequence, (UInt16)(request.ICMP_DataLength))
+            : base(request.DestinationIP, request.SourceIP, 0, 0, request.ICMP_ID, request.ICMP_Sequence, (ushort)(request.ICMP_DataLength))
         {
-            for (int b = 0; b < this.ICMP_DataLength; b++)
+            for (int b = 0; b < ICMP_DataLength; b++)
             {
-                RawData[this.DataOffset + 8 + b] = request.RawData[this.DataOffset + 8 + b];
+                RawData[DataOffset + 8 + b] = request.RawData[DataOffset + 8 + b];
             }
 
-            RawData[this.DataOffset + 2] = 0x00;
-            RawData[this.DataOffset + 3] = 0x00;
-            icmpCRC = CalcICMPCRC((UInt16)(this.ICMP_DataLength + 8));
-            RawData[this.DataOffset + 2] = (byte)((icmpCRC >> 8) & 0xFF);
-            RawData[this.DataOffset + 3] = (byte)((icmpCRC >> 0) & 0xFF);
+            RawData[DataOffset + 2] = 0x00;
+            RawData[DataOffset + 3] = 0x00;
+            icmpCRC = CalcICMPCRC((ushort)(ICMP_DataLength + 8));
+            RawData[DataOffset + 2] = (byte)((icmpCRC >> 8) & 0xFF);
+            RawData[DataOffset + 3] = (byte)((icmpCRC >> 0) & 0xFF);
         }
 
         /// <summary>
         /// Get ICMP ID.
         /// </summary>
-        internal UInt16 ICMP_ID
+        internal ushort ICMP_ID
         {
-            get { return this.icmpID; }
+            get { return icmpID; }
         }
         /// <summary>
         /// Get ICMP sequence.
         /// </summary>
-        internal UInt16 ICMP_Sequence
+        internal ushort ICMP_Sequence
         {
-            get { return this.icmpSequence; }
+            get { return icmpSequence; }
         }
 
         /// <summary>
