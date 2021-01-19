@@ -44,6 +44,7 @@
     <ISO_EnableGDB>False</ISO_EnableGDB>
     <ISO_StartCosmosGDB>False</ISO_StartCosmosGDB>
     <ISO_ISOFile>bin\Debug\netcoreapp2.0\cosmos\Aura_OS.iso</ISO_ISOFile>
+    <VMwareEdition>Workstation</VMwareEdition>
   </PropertyGroup>
   <Target Name="GetVersion">
     <WriteLinesToFile File="Properties\VersionInfo.cs" Lines="$(SomeThing)" Overwrite="true"></WriteLinesToFile>
