@@ -11,21 +11,42 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Aura_OS.System.Network.IPV4
+namespace Aura_OS.System.Network.IPv4
 {
+    /// <summary>
+    /// ICMPClient class. Used to manage the ICMP connection to a client.
+    /// </summary>
     public class ICMPClient
     {
-        private static TempDictionary<ICMPClient> clients;
+        /// <summary>
+        /// Clients dictionary.
+        /// </summary>
+        private static TempDictionary<uint, ICMPClient> clients;
 
+        /// <summary>
+        /// Destination address.
+        /// </summary>
         protected Address destination;
 
+        /// <summary>
+        /// RX buffer queue.
+        /// </summary>
         protected Queue<ICMPPacket> rxBuffer;
 
+        /// <summary>
+        /// Assign clients dictionary.
+        /// </summary>
+        /// <exception cref="ArgumentOutOfRangeException">Thrown on fatal error (contact support).</exception>
         static ICMPClient()
         {
-            clients = new TempDictionary<ICMPClient>();
+            clients = new TempDictionary<uint, ICMPClient>();
         }
 
+        /// <summary>
+        /// Get client.
+        /// </summary>
+        /// <param name="iphash">IP Hash.</param>
+        /// <returns>ICMPClient</returns>
         internal static ICMPClient Client(uint iphash)
         {
             if (clients.ContainsKey(iphash) == true)
@@ -36,17 +57,28 @@ namespace Aura_OS.System.Network.IPV4
             return null;
         }
 
+        /// <summary>
+        /// Create new inctanse of the <see cref="ICMPClient"/> class.
+        /// </summary>
         public ICMPClient()
         {
             rxBuffer = new Queue<ICMPPacket>(8);
         }
 
+        /// <summary>
+        /// Connect to client.
+        /// </summary>
+        /// <param name="dest">Destination address.</param>
         public void Connect(Address dest)
         {
             destination = dest;
             clients.Add(dest.Hash, this);
         }
 
+        /// <summary>
+        /// Close connection.
+        /// </summary>
+        /// <exception cref="ArgumentOutOfRangeException">Thrown on fatal error (contact support).</exception>
         public void Close()
         {
             if (clients.ContainsKey(destination.Hash) == true)
@@ -55,11 +87,9 @@ namespace Aura_OS.System.Network.IPV4
             }
         }
 
-        public void receiveData(ICMPPacket packet)
-        {
-            rxBuffer.Enqueue(packet);
-        }
-
+        /// <summary>
+        /// Send ICMP Echo
+        /// </summary>
         public void SendEcho()
         {
             Address source = IPConfig.FindNetwork(destination);
@@ -68,6 +98,13 @@ namespace Aura_OS.System.Network.IPV4
             NetworkStack.Update();
         }
 
+        /// <summary>
+        /// Receive data
+        /// </summary>
+        /// <param name="source">Source end point.</param>
+        /// <param name="timeout">timeout value, default 5000ms
+        /// <returns>Address from Domain Name</returns>
+        /// <exception cref="InvalidOperationException">Thrown on fatal error (contact support).</exception>
         public int Receive(ref EndPoint source, int timeout = 5000)
         {
             int second = 0;
@@ -90,6 +127,17 @@ namespace Aura_OS.System.Network.IPV4
             source.address = packet.SourceIP;
 
             return second;
+        }
+
+        /// <summary>
+        /// Receive data from packet.
+        /// </summary>
+        /// <param name="packet">Packet to receive.</param>
+        /// <exception cref="OverflowException">Thrown on fatal error (contact support).</exception>
+        /// <exception cref="Sys.IO.IOException">Thrown on IO error.</exception>
+        public void receiveData(ICMPPacket packet)
+        {
+            rxBuffer.Enqueue(packet);
         }
     }
 }

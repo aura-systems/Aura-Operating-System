@@ -1,7 +1,7 @@
-﻿using Aura_OS.System.Network.IPV4;
+﻿using Aura_OS.System.Network.IPv4;
 using System;
 using Aura_OS.HAL.Drivers.Network;
-using Aura_OS.System.Network.IPV4.UDP.DNS;
+using Aura_OS.System.Network.IPv4.UDP.DNS;
 using Aura_OS.System.Network.Config;
 using System.Collections.Generic;
 
@@ -11,15 +11,26 @@ using System.Collections.Generic;
 * PROGRAMMER(S):    Alexy DA CRUZ <dacruzalexy@gmail.com>
 */
 
-namespace Aura_OS.System.Network.IPV4.UDP.DHCP
+namespace Aura_OS.System.Network.IPv4.UDP.DHCP
 {
-
+    /// <summary>
+    /// DHCPClient class. Used to manage the DHCP connection to a server.
+    /// </summary>
     class DHCPClient
     {
+        /// <summary>
+        /// Current DHCPClient
+        /// </summary>
         public static DHCPClient currentClient;
 
+        // <summary>
+        /// RX buffer queue.
+        /// </summary>
         protected Queue<DHCPPacket> rxBuffer;
 
+        // <summary>
+        /// Is DHCP ascked check variable
+        /// </summary>
         protected bool asked = false;
 
         /// <summary>
@@ -31,22 +42,43 @@ namespace Aura_OS.System.Network.IPV4.UDP.DHCP
             return NetworkConfig.Get(networkDevice).DefaultGateway;
         }
 
+        /// <summary>
+        /// Create new inctanse of the <see cref="UdpClient"/> class.
+        /// </summary>
+        /// <exception cref="ArgumentOutOfRangeException">Thrown on fatal error (contact support).</exception>
+        /// <exception cref="ArgumentException">Thrown if UdpClient with localPort 0 exists.</exception>
         public DHCPClient()
         {
             rxBuffer = new Queue<DHCPPacket>(8);
             currentClient = this;
         }
 
+        /// <summary>
+        /// Close connection.
+        /// </summary>
+        /// <exception cref="ArgumentOutOfRangeException">Thrown on fatal error (contact support).</exception>
         public void Close()
         {
             currentClient = null;
         }
 
+        /// <summary>
+        /// Receive data from packet.
+        /// </summary>
+        /// <param name="packet">Packet to receive.</param>
+        /// <exception cref="OverflowException">Thrown on fatal error (contact support).</exception>
+        /// <exception cref="Sys.IO.IOException">Thrown on IO error.</exception>
         public void receiveData(DHCPPacket packet)
         {
             rxBuffer.Enqueue(packet);
         }
 
+        /// <summary>
+        /// Receive data
+        /// </summary>
+        /// <param name="timeout">timeout value, default 5000ms
+        /// <returns>time value (-1 = timeout)</returns>
+        /// <exception cref="InvalidOperationException">Thrown on fatal error (contact support).</exception>
         private int Receive(int timeout = 5000)
         {
             int second = 0;

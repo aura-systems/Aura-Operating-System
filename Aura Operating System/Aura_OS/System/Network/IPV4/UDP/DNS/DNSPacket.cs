@@ -8,7 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Aura_OS.System.Network.IPV4.UDP.DNS
+namespace Aura_OS.System.Network.IPv4.UDP.DNS
 {
 
     /// <summary>
@@ -34,7 +34,7 @@ namespace Aura_OS.System.Network.IPV4.UDP.DNS
         public ushort Class { get; set; }
     }
 
-/// <summary>
+    /// <summary>
     /// DNS Answer
     /// </summary>
     public class DNSAnswer
@@ -47,17 +47,16 @@ namespace Aura_OS.System.Network.IPV4.UDP.DNS
         public byte[] Address { get; set; }
     }
 
+    /// <summary>
+    /// DNSPacket class.
+    /// </summary>
     public class DNSPacket : UDPPacket
     {
-        protected ushort transactionID;
-        protected ushort dNSFlags;
-        protected ushort questions;
-        protected ushort answerRRs;
-        protected ushort authorityRRs;
-        protected ushort additionalRRs;
-        protected List<DNSQuery> queries;
-        protected List<DNSAnswer> answers;
-
+        /// <summary>
+        /// DNS handler.
+        /// </summary>
+        /// <param name="packetData">Packet data.</param>
+        /// <exception cref="sysIO.IOException">Thrown on IO error.</exception>
         internal static void DNSHandler(byte[] packetData)
         {
             DNSPacket dns_packet = new DNSPacket(packetData);
@@ -77,62 +76,87 @@ namespace Aura_OS.System.Network.IPV4.UDP.DNS
             new DNSPacket();
         }
 
+        /// <summary>
+        /// Create new inctanse of the <see cref="DNSPacket"/> class.
+        /// </summary>
         internal DNSPacket()
             : base()
         { }
 
+        /// <summary>
+        /// Create new inctanse of the <see cref="DNSPacket"/> class.
+        /// </summary>
+        /// <param name="rawData">Raw data.</param>
         public DNSPacket(byte[] rawData)
             : base(rawData)
         { }
 
+        /// <summary>
+        /// Create new inctanse of the <see cref="UDPPacket"/> class.
+        /// </summary>
+        /// <param name="source">Source address.</param>
+        /// <param name="dest">Destination address.</param>
+        /// <param name="urlnb">Domain name number.</param>
+        /// <param name="len">Length</param>
+        /// <exception cref="OverflowException">Thrown if data array length is greater than Int32.MaxValue.</exception>
+        /// <exception cref="ArgumentException">Thrown if RawData is invalid or null.</exception>
         public DNSPacket(Address source, Address dest, ushort urlnb, ushort len)
             : base(source, dest, 53, 53, (ushort)(len + 12))
         {
             Random rnd = new Random();
             byte transactionID = (byte)rnd.Next(0, Int32.MaxValue);
-            mRawData[this.dataOffset + 8] = (byte)((transactionID >> 8) & 0xFF);
-            mRawData[this.dataOffset + 9] = (byte)((transactionID >> 0) & 0xFF);
+            RawData[this.DataOffset + 8] = (byte)((transactionID >> 8) & 0xFF);
+            RawData[this.DataOffset + 9] = (byte)((transactionID >> 0) & 0xFF);
 
-            mRawData[this.dataOffset + 10] = (byte)((0x0100 >> 8) & 0xFF);
-            mRawData[this.dataOffset + 11] = (byte)((0x0100 >> 0) & 0xFF);
+            RawData[this.DataOffset + 10] = (byte)((0x0100 >> 8) & 0xFF);
+            RawData[this.DataOffset + 11] = (byte)((0x0100 >> 0) & 0xFF);
 
-            mRawData[this.dataOffset + 12] = (byte)((urlnb >> 8) & 0xFF);
-            mRawData[this.dataOffset + 13] = (byte)((urlnb >> 0) & 0xFF);
+            RawData[this.DataOffset + 12] = (byte)((urlnb >> 8) & 0xFF);
+            RawData[this.DataOffset + 13] = (byte)((urlnb >> 0) & 0xFF);
 
-            mRawData[this.dataOffset + 14] = (byte)((0 >> 8) & 0xFF);
-            mRawData[this.dataOffset + 15] = (byte)((0 >> 0) & 0xFF);
+            RawData[this.DataOffset + 14] = (byte)((0 >> 8) & 0xFF);
+            RawData[this.DataOffset + 15] = (byte)((0 >> 0) & 0xFF);
 
-            mRawData[this.dataOffset + 16] = (byte)((0 >> 8) & 0xFF);
-            mRawData[this.dataOffset + 17] = (byte)((0 >> 0) & 0xFF);
+            RawData[this.DataOffset + 16] = (byte)((0 >> 8) & 0xFF);
+            RawData[this.DataOffset + 17] = (byte)((0 >> 0) & 0xFF);
 
-            mRawData[this.dataOffset + 18] = (byte)((0 >> 8) & 0xFF);
-            mRawData[this.dataOffset + 19] = (byte)((0 >> 0) & 0xFF);
+            RawData[this.DataOffset + 18] = (byte)((0 >> 8) & 0xFF);
+            RawData[this.DataOffset + 19] = (byte)((0 >> 0) & 0xFF);
 
             initFields();
         }
 
+        /// <summary>
+        /// Init DNSPacket fields.
+        /// </summary>
+        /// <exception cref="ArgumentException">Thrown if RawData is invalid or null.</exception>
         protected override void initFields()
         {
             base.initFields();
-            transactionID = (UInt16)((mRawData[this.dataOffset + 8] << 8) | mRawData[this.dataOffset + 9]);
-            dNSFlags = (UInt16)((mRawData[this.dataOffset + 10] << 8) | mRawData[this.dataOffset + 11]);
-            questions = (UInt16)((mRawData[this.dataOffset + 12] << 8) | mRawData[this.dataOffset + 13]);
-            answerRRs = (UInt16)((mRawData[this.dataOffset + 14] << 8) | mRawData[this.dataOffset + 15]);
-            authorityRRs = (UInt16)((mRawData[this.dataOffset + 16] << 8) | mRawData[this.dataOffset + 17]);
-            additionalRRs = (UInt16)((mRawData[this.dataOffset + 18] << 8) | mRawData[this.dataOffset + 19]);
+            TransactionID = (UInt16)((RawData[this.DataOffset + 8] << 8) | RawData[this.DataOffset + 9]);
+            DNSFlags = (UInt16)((RawData[this.DataOffset + 10] << 8) | RawData[this.DataOffset + 11]);
+            Questions = (UInt16)((RawData[this.DataOffset + 12] << 8) | RawData[this.DataOffset + 13]);
+            AnswerRRs = (UInt16)((RawData[this.DataOffset + 14] << 8) | RawData[this.DataOffset + 15]);
+            AuthorityRRs = (UInt16)((RawData[this.DataOffset + 16] << 8) | RawData[this.DataOffset + 17]);
+            AdditionalRRs = (UInt16)((RawData[this.DataOffset + 18] << 8) | RawData[this.DataOffset + 19]);
         }
 
-        public string parseName(byte[] mRawData, ref int index)
+        /// <summary>
+        /// Get name from data and offset
+        /// </summary>
+        /// <param name="RawData">Data</param>
+        /// <param name="index">Data offset</param>
+        public string parseName(byte[] RawData, ref int index)
         {
             StringBuilder url = new StringBuilder();
 
-            while (mRawData[index] != 0x00 && index < mRawData.Length)
+            while (RawData[index] != 0x00 && index < RawData.Length)
             {
-                byte wordlength = mRawData[index];
+                byte wordlength = RawData[index];
                 index++;
                 for (int j = 0; j < wordlength; j++)
                 {
-                    url.Append((char)mRawData[index]);
+                    url.Append((char)RawData[index]);
                     index++;
                 }
                 url.Append('.');
@@ -141,37 +165,60 @@ namespace Aura_OS.System.Network.IPV4.UDP.DNS
             return (url.ToString().Remove(url.Length - 1, 1));
         }
 
-        internal ushort TransactionID
-        {
-            get { return this.transactionID; }
-        }
+        /// <summary>
+        /// Get AnswerRRs
+        /// </summary>
+        internal ushort AnswerRRs { get; private set; }
 
-        internal ushort DNSFlags
-        {
-            get { return this.dNSFlags; }
-        }
+        /// <summary>
+        /// Get AuthorityRRs
+        /// </summary>
+        internal ushort AuthorityRRs { get; private set; }
 
-        internal ushort Questions
-        {
-            get { return this.questions; }
-        }
+        /// <summary>
+        /// Get AdditionalRRs
+        /// </summary>
+        internal ushort AdditionalRRs { get; private set; }
 
-        internal List<DNSQuery> Queries
-        {
-            get { return this.queries;  }
-        }
+        /// <summary>
+        /// Get Transaction ID
+        /// </summary>
+        internal ushort TransactionID { get; private set; }
 
-        internal List<DNSAnswer> Answers
-        {
-            get { return this.answers; }
-        }
+        /// <summary>
+        /// Get DNS Flags
+        /// </summary>
+        internal ushort DNSFlags { get; private set; }
 
+        /// <summary>
+        /// Get DNS Queries Number
+        /// </summary>
+        internal ushort Questions { get; private set; }
+
+        /// <summary>
+        /// Get DNS Queries
+        /// </summary>
+        internal List<DNSQuery> Queries { get; set; }
+
+        /// <summary>
+        /// Get DNS Answers
+        /// </summary>
+        internal List<DNSAnswer> Answers { get; set; }
+
+        /// <summary>
+        /// To string.
+        /// </summary>
+        /// <returns>string value.</returns>
         public override string ToString()
         {
-            return "DNS Packet Src=" + sourceIP + ":" + SourcePort + ", Dest=" + destIP + ":" + DestinationPort;
+            return "DNS Packet Src=" + SourceIP + ":" + SourcePort + ", Dest=" + DestinationIP + ":" + DestinationPort;
         }
 
     }
+
+    /// <summary>
+    /// DNSPacketAsk class.
+    /// </summary>
     public class DNSPacketAsk : DNSPacket
     {
         /// <summary>
@@ -182,14 +229,28 @@ namespace Aura_OS.System.Network.IPV4.UDP.DNS
             new DNSPacketAsk();
         }
 
+        /// <summary>
+        /// Create new inctanse of the <see cref="DNSPacketAsk"/> class.
+        /// </summary>
         internal DNSPacketAsk()
             : base()
         { }
 
+        /// <summary>
+        /// Create new inctanse of the <see cref="DNSPacketAsk"/> class.
+        /// </summary>
+        /// <param name="rawData">Raw data.</param>
         public DNSPacketAsk(byte[] rawData)
             : base(rawData)
         { }
 
+        /// <summary>
+        /// Create new inctanse of the <see cref="UDPPacket"/> class.
+        /// </summary>
+        /// <param name="source">Source address.</param>
+        /// <param name="dest">DNS Server address.</param>
+        /// <param name="url">Domain name string.</param>
+        /// <exception cref="ArgumentException">Thrown if RawData is invalid or null.</exception>
         public DNSPacketAsk(Address source, Address dest, string url)
             : base(source, dest, 1, (ushort)(5 + url.Length + 1))
         {
@@ -199,33 +260,40 @@ namespace Aura_OS.System.Network.IPV4.UDP.DNS
             {
                 byte[] word = Encoding.ASCII.GetBytes(item);
 
-                mRawData[this.dataOffset + 20 + b] = (byte)word.Length; //set word length
+                RawData[this.DataOffset + 20 + b] = (byte)word.Length; //set word length
 
                 b++;
 
                 foreach (byte letter in word)
                 {
-                    mRawData[this.dataOffset + 20 + b] = letter;
+                    RawData[this.DataOffset + 20 + b] = letter;
                     b++;
                 }
 
             }
 
-            mRawData[this.dataOffset + 20 + b] = 0x00;
+            RawData[this.DataOffset + 20 + b] = 0x00;
 
-            mRawData[this.dataOffset + 20 + b + 1] = 0x00;
-            mRawData[this.dataOffset + 20 + b + 2] = 0x01;
+            RawData[this.DataOffset + 20 + b + 1] = 0x00;
+            RawData[this.DataOffset + 20 + b + 2] = 0x01;
 
-            mRawData[this.dataOffset + 20 + b + 3] = 0x00;
-            mRawData[this.dataOffset + 20 + b + 4] = 0x01;
+            RawData[this.DataOffset + 20 + b + 3] = 0x00;
+            RawData[this.DataOffset + 20 + b + 4] = 0x01;
         }
 
+        /// <summary>
+        /// Init DNSPacketAsk fields.
+        /// </summary>
+        /// <exception cref="ArgumentException">Thrown if RawData is invalid or null.</exception>
         protected override void initFields()
         {
             base.initFields();
         }
     }
 
+    /// <summary>
+    /// DNSPacketAnswer class.
+    /// </summary>
     public class DNSPacketAnswer : DNSPacket
     {
         /// <summary>
@@ -236,14 +304,25 @@ namespace Aura_OS.System.Network.IPV4.UDP.DNS
             new DNSPacketAnswer();
         }
 
+        /// <summary>
+        /// Create new inctanse of the <see cref="DNSPacketAnswer"/> class.
+        /// </summary>
         internal DNSPacketAnswer()
             : base()
         { }
 
+        /// <summary>
+        /// Create new inctanse of the <see cref="DNSPacketAnswer"/> class.
+        /// </summary>
+        /// <param name="rawData">Raw data.</param>
         public DNSPacketAnswer(byte[] rawData)
             : base(rawData)
         { }
 
+        /// <summary>
+        /// Init DNSPacketAnswer fields.
+        /// </summary>
+        /// <exception cref="ArgumentException">Thrown if RawData is invalid or null.</exception>
         protected override void initFields()
         {
             base.initFields();
@@ -254,40 +333,40 @@ namespace Aura_OS.System.Network.IPV4.UDP.DNS
                 return;
             }
 
-            int index = dataOffset + 20;
-            if (questions > 0)
+            int index = DataOffset + 20;
+            if (Questions > 0)
             {
-                queries = new List<DNSQuery>();
+                Queries = new List<DNSQuery>();
 
-                for (int i = 0; i < questions; i++)
+                for (int i = 0; i < Questions; i++)
                 {
                     DNSQuery query = new DNSQuery();
-                    query.Name = parseName(mRawData, ref index);
-                    query.Type = (ushort)((mRawData[index + 0] << 8) | mRawData[index + 1]);
-                    query.Class = (ushort)((mRawData[index + 2] << 8) | mRawData[index + 3]);
-                    queries.Add(query);
+                    query.Name = parseName(RawData, ref index);
+                    query.Type = (ushort)((RawData[index + 0] << 8) | RawData[index + 1]);
+                    query.Class = (ushort)((RawData[index + 2] << 8) | RawData[index + 3]);
+                    Queries.Add(query);
                     index += 4;
                 }
             }
-            if (answerRRs > 0)
+            if (AnswerRRs > 0)
             {
-                answers = new List<DNSAnswer>();
+                Answers = new List<DNSAnswer>();
 
-                for (int i = 0; i < answerRRs; i++)
+                for (int i = 0; i < AnswerRRs; i++)
                 {
                     DNSAnswer answer = new DNSAnswer();
-                    answer.Name = (ushort)((mRawData[index + 0] << 8) | mRawData[index + 1]);
-                    answer.Type = (ushort)((mRawData[index + 2] << 8) | mRawData[index + 3]);
-                    answer.Class = (ushort)((mRawData[index + 4] << 8) | mRawData[index + 5]);
-                    answer.TimeToLive = (mRawData[index + 6] << 24) | (mRawData[index + 7] << 16) | (mRawData[index + 8] << 8) | mRawData[index + 9];
-                    answer.DataLenght = (ushort)((mRawData[index + 10] << 8) | mRawData[index + 11]);
+                    answer.Name = (ushort)((RawData[index + 0] << 8) | RawData[index + 1]);
+                    answer.Type = (ushort)((RawData[index + 2] << 8) | RawData[index + 3]);
+                    answer.Class = (ushort)((RawData[index + 4] << 8) | RawData[index + 5]);
+                    answer.TimeToLive = (RawData[index + 6] << 24) | (RawData[index + 7] << 16) | (RawData[index + 8] << 8) | RawData[index + 9];
+                    answer.DataLenght = (ushort)((RawData[index + 10] << 8) | RawData[index + 11]);
                     index += 12;
                     answer.Address = new byte[answer.DataLenght];
                     for (int j = 0; j < answer.DataLenght; j++, index++)
                     {
-                        answer.Address[j] = mRawData[index];
+                        answer.Address[j] = RawData[index];
                     }
-                    answers.Add(answer);
+                    Answers.Add(answer);
                 }
             }
         }

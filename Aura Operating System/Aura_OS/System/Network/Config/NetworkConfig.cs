@@ -9,9 +9,9 @@ using System.Collections;
 using System.Collections.Generic;
 using Aura_OS.HAL.Drivers.Network;
 using Aura_OS.System.Network.Config;
-using Aura_OS.System.Network.IPV4;
+using Aura_OS.System.Network.IPv4;
 
-namespace Aura_OS.System.Network
+namespace Aura_OS.System.Network.Config
 {
     public class NetworkConfig
     {

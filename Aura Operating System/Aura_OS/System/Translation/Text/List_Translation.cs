@@ -9,6 +9,7 @@ using Shell = Aura_OS.System.Shell;
 //using Cosmos.HAL.PCInformation;
 using System;
 using Aura_OS.System.Network;
+using Aura_OS.System.Network.Config;
 
 namespace Aura_OS.System.Translation
 {

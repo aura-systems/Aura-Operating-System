@@ -19,7 +19,7 @@ using System.Collections.Generic;
 using System.Text;
 using Cosmos.System.ExtendedASCII;
 using Aura_OS.Apps.System;
-using Aura_OS.System.Network.IPV4;
+using Aura_OS.System.Network.IPv4;
 using Cosmos.HAL;
 using Aura_OS.System.Graphics;
 using Aura_OS.System.Shell.cmdIntr;
