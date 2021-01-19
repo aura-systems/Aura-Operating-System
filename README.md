@@ -25,11 +25,11 @@ Aura's kernel: https://github.com/aura-systems/Cosmos.
 
 ## Screenshots
 
+<p align="center"><img width=60% src="https://raw.githubusercontent.com/aura-systems/Aura-Operating-System/master/ARTWORK/aura1.png"></p>
+
 <p align="center"><img width=60% src="https://raw.githubusercontent.com/aura-systems/Aura-Operating-System/master/ARTWORK/aura2.png"></p>
 
 <p align="center"><img width=60% src="https://raw.githubusercontent.com/aura-systems/Aura-Operating-System/master/ARTWORK/aura3.png"></p>
-
-<p align="center"><img width=60% src="https://raw.githubusercontent.com/aura-systems/Aura-Operating-System/master/ARTWORK/aura1.png"></p>
 
 ## Contribute
 You want to add awesome features to Aura? Here's how:
