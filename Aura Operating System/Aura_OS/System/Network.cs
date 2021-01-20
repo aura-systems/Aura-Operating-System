@@ -26,53 +26,6 @@ namespace Aura_OS.System
             return false;
         }
 
-        public static void Init()
-        {
-            int NetworkDeviceID = 0;
-
-            CustomConsole.WriteLineInfo("Searching for Ethernet Controllers...");
-
-            foreach (Cosmos.HAL.PCIDevice device in Cosmos.HAL.PCI.Devices)
-            {
-                if ((device.ClassCode == 0x02) && (device.Subclass == 0x00) && // is Ethernet Controller
-                    device == Cosmos.HAL.PCI.GetDevice(device.bus, device.slot, device.function))
-                {
-
-                    CustomConsole.WriteLineInfo("Found " + Cosmos.HAL.PCIDevice.DeviceClass.GetDeviceString(device) + " on PCI " + device.bus + ":" + device.slot + ":" + device.function);
-
-                    #region PCNETII
-
-                    if (device.VendorID == (ushort)Cosmos.HAL.VendorID.AMD && device.DeviceID == (ushort)Cosmos.HAL.DeviceID.PCNETII)
-                    {
-                            
-                        CustomConsole.WriteLineInfo("NIC IRQ: " + device.InterruptLine);
-
-                        var AMDPCNetIIDevice = new AMDPCNetII(device);
-
-                        AMDPCNetIIDevice.NameID = ("eth" + NetworkDeviceID);
-
-                        CustomConsole.WriteLineInfo("Registered at " + AMDPCNetIIDevice.NameID + " (" + AMDPCNetIIDevice.MACAddress.ToString() + ")");
-
-                        AMDPCNetIIDevice.Enable();
-
-                        NetworkDeviceID++;
-                    }
-
-                    #endregion
-
-                }
-            }
-
-            if (NetworkDevice.Devices.Count == 0)
-            {
-                CustomConsole.WriteLineError("No supported network card found!!");
-            }
-            else
-            {
-                CustomConsole.WriteLineOK("Network initialization done!");
-            }
-        }
-
         static bool IsSavedConf(string device)
         {
             if (Setup.FileSystem() == "true")

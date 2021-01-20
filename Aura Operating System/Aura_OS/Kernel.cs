@@ -109,7 +109,7 @@ namespace Aura_OS
 
                 #region Network Init
 
-                NetworkInit.Init();
+                Cosmos.HAL.Network.NetworkInit.Init();
 
                 NetworkStack.Init();
 
