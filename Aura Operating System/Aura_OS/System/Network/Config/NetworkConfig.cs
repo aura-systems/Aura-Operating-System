@@ -7,7 +7,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using Aura_OS.HAL.Drivers.Network;
+using Cosmos.HAL;
 using Aura_OS.System.Network.Config;
 using Aura_OS.System.Network.IPv4;
 

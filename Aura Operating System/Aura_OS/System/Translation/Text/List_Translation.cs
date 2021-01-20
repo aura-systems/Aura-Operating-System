@@ -10,6 +10,7 @@ using Shell = Aura_OS.System.Shell;
 using System;
 using Aura_OS.System.Network;
 using Aura_OS.System.Network.Config;
+using Cosmos.HAL;
 
 namespace Aura_OS.System.Translation
 {
@@ -531,14 +532,14 @@ namespace Aura_OS.System.Translation
                     {
                         Console.WriteLine("Aucune configuration réseau détectée! Utilisez ipconfig /help");
                     }
-                    foreach (HAL.Drivers.Network.NetworkDevice device in NetworkConfig.Keys)
+                    foreach (NetworkDevice device in NetworkConfig.Keys)
                     {
                         switch (device.CardType)
                         {
-                            case HAL.Drivers.Network.CardType.Ethernet:
+                            case CardType.Ethernet:
                                 Console.WriteLine("Carte Ethernet " + counter + " - " + device.Name);
                                 break;
-                            case HAL.Drivers.Network.CardType.Wireless:
+                            case CardType.Wireless:
                                 Console.WriteLine("Carte réseau sans fil " + counter + " :");
                                 break;
                         }
@@ -558,14 +559,14 @@ namespace Aura_OS.System.Translation
                     {
                         Console.WriteLine("No network configuration detected! Use ipconfig /help");
                     }
-                    foreach (HAL.Drivers.Network.NetworkDevice device in NetworkConfig.Keys)
+                    foreach (NetworkDevice device in NetworkConfig.Keys)
                     {
                         switch (device.CardType)
                         {
-                            case HAL.Drivers.Network.CardType.Ethernet:
+                            case CardType.Ethernet:
                                 Console.WriteLine("Ethernet Card  " + counter1 + " - " + device.Name);
                                 break;
-                            case HAL.Drivers.Network.CardType.Wireless:
+                            case CardType.Wireless:
                                 Console.WriteLine("Wireless Card " + counter1 + " - " + device.Name);
                                 break;
                         }
@@ -585,14 +586,14 @@ namespace Aura_OS.System.Translation
                     {
                         Console.WriteLine("Geen netwerkconfiguratie gedetecteerd! Gebruik ipconfig /help");
                     }
-                    foreach (HAL.Drivers.Network.NetworkDevice device in NetworkConfig.Keys)
+                    foreach (NetworkDevice device in NetworkConfig.Keys)
                     {
                         switch (device.CardType)
                         {
-                            case HAL.Drivers.Network.CardType.Ethernet:
+                            case CardType.Ethernet:
                                 Console.WriteLine("Ethernetkaart " + counter2 + " - " + device.Name);
                                 break;
-                            case HAL.Drivers.Network.CardType.Wireless:
+                            case CardType.Wireless:
                                 Console.WriteLine("Draadloze Netwerkkaart " + counter2 + " :");
                                 break;
                         }
@@ -612,14 +613,14 @@ namespace Aura_OS.System.Translation
                     {
                         Console.WriteLine("Nessuna configurazione di rete rilevata! Utilizzare ipconfig /help");
                     }
-                    foreach (HAL.Drivers.Network.NetworkDevice device in NetworkConfig.Keys)
+                    foreach (NetworkDevice device in NetworkConfig.Keys)
                     {
                         switch (device.CardType)
                         {
-                            case HAL.Drivers.Network.CardType.Ethernet:
+                            case CardType.Ethernet:
                                 Console.WriteLine("Scheda Ethernet " + counter3 + " - " + device.Name);
                                 break;
-                            case HAL.Drivers.Network.CardType.Wireless:
+                            case CardType.Wireless:
                                 Console.WriteLine("Scheda di rete senza fili " + counter3 + " :");
                                 break;
                         }
@@ -639,14 +640,14 @@ namespace Aura_OS.System.Translation
                     {
                         Console.WriteLine("Nie wykryto zadnej konfiguracji sieci! Uzyj ipconfig /help");
                     }
-                    foreach (HAL.Drivers.Network.NetworkDevice device in NetworkConfig.Keys)
+                    foreach (NetworkDevice device in NetworkConfig.Keys)
                     {
                         switch (device.CardType)
                         {
-                            case HAL.Drivers.Network.CardType.Ethernet:
+                            case CardType.Ethernet:
                                 Console.WriteLine("Karta Sieciowa  " + counter4 + " - " + device.Name);
                                 break;
-                            case HAL.Drivers.Network.CardType.Wireless:
+                            case CardType.Wireless:
                                 Console.WriteLine("Karta bezprzewodowa " + counter4 + " - " + device.Name);
                                 break;
                         }

@@ -6,13 +6,13 @@
 */
 
 using System;
-using Aura_OS.HAL.Drivers.Network;
 using Aura_OS.System.Network.ARP;
 using Aura_OS.System.Network.IPv4;
 using System.Collections.Generic;
 using Aura_OS.System.Network.Config;
 using Cosmos.Debug.Kernel;
 using Aura_OS.System.Network.IPv4.UDP;
+using Cosmos.HAL;
 
 namespace Aura_OS.System.Network
 {
@@ -43,17 +43,6 @@ namespace Aura_OS.System.Network
         {
             AddressMap = new TempDictionary<uint, NetworkDevice>();
             MACMap = new TempDictionary<uint, NetworkDevice>();
-
-            // VMT Scanner issue workaround
-            ARPPacket.VMTInclude();
-            ARPPacket_Ethernet.VMTInclude();
-            ARPReply_Ethernet.VMTInclude();
-            ARPRequest_Ethernet.VMTInclude();
-            ICMPPacket.VMTInclude();
-            ICMPEchoReply.VMTInclude();
-            ICMPEchoRequest.VMTInclude();
-            UDPPacket.VMTInclude();
-            //TCPPacket.VMTInclude();
         }
 
         /// <summary>

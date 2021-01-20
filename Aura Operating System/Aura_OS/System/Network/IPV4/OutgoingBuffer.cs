@@ -7,8 +7,8 @@
 */
 
 using System.Collections.Generic;
-using Aura_OS.HAL.Drivers.Network;
-using Aura_OS.HAL;
+using Cosmos.HAL;
+using Cosmos.HAL.Network;
 using Aura_OS.System.Network.ARP;
 using System;
 using Cosmos.Debug.Kernel;

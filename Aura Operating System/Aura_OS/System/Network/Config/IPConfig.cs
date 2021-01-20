@@ -9,7 +9,7 @@
 using System.Collections.Generic;
 using System;
 using Aura_OS.System.Network.IPv4;
-using Aura_OS.HAL.Drivers.Network;
+using Cosmos.HAL;
 
 namespace Aura_OS.System.Network.Config
 {

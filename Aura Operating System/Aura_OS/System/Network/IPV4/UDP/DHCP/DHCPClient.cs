@@ -1,6 +1,6 @@
 ﻿using Aura_OS.System.Network.IPv4;
 using System;
-using Aura_OS.HAL.Drivers.Network;
+using Cosmos.HAL;
 using Aura_OS.System.Network.IPv4.UDP.DNS;
 using Aura_OS.System.Network.Config;
 using System.Collections.Generic;

@@ -6,7 +6,7 @@
 */
 
 using System;
-using Aura_OS.HAL;
+using Cosmos.HAL.Network;
 using Aura_OS.System.Network.ARP;
 using Aura_OS.System.Network.IPv4;
 using Sys = System;

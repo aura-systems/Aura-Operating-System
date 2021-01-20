@@ -5,7 +5,7 @@
 *                   Port of Cosmos Code.
 */
 
-using Aura_OS.HAL;
+using Cosmos.HAL.Network;
 using System;
 using System.Text;
 

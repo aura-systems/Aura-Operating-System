@@ -5,7 +5,7 @@
 */
 
 
-using Aura_OS.HAL.Drivers.Network;
+using Cosmos.HAL;
 using Aura_OS.System.Network;
 using Aura_OS.System.Network.IPv4.UDP.DHCP;
 using Aura_OS.System.Network.IPv4;
@@ -36,14 +36,14 @@ namespace Aura_OS.System.Shell.cmdIntr.Network
             {
                 Console.WriteLine("No network configuration detected! Use ipconfig /help");
             }
-            foreach (HAL.Drivers.Network.NetworkDevice device in NetworkConfig.Keys)
+            foreach (NetworkDevice device in NetworkConfig.Keys)
             {
                 switch (device.CardType)
                 {
-                    case HAL.Drivers.Network.CardType.Ethernet:
+                    case CardType.Ethernet:
                         Console.Write("Ethernet Card : " + device.NameID + " - " + device.Name);
                         break;
-                    case HAL.Drivers.Network.CardType.Wireless:
+                    case CardType.Wireless:
                         Console.Write("Wireless Card : " + device.NameID + " - " + device.Name);
                         break;
                 }

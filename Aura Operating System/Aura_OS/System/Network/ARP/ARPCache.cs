@@ -6,7 +6,7 @@
 */
 
 using System;
-using Aura_OS.HAL;
+using Cosmos.HAL.Network;
 
 namespace Aura_OS.System.Network.ARP
 {

@@ -23,6 +23,7 @@ using Aura_OS.System.Network.IPv4;
 using Cosmos.HAL;
 using Aura_OS.System.Graphics;
 using Aura_OS.System.Shell.cmdIntr;
+using Aura_OS.System.Network;
 
 #endregion
 
@@ -109,6 +110,8 @@ namespace Aura_OS
                 #region Network Init
 
                 NetworkInit.Init();
+
+                NetworkStack.Init();
 
                 #endregion
 

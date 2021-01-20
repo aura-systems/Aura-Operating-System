@@ -4,7 +4,7 @@
 * PROGRAMMER(S):    Valentin Charbonnier <valentinbreiz@gmail.com>
 */
 
-using Aura_OS.HAL.Drivers;
+//using Aura_OS.HAL.Drivers;
 
 namespace Aura_OS.HAL
 {

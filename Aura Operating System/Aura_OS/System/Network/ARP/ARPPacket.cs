@@ -7,8 +7,9 @@
 
 using System;
 using Aura_OS.HAL;
-using Aura_OS.HAL.Drivers.Network;
+using Cosmos.HAL;
 using Aura_OS.System.Network.IPv4;
+using Cosmos.HAL.Network;
 
 namespace Aura_OS.System.Network.ARP
 {

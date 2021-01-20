@@ -1,6 +1,4 @@
-﻿using Aura_OS.HAL;
-using Aura_OS.System.Network.IPv4;
-using Aura_OS.System.Network.IPv4.UDP;
+﻿using Cosmos.HAL.Network;
 using System;
 using System.Collections.Generic;
 using System.Text;

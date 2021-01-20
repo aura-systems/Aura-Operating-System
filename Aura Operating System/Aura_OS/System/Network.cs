@@ -4,9 +4,10 @@
 * PROGRAMMERS:      Valentin Charbonnier <valentinbreiz@gmail.com>; Alexy DA CRUZ <dacruzalexy@gmail.com>
 */
 
-using Aura_OS.HAL.Drivers.Network;
 using Aura_OS.System.Network.Config;
 using Aura_OS.System.Network.IPv4;
+using Cosmos.HAL;
+using Cosmos.HAL.Drivers.PCI.Network;
 using System.Collections.Generic;
 
 namespace Aura_OS.System
@@ -52,7 +53,6 @@ namespace Aura_OS.System
 
                         CustomConsole.WriteLineInfo("Registered at " + AMDPCNetIIDevice.NameID + " (" + AMDPCNetIIDevice.MACAddress.ToString() + ")");
 
-                        Network.NetworkStack.Init();
                         AMDPCNetIIDevice.Enable();
 
                         NetworkDeviceID++;
