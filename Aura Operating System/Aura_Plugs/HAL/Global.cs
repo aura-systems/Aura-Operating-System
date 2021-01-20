@@ -38,7 +38,7 @@ namespace Aura_Plugs.HAL
             Cosmos.HAL.BlockDevice.AHCI.InitDriver();
             Aura_OS.System.CustomConsole.WriteLineOK("AHCI Driver Initialization");
 
-            NetworkInit.Init();
+            Cosmos.HAL.Network.NetworkInit.Init();
             Aura_OS.System.CustomConsole.WriteLineOK("Network Devices Initialization");
 
             Aura_OS.System.CustomConsole.WriteLineOK("Kernel successfully initialized!");

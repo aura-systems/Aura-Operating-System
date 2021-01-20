@@ -10,20 +10,12 @@
 using System;
 using Cosmos.System.FileSystem;
 using Sys = Cosmos.System;
-using Lang = Aura_OS.System.Translation;
 using Aura_OS.System;
 using Aura_OS.System.Users;
-using Aura_OS.System.Computer;
-using Aura_OS.System.Utils;
 using System.Collections.Generic;
 using System.Text;
 using Cosmos.System.ExtendedASCII;
-using Aura_OS.Apps.System;
-using Aura_OS.System.Network.IPv4;
-using Cosmos.HAL;
-using Aura_OS.System.Graphics;
 using Aura_OS.System.Shell.cmdIntr;
-using Aura_OS.System.Network;
 
 #endregion
 
