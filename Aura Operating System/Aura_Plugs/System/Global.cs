@@ -24,6 +24,9 @@ namespace Aura_OS.System.Plugs
 
             Cosmos.System.Global.mDebugger.Send("HW Init");
 
+            Network.NetworkStack.Init();
+            Cosmos.System.Global.mDebugger.Send("Network Stack Init");
+
             Cosmos.System.Global.NumLock = false;
             Cosmos.System.Global.CapsLock = false;
             Cosmos.System.Global.ScrollLock = false;

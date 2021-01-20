@@ -107,14 +107,6 @@ namespace Aura_OS
 
                 #endregion
 
-                #region Network Init
-
-                Cosmos.HAL.Network.NetworkInit.Init();
-
-                NetworkStack.Init();
-
-                #endregion
-
                 System.CustomConsole.WriteLineOK("Aura successfully started!");
 
                 #region Installation Init
