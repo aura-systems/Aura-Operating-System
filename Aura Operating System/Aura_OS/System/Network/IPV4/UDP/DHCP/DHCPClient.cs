@@ -137,7 +137,7 @@ namespace Aura_OS.System.Network.IPv4.UDP.DHCP
 
                 NetworkStack.RemoveAllConfigIP();
 
-                NetworkInit.Enable(networkDevice, new Address(0, 0, 0, 0), new Address(0, 0, 0, 0), new Address(0, 0, 0, 0));
+                IPConfig.Enable(networkDevice, new Address(0, 0, 0, 0), new Address(0, 0, 0, 0), new Address(0, 0, 0, 0));
 
 
                 //Utils.Settings settings = new Utils.Settings(@"0:\System\" + networkDevice.Name + ".conf");
@@ -159,7 +159,7 @@ namespace Aura_OS.System.Network.IPv4.UDP.DHCP
 
             foreach (NetworkDevice networkDevice in NetworkDevice.Devices)
             {
-                NetworkInit.Enable(networkDevice, new Address(0, 0, 0, 0), new Address(0, 0, 0, 0), new Address(0, 0, 0, 0));
+                IPConfig.Enable(networkDevice, new Address(0, 0, 0, 0), new Address(0, 0, 0, 0), new Address(0, 0, 0, 0));
 
                 DHCPDiscover dhcp_discover = new DHCPDiscover(networkDevice.MACAddress);
                 OutgoingBuffer.AddPacket(dhcp_discover);
@@ -227,7 +227,7 @@ namespace Aura_OS.System.Network.IPv4.UDP.DHCP
                     settings.EditValue("dhcp_server", packet.Server.ToString());
                     settings.PushValues();
 
-                    NetworkInit.Enable(networkDevice, packet.Client, packet.Subnet, packet.Server);
+                    IPConfig.Enable(networkDevice, packet.Client, packet.Subnet, packet.Server);
                     DNSConfig.Add(packet.DNS);
 
                     if (message)

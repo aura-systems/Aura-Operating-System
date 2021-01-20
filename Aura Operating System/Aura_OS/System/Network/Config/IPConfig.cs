@@ -90,6 +90,18 @@ namespace Aura_OS.System.Network.Config
             return default_gw;
         }
 
+        public static bool Enable(NetworkDevice device, Address ip, Address subnet, Address gw)
+        {
+            if (device != null)
+            {
+                IPConfig config = new IPConfig(ip, subnet, gw);
+                Network.NetworkStack.ConfigIP(device, config);
+                Kernel.debugger.Send(config.ToString());
+                return true;
+            }
+            return false;
+        }
+
         /// <summary>
         /// Check if address is local address.
         /// </summary>
