@@ -5,15 +5,13 @@
 */
 
 
-using Aura_OS.HAL.Drivers.Network;
-using Aura_OS.System.Network;
-using Aura_OS.System.Network.IPv4.UDP.DHCP;
-using Aura_OS.System.Network.IPv4;
+using Cosmos.HAL;
+using Cosmos.System.Network;
+using Cosmos.System.Network.Config;
+using Cosmos.System.Network.IPv4;
+using Cosmos.System.Network.IPv4.UDP.DHCP;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using L = Aura_OS.System.Translation;
-using Aura_OS.System.Network.Config;
 
 namespace Aura_OS.System.Shell.cmdIntr.Network
 {
@@ -36,14 +34,14 @@ namespace Aura_OS.System.Shell.cmdIntr.Network
             {
                 Console.WriteLine("No network configuration detected! Use ipconfig /help");
             }
-            foreach (HAL.Drivers.Network.NetworkDevice device in NetworkConfig.Keys)
+            foreach (NetworkDevice device in NetworkConfig.Keys)
             {
                 switch (device.CardType)
                 {
-                    case HAL.Drivers.Network.CardType.Ethernet:
+                    case CardType.Ethernet:
                         Console.Write("Ethernet Card : " + device.NameID + " - " + device.Name);
                         break;
-                    case HAL.Drivers.Network.CardType.Wireless:
+                    case CardType.Wireless:
                         Console.Write("Wireless Card : " + device.NameID + " - " + device.Name);
                         break;
                 }
@@ -133,12 +131,12 @@ namespace Aura_OS.System.Shell.cmdIntr.Network
 
                     if (ip != null && subnet != null && gw != null)
                     {
-                        NetworkInit.Enable(nic, ip, subnet, gw);
+                        IPConfig.Enable(nic, ip, subnet, gw);
                         Console.WriteLine("Config OK!");
                     }
                     else if (ip != null && subnet != null)
                     {
-                        NetworkInit.Enable(nic, ip, subnet, ip);
+                        IPConfig.Enable(nic, ip, subnet, ip);
                         Console.WriteLine("Config OK!");
                     }
                     else

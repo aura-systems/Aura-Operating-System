@@ -4,7 +4,7 @@
 * PROGRAMMER(S):    John Welsh <djlw78@gmail.com>
 */
 
-using Aura_OS.System.Network;
+using Cosmos.System.Network;
 using Aura_OS.System.Shell.cmdIntr.c_Console;
 using Aura_OS.System.Shell.cmdIntr.FileSystem;
 using Aura_OS.System.Shell.cmdIntr.Network;

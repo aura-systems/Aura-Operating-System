@@ -7,12 +7,11 @@
 using System;
 using Sys = Cosmos.System;
 using L = Aura_OS.System.Translation;
-using Aura_OS.System.Network.IPv4;
-using Aura_OS.System.Network;
-using Aura_OS.System;
+using Cosmos.System.Network;
 using System.Collections.Generic;
-using Aura_OS.System.Network.IPv4.UDP.DNS;
-using Aura_OS.System.Network.Config;
+using Cosmos.System.Network.IPv4;
+using Cosmos.System.Network.Config;
+using Cosmos.System.Network.IPv4.UDP.DNS;
 
 namespace Aura_OS.System.Shell.cmdIntr.Network
 {
