@@ -83,7 +83,14 @@ namespace Aura_OS.System.Shell.cmdIntr.Network
             }
             else if (arguments[0] == "/ask")
             {
-                xClient.SendDiscoverPacket();
+                if (xClient.SendDiscoverPacket() != -1)
+                {
+                    Console.WriteLine("Configuration applied! Your local IPv4 Address is " + NetworkConfig.CurrentConfig.Value.IPAddress.ToString() + ".");
+                }
+                else
+                {
+                    return new ReturnInfo(this, ReturnCode.ERROR, "DHCP Discover failed. Can't apply dynamic IPv4 address.");
+                }
             }
             else if (arguments[0] == "/listnic")
             {
