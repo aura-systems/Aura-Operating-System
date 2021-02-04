@@ -40,11 +40,12 @@ namespace Aura_OS
         public static bool SystemExists = false;
         public static bool JustInstalled = false;
         public static CosmosVFS vFS = new CosmosVFS();
-		public static Dictionary<string, string> environmentvariables = new Dictionary<string, string>();
+	public static Dictionary<string, string> environmentvariables = new Dictionary<string, string>();
         public static string boottime = Time.MonthString() + "/" + Time.DayString() + "/" + Time.YearString() + ", " + Time.TimeString(true, true, true);
         public static System.AConsole.Console AConsole;
         public static string Consolemode = "VGATextmode";
         public static string current_volume = @"0:\";
+	public static bool DebugMode;
 
         public static Cosmos.Debug.Kernel.Debugger debugger = new Cosmos.Debug.Kernel.Debugger("Aura", "Kernel");
 
