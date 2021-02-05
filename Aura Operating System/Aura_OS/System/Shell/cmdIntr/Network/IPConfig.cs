@@ -5,14 +5,13 @@
 */
 
 
-using Aura_OS.HAL.Drivers.Network;
-using Aura_OS.System.Network;
-using Aura_OS.System.Network.IPV4.UDP.DHCP;
-using Aura_OS.System.Network.IPV4;
+using Cosmos.HAL;
+using Cosmos.System.Network;
+using Cosmos.System.Network.Config;
+using Cosmos.System.Network.IPv4;
+using Cosmos.System.Network.IPv4.UDP.DHCP;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using L = Aura_OS.System.Translation;
 
 namespace Aura_OS.System.Shell.cmdIntr.Network
 {
@@ -35,14 +34,14 @@ namespace Aura_OS.System.Shell.cmdIntr.Network
             {
                 Console.WriteLine("No network configuration detected! Use ipconfig /help");
             }
-            foreach (HAL.Drivers.Network.NetworkDevice device in NetworkConfig.Keys)
+            foreach (NetworkDevice device in NetworkConfig.Keys)
             {
                 switch (device.CardType)
                 {
-                    case HAL.Drivers.Network.CardType.Ethernet:
+                    case CardType.Ethernet:
                         Console.Write("Ethernet Card : " + device.NameID + " - " + device.Name);
                         break;
-                    case HAL.Drivers.Network.CardType.Wireless:
+                    case CardType.Wireless:
                         Console.Write("Wireless Card : " + device.NameID + " - " + device.Name);
                         break;
                 }
@@ -60,7 +59,11 @@ namespace Aura_OS.System.Shell.cmdIntr.Network
                 Console.WriteLine("IP Address           : " + NetworkConfig.Get(device).IPAddress.ToString());
                 Console.WriteLine("Subnet mask          : " + NetworkConfig.Get(device).SubnetMask.ToString());
                 Console.WriteLine("Default Gateway      : " + NetworkConfig.Get(device).DefaultGateway.ToString());
-                Console.WriteLine("Preferred DNS server : " + NetworkConfig.Get(device).DefaultDNSServer.ToString());
+                Console.WriteLine("DNS Nameservers      : ");
+                foreach (Address dnsnameserver in DNSConfig.DNSNameservers)
+                {
+                    Console.WriteLine("                       " + dnsnameserver.ToString());
+                }
             }
 
             return new ReturnInfo(this, ReturnCode.OK);
@@ -72,13 +75,22 @@ namespace Aura_OS.System.Shell.cmdIntr.Network
         /// <param name="arguments">Arguments</param>
         public override ReturnInfo Execute(List<string> arguments)
         {
+            var xClient = new DHCPClient();
+
             if (arguments[0] == "/release")
             {
-                DHCPClient.SendReleasePacket();
+                xClient.SendReleasePacket();
             }
             else if (arguments[0] == "/ask")
             {
-                DHCPClient.SendDiscoverPacket();
+                if (xClient.SendDiscoverPacket() != -1)
+                {
+                    Console.WriteLine("Configuration applied! Your local IPv4 Address is " + NetworkConfig.CurrentConfig.Value.IPAddress.ToString() + ".");
+                }
+                else
+                {
+                    return new ReturnInfo(this, ReturnCode.ERROR, "DHCP Discover failed. Can't apply dynamic IPv4 address.");
+                }
             }
             else if (arguments[0] == "/listnic")
             {
@@ -97,43 +109,69 @@ namespace Aura_OS.System.Shell.cmdIntr.Network
             }
             else if (arguments[0] == "/set")
             {
-                if (arguments.Count < 5)
+                if ((arguments.Count == 3) || (arguments.Count == 4)) // ipconfig /set eth0 192.168.1.2/24 {gw}
                 {
-                    return new ReturnInfo(this, ReturnCode.ERROR, "Usage : ipconfig /set {device} {IPv4} {Subnet} {Gateway}");
-                }
-                else
-                {
-                    Address ip = Address.Parse(arguments[2]);
-                    Address subnet = Address.Parse(arguments[3]);
-                    Address gw = Address.Parse(arguments[4]);
+                    string[] adrnetwork = arguments[2].Split('/');
+                    Address ip = Address.Parse(adrnetwork[0]);
                     NetworkDevice nic = NetworkDevice.GetDeviceByName(arguments[1]);
+                    Address gw = null;
+                    if (arguments.Count == 4)
+                    {
+                        gw = Address.Parse(arguments[3]);
+                    }
+
+                    int cidr;
+                    try
+                    {
+                        cidr = int.Parse(adrnetwork[1]);
+                    }
+                    catch (Exception ex)
+                    {
+                        return new ReturnInfo(this, ReturnCode.ERROR, ex.Message);
+                    }
+                    Address subnet = Address.CIDRToAddress(cidr);
 
                     if (nic == null)
                     {
                         return new ReturnInfo(this, ReturnCode.ERROR, "Couldn't find network device: " + arguments[1]);
                     }
+
                     if (ip != null && subnet != null && gw != null)
                     {
-                        NetworkInit.Enable(nic, ip, subnet, gw, gw);
+                        IPConfig.Enable(nic, ip, subnet, gw);
+                        Console.WriteLine("Config OK!");
+                    }
+                    else if (ip != null && subnet != null)
+                    {
+                        IPConfig.Enable(nic, ip, subnet, ip);
                         Console.WriteLine("Config OK!");
                     }
                     else
                     {
                         return new ReturnInfo(this, ReturnCode.ERROR, "Can't parse IP addresses (make sure they are well formated).");
                     }
-
-                    /*if (NetworkInterfaces.Interface(arguments[1]) != "null")
-                    {
-                        Utils.Settings settings = new Utils.Settings(@"0:\System\" + NetworkInterfaces.Interface(arguments[1]) + ".conf");
-                        NetworkStack.RemoveAllConfigIP();
-                        ApplyIP(arguments.ToArray(), settings); //TODO Fix that (arguments)
-                        settings.Push();
-                    }
-                    else
-                    {
-                        Console.WriteLine("This interface doesn't exists.");
-                    } */
+                }                
+                else
+                {
+                    return new ReturnInfo(this, ReturnCode.ERROR, "Usage : ipconfig /set {device} {IPv4/CIDR} {Gateway|null}");
                 }
+            }
+            else if (arguments[0] == "/nameserver")
+            {
+                if (arguments[1] == "-add")
+                {
+                    DNSConfig.Add(Address.Parse(arguments[2]));
+                    Console.WriteLine(arguments[2] + " has been added to nameservers.");
+                }
+                else if (arguments[1] == "-rem")
+                {
+                    DNSConfig.Remove(Address.Parse(arguments[2]));
+                    Console.WriteLine(arguments[2] + " has been removed from nameservers list.");
+                }
+                else
+                {
+                    return new ReturnInfo(this, ReturnCode.ERROR, "Usage : ipconfig /nameserver {add|remove} {IP}");
+                }                
             }
             else
             {
@@ -148,101 +186,15 @@ namespace Aura_OS.System.Shell.cmdIntr.Network
         public override void PrintHelp()
         {
             Console.WriteLine("Available commands:");
-            Console.WriteLine("- ipconfig /listnic    List network devices");
-            Console.WriteLine("- ipconfig /set        Manually set an IP Address");
+            Console.WriteLine("- ipconfig /listnic      List network devices");
+            Console.WriteLine("- ipconfig /ask          Find the DHCP server and ask a new IP address");
+            Console.WriteLine("- ipconfig /release      Tell the DHCP server to make the IP address available");
+            Console.WriteLine("- ipconfig /set          Manually set an IP Address");
             Console.WriteLine("     Usage:");
             Console.WriteLine("     - ipconfig /set {device} {IPv4} {Subnet} {Gateway}");
-            Console.WriteLine("- ipconfig /ask        Find the DHCP server and ask a new IP address");
-            Console.WriteLine("- ipconfig /release    Tell the DHCP server to make the IP address available");
+            Console.WriteLine("- ipconfig /nameserver   Manually set an DNS server");
+            Console.WriteLine("     Usage:");
+            Console.WriteLine("     - ipconfig /nameserver {-add|-rem} {IPv4}");
         }
-
-        private static void ApplyIP(string[] args, Utils.Settings settings)
-        {
-            int args_count = args.Length;
-            switch (args_count)
-            {
-                default:
-                    Console.WriteLine("Usage : " + args[0] + " /set {interface} {IPv4} {Subnet} -g {Gateway} -d {PrimaryDNS}");
-                    break;
-                case 5:
-                    if (Utils.Misc.IsIpv4Address(args[3]) && Utils.Misc.IsIpv4Address(args[4]))
-                    {
-                        settings.Edit("ipaddress", args[3]);
-                        settings.Edit("subnet", args[4]);
-                        settings.Edit("gateway", "0.0.0.0");
-                        settings.Edit("dns01", "0.0.0.0");
-                    }
-                    else
-                    {
-                        L.Text.Display("notcorrectaddress");
-                    }
-                    break;
-                case 7:
-                    if (Utils.Misc.IsIpv4Address(args[3]) && Utils.Misc.IsIpv4Address(args[4]) && Utils.Misc.IsIpv4Address(args[6]))
-                    {
-                        settings.Edit("ipaddress", args[3]);
-                        settings.Edit("subnet", args[4]);
-                        if (args[5] == "-g")
-                        {
-                            settings.Edit("gateway", args[6]);
-                            settings.Edit("dns01", "0.0.0.0");
-                        }
-                        else if (args[5] == "-d")
-                        {
-                            settings.Edit("dns01", args[6]);
-                            settings.Edit("gateway", "0.0.0.0");
-                        }
-                        else
-                        {
-                            Console.WriteLine("Usage : " + args[0] + " /set {interface} {IPv4} {Subnet} -g {Gateway} -d {PrimaryDNS}");
-                            settings.Edit("gateway", "0.0.0.0");
-                            settings.Edit("dns01", "0.0.0.0");
-                        }
-                    }
-                    else
-                    {
-                        L.Text.Display("notcorrectaddress");
-                    }
-                    break;
-                case 9:
-                    if (Utils.Misc.IsIpv4Address(args[3]) && Utils.Misc.IsIpv4Address(args[4]) && Utils.Misc.IsIpv4Address(args[6]) && Utils.Misc.IsIpv4Address(args[8]))
-                    {
-                        settings.Edit("ipaddress", args[3]);
-                        settings.Edit("subnet", args[4]);
-                        if (args[5] == "-g")
-                        {
-                            settings.Edit("gateway", args[6]);
-                        }
-                        else if (args[5] == "-d")
-                        {
-                            settings.Edit("dns01", args[6]);
-                        }
-                        else
-                        {
-                            Console.WriteLine("Usage : " + args[0] + " /set {interface} {IPv4} {Subnet} -g {Gateway} -d {PrimaryDNS}");
-                            settings.Edit("gateway", "0.0.0.0");
-                            settings.Edit("dns01", "0.0.0.0");
-                        }
-
-                        if (args[7] == "-g")
-                        {
-                            settings.Edit("gateway", args[8]);
-                        }
-                        else if (args[7] == "-d")
-                        {
-                            settings.Edit("dns01", args[8]);
-                        }
-                        else
-                        {
-                            Console.WriteLine("Usage : " + args[0] + " /set {interface} {IPv4} {Subnet} -g {Gateway} -d {PrimaryDNS}");
-                            settings.Edit("gateway", "0.0.0.0");
-                            settings.Edit("dns01", "0.0.0.0");
-                        }
-                    }
-                    break;
-                
-            }
-        }
-
     }
 }

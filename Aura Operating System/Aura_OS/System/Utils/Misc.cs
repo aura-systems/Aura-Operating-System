@@ -11,7 +11,7 @@ namespace Aura_OS.System.Utils
 {
     public class Misc
     {
-        public static bool IsIpv4Address(string[] items)
+        public static bool IsIPv4Address(string[] items)
         {
             if (items.Length == 4)
             {
@@ -31,10 +31,10 @@ namespace Aura_OS.System.Utils
             }
         }
 
-        public static bool IsIpv4Address(string ip)
+        public static bool IsIPv4Address(string ip)
         {
             string[] items = ip.Split('.');
-            if (IsIpv4Address(items))
+            if (IsIPv4Address(items))
             {
                 return true;
             }

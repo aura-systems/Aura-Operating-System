@@ -11,6 +11,7 @@ using Aura_OS.System.Security;
 using Aura_OS.System.Drawable;
 using Aura_OS.System.Translation;
 using Aura_OS.System.Utils;
+using Cosmos.HAL;
 
 namespace Aura_OS.System
 {
@@ -371,7 +372,7 @@ namespace Aura_OS.System
 
             config.PutValue("debugger", "off");
 
-            foreach (HAL.Drivers.Network.NetworkDevice networkDevice in HAL.Drivers.Network.NetworkDevice.Devices)
+            foreach (NetworkDevice networkDevice in NetworkDevice.Devices)
             {
                 File.Create(@"0:\System\" + networkDevice.Name + ".conf");
                 Settings settings = new Settings(@"0:\System\" + networkDevice.Name + ".conf");

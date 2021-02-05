@@ -5,15 +5,10 @@
 */
 
 using System;
-using Sys = Cosmos.System;
-using L = Aura_OS.System.Translation;
-using Aura_OS.System.Network.IPV4;
-using Aura_OS.System.Network;
-using Aura_OS.System;
-using System.Text;
 using System.Collections.Generic;
-using Aura_OS.System.Network.IPV4.UDP.DNS;
-using Aura_OS.System.Network.IPV4.UDP;
+using Cosmos.System.Network.IPv4.UDP.DNS;
+using Cosmos.System.Network.IPv4;
+using Cosmos.System.Network.Config;
 
 namespace Aura_OS.System.Shell.cmdIntr.Network
 {
@@ -52,7 +47,8 @@ namespace Aura_OS.System.Shell.cmdIntr.Network
             }
             else if (arguments.Count == 1)
             {
-                xClient.Connect(NetworkConfig.CurrentConfig.Value.DefaultDNSServer);
+                xClient.Connect(DNSConfig.Server(0));
+                Console.WriteLine("DNS used : " + DNSConfig.Server(0).ToString());
                 xClient.SendAsk(arguments[0]);
                 domainname = arguments[0];
             }
@@ -65,16 +61,16 @@ namespace Aura_OS.System.Shell.cmdIntr.Network
 
             Address address = xClient.Receive();
 
+            xClient.Close();
+
             if (address == null)
             {
-                return new ReturnInfo(this, ReturnCode.ERROR, "Unable to get URL for " + arguments[0]);
+                return new ReturnInfo(this, ReturnCode.ERROR, "Unable to find " + arguments[0]);
             }
             else
             {
                 Console.WriteLine(domainname + " is " + address.ToString());
             }
-
-            xClient.Close();
 
             return new ReturnInfo(this, ReturnCode.OK);
         }

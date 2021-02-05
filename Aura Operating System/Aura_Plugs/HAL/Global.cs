@@ -8,6 +8,7 @@ using System;
 using IL2CPU.API.Attribs;
 using Cosmos.HAL;
 using Cosmos.Core;
+using Cosmos.HAL.Network;
 
 namespace Aura_Plugs.HAL
 {
@@ -37,8 +38,8 @@ namespace Aura_Plugs.HAL
             Cosmos.HAL.BlockDevice.AHCI.InitDriver();
             Aura_OS.System.CustomConsole.WriteLineOK("AHCI Driver Initialization");
 
-            //Cosmos.Core.Processing.ProcessorScheduler.Initialize();
-            //Aura_OS.System.CustomConsole.WriteLineOK("Processor Scheduler Initialization");
+            Cosmos.HAL.Network.NetworkInit.Init();
+            Aura_OS.System.CustomConsole.WriteLineOK("Network Devices Initialization");
 
             Aura_OS.System.CustomConsole.WriteLineOK("Kernel successfully initialized!");
 

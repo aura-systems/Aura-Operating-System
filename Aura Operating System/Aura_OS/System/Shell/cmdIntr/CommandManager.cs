@@ -4,9 +4,7 @@
 * PROGRAMMER(S):    John Welsh <djlw78@gmail.com>
 */
 
-using Aura_OS.System.Network;
-using Aura_OS.System.Network.IPV4;
-using Aura_OS.System.Network.IPV4.TCP;
+using Cosmos.System.Network;
 using Aura_OS.System.Shell.cmdIntr.c_Console;
 using Aura_OS.System.Shell.cmdIntr.FileSystem;
 using Aura_OS.System.Shell.cmdIntr.Network;
@@ -67,6 +65,7 @@ namespace Aura_OS.System.Shell.cmdIntr
             CMDs.Add(new CommandMkfil(new string[] { "touch", "mkfil", "mf" }));
             CMDs.Add(new CommandRmfil(new string[] { "rmfil", "rmf" }));
             CMDs.Add(new CommandHex(new string[] { "hex" }));
+            CMDs.Add(new CommandTree(new string[] { "tree" }));
 
             CMDs.Add(new CommandAction(new string[] { "beep" }, () =>
             {
