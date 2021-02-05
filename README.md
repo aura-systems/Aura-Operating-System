@@ -25,6 +25,6 @@ Please read the [Aura Progression](https://github.com/aura-systems/Aura-Operatin
 
 <p align="center"><img src="https://raw.githubusercontent.com/aura-systems/Aura-Operating-System/master/ARTWORK/aura1.png"></p>
 
-<p align="center"><img src="https://raw.githubusercontent.com/aura-systems/Aura-Operating-System/master/ARTWORK/aura2.png"></p>
-
 <p align="center"><img src="https://raw.githubusercontent.com/aura-systems/Aura-Operating-System/master/ARTWORK/aura3.png"></p>
+
+<p align="center"><img src="https://raw.githubusercontent.com/aura-systems/Aura-Operating-System/master/ARTWORK/aura2.png"></p>
