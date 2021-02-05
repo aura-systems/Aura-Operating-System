@@ -8,7 +8,7 @@
 A Cosmos based Operating System developped in C# made by Alexy DA CRUZ (GeomTech) and Valentin Charbonnier (valentinbreiz). Please read [our wiki](https://github.com/aura-systems/Aura-Operating-System/wiki) for more information 🌼
 
 ## Current features
-Please read the [Aura Progression](https://github.com/aura-systems/Aura-Operating-System/projects/4) or our [Roadmap](https://github.com/aura-systems/Aura-Operating-System/projects/3) to know what will be added soon.
+See the [Aura Progression](https://github.com/aura-systems/Aura-Operating-System/projects/4) or our [Roadmap](https://github.com/aura-systems/Aura-Operating-System/projects/3) to know what will be added soon.
 
 * ATA IDE / AHCI Driver.
 * FAT32/16/12 + Virtual FileSystem.
