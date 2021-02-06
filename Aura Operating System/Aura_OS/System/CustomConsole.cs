@@ -1,4 +1,4 @@
-﻿/*
+/*
 * PROJECT:          Aura Operating System Development
 * CONTENT:          Info / OK / Error in console
 * PROGRAMMERS:      Valentin Charbonnier <valentinbreiz@gmail.com>
@@ -19,6 +19,29 @@ namespace Aura_OS.System
             Console.ForegroundColor = ConsoleColor.White;
             Console.Write(text + "\n");
             Kernel.debugger.Send("[Info] " + text);
+        }
+        public static void WriteLineWarning(string text)
+        {
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.Write("[WARNING] ");
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.Write(text + "\n");
+            Kernel.debugger.Send("[WARNING] " + text);
+        }
+        /// <summary>
+        /// tipColor's text
+        /// [tipText(with tipColor)] text
+        /// </summary>
+        /// <param name="tipColor"></param>
+        /// <param name="text"></param>
+        /// <param name="tipText"></param>
+        public static void WriteLineCustom(ConsoleColor tipColor,string text,string tipText)
+        {
+            Console.ForegroundColor = tipColor;
+            Console.Write("[" + tipText + "] ");
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.Write(text + "\n");
+            Kernel.debugger.Send("[" + tipText + "] " + text);
         }
         public static void WriteLineOK(string text)
         {
