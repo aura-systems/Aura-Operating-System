@@ -40,6 +40,9 @@ namespace Aura_OS.System
                 case "pl_PL":
                     Console.WriteLine(" * Dokumentacja: aura-team.com");
                     break;
+                case "cz_CZ":
+                    Console.WriteLine(" * Dokumentace: aura-team.com");
+                    break;
             }
 
             Console.ForegroundColor = ConsoleColor.White;

@@ -514,6 +514,19 @@ namespace Aura_OS.System.Translation
                     Console.WriteLine("https://github.com/aura-systems/Aura-Operating-System");
                     break;
 
+                case "cz_CZ":
+                    Console.WriteLine("O systému Aura OS:");
+                    Console.WriteLine("Tým Aura vytvořili Valentin CHARBONNIER a Alexa DA CRUZ.");
+                    Console.WriteLine();
+                    Console.WriteLine("Přispěvatelé:");
+                    Console.WriteLine("- djlw78");
+                    Console.WriteLine("- Og-Rok");
+                    Console.WriteLine("Překlad: Kacper Kostka");
+                    Console.WriteLine();
+                    Console.WriteLine("Děkujeme také za podporu AuracOS.");
+                    Console.WriteLine("https://github.com/aura-systems/Aura-Operating-System");
+                    break;
+
             }
         }
 
