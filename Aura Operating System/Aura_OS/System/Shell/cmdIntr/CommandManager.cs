@@ -204,7 +204,7 @@ namespace Aura_OS.System.Shell.cmdIntr
                 {
                     ReturnInfo result;
 
-                    if (arguments.Count > 0 && arguments[0] == "/help")
+                    if (arguments.Count > 0 && (arguments[0] == "/help" || arguments[0] == "/h"))
                     {
                         ShowHelp(command);
                         result = new ReturnInfo(command, ReturnCode.OK);
