@@ -67,6 +67,7 @@ namespace Aura_OS.System.Shell.cmdIntr
             CMDs.Add(new CommandRmfil(new string[] { "rmfil", "rmf" }));
             CMDs.Add(new CommandHex(new string[] { "hex" }));
             CMDs.Add(new CommandTree(new string[] { "tree" }));
+            CMDs.Add(new CommandPCName(new string[] { "pcn" }));
 
             CMDs.Add(new CommandAction(new string[] { "beep" }, () =>
             {
