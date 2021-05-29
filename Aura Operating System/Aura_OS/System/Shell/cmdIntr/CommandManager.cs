@@ -19,6 +19,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using L = Aura_OS.System.Translation;
+using Aura_OS.System.Shell.cmdIntr.Tools;
+using Aura_OS.System.Shell.cmdIntr;
+using Aura_OS.System.Computer;
 
 namespace Aura_OS.System.Shell.cmdIntr
 {
@@ -45,7 +48,6 @@ namespace Aura_OS.System.Shell.cmdIntr
             CMDs.Add(new CommandPing(new string[] { "ping" }));
             CMDs.Add(new CommandUdp(new string[] { "udp" }));
             CMDs.Add(new CommandDns(new string[] { "dns" }));
-            CMDs.Add(new CommandWget(new string[] { "wget" }));
 
             CMDs.Add(new CommandVersion(new string[] { "version", "ver" }));
             CMDs.Add(new CommandSystemInfo(new string[] { "systeminfo", "sysinfo" }));
@@ -61,18 +63,20 @@ namespace Aura_OS.System.Shell.cmdIntr
             CMDs.Add(new CommandMkdir(new string[] { "mkdir", "md" }));
             CMDs.Add(new CommandRmdir(new string[] { "rmdir", "rmd" }));
             CMDs.Add(new CommandCat(new string[] { "cat" }));
-            CMDs.Add(new CommandCD(new string[] { "cd" }));
+            CMDs.Add(new CommandCD(new string[] { "cd","go" }));
             CMDs.Add(new CommandChangeVol(new string[] { "chgvol", "cv" }));
             CMDs.Add(new CommandMkfil(new string[] { "touch", "mkfil", "mf" }));
             CMDs.Add(new CommandRmfil(new string[] { "rmfil", "rmf" }));
             CMDs.Add(new CommandHex(new string[] { "hex" }));
             CMDs.Add(new CommandTree(new string[] { "tree" }));
-            CMDs.Add(new CommandPCName(new string[] { "pcn" }));
-
+            CMDs.Add(new Edit(new string[] { "edit", "vim" }));
+            CMDs.Add(new CPUInfo(new string[] { "cpui", "cpuinfo" }));
+            CMDs.Add(new cmdIntr.CommandPCManager(new string[] { "pcm","settings" }));
             CMDs.Add(new CommandAction(new string[] { "beep" }, () =>
             {
                 Cosmos.System.PCSpeaker.Beep();
             }));
+            CMDs.Add(new CommandAppletman(new string[] { "appman"}));
             CMDs.Add(new CommandAction(new string[] { "play" }, () =>
             {
                 Cosmos.System.PCSpeaker.Beep((uint)Cosmos.System.Notes.F5, 432);
@@ -206,7 +210,7 @@ namespace Aura_OS.System.Shell.cmdIntr
                 {
                     ReturnInfo result;
 
-                    if (arguments.Count > 0 && (arguments[0] == "/help" || arguments[0] == "/h"))
+                    if (arguments.Count > 0 && arguments[0] == "/help")
                     {
                         ShowHelp(command);
                         result = new ReturnInfo(command, ReturnCode.OK);
