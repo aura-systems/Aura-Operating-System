@@ -75,20 +75,23 @@ namespace Aura_OS.System.Shell.cmdIntr.Network
         /// <param name="arguments">Arguments</param>
         public override ReturnInfo Execute(List<string> arguments)
         {
-            var xClient = new DHCPClient();
-
             if (arguments[0] == "/release")
             {
+                var xClient = new DHCPClient();
                 xClient.SendReleasePacket();
+                xClient.Close();
             }
             else if (arguments[0] == "/ask")
             {
+                var xClient = new DHCPClient();
                 if (xClient.SendDiscoverPacket() != -1)
                 {
+                    xClient.Close();
                     Console.WriteLine("Configuration applied! Your local IPv4 Address is " + NetworkConfig.CurrentConfig.Value.IPAddress.ToString() + ".");
                 }
                 else
                 {
+                    xClient.Close();
                     return new ReturnInfo(this, ReturnCode.ERROR, "DHCP Discover failed. Can't apply dynamic IPv4 address.");
                 }
             }
