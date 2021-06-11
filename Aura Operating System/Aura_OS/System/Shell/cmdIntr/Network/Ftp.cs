@@ -34,6 +34,9 @@ namespace Aura_OS.System.Shell.cmdIntr.Network
             try
             {
                 var xServer = new FtpServer(Kernel.vFS, Kernel.current_directory, true);
+
+                Console.WriteLine("FTP Server listening at " + NetworkConfig.CurrentConfig.Value.IPAddress.ToString() + ":21 ...");
+
                 xServer.Listen();
             }
             catch (Exception ex)
