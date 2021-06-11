@@ -31,16 +31,6 @@ namespace Aura_OS.System.Shell.cmdIntr.Network
         /// <param name="arguments">Arguments</param>
         public override ReturnInfo Execute()
         {
-            PrintHelp();
-            return new ReturnInfo(this, ReturnCode.OK);
-        }
-
-        /// <summary>
-        /// CommandDns
-        /// </summary>
-        /// <param name="arguments">Arguments</param>
-        public override ReturnInfo Execute(List<string> arguments)
-        {
             try
             {
                 var xServer = new FtpServer(Kernel.vFS, Kernel.current_directory, true);
