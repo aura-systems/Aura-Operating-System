@@ -1,6 +1,6 @@
 ﻿/*
 * PROJECT:          Aura Operating System Development
-* CONTENT:          Command Interpreter - Ping command
+* CONTENT:          Command Interpreter - Ftp command
 * PROGRAMMER(S):    Valentin Charbonnier <valentinbreiz@gmail.com>
 */
 
@@ -60,8 +60,7 @@ namespace Aura_OS.System.Shell.cmdIntr.Network
         public override void PrintHelp()
         {
             Console.WriteLine("Usage:");
-            Console.WriteLine(" - dns {domain_name}");
-            Console.WriteLine(" - dns {dns_server_ip} {domain_name}");
+            Console.WriteLine(" - ftp");
         }
     }
 }
