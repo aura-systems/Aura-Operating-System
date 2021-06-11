@@ -46,6 +46,7 @@ namespace Aura_OS.System.Shell.cmdIntr
             CMDs.Add(new CommandUdp(new string[] { "udp" }));
             CMDs.Add(new CommandDns(new string[] { "dns" }));
             CMDs.Add(new CommandWget(new string[] { "wget" }));
+            CMDs.Add(new CommandFtp(new string[] { "ftp" }));
 
             CMDs.Add(new CommandVersion(new string[] { "version", "ver" }));
             CMDs.Add(new CommandSystemInfo(new string[] { "systeminfo", "sysinfo" }));
