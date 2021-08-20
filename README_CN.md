@@ -2,25 +2,25 @@
 
 ![Build Status](https://github.com/aura-systems/Aura-Operating-System/workflows/.NET%20Core/badge.svg)[![Issues](https://img.shields.io/github/issues/aura-systems/Aura-Operating-System.svg)](https://github.com/aura-systems/Aura-Operating-System/issues)[![Pull requests](https://img.shields.io/github/issues-pr/aura-systems/Aura-Operating-System.svg)](https://github.com/aura-systems/Aura-Operating-System/pulls)[![Discord](https://img.shields.io/badge/join%20us%20on-discord-blue.svg)](https://discord.gg/DFbAtVA)
 
-English | [Chinese（简体中文）](https://github.com/aura-systems/Aura-Operating-System/blob/master/README_CN.md)
+[English](https://github.com/aura-systems/Aura-Operating-System/blob/master/README.md) | Chinese
 
-A Cosmos based Operating System developped in C# made by Alexy DA CRUZ (GeomTech) and Valentin Charbonnier (valentinbreiz). Please read [our wiki](https://github.com/aura-systems/Aura-Operating-System/wiki) for more information 🌼
+一个基于Cosmos的操作系统，由Alexy DA CRUZ (GeomTech) and Valentin Charbonnier (valentinbreiz)使用C#开发。请阅读 [我们的Wiki](https://github.com/aura-systems/Aura-Operating-System/wiki) 获得更多信息 🌼
 
-## Current features
-See the [Aura Progression](https://github.com/aura-systems/Aura-Operating-System/projects/4) or our [Roadmap](https://github.com/aura-systems/Aura-Operating-System/projects/3) to know what will be added soon.
+## 支持的特性
+请看 [Aura进程表](https://github.com/aura-systems/Aura-Operating-System/projects/4) or our [路线图](https://github.com/aura-systems/Aura-Operating-System/projects/3) 来了解我们之后将会推出什么。
 
-* ATA IDE / AHCI Driver.
-* FAT32/16/12 + Virtual FileSystem.
-* PCI Device Scan.
-* PS/2 Keyboard.
-* Restart + ACPI Shutdown.
-* Multi languages
-* Basic command interpreter.
-* Exception Handler.
-* VBE Graphical Console
-* Networking (ARP, IPV4, ICMP, UDP, DNS, DHCP Client)
+* ATA IDE / AHCI 驱动器。
+* FAT32/16/12 + VFS系统。
+* PCI 设备扫描。
+* PS/2 键盘。
+* 重新启动 + ACPI 关机。
+* 多语言。
+* 基本命令解释器。
+* 错误捕捉。
+* 基于VBE显示的控制台。
+* 网络 (ARP, IPV4, ICMP, UDP, DNS, DHCP客户端)
 
-## Screenshots
+## 屏幕截图
 
 <p align="center"><img src="https://raw.githubusercontent.com/aura-systems/Aura-Operating-System/master/ARTWORK/aura1.png"></p>
 
