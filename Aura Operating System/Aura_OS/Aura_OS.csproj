@@ -51,8 +51,7 @@
   </Target>
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp2.0</TargetFramework>
-    <RuntimeIdentifier>cosmos</RuntimeIdentifier>
+    <TargetFramework>net5.0</TargetFramework>
     <SelfContained>True</SelfContained>
     <BinFormat>ELF</BinFormat>
     <StackCorruptionDetectionEnabled>True</StackCorruptionDetectionEnabled>
@@ -98,7 +97,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PlugsReference Include="$(MSBuildProjectDirectory)\..\Aura_Plugs\bin\Debug\netcoreapp2.0\Aura_Plugs.dll" />
+    <PlugsReference Include="$(MSBuildProjectDirectory)\..\Aura_Plugs\bin\Debug\net5.0\Aura_Plugs.dll" />
   </ItemGroup>
 
 </Project>

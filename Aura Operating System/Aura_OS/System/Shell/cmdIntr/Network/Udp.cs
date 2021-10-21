@@ -52,7 +52,7 @@ namespace Aura_OS.System.Shell.cmdIntr.Network
 
                 byte[] received = client.Receive(ref RemoteIpEndPoint);
 
-                Console.WriteLine("Received UDP packet from " + RemoteIpEndPoint.address.ToString() + ": \"" + Encoding.ASCII.GetString(received) + "\"");
+                Console.WriteLine("Received UDP packet from " + RemoteIpEndPoint.Address.ToString() + ": \"" + Encoding.ASCII.GetString(received) + "\"");
 
                 client.Close();
 

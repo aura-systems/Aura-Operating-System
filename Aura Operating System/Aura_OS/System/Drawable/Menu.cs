@@ -607,7 +607,7 @@ namespace Aura_OS.System.Drawable
         public static int GenericMenu(string[] items, Action method, int x, int y)
         {
             int currentitem = 0, c;
-            ConsoleKeyInfo key;
+            var key = new ConsoleKeyInfo();
 
             method();
 
@@ -636,7 +636,6 @@ namespace Aura_OS.System.Drawable
 
             while (key.Key != ConsoleKey.Enter)
             {
-                
                 key = Console.ReadKey(true);
 
                 if (key.Key == ConsoleKey.DownArrow)
