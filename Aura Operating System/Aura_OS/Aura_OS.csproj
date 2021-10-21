@@ -29,7 +29,7 @@
     <VMware_PxeInterface>192.168.0.8</VMware_PxeInterface>
     <VMware_EnableGDB>False</VMware_EnableGDB>
     <VMware_StartCosmosGDB>False</VMware_StartCosmosGDB>
-    <VMware_ISOFile>bin\Debug\netcoreapp2.0\cosmos\Aura_OS.iso</VMware_ISOFile>
+    <VMware_ISOFile>bin\Debug\net5.0\Aura_OS.iso</VMware_ISOFile>
     <ISO_StackCorruptionDetectionEnabled>True</ISO_StackCorruptionDetectionEnabled>
     <ISO_StackCorruptionDetectionLevel>MethodFooters</ISO_StackCorruptionDetectionLevel>
     <ISO_Description>Creates a bootable ISO image which can be burned to a DVD. After running the selected project, an explorer window will open containing the ISO file. The ISO file can then be burned to a CD or DVD and used to boot a physical or virtual system.</ISO_Description>
@@ -43,7 +43,7 @@
     <ISO_PxeInterface>192.168.0.8</ISO_PxeInterface>
     <ISO_EnableGDB>False</ISO_EnableGDB>
     <ISO_StartCosmosGDB>False</ISO_StartCosmosGDB>
-    <ISO_ISOFile>bin\Debug\netcoreapp2.0\cosmos\Aura_OS.iso</ISO_ISOFile>
+    <ISO_ISOFile>bin\Debug\net5.0\Aura_OS.iso</ISO_ISOFile>
     <VMwareEdition>Workstation</VMwareEdition>
   </PropertyGroup>
   <Target Name="GetVersion">
@@ -52,6 +52,8 @@
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
+    <Platform>cosmos</Platform>
+    <SupportsX86Intrinsics>false</SupportsX86Intrinsics>
     <SelfContained>True</SelfContained>
     <BinFormat>ELF</BinFormat>
     <StackCorruptionDetectionEnabled>True</StackCorruptionDetectionEnabled>
@@ -60,7 +62,7 @@
     <DebugEnabled>False</DebugEnabled>
     <DebugMode>Source</DebugMode>
     <IgnoreDebugStubAttribute>False</IgnoreDebugStubAttribute>
-    <ISOFile>bin\Debug\netcoreapp2.0\cosmos\Aura_OS.iso</ISOFile>
+    <ISOFile>bin\Debug\net5.0\Aura_OS.iso</ISOFile>
   </PropertyGroup>
 
   <PropertyGroup>
