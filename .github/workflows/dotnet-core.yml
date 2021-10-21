@@ -74,8 +74,8 @@ jobs:
         Copy-Item -Path "Cosmos\Cosmos\source\Cosmos.System2\bin\Debug\net5.0\*" -Destination "C:\Users\runneradmin\AppData\Roaming\Cosmos User Kit\Kernel\" -Force
         Copy-Item -Path "Cosmos\Cosmos\source\Cosmos.HAL2\bin\Debug\net5.0\*" -Destination "C:\Users\runneradmin\AppData\Roaming\Cosmos User Kit\Kernel\" -Force
         Copy-Item -Path "Cosmos\Cosmos\source\Cosmos.System2_Plugs\bin\Debug\net5.0\*" -Destination "C:\Users\runneradmin\AppData\Roaming\Cosmos User Kit\Kernel\" -Force
-        Copy-Item -Path "Cosmos\Cosmos\source\Cosmos.Debug.Kernel\bin\Debug\net5.0\*" -Destination "C:\Users\runneradmin\AppData\Roaming\Cosmos User Kit\Kernel\" -Force
-        Copy-Item -Path "Cosmos\Cosmos\source\Cosmos.Debug.Kernel.Plugs.Asm\bin\Debug\net5.0\*" -Destination "C:\Users\runneradmin\AppData\Roaming\Cosmos User Kit\Kernel\" -Force
+        Copy-Item -Path "Cosmos\Cosmos\source\Cosmos.Debug.Kernel\bin\Debug\netstandard2.0\*" -Destination "C:\Users\runneradmin\AppData\Roaming\Cosmos User Kit\Kernel\" -Force
+        Copy-Item -Path "Cosmos\Cosmos\source\Cosmos.Debug.Kernel.Plugs.Asm\bin\Debug\netstandard2.0\*" -Destination "C:\Users\runneradmin\AppData\Roaming\Cosmos User Kit\Kernel\" -Force
     - name: Build Aura Operating System
       run: |
         cd "Aura Operating System"
