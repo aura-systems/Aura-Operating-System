@@ -65,7 +65,11 @@ namespace SimpleHttpServer
 
             var sb = new StringBuilder();
             sb.Append(string.Format("HTTP/1.0 {0} {1}\r\n", response.StatusCode, response.ReasonPhrase));
-            sb.Append(string.Join("\r\n", response.Headers.Select(x => string.Format("{0}: {1}", x.Key, x.Value))));
+
+            foreach (var header in response.Headers)
+            {
+                sb.Append(header.Key + ": " + header.Value + "\r\n");
+            }
             sb.Append("\r\n\r\n");
 
             client.Send(Encoding.ASCII.GetBytes(sb.ToString()));     
@@ -82,10 +86,18 @@ namespace SimpleHttpServer
 
         protected virtual HttpResponse RouteRequest(TcpClient client, HttpRequest request)
         {
+            Route route = null;
+
             if (!Routes.Any())
                 return HttpBuilder.NotFound();
 
-            var route = Routes.SingleOrDefault(x => x.Method == request.Method);
+            foreach (var xroute in Routes)
+            {
+                if (xroute.Method == request.Method)
+                {
+                    route = xroute;
+                }
+            }
 
             if (route == null)
             {
@@ -93,7 +105,6 @@ namespace SimpleHttpServer
                 {
                     ReasonPhrase = "Method Not Allowed",
                     StatusCode = "405",
-
                 };
             }
 
@@ -172,8 +183,7 @@ namespace SimpleHttpServer
                 }
 
                 content = Encoding.ASCII.GetString(bytes);
-            }*/
-
+            }*/  
 
             return new HttpRequest()
             {

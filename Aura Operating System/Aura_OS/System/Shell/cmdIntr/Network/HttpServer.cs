@@ -36,16 +36,16 @@ namespace Aura_OS.System.Shell.cmdIntr.Network
             try
             {
                 var route_config = new List<Route>() {
-                new Route {
-                    Name = "Hello Handler",
-                    Method = "GET",
-                    Callable = (HttpDiscussion result) => {
+                    new Route {
+                        Name = "Hello Handler",
+                        Method = "GET",
+                        Callable = (HttpDiscussion result) => {
                             result.Response = new HttpResponse()
                             {
                                 Content = Encoding.ASCII.GetBytes(@"<html>" +
-                                           "\t<h1>Hello from AuraOS!</h1>" +
-                                           "\t<p>Server hour: " + DateTime.Now.ToString() + "</p>" +
-                                           "</html>"),
+                                            "\t<h1>Hello from AuraOS!</h1>" +
+                                            "\t<p>Server hour: " + DateTime.Now.ToString() + "</p>" +
+                                            "</html>"),
                                 ReasonPhrase = "OK",
                                 StatusCode = "200"
                             };
