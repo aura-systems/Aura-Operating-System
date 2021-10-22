@@ -34,20 +34,21 @@ namespace SimpleHttpServer
         #region Public Methods
         public void HandleClient(TcpClient tcpClient)
         {
-                HttpRequest request = GetRequest(tcpClient);
+            HttpRequest request = GetRequest(tcpClient);
 
-                // route and handle the request...
-                HttpResponse response = RouteRequest(tcpClient, request);      
+            // route and handle the request...
+            HttpResponse response = RouteRequest(tcpClient, request);      
           
-                Console.WriteLine("{0} {1}",response.StatusCode,request.Url);
-                // build a default response for errors
-                if (response.Content == null) {
-                    if (response.StatusCode != "200") {
-                        response.ContentAsUTF8 = string.Format("{0} {1} <p> {2}", response.StatusCode, request.Url, response.ReasonPhrase);
-                    }
-                }
+            Console.WriteLine("{0} {1}", response.StatusCode, request.Url);
 
-                WriteResponse(tcpClient, response);
+            // build a default response for errors
+            if (response.Content == null) {
+                if (response.StatusCode != "200") {
+                    response.ContentAsUTF8 = string.Format("{0} {1} <p> {2}", response.StatusCode, request.Url, response.ReasonPhrase);
+                }
+            }
+
+            WriteResponse(tcpClient, response);
         }
 
         // this formats the HTTP response...
@@ -70,7 +71,8 @@ namespace SimpleHttpServer
             {
                 sb.Append(header.Key + ": " + header.Value + "\r\n");
             }
-            sb.Append("\r\n\r\n");
+            sb.Append("\r\n");
+            sb.Append(Encoding.ASCII.GetString(response.Content));
 
             client.Send(Encoding.ASCII.GetBytes(sb.ToString()));     
         }

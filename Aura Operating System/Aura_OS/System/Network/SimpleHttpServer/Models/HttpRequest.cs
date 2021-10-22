@@ -33,7 +33,7 @@ namespace SimpleHttpServer.Models
             {
                 sb.Append(header.Key + ": " + header.Value + "\r\n");
             }
-            sb.Append("\r\n\r\n");
+            sb.Append("\r\n");
             sb.Append(this.Content);
 
             return sb.ToString();

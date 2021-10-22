@@ -23,6 +23,7 @@ namespace SimpleHttpServer
         #endregion
 
         #region Public Methods
+
         public HttpServer(int port, List<Route> routes)
         {
             this.Port = port;
@@ -36,12 +37,20 @@ namespace SimpleHttpServer
 
         public void Listen()
         {
-            this.Listener = new TcpListener((ushort)Port);
-            this.Listener.Start();
+            Listener = new TcpListener((ushort)Port);
+            Listener.Start();
+
             while (this.IsActive)
             {
-                TcpClient s = this.Listener.AcceptTcpClient();
-                this.Processor.HandleClient(s);
+                try
+                {
+                    var s = Listener.AcceptTcpClient();
+                    Processor.HandleClient(s);
+                }
+                catch
+                {
+
+                }
             }
         }
 
