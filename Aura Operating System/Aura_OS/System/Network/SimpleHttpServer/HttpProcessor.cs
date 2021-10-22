@@ -1,20 +1,31 @@
-﻿// Copyright (C) 2016 by David Jeske, Barend Erasmus and donated to the public domain
+﻿/*
+* PROJECT:          Aura Operating System Development
+* CONTENT:          HttpProcessor class
+* PROGRAMMERS:      Valentin Charbonnier <valentinbreiz@gmail.com>
+*                   David Jeske
+*                   Barend Erasmus
+* LICENSE:          LICENSES\SimpleHttpServer\LICENSE.md
+*/
 
 using Cosmos.System.Network.IPv4;
 using Cosmos.System.Network.IPv4.TCP;
 using SimpleHttpServer.Models;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Text;
-using System.Text.RegularExpressions;
 
 namespace SimpleHttpServer
 {
+    //used because Event with return type is not supported by Cosmos.
+    public class HttpDiscussion
+    {
+        public HttpRequest Request;
+        public HttpResponse Response;
+    }
+
     public class HttpProcessor
     {
-
         #region Fields
 
         private static int MAX_POST_SIZE = 10 * 1024 * 1024; // 10MB
@@ -27,11 +38,13 @@ namespace SimpleHttpServer
 
         public HttpProcessor()
         {
+
         }
 
         #endregion
 
         #region Public Methods
+
         public void HandleClient(TcpClient tcpClient)
         {
             HttpRequest request = GetRequest(tcpClient);
@@ -42,8 +55,10 @@ namespace SimpleHttpServer
             Console.WriteLine("{0} {1}", response.StatusCode, request.Url);
 
             // build a default response for errors
-            if (response.Content == null) {
-                if (response.StatusCode != "200") {
+            if (response.Content == null)
+            {
+                if (response.StatusCode != "200")
+                {
                     response.ContentAsUTF8 = string.Format("{0} {1} <p> {2}", response.StatusCode, request.Url, response.ReasonPhrase);
                 }
             }
@@ -52,21 +67,24 @@ namespace SimpleHttpServer
         }
 
         // this formats the HTTP response...
-        private static void WriteResponse(TcpClient client, HttpResponse response) {            
-            if (response.Content == null) {           
+        private static void WriteResponse(TcpClient client, HttpResponse response)
+        {            
+            if (response.Content == null)
+            {           
                 response.Content = new byte[]{};
             }
             
             // default to text/html content type
-            if (!response.Headers.ContainsKey("Content-Type")) {
+            if (!response.Headers.ContainsKey("Content-Type"))
+            {
                 response.Headers["Content-Type"] = "text/html";
             }
 
             response.Headers["Content-Length"] = response.Content.Length.ToString();
 
+            //make response
             var sb = new StringBuilder();
             sb.Append(string.Format("HTTP/1.0 {0} {1}\r\n", response.StatusCode, response.ReasonPhrase));
-
             foreach (var header in response.Headers)
             {
                 sb.Append(header.Key + ": " + header.Value + "\r\n");
@@ -79,7 +97,7 @@ namespace SimpleHttpServer
 
         public void AddRoute(Route route)
         {
-            this.Routes.Add(route);
+            Routes.Add(route);
         }
 
         #endregion
@@ -91,7 +109,9 @@ namespace SimpleHttpServer
             Route route = null;
 
             if (!Routes.Any())
+            {
                 return HttpBuilder.NotFound();
+            }   
 
             foreach (var xroute in Routes)
             {
@@ -112,11 +132,14 @@ namespace SimpleHttpServer
 
             // trigger the route handler...
             request.Route = route;
-            try {
+            try
+            {
                 var discussion = new HttpDiscussion() { Request = request, Response = null };
                 route.Callable(discussion);
                 return discussion.Response;
-            } catch(Exception ex) {
+            }
+            catch (Exception ex)
+            {
                 Console.WriteLine(ex);
                 return HttpBuilder.InternalServerError();
             }
@@ -125,23 +148,25 @@ namespace SimpleHttpServer
         private HttpRequest GetRequest(TcpClient client)
         {
             var ep = new EndPoint(Address.Zero, 0);
+
             //Read Request Line
             string request = Encoding.ASCII.GetString(client.Receive(ref ep));
 
             var lines = request.Split("\r\n");
 
             string[] tokens = lines[0].Split(' ');
+
             if (tokens.Length != 3)
             {
                 throw new Exception("invalid http request line");
             }
+
             string method = tokens[0].ToUpper();
             string url = tokens[1];
             string protocolVersion = tokens[2];
 
             //Read Headers
             Dictionary<string, string> headers = new Dictionary<string, string>();
-            string line;
 
             for (int i = 1; i < lines.Length; i++)
             {
@@ -197,7 +222,6 @@ namespace SimpleHttpServer
         }
 
         #endregion
-
 
     }
 }

@@ -1,16 +1,18 @@
-﻿// Copyright (C) 2016 by David Jeske, Barend Erasmus and donated to the public domain
+﻿/*
+* PROJECT:          Aura Operating System Development
+* CONTENT:          HttpServer class
+* PROGRAMMERS:      Valentin Charbonnier <valentinbreiz@gmail.com>
+*                   David Jeske
+*                   Barend Erasmus
+* LICENSE:          LICENSES\SimpleHttpServer\LICENSE.md
+*/
 
 using Cosmos.System.Network.IPv4.TCP;
-using SimpleHttpServer;
 using SimpleHttpServer.Models;
-using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.IO;
 
 namespace SimpleHttpServer
 {
-
     public class HttpServer
     {
         #region Fields
@@ -26,12 +28,12 @@ namespace SimpleHttpServer
 
         public HttpServer(int port, List<Route> routes)
         {
-            this.Port = port;
-            this.Processor = new HttpProcessor();
+            Port = port;
+            Processor = new HttpProcessor();
 
             foreach (var route in routes)
             {
-                this.Processor.AddRoute(route);
+                Processor.AddRoute(route);
             }
         }
 
@@ -40,7 +42,7 @@ namespace SimpleHttpServer
             Listener = new TcpListener((ushort)Port);
             Listener.Start();
 
-            while (this.IsActive)
+            while (IsActive)
             {
                 try
                 {

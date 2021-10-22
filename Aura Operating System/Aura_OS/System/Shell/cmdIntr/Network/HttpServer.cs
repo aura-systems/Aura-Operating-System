@@ -53,10 +53,8 @@ namespace Aura_OS.System.Shell.cmdIntr.Network
                     },
                 };
 
-                HttpServer httpServer = new HttpServer(80, route_config);
-
+                var httpServer = new HttpServer(80, route_config);
                 httpServer.Listen();
-
             }
             catch (Exception ex)
             {

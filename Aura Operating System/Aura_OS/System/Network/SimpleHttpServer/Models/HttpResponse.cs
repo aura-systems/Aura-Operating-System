@@ -1,8 +1,13 @@
-﻿// Copyright (C) 2016 by Barend Erasmus and donated to the public domain
+﻿/*
+* PROJECT:          Aura Operating System Development
+* CONTENT:          HttpResponse class
+* PROGRAMMERS:      Valentin Charbonnier <valentinbreiz@gmail.com>
+*                   David Jeske
+*                   Barend Erasmus
+* LICENSE:          LICENSES\SimpleHttpServer\LICENSE.md
+*/
 
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 
 // NOTE: two consequences of this simplified response model are:
@@ -20,7 +25,6 @@ namespace SimpleHttpServer.Models
         // https://en.wikipedia.org/wiki/List_of_HTTP_status_codes
 
         Continue = 100,
-
         Ok = 200,
         Created = 201,
         Accepted = 202,
@@ -49,6 +53,7 @@ namespace SimpleHttpServer.Models
                 this.setContent(value, encoding: Encoding.UTF8);
             }
         }
+
         public void setContent(string content, Encoding encoding = null)
         {
             if (encoding == null)

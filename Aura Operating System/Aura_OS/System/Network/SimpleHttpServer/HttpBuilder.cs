@@ -1,10 +1,13 @@
-﻿using SimpleHttpServer.Models;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿/*
+* PROJECT:          Aura Operating System Development
+* CONTENT:          Http default responses
+* PROGRAMMERS:      Valentin Charbonnier <valentinbreiz@gmail.com>
+*                   David Jeske
+*                   Barend Erasmus
+* LICENSE:          LICENSES\SimpleHttpServer\LICENSE.md
+*/
+
+using SimpleHttpServer.Models;
 
 namespace SimpleHttpServer
 {

@@ -1,8 +1,14 @@
-﻿// Copyright (C) 2016 by Barend Erasmus and donated to the public domain
+﻿/*
+* PROJECT:          Aura Operating System Development
+* CONTENT:          HttpRequest class
+* PROGRAMMERS:      Valentin Charbonnier <valentinbreiz@gmail.com>
+*                   David Jeske
+*                   Barend Erasmus
+* LICENSE:          LICENSES\SimpleHttpServer\LICENSE.md
+*/
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 
 namespace SimpleHttpServer.Models
@@ -24,17 +30,23 @@ namespace SimpleHttpServer.Models
         public override string ToString()
         {
             if (!string.IsNullOrWhiteSpace(this.Content))
-                if (!this.Headers.ContainsKey("Content-Length"))
-                    this.Headers.Add("Content-Length", this.Content.Length.ToString());
+            {
+                if (!Headers.ContainsKey("Content-Length"))
+                {
+                    Headers.Add("Content-Length", Content.Length.ToString());
+                }
+                    
+            }   
 
+            //make string from fields
             var sb = new StringBuilder();
-            sb.Append(this.Method + " " + this.Url + " HTTP/1.0\r\n");
+            sb.Append(Method + " " + Url + " HTTP/1.0\r\n");
             foreach (var header in Headers)
             {
                 sb.Append(header.Key + ": " + header.Value + "\r\n");
             }
             sb.Append("\r\n");
-            sb.Append(this.Content);
+            sb.Append(Content);
 
             return sb.ToString();
         }

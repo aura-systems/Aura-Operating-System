@@ -1,9 +1,13 @@
-﻿// Copyright (C) 2016 by Barend Erasmus and donated to the public domain
+﻿/*
+* PROJECT:          Aura Operating System Development
+* CONTENT:          Route class
+* PROGRAMMERS:      Valentin Charbonnier <valentinbreiz@gmail.com>
+*                   David Jeske
+*                   Barend Erasmus
+* LICENSE:          LICENSES\SimpleHttpServer\LICENSE.md
+*/
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace SimpleHttpServer.Models
 {
@@ -11,7 +15,6 @@ namespace SimpleHttpServer.Models
     {
         public string Name { get; set; } // descriptive name for debugging
         public string Method { get; set; }
-
         public Action<HttpDiscussion> Callable;
     }
 }
