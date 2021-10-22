@@ -115,7 +115,7 @@ namespace SimpleHttpServer
 
             foreach (var xroute in Routes)
             {
-                if (xroute.Method == request.Method)
+                if (xroute.Url == request.Url)
                 {
                     route = xroute;
                 }
@@ -123,11 +123,7 @@ namespace SimpleHttpServer
 
             if (route == null)
             {
-                return new HttpResponse()
-                {
-                    ReasonPhrase = "Method Not Allowed",
-                    StatusCode = "405",
-                };
+                return HttpBuilder.NotFound();
             }
 
             // trigger the route handler...

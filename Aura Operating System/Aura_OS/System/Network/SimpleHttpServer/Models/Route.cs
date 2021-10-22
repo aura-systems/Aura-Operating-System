@@ -15,6 +15,7 @@ namespace SimpleHttpServer.Models
     {
         public string Name { get; set; } // descriptive name for debugging
         public string Method { get; set; }
-        public Action<HttpDiscussion> Callable;
+        public string Url { get; set; }
+        public Action<HttpDiscussion> Callable { get; set; }
     }
 }

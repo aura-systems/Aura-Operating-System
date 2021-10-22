@@ -39,6 +39,7 @@ namespace Aura_OS.System.Shell.cmdIntr.Network
                     new Route {
                         Name = "Hello Handler",
                         Method = "GET",
+                        Url = "/",
                         Callable = (HttpDiscussion result) => {
                             result.Response = new HttpResponse()
                             {
