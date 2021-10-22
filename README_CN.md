@@ -28,3 +28,13 @@
 <p align="center"><img src="https://raw.githubusercontent.com/aura-systems/Aura-Operating-System/master/ARTWORK/aura3.png"></p>
 
 <p align="center"><img src="https://raw.githubusercontent.com/aura-systems/Aura-Operating-System/master/ARTWORK/aura2.png"></p>
+
+## 关于翻译
+
+  如果你觉得有些语言的翻译很糟，不要觉得很惊讶，因为有些语言我们相对于本土语言者无法去更正。所以只要你觉得有些语言的翻译存在问题，你可以自由的去编辑它。之后，你便可以发起一个PR了。
+
+  文档的简体中文翻译由@MasterYuan418负责。
+
+  当然，在贡献之前你需要先读读贡献者行为准则。
+
+  我们永远欢迎你的贡献。
