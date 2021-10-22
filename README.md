@@ -27,3 +27,13 @@ See the [Aura Progression](https://github.com/aura-systems/Aura-Operating-System
 <p align="center"><img src="https://raw.githubusercontent.com/aura-systems/Aura-Operating-System/master/ARTWORK/aura3.png"></p>
 
 <p align="center"><img src="https://raw.githubusercontent.com/aura-systems/Aura-Operating-System/master/ARTWORK/aura2.png"></p>
+
+## About translate
+
+  If you feel some language translation is bad, Don't be surprised, Because some language we won't be able to correct it than local-speakers. So you can feel free to edit the translation if you think there're some problem in some language translation. Then you can make a pull request. 
+
+  Chinese document translation will be in charge of @MasterYuan418.
+
+  Anyway, you need to read Contributor Covenant Code of Conduct before contributing.
+
+  We always welcome your contribution.
