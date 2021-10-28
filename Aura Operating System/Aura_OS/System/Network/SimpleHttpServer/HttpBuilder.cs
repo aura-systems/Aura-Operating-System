@@ -15,9 +15,7 @@ namespace SimpleHttpServer
     {
         public static HttpResponse InternalServerError()
         {
-            string content = @"<h1>Internal Server Error</h1>
-
-<small>by SimpleHtppServer</small>";
+            string content = "<h1>500 Internal Server Error</h1><a href=\"http://141.94.79.247\">Back to home page</a>";
 
             return new HttpResponse()
             {
@@ -29,9 +27,7 @@ namespace SimpleHttpServer
 
         public static HttpResponse NotFound()
         {
-            string content = @"<h1>Not Found</h1>
-
-<small>by SimpleHtppServer</small>";
+            string content = "<h1>404 Not Found</h1><a href=\"http://141.94.79.247\">Back to home page</a>";
 
             return new HttpResponse()
             {
