@@ -9,6 +9,7 @@
 
 using Cosmos.System.Network.IPv4.TCP;
 using SimpleHttpServer.Models;
+using System;
 using System.Collections.Generic;
 
 namespace SimpleHttpServer
@@ -41,6 +42,8 @@ namespace SimpleHttpServer
         {
             Listener = new TcpListener((ushort)Port);
             Listener.Start();
+
+            Console.WriteLine("HTTP Server Listening on port 80...");
 
             while (IsActive)
             {

@@ -26,31 +26,20 @@ namespace SimpleHttpServer
 
     public class HttpProcessor
     {
-        #region Fields
-
-        private static int MAX_POST_SIZE = 10 * 1024 * 1024; // 10MB
-
         private List<Route> Routes = new List<Route>();
-
-        #endregion
-
-        #region Constructors
 
         public HttpProcessor()
         {
 
         }
 
-        #endregion
-
-        #region Public Methods
-
         public void HandleClient(TcpClient tcpClient)
         {
-            HttpRequest request = GetRequest(tcpClient);
+            //get request from client
+            var request = GetRequest(tcpClient);
 
             // route and handle the request...
-            HttpResponse response = RouteRequest(tcpClient, request);      
+            var response = RouteRequest(tcpClient, request);      
           
             Console.WriteLine("{0} {1}", response.StatusCode, request.Url);
 
@@ -64,81 +53,8 @@ namespace SimpleHttpServer
             }
 
             WriteResponse(tcpClient, response);
-        }
 
-        // this formats the HTTP response...
-        private static void WriteResponse(TcpClient client, HttpResponse response)
-        {            
-            if (response.Content == null)
-            {           
-                response.Content = new byte[]{};
-            }
-            
-            // default to text/html content type
-            if (!response.Headers.ContainsKey("Content-Type"))
-            {
-                response.Headers["Content-Type"] = "text/html";
-            }
-
-            response.Headers["Content-Length"] = response.Content.Length.ToString();
-
-            //make response
-            var sb = new StringBuilder();
-            sb.Append(string.Format("HTTP/1.0 {0} {1}\r\n", response.StatusCode, response.ReasonPhrase));
-            foreach (var header in response.Headers)
-            {
-                sb.Append(header.Key + ": " + header.Value + "\r\n");
-            }
-            sb.Append("\r\n");
-            sb.Append(Encoding.ASCII.GetString(response.Content));
-
-            client.Send(Encoding.ASCII.GetBytes(sb.ToString()));     
-        }
-
-        public void AddRoute(Route route)
-        {
-            Routes.Add(route);
-        }
-
-        #endregion
-
-        #region Private Methods
-
-        protected virtual HttpResponse RouteRequest(TcpClient client, HttpRequest request)
-        {
-            Route route = null;
-
-            if (!Routes.Any())
-            {
-                return HttpBuilder.NotFound();
-            }   
-
-            foreach (var xroute in Routes)
-            {
-                if (xroute.Url == request.Url)
-                {
-                    route = xroute;
-                }
-            }
-
-            if (route == null)
-            {
-                return HttpBuilder.NotFound();
-            }
-
-            // trigger the route handler...
-            request.Route = route;
-            try
-            {
-                var discussion = new HttpDiscussion() { Request = request, Response = null };
-                route.Callable(discussion);
-                return discussion.Response;
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex);
-                return HttpBuilder.InternalServerError();
-            }
+            tcpClient.Close();
         }
 
         private HttpRequest GetRequest(TcpClient client)
@@ -206,7 +122,7 @@ namespace SimpleHttpServer
                 }
 
                 content = Encoding.ASCII.GetString(bytes);
-            }*/  
+            }*/
 
             return new HttpRequest()
             {
@@ -217,7 +133,99 @@ namespace SimpleHttpServer
             };
         }
 
-        #endregion
+        protected virtual HttpResponse RouteRequest(TcpClient client, HttpRequest request)
+        {
+            if (!Routes.Any())
+            {
+                return HttpBuilder.NotFound();
+            }
+
+            //Search Route
+            var route = GetRoute(request);
+
+            if (route == null)
+            {
+                return HttpBuilder.NotFound();
+            }
+
+            // trigger the route handler...
+            try
+            {
+                var discussion = new HttpDiscussion() { Request = request, Response = null };
+
+                route.Callable(discussion);
+
+                return discussion.Response;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+
+                return HttpBuilder.InternalServerError();
+            }
+        }
+
+        private Route GetRoute(HttpRequest request)
+        {
+            foreach (var route in Routes)
+            {
+                if (route.Url == request.Url)
+                {
+                    return route;
+                }
+            }
+
+            //no hardcoded route, get filesystem root
+
+            if (request.Url == "/")
+            {
+                request.Url = "/index.html";
+            }
+
+            foreach (var route in Routes)
+            {
+                if (route.Url == "")
+                {
+                    return route;
+                }
+            }
+
+            return null;
+        }
+
+        // this formats the HTTP response...
+        private static void WriteResponse(TcpClient client, HttpResponse response)
+        {
+            if (response.Content == null)
+            {
+                response.Content = new byte[] { };
+            }
+
+            // default to text/html content type
+            if (!response.Headers.ContainsKey("Content-Type"))
+            {
+                response.Headers["Content-Type"] = "text/html";
+            }
+
+            response.Headers["Content-Length"] = response.Content.Length.ToString();
+
+            //make response
+            var sb = new StringBuilder();
+            sb.Append(string.Format("HTTP/1.0 {0} {1}\r\n", response.StatusCode, response.ReasonPhrase));
+            foreach (var header in response.Headers)
+            {
+                sb.Append(header.Key + ": " + header.Value + "\r\n");
+            }
+            sb.Append("\r\n");
+            sb.Append(Encoding.ASCII.GetString(response.Content));
+
+            client.Send(Encoding.ASCII.GetBytes(sb.ToString()));
+        }
+
+        public void AddRoute(Route route)
+        {
+            Routes.Add(route);
+        }
 
     }
 }

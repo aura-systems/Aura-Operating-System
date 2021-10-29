@@ -17,9 +17,7 @@ namespace SimpleHttpServer.Models
     {
         public string Method { get; set; }
         public string Url { get; set; }
-        public string Path { get; set; } // either the Url, or the first regex group
         public string Content { get; set; }
-        public Route Route { get; set; }
         public Dictionary<string, string> Headers { get; set; }
 
         public HttpRequest()

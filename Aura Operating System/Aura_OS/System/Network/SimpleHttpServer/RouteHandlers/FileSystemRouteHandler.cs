@@ -1,85 +1,98 @@
-﻿// Copyright (C) 2016 by Barend Erasmus, David Jeske and donated to the public domain
+﻿/*
+* PROJECT:          Aura Operating System Development
+* CONTENT:          FileSystemRouteHandler class
+* PROGRAMMERS:      Valentin Charbonnier <valentinbreiz@gmail.com>
+*                   David Jeske
+*                   Barend Erasmus
+* LICENSE:          LICENSES\SimpleHttpServer\LICENSE.md
+*/
 
 using SimpleHttpServer.Models;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SimpleHttpServer.RouteHandlers
 {
-    /*
+    public class LiveFile
+    {
+        public string Path { get; set; }
+        public byte[] Content { get; set; }
+    }
+
     public class FileSystemRouteHandler
     {
+        public List<LiveFile> FilesPath = new List<LiveFile>();
+
+        public FileSystemRouteHandler(string basePath)
+        {
+            BasePath = basePath;
+
+            Console.WriteLine("Scanning " + BasePath + "...");
+
+            DoTree(BasePath);
+
+            foreach (var path in FilesPath)
+            {
+                Console.WriteLine(path.Path + " registered.");
+            }
+
+            Console.WriteLine("Done.");
+        }
+
+        private void DoTree(string directory)
+        {
+            var directories = Directory.GetDirectories(directory);
+
+            foreach (string file in Directory.GetFiles(directory))
+            {
+                FilesPath.Add(new LiveFile() { Path = directory.Remove(0, BasePath.Length - 1) + file, Content = File.ReadAllBytes(directory + file) });
+            }
+
+            for (int j = 0; j < directories.Length; j++)
+            {
+                DoTree(directory + directories[j].ToLower() + "\\");
+            }
+        }
 
         public string BasePath { get; set; }
         public bool ShowDirectories { get; set; }
 
-        public HttpResponse Handle(HttpRequest request) {
-            var url_part = request.Path;
+        public void Handle(HttpDiscussion discussion) {
+            var url_part = discussion.Request.Url;
 
             // do some basic sanitization of the URL, attempting to make sure they can't read files outside the basepath
             // NOTE: this is probably not bulletproof/secure
             url_part = url_part.Replace("\\..\\", "\\");
             url_part = url_part.Replace("/../", "/");
-            url_part = url_part.Replace("//","/");
-            url_part = url_part.Replace(@"\\",@"\");
-            url_part = url_part.Replace(":","");           
-            url_part = url_part.Replace("/",Path.DirectorySeparatorChar.ToString());
-           
-            // make sure the first part of the path is not 
-            if (url_part.Length > 0) {
-                var first_char = url_part.ElementAt(0);
-                if (first_char == '/' || first_char == '\\') {
-                    url_part = "." + url_part;
+            url_part = url_part.Replace("//", "/");
+            url_part = url_part.Replace(@"\\", @"\");
+            url_part = url_part.Replace(":", "");           
+            url_part = url_part.Replace("/", Path.DirectorySeparatorChar.ToString());
+
+            foreach (var file in FilesPath)
+            {
+                if (file.Path == url_part)
+                {
+                    var file_extension = GetExtension(url_part);
+
+                    discussion.Response = new HttpResponse();
+                    discussion.Response.StatusCode = "200";
+                    discussion.Response.ReasonPhrase = "Ok";
+                    discussion.Response.Headers["Content-Type"] = QuickMimeTypeMapper.GetMimeType(file_extension);
+                    discussion.Response.Content = file.Content;
+
+                    return;
                 }
             }
-            var local_path = Path.Combine(this.BasePath, url_part);
-                
-            if (ShowDirectories && Directory.Exists(local_path)) {
-                // Console.WriteLine("FileSystemRouteHandler Dir {0}",local_path);
-                return Handle_LocalDir(request, local_path);
-            } else if (File.Exists(local_path)) {
-                // Console.WriteLine("FileSystemRouteHandler File {0}", local_path);
-                return Handle_LocalFile(request, local_path);
-            } else {
-                return new HttpResponse {
-                    StatusCode = "404",
-                    ReasonPhrase = string.Format("Not Found ({0}) handler({1})",local_path,request.Route.Name),
-                };
-            }
+
+            discussion.Response = HttpBuilder.NotFound();
         }
-
-        HttpResponse Handle_LocalFile(HttpRequest request, string local_path) {        
-            var file_extension = Path.GetExtension(local_path);
-
-            var response = new HttpResponse();
-            response.StatusCode = "200";
-            response.ReasonPhrase = "Ok";
-            response.Headers["Content-Type"] = QuickMimeTypeMapper.GetMimeType(file_extension);
-            response.Content = File.ReadAllBytes(local_path);
-
-            return response;
-        }
-
-        HttpResponse Handle_LocalDir(HttpRequest request, string local_path) {
-            var output = new StringBuilder();
-            output.Append(string.Format("<h1> Directory: {0} </h1>",request.Url));
-                        
-            foreach (var entry in Directory.GetFiles(local_path)) {                
-                var file_info = new System.IO.FileInfo(entry);
-
-                var filename = file_info.Name;
-                output.Append(string.Format("<a href=\"{1}\">{1}</a> <br>",filename,filename));                
-            }            
-
-            return new HttpResponse() {
-                StatusCode = "200",
-                ReasonPhrase = "Ok",
-                ContentAsUTF8 = output.ToString(),
-            };
+         
+        private string GetExtension(string attachment_name)
+        {
+            var index_point = attachment_name.IndexOf(".");
+            return attachment_name.Substring(index_point);
         }
     }
 
@@ -96,17 +109,19 @@ namespace SimpleHttpServer.RouteHandlers
                 throw new ArgumentNullException("extension");
             }
 
-            if (!extension.StartsWith(".")) {
-                extension = "." + extension;
+            foreach (var entry in _mappings)
+            {
+                if (entry.Key == extension)
+                {
+                    return entry.Value;
+                }
             }
 
-            string mime;
-
-            return _mappings.TryGetValue(extension, out mime) ? mime : "application/octet-stream";
+            return "application/octet-stream";
         }
 
 
-        private static IDictionary<string, string> _mappings = new Dictionary<string, string>(StringComparer.InvariantCultureIgnoreCase) {
+        private static Dictionary<string, string> _mappings = new Dictionary<string, string>() {
 
         #region Big freaking list of mime types
 
@@ -678,6 +693,6 @@ namespace SimpleHttpServer.RouteHandlers
         };
 
 
-    }*/
+    }
 
 }

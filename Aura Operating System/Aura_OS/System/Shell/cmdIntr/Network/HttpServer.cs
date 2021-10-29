@@ -14,6 +14,8 @@ using System.Text;
 using Cosmos.System.Network.IPv4.TCP.FTP;
 using SimpleHttpServer;
 using SimpleHttpServer.Models;
+using SimpleHttpServer.RouteHandlers;
+using System.IO;
 
 namespace Aura_OS.System.Shell.cmdIntr.Network
 {
@@ -24,7 +26,7 @@ namespace Aura_OS.System.Shell.cmdIntr.Network
         /// </summary>
         public CommandHttpServer(string[] commandvalues) : base(commandvalues, CommandType.Network)
         {
-            Description = "to start an HTTP Server.";
+            Description = "to start an HTTP Server";
         }
 
         /// <summary>
@@ -54,7 +56,54 @@ namespace Aura_OS.System.Shell.cmdIntr.Network
                                 StatusCode = "200"
                             };
                         }
-                    },
+                    }
+                };
+
+                var httpServer = new HttpServer(80, route_config);
+                httpServer.Listen();
+            }
+            catch (Exception ex)
+            {
+                return new ReturnInfo(this, ReturnCode.ERROR, ex.Message);
+            }
+
+            return new ReturnInfo(this, ReturnCode.OK);
+        }
+
+        /// <summary>
+        /// CommandTree
+        /// </summary>
+        /// <param name="arguments">Arguments</param>
+        public override ReturnInfo Execute(List<string> arguments)
+        {
+            if (arguments.Count != 1)
+            {
+                return new ReturnInfo(this, ReturnCode.ERROR_ARG);
+            }
+
+            try
+            {
+                string path = arguments[0];
+
+                if (!path.EndsWith("/"))
+                {
+                    path += "/";
+                }
+
+                path = path.Replace("/", "\\");
+
+                if (!Directory.Exists(path))
+                {
+                    return new ReturnInfo(this, ReturnCode.ERROR, "Directory does not exist.");
+                }
+
+                var route_config = new List<Route>() {
+                    new Route {
+                        Name = "FileSystem Static Handler",
+                        Method = "GET",
+                        Url = "",
+                        Callable = new FileSystemRouteHandler(path).Handle,
+                    }
                 };
 
                 var httpServer = new HttpServer(80, route_config);
@@ -75,6 +124,7 @@ namespace Aura_OS.System.Shell.cmdIntr.Network
         {
             Console.WriteLine("Usage:");
             Console.WriteLine(" - httpserver");
+            Console.WriteLine(" - httpserver {path}");
         }
     }
 }
