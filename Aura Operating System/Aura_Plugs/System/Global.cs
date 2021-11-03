@@ -22,11 +22,12 @@ namespace Aura_OS.System.Plugs
 
             Aura_Plugs.HAL.Global.Init(textScreen);
 
-            /*if (_SVGAIIDevice != null && PCI.Exists(_SVGAIIDevice))
+            var _SVGAIIDevice = PCI.GetDevice(VendorID.VMWare, DeviceID.SVGAIIAdapter);
+
+            if (_SVGAIIDevice != null && PCI.Exists(_SVGAIIDevice))
             {
-                return new SVGAIICanvas();
+                Kernel.AConsole = new AConsole.SVGAII.SVGAIIConsole();
             }
-            */
             if (VBEAvailable())
             {
                 Kernel.AConsole = new AConsole.VESAVBE.VESAVBEConsole();
