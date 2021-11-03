@@ -81,8 +81,8 @@ namespace Aura_OS
                 else
                 {
 
-                    Console.InputEncoding = Encoding.ASCII;
-                    Console.OutputEncoding = Encoding.ASCII;
+                    Console.InputEncoding = Encoding.GetEncoding(437);
+                    Console.OutputEncoding = Encoding.GetEncoding(437);
                 }
 
                 #endregion
