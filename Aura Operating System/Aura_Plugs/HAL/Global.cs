@@ -26,7 +26,9 @@ namespace Aura_Plugs.HAL
 
             var _SVGAIIDevice = PCI.GetDevice(VendorID.VMWare, DeviceID.SVGAIIAdapter);
 
-            if (_SVGAIIDevice != null && PCI.Exists(_SVGAIIDevice))
+            //Check if VMWare SVGAII graphic card exists without VBE enabled from multiboot
+            //This is useful to detect if VBE graphic mode is enabled from the bootloader.
+            if (_SVGAIIDevice != null && PCI.Exists(_SVGAIIDevice) && VBE.IsAvailable() == false)
             {
                 Kernel.AConsole = new Aura_OS.System.AConsole.SVGAII.SVGAIIConsole();
             }

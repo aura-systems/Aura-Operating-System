@@ -23,7 +23,7 @@ namespace Aura_OS.System.AConsole.VESAVBE
 
         public VESAVBEConsole()
         {
-            Name = "VESA";
+            Name = "VBE";
             Type = ConsoleType.Graphical;
 
             graphics = new Graphics.Graphics();
