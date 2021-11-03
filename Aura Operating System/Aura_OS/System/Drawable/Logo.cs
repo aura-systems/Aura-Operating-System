@@ -11,13 +11,56 @@ namespace Aura_OS.System
 {
     public class Logo
     {
+        /// <summary>
+        /// Display Textual Logo of Aura
+        /// </summary>
+        public static void PrintText()
+        {
+            switch (Kernel.langSelected)
+            {
+                case "fr_FR":
+                    Console.ForegroundColor = ConsoleColor.White;
+                    Console.WriteLine($@"
+  █████╗ ██╗   ██╗██████╗  █████╗
+ ██╔══██╗██║   ██║██╔══██╗██╔══██╗
+ ███████║██║   ██║██████╔╝███████║
+ ██╔══██║██║   ██║██╔══██╗██╔══██║ 
+ ██║  ██║╚██████╔╝██║  ██║██║  ██║ créé par Aura Team
+ ╚═╝  ╚═╝ ╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═╝ v{ Kernel.version }
+");
+                    break;
+
+                case "en_US":
+                    Console.ForegroundColor = ConsoleColor.White;
+                    Console.WriteLine($@"
+  █████╗ ██╗   ██╗██████╗  █████╗
+ ██╔══██╗██║   ██║██╔══██╗██╔══██╗
+ ███████║██║   ██║██████╔╝███████║
+ ██╔══██║██║   ██║██╔══██╗██╔══██║ 
+ ██║  ██║╚██████╔╝██║  ██║██║  ██║ created by Aura Team
+ ╚═╝  ╚═╝ ╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═╝ v{ Kernel.version }
+");
+                    break;
+
+                case "nl_NL":
+                    Console.ForegroundColor = ConsoleColor.White;
+                    Console.WriteLine($@"
+  █████╗ ██╗   ██╗██████╗  █████╗
+ ██╔══██╗██║   ██║██╔══██╗██╔══██╗
+ ███████║██║   ██║██████╔╝███████║ 
+ ██╔══██║██║   ██║██╔══██╗██╔══██║ 
+ ██║  ██║╚██████╔╝██║  ██║██║  ██║ ontwikkeld door Aura Team
+ ╚═╝  ╚═╝ ╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═╝ v{ Kernel.version }
+");
+                    break;
+            }
+        }
 
         /// <summary>
         /// Display Logo of Aura
         /// </summary>
         public static void Print()
         {
-
             Console.Clear();
 
             Console.ForegroundColor = ConsoleColor.White;

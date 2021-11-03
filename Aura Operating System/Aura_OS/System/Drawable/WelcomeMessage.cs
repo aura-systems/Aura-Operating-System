@@ -17,7 +17,15 @@ namespace Aura_OS.System
         /// </summary>
         public static void Display()
         {
-            Logo.Print();
+            if (Kernel.AConsole.Type == AConsole.ConsoleType.Graphical)
+            {
+                Logo.Print();
+            }
+            else
+            {
+                Logo.PrintText();
+            }
+
             Console.ForegroundColor = ConsoleColor.Green;
             switch (Kernel.langSelected)
             {

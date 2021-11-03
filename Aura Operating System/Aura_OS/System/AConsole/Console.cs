@@ -27,6 +27,8 @@ namespace Aura_OS.System.AConsole
 
         public string Name;
 
+        public ConsoleType Type;
+
         public abstract int X { get; set; }
         public abstract int Y { get; set; }
 
@@ -54,6 +56,12 @@ namespace Aura_OS.System.AConsole
 
         public abstract void DrawImage(ushort X, ushort Y, Bitmap image);
 
+    }
+
+    public enum ConsoleType
+    {
+        Text,
+        Graphical
     }
 
     public static class ConsoleMode

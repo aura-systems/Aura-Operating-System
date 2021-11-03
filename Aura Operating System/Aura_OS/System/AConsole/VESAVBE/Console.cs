@@ -26,6 +26,8 @@ namespace Aura_OS.System.AConsole.VESAVBE
         public VESAVBEConsole()
         {
             Name = "VESA";
+            Type = ConsoleType.Graphical;
+
             graphics = new Graphics.Graphics();
             mWidth = graphics.canvas.Mode.Columns / graphics.font.Width;
             mHeight = graphics.canvas.Mode.Rows / graphics.font.Height;
