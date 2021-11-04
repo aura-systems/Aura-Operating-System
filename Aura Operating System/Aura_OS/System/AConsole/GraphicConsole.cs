@@ -23,11 +23,11 @@ namespace Aura_OS.System.AConsole
 
         public GraphicalConsole()
         {
-            Name = graphics.canvas.Name();
-
-            Type = ConsoleType.Graphical;
-
             graphics = new Graphics.Graphics();
+
+            Name = graphics.canvas.Name();
+            Type = ConsoleType.Graphical;
+ 
             mWidth = graphics.canvas.Mode.Columns / graphics.font.Width;
             mHeight = graphics.canvas.Mode.Rows / graphics.font.Height;
 
