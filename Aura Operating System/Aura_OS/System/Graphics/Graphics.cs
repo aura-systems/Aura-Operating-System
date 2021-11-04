@@ -5,7 +5,6 @@
 */
 
 using Aura_OS.System.AConsole;
-using Aura_OS.System.AConsole.VESAVBE;
 using Cosmos.System.Graphics;
 using Cosmos.System.Graphics.Fonts;
 using System;
@@ -46,8 +45,8 @@ namespace Aura_OS.System.Graphics
             Pallete[14] = 0xFFFFFF55; // Yellow
             Pallete[15] = 0xFFFFFFFF; //White
 
-            frontpen = new Pen(Color.FromArgb((int)Pallete[VESAVBEConsole.foreground]));
-            backpen = new Pen(Color.FromArgb((int)Pallete[VESAVBEConsole.background]));
+            frontpen = new Pen(Color.FromArgb((int)Pallete[GraphicalConsole.foreground]));
+            backpen = new Pen(Color.FromArgb((int)Pallete[GraphicalConsole.background]));
 
             lastpen = backpen;
             lastx = 0;
