@@ -10,9 +10,9 @@ using System.Drawing;
 using Cosmos.Debug.Kernel;
 using Cosmos.System.Graphics;
 
-namespace Aura_OS.System.AConsole.SVGAII
+namespace Aura_OS.System.AConsole
 {
-    public class SVGAIIConsole : Console
+    public class GraphicalConsole : Console
     {
 
         public Graphics.Graphics graphics;
@@ -21,9 +21,10 @@ namespace Aura_OS.System.AConsole.SVGAII
         private const char Tab = '\t';
         private const char Space = ' ';
 
-        public SVGAIIConsole()
+        public GraphicalConsole()
         {
-            Name = "SVGAII";
+            Name = graphics.canvas.Name();
+
             Type = ConsoleType.Graphical;
 
             graphics = new Graphics.Graphics();

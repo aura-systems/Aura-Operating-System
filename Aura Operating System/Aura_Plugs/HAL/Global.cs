@@ -30,15 +30,15 @@ namespace Aura_Plugs.HAL
             //This is useful to detect if VBE graphic mode is enabled from the bootloader.
             if (_SVGAIIDevice != null && PCI.Exists(_SVGAIIDevice) && VBE.IsAvailable() == false)
             {
-                Kernel.AConsole = new Aura_OS.System.AConsole.SVGAII.SVGAIIConsole();
+                Kernel.AConsole = new Aura_OS.System.AConsole.GraphicalConsole();
             }
             else if (VBEAvailable())
             {
-                Kernel.AConsole = new Aura_OS.System.AConsole.VESAVBE.VESAVBEConsole();
+                Kernel.AConsole = new Aura_OS.System.AConsole.GraphicalConsole();
             }
             else
             {
-                Kernel.AConsole = new Aura_OS.System.AConsole.VGA.VGAConsole(textScreen);
+                Kernel.AConsole = new Aura_OS.System.AConsole.VGAConsole(textScreen);
             }
 
             Console.WriteLine("[Aura Operating System v" + Aura_OS.Kernel.version + " - Made by valentinbreiz and geomtech]");

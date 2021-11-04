@@ -10,7 +10,7 @@ using System.Runtime.CompilerServices;
 using Cosmos.HAL;
 using Cosmos.System.Graphics;
 
-namespace Aura_OS.System.AConsole.VGA
+namespace Aura_OS.System.AConsole
 {
 
     public class VGAConsole : Console
