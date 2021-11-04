@@ -11,13 +11,27 @@ namespace Aura_OS.System
 {
     public class Logo
     {
+        /// <summary>
+        /// Display Textual Logo of Aura
+        /// </summary>
+        public static void PrintText()
+        {
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.WriteLine($@"
+  █████╗ ██╗   ██╗██████╗  █████╗
+ ██╔══██╗██║   ██║██╔══██╗██╔══██╗
+ ███████║██║   ██║██████╔╝███████║
+ ██╔══██║██║   ██║██╔══██╗██╔══██║ 
+ ██║  ██║╚██████╔╝██║  ██║██║  ██║ Aura Operating System
+ ╚═╝  ╚═╝ ╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═╝ v{ Kernel.version }
+");
+        }
 
         /// <summary>
         /// Display Logo of Aura
         /// </summary>
         public static void Print()
         {
-
             Console.Clear();
 
             Console.ForegroundColor = ConsoleColor.White;

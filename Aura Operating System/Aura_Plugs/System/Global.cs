@@ -7,6 +7,8 @@
 using IL2CPU.API.Attribs;
 using Cosmos.HAL;
 using Aura_OS;
+using Cosmos.Core;
+using Cosmos.HAL.Drivers;
 
 namespace Aura_OS.System.Plugs
 {
@@ -19,8 +21,6 @@ namespace Aura_OS.System.Plugs
             Cosmos.System.Global.mDebugger.Send("Creating Console");
 
             Aura_Plugs.HAL.Global.Init(textScreen);
-
-            Kernel.AConsole = new AConsole.VESAVBE.VESAVBEConsole();
 
             Cosmos.System.Global.mDebugger.Send("HW Init");
 

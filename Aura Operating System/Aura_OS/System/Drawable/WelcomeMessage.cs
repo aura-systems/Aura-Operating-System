@@ -17,28 +17,36 @@ namespace Aura_OS.System
         /// </summary>
         public static void Display()
         {
-            Logo.Print();
+            if (Kernel.AConsole.Type == AConsole.ConsoleType.Graphical)
+            {
+                Logo.Print();
+            }
+            else
+            {
+                Logo.PrintText();
+            }
+
             Console.ForegroundColor = ConsoleColor.Green;
             switch (Kernel.langSelected)
             {
                 case "fr_FR":
-                    Console.WriteLine(" * Documentation: aura-team.com");
+                    Console.WriteLine(" * Documentation: github.com/aura-systems");
                     break;
 
                 case "en_US":
-                    Console.WriteLine(" * Documentation: aura-team.com");
+                    Console.WriteLine(" * Documentation: github.com/aura-systems");
                     break;
 
                 case "nl_NL":
-                    Console.WriteLine(" * Documentatie: aura-team.com");
+                    Console.WriteLine(" * Documentatie: github.com/aura-systems");
                     break;
 
                 case "it_IT":
-                    Console.WriteLine(" * Documentazione: aura-team.com");
+                    Console.WriteLine(" * Documentazione: github.com/aura-systems");
                     break;
                 
                 case "pl_PL":
-                    Console.WriteLine(" * Dokumentacja: aura-team.com");
+                    Console.WriteLine(" * Dokumentacja: github.com/aura-systems");
                     break;
             }
 

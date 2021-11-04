@@ -10,9 +10,9 @@ using System.Drawing;
 using Cosmos.Debug.Kernel;
 using Cosmos.System.Graphics;
 
-namespace Aura_OS.System.AConsole.VESAVBE
+namespace Aura_OS.System.AConsole
 {
-    public class VESAVBEConsole : Console
+    public class GraphicalConsole : Console
     {
 
         public Graphics.Graphics graphics;
@@ -21,23 +21,18 @@ namespace Aura_OS.System.AConsole.VESAVBE
         private const char Tab = '\t';
         private const char Space = ' ';
 
-        public Debugger debugger = new Debugger("", "");
-
-        public VESAVBEConsole()
+        public GraphicalConsole()
         {
-            Name = "VESA";
             graphics = new Graphics.Graphics();
+
+            Name = graphics.canvas.Name();
+            Type = ConsoleType.Graphical;
+ 
             mWidth = graphics.canvas.Mode.Columns / graphics.font.Width;
             mHeight = graphics.canvas.Mode.Rows / graphics.font.Height;
 
             mCols = mWidth;
             mRows = mHeight;
-
-            debugger.Send("Height=" + graphics.canvas.Mode.Rows);
-            debugger.Send("rows=" + mRows);
-
-            debugger.Send("Width=" + graphics.canvas.Mode.Columns);
-            debugger.Send("mCols=" + mCols);
         }
 
         protected int mX = 0;

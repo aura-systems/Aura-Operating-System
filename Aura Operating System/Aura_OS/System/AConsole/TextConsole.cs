@@ -10,7 +10,7 @@ using System.Runtime.CompilerServices;
 using Cosmos.HAL;
 using Cosmos.System.Graphics;
 
-namespace Aura_OS.System.AConsole.VGA
+namespace Aura_OS.System.AConsole
 {
 
     public class VGAConsole : Console
@@ -57,6 +57,8 @@ namespace Aura_OS.System.AConsole.VGA
         public VGAConsole(TextScreenBase textScreen)
         {
             Name = "VGA Textmode";
+            Type = ConsoleType.Text;
+
             //Kernel.debugger.Send("VGA Textmode Class");
             if (textScreen == null)
             {
