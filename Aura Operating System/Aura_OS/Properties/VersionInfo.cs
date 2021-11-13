@@ -1,7 +1,9 @@
-namespace Aura_OS
+<![CDATA[
+        namespace Aura_OS
 {
     public class VersionInfo
     {
-        public static string revision = "041120211728";
+        public static string revision = "131120210130";
     }
 }
+       ]]>
