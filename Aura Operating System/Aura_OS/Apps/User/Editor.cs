@@ -220,18 +220,7 @@ namespace Aura_OS.Apps.User
             Console.SetCursorPosition(0, 0);
             Console.BackgroundColor = ConsoleColor.Gray;
             Console.ForegroundColor = ConsoleColor.Black;
-            switch (Kernel.langSelected)
-            {
-                case "fr_FR":
-                    Console.Write("Liquid Editor v" + prgm_version + "                    ");
-                    break;
-                case "en_US":
-                    Console.Write("Liquid Editor v" + prgm_version + "                                  ");
-                    break;
-                case "nl_NL":
-                    Console.Write("Liquid Editor v" + prgm_version + "                        ");
-                    break;
-            }
+            Console.Write("Liquid Editor v" + prgm_version + "                    ");
             Console.ForegroundColor = ConsoleColor.Blue;
             Text.Display("menuliquideditor");
             Console.ForegroundColor = ConsoleColor.White;
