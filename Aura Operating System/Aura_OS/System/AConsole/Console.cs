@@ -16,6 +16,11 @@ namespace Aura_OS.System.AConsole
     [Plug(Target = typeof(Cosmos.System.Console))]
     public abstract class Console
     {
+        internal const char LineFeed = '\n';
+        internal const char CarriageReturn = '\r';
+        internal const char Tab = '\t';
+        internal const char Space = ' ';
+
         public Console()
         {
 
@@ -42,7 +47,7 @@ namespace Aura_OS.System.AConsole
 
         public abstract void Clear(uint color);
 
-        public abstract void Write(byte[] aText);
+        public abstract void Write(char[] aText);
 
         public abstract void UpdateCursor();
 

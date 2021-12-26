@@ -15,11 +15,6 @@ namespace Aura_OS.System.AConsole
 
     public class VGAConsole : Console
     {
-        private const byte LineFeed = (byte)'\n';
-        private const byte CarriageReturn = (byte)'\r';
-        private const byte Tab = (byte)'\t';
-        private const byte Space = (byte)' ';
-
         protected int mX = 0;
         public override int X
         {
@@ -120,9 +115,9 @@ namespace Aura_OS.System.AConsole
             Write(Space);
         }
 
-        public void Write(byte aChar)
+        public void Write(char aChar)
         {
-            mText[mX, mY] = aChar;
+            mText[mX, mY] = (byte)aChar;
             mX++;
             if (mX == mText.Cols)
             {
@@ -133,7 +128,7 @@ namespace Aura_OS.System.AConsole
 
         //TODO: Optimize this
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public override void Write(byte[] aText)
+        public override void Write(char[] aText)
         {
             if (aText == null)
             {
