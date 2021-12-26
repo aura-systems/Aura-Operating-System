@@ -212,7 +212,7 @@ namespace Aura_OS.System.Translation
                             Console.WriteLine("créé par Alexy DA CRUZ et Valentin CHARBONNIER.");
                             Console.WriteLine();
                             Console.ForegroundColor = ConsoleColor.Green;
-                            Console.WriteLine("Site Web: aura-team.com");
+                            Console.WriteLine("Site Web: github.com/aura-systems");
                             Console.ForegroundColor = ConsoleColor.White;
                             break;
                         case "errorthisisafile":
@@ -466,7 +466,7 @@ namespace Aura_OS.System.Translation
                             Console.WriteLine("Created by Alexy DA CRUZ and Valentin CHARBONNIER.");
                             Console.WriteLine();
                             Console.ForegroundColor = ConsoleColor.Green;
-                            Console.WriteLine("Website: aura-team.com");
+                            Console.WriteLine("Website: github.com/aura-systems");
                             Console.ForegroundColor = ConsoleColor.White;
                             break;
                         case "errorthisisafile":
@@ -717,7 +717,7 @@ namespace Aura_OS.System.Translation
                             Console.WriteLine("Ontwikkeld door Alexy DA CRUZ en Valentin CHARBONNIER.");
                             Console.WriteLine();
                             Console.ForegroundColor = ConsoleColor.Green;
-                            Console.WriteLine("Website: aura-team.com");
+                            Console.WriteLine("Website: github.com/aura-systems");
                             Console.ForegroundColor = ConsoleColor.White;
                             break;
                         case "errorthisisafile":
@@ -956,7 +956,7 @@ namespace Aura_OS.System.Translation
                             Console.WriteLine("Creato da Alexy DA CRUZ e Valentin CHARBONNIER.");
                             Console.WriteLine();
                             Console.ForegroundColor = ConsoleColor.Green;
-                            Console.WriteLine("Sito web: aura-team.com");
+                            Console.WriteLine("Sito web: github.com/aura-systems");
                             Console.ForegroundColor = ConsoleColor.White;
                             break;
                         case "errorthisisafile":
@@ -1210,7 +1210,7 @@ namespace Aura_OS.System.Translation
                             Console.WriteLine("Stworzona Alexy DA CRUZ i Valentin CHARBONNIER.");
                             Console.WriteLine();
                             Console.ForegroundColor = ConsoleColor.Green;
-                            Console.WriteLine("Strona internetowa: aura-team.com");
+                            Console.WriteLine("Strona internetowa: github.com/aura-systems");
                             Console.ForegroundColor = ConsoleColor.White;
                             break;
                         case "errorthisisafile":

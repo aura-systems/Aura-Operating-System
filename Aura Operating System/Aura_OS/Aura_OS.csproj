@@ -45,6 +45,8 @@
     <ISO_StartCosmosGDB>False</ISO_StartCosmosGDB>
     <ISO_ISOFile>bin\Debug\net5.0\Aura_OS.iso</ISO_ISOFile>
     <VMwareEdition>Workstation</VMwareEdition>
+    <CompileVBEMultiboot>True</CompileVBEMultiboot>
+    <VBEResolution>1920x1080x32</VBEResolution>
   </PropertyGroup>
   <Target Name="GetVersion">
     <WriteLinesToFile File="Properties\VersionInfo.cs" Lines="$(SomeThing)" Overwrite="true"></WriteLinesToFile>

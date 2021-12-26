@@ -6,6 +6,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Text;
 using Cosmos.System.Graphics;
 using IL2CPU.API.Attribs;
 
@@ -15,6 +16,10 @@ namespace Aura_OS.System.AConsole
     [Plug(Target = typeof(Cosmos.System.Console))]
     public abstract class Console
     {
+        internal const char LineFeed = '\n';
+        internal const char CarriageReturn = '\r';
+        internal const char Tab = '\t';
+        internal const char Space = ' ';
 
         public Console()
         {
@@ -26,6 +31,8 @@ namespace Aura_OS.System.AConsole
         public string cmd;
 
         public string Name;
+
+        public ConsoleType Type;
 
         public abstract int X { get; set; }
         public abstract int Y { get; set; }
@@ -42,6 +49,8 @@ namespace Aura_OS.System.AConsole
 
         public abstract void Write(char[] aText);
 
+        public abstract void Write(byte[] aText);
+
         public abstract void UpdateCursor();
 
         public abstract ConsoleColor Foreground { get; set; }
@@ -53,12 +62,16 @@ namespace Aura_OS.System.AConsole
         public abstract bool CursorVisible { get; set; }
 
         public abstract void DrawImage(ushort X, ushort Y, Bitmap image);
+    }
 
+    public enum ConsoleType
+    {
+        Text,
+        Graphical
     }
 
     public static class ConsoleMode
     {
-
         public enum Mode800x600
         {
             Rows = 87,
@@ -107,5 +120,16 @@ namespace Aura_OS.System.AConsole
             Cols = 48 // Not good value
         };
 
+        public static string GetConsoleInfo()
+        {
+            if (Kernel.AConsole.Type == ConsoleType.Graphical)
+            {
+                return Kernel.AConsole.Name + " (" + Kernel.AConsole.Width + "x" + Kernel.AConsole.Height + " - " + global::System.Console.OutputEncoding.BodyName + ")";
+            }
+            else
+            {
+                return Kernel.AConsole.Name + " (" + global::System.Console.OutputEncoding.BodyName + ")";
+            }
+        }
     }
 }

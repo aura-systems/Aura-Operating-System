@@ -99,35 +99,5 @@ namespace Aura_OS.System.Computer
         {
             return Cosmos.HAL.Network.MACAddress.Broadcast + "";
         }
-
-        /// <summary>
-        /// Number of CPU
-        /// </summary>
-        /*public static int GetNumberOfCPU()
-        {
-            int number = 0;
-            foreach (var x in ListProcessors)
-            {
-                CPUInfo.Processors.Add(x);
-                number++;
-            }
-            return number;
-        }
-
-        private static List<Processor> _listProcessors;
-        public static List<Processor> ListProcessors
-        {
-            get
-            {
-                //This is to allow multiprocessor on a future
-                //TODO: search a list of processors based on the topology
-                if (_listProcessors == null)
-                {
-                    _listProcessors = new List<Processor>();
-                    _listProcessors.Add(new Processor());
-                }
-                return _listProcessors;
-            }
-        }*/
     }
 }

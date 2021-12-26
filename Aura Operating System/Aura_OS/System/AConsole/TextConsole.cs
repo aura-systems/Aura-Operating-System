@@ -10,16 +10,11 @@ using System.Runtime.CompilerServices;
 using Cosmos.HAL;
 using Cosmos.System.Graphics;
 
-namespace Aura_OS.System.AConsole.VGA
+namespace Aura_OS.System.AConsole
 {
 
     public class VGAConsole : Console
     {
-        private const char LineFeed = '\n';
-        private const char CarriageReturn = '\r';
-        private const char Tab = '\t';
-        private const char Space = ' ';
-
         protected int mX = 0;
         public override int X
         {
@@ -57,6 +52,8 @@ namespace Aura_OS.System.AConsole.VGA
         public VGAConsole(TextScreenBase textScreen)
         {
             Name = "VGA Textmode";
+            Type = ConsoleType.Text;
+
             //Kernel.debugger.Send("VGA Textmode Class");
             if (textScreen == null)
             {
@@ -112,15 +109,15 @@ namespace Aura_OS.System.AConsole.VGA
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void DoTab()
         {
-            Write(Space);
-            Write(Space);
-            Write(Space);
-            Write(Space);
+            Write((byte)Space);
+            Write((byte)Space);
+            Write((byte)Space);
+            Write((byte)Space);
         }
 
-        public void Write(char aChar)
+        public void Write(byte aChar)
         {
-            mText[mX, mY] = (byte)aChar;
+            mText[mX, mY] = aChar;
             mX++;
             if (mX == mText.Cols)
             {
@@ -129,9 +126,14 @@ namespace Aura_OS.System.AConsole.VGA
             UpdateCursor();
         }
 
+        public override void Write(char[] aText)
+        {
+            throw new NotImplementedException();
+        }
+
         //TODO: Optimize this
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public override void Write(char[] aText)
+        public override void Write(byte[] aText)
         {
             if (aText == null)
             {
@@ -142,15 +144,15 @@ namespace Aura_OS.System.AConsole.VGA
             {
                 switch (aText[i])
                 {
-                    case LineFeed:
+                    case (byte)LineFeed:
                         DoLineFeed();
                         break;
 
-                    case CarriageReturn:
+                    case (byte)CarriageReturn:
                         DoCarriageReturn();
                         break;
 
-                    case Tab:
+                    case (byte)Tab:
                         DoTab();
                         break;
 

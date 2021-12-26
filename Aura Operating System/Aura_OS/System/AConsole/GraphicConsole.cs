@@ -10,34 +10,26 @@ using System.Drawing;
 using Cosmos.Debug.Kernel;
 using Cosmos.System.Graphics;
 
-namespace Aura_OS.System.AConsole.VESAVBE
+namespace Aura_OS.System.AConsole
 {
-    public class VESAVBEConsole : Console
+    public class GraphicalConsole : Console
     {
 
         public Graphics.Graphics graphics;
-        private const char LineFeed = '\n';
-        private const char CarriageReturn = '\r';
-        private const char Tab = '\t';
-        private const char Space = ' ';
+        
 
-        public Debugger debugger = new Debugger("", "");
-
-        public VESAVBEConsole()
+        public GraphicalConsole()
         {
-            Name = "VESA";
             graphics = new Graphics.Graphics();
-            mWidth = graphics.canvas.Mode.Columns / graphics.font.Width;
-            mHeight = graphics.canvas.Mode.Rows / graphics.font.Height;
 
-            mCols = mWidth;
-            mRows = mHeight;
+            Name = graphics.canvas.Name();
+            Type = ConsoleType.Graphical;
+ 
+            mWidth = graphics.canvas.Mode.Columns;
+            mHeight = graphics.canvas.Mode.Rows;
 
-            debugger.Send("Height=" + graphics.canvas.Mode.Rows);
-            debugger.Send("rows=" + mRows);
-
-            debugger.Send("Width=" + graphics.canvas.Mode.Columns);
-            debugger.Send("mCols=" + mCols);
+            mCols = graphics.canvas.Mode.Columns / graphics.font.Width;
+            mRows = graphics.canvas.Mode.Rows / graphics.font.Height;
         }
 
         protected int mX = 0;
@@ -201,6 +193,11 @@ namespace Aura_OS.System.AConsole.VESAVBE
             }
         }
 
+        public override void Write(byte[] aText)
+        {
+            throw new NotImplementedException();
+        }
+
         private void DoTab()
         {
             Write(Space);
@@ -213,6 +210,5 @@ namespace Aura_OS.System.AConsole.VESAVBE
         {
             graphics.canvas.DrawImage(image, X, Y);
         }
-
     }
 }
