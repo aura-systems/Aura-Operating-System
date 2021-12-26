@@ -6,6 +6,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Text;
 using Cosmos.System.Graphics;
 using IL2CPU.API.Attribs;
 
@@ -42,7 +43,7 @@ namespace Aura_OS.System.AConsole
 
         public abstract void Clear(uint color);
 
-        public abstract void Write(char[] aText);
+        public abstract void Write(byte[] aText);
 
         public abstract void UpdateCursor();
 
@@ -114,6 +115,30 @@ namespace Aura_OS.System.AConsole
             Rows = 141, // Not good value
             Cols = 48 // Not good value
         };
+
+        public static string GetEncodingType(Encoding encoding)
+        {
+            if (encoding == Encoding.ASCII)
+            {
+                return "ASCII";
+            }
+            else if (encoding == Encoding.UTF8)
+            {
+                return "UTF8";
+            }
+            else if (encoding == Encoding.UTF32)
+            {
+                return "UTF32";
+            }
+            else if (encoding == Encoding.Unicode)
+            {
+                return "Unicode";
+            }
+            else
+            {
+                return encoding.CodePage.ToString();
+            }
+        }
 
     }
 }

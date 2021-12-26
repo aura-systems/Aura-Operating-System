@@ -25,6 +25,8 @@ namespace Aura_Plugs
         private static Encoding ConsoleInputEncoding = Encoding.ASCII;
         private static Encoding ConsoleOutputEncoding = Encoding.ASCII;
 
+        private static Cosmos.System.Console mFallbackConsole = new Cosmos.System.Console(null);
+
         private static Aura_OS.System.AConsole.Console GetConsole()
         {
             return Aura_OS.Kernel.AConsole;
@@ -44,24 +46,22 @@ namespace Aura_Plugs
 
         public static int get_BufferHeight()
         {
-            WriteLine("Not implemented: get_BufferHeight");
-            return -1;
+            throw new NotImplementedException("Not implemented: get_BufferHeight");
         }
 
         public static void set_BufferHeight(int aHeight)
         {
-            WriteLine("Not implemented: set_BufferHeight");
+            throw new NotImplementedException("Not implemented: set_BufferHeight");
         }
 
         public static int get_BufferWidth()
         {
-            WriteLine("Not implemented: get_BufferWidth");
-            return -1;
+            throw new NotImplementedException("Not implemented: get_BufferWidth");
         }
 
         public static void set_BufferWidth(int aWidth)
         {
-            WriteLine("Not implemented: set_BufferWidth");
+            throw new NotImplementedException("Not implemented: set_BufferWidth");
         }
 
         public static bool get_CapsLock()
@@ -89,13 +89,18 @@ namespace Aura_Plugs
                 return;
             }
 
+            if (x < 0)
+            {
+                throw new ArgumentException("The value x must be at least 0!");
+            }
+
             if (x < get_WindowWidth())
             {
                 xConsole.X = x;
             }
             else
             {
-                WriteLine("x must be lower than the console width!");
+                throw new ArgumentException("The value x must be lower than the console width!");
             }
         }
 
@@ -141,13 +146,18 @@ namespace Aura_Plugs
                 return;
             }
 
+            if (y < 0)
+            {
+                throw new ArgumentException("The value y must be at least 0!");
+            }
+
             if (y < get_WindowHeight())
             {
                 xConsole.Y = y;
             }
             else
             {
-                WriteLine("y must be lower than the console height!");
+                throw new ArgumentException("The value y must be lower than the console height!");
             }
         }
 
@@ -224,14 +234,12 @@ namespace Aura_Plugs
 
         public static int get_LargestWindowHeight()
         {
-            WriteLine("Not implemented: get_LargestWindowHeight");
-            return -1;
+            throw new NotImplementedException("Not implemented: get_LargestWindowHeight");
         }
 
         public static int get_LargestWindowWidth()
         {
-            WriteLine("Not implemented: get_LargestWindowWidth");
-            return -1;
+            throw new NotImplementedException("Not implemented: get_LargestWindowWidth");
         }
 
         public static bool get_NumberLock()
@@ -246,24 +254,22 @@ namespace Aura_Plugs
 
         public static string get_Title()
         {
-            WriteLine("Not implemented: get_Title");
-            return string.Empty;
+            throw new NotImplementedException("Not implemented: get_Title");
         }
 
         public static void set_Title(string value)
         {
-            WriteLine("Not implemented: set_Title");
+            throw new NotImplementedException("Not implemented: set_Title");
         }
 
         public static bool get_TreatControlCAsInput()
         {
-            WriteLine("Not implemented: get_TreatControlCAsInput");
-            return false;
+            throw new NotImplementedException("Not implemented: get_TreatControlCAsInput");
         }
 
         public static void set_TreatControlCAsInput(bool value)
         {
-            WriteLine("Not implemented: set_TreatControlCAsInput");
+            throw new NotImplementedException("Not implemented: set_TreatControlCAsInput");
         }
 
         public static int get_WindowHeight()
@@ -279,29 +285,27 @@ namespace Aura_Plugs
 
         public static void set_WindowHeight(int value)
         {
-            WriteLine("Not implemented: set_WindowHeight");
+            throw new NotImplementedException("Not implemented: set_WindowHeight");
         }
 
         public static int get_WindowLeft()
         {
-            WriteLine("Not implemented: get_WindowLeft");
-            return -1;
+            throw new NotImplementedException("Not implemented: get_WindowLeft");
         }
 
         public static void set_WindowLeft(int value)
         {
-            WriteLine("Not implemented: set_WindowLeft");
+            throw new NotImplementedException("Not implemented: set_WindowLeft");
         }
 
         public static int get_WindowTop()
         {
-            WriteLine("Not implemented: get_WindowTop");
-            return -1;
+            throw new NotImplementedException("Not implemented: get_WindowTop");
         }
 
         public static void set_WindowTop(int value)
         {
-            WriteLine("Not implemented: set_WindowTop");
+            throw new NotImplementedException("Not implemented: set_WindowTop");
         }
 
         public static int get_WindowWidth()
@@ -317,7 +321,7 @@ namespace Aura_Plugs
 
         public static void set_WindowWidth(int value)
         {
-            WriteLine("Not implemented: set_WindowWidth");
+            throw new NotImplementedException("Not implemented: set_WindowWidth");
         }
 
         /// <summary>
@@ -355,7 +359,6 @@ namespace Aura_Plugs
         //TODO: Console uses TextWriter - intercept and plug it instead
         public static void Clear()
         {
-            //Kernel.debugger.Send("Clear console!!!!");
             var xConsole = GetConsole();
             if (xConsole == null)
             {
@@ -370,7 +373,7 @@ namespace Aura_Plugs
         public static void MoveBufferArea(int sourceLeft, int sourceTop, int sourceWidth, int sourceHeight,
             int targetLeft, int targetTop, Char sourceChar, ConsoleColor sourceForeColor, ConsoleColor sourceBackColor)
         {
-            WriteLine("Not implemented: MoveBufferArea");
+            throw new NotImplementedException("Not implemented: MoveBufferArea");
         }
 
         //public static Stream OpenStandardError() {
@@ -511,7 +514,7 @@ namespace Aura_Plugs
                     continue;
                 }
                 else if (current.Key == ConsoleKeyEx.Tab)
-                {   
+                {
                     if (currentCount >= 1)
                     {
                         int index = -1;
@@ -519,7 +522,7 @@ namespace Aura_Plugs
                         foreach (char ch in chars)
                         {
                             CMDToComplete = CMDToComplete + ch.ToString();
-                        }                    
+                        }
 
                         foreach (ICommand command in CommandManager.CMDs)
                         {
@@ -734,7 +737,7 @@ namespace Aura_Plugs
 
         public static void SetBufferSize(int width, int height)
         {
-            WriteLine("Not implemented: SetBufferSize");
+            throw new NotImplementedException("Not implemented: SetBufferSize");
         }
 
         public static void SetCursorPosition(int left, int top)
@@ -757,12 +760,57 @@ namespace Aura_Plugs
 
         public static void SetWindowPosition(int left, int top)
         {
-            WriteLine("Not implemented: SetWindowPosition");
+            throw new NotImplementedException("Not implemented: SetWindowPosition");
         }
 
         public static void SetWindowSize(int width, int height)
         {
-            WriteLine("Not implemented: SetWindowSize");
+            if (width == 40 && height == 25)
+            {
+                mFallbackConsole.mText.Cols = 40;
+                mFallbackConsole.mText.Rows = 25;
+                Cosmos.System.Graphics.VGAScreen.SetTextMode(Cosmos.HAL.VGADriver.TextSize.Size40x25);
+            }
+            else if (width == 40 && height == 50)
+            {
+                mFallbackConsole.mText.Cols = 40;
+                mFallbackConsole.mText.Rows = 50;
+                Cosmos.System.Graphics.VGAScreen.SetTextMode(Cosmos.HAL.VGADriver.TextSize.Size40x50);
+            }
+            else if (width == 80 && height == 25)
+            {
+                mFallbackConsole.mText.Cols = 80;
+                mFallbackConsole.mText.Rows = 25;
+                Cosmos.System.Graphics.VGAScreen.SetTextMode(Cosmos.HAL.VGADriver.TextSize.Size80x25);
+            }
+            else if (width == 80 && height == 50)
+            {
+                mFallbackConsole.mText.Cols = 80;
+                mFallbackConsole.mText.Rows = 50;
+                Cosmos.System.Graphics.VGAScreen.SetTextMode(Cosmos.HAL.VGADriver.TextSize.Size80x50);
+            }
+            else if (width == 90 && height == 30)
+            {
+                mFallbackConsole.mText.Cols = 90;
+                mFallbackConsole.mText.Rows = 30;
+                Cosmos.System.Graphics.VGAScreen.SetTextMode(Cosmos.HAL.VGADriver.TextSize.Size90x30);
+            }
+            else if (width == 90 && height == 60)
+            {
+                mFallbackConsole.mText.Cols = 90;
+                mFallbackConsole.mText.Rows = 60;
+                Cosmos.System.Graphics.VGAScreen.SetTextMode(Cosmos.HAL.VGADriver.TextSize.Size90x60);
+            }
+            else
+            {
+                throw new Exception("Invalid text size.");
+            }
+            mFallbackConsole.Cols = mFallbackConsole.mText.Cols;
+            mFallbackConsole.Rows = mFallbackConsole.mText.Rows;
+
+            ((Cosmos.HAL.TextScreen)mFallbackConsole.mText).UpdateWindowSize();
+
+            Clear();
         }
 
         #region Write
@@ -804,7 +852,8 @@ namespace Aura_Plugs
                 return;
             }
 
-            GetConsole().Write(aText.ToCharArray());
+            byte[] aTextEncoded = ConsoleOutputEncoding.GetBytes(aText);
+            GetConsole().Write(aTextEncoded);
         }
 
         public static void Write(uint aInt) => Write(aInt.ToString());
@@ -816,8 +865,6 @@ namespace Aura_Plugs
         public static void Write(string format, object arg0, object arg1) => Write(String.Format(format, arg0, arg1));
 
         public static void Write(string format, object arg0, object arg1, object arg2) => Write(String.Format(format, arg0, arg1, arg2));
-
-        public static void Write(string format, object arg0, object arg1, object arg2, object arg3) => Write(String.Format(format, arg0, arg1, arg2, arg3));
 
         public static void Write(string format, params object[] arg) => Write(String.Format(format, arg));
 
@@ -887,8 +934,6 @@ namespace Aura_Plugs
         public static void WriteLine(string format, object arg0, object arg1) => WriteLine(String.Format(format, arg0, arg1));
 
         public static void WriteLine(string format, object arg0, object arg1, object arg2) => WriteLine(String.Format(format, arg0, arg1, arg2));
-
-        public static void WriteLine(string format, object arg0, object arg1, object arg2, object arg3) => WriteLine(String.Format(format, arg0, arg1, arg2, arg3));
 
         public static void WriteLine(string format, params object[] arg) => WriteLine(String.Format(format, arg));
 

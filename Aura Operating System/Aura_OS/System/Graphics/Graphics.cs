@@ -69,7 +69,7 @@ namespace Aura_OS.System.Graphics
             }
         }
 
-        public void WriteByte(char ch)
+        public void WriteByte(byte ch)
         {
             DrawFilledRectangle(backpen, Kernel.AConsole.X * font.Width + 1, Kernel.AConsole.Y * font.Height, font.Width - 1, font.Height);
 
@@ -88,7 +88,7 @@ namespace Aura_OS.System.Graphics
             }
             else
             {
-                canvas.DrawChar(ch, font, frontpen, Kernel.AConsole.X * font.Width, Kernel.AConsole.Y * font.Height);
+                canvas.DrawChar((char)ch, font, frontpen, Kernel.AConsole.X * font.Width, Kernel.AConsole.Y * font.Height);
             }
         }
 

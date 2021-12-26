@@ -16,10 +16,10 @@ namespace Aura_OS.System.AConsole
     {
 
         public Graphics.Graphics graphics;
-        private const char LineFeed = '\n';
-        private const char CarriageReturn = '\r';
-        private const char Tab = '\t';
-        private const char Space = ' ';
+        private const byte LineFeed = (byte)'\n';
+        private const byte CarriageReturn = (byte)'\r';
+        private const byte Tab = (byte)'\t';
+        private const byte Space = (byte)' ';
 
         public GraphicalConsole()
         {
@@ -156,7 +156,7 @@ namespace Aura_OS.System.AConsole
         /// Write char to the console.
         /// </summary>
         /// <param name="aChar">A char to write</param>
-        public void Write(char aChar)
+        public void Write(byte aChar)
         {
             if (aChar == 0)
                 return;
@@ -170,7 +170,7 @@ namespace Aura_OS.System.AConsole
             UpdateCursor();
         }
 
-        public override void Write(char[] aText)
+        public override void Write(byte[] aText)
         {
             for (int i = 0; i < aText.Length; i++)
             {

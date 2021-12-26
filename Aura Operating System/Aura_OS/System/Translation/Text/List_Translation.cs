@@ -108,6 +108,7 @@ namespace Aura_OS.System.Translation
                     Console.WriteLine("Mémoire restante:              " + Core.MemoryManager.GetFreeMemory() + "MB");
                     Console.WriteLine("Processeur(s):                 " + CPU.GetCPUBrandString());
                     Console.WriteLine("Mode de la console:            " + Kernel.AConsole.Name);
+                    Console.WriteLine("Encoding:                      " + AConsole.ConsoleMode.GetEncodingType(Console.OutputEncoding));
                     break;
 
                 case "en_US":
@@ -126,6 +127,7 @@ namespace Aura_OS.System.Translation
                     Console.WriteLine("Free memory:               " + Core.MemoryManager.GetFreeMemory() + "MB");
                     Console.WriteLine("Processor(s):              " + CPU.GetCPUBrandString());
                     Console.WriteLine("Console mode:              " + Kernel.AConsole.Name);
+                    Console.WriteLine("Encoding:                  " + AConsole.ConsoleMode.GetEncodingType(Console.OutputEncoding));
                     break;
 
                 case "nl_NL":
@@ -144,6 +146,7 @@ namespace Aura_OS.System.Translation
                     Console.WriteLine("Gratis geheugen:           " + Core.MemoryManager.GetFreeMemory() + "MB");
                     Console.WriteLine("Processor(s):              " + CPU.GetCPUBrandString());
                     Console.WriteLine("Consolewijze:              " + Kernel.AConsole.Name);
+                    Console.WriteLine("Encoding:                  " + AConsole.ConsoleMode.GetEncodingType(Console.OutputEncoding));
                     break;
 
                 case "it_IT":
@@ -162,6 +165,7 @@ namespace Aura_OS.System.Translation
                     Console.WriteLine("Memoria libera:                  " + Core.MemoryManager.GetFreeMemory() + "MB");
                     Console.WriteLine("Processor(s):                    " + CPU.GetCPUBrandString());
                     Console.WriteLine("Modalità console:                " + Kernel.AConsole.Name);
+                    Console.WriteLine("Encoding:                        " + AConsole.ConsoleMode.GetEncodingType(Console.OutputEncoding));
                     break;
                 
                 case "pl_PL":
@@ -180,6 +184,7 @@ namespace Aura_OS.System.Translation
                     Console.WriteLine("Wolny RAM:                 " + Core.MemoryManager.GetFreeMemory() + "MB");
                     Console.WriteLine("Procesor(y):               " + CPU.GetCPUBrandString());
                     Console.WriteLine("Tryb konsoli:              " + Kernel.AConsole.Name);
+                    Console.WriteLine("Encoding:                  " + AConsole.ConsoleMode.GetEncodingType(Console.OutputEncoding));
                     break;
             }
         }

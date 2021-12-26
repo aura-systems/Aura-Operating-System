@@ -16,11 +16,11 @@ namespace Aura_OS.System.Plugs
     [Plug(Target = typeof(Cosmos.System.Global))]
     public static class Global
     {
-        public static void Init(TextScreenBase textScreen)
+        public static void Init(TextScreenBase textScreen, bool InitScroolWheel = true, bool InitPS2 = true, bool InitNetwork = true, bool IDEInit = true)
         {
             Cosmos.System.Global.mDebugger.Send("Creating Console");
 
-            Aura_Plugs.HAL.Global.Init(textScreen);
+            Aura_Plugs.HAL.Global.Init(textScreen, InitScroolWheel, InitPS2, InitNetwork, IDEInit);
 
             Cosmos.System.Global.mDebugger.Send("HW Init");
 

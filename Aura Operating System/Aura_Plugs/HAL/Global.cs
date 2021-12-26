@@ -19,7 +19,7 @@ namespace Aura_Plugs.HAL
     public static class Global
     {
 
-        static public void Init(TextScreenBase textScreen)
+        static public void Init(TextScreenBase textScreen, bool InitScrollWheel, bool InitPS2, bool InitNetwork, bool IDEInit)
         {
             PCI.Setup();
             Aura_OS.System.CustomConsole.WriteLineOK("PCI Devices Scan");
@@ -47,7 +47,7 @@ namespace Aura_Plugs.HAL
             ACPI.Start();
             Aura_OS.System.CustomConsole.WriteLineOK("ACPI Initialization");
 
-            Cosmos.HAL.Global.PS2Controller.Initialize();
+            Cosmos.HAL.Global.PS2Controller.Initialize(false);
             Aura_OS.System.CustomConsole.WriteLineOK("PS/2 Controller Initialization");
 
             Cosmos.HAL.BlockDevice.IDE.InitDriver();
@@ -95,7 +95,7 @@ namespace Aura_Plugs.HAL
         /// Checks whether the Bochs Graphics Adapter exists (not limited to Bochs)
         /// </summary>
         /// <returns></returns>
-        public static bool BGAExists()
+        private static bool BGAExists()
         {
             return VBEDriver.ISAModeAvailable();
         }
