@@ -16,7 +16,6 @@ namespace Aura_OS.System.AConsole
     [Plug(Target = typeof(Cosmos.System.Console))]
     public abstract class Console
     {
-
         public Console()
         {
 
@@ -56,7 +55,6 @@ namespace Aura_OS.System.AConsole
         public abstract bool CursorVisible { get; set; }
 
         public abstract void DrawImage(ushort X, ushort Y, Bitmap image);
-
     }
 
     public enum ConsoleType
@@ -67,7 +65,6 @@ namespace Aura_OS.System.AConsole
 
     public static class ConsoleMode
     {
-
         public enum Mode800x600
         {
             Rows = 87,
@@ -115,30 +112,5 @@ namespace Aura_OS.System.AConsole
             Rows = 141, // Not good value
             Cols = 48 // Not good value
         };
-
-        public static string GetEncodingType(Encoding encoding)
-        {
-            if (encoding == Encoding.ASCII)
-            {
-                return "ASCII";
-            }
-            else if (encoding == Encoding.UTF8)
-            {
-                return "UTF8";
-            }
-            else if (encoding == Encoding.UTF32)
-            {
-                return "UTF32";
-            }
-            else if (encoding == Encoding.Unicode)
-            {
-                return "Unicode";
-            }
-            else
-            {
-                return encoding.CodePage.ToString();
-            }
-        }
-
     }
 }
