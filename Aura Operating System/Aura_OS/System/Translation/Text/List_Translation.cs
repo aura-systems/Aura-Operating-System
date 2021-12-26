@@ -107,8 +107,7 @@ namespace Aura_OS.System.Translation
                     Console.WriteLine("Mémoire utilisée:              " + Core.MemoryManager.GetUsedMemory() + "MB");
                     Console.WriteLine("Mémoire restante:              " + Core.MemoryManager.GetFreeMemory() + "MB");
                     Console.WriteLine("Processeur(s):                 " + CPU.GetCPUBrandString());
-                    Console.WriteLine("Mode de la console:            " + Kernel.AConsole.Name);
-                    Console.WriteLine("Encoding:                      " + Console.OutputEncoding.BodyName);
+                    Console.WriteLine("Mode de la console:            " + AConsole.ConsoleMode.GetConsoleInfo());
                     break;
 
                 case "en_US":
@@ -126,8 +125,7 @@ namespace Aura_OS.System.Translation
                     Console.WriteLine("Used memory:               " + Core.MemoryManager.GetUsedMemory() + "MB");
                     Console.WriteLine("Free memory:               " + Core.MemoryManager.GetFreeMemory() + "MB");
                     Console.WriteLine("Processor(s):              " + CPU.GetCPUBrandString());
-                    Console.WriteLine("Console mode:              " + Kernel.AConsole.Name);
-                    Console.WriteLine("Encoding:                  " + Console.OutputEncoding.BodyName);
+                    Console.WriteLine("Console mode:              " + AConsole.ConsoleMode.GetConsoleInfo());
                     break;
 
                 case "nl_NL":
@@ -145,8 +143,7 @@ namespace Aura_OS.System.Translation
                     Console.WriteLine("Gebruikt geheugen:         " + Core.MemoryManager.GetUsedMemory() + "MB");
                     Console.WriteLine("Gratis geheugen:           " + Core.MemoryManager.GetFreeMemory() + "MB");
                     Console.WriteLine("Processor(s):              " + CPU.GetCPUBrandString());
-                    Console.WriteLine("Consolewijze:              " + Kernel.AConsole.Name);
-                    Console.WriteLine("Encoding:                  " + Console.OutputEncoding.BodyName);
+                    Console.WriteLine("Consolewijze:              " + AConsole.ConsoleMode.GetConsoleInfo());
                     break;
 
                 case "it_IT":
@@ -164,8 +161,7 @@ namespace Aura_OS.System.Translation
                     Console.WriteLine("Memoria utilizzata:              " + Core.MemoryManager.GetUsedMemory() + "MB");
                     Console.WriteLine("Memoria libera:                  " + Core.MemoryManager.GetFreeMemory() + "MB");
                     Console.WriteLine("Processor(s):                    " + CPU.GetCPUBrandString());
-                    Console.WriteLine("Modalità console:                " + Kernel.AConsole.Name);
-                    Console.WriteLine("Encoding:                        " + Console.OutputEncoding.BodyName);
+                    Console.WriteLine("Modalità console:                " + AConsole.ConsoleMode.GetConsoleInfo());
                     break;
                 
                 case "pl_PL":
@@ -183,8 +179,7 @@ namespace Aura_OS.System.Translation
                     Console.WriteLine("RAM w uzyciu:              " + Core.MemoryManager.GetUsedMemory() + "MB");
                     Console.WriteLine("Wolny RAM:                 " + Core.MemoryManager.GetFreeMemory() + "MB");
                     Console.WriteLine("Procesor(y):               " + CPU.GetCPUBrandString());
-                    Console.WriteLine("Tryb konsoli:              " + Kernel.AConsole.Name);
-                    Console.WriteLine("Encoding:                  " + Console.OutputEncoding.BodyName);
+                    Console.WriteLine("Tryb konsoli:              " + AConsole.ConsoleMode.GetConsoleInfo());
                     break;
             }
         }

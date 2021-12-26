@@ -25,11 +25,11 @@ namespace Aura_OS.System.AConsole
             Name = graphics.canvas.Name();
             Type = ConsoleType.Graphical;
  
-            mWidth = graphics.canvas.Mode.Columns / graphics.font.Width;
-            mHeight = graphics.canvas.Mode.Rows / graphics.font.Height;
+            mWidth = graphics.canvas.Mode.Columns;
+            mHeight = graphics.canvas.Mode.Rows;
 
-            mCols = mWidth;
-            mRows = mHeight;
+            mCols = graphics.canvas.Mode.Columns / graphics.font.Width;
+            mRows = graphics.canvas.Mode.Rows / graphics.font.Height;
         }
 
         protected int mX = 0;

@@ -119,5 +119,17 @@ namespace Aura_OS.System.AConsole
             Rows = 141, // Not good value
             Cols = 48 // Not good value
         };
+
+        public static string GetConsoleInfo()
+        {
+            if (Kernel.AConsole.Type == ConsoleType.Graphical)
+            {
+                return Kernel.AConsole.Name + " (" + Kernel.AConsole.Width + "x" + Kernel.AConsole.Height + " - " + global::System.Console.OutputEncoding.BodyName + ")";
+            }
+            else
+            {
+                return Kernel.AConsole.Name + " (" + global::System.Console.OutputEncoding.BodyName + ")";
+            }
+        }
     }
 }
