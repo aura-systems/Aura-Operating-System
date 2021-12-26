@@ -193,6 +193,11 @@ namespace Aura_OS.System.AConsole
             }
         }
 
+        public override void Write(byte[] aText)
+        {
+            throw new NotImplementedException();
+        }
+
         private void DoTab()
         {
             Write(Space);
@@ -205,6 +210,5 @@ namespace Aura_OS.System.AConsole
         {
             graphics.canvas.DrawImage(image, X, Y);
         }
-
     }
 }

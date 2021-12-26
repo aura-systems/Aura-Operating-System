@@ -852,7 +852,15 @@ namespace Aura_Plugs
                 return;
             }
 
-            GetConsole().Write(aText.ToCharArray());
+            if (ConsoleOutputEncoding.CodePage == 437 || ConsoleOutputEncoding.CodePage == 858)
+            {
+                byte[] aTextEncoded = ConsoleOutputEncoding.GetBytes(aText);
+                GetConsole().Write(aTextEncoded);
+            }
+            else if (ConsoleOutputEncoding == Encoding.Unicode)
+            {
+                GetConsole().Write(aText.ToCharArray());
+            }
         }
 
         public static void Write(uint aInt) => Write(aInt.ToString());

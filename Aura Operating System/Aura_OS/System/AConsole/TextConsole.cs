@@ -109,15 +109,15 @@ namespace Aura_OS.System.AConsole
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void DoTab()
         {
-            Write(Space);
-            Write(Space);
-            Write(Space);
-            Write(Space);
+            Write((byte)Space);
+            Write((byte)Space);
+            Write((byte)Space);
+            Write((byte)Space);
         }
 
-        public void Write(char aChar)
+        public void Write(byte aChar)
         {
-            mText[mX, mY] = (byte)aChar;
+            mText[mX, mY] = aChar;
             mX++;
             if (mX == mText.Cols)
             {
@@ -126,9 +126,14 @@ namespace Aura_OS.System.AConsole
             UpdateCursor();
         }
 
+        public override void Write(char[] aText)
+        {
+            throw new NotImplementedException();
+        }
+
         //TODO: Optimize this
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public override void Write(char[] aText)
+        public override void Write(byte[] aText)
         {
             if (aText == null)
             {
@@ -139,15 +144,15 @@ namespace Aura_OS.System.AConsole
             {
                 switch (aText[i])
                 {
-                    case LineFeed:
+                    case (byte)LineFeed:
                         DoLineFeed();
                         break;
 
-                    case CarriageReturn:
+                    case (byte)CarriageReturn:
                         DoCarriageReturn();
                         break;
 
-                    case Tab:
+                    case (byte)Tab:
                         DoTab();
                         break;
 
