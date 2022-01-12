@@ -319,8 +319,6 @@ namespace Aura_OS.Apps.User
                 File.WriteAllText(@"0:\" + file, text);
                 Console.WriteLine("Content has been saved to " + file);
             }
-            Console.WriteLine("Press any key to continue...");
-            Console.ReadKey(true);
         }
     }
 }
