@@ -19,6 +19,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using L = Aura_OS.System.Translation;
+using Aura_OS.System.Shell.cmdIntr.Tools;
 
 namespace Aura_OS.System.Shell.cmdIntr
 {
@@ -70,6 +71,8 @@ namespace Aura_OS.System.Shell.cmdIntr
             CMDs.Add(new CommandHex(new string[] { "hex" }));
             CMDs.Add(new CommandTree(new string[] { "tree" }));
             CMDs.Add(new CommandPCName(new string[] { "pcn" }));
+
+            CMDs.Add(new CommandMIV(new string[] { "miv", "edit" }));
 
             CMDs.Add(new CommandAction(new string[] { "beep" }, () =>
             {
