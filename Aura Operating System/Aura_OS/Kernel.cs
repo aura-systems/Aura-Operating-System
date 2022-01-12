@@ -28,7 +28,7 @@ namespace Aura_OS
 
         Setup setup = new Setup();
         public static bool running;
-        public static string version = "0.5.1";
+        public static string version = "0.5.2";
         public static string revision = VersionInfo.revision;
         public static string current_directory = @"0:\";
         public static string langSelected = "en_US";
@@ -110,6 +110,9 @@ namespace Aura_OS
                 #endregion
 
                 System.CustomConsole.WriteLineOK("Aura successfully started!");
+
+                Console.WriteLine("Press any key to continue...");
+                Console.ReadKey();
 
                 #region Installation Init
 
