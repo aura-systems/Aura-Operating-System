@@ -63,7 +63,7 @@ namespace Aura_OS.Apps.User
         {
             int countNewLine = 0;
             int countChars = 0;
-            delay(10000000);
+            //delay(10000000);
             Console.Clear();
 
             for (int i = 0; i < pos; i++)
@@ -78,7 +78,7 @@ namespace Aura_OS.Apps.User
                 {
                     Console.Write(chars[i]);
                     countChars++;
-                    if (countChars % 80 == 79)
+                    if (countChars % Kernel.AConsole.Cols == Kernel.AConsole.Cols - 1)
                     {
                         countNewLine++;
                     }
@@ -87,7 +87,7 @@ namespace Aura_OS.Apps.User
 
             Console.Write("/");
 
-            for (int i = 0; i < 23 - countNewLine; i++)
+            for (int i = 0; i < (Kernel.AConsole.Rows - 2) - countNewLine; i++)
             {
                 Console.WriteLine("");
                 Console.Write("~");
@@ -95,7 +95,7 @@ namespace Aura_OS.Apps.User
 
             //PRINT INSTRUCTION
             Console.WriteLine();
-            for (int i = 0; i < 72; i++)
+            for (int i = 0; i < Kernel.AConsole.Cols - 5; i++)
             {
                 if (i < infoBar.Length)
                 {
@@ -114,12 +114,12 @@ namespace Aura_OS.Apps.User
 
         }
 
-        public static String miv(String start)
+        public static string miv(string start)
         {
-            Boolean editMode = false;
-            int pos = 0;
-            char[] chars = new char[2000];
-            String infoBar = String.Empty;
+            var editMode = false;
+            var pos = 0;
+            var chars = new char[2000];
+            var infoBar = string.Empty;
 
             if (start == null)
             {
@@ -155,7 +155,7 @@ namespace Aura_OS.Apps.User
                         {
                             if (infoBar == ":wq")
                             {
-                                String returnString = String.Empty;
+                                string returnString = string.Empty;
                                 for (int i = 0; i < pos; i++)
                                 {
                                     returnString += chars[i];
@@ -164,8 +164,7 @@ namespace Aura_OS.Apps.User
                             }
                             else if (infoBar == ":q")
                             {
-                                return null;
-
+                                return string.Empty;
                             }
                             else if (infoBar == ":help")
                             {
@@ -281,19 +280,20 @@ namespace Aura_OS.Apps.User
 
         public static void StartMIV(string path)
         {
+            string text = string.Empty;
             file = path;
 
             try
             {
                 if (File.Exists(@"0:\" + file))
                 {
-                    Console.WriteLine("Found file!");
+                    text = miv(File.ReadAllText(@"0:\" + file));
                 }
-                else if (!File.Exists(@"0:\" + file))
+                else
                 {
-                    Console.WriteLine("Creating file!");
-                    File.Create(@"0:\" + file);
+                    text = miv(null);
                 }
+
                 Console.Clear();
             }
             catch (Exception ex)
@@ -301,20 +301,7 @@ namespace Aura_OS.Apps.User
                 Console.WriteLine(ex.Message);
             }
 
-            String text = String.Empty;
-            Console.WriteLine("Do you want to open " + file + " content? (Yes/No)");
-            if (Console.ReadLine().ToLower() == "yes" || Console.ReadLine().ToLower() == "y")
-            {
-                text = miv(File.ReadAllText(@"0:\" + file));
-            }
-            else
-            {
-                text = miv(null);
-            }
-
-            Console.Clear();
-
-            if (text != null)
+            if (text != null && text != string.Empty)
             {
                 File.WriteAllText(@"0:\" + file, text);
                 Console.WriteLine("Content has been saved to " + file);
