@@ -20,31 +20,37 @@ namespace Aura_OS.Apps.User
         public static void printMIVStartScreen()
         {
             Console.Clear();
-            Console.WriteLine("~");
-            Console.WriteLine("~");
-            Console.WriteLine("~");
-            Console.WriteLine("~");
-            Console.WriteLine("~");
-            Console.WriteLine("~");
-            Console.WriteLine("~");
-            Console.WriteLine("~                               MIV - MInimalistic Vi");
-            Console.WriteLine("~");
-            Console.WriteLine("~                                  version 1.2");
-            Console.WriteLine("~                             by Denis Bartashevich");
-            Console.WriteLine("~                            Minor additions by CaveSponge");
-            Console.WriteLine("~                    MIV is open source and freely distributable");
-            Console.WriteLine("~");
-            Console.WriteLine("~                     type :help<Enter>          for information");
-            Console.WriteLine("~                     type :q<Enter>             to exit");
-            Console.WriteLine("~                     type :wq<Enter>            save to file and exit");
-            Console.WriteLine("~                     press i                    to write");
-            Console.WriteLine("~");
-            Console.WriteLine("~");
-            Console.WriteLine("~");
-            Console.WriteLine("~");
-            Console.WriteLine("~");
-            Console.WriteLine("~");
-            Console.Write("~");
+
+            for (int i = 0; i < Kernel.AConsole.Rows; i++)
+            {
+                Console.WriteLine("~");
+            }
+
+            int x = Kernel.AConsole.Cols / 2 - (43 / 2);
+            int y = Kernel.AConsole.Rows / 2 - (11 / 2);
+
+            Console.SetCursorPosition(x, y);
+            Console.WriteLine("           MIV - MInimalistic Vi");
+            Console.SetCursorPosition(x, y + 1);
+            Console.WriteLine();
+            Console.SetCursorPosition(x, y + 2);
+            Console.WriteLine("               version 1.2");
+            Console.SetCursorPosition(x, y + 3);
+            Console.WriteLine("          by Denis Bartashevich");
+            Console.SetCursorPosition(x, y + 4);
+            Console.WriteLine("         Minor additions by CaveSponge");
+            Console.SetCursorPosition(x, y + 5);
+            Console.WriteLine("MIV is open source and freely distributable");
+            Console.SetCursorPosition(x, y + 6);
+            Console.WriteLine("");
+            Console.SetCursorPosition(x, y + 7);
+            Console.WriteLine("  type :help<Enter>          for information");
+            Console.SetCursorPosition(x, y + 8);
+            Console.WriteLine("  type :q<Enter>             to exit");
+            Console.SetCursorPosition(x, y + 9);
+            Console.WriteLine("  type :wq<Enter>            save to file and exit");
+            Console.SetCursorPosition(x, y + 10);
+            Console.WriteLine("  press i                    to write");
         }
 
         public static String stringCopy(String value)
