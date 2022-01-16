@@ -3,9 +3,12 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29920.165
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Aura_OS", "Aura_OS\Aura_OS.csproj", "{E0EC8D7A-B5D7-4097-AB38-2FD033B4B8D2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Aura_OS", "Aura_OS\Aura_OS.csproj", "{E0EC8D7A-B5D7-4097-AB38-2FD033B4B8D2}"
+	ProjectSection(ProjectDependencies) = postProject
+		{238449E7-EB82-4BE0-9C60-2BAF86F56D52} = {238449E7-EB82-4BE0-9C60-2BAF86F56D52}
+	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Aura_Plugs", "Aura_Plugs\Aura_Plugs.csproj", "{238449E7-EB82-4BE0-9C60-2BAF86F56D52}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Aura_Plugs", "Aura_Plugs\Aura_Plugs.csproj", "{238449E7-EB82-4BE0-9C60-2BAF86F56D52}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -46,7 +46,8 @@
     <ISO_ISOFile>bin\Debug\net5.0\Aura_OS.iso</ISO_ISOFile>
     <VMwareEdition>Workstation</VMwareEdition>
     <CompileVBEMultiboot>True</CompileVBEMultiboot>
-    <VBEResolution>1920x1080x32</VBEResolution>
+    <VBEResolution>800x600x32</VBEResolution>
+    <ExtractMapFile>False</ExtractMapFile>
   </PropertyGroup>
   <Target Name="GetVersion">
     <WriteLinesToFile File="Properties\VersionInfo.cs" Lines="$(SomeThing)" Overwrite="true"></WriteLinesToFile>
@@ -98,10 +99,6 @@
     <Reference Include="IL2CPU">
       <HintPath>$(AppData)\Cosmos User Kit\Build\IL2CPU\IL2CPU.dll</HintPath>
     </Reference>
-  </ItemGroup>
-
-  <ItemGroup>
-    <PlugsReference Include="$(MSBuildProjectDirectory)\..\Aura_Plugs\bin\Debug\net5.0\Aura_Plugs.dll" />
   </ItemGroup>
 
 </Project>

@@ -10,8 +10,4 @@
 		</Reference>
 	</ItemGroup>
 
-    <ItemGroup>
-      <ProjectReference Include="..\Aura_OS\Aura_OS.csproj" />
-    </ItemGroup>
-
 </Project>
