@@ -73,18 +73,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Reference Include="IL2CPU.API">
-      <HintPath>$(AppData)\Cosmos User Kit\Build\IL2CPU\IL2CPU.API.dll</HintPath>
-    </Reference>
-    <Reference Include="XSharp">
-      <HintPath>$(AppData)\Cosmos User Kit\Build\IL2CPU\XSharp.dll</HintPath>
-    </Reference>
-    <Reference Include="IL2CPU">
-      <HintPath>$(AppData)\Cosmos User Kit\Build\IL2CPU\IL2CPU.dll</HintPath>
-    </Reference>
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\Aura_OS\Aura_OS.csproj" />
     <ProjectReference Include="..\Aura_Plugs\Aura_Plugs.csproj" />
   </ItemGroup>
