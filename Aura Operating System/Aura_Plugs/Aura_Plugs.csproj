@@ -4,6 +4,10 @@
         <TargetFramework>net5.0</TargetFramework>
     </PropertyGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\Aura_OS\Aura_OS.csproj" />
+    </ItemGroup>
+
 	<ItemGroup>
 			<Reference Include="IL2CPU.API">
 			<HintPath>..\..\..\..\..\AppData\Roaming\Cosmos User Kit\Build\IL2CPU\IL2CPU.API.dll</HintPath>
