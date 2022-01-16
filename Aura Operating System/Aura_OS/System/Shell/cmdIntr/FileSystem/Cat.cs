@@ -28,9 +28,9 @@ namespace Aura_OS.System.Shell.cmdIntr.FileSystem
             try
             {
                 string file = arguments[0];
-                if (File.Exists(Kernel.current_directory + file))
+                if (File.Exists(Global.current_directory + file))
                 {
-                    foreach (string line in File.ReadAllLines(Kernel.current_directory + file))
+                    foreach (string line in File.ReadAllLines(Global.current_directory + file))
                     {
                         Console.WriteLine(line);
                     }

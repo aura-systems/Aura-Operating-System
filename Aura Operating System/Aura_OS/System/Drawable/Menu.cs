@@ -16,8 +16,8 @@ namespace Aura_OS.System.Drawable
         /// </summary>
         public static void DispInstallationDialog(int percent)
         {
-            int x = (Kernel.AConsole.Cols / 2) - (64 / 2);
-            int y = (Kernel.AConsole.Rows / 2) - (10 / 2);
+            int x = (Global.AConsole.Cols / 2) - (64 / 2);
+            int y = (Global.AConsole.Rows / 2) - (10 / 2);
 
             if (percent == 0)
             {
@@ -25,7 +25,7 @@ namespace Aura_OS.System.Drawable
 
                 Console.BackgroundColor = ConsoleColor.DarkBlue;
 
-                switch (Kernel.langSelected)
+                switch (Global.langSelected)
                 {
                     case "en_US":
                         Console.SetCursorPosition(x, y);
@@ -337,8 +337,8 @@ namespace Aura_OS.System.Drawable
         {
             Console.Clear();
 
-            int x = (Kernel.AConsole.Cols / 2) - (64 / 2);
-            int y = (Kernel.AConsole.Rows / 2) - (10 / 2);
+            int x = (Global.AConsole.Cols / 2) - (64 / 2);
+            int y = (Global.AConsole.Rows / 2) - (10 / 2);
 
             Console.BackgroundColor = ConsoleColor.DarkBlue;
 
@@ -401,8 +401,8 @@ namespace Aura_OS.System.Drawable
         {
             Console.Clear();
 
-            int x = (Kernel.AConsole.Cols / 2) - (64 / 2);
-            int y = (Kernel.AConsole.Rows / 2) - (4 / 2);
+            int x = (Global.AConsole.Cols / 2) - (64 / 2);
+            int y = (Global.AConsole.Rows / 2) - (4 / 2);
 
             Console.BackgroundColor = ConsoleColor.DarkRed;
 
@@ -438,8 +438,8 @@ namespace Aura_OS.System.Drawable
             title = "║ " + title;
             input = "║ " + input;
 
-            int x = (Kernel.AConsole.Cols / 2) - (64 / 2);
-            int y = (Kernel.AConsole.Rows / 2) - (10 / 2);
+            int x = (Global.AConsole.Cols / 2) - (64 / 2);
+            int y = (Global.AConsole.Rows / 2) - (10 / 2);
 
             Console.BackgroundColor = ConsoleColor.DarkBlue;
 
@@ -494,8 +494,8 @@ namespace Aura_OS.System.Drawable
         /// </summary>
         public static string DispLanguageDialog()
         {
-            int x = (Kernel.AConsole.Cols / 2) - (64 / 2);
-            int y = (Kernel.AConsole.Rows / 2) - (10 / 2);
+            int x = (Global.AConsole.Cols / 2) - (64 / 2);
+            int y = (Global.AConsole.Rows / 2) - (10 / 2);
             x_ = x;
             y_ = y;
             LanguageMenu(x, y);

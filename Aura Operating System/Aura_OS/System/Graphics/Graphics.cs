@@ -71,7 +71,7 @@ namespace Aura_OS.System.Graphics
 
         public void WriteByte(char ch)
         {
-            DrawFilledRectangle(backpen, Kernel.AConsole.X * font.Width + 1, Kernel.AConsole.Y * font.Height, font.Width - 1, font.Height);
+            DrawFilledRectangle(backpen, Global.AConsole.X * font.Width + 1, Global.AConsole.Y * font.Height, font.Width - 1, font.Height);
 
             if (ch > 0x7E) //max font
             {
@@ -81,14 +81,14 @@ namespace Aura_OS.System.Graphics
                     {
                         if (unicodechar == ch)
                         {
-                            canvas.DrawChar((char)map.FontPosition, font, frontpen, Kernel.AConsole.X * font.Width, Kernel.AConsole.Y * font.Height);
+                            canvas.DrawChar((char)map.FontPosition, font, frontpen, Global.AConsole.X * font.Width, Global.AConsole.Y * font.Height);
                         }
                     }
                 }
             }
             else
             {
-                canvas.DrawChar((char)ch, font, frontpen, Kernel.AConsole.X * font.Width, Kernel.AConsole.Y * font.Height);
+                canvas.DrawChar((char)ch, font, frontpen, Global.AConsole.X * font.Width, Global.AConsole.Y * font.Height);
             }
         }
 
@@ -113,7 +113,7 @@ namespace Aura_OS.System.Graphics
 
         public void SetCursorPos(int mX, int mY)
         {
-            if (Kernel.AConsole.CursorVisible)
+            if (Global.AConsole.CursorVisible)
             {
                 DrawFilledRectangle(lastpen, lastx, lasty, 8, 4);
                 DrawFilledRectangle(frontpen, mX * font.Width, mY * font.Height + font.Height, 8, 4);

@@ -21,7 +21,7 @@ namespace Aura_OS.System.Utils
             this.path = path;
 
             fileContent = null;
-            if (Kernel.SystemExists)
+            if (Global.SystemExists)
             {
                 if (File.Exists(path))
                 {
@@ -32,7 +32,7 @@ namespace Aura_OS.System.Utils
 
         public void Push()
         {
-            if (Kernel.SystemExists)
+            if (Global.SystemExists)
             {
                 File.WriteAllLines(path, fileContent);
             }

@@ -33,7 +33,7 @@ namespace Aura_OS.System.Users
         /// <returns>User type char</returns>
         public static string TypeUser()
         {
-            if(Kernel.userLevelLogged == Administrator())
+            if (Global.userLevelLogged == Administrator())
             {
                 return "#";
             }
@@ -54,10 +54,10 @@ namespace Aura_OS.System.Users
         {
             if(content == Administrator())
             {
-                Kernel.userLevelLogged = Administrator();
+                Global.userLevelLogged = Administrator();
             } else
             {
-                Kernel.userLevelLogged = StandardUser();
+                Global.userLevelLogged = StandardUser();
             }
         }
 

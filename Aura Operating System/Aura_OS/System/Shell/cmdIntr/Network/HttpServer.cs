@@ -47,9 +47,9 @@ namespace Aura_OS.System.Shell.cmdIntr.Network
                             {
                                 Content = Encoding.ASCII.GetBytes(@"<html>" +
                                             "\t<h1>Hello from <a href=\"https://github.com/aura-systems/Aura-Operating-System\">AuraOS</a>!</h1>" +
-                                            "\t<p>Version: " + Kernel.version + "." + Kernel.revision + "</p>" +
+                                            "\t<p>Version: " + Global.version + "." + Global.revision + "</p>" +
                                             "\t<p>Server Hour: " + DateTime.Now.ToString() + "</p>" +
-                                            "\t<p>Server Boot Time: " + Kernel.boottime + "</p>" +
+                                            "\t<p>Server Boot Time: " + Global.boottime + "</p>" +
                                             "\t<p>Powered by <a href=\"https://github.com/CosmosOS/Cosmos\">Cosmos</a>.</p>" +
                                             "</html>"),
                                 ReasonPhrase = "OK",

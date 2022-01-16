@@ -44,17 +44,17 @@ namespace Aura_OS.System.Shell.cmdIntr.FileSystem
 
             else
             {
-                if (!Directory.Exists(Kernel.current_directory + dir))
+                if (!Directory.Exists(Global.current_directory + dir))
                 {
-                    Directory.CreateDirectory(Kernel.current_directory + dir);
+                    Directory.CreateDirectory(Global.current_directory + dir);
                 }
-                else if (Directory.Exists(Kernel.current_directory + dir))
+                else if (Directory.Exists(Global.current_directory + dir))
                 {
                     Char[] separators = new char[] { '(', ')' };
                     Char[] directories = new char[] { '/', '\\' };
 
                     //getting last directory.
-                    string x1 = Kernel.current_directory + dir;
+                    string x1 = Global.current_directory + dir;
                     string[] x2 = x1.Split(directories);
                     string x3 = x2[x2.Length - 1];
                     int x4 = 0;
@@ -77,13 +77,13 @@ namespace Aura_OS.System.Shell.cmdIntr.FileSystem
                         //set new directory name with the new number.
                         string newName = dir + "(" + num + ")";
 
-                        if (Directory.Exists(Kernel.current_directory + newName))
+                        if (Directory.Exists(Global.current_directory + newName))
                         {
                             goto boucle;
                         }
 
                         //create directory
-                        Directory.CreateDirectory(Kernel.current_directory + newName);
+                        Directory.CreateDirectory(Global.current_directory + newName);
 
                         //display text to inform the user that the directory has been created with an another name
                         Console.ForegroundColor = ConsoleColor.Yellow;
@@ -92,7 +92,7 @@ namespace Aura_OS.System.Shell.cmdIntr.FileSystem
                     else
                     {
                         //if not, we create directory with (1)
-                        Directory.CreateDirectory(Kernel.current_directory + dir + "(1)");
+                        Directory.CreateDirectory(Global.current_directory + dir + "(1)");
 
                         //display text to inform the user that the directory has been created with an another name
                         Console.ForegroundColor = ConsoleColor.Yellow;

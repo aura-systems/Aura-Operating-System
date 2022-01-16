@@ -19,7 +19,7 @@ namespace Aura_OS.System.Translation
         {
             try
             {
-                switch (Kernel.langSelected)
+                switch (Global.langSelected)
                 {
                     case "fr_FR":
                         Sys.KeyboardManager.SetKeyLayout(new Sys.ScanMaps.FR_Standard());

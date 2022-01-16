@@ -32,11 +32,11 @@ namespace Aura_OS.System.Shell.cmdIntr.Settings
         /// </summary>
         public static void c_Logout()
         {
-            Kernel.Logged = false;
-            Kernel.userLevelLogged = "";
-            Kernel.userLogged = "";
-            Directory.SetCurrentDirectory(Kernel.current_directory);
-            Kernel.current_directory = Kernel.current_volume;
+            Global.Logged = false;
+            Global.userLevelLogged = "";
+            Global.userLogged = "";
+            Directory.SetCurrentDirectory(Global.current_directory);
+            Global.current_directory = Global.current_volume;
             Console.Clear();
         }
     }

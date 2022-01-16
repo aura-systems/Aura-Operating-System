@@ -37,10 +37,10 @@ namespace Aura_OS.System.Shell.cmdIntr.FileSystem
         public static void c_Edit(string edit, short startIndex = 0, short count = 5)
         {
             string file = edit.Remove(startIndex, count);
-            if (File.Exists(Kernel.current_directory + file))
+            if (File.Exists(Global.current_directory + file))
             {
                 Apps.User.Editor application = new Apps.User.Editor();
-                application.Start(file, Kernel.current_directory);
+                application.Start(file, Global.current_directory);
             }
             else
             {

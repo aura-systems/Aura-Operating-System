@@ -54,7 +54,7 @@ namespace Aura_OS.System.AConsole
             Name = "VGA Textmode";
             Type = ConsoleType.Text;
 
-            //Kernel.debugger.Send("VGA Textmode Class");
+            //Global.debugger.Send("VGA Textmode Class");
             if (textScreen == null)
             {
                 mText = new TextScreen();

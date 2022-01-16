@@ -123,7 +123,7 @@ namespace Aura_OS.System
         /// </summary>
         /// <returns>Actual Hour</returns>
         public static string TimeString(bool hour, bool min, bool sec) {
-            switch (Kernel.langSelected)
+            switch (Global.langSelected)
             {
                 case "fr_FR":
                     return getTime24(hour, min, sec);

@@ -171,7 +171,7 @@ namespace Aura_OS.System.Users
             {
                 password = Sha256.hash(password);
 
-                usersfile[index] = "user:" + username + ":" + password + "|" + Kernel.userLevelLogged;
+                usersfile[index] = "user:" + username + ":" + password + "|" + Global.userLevelLogged;
 
                 users = usersfile.ToArray();
 

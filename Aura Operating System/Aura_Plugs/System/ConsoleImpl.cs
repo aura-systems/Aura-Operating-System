@@ -29,7 +29,7 @@ namespace Aura_Plugs
 
         private static Aura_OS.System.AConsole.Console GetConsole()
         {
-            return Aura_OS.Kernel.AConsole;
+            return Aura_OS.Global.AConsole;
         }
 
         public static ConsoleColor get_BackgroundColor()
@@ -66,7 +66,7 @@ namespace Aura_Plugs
 
         public static bool get_CapsLock()
         {
-            return Global.CapsLock;
+            return Cosmos.System.Global.CapsLock;
         }
 
         public static int get_CursorLeft()
@@ -244,7 +244,7 @@ namespace Aura_Plugs
 
         public static bool get_NumberLock()
         {
-            return Global.NumLock;
+            return Cosmos.System.Global.NumLock;
         }
 
         //public static TextWriter get_Out() {
@@ -534,7 +534,7 @@ namespace Aura_Plugs
                                 currentCount = 0;
                                 chars.Clear();
 
-                                Aura_OS.Kernel.BeforeCommand();
+                                Aura_OS.Global.BeforeCommand();
 
                                 foreach (char chr in c)
                                 {
@@ -550,18 +550,18 @@ namespace Aura_Plugs
                 else if (current.Key == ConsoleKeyEx.C && KeyboardManager.ControlPressed)
                 {
                     CMDToComplete = "";
-                    if (Aura_OS.Kernel.AConsole.writecommand)
+                    if (Aura_OS.Global.AConsole.writecommand)
                     {
                         CommandsHistory.ClearCurrentConsoleLine();
                         currentCount = 0;
                         chars.Clear();
 
-                        Aura_OS.Kernel.BeforeCommand();
+                        Aura_OS.Global.BeforeCommand();
                     }
                 }
                 else if (current.Key == ConsoleKeyEx.UpArrow) //COMMAND HISTORY UP
                 {
-                    if (Aura_OS.Kernel.AConsole.writecommand) //IF SHELL
+                    if (Aura_OS.Global.AConsole.writecommand) //IF SHELL
                     {
                         CMDToComplete = "";
                         if (CommandsHistory.CHIndex >= 0 && CommandsHistory.commands.Count > 0)
@@ -570,7 +570,7 @@ namespace Aura_Plugs
                             currentCount = 0;
                             chars.Clear();
 
-                            Aura_OS.Kernel.BeforeCommand();
+                            Aura_OS.Global.BeforeCommand();
 
                             string Command = CommandsHistory.commands[CommandsHistory.CHIndex];
                             CommandsHistory.CHIndex = CommandsHistory.CHIndex - 1;
@@ -608,7 +608,7 @@ namespace Aura_Plugs
                                         Write(chars[x]);
                                     }
 
-                                    Aura_OS.Kernel.AConsole.X -= (chars.Count - currentCount) - 1;
+                                    Aura_OS.Global.AConsole.X -= (chars.Count - currentCount) - 1;
                                     currentCount++;
                                 }
 
@@ -619,7 +619,7 @@ namespace Aura_Plugs
                 }
                 else if (current.Key == ConsoleKeyEx.DownArrow) //COMMAND HISTORY UP
                 {
-                    if (Aura_OS.Kernel.AConsole.writecommand) //IF SHELL
+                    if (Aura_OS.Global.AConsole.writecommand) //IF SHELL
                     {
                         CMDToComplete = "";
                         if (CommandsHistory.CHIndex < CommandsHistory.commands.Count - 1)
@@ -628,7 +628,7 @@ namespace Aura_Plugs
                             currentCount = 0;
                             chars.Clear();
 
-                            Aura_OS.Kernel.BeforeCommand();
+                            Aura_OS.Global.BeforeCommand();
 
                             CommandsHistory.CHIndex = CommandsHistory.CHIndex + 1;
 
@@ -673,7 +673,7 @@ namespace Aura_Plugs
                                         Write(chars[x]);
                                     }
 
-                                    Aura_OS.Kernel.AConsole.X -= (chars.Count - currentCount) - 1;
+                                    Aura_OS.Global.AConsole.X -= (chars.Count - currentCount) - 1;
                                     currentCount++;
                                 }
 

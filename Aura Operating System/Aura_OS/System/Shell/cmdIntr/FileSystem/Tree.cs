@@ -27,7 +27,7 @@ namespace Aura_OS.System.Shell.cmdIntr.FileSystem
         {
             try
             {
-                DoTree(Kernel.current_directory, 0);
+                DoTree(Global.current_directory, 0);
                 return new ReturnInfo(this, ReturnCode.OK);
             }
             catch (Exception ex)
@@ -43,7 +43,7 @@ namespace Aura_OS.System.Shell.cmdIntr.FileSystem
         {
             try
             {
-                DoTree(Kernel.current_directory + "/" + arguments[0], 0);
+                DoTree(Global.current_directory + "/" + arguments[0], 0);
                 return new ReturnInfo(this, ReturnCode.OK);
             }
             catch (Exception ex)

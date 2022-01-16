@@ -36,7 +36,7 @@ namespace Aura_OS.System.Shell.cmdIntr.c_Console
                 {
                     try
                     {
-                        Console.WriteLine(Kernel.environmentvariables[argument.Remove(0, 1)]);
+                        Console.WriteLine(Global.environmentvariables[argument.Remove(0, 1)]);
                     }
                     catch
                     {

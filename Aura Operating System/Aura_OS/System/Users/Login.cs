@@ -12,7 +12,7 @@ using System;
 
 namespace Aura_OS.System.Users
 {
-    class Login
+    public class Login
     {
 
         /// <summary>
@@ -61,7 +61,7 @@ namespace Aura_OS.System.Users
             string title_nl = "Log in op je Aura account.";
             string title_it = "Accedi al tuo Aura account.";
 
-            switch (Kernel.langSelected)
+            switch (Global.langSelected)
             {
                 case "en_US":
                     return title_en;
@@ -84,7 +84,7 @@ namespace Aura_OS.System.Users
             string text_fr = "Mauvais mot de passe.";
             string text_en = "Wrong password.";
 
-            if(Kernel.langSelected == "fr_FR")
+            if(Global.langSelected == "fr_FR")
             {
                 Menu.DispErrorDialog(text_fr);
             }
@@ -101,10 +101,10 @@ namespace Aura_OS.System.Users
         {
             Console.Clear();
 
-            Kernel.SystemExists = true;
-            Kernel.userLogged = username;
-            Kernel.JustInstalled = true;
-            Kernel.running = true;
+            Global.SystemExists = true;
+            Global.userLogged = username;
+            Global.JustInstalled = true;
+            Global.running = true;
 
             Console.Clear();
 
@@ -117,7 +117,7 @@ namespace Aura_OS.System.Users
 
             Console.WriteLine();
 
-            Kernel.Logged = true;
+            Global.Logged = true;
         }
 
     }

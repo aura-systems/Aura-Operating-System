@@ -122,13 +122,13 @@ namespace Aura_OS.System.AConsole
 
         public static string GetConsoleInfo()
         {
-            if (Kernel.AConsole.Type == ConsoleType.Graphical)
+            if (Global.AConsole.Type == ConsoleType.Graphical)
             {
-                return Kernel.AConsole.Name + " (" + Kernel.AConsole.Width + "x" + Kernel.AConsole.Height + " - " + global::System.Console.OutputEncoding.BodyName + ")";
+                return Global.AConsole.Name + " (" + Global.AConsole.Width + "x" + Global.AConsole.Height + " - " + global::System.Console.OutputEncoding.BodyName + ")";
             }
             else
             {
-                return Kernel.AConsole.Name + " (" + global::System.Console.OutputEncoding.BodyName + ")";
+                return Global.AConsole.Name + " (" + global::System.Console.OutputEncoding.BodyName + ")";
             }
         }
     }

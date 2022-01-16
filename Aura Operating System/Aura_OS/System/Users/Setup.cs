@@ -15,7 +15,7 @@ using Cosmos.HAL;
 
 namespace Aura_OS.System
 {
-    class Setup
+    public class Setup
     {
         private string username;
         private string password;
@@ -36,7 +36,7 @@ namespace Aura_OS.System
         /// <returns>"false", if there is not a FS</returns>
         public static string FileSystem()
         {
-            if (Kernel.ContainsVolumes())
+            if (Global.ContainsVolumes())
             {
                 if (File.Exists(@"0:\System\settings.conf"))
                 {
@@ -65,7 +65,7 @@ namespace Aura_OS.System
             }
             else if (FileSystem() == "true")
             {
-                Kernel.SystemExists = true;
+                Global.SystemExists = true;
             }
             else if (FileSystem() == "continue")
             {
@@ -171,25 +171,25 @@ namespace Aura_OS.System
 
             if ((language.Equals("en_US")) || language.Equals("en-US"))
             {
-                Kernel.langSelected = "en_US";
+                Global.langSelected = "en_US";
                 FinalLang = "en_US";
                 Keyboard.Init();
             }
             else if ((language.Equals("fr_FR")) || language.Equals("fr-FR"))
             {
-                Kernel.langSelected = "fr_FR";
+                Global.langSelected = "fr_FR";
                 FinalLang = "fr_FR";
                 Keyboard.Init();
             }
             else if ((language.Equals("nl_NL")) || language.Equals("nl-NL"))
             {
-                Kernel.langSelected = "nl_NL";
+                Global.langSelected = "nl_NL";
                 FinalLang = "nl_NL";
                 Keyboard.Init();
             }
             else if ((language.Equals("it_IT")) || language.Equals("it-IT"))
             {
-                Kernel.langSelected = "it_IT";
+                Global.langSelected = "it_IT";
                 FinalLang = "it_IT";
                 Keyboard.Init();
             }
@@ -234,35 +234,35 @@ namespace Aura_OS.System
                 RegisterLanguage();
             }
 
-            Kernel.SystemExists = false;
-            Kernel.userLogged = "root";
-            Kernel.Logged = true;
+            Global.SystemExists = false;
+            Global.userLogged = "root";
+            Global.Logged = true;
             Console.Clear();
             //switch (Video.GetVideo())
             //{
             //    case "VGATextmode":
-            //        //Kernel.AConsole = new System.Shell.VGA.VGAConsole(null);
+            //        //Global.AConsole = new System.Shell.VGA.VGAConsole(null);
             //        break;
             //    case "SVGA":
             //        // TO DO ?
             //        break;
             //    case "VESA":
-            //        //Kernel.AConsole = new System.Shell.VESAVBE.VESAVBEConsole();
+            //        //Global.AConsole = new System.Shell.VESAVBE.VESAVBEConsole();
             //        break;
             //    default:
-            //        //Kernel.AConsole = new System.Shell.VGA.VGAConsole(null);
+            //        //Global.AConsole = new System.Shell.VGA.VGAConsole(null);
             //        break;
             //}
             WelcomeMessage.Display();
             Text.Display("logged", "root");
 
-            if (Kernel.ContainsVolumes() == false)
+            if (Global.ContainsVolumes() == false)
             {
                 Text.Display("nofilesystem");
             }
 
             Console.WriteLine();
-            Kernel.running = true;
+            Global.running = true;
         }
 
         /// <summary>
@@ -272,24 +272,24 @@ namespace Aura_OS.System
         {
             Console.Clear();
 
-            Kernel.userLogged = username;
-            Kernel.JustInstalled = true;
-            Kernel.running = true;
+            Global.userLogged = username;
+            Global.JustInstalled = true;
+            Global.running = true;
 
             Console.Clear();
             //switch (Video.GetVideo())
             //{
             //    case "VGATextmode":
-            //        //Kernel.AConsole = new System.Shell.VGA.VGAConsole(null);
+            //        //Global.AConsole = new System.Shell.VGA.VGAConsole(null);
             //        break;
             //    case "SVGA":
             //        // TO DO ?
             //        break;
             //    case "VESA":
-            //        //Kernel.AConsole = new System.Shell.VESAVBE.VESAVBEConsole();
+            //        //Global.AConsole = new System.Shell.VESAVBE.VESAVBEConsole();
             //        break;
             //    default:
-            //        //Kernel.AConsole = new System.Shell.VGA.VGAConsole(null);
+            //        //Global.AConsole = new System.Shell.VGA.VGAConsole(null);
             //        break;
             //}
             WelcomeMessage.Display();
@@ -297,7 +297,7 @@ namespace Aura_OS.System
 
             Console.WriteLine();
 
-            Kernel.Logged = true;
+            Global.Logged = true;
         }
 
         /// <summary>
@@ -368,7 +368,7 @@ namespace Aura_OS.System
 
             Menu.DispInstallationDialog(80);
 
-            Kernel.SystemExists = true;
+            Global.SystemExists = true;
 
             config.PutValue("debugger", "off");
 

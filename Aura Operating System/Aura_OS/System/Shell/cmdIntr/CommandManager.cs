@@ -282,7 +282,7 @@ namespace Aura_OS.System.Shell.cmdIntr
         {
             if (command.Type == CommandType.Filesystem)
             {
-                if (Kernel.ContainsVolumes() == false)
+                if (Global.ContainsVolumes() == false)
                 {
                     return new ReturnInfo(command, ReturnCode.ERROR, "No volume detected!");
                 }

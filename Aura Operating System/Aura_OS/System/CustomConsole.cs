@@ -18,7 +18,7 @@ namespace Aura_OS.System
             Console.Write("[Info] ");
             Console.ForegroundColor = ConsoleColor.White;
             Console.Write(text + "\n");
-            Kernel.debugger.Send("[Info] " + text);
+            Global.debugger.Send("[Info] " + text);
         }
         public static void WriteLineWarning(string text)
         {
@@ -26,7 +26,7 @@ namespace Aura_OS.System
             Console.Write("[WARNING] ");
             Console.ForegroundColor = ConsoleColor.White;
             Console.Write(text + "\n");
-            Kernel.debugger.Send("[WARNING] " + text);
+            Global.debugger.Send("[WARNING] " + text);
         }
         /// <summary>
         /// tipColor's text
@@ -41,7 +41,7 @@ namespace Aura_OS.System
             Console.Write("[" + tipText + "] ");
             Console.ForegroundColor = ConsoleColor.White;
             Console.Write(text + "\n");
-            Kernel.debugger.Send("[" + tipText + "] " + text);
+            Global.debugger.Send("[" + tipText + "] " + text);
         }
         public static void WriteLineOK(string text)
         {
@@ -49,7 +49,7 @@ namespace Aura_OS.System
             Console.Write("[OK] ");
             Console.ForegroundColor = ConsoleColor.White;
             Console.Write(text + "\n");
-            Kernel.debugger.Send("[OK] " + text);
+            Global.debugger.Send("[OK] " + text);
         }
         public static void WriteLineError(string text)
         {
@@ -57,7 +57,7 @@ namespace Aura_OS.System
             Console.Write("[Error] ");
             Console.ForegroundColor = ConsoleColor.White;
             Console.Write(text + "\n");
-            Kernel.debugger.Send("[Error] " + text);
+            Global.debugger.Send("[Error] " + text);
         }
     }
 }

@@ -30,18 +30,18 @@ namespace Aura_Plugs.HAL
             //This is useful to detect if VBE graphic mode is enabled from the bootloader.
             /*if (_SVGAIIDevice != null && PCI.Exists(_SVGAIIDevice) && VBE.IsAvailable() == false)
             {
-                Kernel.AConsole = new Aura_OS.System.AConsole.GraphicalConsole();
+                Global.AConsole = new Aura_OS.System.AConsole.GraphicalConsole();
             }*/
             if (VBEAvailable())
             {
-                Kernel.AConsole = new Aura_OS.System.AConsole.GraphicalConsole();
+                Aura_OS.Global.AConsole = new Aura_OS.System.AConsole.GraphicalConsole();
             }
             else
             {
-                Kernel.AConsole = new Aura_OS.System.AConsole.VGAConsole(textScreen);
+                Aura_OS.Global.AConsole = new Aura_OS.System.AConsole.VGAConsole(textScreen);
             }
 
-            Console.WriteLine("[Aura Operating System v" + Aura_OS.Kernel.version + " - Made by valentinbreiz and geomtech]");
+            Console.WriteLine("[Aura Operating System v" + Aura_OS.Global.version + " - Made by valentinbreiz and geomtech]");
             Aura_OS.System.CustomConsole.WriteLineInfo("Starting Cosmos kernel...");
 
             ACPI.Start();

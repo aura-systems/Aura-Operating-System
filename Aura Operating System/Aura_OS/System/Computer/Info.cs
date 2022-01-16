@@ -26,7 +26,7 @@ namespace Aura_OS.System.Computer
             {
                 Settings config = new Settings(@"0:\System\settings.conf");
                 string hostname = config.GetValue("hostname");
-                Kernel.ComputerName = hostname;
+                Global.ComputerName = hostname;
                 return hostname;
             }
             catch
@@ -54,7 +54,7 @@ namespace Aura_OS.System.Computer
             Settings config = new Settings(@"0:\System\settings.conf");
             config.EditValue("hostname", name);
             config.PushValues();
-            Kernel.ComputerName = name;
+            Global.ComputerName = name;
         }
 
         /// <summary>

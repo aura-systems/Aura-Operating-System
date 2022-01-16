@@ -28,11 +28,11 @@ namespace Aura_OS.System.Shell.cmdIntr.FileSystem
             try
             {
                 string file = arguments[0];
-                if (File.Exists(Kernel.current_directory + file))
+                if (File.Exists(Global.current_directory + file))
                 {
                     Console.WriteLine("Offset(h)  00 01 02 03 04 05 06 07  08 09 0A 0B 0C 0D 0E 0F");
                     Console.WriteLine();
-                    Console.WriteLine(Utils.Conversion.HexDump(File.ReadAllBytes(Kernel.current_directory + file)));
+                    Console.WriteLine(Utils.Conversion.HexDump(File.ReadAllBytes(Global.current_directory + file)));
                 }
                 else
                 {

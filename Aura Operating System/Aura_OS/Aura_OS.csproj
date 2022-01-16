@@ -1,4 +1,4 @@
-﻿<Project InitialTargets="GetVersion" Sdk="Microsoft.NET.Sdk">
+<Project InitialTargets="GetVersion" Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <Year>$([System.DateTime]::Now.ToString("yyyy"))</Year>
@@ -16,76 +16,13 @@
 }
        ]]>
     </SomeThing>
-    <VMware_StackCorruptionDetectionEnabled>True</VMware_StackCorruptionDetectionEnabled>
-    <VMware_StackCorruptionDetectionLevel>MethodFooters</VMware_StackCorruptionDetectionLevel>
-    <VMware_Description>Use VMware Player or Workstation to deploy and debug.</VMware_Description>
-    <VMware_Deployment>ISO</VMware_Deployment>
-    <VMware_Launch>VMware</VMware_Launch>
-    <VMware_DebugEnabled>False</VMware_DebugEnabled>
-    <VMware_DebugMode>Source</VMware_DebugMode>
-    <VMware_IgnoreDebugStubAttribute>False</VMware_IgnoreDebugStubAttribute>
-    <VMware_CosmosDebugPort>Serial: COM1</VMware_CosmosDebugPort>
-    <VMware_VisualStudioDebugPort>Pipe: Cosmos\Serial</VMware_VisualStudioDebugPort>
-    <VMware_PxeInterface>192.168.0.8</VMware_PxeInterface>
-    <VMware_EnableGDB>False</VMware_EnableGDB>
-    <VMware_StartCosmosGDB>False</VMware_StartCosmosGDB>
-    <VMware_ISOFile>bin\Debug\net5.0\Aura_OS.iso</VMware_ISOFile>
-    <ISO_StackCorruptionDetectionEnabled>True</ISO_StackCorruptionDetectionEnabled>
-    <ISO_StackCorruptionDetectionLevel>MethodFooters</ISO_StackCorruptionDetectionLevel>
-    <ISO_Description>Creates a bootable ISO image which can be burned to a DVD. After running the selected project, an explorer window will open containing the ISO file. The ISO file can then be burned to a CD or DVD and used to boot a physical or virtual system.</ISO_Description>
-    <ISO_Deployment>ISO</ISO_Deployment>
-    <ISO_Launch>None</ISO_Launch>
-    <ISO_DebugEnabled>False</ISO_DebugEnabled>
-    <ISO_DebugMode>Source</ISO_DebugMode>
-    <ISO_IgnoreDebugStubAttribute>False</ISO_IgnoreDebugStubAttribute>
-    <ISO_CosmosDebugPort>Serial: COM1</ISO_CosmosDebugPort>
-    <ISO_VisualStudioDebugPort>Pipe: Cosmos\Serial</ISO_VisualStudioDebugPort>
-    <ISO_PxeInterface>192.168.0.8</ISO_PxeInterface>
-    <ISO_EnableGDB>False</ISO_EnableGDB>
-    <ISO_StartCosmosGDB>False</ISO_StartCosmosGDB>
-    <ISO_ISOFile>bin\Debug\net5.0\Aura_OS.iso</ISO_ISOFile>
-    <VMwareEdition>Workstation</VMwareEdition>
-    <CompileVBEMultiboot>True</CompileVBEMultiboot>
-    <VBEResolution>800x600x32</VBEResolution>
-    <ExtractMapFile>False</ExtractMapFile>
   </PropertyGroup>
-  <Target Name="GetVersion">
-    <WriteLinesToFile File="Properties\VersionInfo.cs" Lines="$(SomeThing)" Overwrite="true"></WriteLinesToFile>
-  </Target>
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
-    <Platform>cosmos</Platform>
-    <SupportsX86Intrinsics>false</SupportsX86Intrinsics>
-    <SelfContained>True</SelfContained>
-    <BinFormat>ELF</BinFormat>
-    <StackCorruptionDetectionEnabled>True</StackCorruptionDetectionEnabled>
-    <StackCorruptionDetectionLevel>MethodFooters</StackCorruptionDetectionLevel>
-    <Deployment>ISO</Deployment>
-    <DebugEnabled>False</DebugEnabled>
-    <DebugMode>Source</DebugMode>
-    <IgnoreDebugStubAttribute>False</IgnoreDebugStubAttribute>
-    <ISOFile>bin\Debug\net5.0\Aura_OS.iso</ISOFile>
-  </PropertyGroup>
-
-  <PropertyGroup>
-    <EnableGDB>False</EnableGDB>
-    <StartCosmosGDB>False</StartCosmosGDB>
-    <VisualStudioDebugPort>Pipe: Cosmos\Serial</VisualStudioDebugPort>
-    <CosmosDebugPort>Serial: COM1</CosmosDebugPort>
-    <Launch>VMware</Launch>
-    <Profile>VMware</Profile>
-    <Description>Use VMware Player or Workstation to deploy and debug.</Description>
-    <PxeInterface>192.168.0.8</PxeInterface>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Cosmos.Build" Version="0-*" NoWarn="NU1604" />
-    <PackageReference Include="Cosmos.Debug.Kernel" Version="0-*" NoWarn="NU1604" />
     <PackageReference Include="Cosmos.System2" Version="0-*" NoWarn="NU1604" />
   </ItemGroup>
 
@@ -100,5 +37,9 @@
       <HintPath>$(AppData)\Cosmos User Kit\Build\IL2CPU\IL2CPU.dll</HintPath>
     </Reference>
   </ItemGroup>
+  
+  <Target Name="GetVersion">
+    <WriteLinesToFile File="Properties\VersionInfo.cs" Lines="$(SomeThing)" Overwrite="true" />
+  </Target>
 
 </Project>

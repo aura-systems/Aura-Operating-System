@@ -25,7 +25,7 @@ namespace Aura_OS.System.Shell.cmdIntr.Power
         /// </summary>
         public override ReturnInfo Execute()
         {
-            Kernel.running = false;
+            Global.running = false;
             Console.Clear();
             L.Text.Display("restart");
             Sys.Power.Reboot();

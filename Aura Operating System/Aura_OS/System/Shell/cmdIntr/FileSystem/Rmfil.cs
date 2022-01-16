@@ -27,9 +27,9 @@ namespace Aura_OS.System.Shell.cmdIntr.FileSystem
         {
             string file = arguments[0];
 
-            if (File.Exists(Kernel.current_directory + file))
+            if (File.Exists(Global.current_directory + file))
             {
-                File.Delete(Kernel.current_directory + file);
+                File.Delete(Global.current_directory + file);
             }
             else
             {

@@ -41,7 +41,7 @@ namespace Aura_OS.System.Translation
         /// <param name="arg2">dynamic string</param>
         public static void Display(string ToTranslate, string arg = "", string arg2 = "")
         {
-            switch (Kernel.langSelected)
+            switch (Global.langSelected)
             {
                 case "fr_FR":
 
@@ -208,7 +208,7 @@ namespace Aura_OS.System.Translation
                             break;
                         case "about":
                             Console.ForegroundColor = ConsoleColor.White;
-                            Console.WriteLine("Aura [version " + Kernel.version + "-" + Kernel.revision + "]");
+                            Console.WriteLine("Aura [version " + Global.version + "-" + Global.revision + "]");
                             Console.WriteLine("créé par Alexy DA CRUZ et Valentin CHARBONNIER.");
                             Console.WriteLine();
                             Console.ForegroundColor = ConsoleColor.Green;
@@ -282,7 +282,7 @@ namespace Aura_OS.System.Translation
                             Console.WriteLine("L'heure actuelle est:  " + Time.DayString() + "/" + Time.MonthString() + "/" + Time.YearString() + ", " + Time.TimeString(true, true, true));
                             break;
                         case "changeipaddress":
-                            //Console.WriteLine("Nouvelle adresse IP du PC (actuellement " + Kernel.LocalNetworkConfig.IPAddress.ToString() + ") :");
+                            //Console.WriteLine("Nouvelle adresse IP du PC (actuellement " + Global.LocalNetworkConfig.IPAddress.ToString() + ") :");
                             break;
                         case "notcorrectaddress":
                             Console.WriteLine("Ce n'est pas une adresse IP correcte !");
@@ -462,7 +462,7 @@ namespace Aura_OS.System.Translation
                             break;
                         case "about":
                             Console.ForegroundColor = ConsoleColor.White;
-                            Console.WriteLine("Aura [version " + Kernel.version + "-" + Kernel.revision + "]");
+                            Console.WriteLine("Aura [version " + Global.version + "-" + Global.revision + "]");
                             Console.WriteLine("Created by Alexy DA CRUZ and Valentin CHARBONNIER.");
                             Console.WriteLine();
                             Console.ForegroundColor = ConsoleColor.Green;
@@ -533,7 +533,7 @@ namespace Aura_OS.System.Translation
                             Console.WriteLine("The current time is:  " + Time.MonthString() + "/" + Time.DayString() + "/" + Time.YearString() + ", " + Time.TimeString(true, true, true));
                             break;
                         case "changeipaddress":
-                            //Console.WriteLine("New IP address of the PC (now " + Kernel.LocalNetworkConfig.IPAddress.ToString() + ") :");
+                            //Console.WriteLine("New IP address of the PC (now " + Global.LocalNetworkConfig.IPAddress.ToString() + ") :");
                             break;
                         case "notcorrectaddress":
                             Console.WriteLine("This is not a correct IP address!");
@@ -713,7 +713,7 @@ namespace Aura_OS.System.Translation
                             break;
                         case "about":
                             Console.ForegroundColor = ConsoleColor.White;
-                            Console.WriteLine("Aura [versie " + Kernel.version + "-" + Kernel.revision + "]");
+                            Console.WriteLine("Aura [versie " + Global.version + "-" + Global.revision + "]");
                             Console.WriteLine("Ontwikkeld door Alexy DA CRUZ en Valentin CHARBONNIER.");
                             Console.WriteLine();
                             Console.ForegroundColor = ConsoleColor.Green;
@@ -784,7 +784,7 @@ namespace Aura_OS.System.Translation
                             Console.WriteLine("De huidige tijd is:  " + Time.MonthString() + "/" + Time.DayString() + "/" + Time.YearString() + ", " + Time.TimeString(true, true, true));
                             break;
                         case "changeipaddress":
-                            //Console.WriteLine("Nieuw IP-adres van de PC (nu " + Kernel.LocalNetworkConfig.IPAddress.ToString() + ") :");
+                            //Console.WriteLine("Nieuw IP-adres van de PC (nu " + Global.LocalNetworkConfig.IPAddress.ToString() + ") :");
                             break;
                         case "notcorrectaddress":
                             Console.WriteLine("Dit is geen correct IP adres!");
@@ -952,7 +952,7 @@ namespace Aura_OS.System.Translation
                             break;
                         case "about":
                             Console.ForegroundColor = ConsoleColor.White;
-                            Console.WriteLine("Aura [Versione " + Kernel.version + "-" + Kernel.revision + "]");
+                            Console.WriteLine("Aura [Versione " + Global.version + "-" + Global.revision + "]");
                             Console.WriteLine("Creato da Alexy DA CRUZ e Valentin CHARBONNIER.");
                             Console.WriteLine();
                             Console.ForegroundColor = ConsoleColor.Green;
@@ -1026,7 +1026,7 @@ namespace Aura_OS.System.Translation
                             Console.WriteLine("Data e ora attuali sono: " + Time.MonthString() + "/" + Time.DayString() + "/" + Time.YearString() + ", " + Time.TimeString(true, true, true));
                             break;
                         case "changeipaddress":
-                            //Console.WriteLine("Nuovo indirizzo IP del PC (ora " + Kernel.LocalNetworkConfig.IPAddress.ToString() + ") :");
+                            //Console.WriteLine("Nuovo indirizzo IP del PC (ora " + Global.LocalNetworkConfig.IPAddress.ToString() + ") :");
                             break;
                         case "notcorrectaddress":
                             Console.WriteLine("Questo non è un indirizzo IP corretto!");
@@ -1206,7 +1206,7 @@ namespace Aura_OS.System.Translation
                             break;
                         case "about":
                             Console.ForegroundColor = ConsoleColor.White;
-                            Console.WriteLine("Aura [version " + Kernel.version + "-" + Kernel.revision + "]");
+                            Console.WriteLine("Aura [version " + Global.version + "-" + Global.revision + "]");
                             Console.WriteLine("Stworzona Alexy DA CRUZ i Valentin CHARBONNIER.");
                             Console.WriteLine();
                             Console.ForegroundColor = ConsoleColor.Green;
@@ -1277,7 +1277,7 @@ namespace Aura_OS.System.Translation
                             Console.WriteLine("Obecny czas:  " + Time.MonthString() + "/" + Time.DayString() + "/" + Time.YearString() + ", " + Time.TimeString(true, true, true));
                             break;
                         case "changeipaddress":
-                            //Console.WriteLine("Nowy adres IP tej maszyny (teraz " + Kernel.LocalNetworkConfig.IPAddress.ToString() + ") :");
+                            //Console.WriteLine("Nowy adres IP tej maszyny (teraz " + Global.LocalNetworkConfig.IPAddress.ToString() + ") :");
                             break;
                         case "notcorrectaddress":
                             Console.WriteLine("To nie jest poprawny adres IP!");
@@ -1298,7 +1298,7 @@ namespace Aura_OS.System.Translation
 
         public static string Menu(string ToTranslate)
         {
-            switch (Kernel.langSelected)
+            switch (Global.langSelected)
             {
                 case "fr_FR":
 

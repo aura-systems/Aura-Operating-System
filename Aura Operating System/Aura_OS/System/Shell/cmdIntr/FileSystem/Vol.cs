@@ -24,19 +24,19 @@ namespace Aura_OS.System.Shell.cmdIntr.FileSystem
         /// </summary>
         public override ReturnInfo Execute()
         {
-            var vols = Kernel.vFS.GetVolumes();
+            var vols = Global.vFS.GetVolumes();
 
             L.Text.Display("volCommand");
 
             foreach (var vol in vols)
             {
-                if (vol.mName == Kernel.current_volume && vols.Count > 1)
+                if (vol.mName == Global.current_volume && vols.Count > 1)
                 {
-                    Console.WriteLine(" >" + vol.mName + "\t   \t" + Kernel.vFS.GetFileSystemType(vol.mName) + " \t" + vol.mSize + " MB\t" + vol.mParent);
+                    Console.WriteLine(" >" + vol.mName + "\t   \t" + Global.vFS.GetFileSystemType(vol.mName) + " \t" + vol.mSize + " MB\t" + vol.mParent);
                 }
                 else
                 {
-                    Console.WriteLine("  " + vol.mName + "\t   \t" + Kernel.vFS.GetFileSystemType(vol.mName) + " \t" + vol.mSize + " MB\t" + vol.mParent);
+                    Console.WriteLine("  " + vol.mName + "\t   \t" + Global.vFS.GetFileSystemType(vol.mName) + " \t" + vol.mSize + " MB\t" + vol.mParent);
                 }
             }
             return new ReturnInfo(this, ReturnCode.OK);

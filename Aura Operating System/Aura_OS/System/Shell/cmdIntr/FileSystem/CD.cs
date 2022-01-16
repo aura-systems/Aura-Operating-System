@@ -30,28 +30,28 @@ namespace Aura_OS.System.Shell.cmdIntr.FileSystem
             {
                 if (dir == "..")
                 {
-                    Directory.SetCurrentDirectory(Kernel.current_directory);
-                    var root = Kernel.vFS.GetDirectory(Kernel.current_directory);
-                    if (Kernel.current_directory == Kernel.current_volume)
+                    Directory.SetCurrentDirectory(Global.current_directory);
+                    var root = Global.vFS.GetDirectory(Global.current_directory);
+                    if (Global.current_directory == Global.current_volume)
                     {
                     }
                     else
                     {
-                        Kernel.current_directory = root.mParent.mFullPath;
+                        Global.current_directory = root.mParent.mFullPath;
                     }
                 }
-                else if (dir == Kernel.current_volume)
+                else if (dir == Global.current_volume)
                 { 
-                    Kernel.current_directory = Kernel.current_volume;
+                    Global.current_directory = Global.current_volume;
                 }
                 else
                 {
-                    if (Directory.Exists(Kernel.current_directory + dir))
+                    if (Directory.Exists(Global.current_directory + dir))
                     {
-                        Directory.SetCurrentDirectory(Kernel.current_directory);
-                        Kernel.current_directory = Kernel.current_directory + dir + @"\";
+                        Directory.SetCurrentDirectory(Global.current_directory);
+                        Global.current_directory = Global.current_directory + dir + @"\";
                     }
-                    else if (File.Exists(Kernel.current_directory + dir))
+                    else if (File.Exists(Global.current_directory + dir))
                     {
                         L.Text.Display("errorthisisafile");
                     }

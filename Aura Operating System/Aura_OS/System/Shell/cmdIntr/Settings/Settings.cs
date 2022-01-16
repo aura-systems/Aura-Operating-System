@@ -84,21 +84,21 @@ namespace Aura_OS.System.Shell.cmdIntr.Settings
 
                     if ((cmdargs[2].Equals("en_US")) || cmdargs[2].Equals("en-US"))
                     {
-                        Kernel.langSelected = "en_US";
+                        Global.langSelected = "en_US";
                         L.Keyboard.Init();
                         config.EditValue("language", "en_US");
                         config.PushValues();
                     }
                     else if ((cmdargs[2].Equals("fr_FR")) || cmdargs[2].Equals("fr-FR"))
                     {
-                        Kernel.langSelected = "fr_FR";
+                        Global.langSelected = "fr_FR";
                         L.Keyboard.Init();
                         config.EditValue("language", "fr_FR");
                         config.PushValues();
                     }
                     else if ((cmdargs[2].Equals("nl_NL")) || cmdargs[2].Equals("nl-NL"))
                     {
-                        Kernel.langSelected = "nl_NL";
+                        Global.langSelected = "nl_NL";
                         L.Keyboard.Init();
                         config.EditValue("language", "nl_NL");
                         config.PushValues();

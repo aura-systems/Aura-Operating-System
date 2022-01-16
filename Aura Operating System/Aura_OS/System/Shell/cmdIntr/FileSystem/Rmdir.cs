@@ -27,9 +27,9 @@ namespace Aura_OS.System.Shell.cmdIntr.FileSystem
         public override ReturnInfo Execute(List<string> arguments)
         {
             string dir = arguments[0];
-            if (Directory.Exists(Kernel.current_directory + dir))
+            if (Directory.Exists(Global.current_directory + dir))
             {
-                Directory.Delete(Kernel.current_directory + dir, true);
+                Directory.Delete(Global.current_directory + dir, true);
                 return new ReturnInfo(this, ReturnCode.OK);
             }
             else

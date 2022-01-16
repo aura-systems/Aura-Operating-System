@@ -37,7 +37,7 @@ namespace Aura_OS.System.Shell.cmdIntr.FileSystem
         public static void c_Run(string run, short startIndex = 0, short count = 4)
         {
             string file = run.Remove(startIndex, count);
-            if (File.Exists(Kernel.current_directory + file))
+            if (File.Exists(Global.current_directory + file))
             {
                 Apps.System.Batch.Execute(file);
             }

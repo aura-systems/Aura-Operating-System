@@ -55,13 +55,13 @@ namespace Aura_OS.System.Shell.cmdIntr.FileSystem
 
                 if (cmdargs.Length == 3)
                 {
-                    if (File.Exists(Kernel.current_directory + sourcefile))
+                    if (File.Exists(Global.current_directory + sourcefile))
                     {
-                        if (!File.Exists(Kernel.current_directory + destfile))
+                        if (!File.Exists(Global.current_directory + destfile))
                         {
                             try
                             {
-                                File.Copy(Kernel.current_directory + sourcefile, Kernel.current_directory + destfile);
+                                File.Copy(Global.current_directory + sourcefile, Global.current_directory + destfile);
 
                                 Console.ForegroundColor = ConsoleColor.Green;
                                 L.Text.Display("filecopied");
@@ -107,13 +107,13 @@ namespace Aura_OS.System.Shell.cmdIntr.FileSystem
                     //code following
                     if (cmdargs.Length == 4)
                     {
-                        if (File.Exists(Kernel.current_directory + sourcefile))
+                        if (File.Exists(Global.current_directory + sourcefile))
                         {
-                            if (File.Exists(Kernel.current_directory + destfile))
+                            if (File.Exists(Global.current_directory + destfile))
                             {
                                 try
                                 {
-                                    File.Copy(Kernel.current_directory + sourcefile, Kernel.current_directory + destfile, true);
+                                    File.Copy(Global.current_directory + sourcefile, Global.current_directory + destfile, true);
 
                                     Console.ForegroundColor = ConsoleColor.Green;
                                     L.Text.Display("filecopied");
@@ -126,7 +126,7 @@ namespace Aura_OS.System.Shell.cmdIntr.FileSystem
                             }
                             else
                             {
-                                File.Copy(Kernel.current_directory + sourcefile, Kernel.current_directory + destfile);
+                                File.Copy(Global.current_directory + sourcefile, Global.current_directory + destfile);
                             }
                         }
                         else

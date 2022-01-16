@@ -21,12 +21,12 @@ namespace Aura_OS.System.Shell.cmdIntr
             }
             else if (args[0] == "-s")
             {
-                Console.WriteLine("Your computer name: " + Kernel.ComputerName);return new ReturnInfo(this, ReturnCode.OK);
+                Console.WriteLine("Your computer name: " + Global.ComputerName);return new ReturnInfo(this, ReturnCode.OK);
             }
             else if (args[0] == "-c" && args.Count == 2 && args[1] != string.Empty)
             {
                 string name = args[1];
-                Kernel.ComputerName = name;Console.WriteLine("Set successful to " + name + ".");return new ReturnInfo(this, ReturnCode.OK);
+                Global.ComputerName = name;Console.WriteLine("Set successful to " + name + ".");return new ReturnInfo(this, ReturnCode.OK);
             }
             return new ReturnInfo(this, ReturnCode.ERROR);
         }

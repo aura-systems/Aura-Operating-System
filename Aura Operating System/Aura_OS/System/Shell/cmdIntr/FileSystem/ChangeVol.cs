@@ -33,13 +33,13 @@ namespace Aura_OS.System.Shell.cmdIntr.FileSystem
 
                     bool exist = false;
 
-                    foreach (var vol in Kernel.vFS.GetVolumes())
+                    foreach (var vol in Global.vFS.GetVolumes())
                     {
                         if (vol.mName == volume + ":\\")
                         {
                             exist = true;
-                            Kernel.current_volume = vol.mName;
-                            Kernel.current_directory = Kernel.current_volume;
+                            Global.current_volume = vol.mName;
+                            Global.current_directory = Global.current_volume;
                         }
                     }
                     if (!exist)

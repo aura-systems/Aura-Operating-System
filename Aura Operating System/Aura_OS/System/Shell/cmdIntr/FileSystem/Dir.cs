@@ -26,8 +26,8 @@ namespace Aura_OS.System.Shell.cmdIntr.FileSystem
         /// </summary>
         public override ReturnInfo Execute()
         {
-            DirectoryListing.DispDirectories(Kernel.current_directory);
-            DirectoryListing.DispFiles(Kernel.current_directory);
+            DirectoryListing.DispDirectories(Global.current_directory);
+            DirectoryListing.DispFiles(Global.current_directory);
             Console.WriteLine();
             return new ReturnInfo(this, ReturnCode.OK);
         }
@@ -43,10 +43,10 @@ namespace Aura_OS.System.Shell.cmdIntr.FileSystem
             {
                 directory = arguments[0];
 
-                if (Directory.Exists(Kernel.current_directory + directory))
+                if (Directory.Exists(Global.current_directory + directory))
                 {
-                    DirectoryListing.DispDirectories(Kernel.current_directory + directory);
-                    DirectoryListing.DispFiles(Kernel.current_directory + directory);
+                    DirectoryListing.DispDirectories(Global.current_directory + directory);
+                    DirectoryListing.DispFiles(Global.current_directory + directory);
                 }
             }
 
@@ -54,15 +54,15 @@ namespace Aura_OS.System.Shell.cmdIntr.FileSystem
             {
                 if (arguments[0].Equals("-a"))
                 {
-                    DirectoryListing.DispDirectories(Kernel.current_directory);
-                    DirectoryListing.DispHiddenFiles(Kernel.current_directory);
+                    DirectoryListing.DispDirectories(Global.current_directory);
+                    DirectoryListing.DispHiddenFiles(Global.current_directory);
 
                     if (arguments.Count == 2)
                     {
                         directory = arguments[1];
 
-                        DirectoryListing.DispDirectories(Kernel.current_directory + directory);
-                        DirectoryListing.DispHiddenFiles(Kernel.current_directory + directory);
+                        DirectoryListing.DispDirectories(Global.current_directory + directory);
+                        DirectoryListing.DispHiddenFiles(Global.current_directory + directory);
                     }
                 }
                 else

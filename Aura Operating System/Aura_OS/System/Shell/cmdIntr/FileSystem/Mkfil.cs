@@ -37,11 +37,11 @@ namespace Aura_OS.System.Shell.cmdIntr.FileSystem
         {
             string file = arguments[0];
 
-            if (!File.Exists(Kernel.current_directory + file))
+            if (!File.Exists(Global.current_directory + file))
             {
                 /*Apps.User.Editor application = new Apps.User.Editor();
-                application.Start(file, Kernel.current_directory);*/
-                File.Create(Kernel.current_directory + file);
+                application.Start(file, Global.current_directory);*/
+                File.Create(Global.current_directory + file);
             }
             else
             {

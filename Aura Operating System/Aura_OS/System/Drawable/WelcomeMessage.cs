@@ -17,7 +17,7 @@ namespace Aura_OS.System
         /// </summary>
         public static void Display()
         {
-            if (Kernel.AConsole.Type == AConsole.ConsoleType.Graphical)
+            if (Global.AConsole.Type == AConsole.ConsoleType.Graphical)
             {
                 Logo.Print();
             }
@@ -27,7 +27,7 @@ namespace Aura_OS.System
             }
 
             Console.ForegroundColor = ConsoleColor.Green;
-            switch (Kernel.langSelected)
+            switch (Global.langSelected)
             {
                 case "fr_FR":
                     Console.WriteLine(" * Documentation: github.com/aura-systems");

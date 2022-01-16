@@ -21,13 +21,13 @@ namespace Aura_OS.Apps.User
         {
             Console.Clear();
 
-            for (int i = 0; i < Kernel.AConsole.Rows; i++)
+            for (int i = 0; i < Global.AConsole.Rows; i++)
             {
                 Console.WriteLine("~");
             }
 
-            int x = Kernel.AConsole.Cols / 2 - (43 / 2);
-            int y = Kernel.AConsole.Rows / 2 - (11 / 2);
+            int x = Global.AConsole.Cols / 2 - (43 / 2);
+            int y = Global.AConsole.Rows / 2 - (11 / 2);
 
             Console.SetCursorPosition(x, y);
             Console.WriteLine("           MIV - MInimalistic Vi");
@@ -84,7 +84,7 @@ namespace Aura_OS.Apps.User
                 {
                     Console.Write(chars[i]);
                     countChars++;
-                    if (countChars % Kernel.AConsole.Cols == Kernel.AConsole.Cols - 1)
+                    if (countChars % Global.AConsole.Cols == Global.AConsole.Cols - 1)
                     {
                         countNewLine++;
                     }
@@ -93,7 +93,7 @@ namespace Aura_OS.Apps.User
 
             Console.Write("/");
 
-            for (int i = 0; i < (Kernel.AConsole.Rows - 2) - countNewLine; i++)
+            for (int i = 0; i < (Global.AConsole.Rows - 2) - countNewLine; i++)
             {
                 Console.WriteLine("");
                 Console.Write("~");
@@ -101,7 +101,7 @@ namespace Aura_OS.Apps.User
 
             //PRINT INSTRUCTION
             Console.WriteLine();
-            for (int i = 0; i < Kernel.AConsole.Cols - 5; i++)
+            for (int i = 0; i < Global.AConsole.Cols - 5; i++)
             {
                 if (i < infoBar.Length)
                 {

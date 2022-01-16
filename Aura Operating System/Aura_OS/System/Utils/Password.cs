@@ -8,7 +8,7 @@ namespace Aura_OS.System.Utils
     {
         private static Aura_OS.System.AConsole.Console GetConsole()
         {
-            return Aura_OS.Kernel.AConsole;
+            return Aura_OS.Global.AConsole;
         }
 
         public static String ReadLine()

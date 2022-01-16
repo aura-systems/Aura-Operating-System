@@ -20,7 +20,7 @@ namespace Aura_OS.System.Translation
         /// </summary>
         public static void Settings()
         {
-            switch (Kernel.langSelected)
+            switch (Global.langSelected)
             {
                 case "fr_FR":
                     Console.WriteLine("Commandes disponible:");
@@ -90,19 +90,19 @@ namespace Aura_OS.System.Translation
         public static void Systeminfo()
         {
             Utils.Settings config = new Utils.Settings(@"0:\System\settings.conf");
-            switch (Kernel.langSelected)
+            switch (Global.langSelected)
             {
                 case "fr_FR":
-                    Console.WriteLine("Nom du PC:                     " + Kernel.ComputerName);
+                    Console.WriteLine("Nom du PC:                     " + Global.ComputerName);
                     Console.WriteLine("Nom du système d'exploitation: Aura");
-                    Console.WriteLine("Version du système:            " + Kernel.version);
-                    Console.WriteLine("Révision du système:           " + Kernel.revision);
+                    Console.WriteLine("Version du système:            " + Global.version);
+                    Console.WriteLine("Révision du système:           " + Global.revision);
                     Console.WriteLine("Date et heure:                 " + Time.MonthString() + "/" + Time.DayString() + "/" + Time.YearString() + ", " + Time.TimeString(true, true, true));
-                    if (Kernel.SystemExists)
+                    if (Global.SystemExists)
                     {
                         Console.WriteLine("Date d'installation originale: " + config.GetValue("setuptime"));
                     }
-                    Console.WriteLine("Heure de démarrage du système: " + Kernel.boottime);
+                    Console.WriteLine("Heure de démarrage du système: " + Global.boottime);
                     Console.WriteLine("Mémoire totale:                " + Core.MemoryManager.TotalMemory + "MB");
                     Console.WriteLine("Mémoire utilisée:              " + Core.MemoryManager.GetUsedMemory() + "MB");
                     Console.WriteLine("Mémoire restante:              " + Core.MemoryManager.GetFreeMemory() + "MB");
@@ -111,16 +111,16 @@ namespace Aura_OS.System.Translation
                     break;
 
                 case "en_US":
-                    Console.WriteLine("Computer name:             " + Kernel.ComputerName);
+                    Console.WriteLine("Computer name:             " + Global.ComputerName);
                     Console.WriteLine("Operating system name:     Aura");
-                    Console.WriteLine("Operating system version:  " + Kernel.version);
-                    Console.WriteLine("Operating system revision: " + Kernel.revision);
+                    Console.WriteLine("Operating system version:  " + Global.version);
+                    Console.WriteLine("Operating system revision: " + Global.revision);
                     Console.WriteLine("Date and time:             " + Time.MonthString() + "/" + Time.DayString() + "/" + Time.YearString() + ", " + Time.TimeString(true, true, true));
-                    if (Kernel.SystemExists)
+                    if (Global.SystemExists)
                     {
                         Console.WriteLine("Original Install Date:     " + config.GetValue("setuptime"));
                     }
-                    Console.WriteLine("System Boot Time:          " + Kernel.boottime);
+                    Console.WriteLine("System Boot Time:          " + Global.boottime);
                     Console.WriteLine("Total memory:              " + Core.MemoryManager.TotalMemory + "MB");
                     Console.WriteLine("Used memory:               " + Core.MemoryManager.GetUsedMemory() + "MB");
                     Console.WriteLine("Free memory:               " + Core.MemoryManager.GetFreeMemory() + "MB");
@@ -129,16 +129,16 @@ namespace Aura_OS.System.Translation
                     break;
 
                 case "nl_NL":
-                    Console.WriteLine("Naam computer:             " + Kernel.ComputerName);
+                    Console.WriteLine("Naam computer:             " + Global.ComputerName);
                     Console.WriteLine("Naam besturingssysteem:    Aura");
-                    Console.WriteLine("Versie besturingssysteem:  " + Kernel.version);
-                    Console.WriteLine("Revisie besturingssysteem: " + Kernel.revision);
+                    Console.WriteLine("Versie besturingssysteem:  " + Global.version);
+                    Console.WriteLine("Revisie besturingssysteem: " + Global.revision);
                     Console.WriteLine("Datum en tijd:             " + Time.MonthString() + "/" + Time.DayString() + "/" + Time.YearString() + ", " + Time.TimeString(true, true, true));
-                    if (Kernel.SystemExists)
+                    if (Global.SystemExists)
                     {
                         Console.WriteLine("Installeer datum:          " + config.GetValue("setuptime"));
                     }
-                    Console.WriteLine("Starttijd van het systeem: " + Kernel.boottime);
+                    Console.WriteLine("Starttijd van het systeem: " + Global.boottime);
                     Console.WriteLine("Totaal geheugen:           " + Core.MemoryManager.TotalMemory + "MB");
                     Console.WriteLine("Gebruikt geheugen:         " + Core.MemoryManager.GetUsedMemory() + "MB");
                     Console.WriteLine("Gratis geheugen:           " + Core.MemoryManager.GetFreeMemory() + "MB");
@@ -147,16 +147,16 @@ namespace Aura_OS.System.Translation
                     break;
 
                 case "it_IT":
-                    Console.WriteLine("Nome del computer:               " + Kernel.ComputerName);
+                    Console.WriteLine("Nome del computer:               " + Global.ComputerName);
                     Console.WriteLine("Nome del sistema operativo:      Aura");
-                    Console.WriteLine("Versione del sistema operativo:  " + Kernel.version);
-                    Console.WriteLine("Revisione del sistema operativo: " + Kernel.revision);
+                    Console.WriteLine("Versione del sistema operativo:  " + Global.version);
+                    Console.WriteLine("Revisione del sistema operativo: " + Global.revision);
                     Console.WriteLine("Data e ora:                      " + Time.MonthString() + "/" + Time.DayString() + "/" + Time.YearString() + ", " + Time.TimeString(true, true, true));
-                    if (Kernel.SystemExists)
+                    if (Global.SystemExists)
                     {
                         Console.WriteLine("Data Installazione Sistema:      " + config.GetValue("setuptime"));
                     }
-                    Console.WriteLine("System Boot Time:                " + Kernel.boottime);
+                    Console.WriteLine("System Boot Time:                " + Global.boottime);
                     Console.WriteLine("Memoria totale:                  " + Core.MemoryManager.TotalMemory + "MB");
                     Console.WriteLine("Memoria utilizzata:              " + Core.MemoryManager.GetUsedMemory() + "MB");
                     Console.WriteLine("Memoria libera:                  " + Core.MemoryManager.GetFreeMemory() + "MB");
@@ -165,16 +165,16 @@ namespace Aura_OS.System.Translation
                     break;
                 
                 case "pl_PL":
-                    Console.WriteLine("Nazwa Komputera:           " + Kernel.ComputerName);
+                    Console.WriteLine("Nazwa Komputera:           " + Global.ComputerName);
                     Console.WriteLine("Nazwa systemu opr.:         Aura");
-                    Console.WriteLine("Wersja systemu opr.:       " + Kernel.version);
-                    Console.WriteLine("Podwersja systemu opr.:    " + Kernel.revision);
+                    Console.WriteLine("Wersja systemu opr.:       " + Global.version);
+                    Console.WriteLine("Podwersja systemu opr.:    " + Global.revision);
                     Console.WriteLine("Data i godzina:            " + Time.MonthString() + "/" + Time.DayString() + "/" + Time.YearString() + ", " + Time.TimeString(true, true, true));
-                    if (Kernel.SystemExists)
+                    if (Global.SystemExists)
                     {
                         Console.WriteLine("Data instalacji:       " + config.GetValue("setuptime"));
                     }
-                    Console.WriteLine("Czas od startu:            " + Kernel.boottime);
+                    Console.WriteLine("Czas od startu:            " + Global.boottime);
                     Console.WriteLine("Pamiec RAM:                " + Core.MemoryManager.TotalMemory + "MB");
                     Console.WriteLine("RAM w uzyciu:              " + Core.MemoryManager.GetUsedMemory() + "MB");
                     Console.WriteLine("Wolny RAM:                 " + Core.MemoryManager.GetFreeMemory() + "MB");
@@ -189,7 +189,7 @@ namespace Aura_OS.System.Translation
         /// </summary>
         public static void About()
         {
-            switch (Kernel.langSelected)
+            switch (Global.langSelected)
             {
                 case "fr_FR":
                     Console.WriteLine("À Propos d'Aura OS:");
