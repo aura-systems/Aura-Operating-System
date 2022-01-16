@@ -84,7 +84,6 @@ namespace Aura_OS
                 Console.Write(current_directory + "~ ");
 
                 Console.ForegroundColor = ConsoleColor.White;
-
             }
         }
 

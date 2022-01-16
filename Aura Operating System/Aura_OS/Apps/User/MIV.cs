@@ -291,9 +291,9 @@ namespace Aura_OS.Apps.User
 
             try
             {
-                if (File.Exists(@"0:\" + file))
+                if (File.Exists(Global.current_directory + file))
                 {
-                    text = miv(File.ReadAllText(@"0:\" + file));
+                    text = miv(File.ReadAllText(Global.current_directory + file));
                 }
                 else
                 {
@@ -309,7 +309,7 @@ namespace Aura_OS.Apps.User
 
             if (text != null && text != string.Empty)
             {
-                File.WriteAllText(@"0:\" + file, text);
+                File.WriteAllText(Global.current_directory + file, text);
                 Console.WriteLine("Content has been saved to " + file);
             }
         }
