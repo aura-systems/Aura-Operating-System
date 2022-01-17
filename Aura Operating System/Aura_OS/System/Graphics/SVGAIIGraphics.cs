@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Cosmos.System.Graphics.Fonts;
 
 namespace Aura_OS.System.Graphics
 {
@@ -102,11 +103,11 @@ namespace Aura_OS.System.Graphics
             int dx = x, dy = y;
             for (int i = 0; i < text.Length; i++)
             {
-                if (text[i] == '\n') { dx = x; dy += font.Height + font.SpacingY; }
+                if (text[i] == '\n') { dx = x; dy += font.Height; }
                 else
                 {
                     DrawChar(dx, dy, text[i], fg, font);
-                    dx += font.Width + font.SpacingY;
+                    dx += font.Width;
                 }
             }
         }
@@ -117,11 +118,11 @@ namespace Aura_OS.System.Graphics
             int dx = x, dy = y;
             for (int i = 0; i < text.Length; i++)
             {
-                if (text[i] == '\n') { dx = x; dy += font.Height + font.SpacingY; }
+                if (text[i] == '\n') { dx = x; dy += font.Height; }
                 else
                 {
                     DrawChar(dx, dy, text[i], fg, bg, font);
-                    dx += font.Width + font.SpacingY;
+                    dx += font.Width;
                 }
             }
         }
