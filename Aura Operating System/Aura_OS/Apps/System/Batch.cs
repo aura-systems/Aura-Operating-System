@@ -11,7 +11,7 @@ using System.IO;
 
 namespace Aura_OS.Apps.System
 {
-    class Batch
+    public class Batch
     {
         /// <summary>
         /// Execute batch-like script with ext .aus or .bat
@@ -21,14 +21,13 @@ namespace Aura_OS.Apps.System
         {
             try
             {
-                if ((filename.EndsWith(".aus")) || (filename.EndsWith(".bat")))
+                if (filename.EndsWith(".bat"))
                 {
                     string[] lines = File.ReadAllLines(filename);
                     foreach (string line in lines)
                     {
-                        if(!(line.StartsWith("|")))// don't read the line if it start with "|" for comment
+                        if(!(line.StartsWith(";")))// don't read the line if it start with ";" for comment
                         {
-
                             CommandManager._CommandManger(line);
                         }
                     }

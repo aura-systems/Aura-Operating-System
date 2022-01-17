@@ -4,50 +4,56 @@
 * PROGRAMMER(S):    DA CRUZ Alexy <dacruzalexy@gmail.com>
 */
 
-/*
+using System;
+using System.Collections.Generic;
 using System.IO;
 using L = Aura_OS.System.Translation;
 
 namespace Aura_OS.System.Shell.cmdIntr.FileSystem
 {
-    class Run
+    class CommandRun : ICommand
     {
-        private static string HelpInfo = "";
-
         /// <summary>
-        /// Getter and Setters for Help Info.
+        /// Empty constructor.
         /// </summary>
-        public static string HI
+        public CommandRun(string[] commandvalues) : base(commandvalues, CommandType.Filesystem)
         {
-            get { return HelpInfo; }
-            set { HelpInfo = value; }
+            Description = "to run a program";
         }
 
         /// <summary>
-        /// Empty constructor. (Good for debug)
+        /// CommandTree
         /// </summary>
-        public Run() { }
+        public override ReturnInfo Execute()
+        {
+            PrintHelp();
+            return new ReturnInfo(this, ReturnCode.OK);
+        }
 
         /// <summary>
-        /// c = command, c_Run
+        /// CommandTree
         /// </summary>
-        /// <param name="run">The script you wish to start</param>
-        /// /// <param name="startIndex">The start index for remove.</param>
-        /// <param name="count">The count index for remove.</param>
-        public static void c_Run(string run, short startIndex = 0, short count = 4)
+        public override ReturnInfo Execute(List<string> arguments)
         {
-            string file = run.Remove(startIndex, count);
-            if (File.Exists(Global.current_directory + file))
+            if (File.Exists(Global.current_directory + arguments[0]))
             {
-                Apps.System.Batch.Execute(file);
+                Apps.System.Batch.Execute(arguments[0]);
             }
             else
             {
                 L.Text.Display("doesnotexit");
             }
+
+            return new ReturnInfo(this, ReturnCode.OK);
         }
 
+        /// <summary>
+        /// Print /help information
+        /// </summary>
+        public override void PrintHelp()
+        {
+            Console.WriteLine("Usage:");
+            Console.WriteLine(" - run {file}");
+        }
     }
 }
-
-*/
