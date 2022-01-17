@@ -1,4 +1,4 @@
-<Project InitialTargets="GetVersion" Sdk="Microsoft.NET.Sdk">
+﻿<Project InitialTargets="GetVersion" Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <Year>$([System.DateTime]::Now.ToString("yyyy"))</Year>
@@ -40,10 +40,6 @@
   
   <Target Name="GetVersion">
     <WriteLinesToFile File="Properties\VersionInfo.cs" Lines="$(SomeThing)" Overwrite="true" />
-  </Target>
-
-  <Target Name="PreBuild" BeforeTargets="Compile">
-    <MSBuild Projects="../Aura_Boot/Aura_Boot.csproj" Targets="Clean" />
   </Target>
 
 </Project>

@@ -71,7 +71,7 @@ namespace Aura_OS.System.Shell.cmdIntr.Util
                 Console.WriteLine(" (" + command.Description + ")");
 
                 count++;
-                if (count == Console.WindowHeight)
+                if (count == Global.AConsole.Rows)
                 {
                     Console.ReadKey();
                     count = 0;

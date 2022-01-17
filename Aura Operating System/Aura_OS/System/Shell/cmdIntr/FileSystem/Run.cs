@@ -37,7 +37,7 @@ namespace Aura_OS.System.Shell.cmdIntr.FileSystem
         {
             if (File.Exists(Global.current_directory + arguments[0]))
             {
-                Apps.System.Batch.Execute(arguments[0]);
+                Apps.System.Batch.Execute(Global.current_directory +  arguments[0]);
             }
             else
             {
