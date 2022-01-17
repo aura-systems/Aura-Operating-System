@@ -10,7 +10,7 @@ using Aura_OS.System.Computer;
 
 namespace Aura_OS.System.Shell.cmdIntr.Settings
 {
-    class Settings
+    /*class Settings
     {
         private static string HelpInfo = "";
 
@@ -20,7 +20,7 @@ namespace Aura_OS.System.Shell.cmdIntr.Settings
         public static string HI
         {
             get { return HelpInfo; }
-            set { HelpInfo = value; /*PUSHED OUT VALUE (in)*/}
+            set { HelpInfo = value; /*PUSHED OUT VALUE (in)*//*}
         }
 
         /// <summary>
@@ -176,5 +176,5 @@ namespace Aura_OS.System.Shell.cmdIntr.Settings
             }
 
         }
-    }
+    }*/
 }
