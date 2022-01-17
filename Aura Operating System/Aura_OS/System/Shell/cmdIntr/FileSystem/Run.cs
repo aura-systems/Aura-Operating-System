@@ -18,7 +18,7 @@ namespace Aura_OS.System.Shell.cmdIntr.FileSystem
         /// </summary>
         public CommandRun(string[] commandvalues) : base(commandvalues, CommandType.Filesystem)
         {
-            Description = "to run a program";
+            Description = "to run a program (only .bat command script)";
         }
 
         /// <summary>
