@@ -9,7 +9,7 @@ using System;
 
 namespace Aura_OS.System
 {
-    class WelcomeMessage
+    public class WelcomeMessage
     {
 
         /// <summary>
