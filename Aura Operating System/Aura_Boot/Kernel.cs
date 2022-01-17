@@ -16,6 +16,7 @@ using System.Text;
 using Cosmos.System.ExtendedASCII;
 using Aura_OS.System.Shell.cmdIntr;
 using Aura_OS.System.Users;
+using System.IO;
 
 #endregion
 
@@ -72,7 +73,24 @@ namespace Aura_OS
 
                 System.CustomConsole.WriteLineOK("Aura successfully started!");
 
-                Console.WriteLine("Press any key to continue...");
+                #region Scan boot.bat
+
+                if (Global.ContainsVolumes())
+                {
+                    CustomConsole.WriteLineInfo("Scanning for boot.bat...");
+
+                    foreach (var vol in Global.vFS.GetVolumes())
+                    {
+                        if (File.Exists(vol.mName + "\\boot.bat"))
+                        {
+                            Apps.System.Batch.Execute(vol.mName + "\\boot.bat");
+                        }
+                    }
+                }
+
+                #endregion
+
+                CustomConsole.WriteLineInfo("Press any key to continue...");
                 Console.ReadKey();
 
                 #region Installation Init
