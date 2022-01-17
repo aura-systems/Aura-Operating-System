@@ -238,21 +238,7 @@ namespace Aura_OS.System
             Global.userLogged = "root";
             Global.Logged = true;
             Console.Clear();
-            //switch (Video.GetVideo())
-            //{
-            //    case "VGATextmode":
-            //        //Global.AConsole = new System.Shell.VGA.VGAConsole(null);
-            //        break;
-            //    case "SVGA":
-            //        // TO DO ?
-            //        break;
-            //    case "VESA":
-            //        //Global.AConsole = new System.Shell.VESAVBE.VESAVBEConsole();
-            //        break;
-            //    default:
-            //        //Global.AConsole = new System.Shell.VGA.VGAConsole(null);
-            //        break;
-            //}
+
             WelcomeMessage.Display();
             Text.Display("logged", "root");
 
@@ -265,6 +251,7 @@ namespace Aura_OS.System
             Global.running = true;
         }
 
+        /*
         /// <summary>
         /// Method called to start Aura_OS to run with filesystem and not logged to any user by default
         /// </summary>
@@ -298,8 +285,9 @@ namespace Aura_OS.System
             Console.WriteLine();
 
             Global.Logged = true;
-        }
+        }*/
 
+        /*
         /// <summary>
         /// Installation with progressbar.
         /// </summary>
@@ -395,7 +383,7 @@ namespace Aura_OS.System
             Console.BackgroundColor = ConsoleColor.Black;
 
             Run();
-        }
+        }*/
 
     }
 }

@@ -21,28 +21,26 @@ namespace Aura_Plugs.HAL
 
         static public void Init(TextScreenBase textScreen, bool InitScrollWheel, bool InitPS2, bool InitNetwork, bool IDEInit)
         {
-            PCI.Setup();
-            Aura_OS.System.CustomConsole.WriteLineOK("PCI Devices Scan");
+            Cosmos.HAL.Global.mDebugger.Send("Before Core.Global.Init");
+            Cosmos.Core.Global.Init();
 
+            PCI.Setup();
             var _SVGAIIDevice = PCI.GetDevice(VendorID.VMWare, DeviceID.SVGAIIAdapter);
 
-            //Check if VMWare SVGAII graphic card exists without VBE enabled from multiboot
-            //This is useful to detect if VBE graphic mode is enabled from the bootloader.
-            /*if (_SVGAIIDevice != null && PCI.Exists(_SVGAIIDevice) && VBE.IsAvailable() == false)
+            if (VBEAvailable() || (_SVGAIIDevice != null && PCI.Exists(_SVGAIIDevice)))
             {
-                Global.AConsole = new Aura_OS.System.AConsole.GraphicalConsole();
-            }*/
-            if (VBEAvailable())
-            {
-                Aura_OS.Global.AConsole = new Aura_OS.System.AConsole.GraphicalConsole();
+                Aura_OS.Global.AConsole = new Aura_OS.System.AConsole.GraphicConsole();
             }
             else
             {
                 Aura_OS.Global.AConsole = new Aura_OS.System.AConsole.VGAConsole(textScreen);
             }
 
-            Console.WriteLine("[Aura Operating System v" + Aura_OS.Global.version + " - Made by valentinbreiz and geomtech]");
+            Aura_OS.Global.AConsole.Write(("[Aura Operating System v" + Aura_OS.Global.version + " - Made by valentinbreiz and geomtech]\n").ToCharArray());
             Aura_OS.System.CustomConsole.WriteLineInfo("Starting Cosmos kernel...");
+
+            Aura_OS.System.CustomConsole.WriteLineOK("PCI Devices Scan");
+            Aura_OS.System.CustomConsole.WriteLineOK("Plugged Console");
 
             ACPI.Start();
             Aura_OS.System.CustomConsole.WriteLineOK("ACPI Initialization");

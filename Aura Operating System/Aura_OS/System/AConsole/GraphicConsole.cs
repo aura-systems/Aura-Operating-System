@@ -4,7 +4,6 @@
 * PROGRAMMERS:      Valentin Charbonnier <valentinbreiz@gmail.com>
 */
 
-
 using System;
 using System.Drawing;
 using Cosmos.Debug.Kernel;
@@ -12,13 +11,13 @@ using Cosmos.System.Graphics;
 
 namespace Aura_OS.System.AConsole
 {
-    public class GraphicalConsole : Console
+    public class GraphicConsole : Console
     {
 
         public Graphics.Graphics graphics;
         
 
-        public GraphicalConsole()
+        public GraphicConsole()
         {
             graphics = new Graphics.Graphics();
 
