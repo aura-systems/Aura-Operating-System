@@ -15,17 +15,17 @@ namespace Aura_OS.System
         public static void WriteLineInfo(string text)
         {
             Console.ForegroundColor = ConsoleColor.Cyan;
-            Console.Write("[Info] ");
+            Global.AConsole.Write("[Info] ".ToCharArray());
             Console.ForegroundColor = ConsoleColor.White;
-            Console.Write(text + "\n");
+            Global.AConsole.Write((text + "\n").ToCharArray());
             Global.debugger.Send("[Info] " + text);
         }
         public static void WriteLineWarning(string text)
         {
             Console.ForegroundColor = ConsoleColor.Yellow;
-            Console.Write("[WARNING] ");
+            Global.AConsole.Write("[WARNING] ".ToCharArray());
             Console.ForegroundColor = ConsoleColor.White;
-            Console.Write(text + "\n");
+            Global.AConsole.Write((text + "\n").ToCharArray());
             Global.debugger.Send("[WARNING] " + text);
         }
         /// <summary>
@@ -38,25 +38,25 @@ namespace Aura_OS.System
         public static void WriteLineCustom(ConsoleColor tipColor,string text,string tipText)
         {
             Console.ForegroundColor = tipColor;
-            Console.Write("[" + tipText + "] ");
+            Global.AConsole.Write(("[" + tipText + "] ").ToCharArray());
             Console.ForegroundColor = ConsoleColor.White;
-            Console.Write(text + "\n");
+            Global.AConsole.Write((text + "\n").ToCharArray());
             Global.debugger.Send("[" + tipText + "] " + text);
         }
         public static void WriteLineOK(string text)
         {
             Console.ForegroundColor = ConsoleColor.Green;
-            Console.Write("[OK] ");
+            Global.AConsole.Write("[OK] ".ToCharArray());
             Console.ForegroundColor = ConsoleColor.White;
-            Console.Write(text + "\n");
+            Global.AConsole.Write((text + "\n").ToCharArray());
             Global.debugger.Send("[OK] " + text);
         }
         public static void WriteLineError(string text)
         {
             Console.ForegroundColor = ConsoleColor.DarkRed;
-            Console.Write("[Error] ");
+            Global.AConsole.Write(("[Error] ").ToCharArray());
             Console.ForegroundColor = ConsoleColor.White;
-            Console.Write(text + "\n");
+            Global.AConsole.Write((text + "\n").ToCharArray());
             Global.debugger.Send("[Error] " + text);
         }
     }

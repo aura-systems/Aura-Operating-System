@@ -229,30 +229,22 @@ namespace Aura_OS.System
         /// </summary>
         public void RunWithoutFS(bool nofsroot) //logged with root without using filesystem
         {
-            if (!nofsroot)
+            /*if (!nofsroot)
             {
                 RegisterLanguage();
-            }
+            }*/
+
+
+            //TODO FIX THIS
+            Global.langSelected = "fr_FR";
+            FinalLang = "fr_FR";
+            Keyboard.Init();
 
             Global.SystemExists = false;
             Global.userLogged = "root";
             Global.Logged = true;
             Console.Clear();
-            //switch (Video.GetVideo())
-            //{
-            //    case "VGATextmode":
-            //        //Global.AConsole = new System.Shell.VGA.VGAConsole(null);
-            //        break;
-            //    case "SVGA":
-            //        // TO DO ?
-            //        break;
-            //    case "VESA":
-            //        //Global.AConsole = new System.Shell.VESAVBE.VESAVBEConsole();
-            //        break;
-            //    default:
-            //        //Global.AConsole = new System.Shell.VGA.VGAConsole(null);
-            //        break;
-            //}
+
             WelcomeMessage.Display();
             Text.Display("logged", "root");
 

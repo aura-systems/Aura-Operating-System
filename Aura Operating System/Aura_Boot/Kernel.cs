@@ -33,16 +33,15 @@ namespace Aura_OS
 
                 #region Console Encoding Provider
 
-                Encoding.RegisterProvider(CosmosEncodingProvider.Instance);
-
-                if (Global.AConsole.Type == System.AConsole.ConsoleType.Graphical)
+                if (Global.AConsole.Type == System.AConsole.ConsoleType.Graphical && Global.AConsole.Name != "SVGAII")
                 {
+                    Encoding.RegisterProvider(CosmosEncodingProvider.Instance);
                     Console.InputEncoding = Encoding.Unicode;
                     Console.OutputEncoding = Encoding.Unicode;
                 }
-                else
+                else if (Global.AConsole.Type == System.AConsole.ConsoleType.Text)
                 {
-
+                    Encoding.RegisterProvider(CosmosEncodingProvider.Instance);
                     Console.InputEncoding = Encoding.GetEncoding(437);
                     Console.OutputEncoding = Encoding.GetEncoding(437);
                 }
@@ -75,6 +74,8 @@ namespace Aura_OS
 
                 #region Scan boot.bat
 
+                int counter = 0;
+
                 if (Global.ContainsVolumes())
                 {
                     CustomConsole.WriteLineInfo("Scanning for boot.bat...");
@@ -83,9 +84,18 @@ namespace Aura_OS
                     {
                         if (File.Exists(vol.mName + "\\boot.bat"))
                         {
+                            CustomConsole.WriteLineOK("Found " + vol.mName + "\\boot.bat");
+
                             Apps.System.Batch.Execute(vol.mName + "\\boot.bat");
+
+                            counter++;
                         }
                     }
+                }
+
+                if (counter == 0)
+                {
+                    CustomConsole.WriteLineOK("No boot.bat found.");
                 }
 
                 #endregion

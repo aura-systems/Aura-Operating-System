@@ -45,8 +45,8 @@ namespace Aura_OS.System.Graphics
             Pallete[14] = 0xFFFFFF55; // Yellow
             Pallete[15] = 0xFFFFFFFF; //White
 
-            frontpen = new Pen(Color.FromArgb((int)Pallete[GraphicalConsole.foreground]));
-            backpen = new Pen(Color.FromArgb((int)Pallete[GraphicalConsole.background]));
+            frontpen = new Pen(Color.FromArgb((int)Pallete[VBEConsole.foreground]));
+            backpen = new Pen(Color.FromArgb((int)Pallete[VBEConsole.background]));
 
             lastpen = backpen;
             lastx = 0;

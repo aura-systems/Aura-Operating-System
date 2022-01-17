@@ -72,54 +72,6 @@ namespace Aura_OS.System.AConsole
 
     public static class ConsoleMode
     {
-        public enum Mode800x600
-        {
-            Rows = 87,
-            Cols = 37
-        };
-
-        public enum Mode1152x864
-        {
-            Rows = 127,
-            Cols = 54
-        };
-
-        public enum Mode1280x768
-        {
-            Rows = 141,
-            Cols = 48
-        };
-		
-		public enum Mode1280x800
-        {
-            Rows = 141,
-            Cols = 48
-        };
-
-        public enum Mode1360x768
-        {
-            Rows = 149, //+1?
-            Cols = 48
-        };
-
-        public enum Mode1366x768
-        {
-            Rows = 150,
-            Cols = 48
-        };
-
-        public enum Mode1600x1200
-        {
-            Rows = 176,
-            Cols = 75
-        };
-
-        public enum Mode1920x1080
-        {
-            Rows = 141, // Not good value
-            Cols = 48 // Not good value
-        };
-
         public static string GetConsoleInfo()
         {
             if (Global.AConsole.Type == ConsoleType.Graphical)

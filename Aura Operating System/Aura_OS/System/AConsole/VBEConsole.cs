@@ -12,13 +12,13 @@ using Cosmos.System.Graphics;
 
 namespace Aura_OS.System.AConsole
 {
-    public class GraphicalConsole : Console
+    public class VBEConsole : Console
     {
 
         public Graphics.Graphics graphics;
         
 
-        public GraphicalConsole()
+        public VBEConsole()
         {
             graphics = new Graphics.Graphics();
 
