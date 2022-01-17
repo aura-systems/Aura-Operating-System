@@ -229,16 +229,10 @@ namespace Aura_OS.System
         /// </summary>
         public void RunWithoutFS(bool nofsroot) //logged with root without using filesystem
         {
-            /*if (!nofsroot)
+            if (!nofsroot)
             {
                 RegisterLanguage();
-            }*/
-
-
-            //TODO FIX THIS
-            Global.langSelected = "fr_FR";
-            FinalLang = "fr_FR";
-            Keyboard.Init();
+            }
 
             Global.SystemExists = false;
             Global.userLogged = "root";
@@ -257,6 +251,7 @@ namespace Aura_OS.System
             Global.running = true;
         }
 
+        /*
         /// <summary>
         /// Method called to start Aura_OS to run with filesystem and not logged to any user by default
         /// </summary>
@@ -290,8 +285,9 @@ namespace Aura_OS.System
             Console.WriteLine();
 
             Global.Logged = true;
-        }
+        }*/
 
+        /*
         /// <summary>
         /// Installation with progressbar.
         /// </summary>
@@ -387,7 +383,7 @@ namespace Aura_OS.System
             Console.BackgroundColor = ConsoleColor.Black;
 
             Run();
-        }
+        }*/
 
     }
 }
