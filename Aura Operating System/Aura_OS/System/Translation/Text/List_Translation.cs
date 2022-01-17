@@ -95,6 +95,7 @@ namespace Aura_OS.System.Translation
                 case "fr_FR":
                     Console.WriteLine("Nom du PC:                     " + Global.ComputerName);
                     Console.WriteLine("Nom du système d'exploitation: Aura");
+                    Console.WriteLine("Nom du noyau:                  Cosmos");
                     Console.WriteLine("Version du système:            " + Global.version);
                     Console.WriteLine("Révision du système:           " + Global.revision);
                     Console.WriteLine("Date et heure:                 " + Time.MonthString() + "/" + Time.DayString() + "/" + Time.YearString() + ", " + Time.TimeString(true, true, true));
@@ -108,11 +109,13 @@ namespace Aura_OS.System.Translation
                     Console.WriteLine("Mémoire restante:              " + Core.MemoryManager.GetFreeMemory() + "MB");
                     Console.WriteLine("Processeur(s):                 " + CPU.GetCPUBrandString());
                     Console.WriteLine("Mode de la console:            " + AConsole.ConsoleMode.GetConsoleInfo());
+                    Console.WriteLine("Taille de la console:          " + Global.AConsole.Cols + "x" + Global.AConsole.Rows);
                     break;
 
                 case "en_US":
                     Console.WriteLine("Computer name:             " + Global.ComputerName);
                     Console.WriteLine("Operating system name:     Aura");
+                    Console.WriteLine("Kernel name:               Cosmos");
                     Console.WriteLine("Operating system version:  " + Global.version);
                     Console.WriteLine("Operating system revision: " + Global.revision);
                     Console.WriteLine("Date and time:             " + Time.MonthString() + "/" + Time.DayString() + "/" + Time.YearString() + ", " + Time.TimeString(true, true, true));
@@ -126,11 +129,13 @@ namespace Aura_OS.System.Translation
                     Console.WriteLine("Free memory:               " + Core.MemoryManager.GetFreeMemory() + "MB");
                     Console.WriteLine("Processor(s):              " + CPU.GetCPUBrandString());
                     Console.WriteLine("Console mode:              " + AConsole.ConsoleMode.GetConsoleInfo());
+                    Console.WriteLine("Console size:              " + Global.AConsole.Cols + "x" + Global.AConsole.Rows);
                     break;
 
                 case "nl_NL":
                     Console.WriteLine("Naam computer:             " + Global.ComputerName);
                     Console.WriteLine("Naam besturingssysteem:    Aura");
+                    Console.WriteLine("Kernel name:               Cosmos"); //TODO TRAD
                     Console.WriteLine("Versie besturingssysteem:  " + Global.version);
                     Console.WriteLine("Revisie besturingssysteem: " + Global.revision);
                     Console.WriteLine("Datum en tijd:             " + Time.MonthString() + "/" + Time.DayString() + "/" + Time.YearString() + ", " + Time.TimeString(true, true, true));
@@ -144,11 +149,13 @@ namespace Aura_OS.System.Translation
                     Console.WriteLine("Gratis geheugen:           " + Core.MemoryManager.GetFreeMemory() + "MB");
                     Console.WriteLine("Processor(s):              " + CPU.GetCPUBrandString());
                     Console.WriteLine("Consolewijze:              " + AConsole.ConsoleMode.GetConsoleInfo());
+                    Console.WriteLine("Console size:              " + Global.AConsole.Cols + "x" + Global.AConsole.Rows); //TODO TRAD
                     break;
 
                 case "it_IT":
                     Console.WriteLine("Nome del computer:               " + Global.ComputerName);
                     Console.WriteLine("Nome del sistema operativo:      Aura");
+                    Console.WriteLine("Kernel name:                     Cosmos"); //TODO TRAD
                     Console.WriteLine("Versione del sistema operativo:  " + Global.version);
                     Console.WriteLine("Revisione del sistema operativo: " + Global.revision);
                     Console.WriteLine("Data e ora:                      " + Time.MonthString() + "/" + Time.DayString() + "/" + Time.YearString() + ", " + Time.TimeString(true, true, true));
@@ -162,11 +169,13 @@ namespace Aura_OS.System.Translation
                     Console.WriteLine("Memoria libera:                  " + Core.MemoryManager.GetFreeMemory() + "MB");
                     Console.WriteLine("Processor(s):                    " + CPU.GetCPUBrandString());
                     Console.WriteLine("Modalità console:                " + AConsole.ConsoleMode.GetConsoleInfo());
+                    Console.WriteLine("Console size:                    " + Global.AConsole.Cols + "x" + Global.AConsole.Rows); //TODO TRAD
                     break;
                 
                 case "pl_PL":
                     Console.WriteLine("Nazwa Komputera:           " + Global.ComputerName);
                     Console.WriteLine("Nazwa systemu opr.:         Aura");
+                    Console.WriteLine("Kernel name:                Cosmos"); //TODO TRAD
                     Console.WriteLine("Wersja systemu opr.:       " + Global.version);
                     Console.WriteLine("Podwersja systemu opr.:    " + Global.revision);
                     Console.WriteLine("Data i godzina:            " + Time.MonthString() + "/" + Time.DayString() + "/" + Time.YearString() + ", " + Time.TimeString(true, true, true));
@@ -180,6 +189,7 @@ namespace Aura_OS.System.Translation
                     Console.WriteLine("Wolny RAM:                 " + Core.MemoryManager.GetFreeMemory() + "MB");
                     Console.WriteLine("Procesor(y):               " + CPU.GetCPUBrandString());
                     Console.WriteLine("Tryb konsoli:              " + AConsole.ConsoleMode.GetConsoleInfo());
+                    Console.WriteLine("Console size:              " + Global.AConsole.Cols + "x" + Global.AConsole.Rows); //TODO TRAD
                     break;
             }
         }
