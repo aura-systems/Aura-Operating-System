@@ -33,15 +33,15 @@ namespace Aura_OS
 
                 #region Console Encoding Provider
 
-                if (Global.AConsole.Type == System.AConsole.ConsoleType.Graphical && Global.AConsole.Name != "SVGAII")
+                Encoding.RegisterProvider(CosmosEncodingProvider.Instance);
+
+                if (Global.AConsole.Type == System.AConsole.ConsoleType.Graphical)
                 {
-                    Encoding.RegisterProvider(CosmosEncodingProvider.Instance);
                     Console.InputEncoding = Encoding.Unicode;
                     Console.OutputEncoding = Encoding.Unicode;
                 }
-                else if (Global.AConsole.Type == System.AConsole.ConsoleType.Text)
+                else
                 {
-                    Encoding.RegisterProvider(CosmosEncodingProvider.Instance);
                     Console.InputEncoding = Encoding.GetEncoding(437);
                     Console.OutputEncoding = Encoding.GetEncoding(437);
                 }
