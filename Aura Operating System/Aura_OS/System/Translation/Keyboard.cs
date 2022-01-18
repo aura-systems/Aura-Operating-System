@@ -36,6 +36,7 @@ namespace Aura_OS.System.Translation
                     case "it_IT":
                         Sys.KeyboardManager.SetKeyLayout(new Sys.ScanMaps.US_Standard());
                         break;
+
                     case "pl_PL":
                         Sys.KeyboardManager.SetKeyLayout(new Sys.ScanMaps.US_Standard());
                         break;

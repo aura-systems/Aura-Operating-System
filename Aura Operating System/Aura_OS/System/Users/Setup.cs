@@ -193,6 +193,12 @@ namespace Aura_OS.System
                 FinalLang = "it_IT";
                 Keyboard.Init();
             }
+            else if ((language.Equals("pl_PL")) || language.Equals("pl-PL"))
+            {
+                Global.langSelected = "pl_PL";
+                FinalLang = "pl_PL";
+                Keyboard.Init();
+            }
             else
             {
                 RegisterLanguage();
