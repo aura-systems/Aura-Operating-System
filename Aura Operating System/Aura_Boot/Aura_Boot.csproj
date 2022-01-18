@@ -12,7 +12,7 @@
     <DebugEnabled>False</DebugEnabled>
     <DebugMode>Source</DebugMode>
     <IgnoreDebugStubAttribute>False</IgnoreDebugStubAttribute>
-    <ISOFile>bin\Debug\net5.0\Aura_OS.iso</ISOFile>
+    <ISOFile>bin\Debug\net5.0\Aura_Boot.iso</ISOFile>
     <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
     <Profile>VMware</Profile>
     <Description>Use VMware Player or Workstation to deploy and debug.</Description>
@@ -39,7 +39,7 @@
     <ISO_PxeInterface>192.168.0.8</ISO_PxeInterface>
     <ISO_EnableGDB>False</ISO_EnableGDB>
     <ISO_StartCosmosGDB>False</ISO_StartCosmosGDB>
-    <ISO_ISOFile>bin\Debug\net5.0\Aura_OS.iso</ISO_ISOFile>
+    <ISO_ISOFile>bin\Debug\net5.0\Aura_Boot.iso</ISO_ISOFile>
     <VMware_StackCorruptionDetectionEnabled>True</VMware_StackCorruptionDetectionEnabled>
     <VMware_StackCorruptionDetectionLevel>MethodFooters</VMware_StackCorruptionDetectionLevel>
     <VMware_Description>Use VMware Player or Workstation to deploy and debug.</VMware_Description>
@@ -53,7 +53,7 @@
     <VMware_PxeInterface>192.168.0.8</VMware_PxeInterface>
     <VMware_EnableGDB>False</VMware_EnableGDB>
     <VMware_StartCosmosGDB>False</VMware_StartCosmosGDB>
-    <VMware_ISOFile>bin\Debug\net5.0\Aura_OS.iso</VMware_ISOFile>
+    <VMware_ISOFile>bin\Debug\net5.0\Aura_Boot.iso</VMware_ISOFile>
     <VMware_VMwareEdition>Workstation</VMware_VMwareEdition>
     <VMware_CompileVBEMultiboot>False</VMware_CompileVBEMultiboot>
     <VMware_VBEResolution>800x600x32</VMware_VBEResolution>
@@ -72,7 +72,7 @@
     <HyperV_VMwareEdition>Workstation</HyperV_VMwareEdition>
     <HyperV_EnableGDB>False</HyperV_EnableGDB>
     <HyperV_StartCosmosGDB>False</HyperV_StartCosmosGDB>
-    <HyperV_ISOFile>bin\Debug\net5.0\Aura_OS.iso</HyperV_ISOFile>
+    <HyperV_ISOFile>bin\Debug\net5.0\Aura_Boot.iso</HyperV_ISOFile>
     <HyperV_CompileVBEMultiboot>False</HyperV_CompileVBEMultiboot>
     <HyperV_VBEResolution>800x600x32</HyperV_VBEResolution>
     <HyperV_ExtractMapFile>False</HyperV_ExtractMapFile>
@@ -90,7 +90,7 @@
     <Bochs_VMwareEdition>Workstation</Bochs_VMwareEdition>
     <Bochs_EnableGDB>False</Bochs_EnableGDB>
     <Bochs_StartCosmosGDB>False</Bochs_StartCosmosGDB>
-    <Bochs_ISOFile>bin\Debug\net5.0\Aura_OS.iso</Bochs_ISOFile>
+    <Bochs_ISOFile>bin\Debug\net5.0\Aura_Boot.iso</Bochs_ISOFile>
     <Bochs_CompileVBEMultiboot>False</Bochs_CompileVBEMultiboot>
     <Bochs_VBEResolution>800x600x32</Bochs_VBEResolution>
     <Bochs_ExtractMapFile>False</Bochs_ExtractMapFile>

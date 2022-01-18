@@ -21,13 +21,9 @@ namespace Aura_Plugs.HAL
 
         static public void Init(TextScreenBase textScreen, bool InitScrollWheel, bool InitPS2, bool InitNetwork, bool IDEInit)
         {
-            Cosmos.HAL.Global.mDebugger.Send("Before Core.Global.Init");
-            Cosmos.Core.Global.Init();
-
             PCI.Setup();
-            var _SVGAIIDevice = PCI.GetDevice(VendorID.VMWare, DeviceID.SVGAIIAdapter);
 
-            if (VBEAvailable() || (_SVGAIIDevice != null && PCI.Exists(_SVGAIIDevice)))
+            if (VBEAvailable())
             {
                 Aura_OS.Global.AConsole = new Aura_OS.System.AConsole.GraphicConsole();
             }
@@ -36,11 +32,10 @@ namespace Aura_Plugs.HAL
                 Aura_OS.Global.AConsole = new Aura_OS.System.AConsole.VGAConsole(textScreen);
             }
 
-            Aura_OS.Global.AConsole.Write(("[Aura Operating System v" + Aura_OS.Global.version + " - Made by valentinbreiz and geomtech]\n").ToCharArray());
+            Console.WriteLine("[Aura Operating System v" + Aura_OS.Global.version + " - Made by valentinbreiz and geomtech]");
             Aura_OS.System.CustomConsole.WriteLineInfo("Starting Cosmos kernel...");
 
             Aura_OS.System.CustomConsole.WriteLineOK("PCI Devices Scan");
-            Aura_OS.System.CustomConsole.WriteLineOK("Plugged Console");
 
             ACPI.Start();
             Aura_OS.System.CustomConsole.WriteLineOK("ACPI Initialization");
@@ -58,7 +53,6 @@ namespace Aura_Plugs.HAL
             Aura_OS.System.CustomConsole.WriteLineOK("Network Devices Initialization");
 
             Aura_OS.System.CustomConsole.WriteLineOK("Kernel successfully initialized!");
-
         }
 
         /// <summary>
