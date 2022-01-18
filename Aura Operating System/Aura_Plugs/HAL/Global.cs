@@ -27,13 +27,13 @@ namespace Aura_Plugs.HAL
             PCI.Setup();
             var _SVGAIIDevice = PCI.GetDevice(VendorID.VMWare, DeviceID.SVGAIIAdapter);
 
-            if (VBEAvailable() || (_SVGAIIDevice != null && PCI.Exists(_SVGAIIDevice)))
-            {
-                Aura_OS.Global.AConsole = new Aura_OS.System.AConsole.GraphicConsole();
-            }
-            else
+            if (VBE.IsAvailable() == false)
             {
                 Aura_OS.Global.AConsole = new Aura_OS.System.AConsole.VGAConsole(textScreen);
+            }
+            else if (VBEAvailable() || (_SVGAIIDevice != null && PCI.Exists(_SVGAIIDevice)))
+            {
+                Aura_OS.Global.AConsole = new Aura_OS.System.AConsole.GraphicConsole();
             }
 
             Aura_OS.Global.AConsole.Write(("[Aura Operating System v" + Aura_OS.Global.version + " - Made by valentinbreiz and geomtech]\n").ToCharArray());

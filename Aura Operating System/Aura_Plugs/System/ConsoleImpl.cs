@@ -861,10 +861,6 @@ namespace Aura_Plugs
             {
                 GetConsole().Write(aText.ToCharArray());
             }
-            else
-            {
-                GetConsole().Write(aText.ToCharArray());
-            }
         }
 
         public static void Write(uint aInt) => Write(aInt.ToString());
