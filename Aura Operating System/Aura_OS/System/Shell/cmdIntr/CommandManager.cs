@@ -50,10 +50,9 @@ namespace Aura_OS.System.Shell.cmdIntr
             //CMDs.Add(new CommandFtp(new string[] { "ftp" }));
             CMDs.Add(new CommandHttpServer(new string[] { "httpserver" }));
 
-            CMDs.Add(new CommandVersion(new string[] { "version", "ver" }));
+            CMDs.Add(new CommandVersion(new string[] { "version", "ver", "about" }));
             CMDs.Add(new CommandSystemInfo(new string[] { "systeminfo", "sysinfo" }));
             CMDs.Add(new CommandTime(new string[] { "time", "date" }));
-            CMDs.Add(new CommandAbout(new string[] { "about" }));
             CMDs.Add(new CommandHelp(new string[] { "help" }));
 
             CMDs.Add(new CommandLspci(new string[] { "lspci" }));

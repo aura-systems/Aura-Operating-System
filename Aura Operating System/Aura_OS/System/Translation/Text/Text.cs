@@ -6,6 +6,7 @@
 */
 
 using Aura_OS.System.Computer;
+using Cosmos.System.Graphics;
 using System;
 
 namespace Aura_OS.System.Translation
@@ -210,7 +211,18 @@ namespace Aura_OS.System.Translation
                             Console.ForegroundColor = ConsoleColor.White;
                             Console.WriteLine("Aura [version " + Global.version + "-" + Global.revision + "]");
                             Console.WriteLine("créé par Alexy DA CRUZ et Valentin CHARBONNIER.");
-                            Console.WriteLine();
+
+                            for (int i = 0; i < 9; i++)
+                            {
+                                Console.WriteLine();
+                            }
+
+                            var bitmap = new Bitmap(Convert.FromBase64String(Logo.b64AuraLogo));
+                            Global.AConsole.DrawImage((ushort)(Global.AConsole.X * 8), (ushort)((Global.AConsole.Y - 8) * 16), bitmap);
+
+                            var bitmap2 = new Bitmap(Convert.FromBase64String(Logo.b64CosmosLogo));
+                            Global.AConsole.DrawImage((ushort)((Global.AConsole.X + 12)* 8), (ushort)((Global.AConsole.Y - 7) * 16 + 10), bitmap2);
+
                             Console.ForegroundColor = ConsoleColor.Green;
                             Console.WriteLine("Site Web: github.com/aura-systems");
                             Console.ForegroundColor = ConsoleColor.White;
@@ -464,7 +476,18 @@ namespace Aura_OS.System.Translation
                             Console.ForegroundColor = ConsoleColor.White;
                             Console.WriteLine("Aura [version " + Global.version + "-" + Global.revision + "]");
                             Console.WriteLine("Created by Alexy DA CRUZ and Valentin CHARBONNIER.");
-                            Console.WriteLine();
+
+                            for (int i = 0; i < 9; i++)
+                            {
+                                Console.WriteLine();
+                            }
+
+                            var bitmap = new Bitmap(Convert.FromBase64String(Logo.b64AuraLogo));
+                            Global.AConsole.DrawImage((ushort)(Global.AConsole.X * 8), (ushort)((Global.AConsole.Y - 8) * 16), bitmap);
+
+                            var bitmap2 = new Bitmap(Convert.FromBase64String(Logo.b64CosmosLogo));
+                            Global.AConsole.DrawImage((ushort)((Global.AConsole.X + 12) * 8), (ushort)((Global.AConsole.Y - 7) * 16 + 10), bitmap2);
+
                             Console.ForegroundColor = ConsoleColor.Green;
                             Console.WriteLine("Website: github.com/aura-systems");
                             Console.ForegroundColor = ConsoleColor.White;
@@ -715,7 +738,18 @@ namespace Aura_OS.System.Translation
                             Console.ForegroundColor = ConsoleColor.White;
                             Console.WriteLine("Aura [versie " + Global.version + "-" + Global.revision + "]");
                             Console.WriteLine("Ontwikkeld door Alexy DA CRUZ en Valentin CHARBONNIER.");
-                            Console.WriteLine();
+
+                            for (int i = 0; i < 9; i++)
+                            {
+                                Console.WriteLine();
+                            }
+
+                            var bitmap = new Bitmap(Convert.FromBase64String(Logo.b64AuraLogo));
+                            Global.AConsole.DrawImage((ushort)(Global.AConsole.X * 8), (ushort)((Global.AConsole.Y - 8) * 16), bitmap);
+
+                            var bitmap2 = new Bitmap(Convert.FromBase64String(Logo.b64CosmosLogo));
+                            Global.AConsole.DrawImage((ushort)((Global.AConsole.X + 12) * 8), (ushort)((Global.AConsole.Y - 7) * 16 + 10), bitmap2);
+
                             Console.ForegroundColor = ConsoleColor.Green;
                             Console.WriteLine("Website: github.com/aura-systems");
                             Console.ForegroundColor = ConsoleColor.White;
@@ -954,7 +988,18 @@ namespace Aura_OS.System.Translation
                             Console.ForegroundColor = ConsoleColor.White;
                             Console.WriteLine("Aura [Versione " + Global.version + "-" + Global.revision + "]");
                             Console.WriteLine("Creato da Alexy DA CRUZ e Valentin CHARBONNIER.");
-                            Console.WriteLine();
+
+                            for (int i = 0; i < 9; i++)
+                            {
+                                Console.WriteLine();
+                            }
+
+                            var bitmap = new Bitmap(Convert.FromBase64String(Logo.b64AuraLogo));
+                            Global.AConsole.DrawImage((ushort)(Global.AConsole.X * 8), (ushort)((Global.AConsole.Y - 8) * 16), bitmap);
+
+                            var bitmap2 = new Bitmap(Convert.FromBase64String(Logo.b64CosmosLogo));
+                            Global.AConsole.DrawImage((ushort)((Global.AConsole.X + 12) * 8), (ushort)((Global.AConsole.Y - 7) * 16 + 10), bitmap2);
+
                             Console.ForegroundColor = ConsoleColor.Green;
                             Console.WriteLine("Sito web: github.com/aura-systems");
                             Console.ForegroundColor = ConsoleColor.White;
@@ -1208,7 +1253,18 @@ namespace Aura_OS.System.Translation
                             Console.ForegroundColor = ConsoleColor.White;
                             Console.WriteLine("Aura [version " + Global.version + "-" + Global.revision + "]");
                             Console.WriteLine("Stworzona Alexy DA CRUZ i Valentin CHARBONNIER.");
-                            Console.WriteLine();
+
+                            for (int i = 0; i < 9; i++)
+                            {
+                                Console.WriteLine();
+                            }
+
+                            var bitmap = new Bitmap(Convert.FromBase64String(Logo.b64AuraLogo));
+                            Global.AConsole.DrawImage((ushort)(Global.AConsole.X * 8), (ushort)((Global.AConsole.Y - 8) * 16), bitmap);
+
+                            var bitmap2 = new Bitmap(Convert.FromBase64String(Logo.b64CosmosLogo));
+                            Global.AConsole.DrawImage((ushort)((Global.AConsole.X + 12) * 8), (ushort)((Global.AConsole.Y - 7) * 16 + 10), bitmap2);
+
                             Console.ForegroundColor = ConsoleColor.Green;
                             Console.WriteLine("Strona internetowa: github.com/aura-systems");
                             Console.ForegroundColor = ConsoleColor.White;
