@@ -39,7 +39,7 @@ namespace Aura_OS.Apps.System
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                global::System.Console.WriteLine(ex.Message);
             }
 
         }

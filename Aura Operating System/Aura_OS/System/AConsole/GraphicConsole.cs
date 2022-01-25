@@ -27,8 +27,8 @@ namespace Aura_OS.System.AConsole
             mWidth = graphics.canvas.Mode.Columns;
             mHeight = graphics.canvas.Mode.Rows;
 
-            mCols = graphics.canvas.Mode.Columns / graphics.font.Width;
-            mRows = graphics.canvas.Mode.Rows / graphics.font.Height;
+            mCols = graphics.canvas.Mode.Columns / Graphics.Graphics.font.Width;
+            mRows = graphics.canvas.Mode.Rows / Graphics.Graphics.font.Height;
         }
 
         protected int mX = 0;

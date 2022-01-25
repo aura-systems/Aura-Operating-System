@@ -177,6 +177,18 @@ namespace Aura_OS.System.Shell.cmdIntr
                 Cosmos.System.PCSpeaker.Beep((uint)Cosmos.System.Notes.D6, 432);
                 Cosmos.System.PCSpeaker.Beep((uint)Cosmos.System.Notes.E6, 432);
             }));
+
+
+            CMDs.Add(new CommandAction(new string[] { "startx" }, () =>
+            {
+                var gui = new Apps.System.GUI();
+                gui.Init();
+
+                while (true)
+                {
+                    gui.Loop();
+                }
+            }));
         }
 
         /// <summary>
