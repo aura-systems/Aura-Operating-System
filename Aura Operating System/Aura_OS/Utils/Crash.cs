@@ -48,6 +48,8 @@ namespace Aura_OS.System
             Kernel.console.WriteLine();
             Kernel.console.WriteLine("Press any key to reboot...");
 
+            Kernel.canvas.Display();
+
             Console.ReadKey();
 
             Sys.Power.Reboot();
@@ -85,6 +87,8 @@ namespace Aura_OS.System
             Kernel.console.WriteLine(@"If problems continue, you can contact us on our Discord (discord.gg/DFbAtVA) or you can submit your issue on our GitHub repository (github.com/aura-systems/Aura-Operating-System).");
             Kernel.console.WriteLine();
             Kernel.console.WriteLine("Press any key to reboot...");
+
+            Kernel.canvas.Display();
 
             Console.ReadKey();
 
