@@ -40,6 +40,7 @@ namespace Aura_OS.System.Shell.cmdIntr
 
         public void RegisterAllCommands()
         {
+            CMDs.Add(new CommandChangeRes(new string[] { "changeres", "cr" }));
             CMDs.Add(new CommandReboot(new string[] { "reboot", "rb" }));
             CMDs.Add(new CommandShutdown(new string[] { "shutdown", "sd" }));
 
