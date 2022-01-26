@@ -1,3 +1,7 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+using Sys = Cosmos.System;
 using Aura_OS.System.Graphics;
 using Aura_OS.System.Shell.cmdIntr;
 using Cosmos.Core;
@@ -10,15 +14,11 @@ using Cosmos.System.FileSystem.VFS;
 using Cosmos.System.Graphics;
 using Cosmos.System.Graphics.Fonts;
 using Aura_OS.Processing;
-using System;
-using System.Collections.Generic;
 using System.Drawing;
-using System.Text;
-using Sys = Cosmos.System;
 
 namespace Aura_OS
 {
-    public class Kernel : Sys.Kernel
+    public class Kernel
     {
         public static string ComputerName = "aura-pc";
         public static string userLogged = "root";
@@ -53,11 +53,11 @@ namespace Aura_OS
         public static bool Pressed;
         public static int FreeCount = 0;
 
-        int _frames = 0;
+        private static int _frames = 0;
         public static int _fps = 0;
-        int _deltaT = 0;
+        private static int _deltaT = 0;
 
-        protected override void BeforeRun()
+        public static void BeforeRun()
         {
             //Load Localization
             Encoding.RegisterProvider(CosmosEncodingProvider.Instance);
@@ -102,13 +102,10 @@ namespace Aura_OS
             Running = true;
         }
 
-        protected override void Run()
+        public static void Run()
         {
             try
             {
-                if (!Running)
-                    Stop();
-
                 if (_deltaT != RTC.Second)
                 {
                     _fps = _frames;
@@ -151,7 +148,7 @@ namespace Aura_OS
             }
         }
 
-        public void DrawCursor(uint x, uint y)
+        public static void DrawCursor(uint x, uint y)
         {
             canvas.DrawImageAlpha(cursor, (int)x, (int)y);
         }

@@ -8,4 +8,8 @@
         <PackageReference Include="Cosmos.System2" Version="0-*" NoWarn="NU1604" />
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\Aura_OS\Aura_OS.csproj" />
+    </ItemGroup>
+
 </Project>
