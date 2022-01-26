@@ -131,7 +131,8 @@ namespace Aura_OS
 
                 canvas.DrawImage(bootBitmap, (int)(screenWidth / 2 - bootBitmap.Width / 2), (int)(screenHeight / 2 - bootBitmap.Height / 2));
 
-                canvas.DrawString("fps=" + _fps, font, WhitePen, 2, (int)(20));
+                canvas.DrawString("fps=" + _fps, font, WhitePen, 2, (int)screenHeight - (font.Height * 2));
+                canvas.DrawString("Aura Operating System [" + Version + "." + Revision + "]", font, WhitePen, 2, (int)screenHeight - font.Height);      
 
                 foreach (App app in apps)
                     app.Update();
@@ -144,7 +145,7 @@ namespace Aura_OS
             }
             catch (Exception ex)
             {
-                System.Crash.StopKernel(ex);
+                System.Crash.WriteException(ex);
             }
         }
 
