@@ -57,6 +57,20 @@ namespace Aura_OS.System.Shell.cmdIntr
             CMDs.Add(new CommandWget(new string[] { "wget" }));
             //CMDs.Add(new CommandFtp(new string[] { "ftp" }));
             CMDs.Add(new CommandHttpServer(new string[] { "httpserver" }));
+
+            CMDs.Add(new CommandAction(new string[] { "crash" }, () =>
+            {
+                throw new Exception("Exception test");
+            }));
+            CMDs.Add(new CommandAction(new string[] { "crashn" }, () =>
+            {
+                string[] test =
+                {
+                    "test1",
+                    "tert2"
+                };
+                test[2] = "test3"; //Should make a Null reference exception
+            }));
         }
 
         /// <summary>

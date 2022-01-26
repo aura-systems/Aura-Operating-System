@@ -23,6 +23,9 @@ namespace Aura_OS
         public static string ComputerName = "aura-pc";
         public static string userLogged = "root";
         public static string userLevelLogged = "admin";
+        public static bool Running = false;
+        public static string Version = "0.5.3";
+        public static string Revision = VersionInfo.revision;
 
         //FILES
         public static Bitmap programlogo;
@@ -95,45 +98,57 @@ namespace Aura_OS
             //START MOUSE
             MouseManager.ScreenWidth = screenWidth;
             MouseManager.ScreenHeight = screenHeight;
+
+            Running = true;
         }
 
         protected override void Run()
         {
-            if (_deltaT != RTC.Second)
+            try
             {
-                _fps = _frames;
-                _frames = 0;
-                _deltaT = RTC.Second;
+                if (!Running)
+                    Stop();
+
+                if (_deltaT != RTC.Second)
+                {
+                    _fps = _frames;
+                    _frames = 0;
+                    _deltaT = RTC.Second;
+                }
+
+                _frames++;
+
+                FreeCount = Heap.Collect();
+
+                switch (MouseManager.MouseState)
+                {
+                    case MouseState.Left:
+                        Pressed = true;
+                        break;
+                    case MouseState.None:
+                        Pressed = false;
+                        break;
+                }
+
+                canvas.Clear(0x000000);
+
+                canvas.DrawImage(bootBitmap, (int)(screenWidth / 2 - bootBitmap.Width / 2), (int)(screenHeight / 2 - bootBitmap.Height / 2));
+
+                canvas.DrawString("fps=" + _fps, font, WhitePen, 2, (int)(20));
+
+                foreach (App app in apps)
+                    app.Update();
+
+                dock.Update();
+
+                DrawCursor(MouseManager.X, MouseManager.Y);
+
+                canvas.Display();
             }
-
-            _frames++;
-
-            FreeCount = Heap.Collect();
-
-            switch (MouseManager.MouseState)
+            catch (Exception ex)
             {
-                case MouseState.Left:
-                    Pressed = true;
-                    break;
-                case MouseState.None:
-                    Pressed = false;
-                    break;
+                System.Crash.StopKernel(ex);
             }
-
-            canvas.Clear(0x000000);
-
-            canvas.DrawImage(bootBitmap, (int)(screenWidth / 2 - bootBitmap.Width / 2), (int)(screenHeight / 2 - bootBitmap.Height / 2));
-
-            canvas.DrawString("fps=" + _fps, font, WhitePen, 2, (int)(20));
-
-            foreach (App app in apps)
-                app.Update();
-
-            dock.Update();
-
-            DrawCursor(MouseManager.X, MouseManager.Y);
-
-            canvas.Display();
         }
 
         public void DrawCursor(uint x, uint y)
