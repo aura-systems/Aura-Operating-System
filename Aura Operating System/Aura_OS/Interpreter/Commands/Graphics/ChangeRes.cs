@@ -11,6 +11,7 @@ using Cosmos.System.Network.IPv4;
 using Cosmos.System.Network.Config;
 using Aura_OS;
 using Cosmos.System.Graphics;
+using Cosmos.System;
 
 namespace Aura_OS.System.Shell.cmdIntr.Network
 {
@@ -19,7 +20,7 @@ namespace Aura_OS.System.Shell.cmdIntr.Network
         /// <summary>
         /// Empty constructor.
         /// </summary>
-        public CommandChangeRes(string[] commandvalues) : base(commandvalues, CommandType.Network)
+        public CommandChangeRes(string[] commandvalues) : base(commandvalues)
         {
             Description = "to change screen resolution";
         }
@@ -47,6 +48,9 @@ namespace Aura_OS.System.Shell.cmdIntr.Network
 
             Kernel.screenWidth = (uint)width;
             Kernel.screenHeight = (uint)height;
+
+            MouseManager.ScreenWidth = (uint)width;
+            MouseManager.ScreenHeight = (uint)height;
 
             Kernel.canvas = FullScreenCanvas.GetFullScreenCanvas(new Mode(width, height, ColorDepth.ColorDepth32));
 
