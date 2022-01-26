@@ -41,6 +41,7 @@ namespace Aura_OS.Processing
         public virtual void Initialize() { if (Initialized) { return; } Initialized = true; }
         public virtual void Start() { if (Running) { return; } Running = true; }
         public virtual void Stop() { if (!Running) { return; } Running = false; }
+        public virtual void Update() { }
 
         public void SetName(string name) { this.Name = name; }
         public void SetID(uint id) { this.ID = id; }

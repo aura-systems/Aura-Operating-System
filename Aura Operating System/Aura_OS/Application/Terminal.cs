@@ -105,7 +105,7 @@ namespace Aura_OS
             BeforeCommand();
         }
 
-        public override void _Update()
+        public override void UpdateApp()
         {
             KeyEvent keyEvent = null;
 
@@ -266,13 +266,13 @@ namespace Aura_OS
             Write(UserLevel.TypeUser);
 
             Foreground = ConsoleColor.Yellow;
-            Write("root");
+            Write(Kernel.userLogged);
 
             Foreground = ConsoleColor.DarkGray;
             Write("@");
 
             Foreground = ConsoleColor.Blue;
-            Write("aura-pc");
+            Write(Kernel.ComputerName);
 
             Foreground = ConsoleColor.Gray;
             Write("> ");

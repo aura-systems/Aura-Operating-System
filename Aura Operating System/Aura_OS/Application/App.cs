@@ -35,10 +35,10 @@ namespace Aura_OS
 
         public App(string name, uint width, uint height, uint x = 0, uint y = 0) : base(name, ProcessType.Program)
         {
-            this.baseWidth = width;
-            this.baseHeight = height;
-            this.baseX = x;
-            this.baseY = y;
+            baseWidth = width;
+            baseHeight = height;
+            baseX = x;
+            baseY = y;
 
             this.x = x + 2;
             this.y = y + MoveBarHeight;
@@ -48,6 +48,8 @@ namespace Aura_OS
             this.name = name;
         }
 
+        public virtual void UpdateApp() { }
+
         public override void Initialize()
         {
             base.Initialize();
@@ -56,7 +58,7 @@ namespace Aura_OS
             Kernel.ProcessManager.Start(this);
         }
 
-        public void Update()
+        public override void Update()
         {
             if (_i != 0)
             {
@@ -73,31 +75,41 @@ namespace Aura_OS
                 if (MouseManager.X > dockX && MouseManager.X < dockX + dockWidth && MouseManager.Y > dockY && MouseManager.Y < dockY + dockHeight)
                 {
                     visible = !visible;
+
+                    if (visible)
+                    {
+                        Start();
+                    }
+                    else
+                    {
+                        Stop();
+                    }
+
                     _i = 60;
                 }
             }
 
-            if (Kernel.Pressed)
-            {
-                if (MouseManager.X > baseX && MouseManager.X < baseX + baseWidth && MouseManager.Y > baseY && MouseManager.Y < baseY + MoveBarHeight)
-                {
-                    this.pressed = true;
-                    if (!lck)
-                    {
-                        px = (int)((int)MouseManager.X - this.baseX);
-                        py = (int)((int)MouseManager.Y - this.baseY);
-                        lck = true;
-                    }
-                }
-            }
-            else
-            {
-                pressed = false;
-                lck = false;
-            }
-
             if (visible)
             {
+                if (Kernel.Pressed)
+                {
+                    if (MouseManager.X > baseX && MouseManager.X < baseX + baseWidth && MouseManager.Y > baseY && MouseManager.Y < baseY + MoveBarHeight)
+                    {
+                        this.pressed = true;
+                        if (!lck)
+                        {
+                            px = (int)((int)MouseManager.X - this.baseX);
+                            py = (int)((int)MouseManager.Y - this.baseY);
+                            lck = true;
+                        }
+                    }
+                }
+                else
+                {
+                    pressed = false;
+                    lck = false;
+                }
+
                 if (pressed)
                 {
                     baseX = (uint)(MouseManager.X - px);
@@ -112,12 +124,8 @@ namespace Aura_OS
 
                 Kernel.canvas.DrawString(name, Kernel.font, Kernel.BlackPen, (int)(baseX + 2), (int)(baseY + 2));
 
-                _Update();
+                UpdateApp();
             }
-        }
-
-        public virtual void _Update()
-        {
         }
     }
 }

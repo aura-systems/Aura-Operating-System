@@ -12,7 +12,7 @@ namespace Aura_OS
 
         }
 
-        public override void _Update()
+        public override void UpdateApp()
         {
             Kernel.canvas.DrawString("Available RAM               =" + GCImplementation.GetAvailableRAM(), Kernel.font, Kernel.BlackPen, (int)x, (int)y);
             Kernel.canvas.DrawString("Used RAM                    =" + GCImplementation.GetUsedRAM(), Kernel.font, Kernel.BlackPen, (int)x, (int)(y + Kernel.font.Height));
