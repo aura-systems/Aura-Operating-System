@@ -1,3 +1,4 @@
+using Aura_OS.System;
 using Cosmos.Core;
 using Cosmos.Core.Memory;
 using Cosmos.HAL;
@@ -24,7 +25,7 @@ namespace Aura_OS
             uint strY = (20 - 16) / 2;
             Kernel.canvas.DrawString("PowerOFF", Kernel.font, Kernel.WhitePen, (int)(strX), (int)(strY));
             
-            string time = $"{DateTime.Now.Hour}:{DateTime.Now.Minute}";
+            string time = Time.TimeString(true, true, true);
             Kernel.canvas.DrawString(time, Kernel.font, Kernel.WhitePen, (int)(Kernel.screenWidth - strX - time.Length * Kernel.font.Width), (int)(strY));
             if (Kernel.Pressed)
             {

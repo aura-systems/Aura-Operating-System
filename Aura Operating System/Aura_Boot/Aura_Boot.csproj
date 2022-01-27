@@ -3,25 +3,68 @@
     <PropertyGroup>
         <TargetFramework>net5.0</TargetFramework>
         <SelfContained>True</SelfContained>
+        <Profile>VMware</Profile>
         <BinFormat>ELF</BinFormat>
-        <StackCorruptionDetectionEnabled>False</StackCorruptionDetectionEnabled>
+        <StackCorruptionDetectionEnabled>True</StackCorruptionDetectionEnabled>
         <StackCorruptionDetectionLevel>MethodFooters</StackCorruptionDetectionLevel>
         <Deployment>ISO</Deployment>
         <DebugEnabled>False</DebugEnabled>
         <DebugMode>Source</DebugMode>
         <IgnoreDebugStubAttribute>False</IgnoreDebugStubAttribute>
-        <VMwareEdition>Workstation</VMwareEdition>
-    </PropertyGroup>
-
-    <PropertyGroup>
-        <EnableGDB>False</EnableGDB>
-        <StartCosmosGDB>False</StartCosmosGDB>
-        <VisualStudioDebugPort>Pipe: Cosmos\Serial</VisualStudioDebugPort>
-        <CosmosDebugPort>Serial: COM1</CosmosDebugPort>
+        <ISOFile>bin\Debug\net5.0\Aura_Boot.iso</ISOFile>
+        <CompileVBEMultiboot>False</CompileVBEMultiboot>
+        <ExtractMapFile>False</ExtractMapFile>
+        <PxeInterface>10.204.128.41</PxeInterface>
         <Launch>VMware</Launch>
-        <Profile>VMware</Profile>
+        <VisualStudioDebugPort>Pipe: Cosmos\Serial</VisualStudioDebugPort>
+        <EnableBochsDebug>True</EnableBochsDebug>
+        <StartBochsDebugGui>True</StartBochsDebugGui>
+        <Bochs_StackCorruptionDetectionEnabled>True</Bochs_StackCorruptionDetectionEnabled>
+        <Bochs_StackCorruptionDetectionLevel>MethodFooters</Bochs_StackCorruptionDetectionLevel>
+        <Bochs_Deployment>ISO</Bochs_Deployment>
+        <Bochs_Launch>Bochs</Bochs_Launch>
+        <Bochs_DebugEnabled>False</Bochs_DebugEnabled>
+        <Bochs_DebugMode>Source</Bochs_DebugMode>
+        <Bochs_IgnoreDebugStubAttribute>False</Bochs_IgnoreDebugStubAttribute>
+        <Bochs_VisualStudioDebugPort>Pipe: Cosmos\Serial</Bochs_VisualStudioDebugPort>
+        <Bochs_PxeInterface>10.204.128.41</Bochs_PxeInterface>
+        <Bochs_EnableBochsDebug>True</Bochs_EnableBochsDebug>
+        <Bochs_StartBochsDebugGui>True</Bochs_StartBochsDebugGui>
+        <Bochs_ISOFile>bin\Debug\net5.0\Aura_Boot.iso</Bochs_ISOFile>
+        <Bochs_CompileVBEMultiboot>False</Bochs_CompileVBEMultiboot>
+        <Bochs_ExtractMapFile>False</Bochs_ExtractMapFile>
         <Description>Use VMware Player or Workstation to deploy and debug.</Description>
-        <PxeInterface>192.168.0.8</PxeInterface>
+        <VMware_StackCorruptionDetectionEnabled>True</VMware_StackCorruptionDetectionEnabled>
+        <VMware_StackCorruptionDetectionLevel>MethodFooters</VMware_StackCorruptionDetectionLevel>
+        <VMware_Description>Use VMware Player or Workstation to deploy and debug.</VMware_Description>
+        <VMware_Deployment>ISO</VMware_Deployment>
+        <VMware_Launch>VMware</VMware_Launch>
+        <VMware_DebugEnabled>False</VMware_DebugEnabled>
+        <VMware_DebugMode>Source</VMware_DebugMode>
+        <VMware_IgnoreDebugStubAttribute>False</VMware_IgnoreDebugStubAttribute>
+        <VMware_VisualStudioDebugPort>Pipe: Cosmos\Serial</VMware_VisualStudioDebugPort>
+        <VMware_PxeInterface>10.204.128.41</VMware_PxeInterface>
+        <VMware_EnableBochsDebug>True</VMware_EnableBochsDebug>
+        <VMware_StartBochsDebugGui>True</VMware_StartBochsDebugGui>
+        <VMware_ISOFile>bin\Debug\net5.0\Aura_Boot.iso</VMware_ISOFile>
+        <VMware_CompileVBEMultiboot>False</VMware_CompileVBEMultiboot>
+        <VMware_ExtractMapFile>False</VMware_ExtractMapFile>
+        <Bochs_Description>Use Bochs emulator to deploy and debug.</Bochs_Description>
+        <ISO_StackCorruptionDetectionEnabled>True</ISO_StackCorruptionDetectionEnabled>
+        <ISO_StackCorruptionDetectionLevel>MethodFooters</ISO_StackCorruptionDetectionLevel>
+        <ISO_Description>Creates a bootable ISO image which can be burned to a DVD. After running the selected project, an explorer window will open containing the ISO file. The ISO file can then be burned to a CD or DVD and used to boot a physical or virtual system.</ISO_Description>
+        <ISO_Deployment>ISO</ISO_Deployment>
+        <ISO_Launch>None</ISO_Launch>
+        <ISO_DebugEnabled>True</ISO_DebugEnabled>
+        <ISO_DebugMode>Source</ISO_DebugMode>
+        <ISO_IgnoreDebugStubAttribute>False</ISO_IgnoreDebugStubAttribute>
+        <ISO_VisualStudioDebugPort>Pipe: Cosmos\Serial</ISO_VisualStudioDebugPort>
+        <ISO_PxeInterface>10.204.128.41</ISO_PxeInterface>
+        <ISO_EnableBochsDebug>True</ISO_EnableBochsDebug>
+        <ISO_StartBochsDebugGui>True</ISO_StartBochsDebugGui>
+        <ISO_ISOFile>bin\Debug\net5.0\Aura_Boot.iso</ISO_ISOFile>
+        <ISO_CompileVBEMultiboot>False</ISO_CompileVBEMultiboot>
+        <ISO_ExtractMapFile>False</ISO_ExtractMapFile>
     </PropertyGroup>
 
     <ItemGroup>

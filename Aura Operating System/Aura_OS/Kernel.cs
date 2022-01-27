@@ -26,6 +26,7 @@ namespace Aura_OS
         public static bool Running = false;
         public static string Version = "0.5.3";
         public static string Revision = VersionInfo.revision;
+        public static string langSelected = "en_US";
 
         //FILES
         public static Bitmap programlogo;
@@ -132,7 +133,9 @@ namespace Aura_OS
                 canvas.DrawImage(bootBitmap, (int)(screenWidth / 2 - bootBitmap.Width / 2), (int)(screenHeight / 2 - bootBitmap.Height / 2));
 
                 canvas.DrawString("fps=" + _fps, font, WhitePen, 2, (int)screenHeight - (font.Height * 2));
-                canvas.DrawString("Aura Operating System [" + Version + "." + Revision + "]", font, WhitePen, 2, (int)screenHeight - font.Height);      
+                canvas.DrawString("Aura Operating System [" + Version + "." + Revision + "]", font, WhitePen, 2, (int)screenHeight - font.Height);
+
+                //Global.mDebugger.Send("");
 
                 foreach (App app in apps)
                     app.Update();

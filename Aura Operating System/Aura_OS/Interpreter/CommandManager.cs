@@ -50,6 +50,7 @@ namespace Aura_OS.System.Shell.cmdIntr
             CMDs.Add(new CommandHelp(new string[] { "help" }));
 
             CMDs.Add(new CommandLsprocess(new string[] { "lsprocess" }));
+            CMDs.Add(new CommandLspci(new string[] { "lspci" }));
 
             CMDs.Add(new CommandIPConfig(new string[] { "ipconfig", "ifconfig", "netconf" }));
             CMDs.Add(new CommandPing(new string[] { "ping" }));
