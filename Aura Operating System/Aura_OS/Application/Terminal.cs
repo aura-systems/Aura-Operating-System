@@ -367,6 +367,9 @@ namespace Aura_OS
             Foreground = ConsoleColor.Gray;
             Write("> ");
 
+            Foreground = ConsoleColor.DarkGray;
+            Write(Kernel.CurrentDirectory + "~ ");
+
             Foreground = ConsoleColor.White;
         }
 

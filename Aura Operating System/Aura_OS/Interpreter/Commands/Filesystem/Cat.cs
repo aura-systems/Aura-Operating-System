@@ -34,7 +34,7 @@ namespace Aura_OS.Interpreter.Commands.Filesystem
                 {
                     foreach (string line in File.ReadAllLines(Kernel.CurrentDirectory + file))
                     {
-                        Console.WriteLine(line);
+                        Kernel.console.WriteLine(line);
                     }
                 }
                 else
@@ -55,8 +55,8 @@ namespace Aura_OS.Interpreter.Commands.Filesystem
         /// </summary>
         public override void PrintHelp()
         {
-            Console.WriteLine("Usage:");
-            Console.WriteLine(" - cat {file_path}");
+            Kernel.console.WriteLine("Usage:");
+            Kernel.console.WriteLine(" - cat {file_path}");
         }
     }
 }
