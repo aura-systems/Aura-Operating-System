@@ -86,7 +86,7 @@ namespace Aura_OS
             CommandManager = new CommandManager();
             CommandManager.Initialize();
 
-            console = new Terminal(500, 400, 40, 40);
+            console = new Terminal(600, 500, 40, 40);
             console.Initialize();
 
             systeminfo = new SystemInfo(400, 300, 40, 40);

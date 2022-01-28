@@ -5,6 +5,7 @@ using Cosmos.System.Graphics;
 using System;
 using System.Drawing;
 using Aura_OS.System.Graphics;
+using System.Collections.Generic;
 
 namespace Aura_OS
 {
@@ -26,6 +27,9 @@ namespace Aura_OS
         private static uint[] Pallete = new uint[16];
 
         Cell[][] Text;
+
+        List<string> Commands = new List<string>();
+        private int CommandIndex = 0;
         public string Command = string.Empty;
 
         protected int mX = 0;
@@ -134,8 +138,6 @@ namespace Aura_OS
             mX = 0;
             mY = 0;
 
-            visible = true;
-
             Command = string.Empty;
 
             BeforeCommand();
@@ -150,9 +152,24 @@ namespace Aura_OS
                 switch (keyEvent.Key)
                 {
                     case ConsoleKeyEx.Enter:
-                        Kernel.CommandManager.Execute(Command);
+                        if (Command.Length > 0)
+                        {
+                            mX -= Command.Length;
 
-                        Command = string.Empty;
+                            WriteLine(Command);
+
+                            Kernel.CommandManager.Execute(Command);
+
+                            Commands.Add(Command);
+                            CommandIndex = Commands.Count - 1;
+
+                            Command = string.Empty;
+                        }
+                        else
+                        {
+                            WriteLine();
+                            WriteLine();
+                        }
 
                         BeforeCommand();
                         break;
@@ -160,12 +177,31 @@ namespace Aura_OS
                         if (Command.Length > 0)
                         {
                             Command = Command.Remove(Command.Length - 1);
+                            mX--;
+                        }
+                        break;
+                    case ConsoleKeyEx.UpArrow:
+                        if (CommandIndex > 0)
+                        {
+                            mX -= Command.Length;
+                            Command = Commands[CommandIndex];
+                            mX += Command.Length;
+                        }
+                        break;
+                    case ConsoleKeyEx.DownArrow:
+                        if (CommandIndex < Commands.Count - 1)
+                        {
+                            CommandIndex++;
+                            mX -= Command.Length;
+                            Command = Commands[CommandIndex];
+                            mX += Command.Length;
                         }
                         break;
                     default:
-                        if ((char.IsLetterOrDigit(keyEvent.KeyChar) || char.IsPunctuation(keyEvent.KeyChar) || char.IsSymbol(keyEvent.KeyChar) || (keyEvent.KeyChar == ' ')))
+                        if (char.IsLetterOrDigit(keyEvent.KeyChar) || char.IsPunctuation(keyEvent.KeyChar) || char.IsSymbol(keyEvent.KeyChar) || (keyEvent.KeyChar == ' '))
                         {
                             Command += keyEvent.KeyChar;
+                            mX++;
                         }
                         break;
                 }
@@ -191,9 +227,14 @@ namespace Aura_OS
                 }
             }
 
-            for (int i = 0; i < Command.Length; i++)
+            if (Command.Length > 0)
             {
-                Graphics.WriteByte((char)Command[i], (int)Kernel.console.x + ((X + i) * Kernel.font.Width), (int)Kernel.console.y + Y * Kernel.font.Height, ForegroundPen);
+                int baseX = mX - Command.Length;
+
+                for (int i = 0; i < Command.Length; i++)
+                {
+                    Graphics.WriteByte(Command[i], (int)Kernel.console.x + ((baseX + i) * Kernel.font.Width), (int)Kernel.console.y + mY * Kernel.font.Height, ForegroundPen);
+                }
             }
         }
 
@@ -210,7 +251,7 @@ namespace Aura_OS
         {
             ClearText();
             mX = 0;
-            mY = 0;
+            mY = -1;
         }
 
         public void DrawCursor()
@@ -227,8 +268,19 @@ namespace Aura_OS
             mX = 0;
             if (mY == mRows)
             {
+                Scroll();
                 mY--;
             }
+        }
+
+        private void Scroll()
+        {
+            for (int i = 0; i < mRows - 1; i++)
+            {
+                Text[i] = Text[i + 1];
+            }
+
+            Text[mRows - 1] = new Cell[mCols];
         }
 
         private void DoCarriageReturn()

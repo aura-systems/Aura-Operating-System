@@ -36,6 +36,7 @@ namespace Aura_OS.Processing
             this.Name = name;
             this.Type = type;
             this.ID = 0;
+            Running = false;
         }
 
         public virtual void Initialize() { if (Initialized) { return; } Initialized = true; }

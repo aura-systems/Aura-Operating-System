@@ -55,7 +55,6 @@ namespace Aura_OS
             base.Initialize();
 
             Kernel.ProcessManager.Register(this);
-            Kernel.ProcessManager.Start(this);
         }
 
         public override void Update()
@@ -78,7 +77,7 @@ namespace Aura_OS
 
                     if (visible)
                     {
-                        Start();
+                        Kernel.ProcessManager.Start(this);
                     }
                     else
                     {
@@ -95,6 +94,10 @@ namespace Aura_OS
                 {
                     if (MouseManager.X > baseX && MouseManager.X < baseX + baseWidth && MouseManager.Y > baseY && MouseManager.Y < baseY + MoveBarHeight)
                     {
+                        //Focus Windows
+                        Kernel.apps.Add(this);
+                        Kernel.apps.Remove(this);
+
                         this.pressed = true;
                         if (!lck)
                         {
