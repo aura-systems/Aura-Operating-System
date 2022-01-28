@@ -19,6 +19,7 @@ using System.Text;
 using Aura_OS.System.Shell.cmdIntr.SystemInfomation;
 using Aura_OS.System.Shell.cmdIntr.FileSystem;
 using Aura_OS.Interpreter.Commands.Util;
+using Aura_OS.Interpreter.Commands.Filesystem;
 
 namespace Aura_OS.System.Shell.cmdIntr
 {
@@ -70,18 +71,19 @@ namespace Aura_OS.System.Shell.cmdIntr
             //CMDs.Add(new CommandCrash(new string[] { "crash" }));
 
             CMDs.Add(new CommandVol(new string[] { "vol" }));
-            /*CMDs.Add(new CommandDir(new string[] { "dir", "ls", "l" }));
-            CMDs.Add(new CommandMkdir(new string[] { "mkdir", "md" }));
-            CMDs.Add(new CommandRmdir(new string[] { "rmdir", "rmd" }));
+            CMDs.Add(new CommandDir(new string[] { "dir", "ls", "l" }));
+            //CMDs.Add(new CommandMkdir(new string[] { "mkdir", "md" }));
+            //CMDs.Add(new CommandRmdir(new string[] { "rmdir", "rmd" }));
             CMDs.Add(new CommandCat(new string[] { "cat" }));
             CMDs.Add(new CommandCD(new string[] { "cd" }));
-            CMDs.Add(new CommandChangeVol(new string[] { "chgvol", "cv" }));
+            /*CMDs.Add(new CommandChangeVol(new string[] { "chgvol", "cv" }));
             CMDs.Add(new CommandMkfil(new string[] { "touch", "mkfil", "mf" }));
             CMDs.Add(new CommandRmfil(new string[] { "rmfil", "rmf" }));
             CMDs.Add(new CommandHex(new string[] { "hex" }));
-            CMDs.Add(new CommandTree(new string[] { "tree" }));
+            CMDs.Add(new CommandTree(new string[] { "tree" }));*/
             CMDs.Add(new CommandRun(new string[] { "run" }));
 
+            /*
             CMDs.Add(new CommandPCName(new string[] { "pcn" }));
 
             CMDs.Add(new CommandMIV(new string[] { "miv", "edit" }));*/
