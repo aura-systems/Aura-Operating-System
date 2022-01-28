@@ -17,6 +17,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using Aura_OS.System.Shell.cmdIntr.SystemInfomation;
+using Aura_OS.System.Shell.cmdIntr.FileSystem;
+using Aura_OS.Interpreter.Commands.Util;
 
 namespace Aura_OS.System.Shell.cmdIntr
 {
@@ -46,8 +48,8 @@ namespace Aura_OS.System.Shell.cmdIntr
 
             CMDs.Add(new CommandClear(new string[] { "clear", "clr" }));
             CMDs.Add(new CommandKeyboardMap(new string[] { "setkeyboardmap", "setkeyboard" }));
-            //CMDs.Add(new CommandEnv(new string[] { "export", "set" }));
-            //CMDs.Add(new CommandEcho(new string[] { "echo" }));
+            CMDs.Add(new CommandEnv(new string[] { "export", "set" }));
+            CMDs.Add(new CommandEcho(new string[] { "echo" }));
 
             CMDs.Add(new CommandIPConfig(new string[] { "ipconfig", "ifconfig", "netconf" }));
             CMDs.Add(new CommandPing(new string[] { "ping" }));
@@ -67,8 +69,8 @@ namespace Aura_OS.System.Shell.cmdIntr
             CMDs.Add(new CommandLspci(new string[] { "lspci" }));
             //CMDs.Add(new CommandCrash(new string[] { "crash" }));
 
-            /*CMDs.Add(new CommandVol(new string[] { "vol" }));
-            CMDs.Add(new CommandDir(new string[] { "dir", "ls", "l" }));
+            CMDs.Add(new CommandVol(new string[] { "vol" }));
+            /*CMDs.Add(new CommandDir(new string[] { "dir", "ls", "l" }));
             CMDs.Add(new CommandMkdir(new string[] { "mkdir", "md" }));
             CMDs.Add(new CommandRmdir(new string[] { "rmdir", "rmd" }));
             CMDs.Add(new CommandCat(new string[] { "cat" }));

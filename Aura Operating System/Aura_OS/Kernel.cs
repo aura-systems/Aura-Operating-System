@@ -30,6 +30,9 @@ namespace Aura_OS
         public static string langSelected = "en_US";
         public static string BootTime = "01/01/1970";
 
+        public static string CurrentVolume = @"0:\";
+        public static string CurrentDirectory = @"0:\";
+
         //FILES
         public static Bitmap programlogo;
         public static Bitmap bootBitmap;
@@ -60,8 +63,14 @@ namespace Aura_OS
         public static int _fps = 0;
         private static int _deltaT = 0;
 
+        public static CosmosVFS VirtualFileSystem = new CosmosVFS();
+        public static Dictionary<string, string> EnvironmentVariables = new Dictionary<string, string>();
+
         public static void BeforeRun()
         {
+            //Start Filesystem
+            VFSManager.RegisterVFS(VirtualFileSystem);
+
             //Load Localization
             Encoding.RegisterProvider(CosmosEncodingProvider.Instance);
             KeyboardManager.SetKeyLayout(new Sys.ScanMaps.FR_Standard());
