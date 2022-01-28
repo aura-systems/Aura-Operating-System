@@ -11,7 +11,7 @@ namespace Aura_OS
     public struct Cell
     {
         public char ?Char;
-        public uint ?Colour;
+        public Pen ?Colour;
     }
 
     public class Terminal : App
@@ -25,7 +25,7 @@ namespace Aura_OS
 
         private static uint[] Pallete = new uint[16];
 
-        Cell[] Text;
+        Cell[][] Text;
         public string Command = string.Empty;
 
         protected int mX = 0;
@@ -127,7 +127,7 @@ namespace Aura_OS
             mCols = mWidth / Kernel.font.Width - 1;
             mRows = mHeight / Kernel.font.Height - 2;
 
-            Text = new Cell[mCols * mRows];
+            ClearText();
 
             CursorVisible = true;
 
@@ -135,6 +135,8 @@ namespace Aura_OS
             mY = 0;
 
             visible = true;
+
+            Command = string.Empty;
 
             BeforeCommand();
         }
@@ -178,32 +180,35 @@ namespace Aura_OS
 
         void DrawTerminal()
         {
-            int DrawX = 0;
-            int DrawY = 0;
-
-            for (int i = 0; i < Text.Length; i++)
+            for (int i = 0; i < mRows; i++)
             {
-                if (Text[i].Char == null)
-                    continue;
-
-                Graphics.WriteByte((char)Text[i].Char, (int)Kernel.console.x + DrawX * Kernel.font.Width, (int)Kernel.console.y + DrawY * Kernel.font.Height);
-
-                DrawX++;
-                if (DrawX == mCols)
+                for (int j = 0; j < mCols; j++)
                 {
-                    DrawY++;
-                    DrawX = 0;
-                    if (DrawY == mRows)
-                    {
-                        DrawY--;
-                    }
+                    if (Text[i][j].Char == null || Text[i][j].Char == '\n')
+                        continue;
+
+                    Graphics.WriteByte((char)Text[i][j].Char, (int)Kernel.console.x + j * Kernel.font.Width, (int)Kernel.console.y + i * Kernel.font.Height, Text[i][j].Colour);
                 }
+            }
+
+            for (int i = 0; i < Command.Length; i++)
+            {
+                Graphics.WriteByte((char)Command[i], (int)Kernel.console.x + ((X + i) * Kernel.font.Width), (int)Kernel.console.y + Y * Kernel.font.Height, ForegroundPen);
+            }
+        }
+
+        private void ClearText()
+        {
+            Text = new Cell[mRows][];
+            for (int i = 0; i < mRows; i++)
+            {
+                Text[i] = new Cell[mCols];
             }
         }
 
         public void Clear()
         {
-            Text = new Cell[mRows * mCols];
+            ClearText();
             mX = 0;
             mY = 0;
         }
@@ -231,22 +236,6 @@ namespace Aura_OS
             mX = 0;
         }
 
-        /// <summary>
-        /// Write char to the console.
-        /// </summary>
-        /// <param name="aChar">A char to write</param>
-        public void Write(char aChar)
-        {
-            if (aChar == '\0')
-                return;
-            Text[X * mCols + Y] = new Cell() { Char = aChar, Colour = Pallete[foreground] };
-            mX++;
-            if (mX == mCols)
-            {
-                DoLineFeed();
-            }
-        }
-
         private void DoTab()
         {
             Write(Space);
@@ -255,9 +244,18 @@ namespace Aura_OS
             Write(Space);
         }
 
-        public void DrawImage(ushort X, ushort Y, Bitmap image)
+        /// <summary>
+        /// Write char to the console.
+        /// </summary>
+        /// <param name="aChar">A char to write</param>
+        public void Write(char aChar)
         {
-            //graphics.canvas.DrawImage(image, X, Y);
+            Text[mY][mX] = new Cell() { Char = aChar, Colour = ForegroundPen };
+            mX++;
+            if (mX == mCols)
+            {
+                DoLineFeed();
+            }
         }
 
         public void Write(uint aInt) => Write(aInt.ToString());

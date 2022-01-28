@@ -30,7 +30,7 @@ namespace Aura_OS.System.Graphics
             }
         }
 
-        public void WriteByte(char ch, int mX, int mY)
+        public void WriteByte(char ch, int mX, int mY, Pen pen)
         {
             if (ch > 0x7E) //max font
             {
@@ -40,14 +40,14 @@ namespace Aura_OS.System.Graphics
                     {
                         if (Kernel.font._UnicodeMappings[i].UnicodeCharacters[j] == ch)
                         {
-                            Kernel.canvas.DrawChar((char)Kernel.font._UnicodeMappings[i].FontPosition, Kernel.font, Kernel.console.ForegroundPen, mX, mY);
+                            Kernel.canvas.DrawChar((char)Kernel.font._UnicodeMappings[i].FontPosition, Kernel.font, pen, mX, mY);
                         }
                     }
                 }
             }
             else
             {
-                Kernel.canvas.DrawChar((char)ch, Kernel.font, Kernel.console.ForegroundPen, mX, mY);
+                Kernel.canvas.DrawChar((char)ch, Kernel.font, pen, mX, mY);
             }
         }
 
