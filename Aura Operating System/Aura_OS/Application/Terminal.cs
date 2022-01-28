@@ -181,18 +181,19 @@ namespace Aura_OS
                         }
                         break;
                     case ConsoleKeyEx.UpArrow:
-                        if (CommandIndex > 0)
+                        if (CommandIndex >= 0)
                         {
                             mX -= Command.Length;
                             Command = Commands[CommandIndex];
+                            CommandIndex--;
                             mX += Command.Length;
                         }
                         break;
                     case ConsoleKeyEx.DownArrow:
                         if (CommandIndex < Commands.Count - 1)
                         {
-                            CommandIndex++;
                             mX -= Command.Length;
+                            CommandIndex++;
                             Command = Commands[CommandIndex];
                             mX += Command.Length;
                         }
@@ -367,6 +368,11 @@ namespace Aura_OS
             Write("> ");
 
             Foreground = ConsoleColor.White;
+        }
+
+        public string GetConsoleInfo()
+        {
+            return Kernel.canvas.Name() + " (" + Kernel.console.Cols + "x" + Kernel.console.Rows + " - " + global::System.Console.OutputEncoding.BodyName + ")";
         }
 
         #endregion

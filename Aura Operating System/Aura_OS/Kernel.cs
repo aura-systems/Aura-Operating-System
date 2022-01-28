@@ -15,6 +15,7 @@ using Cosmos.System.Graphics;
 using Cosmos.System.Graphics.Fonts;
 using Aura_OS.Processing;
 using System.Drawing;
+using Aura_OS.System;
 
 namespace Aura_OS
 {
@@ -27,6 +28,7 @@ namespace Aura_OS
         public static string Version = "0.5.3";
         public static string Revision = VersionInfo.revision;
         public static string langSelected = "en_US";
+        public static string BootTime = "01/01/1970";
 
         //FILES
         public static Bitmap programlogo;
@@ -86,7 +88,7 @@ namespace Aura_OS
             CommandManager = new CommandManager();
             CommandManager.Initialize();
 
-            console = new Terminal(600, 500, 40, 40);
+            console = new Terminal(700, 600, 40, 40);
             console.Initialize();
 
             systeminfo = new SystemInfo(400, 300, 40, 40);
@@ -99,6 +101,8 @@ namespace Aura_OS
             //START MOUSE
             MouseManager.ScreenWidth = screenWidth;
             MouseManager.ScreenHeight = screenHeight;
+
+            BootTime = Time.MonthString() + "/" + Time.DayString() + "/" + Time.YearString() + ", " + Time.TimeString(true, true, true);
 
             Running = true;
         }

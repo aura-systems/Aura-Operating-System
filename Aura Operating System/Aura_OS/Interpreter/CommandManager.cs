@@ -16,6 +16,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using Aura_OS.System.Shell.cmdIntr.SystemInfomation;
 
 namespace Aura_OS.System.Shell.cmdIntr
 {
@@ -40,17 +41,13 @@ namespace Aura_OS.System.Shell.cmdIntr
 
         public void RegisterAllCommands()
         {
-            CMDs.Add(new CommandChangeRes(new string[] { "changeres", "cr" }));
             CMDs.Add(new CommandReboot(new string[] { "reboot", "rb" }));
             CMDs.Add(new CommandShutdown(new string[] { "shutdown", "sd" }));
 
             CMDs.Add(new CommandClear(new string[] { "clear", "clr" }));
             CMDs.Add(new CommandKeyboardMap(new string[] { "setkeyboardmap", "setkeyboard" }));
-
-            CMDs.Add(new CommandHelp(new string[] { "help" }));
-
-            CMDs.Add(new CommandLsprocess(new string[] { "lsprocess" }));
-            CMDs.Add(new CommandLspci(new string[] { "lspci" }));
+            //CMDs.Add(new CommandEnv(new string[] { "export", "set" }));
+            //CMDs.Add(new CommandEcho(new string[] { "echo" }));
 
             CMDs.Add(new CommandIPConfig(new string[] { "ipconfig", "ifconfig", "netconf" }));
             CMDs.Add(new CommandPing(new string[] { "ping" }));
@@ -60,6 +57,37 @@ namespace Aura_OS.System.Shell.cmdIntr
             //CMDs.Add(new CommandFtp(new string[] { "ftp" }));
             CMDs.Add(new CommandHttpServer(new string[] { "httpserver" }));
 
+            CMDs.Add(new CommandVersion(new string[] { "version", "ver", "about" }));
+            CMDs.Add(new CommandSystemInfo(new string[] { "systeminfo", "sysinfo" }));
+            //CMDs.Add(new CommandTime(new string[] { "time", "date" }));
+            CMDs.Add(new CommandHelp(new string[] { "help" }));
+
+            CMDs.Add(new CommandChangeRes(new string[] { "changeres", "cr" }));
+            CMDs.Add(new CommandLsprocess(new string[] { "lsprocess" }));
+            CMDs.Add(new CommandLspci(new string[] { "lspci" }));
+            //CMDs.Add(new CommandCrash(new string[] { "crash" }));
+
+            /*CMDs.Add(new CommandVol(new string[] { "vol" }));
+            CMDs.Add(new CommandDir(new string[] { "dir", "ls", "l" }));
+            CMDs.Add(new CommandMkdir(new string[] { "mkdir", "md" }));
+            CMDs.Add(new CommandRmdir(new string[] { "rmdir", "rmd" }));
+            CMDs.Add(new CommandCat(new string[] { "cat" }));
+            CMDs.Add(new CommandCD(new string[] { "cd" }));
+            CMDs.Add(new CommandChangeVol(new string[] { "chgvol", "cv" }));
+            CMDs.Add(new CommandMkfil(new string[] { "touch", "mkfil", "mf" }));
+            CMDs.Add(new CommandRmfil(new string[] { "rmfil", "rmf" }));
+            CMDs.Add(new CommandHex(new string[] { "hex" }));
+            CMDs.Add(new CommandTree(new string[] { "tree" }));
+            CMDs.Add(new CommandRun(new string[] { "run" }));
+
+            CMDs.Add(new CommandPCName(new string[] { "pcn" }));
+
+            CMDs.Add(new CommandMIV(new string[] { "miv", "edit" }));*/
+
+            CMDs.Add(new CommandAction(new string[] { "beep" }, () =>
+            {
+                Cosmos.System.PCSpeaker.Beep();
+            }));
             CMDs.Add(new CommandAction(new string[] { "crash" }, () =>
             {
                 throw new Exception("Exception test");
