@@ -31,7 +31,13 @@ namespace Aura_OS.System.Shell.cmdIntr.Network
         /// <param name="arguments">Arguments</param>
         public override ReturnInfo Execute()
         {
-            PrintHelp();
+            Kernel.console.WriteLine("Available modes:");
+
+            foreach (var mode in Kernel.canvas.AvailableModes)
+            {
+                Kernel.console.WriteLine("- " + mode.ToString());
+            }
+
             return new ReturnInfo(this, ReturnCode.OK);
         }
 
@@ -41,20 +47,47 @@ namespace Aura_OS.System.Shell.cmdIntr.Network
         /// <param name="arguments">Arguments</param>
         public override ReturnInfo Execute(List<string> arguments)
         {
-            //TODO Check if mode is supported
+            if (arguments.Count != 2)
+            {
+                return new ReturnInfo(this, ReturnCode.ERROR_ARG);
+            }
 
-            int width = int.Parse(arguments[0]);
-            int height = int.Parse(arguments[1]);
+            try
+            {
+                int width = int.Parse(arguments[0]);
+                int height = int.Parse(arguments[1]);
 
-            Kernel.screenWidth = (uint)width;
-            Kernel.screenHeight = (uint)height;
+                bool modeExists = false;
 
-            MouseManager.ScreenWidth = (uint)width;
-            MouseManager.ScreenHeight = (uint)height;
+                foreach (var mode in Kernel.canvas.AvailableModes)
+                {
+                    if (mode.Columns == width && mode.Rows == height)
+                    {
+                        modeExists = true;
+                    }
+                }
 
-            Kernel.canvas = FullScreenCanvas.GetFullScreenCanvas(new Mode(width, height, ColorDepth.ColorDepth32));
+                if (modeExists)
+                {
+                    Kernel.screenWidth = (uint)width;
+                    Kernel.screenHeight = (uint)height;
 
-            return new ReturnInfo(this, ReturnCode.OK);
+                    MouseManager.ScreenWidth = (uint)width;
+                    MouseManager.ScreenHeight = (uint)height;
+
+                    Kernel.canvas = FullScreenCanvas.GetFullScreenCanvas(new Mode(width, height, ColorDepth.ColorDepth32));
+
+                    return new ReturnInfo(this, ReturnCode.OK);
+                }
+                else
+                {
+                    return new ReturnInfo(this, ReturnCode.ERROR, "Requested graphic mode is not supported.");
+                }
+            }
+            catch (Exception ex)
+            {
+                return new ReturnInfo(this, ReturnCode.ERROR, ex.Message);
+            } 
         }
 
         /// <summary>
@@ -63,6 +96,7 @@ namespace Aura_OS.System.Shell.cmdIntr.Network
         public override void PrintHelp()
         {
             Kernel.console.WriteLine("Usage:");
+            Kernel.console.WriteLine(" - changeres");
             Kernel.console.WriteLine(" - changeres {x} {y}");
         }
     }
