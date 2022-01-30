@@ -12,7 +12,7 @@ namespace Aura_OS
     public struct Cell
     {
         public char ?Char;
-        public Pen ?Colour;
+        public Pen Colour;
     }
 
     public class Terminal : App
@@ -106,6 +106,8 @@ namespace Aura_OS
 
         public Terminal(uint width, uint height, uint x = 0, uint y = 0) : base("Terminal", width, height, x, y)
         {
+            Icon = Kernel.terminalIco;
+
             Graphics = new Graphics();
 
             Pallete[0] = 0xFF000000; // Black

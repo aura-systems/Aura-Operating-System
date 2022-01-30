@@ -1,11 +1,15 @@
 using Cosmos.System;
+using Cosmos.System.Graphics;
 using System.Drawing;
 using Aura_OS.Processing;
+using System;
 
 namespace Aura_OS
 {
     public class App : Process
     {
+        public Bitmap Icon;
+
         public readonly uint baseWidth;
         public readonly uint baseHeight;
         public readonly uint width;
@@ -35,6 +39,8 @@ namespace Aura_OS
 
         public App(string name, uint width, uint height, uint x = 0, uint y = 0) : base(name, ProcessType.Program)
         {
+            Icon = Kernel.programIco;
+
             baseWidth = width;
             baseHeight = height;
             baseX = x;
@@ -125,7 +131,8 @@ namespace Aura_OS
                 Kernel.canvas.DrawFilledRectangle(Kernel.WhitePen, (int)baseX, (int)baseY, (int)baseWidth, (int)baseHeight);
                 Kernel.canvas.DrawRectangle(Kernel.avgColPen, (int)baseX, (int)baseY, (int)baseWidth, (int)baseHeight);
 
-                Kernel.canvas.DrawString(name, Kernel.font, Kernel.BlackPen, (int)(baseX + 2), (int)(baseY + 2));
+                Kernel.canvas.DrawImage(Icon, (int)(baseX + 2), (int)(baseY + 2));
+                Kernel.canvas.DrawString(name, Kernel.font, Kernel.BlackPen, (int)(baseX + Icon.Width + 2), (int)(baseY + 2));
 
                 UpdateApp();
             }

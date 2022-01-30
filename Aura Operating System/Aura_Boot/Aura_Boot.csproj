@@ -5,16 +5,16 @@
         <SelfContained>True</SelfContained>
         <Profile>VMware</Profile>
         <BinFormat>ELF</BinFormat>
-        <StackCorruptionDetectionEnabled>True</StackCorruptionDetectionEnabled>
+        <StackCorruptionDetectionEnabled>False</StackCorruptionDetectionEnabled>
         <StackCorruptionDetectionLevel>MethodFooters</StackCorruptionDetectionLevel>
         <Deployment>ISO</Deployment>
-        <DebugEnabled>False</DebugEnabled>
+        <DebugEnabled>True</DebugEnabled>
         <DebugMode>Source</DebugMode>
         <IgnoreDebugStubAttribute>False</IgnoreDebugStubAttribute>
         <ISOFile>bin\Debug\net5.0\Aura_Boot.iso</ISOFile>
         <CompileVBEMultiboot>False</CompileVBEMultiboot>
         <ExtractMapFile>False</ExtractMapFile>
-        <PxeInterface>10.204.128.41</PxeInterface>
+        <PxeInterface>192.168.0.8</PxeInterface>
         <Launch>VMware</Launch>
         <VisualStudioDebugPort>Pipe: Cosmos\Serial</VisualStudioDebugPort>
         <EnableBochsDebug>True</EnableBochsDebug>
@@ -65,6 +65,10 @@
         <ISO_ISOFile>bin\Debug\net5.0\Aura_Boot.iso</ISO_ISOFile>
         <ISO_CompileVBEMultiboot>False</ISO_CompileVBEMultiboot>
         <ISO_ExtractMapFile>False</ISO_ExtractMapFile>
+        <CosmosDebugPort>Serial: COM1</CosmosDebugPort>
+        <VMwareEdition>Workstation</VMwareEdition>
+        <EnableGDB>False</EnableGDB>
+        <StartCosmosGDB>False</StartCosmosGDB>
     </PropertyGroup>
 
     <ItemGroup>

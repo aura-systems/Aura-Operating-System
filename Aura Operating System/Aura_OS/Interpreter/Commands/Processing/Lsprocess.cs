@@ -1,6 +1,6 @@
 ﻿/*
 * PROJECT:          Aura Operating System Development
-* CONTENT:          Help command
+* CONTENT:          Lsprocess command
 * PROGRAMMER(S):    Valentin Charbonnier <valentinbreiz@gmail.com>
 */
 
@@ -14,7 +14,7 @@ namespace Aura_OS.System.Shell.cmdIntr.Util
     class CommandLsprocess : ICommand
     {
         /// <summary>
-        /// Empty constructor.
+        /// Constructor.
         /// </summary>
         public CommandLsprocess(string[] commandvalues) : base(commandvalues)
         {
@@ -22,7 +22,7 @@ namespace Aura_OS.System.Shell.cmdIntr.Util
         }
 
         /// <summary>
-        /// CommandHelp
+        /// CommandLsprocess
         /// </summary>
         public override ReturnInfo Execute()
         {
@@ -39,15 +39,6 @@ namespace Aura_OS.System.Shell.cmdIntr.Util
             }
 
             return new ReturnInfo(this, ReturnCode.OK);
-        }
-
-        /// <summary>
-        /// Print /help information
-        /// </summary>
-        public override void PrintHelp()
-        {
-            Kernel.console.WriteLine("Available command:");
-            Kernel.console.WriteLine("- help /alias    show command aliases.");
         }
     }
 }
