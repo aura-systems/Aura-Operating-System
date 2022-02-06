@@ -62,7 +62,7 @@ namespace Aura_OS.System.Shell.cmdIntr
 
             CMDs.Add(new CommandVersion(new string[] { "version", "ver", "about" }));
             CMDs.Add(new CommandSystemInfo(new string[] { "systeminfo", "sysinfo" }));
-            //CMDs.Add(new CommandTime(new string[] { "time", "date" }));
+            CMDs.Add(new CommandTime(new string[] { "time", "date" }));
             CMDs.Add(new CommandHelp(new string[] { "help" }));
 
             CMDs.Add(new CommandChangeRes(new string[] { "changeres", "cr" }));
