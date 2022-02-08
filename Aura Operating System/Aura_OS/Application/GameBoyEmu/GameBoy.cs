@@ -1,4 +1,5 @@
-﻿using ProjectDMG;
+﻿using Cosmos.System;
+using ProjectDMG;
 using ProjectDMG.Utils;
 using System;
 using System.Collections.Generic;
@@ -44,6 +45,13 @@ namespace Aura_OS.Application.GameBoyEmu
 
         public override void UpdateApp()
         {
+            KeyEvent keyEvent = null;
+
+            if (KeyboardManager.TryReadKey(out keyEvent))
+            {
+                joypad.handleKeyDown(keyEvent.Key);
+            }
+
             while (cyclesThisUpdate < Constants.CYCLES_PER_UPDATE)
             {
                 cpuCycles = cpu.Exe();
@@ -91,10 +99,12 @@ namespace Aura_OS.Application.GameBoyEmu
                     _y += Kernel.font.Height;
                     _x = x;
                 }
+                else
+                {
+                    Kernel.canvas.DrawChar(Logs.Logs[i], Kernel.font, Kernel.BlackPen, (int)(_x + ppu.bmp.Bitmap.Width + 2), (int)_y);
 
-                Kernel.canvas.DrawChar(Logs.Logs[i], Kernel.font, Kernel.BlackPen, (int)(_x + ppu.bmp.Bitmap.Width + 2), (int)_y);
-
-                _x += Kernel.font.Width;
+                    _x += Kernel.font.Width;
+                }
             }
         }
     }
