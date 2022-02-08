@@ -13,6 +13,7 @@ using Cosmos.System.Network.IPv4.TCP;
 using System.Text;
 using Cosmos.System.Network.IPv4.TCP.FTP;
 using Aura_OS;
+using Aura_OS.Interpreter;
 
 namespace Aura_OS.System.Shell.cmdIntr.Network
 {
