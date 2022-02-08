@@ -4,6 +4,7 @@
 * PROGRAMMER(S):    John Welsh <djlw78@gmail.com>
 */
 
+using Aura_OS.Interpreter;
 using System;
 
 namespace Aura_OS.System.Shell.cmdIntr.SystemInfomation

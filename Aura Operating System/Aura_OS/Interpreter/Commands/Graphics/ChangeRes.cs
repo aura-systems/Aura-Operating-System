@@ -12,6 +12,7 @@ using Cosmos.System.Network.Config;
 using Aura_OS;
 using Cosmos.System.Graphics;
 using Cosmos.System;
+using Aura_OS.Interpreter;
 
 namespace Aura_OS.System.Shell.cmdIntr.Network
 {

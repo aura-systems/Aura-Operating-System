@@ -5,6 +5,7 @@
 */
 
 using Aura_OS.Core;
+using Aura_OS.Interpreter;
 using Cosmos.Core;
 
 namespace Aura_OS.System.Shell.cmdIntr.SystemInfomation

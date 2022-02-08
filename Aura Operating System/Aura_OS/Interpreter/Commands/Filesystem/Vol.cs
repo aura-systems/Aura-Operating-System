@@ -6,7 +6,7 @@
 
 using System;
 
-namespace Aura_OS.System.Shell.cmdIntr.FileSystem
+namespace Aura_OS.Interpreter.Commands.Filesystem
 {
     class CommandVol : ICommand
     {

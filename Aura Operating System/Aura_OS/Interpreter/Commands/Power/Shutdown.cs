@@ -7,6 +7,7 @@
 using System;
 using Sys = Cosmos.System;
 using Aura_OS;
+using Aura_OS.Interpreter;
 
 namespace Aura_OS.System.Shell.cmdIntr.Power
 {

@@ -4,6 +4,7 @@
 * PROGRAMMER(S):    Valentin Charbonnier <valentinbreiz@gmail.com>
 */
 
+using Aura_OS.Interpreter;
 using Aura_OS.System.Utils;
 using Aura_OS.Utils;
 using System;

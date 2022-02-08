@@ -13,6 +13,7 @@ using Cosmos.System.Network.IPv4.UDP.DHCP;
 using Aura_OS;
 using System;
 using System.Collections.Generic;
+using Aura_OS.Interpreter;
 
 namespace Aura_OS.System.Shell.cmdIntr.Network
 {

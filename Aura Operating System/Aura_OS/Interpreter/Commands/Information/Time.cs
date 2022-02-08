@@ -5,6 +5,8 @@
 */
 
 
+using Aura_OS.Interpreter;
+
 namespace Aura_OS.System.Shell.cmdIntr.SystemInfomation
 {
     class CommandTime : ICommand

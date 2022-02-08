@@ -10,6 +10,7 @@ using Cosmos.System.Network.IPv4.UDP.DNS;
 using Cosmos.System.Network.IPv4;
 using Cosmos.System.Network.Config;
 using Aura_OS;
+using Aura_OS.Interpreter;
 
 namespace Aura_OS.System.Shell.cmdIntr.Network
 {

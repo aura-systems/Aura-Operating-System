@@ -7,7 +7,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Aura_OS.System.Shell.cmdIntr
+namespace Aura_OS.Interpreter
 {
 
     /// <summary>

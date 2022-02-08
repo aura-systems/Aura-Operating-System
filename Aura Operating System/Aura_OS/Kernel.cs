@@ -16,6 +16,7 @@ using Cosmos.System.Graphics.Fonts;
 using Aura_OS.Processing;
 using System.Drawing;
 using Aura_OS.System;
+using Aura_OS.Interpreter;
 
 namespace Aura_OS
 {

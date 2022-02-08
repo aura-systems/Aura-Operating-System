@@ -17,6 +17,7 @@ using SimpleHttpServer.Models;
 using SimpleHttpServer.RouteHandlers;
 using System.IO;
 using Aura_OS;
+using Aura_OS.Interpreter;
 
 namespace Aura_OS.System.Shell.cmdIntr.Network
 {

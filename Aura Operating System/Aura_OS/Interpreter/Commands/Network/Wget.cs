@@ -12,6 +12,7 @@ using Cosmos.System.Network.Config;
 using Cosmos.System.Network.IPv4.TCP;
 using System.Text;
 using Aura_OS;
+using Aura_OS.Interpreter;
 
 namespace Aura_OS.System.Shell.cmdIntr.Network
 {

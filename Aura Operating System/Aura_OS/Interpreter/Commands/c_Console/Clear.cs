@@ -6,6 +6,7 @@
 
 //NOTE: Console conflicted with Console so now it is c_Console. (Still readable)
 using Aura_OS;
+using Aura_OS.Interpreter;
 using System;
 namespace Aura_OS.System.Shell.cmdIntr.c_Console
 {
