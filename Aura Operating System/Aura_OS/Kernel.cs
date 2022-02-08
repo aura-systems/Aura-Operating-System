@@ -17,6 +17,7 @@ using Aura_OS.Processing;
 using System.Drawing;
 using Aura_OS.System;
 using Aura_OS.Interpreter;
+using Aura_OS.Application.GameBoyEmu;
 
 namespace Aura_OS
 {
@@ -58,8 +59,11 @@ namespace Aura_OS
         //PROCESSES
         public static List<App> apps;
         public static ProcessManager ProcessManager;
+
         public static Terminal console;
         public static SystemInfo systeminfo;
+        public static GameBoyEmu gameBoyEmu;
+
         public static CommandManager CommandManager;
 
         public static bool Pressed;
@@ -67,7 +71,7 @@ namespace Aura_OS
 
         private static int _frames = 0;
         public static int _fps = 0;
-        private static int _deltaT = 0;
+        public static int _deltaT = 0;
 
         public static CosmosVFS VirtualFileSystem = new CosmosVFS();
         public static Dictionary<string, string> EnvironmentVariables = new Dictionary<string, string>();
@@ -134,9 +138,13 @@ namespace Aura_OS
             systeminfo = new SystemInfo(400, 300, 40, 40);
             systeminfo.Initialize();
 
+            gameBoyEmu = new GameBoyEmu(160 + 2, 144 + 20, 40, 40);
+            gameBoyEmu.Initialize();
+
             apps = new List<App>();
             apps.Add(console);
             apps.Add(systeminfo);
+            apps.Add(gameBoyEmu);
 
             //START MOUSE
             MouseManager.ScreenWidth = screenWidth;
