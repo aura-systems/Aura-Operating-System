@@ -36,31 +36,14 @@ namespace Aura_OS.Application.GameBoyEmu
             mmu.loadGamePak(Rom);
         }
 
-        private KeyEvent lastKey = null;
-        private int Second = 0;
+        private KeyEvent keyEvent = null;
 
         public override void UpdateApp()
         {
-            KeyEvent keyEvent = null;
-
             if (KeyboardManager.TryReadKey(out keyEvent))
             {
                 joypad.handleKeyDown(keyEvent.Key);
-
-                lastKey = keyEvent;
-
-                Second = RTC.Second;
             }
-
-            if (lastKey != null)
-            {
-                if (RTC.Second != Second) //Auto release (1sec)
-                {
-                    joypad.handleKeyUp(keyEvent.Key);
-
-                    lastKey = null;
-                }
-            } 
 
             while (cyclesThisUpdate < Constants.CYCLES_PER_UPDATE)
             {
@@ -73,6 +56,13 @@ namespace Aura_OS.Application.GameBoyEmu
                 handleInterrupts();
             }
             cyclesThisUpdate -= Constants.CYCLES_PER_UPDATE;
+
+            if (keyEvent != null)
+            {
+                joypad.handleKeyUp(keyEvent.Key);
+
+                keyEvent = null;
+            }
         }
 
         private void handleInterrupts()
