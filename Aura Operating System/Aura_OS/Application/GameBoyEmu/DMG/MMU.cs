@@ -230,26 +230,21 @@ namespace ProjectDMG {
             switch (rom[0x147]) {
                 case 0x00:
                     gamePak = new MBC0();
-                    Kernel.gameBoyEmu.Logs.WriteLine("MBC0");
                     break;
                 case 0x01: case 0x02: case 0x03:
                     gamePak = new MBC1();
-                    Kernel.gameBoyEmu.Logs.WriteLine("MBC1");
                     break;
                 case 0x05: case 0x06:
                     gamePak = new MBC2();
-                    Kernel.gameBoyEmu.Logs.WriteLine("MBC2");
                     break;
                 case 0x0F: case 0x10: case 0x11: case 0x12: case 0x13:
                     gamePak = new MBC3();
-                    Kernel.gameBoyEmu.Logs.WriteLine("MBC3");
                     break;
                 case 0x19: case 0x1A: case 0x1B:
                     gamePak = new MBC5();
-                    Kernel.gameBoyEmu.Logs.WriteLine("MBC5");
                     break;
                 default:
-                    Kernel.gameBoyEmu.Logs.WriteLine("Unsupported MBC: " + rom[0x147].ToString("x2"));
+                    Kernel.console.WriteLine("Unsupported MBC: " + rom[0x147].ToString("x2"));
                     break;
             }
             gamePak.Init(rom);

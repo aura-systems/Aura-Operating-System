@@ -71,7 +71,7 @@ namespace Aura_OS
 
         private static int _frames = 0;
         public static int _fps = 0;
-        private static int _deltaT = 0;
+        public static int _deltaT = 0;
 
         public static CosmosVFS VirtualFileSystem = new CosmosVFS();
         public static Dictionary<string, string> EnvironmentVariables = new Dictionary<string, string>();
@@ -138,7 +138,7 @@ namespace Aura_OS
             systeminfo = new SystemInfo(400, 300, 40, 40);
             systeminfo.Initialize();
 
-            gameBoyEmu = new GameBoyEmu(320, 288, 40, 40);
+            gameBoyEmu = new GameBoyEmu(160 + 2, 144 + 20, 40, 40);
             gameBoyEmu.Initialize();
 
             apps = new List<App>();

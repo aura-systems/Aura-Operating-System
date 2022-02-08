@@ -1,4 +1,5 @@
-﻿using Cosmos.System;
+﻿using Cosmos.HAL;
+using Cosmos.System;
 using ProjectDMG;
 using ProjectDMG.Utils;
 using System;
@@ -12,8 +13,6 @@ namespace Aura_OS.Application.GameBoyEmu
     public class GameBoyEmu : App
     {
         public byte[] Rom;
-
-        public GameBoyLogs Logs;
 
         private CPU cpu;
         private MMU mmu;
@@ -34,14 +33,11 @@ namespace Aura_OS.Application.GameBoyEmu
             timer = new TIMER();
             joypad = new JOYPAD();
 
-            Logs = new GameBoyLogs();
-
-            Logs.WriteLine("Emu started.");
-
             mmu.loadGamePak(Rom);
-
-            Logs.WriteLine("Rom loaded.");
         }
+
+        private KeyEvent lastKey = null;
+        private int Second = 0;
 
         public override void UpdateApp()
         {
@@ -50,7 +46,21 @@ namespace Aura_OS.Application.GameBoyEmu
             if (KeyboardManager.TryReadKey(out keyEvent))
             {
                 joypad.handleKeyDown(keyEvent.Key);
+
+                lastKey = keyEvent;
+
+                Second = RTC.Second;
             }
+
+            if (lastKey != null)
+            {
+                if (RTC.Second != Second) //Auto release (1sec)
+                {
+                    joypad.handleKeyUp(keyEvent.Key);
+
+                    lastKey = null;
+                }
+            } 
 
             while (cyclesThisUpdate < Constants.CYCLES_PER_UPDATE)
             {
@@ -63,8 +73,6 @@ namespace Aura_OS.Application.GameBoyEmu
                 handleInterrupts();
             }
             cyclesThisUpdate -= Constants.CYCLES_PER_UPDATE;
-
-            PrintLogs();
         }
 
         private void handleInterrupts()
@@ -80,42 +88,6 @@ namespace Aura_OS.Application.GameBoyEmu
             }
 
             cpu.UpdateIME();
-        }
-
-        void PrintLogs()
-        {
-            uint _y = y;
-            uint _x = x;
-
-            for (int i = 0; i < Logs.Logs.Length; i++)
-            {
-                if (Logs.Logs[i] == '\n')
-                {
-                    if (_y > y + height)
-                    {
-                        Logs.Logs = "";
-                    }
-
-                    _y += Kernel.font.Height;
-                    _x = x;
-                }
-                else
-                {
-                    Kernel.canvas.DrawChar(Logs.Logs[i], Kernel.font, Kernel.BlackPen, (int)(_x + ppu.bmp.Bitmap.Width + 2), (int)_y);
-
-                    _x += Kernel.font.Width;
-                }
-            }
-        }
-    }
-
-    public class GameBoyLogs
-    {
-        public string Logs = "";
-
-        public void WriteLine(string text)
-        {
-            Logs += text + '\n';
         }
     }
 }
