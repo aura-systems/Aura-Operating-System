@@ -93,6 +93,8 @@ namespace Aura_OS.Application.GameBoyEmu
                 }
 
                 Kernel.canvas.DrawChar(Logs.Logs[i], Kernel.font, Kernel.BlackPen, (int)(_x + ppu.bmp.Bitmap.Width + 2), (int)_y);
+
+                _x += Kernel.font.Width;
             }
         }
     }

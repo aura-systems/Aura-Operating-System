@@ -18,7 +18,7 @@ namespace ProjectDMG
         private const int VBLANK_INTERRUPT = 0;
         private const int LCD_INTERRUPT = 1;
 
-        private uint[] color = new uint[] { 0xFFFFFF, 0x808080, 0x404040, 0 };
+        private int[] color = new int[] { 0xFFFFFF, 0x808080, 0x404040, 0 };
 
         public DirectBitmap bmp;
         private int scanlineCounter;

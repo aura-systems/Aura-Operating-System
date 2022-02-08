@@ -15,9 +15,9 @@ namespace ProjectDMG {
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void SetPixel(int x, int y, uint colour) {
+        public void SetPixel(int x, int y, int colour) {
             int index = x + (y * Width);
-            Bitmap.rawData[index] = (int)colour;
+            Bitmap.rawData[index] = colour;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
