@@ -18,7 +18,7 @@ namespace Aura_OS.Application.GameBoyEmu
         private MMU mmu;
         private PPU ppu;
         private TIMER timer;
-        //public JOYPAD joypad;
+        public JOYPAD joypad;
 
         int cyclesThisUpdate = 0;
         int cpuCycles = 0;
@@ -31,7 +31,7 @@ namespace Aura_OS.Application.GameBoyEmu
             cpu = new CPU(mmu);
             ppu = new PPU();
             timer = new TIMER();
-            //joypad = new JOYPAD();
+            joypad = new JOYPAD();
 
             Logs = new GameBoyLogs();
 
@@ -51,7 +51,7 @@ namespace Aura_OS.Application.GameBoyEmu
 
                 timer.update(cpuCycles, mmu);
                 ppu.update(cpuCycles, mmu);
-                //joypad.update(mmu);
+                joypad.update(mmu);
                 handleInterrupts();
             }
             cyclesThisUpdate -= Constants.CYCLES_PER_UPDATE;
@@ -105,7 +105,7 @@ namespace Aura_OS.Application.GameBoyEmu
 
         public void WriteLine(string text)
         {
-            Logs += text + Environment.NewLine;
+            Logs += text + '\n';
         }
     }
 }
