@@ -39,6 +39,7 @@ namespace Aura_OS
         public static Bitmap programIco;
         public static Bitmap terminalIco;
         public static Bitmap powerIco;
+        public static Bitmap connectedIco;
 
         public static Bitmap programlogo;
         public static Bitmap bootBitmap;
@@ -87,39 +88,9 @@ namespace Aura_OS
             Encoding.RegisterProvider(CosmosEncodingProvider.Instance);
             KeyboardManager.SetKeyLayout(new Sys.ScanMaps.FR_Standard());
 
-            System.CustomConsole.WriteLineInfo("Loading files...");
+            LoadFiles();
 
-            //LOAD FILES
-
-            programIco = new Bitmap(Convert.FromBase64String(Files.b64NoIcon));
-
-            System.CustomConsole.WriteLineOK("Program icon.");
-
-            terminalIco = new Bitmap(Convert.FromBase64String(Files.b64TerminalIcon));
-
-            System.CustomConsole.WriteLineOK("Terminal icon.");
-
-            powerIco = new Bitmap(Convert.FromBase64String(Files.b64PowerIcon));
-
-            System.CustomConsole.WriteLineOK("Power icon.");
-
-            bootBitmap = new Bitmap(Convert.FromBase64String(Files.b64AuraLogo));
-
-            System.CustomConsole.WriteLineOK("Aura logo.");
-
-            programlogo = new Bitmap(Convert.FromBase64String(Files.b64ProgramIcon));
-
-            System.CustomConsole.WriteLineOK("Program icon 2.");
-
-            cursor = new Bitmap(Convert.FromBase64String(Files.b64cursorIcon));
-
-            System.CustomConsole.WriteLineOK("Cursor.");
-
-            font = PCScreenFont.LoadFont(Convert.FromBase64String(Files.b64font));
-
-            System.CustomConsole.WriteLineOK("Font.");
-
-            System.CustomConsole.WriteLineInfo("Starting Canvas...");
+            CustomConsole.WriteLineInfo("Starting Canvas...");
 
             //START GRAPHICS
             canvas = FullScreenCanvas.GetFullScreenCanvas(new Mode((int)screenWidth, (int)screenHeight, ColorDepth.ColorDepth32));
@@ -153,6 +124,45 @@ namespace Aura_OS
             BootTime = Time.MonthString() + "/" + Time.DayString() + "/" + Time.YearString() + ", " + Time.TimeString(true, true, true);
 
             Running = true;
+        }
+
+        public static void LoadFiles()
+        {
+            System.CustomConsole.WriteLineInfo("Loading files...");
+
+            //LOAD FILES
+
+            programIco = new Bitmap(Convert.FromBase64String(Files.b64NoIcon));
+
+            System.CustomConsole.WriteLineOK("Program icon.");
+
+            terminalIco = new Bitmap(Convert.FromBase64String(Files.b64TerminalIcon));
+
+            System.CustomConsole.WriteLineOK("Terminal icon.");
+
+            powerIco = new Bitmap(Convert.FromBase64String(Files.b64PowerIcon));
+
+            System.CustomConsole.WriteLineOK("Power icon.");
+
+            connectedIco = new Bitmap(Convert.FromBase64String(Files.b64ConnectedIcon));
+
+            System.CustomConsole.WriteLineOK("Connected icon.");
+
+            bootBitmap = new Bitmap(Convert.FromBase64String(Files.b64AuraLogo));
+
+            System.CustomConsole.WriteLineOK("Aura logo.");
+
+            programlogo = new Bitmap(Convert.FromBase64String(Files.b64ProgramIcon));
+
+            System.CustomConsole.WriteLineOK("Program icon 2.");
+
+            cursor = new Bitmap(Convert.FromBase64String(Files.b64cursorIcon));
+
+            System.CustomConsole.WriteLineOK("Cursor.");
+
+            font = PCScreenFont.LoadFont(Convert.FromBase64String(Files.b64font));
+
+            System.CustomConsole.WriteLineOK("Font.");
         }
 
         public static void Run()

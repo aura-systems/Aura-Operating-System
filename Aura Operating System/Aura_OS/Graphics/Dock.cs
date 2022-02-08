@@ -3,6 +3,7 @@ using Cosmos.Core;
 using Cosmos.Core.Memory;
 using Cosmos.HAL;
 using Cosmos.System;
+using Cosmos.System.Network;
 using System;
 using System.Drawing;
 
@@ -23,7 +24,12 @@ namespace Aura_OS
             uint strX = 0;
             uint strY = 0;
             Kernel.canvas.DrawImage(Kernel.powerIco, (int)strX, (int)strY);
-            
+
+            if (!NetworkStack.ConfigEmpty())
+            {
+                Kernel.canvas.DrawImage(Kernel.connectedIco, (int)(Kernel.screenWidth - 24), (int)strY);
+            }
+
             string time = Time.TimeString(true, true, true);
             Kernel.canvas.DrawString(time, Kernel.font, Kernel.BlackPen, (int)((Kernel.screenWidth / 2) - ((time.Length * Kernel.font.Width) / 2)), (int)(strY + 4));
             if (Kernel.Pressed)

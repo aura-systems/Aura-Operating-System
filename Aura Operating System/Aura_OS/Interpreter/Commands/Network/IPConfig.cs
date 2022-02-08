@@ -81,6 +81,9 @@ namespace Aura_OS.System.Shell.cmdIntr.Network
                 var xClient = new DHCPClient();
                 xClient.SendReleasePacket();
                 xClient.Close();
+
+                NetworkConfig.Keys.Clear();
+                NetworkConfig.Values.Clear();
             }
             else if (arguments[0] == "/ask")
             {
@@ -92,6 +95,9 @@ namespace Aura_OS.System.Shell.cmdIntr.Network
                 }
                 else
                 {
+                    NetworkConfig.Keys.Clear();
+                    NetworkConfig.Values.Clear();
+
                     xClient.Close();
                     return new ReturnInfo(this, ReturnCode.ERROR, "DHCP Discover failed. Can't apply dynamic IPv4 address.");
                 }
