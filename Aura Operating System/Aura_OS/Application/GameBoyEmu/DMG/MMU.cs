@@ -244,7 +244,7 @@ namespace ProjectDMG {
                     gamePak = new MBC5();
                     break;
                 default:
-                    Kernel.console.WriteLine("Unsupported MBC: " + rom[0x147].ToString("x2"));
+                    Kernel.gameBoyEmu.Logs.WriteLine("Unsupported MBC: " + rom[0x147].ToString("x2"));
                     break;
             }
             gamePak.Init(rom);

@@ -18,7 +18,7 @@ namespace ProjectDMG
         private const int VBLANK_INTERRUPT = 0;
         private const int LCD_INTERRUPT = 1;
 
-        private int[] color = new int[] { 0x00FFFFFF, 0x00808080, 0x00404040, 0 };
+        private uint[] color = new uint[] { 0xFFFFFF, 0x808080, 0x404040, 0 };
 
         public DirectBitmap bmp;
         private int scanlineCounter;
@@ -296,7 +296,6 @@ namespace ProjectDMG
 
         public void RenderFrame()
         {
-            //window.pictureBox.Refresh();
             Kernel.canvas.DrawImage(bmp.Bitmap, (int)Kernel.gameBoyEmu.x, (int)Kernel.gameBoyEmu.y);
         }
 
