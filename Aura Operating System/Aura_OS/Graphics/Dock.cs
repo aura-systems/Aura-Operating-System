@@ -25,7 +25,7 @@ namespace Aura_OS
             Kernel.canvas.DrawImage(Kernel.powerIco, (int)strX, (int)strY);
             
             string time = Time.TimeString(true, true, true);
-            Kernel.canvas.DrawString(time, Kernel.font, Kernel.BlackPen, (int)(Kernel.screenWidth - strX - time.Length * Kernel.font.Width - 4), (int)(strY + 4));
+            Kernel.canvas.DrawString(time, Kernel.font, Kernel.BlackPen, (int)((Kernel.screenWidth / 2) - ((time.Length * Kernel.font.Width) / 2)), (int)(strY + 4));
             if (Kernel.Pressed)
             {
                 if (MouseManager.X > strX && MouseManager.X < strX + Kernel.powerIco.Width && MouseManager.Y > strY && MouseManager.Y < strY + 24)
