@@ -36,6 +36,7 @@ namespace Aura_OS
         //FILES
         public static Bitmap programIco;
         public static Bitmap terminalIco;
+        public static Bitmap powerIco;
 
         public static Bitmap programlogo;
         public static Bitmap bootBitmap;
@@ -73,7 +74,7 @@ namespace Aura_OS
         public static void BeforeRun()
         {
             //Start Filesystem
-            //VFSManager.RegisterVFS(VirtualFileSystem);
+            VFSManager.RegisterVFS(VirtualFileSystem);
 
             //Load Localization
             System.CustomConsole.WriteLineInfo("Initializing localization...");
@@ -92,6 +93,10 @@ namespace Aura_OS
             terminalIco = new Bitmap(Convert.FromBase64String(Files.b64TerminalIcon));
 
             System.CustomConsole.WriteLineOK("Terminal icon.");
+
+            powerIco = new Bitmap(Convert.FromBase64String(Files.b64PowerIcon));
+
+            System.CustomConsole.WriteLineOK("Power icon.");
 
             bootBitmap = new Bitmap(Convert.FromBase64String(Files.b64AuraLogo));
 

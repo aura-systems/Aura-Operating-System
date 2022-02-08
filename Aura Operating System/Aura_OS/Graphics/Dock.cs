@@ -18,18 +18,17 @@ namespace Aura_OS
         {
             Width = (uint)(Kernel.apps.Count * Kernel.programlogo.Width + Kernel.apps.Count * Devide);
 
-            Kernel.canvas.DrawFilledRectangle(Kernel.avgColPen, 0, 0, (int)Kernel.screenWidth, 20);
+            Kernel.canvas.DrawFilledRectangle(Kernel.WhitePen, 0, 0, (int)Kernel.screenWidth, 24);
 
-            string text = "PowerOFF";
-            uint strX = 2;
-            uint strY = (20 - 16) / 2;
-            Kernel.canvas.DrawString("PowerOFF", Kernel.font, Kernel.WhitePen, (int)(strX), (int)(strY));
+            uint strX = 0;
+            uint strY = 0;
+            Kernel.canvas.DrawImage(Kernel.powerIco, (int)strX, (int)strY);
             
             string time = Time.TimeString(true, true, true);
-            Kernel.canvas.DrawString(time, Kernel.font, Kernel.WhitePen, (int)(Kernel.screenWidth - strX - time.Length * Kernel.font.Width), (int)(strY));
+            Kernel.canvas.DrawString(time, Kernel.font, Kernel.BlackPen, (int)(Kernel.screenWidth - strX - time.Length * Kernel.font.Width - 4), (int)(strY + 4));
             if (Kernel.Pressed)
             {
-                if (MouseManager.X > strX && MouseManager.X < strX + (text.Length * 8) && MouseManager.Y > strY && MouseManager.Y < strY + 16)
+                if (MouseManager.X > strX && MouseManager.X < strX + Kernel.powerIco.Width && MouseManager.Y > strY && MouseManager.Y < strY + 24)
                 {
                     ACPI.Shutdown();
                 }
