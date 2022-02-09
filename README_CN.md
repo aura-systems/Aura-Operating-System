@@ -13,18 +13,14 @@
 * ATA IDE / AHCI 驱动器。
 * FAT32/16/12 + VFS系统。
 * PCI 设备扫描。
-* PS/2 键盘。
+* PS/2 Keyboard + Mouse.
 * 重新启动 + ACPI 关机。
 * 多语言。
-* 基本命令解释器。
+* Command interpreter.
 * 错误捕捉。
-* 基于VBE显示的控制台。
-* 网络 (ARP, IPV4, ICMP, UDP, DNS, DHCP客户端)
+* GUI (SVGAII, VBE)
+* 网络 (ARP, IPV4, ICMP, UDP, DNS, DHCP, TCP, HTTP)
 
 ## 屏幕截图
 
 <p align="center"><img src="https://raw.githubusercontent.com/aura-systems/Aura-Operating-System/master/ARTWORK/aura1.png"></p>
-
-<p align="center"><img src="https://raw.githubusercontent.com/aura-systems/Aura-Operating-System/master/ARTWORK/aura3.png"></p>
-
-<p align="center"><img src="https://raw.githubusercontent.com/aura-systems/Aura-Operating-System/master/ARTWORK/aura2.png"></p>

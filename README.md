@@ -12,18 +12,13 @@ See the [Aura Progression](https://github.com/aura-systems/Aura-Operating-System
 * ATA IDE / AHCI Driver.
 * FAT32/16/12 + Virtual FileSystem.
 * PCI Device Scan.
-* PS/2 Keyboard.
+* PS/2 Keyboard + Mouse.
 * Restart + ACPI Shutdown.
-* Multi languages
-* Basic command interpreter.
+* Command interpreter.
 * Exception Handler.
-* VBE Graphical Console
-* Networking (ARP, IPV4, ICMP, UDP, DNS, DHCP Client)
+* GUI (SVGAII, VBE)
+* Networking (ARP, IPV4, ICMP, UDP, DNS, DHCP, TCP, HTTP)
 
 ## Screenshots
 
 <p align="center"><img src="https://raw.githubusercontent.com/aura-systems/Aura-Operating-System/master/ARTWORK/aura1.png"></p>
-
-<p align="center"><img src="https://raw.githubusercontent.com/aura-systems/Aura-Operating-System/master/ARTWORK/aura3.png"></p>
-
-<p align="center"><img src="https://raw.githubusercontent.com/aura-systems/Aura-Operating-System/master/ARTWORK/aura2.png"></p>
