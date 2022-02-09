@@ -19,7 +19,7 @@ namespace Aura_OS
         public void Update()
         {
             //Top bar
-            Width = (uint)(Kernel.WindowManager.apps.Count * Kernel.programlogo.Width + Kernel.WindowManager.apps.Count * Devide);
+            Width = (uint)(Kernel.WindowManager.apps.Count * Kernel.programLogo.Width + Kernel.WindowManager.apps.Count * Devide);
 
             Kernel.canvas.DrawFilledRectangle(Kernel.WhitePen, 0, 0, (int)Kernel.screenWidth, 24);
 
@@ -33,7 +33,7 @@ namespace Aura_OS
             }
 
             string time = Time.TimeString(true, true, true);
-            Kernel.canvas.DrawString(time, Kernel.font, Kernel.BlackPen, (int)((Kernel.screenWidth / 2) - ((time.Length * Kernel.font.Width) / 2)), (int)(strY + 5));
+            Kernel.canvas.DrawString(time, Kernel.font, Kernel.BlackPen, (int)((Kernel.screenWidth / 2) - ((time.Length * Kernel.font.Width) / 2)), (int)(strY + 4));
             if (Kernel.Pressed)
             {
                 if (MouseManager.X > strX && MouseManager.X < strX + Kernel.powerIco.Width && MouseManager.Y > strY && MouseManager.Y < strY + 24)
@@ -52,9 +52,9 @@ namespace Aura_OS
                 {
                     var app = process as App;
 
-                    app.dockX = (uint)(Devide / 2 + ((Kernel.screenWidth - Width) / 2) + (Kernel.programlogo.Width * i) + (Devide * i));
-                    app.dockY = Kernel.screenHeight - Kernel.programlogo.Height - Devide / 2;
-                    Kernel.canvas.DrawImage(Kernel.programlogo, (int)app.dockX, (int)app.dockY);
+                    app.dockX = (uint)(Devide / 2 + ((Kernel.screenWidth - Width) / 2) + (Kernel.programLogo.Width * i) + (Devide * i));
+                    app.dockY = Kernel.screenHeight - Kernel.programLogo.Height - Devide / 2;
+                    Kernel.canvas.DrawImage(Kernel.programLogo, (int)app.dockX, (int)app.dockY);
                     i++;
 
                     int _i = 0;

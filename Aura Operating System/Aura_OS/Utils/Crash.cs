@@ -35,26 +35,33 @@ namespace Aura_OS.System
         {
             Kernel.Running = false;
 
-            Kernel.console.Background = ConsoleColor.Red;
-
             Kernel.canvas.Clear(0xAA0000);
 
-            Kernel.console.X = 0;
-            Kernel.console.Y = 0;
+            Kernel.canvas.DrawImageAlpha(Kernel.errorLogo, (int)((Kernel.canvas.Mode.Columns / 2) - (Kernel.errorLogo.Width / 2)), (int)((Kernel.canvas.Mode.Rows / 2) - (Kernel.errorLogo.Height / 2) - 89));
 
-            int i = 0;
+            string CpuException = "CPU Exception x" + ctxinterrupt + " occured in Aura Operating System:";
+            Kernel.canvas.DrawString(CpuException, Kernel.font, Kernel.WhitePen, ((Kernel.canvas.Mode.Columns / 2) - (CpuException.Length * Kernel.font.Width / 2)), (int)((Kernel.canvas.Mode.Rows / 2) - (Kernel.errorLogo.Height / 2)) + (89 + 1 * Kernel.font.Height));
 
-            Kernel.canvas.DrawString("CPU Exception x" + ctxinterrupt + " occured in Aura Operating System:", Kernel.font, Kernel.WhitePen, 2, i++ * Kernel.font.Height);
-            Kernel.canvas.DrawString("Exception: " + exception, Kernel.font, Kernel.WhitePen, 2, i++ * Kernel.font.Height);
-            Kernel.canvas.DrawString("Description: " + description, Kernel.font, Kernel.WhitePen, 2, i++ * Kernel.font.Height);
-            Kernel.canvas.DrawString("Aura Version: " + Kernel.Version, Kernel.font, Kernel.WhitePen, 2, i++ * Kernel.font.Height);
-            Kernel.canvas.DrawString("Aura Revision: " + Kernel.Revision, Kernel.font, Kernel.WhitePen, 2, i++ * Kernel.font.Height);
+            string Exception = "Exception: " + exception;
+            Kernel.canvas.DrawString(Exception, Kernel.font, Kernel.WhitePen, ((Kernel.canvas.Mode.Columns / 2) - (Exception.Length * Kernel.font.Width / 2)), (int)((Kernel.canvas.Mode.Rows / 2) - (Kernel.errorLogo.Height / 2)) + (89 + 2 * Kernel.font.Height));
+
+            string Description = "Description: " + description;
+            Kernel.canvas.DrawString(Description, Kernel.font, Kernel.WhitePen, ((Kernel.canvas.Mode.Columns / 2) - (Description.Length * Kernel.font.Width / 2)), (int)((Kernel.canvas.Mode.Rows / 2) - (Kernel.errorLogo.Height / 2)) + (89 + 3 * Kernel.font.Height));
+
+            string Version = "Aura Version: " + Kernel.Version;
+            Kernel.canvas.DrawString(Version, Kernel.font, Kernel.WhitePen, ((Kernel.canvas.Mode.Columns / 2) - (Version.Length * Kernel.font.Width / 2)), (int)((Kernel.canvas.Mode.Rows / 2) - (Kernel.errorLogo.Height / 2)) + (89 + 4 * Kernel.font.Height));
+
+            string Revision = "Aura Revision: " + Kernel.Revision;
+            Kernel.canvas.DrawString(Revision, Kernel.font, Kernel.WhitePen, ((Kernel.canvas.Mode.Columns / 2) - (Revision.Length * Kernel.font.Width / 2)), (int)((Kernel.canvas.Mode.Rows / 2) - (Kernel.errorLogo.Height / 2)) + (89 + 5 * Kernel.font.Height));
+
             if (lastknowaddress != "")
             {
-                Kernel.canvas.DrawString("Last known address: 0x" + lastknowaddress, Kernel.font, Kernel.WhitePen, 2, i++ * Kernel.font.Height);
+                string Lastknownaddress = "Last known address: 0x" + lastknowaddress;
+                Kernel.canvas.DrawString(Lastknownaddress, Kernel.font, Kernel.WhitePen, ((Kernel.canvas.Mode.Columns / 2) - (Lastknownaddress.Length * Kernel.font.Width / 2)), (int)((Kernel.canvas.Mode.Rows / 2) - (Kernel.errorLogo.Height / 2)) + (89 + 6 * Kernel.font.Height));
             }
 
-            Kernel.canvas.DrawString("Press any key to reboot...", Kernel.font, Kernel.WhitePen, 2, i++ * Kernel.font.Height);
+            string PressKey = "Press any key to reboot...";
+            Kernel.canvas.DrawString(PressKey, Kernel.font, Kernel.WhitePen, ((Kernel.canvas.Mode.Columns / 2) - (PressKey.Length * Kernel.font.Width / 2)), (int)((Kernel.canvas.Mode.Rows / 2) - (Kernel.errorLogo.Height / 2)) + (89 + 8 * Kernel.font.Height));
 
             Kernel.canvas.Display();
 

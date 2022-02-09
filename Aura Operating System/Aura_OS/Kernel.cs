@@ -42,7 +42,8 @@ namespace Aura_OS
         public static Bitmap powerIco;
         public static Bitmap connectedIco;
 
-        public static Bitmap programlogo;
+        public static Bitmap programLogo;
+        public static Bitmap errorLogo;
         public static Bitmap bootBitmap;
         public static Bitmap cursor;
         public static PCScreenFont font;
@@ -152,7 +153,11 @@ namespace Aura_OS
 
             System.CustomConsole.WriteLineOK("Aura logo.");
 
-            programlogo = new Bitmap(Convert.FromBase64String(Files.b64ProgramIcon));
+            errorLogo = new Bitmap(Convert.FromBase64String(Files.b64ErrorLogo));
+
+            System.CustomConsole.WriteLineOK("Error logo.");
+
+            programLogo = new Bitmap(Convert.FromBase64String(Files.b64ProgramIcon));
 
             System.CustomConsole.WriteLineOK("Program icon 2.");
 
