@@ -21,8 +21,8 @@ jobs:
       uses: microsoft/setup-msbuild@v1.0.0
       env:
         ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
-    - name: Install vcexpress2010
-      run: choco install vcexpress2010
+    - name: Install Visual C++ 2010 Service Pack 1 Redistributable Update
+      run: choco install kb2565063
     - name: Clone Cosmos
       run: |
         mkdir Cosmos
