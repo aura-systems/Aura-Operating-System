@@ -154,6 +154,10 @@ namespace Aura_OS
                 switch (keyEvent.Key)
                 {
                     case ConsoleKeyEx.Enter:
+                        if (ScrollMode)
+                        {
+                            break;
+                        }
                         if (Command.Length > 0)
                         {
                             mX -= Command.Length;
@@ -176,6 +180,10 @@ namespace Aura_OS
                         BeforeCommand();
                         break;
                     case ConsoleKeyEx.Backspace:
+                        if (ScrollMode)
+                        {
+                            break;
+                        }
                         if (Command.Length > 0)
                         {
                             Command = Command.Remove(Command.Length - 1);
@@ -183,24 +191,42 @@ namespace Aura_OS
                         }
                         break;
                     case ConsoleKeyEx.UpArrow:
-                        if (CommandIndex >= 0)
+                        if (KeyboardManager.ControlPressed)
                         {
-                            mX -= Command.Length;
-                            Command = Commands[CommandIndex];
-                            CommandIndex--;
-                            mX += Command.Length;
+                            ScrollUp();
+                        }
+                        else
+                        {
+                            if (CommandIndex >= 0)
+                            {
+                                mX -= Command.Length;
+                                Command = Commands[CommandIndex];
+                                CommandIndex--;
+                                mX += Command.Length;
+                            }
                         }
                         break;
                     case ConsoleKeyEx.DownArrow:
-                        if (CommandIndex < Commands.Count - 1)
+                        if (KeyboardManager.ControlPressed)
                         {
-                            mX -= Command.Length;
-                            CommandIndex++;
-                            Command = Commands[CommandIndex];
-                            mX += Command.Length;
+                            ScrollDown();
+                        }
+                        else
+                        {
+                            if (CommandIndex < Commands.Count - 1)
+                            {
+                                mX -= Command.Length;
+                                CommandIndex++;
+                                Command = Commands[CommandIndex];
+                                mX += Command.Length;
+                            }
                         }
                         break;
                     default:
+                        if (ScrollMode)
+                        {
+                            break;
+                        }
                         if (char.IsLetterOrDigit(keyEvent.KeyChar) || char.IsPunctuation(keyEvent.KeyChar) || char.IsSymbol(keyEvent.KeyChar) || (keyEvent.KeyChar == ' '))
                         {
                             Command += keyEvent.KeyChar;
@@ -214,7 +240,10 @@ namespace Aura_OS
 
             DrawTerminal();
 
-            DrawCursor();
+            if (!ScrollMode)
+            {
+                DrawCursor();
+            }
         }
 
         void DrawTerminal()
@@ -276,14 +305,52 @@ namespace Aura_OS
             }
         }
 
+        List<Cell[]> TerminalHistory = new List<Cell[]>();
+        int TerminalHistoryIndex = 0;
+        bool ScrollMode = false;
+
         private void Scroll()
         {
+            TerminalHistory.Add(Text[0]);
+            TerminalHistoryIndex++;
+
             for (int i = 0; i < mRows - 1; i++)
             {
                 Text[i] = Text[i + 1];
             }
 
             Text[mRows - 1] = new Cell[mCols];
+        }
+
+        private void ScrollUp()
+        {
+            if (TerminalHistoryIndex > 0)
+            {
+                ScrollMode = true;
+
+                for (int i = Rows - 1; i > 0; i--)
+                {
+                    Text[i] = Text[i - 1];
+                }
+
+                TerminalHistoryIndex--;
+
+                Text[0] = TerminalHistory[TerminalHistoryIndex];
+            }
+        }
+
+        private void ScrollDown()
+        {
+            TerminalHistoryIndex = 0;
+
+            TerminalHistory.Clear();
+
+            ScrollMode = false;
+
+            ClearText();
+            mX = 0;
+            mY = 0;
+            BeforeCommand();
         }
 
         private void DoCarriageReturn()
