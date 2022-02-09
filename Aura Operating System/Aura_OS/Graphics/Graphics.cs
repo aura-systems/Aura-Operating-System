@@ -15,7 +15,7 @@ using System.Text;
 
 namespace Aura_OS.System.Graphics
 {
-    public class Graphics
+    public class GUI
     {
         public void DrawFilledRectangle(Pen pen, int x_start, int y_start, int width, int height)
         {
@@ -32,23 +32,7 @@ namespace Aura_OS.System.Graphics
 
         public void WriteByte(char ch, int mX, int mY, Pen pen)
         {
-            if (ch > 0x7E) //max font
-            {
-                for (int i = 0; i < Kernel.font._UnicodeMappings.Count; i++)
-                {
-                    for (int j = 0; j < Kernel.font._UnicodeMappings[i].UnicodeCharacters.Count; i++)
-                    {
-                        if (Kernel.font._UnicodeMappings[i].UnicodeCharacters[j] == ch)
-                        {
-                            Kernel.canvas.DrawChar((char)Kernel.font._UnicodeMappings[i].FontPosition, Kernel.font, pen, mX, mY);
-                        }
-                    }
-                }
-            }
-            else
-            {
-                Kernel.canvas.DrawChar((char)ch, Kernel.font, pen, mX, mY);
-            }
+            Kernel.canvas.DrawChar((char)ch, Kernel.font, pen, mX, mY);
         }
 
         public void SetCursorPos(int mX, int mY)

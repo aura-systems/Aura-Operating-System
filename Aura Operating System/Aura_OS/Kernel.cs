@@ -44,7 +44,10 @@ namespace Aura_OS
 
         public static Bitmap programLogo;
         public static Bitmap errorLogo;
+
         public static Bitmap bootBitmap;
+        public static Bitmap wallpaper;
+
         public static Bitmap cursor;
         public static PCScreenFont font;
         public static PCScreenFont fontTerminal;
@@ -153,6 +156,10 @@ namespace Aura_OS
 
             System.CustomConsole.WriteLineOK("Aura logo.");
 
+            wallpaper = new Bitmap(Convert.FromBase64String(Files.b64Wallpaper));
+
+            System.CustomConsole.WriteLineOK("Wallpaper.");
+
             errorLogo = new Bitmap(Convert.FromBase64String(Files.b64ErrorLogo));
 
             System.CustomConsole.WriteLineOK("Error logo.");
@@ -195,9 +202,11 @@ namespace Aura_OS
                         break;
                 }
 
-                canvas.Clear(0x000000);
+                //canvas.Clear(0x000000);
 
-                canvas.DrawImage(bootBitmap, (int)(screenWidth / 2 - bootBitmap.Width / 2), (int)(screenHeight / 2 - bootBitmap.Height / 2));
+                canvas.DrawImage(wallpaper, 0, 0);
+
+                //canvas.DrawImage(bootBitmap, (int)(screenWidth / 2 - bootBitmap.Width / 2), (int)(screenHeight / 2 - bootBitmap.Height / 2));
 
                 canvas.DrawString("fps=" + _fps, font, WhitePen, 2, (int)screenHeight - (font.Height * 2));
                 canvas.DrawString("Aura Operating System [" + Version + "." + Revision + "]", font, WhitePen, 2, (int)screenHeight - font.Height);
