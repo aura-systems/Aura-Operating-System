@@ -35,8 +35,6 @@ namespace Aura_OS
 
         const int MoveBarHeight = 20;
 
-        public int _i = 0;
-
         public App(string name, uint width, uint height, uint x = 0, uint y = 0) : base(name, ProcessType.Program)
         {
             Icon = Kernel.programIco;
@@ -65,44 +63,22 @@ namespace Aura_OS
 
         public override void Update()
         {
-            if (_i != 0)
-            {
-                _i--;
-            }
-
-            if (MouseManager.X > dockX && MouseManager.X < dockX + dockWidth && MouseManager.Y > dockY && MouseManager.Y < dockY + dockHeight)
-            {
-                Kernel.canvas.DrawString(name, Kernel.font, Kernel.WhitePen, (int)(dockX - ((name.Length * 8) / 2) + dockWidth / 2), (int)(dockY - 20));
-            }
-
-            if (MouseManager.MouseState == MouseState.Left && _i == 0)
-            {
-                if (MouseManager.X > dockX && MouseManager.X < dockX + dockWidth && MouseManager.Y > dockY && MouseManager.Y < dockY + dockHeight)
-                {
-                    visible = !visible;
-
-                    if (visible)
-                    {
-                        Kernel.ProcessManager.Start(this);
-                    }
-                    else
-                    {
-                        Stop();
-                    }
-
-                    _i = 60;
-                }
-            }
-
             if (visible)
             {
                 if (Kernel.Pressed)
                 {
                     if (MouseManager.X > baseX && MouseManager.X < baseX + baseWidth && MouseManager.Y > baseY && MouseManager.Y < baseY + MoveBarHeight)
                     {
-                        //Focus Windows
-                        Kernel.apps.Add(this);
-                        Kernel.apps.Remove(this);
+                        //Focus window
+                        foreach (var app in Kernel.WindowManager.apps)
+                        {
+                            if (app.Equals(this))
+                            {
+                                Kernel.WindowManager.apps.Remove(app);
+                                Kernel.WindowManager.apps.Add(this);
+                                break;
+                            }
+                        }
 
                         this.pressed = true;
                         if (!lck)

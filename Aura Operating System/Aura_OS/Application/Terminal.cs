@@ -17,7 +17,7 @@ namespace Aura_OS
 
     public class Terminal : App
     {
-        Graphics Graphics;
+        GUI Graphics;
 
         internal const char LineFeed = '\n';
         internal const char CarriageReturn = '\r';
@@ -108,7 +108,7 @@ namespace Aura_OS
         {
             Icon = Kernel.terminalIco;
 
-            Graphics = new Graphics();
+            Graphics = new GUI();
 
             Pallete[0] = 0xFF000000; // Black
             Pallete[1] = 0xFF0000AB; // Darkblue

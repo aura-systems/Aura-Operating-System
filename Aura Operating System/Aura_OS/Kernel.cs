@@ -18,6 +18,7 @@ using System.Drawing;
 using Aura_OS.System;
 using Aura_OS.Interpreter;
 using Aura_OS.Application.GameBoyEmu;
+using Aura_OS.Graphics;
 
 namespace Aura_OS
 {
@@ -58,8 +59,9 @@ namespace Aura_OS
         public static Dock dock;
 
         //PROCESSES
-        public static List<App> apps;
         public static ProcessManager ProcessManager;
+
+        public static WindowManager WindowManager;
 
         public static Terminal console;
         public static SystemInfo systeminfo;
@@ -112,10 +114,8 @@ namespace Aura_OS
             gameBoyEmu = new GameBoyEmu(160 + 2, 144 + 20, 40, 40);
             gameBoyEmu.Initialize();
 
-            apps = new List<App>();
-            apps.Add(console);
-            apps.Add(systeminfo);
-            apps.Add(gameBoyEmu);
+            WindowManager = new WindowManager();
+            WindowManager.Initialize();
 
             //START MOUSE
             MouseManager.ScreenWidth = screenWidth;
@@ -197,10 +197,7 @@ namespace Aura_OS
                 canvas.DrawString("fps=" + _fps, font, WhitePen, 2, (int)screenHeight - (font.Height * 2));
                 canvas.DrawString("Aura Operating System [" + Version + "." + Revision + "]", font, WhitePen, 2, (int)screenHeight - font.Height);
 
-                //Global.mDebugger.Send("");
-
-                foreach (App app in apps)
-                    app.Update();
+                WindowManager.DrawWindows();
 
                 dock.Update();
 
