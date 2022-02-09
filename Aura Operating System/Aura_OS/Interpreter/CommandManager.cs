@@ -190,11 +190,11 @@ namespace Aura_OS.Interpreter
                 {
                     if (i != command.CommandValues.Length - 1)
                     {
-                        Console.Write(command.CommandValues[i] + ", ");
+                        Kernel.console.Write(command.CommandValues[i] + ", ");
                     }
                     else
                     {
-                        Console.Write(command.CommandValues[i]);
+                        Kernel.console.Write(command.CommandValues[i]);
                     }
                 }
                 Kernel.console.WriteLine();

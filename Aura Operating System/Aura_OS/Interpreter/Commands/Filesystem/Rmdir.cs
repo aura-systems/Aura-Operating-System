@@ -43,8 +43,8 @@ namespace Aura_OS.Interpreter.Commands.Filesystem
         /// </summary>
         public override void PrintHelp()
         {
-            Console.WriteLine("Usage:");
-            Console.WriteLine(" - rmdir {dir}");
+            Kernel.console.WriteLine("Usage:");
+            Kernel.console.WriteLine(" - rmdir {dir}");
         }
     }
 }

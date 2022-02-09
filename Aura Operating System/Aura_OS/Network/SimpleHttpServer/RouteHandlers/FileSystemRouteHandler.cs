@@ -7,6 +7,7 @@
 * LICENSE:          LICENSES\SimpleHttpServer\LICENSE.md
 */
 
+using Aura_OS;
 using SimpleHttpServer.Models;
 using System;
 using System.Collections.Generic;
@@ -28,16 +29,16 @@ namespace SimpleHttpServer.RouteHandlers
         {
             BasePath = basePath;
 
-            Console.WriteLine("Scanning " + BasePath + "...");
+            Kernel.console.WriteLine("Scanning " + BasePath + "...");
 
             DoTree(BasePath);
 
             foreach (var path in FilesPath)
             {
-                Console.WriteLine(path.Path + " registered.");
+                Kernel.console.WriteLine(path.Path + " registered.");
             }
 
-            Console.WriteLine("Done.");
+            Kernel.console.WriteLine("Done.");
         }
 
         private void DoTree(string directory)

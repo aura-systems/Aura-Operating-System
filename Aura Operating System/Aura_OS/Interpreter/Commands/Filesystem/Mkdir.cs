@@ -86,7 +86,7 @@ namespace Aura_OS.Interpreter.Commands.Filesystem
                         Directory.CreateDirectory(Kernel.CurrentDirectory + newName);
 
                         //display text to inform the user that the directory has been created with an another name
-                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        Kernel.console.Foreground = ConsoleColor.Yellow;
 
                         Kernel.console.WriteLine("That folder existed already, directory \"" + newName + "\" has been created.");
                     }
@@ -96,7 +96,7 @@ namespace Aura_OS.Interpreter.Commands.Filesystem
                         Directory.CreateDirectory(Kernel.CurrentDirectory + dir + "(1)");
 
                         //display text to inform the user that the directory has been created with an another name
-                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        Kernel.console.Foreground = ConsoleColor.Yellow;
 
                         Kernel.console.WriteLine("That folder existed already, directory \"" + dir + "(1)" + "\" has been created.");
                     }
@@ -110,8 +110,8 @@ namespace Aura_OS.Interpreter.Commands.Filesystem
         /// </summary>
         public override void PrintHelp()
         {
-            Console.WriteLine("Usage:");
-            Console.WriteLine(" - mkdir {directory}");
+            Kernel.console.WriteLine("Usage:");
+            Kernel.console.WriteLine(" - mkdir {directory}");
         }
     }
 }

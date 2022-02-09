@@ -31,9 +31,9 @@ namespace Aura_OS.Interpreter.Commands.Filesystem
 
                 if (File.Exists(Kernel.CurrentDirectory + file))
                 {
-                    Console.WriteLine("Offset(h)  00 01 02 03 04 05 06 07  08 09 0A 0B 0C 0D 0E 0F");
-                    Console.WriteLine();
-                    Console.WriteLine(Utils.Conversion.HexDump(File.ReadAllBytes(Kernel.CurrentDirectory + file)));
+                    Kernel.console.WriteLine("Offset(h)  00 01 02 03 04 05 06 07  08 09 0A 0B 0C 0D 0E 0F");
+                    Kernel.console.WriteLine();
+                    Kernel.console.WriteLine(Utils.Conversion.HexDump(File.ReadAllBytes(Kernel.CurrentDirectory + file)));
                 }
                 else
                 {
@@ -52,8 +52,8 @@ namespace Aura_OS.Interpreter.Commands.Filesystem
         /// </summary>
         public override void PrintHelp()
         {
-            Console.WriteLine("Usage:");
-            Console.WriteLine(" - hex {file}");
+            Kernel.console.WriteLine("Usage:");
+            Kernel.console.WriteLine(" - hex {file}");
         }
     }
 }

@@ -64,8 +64,8 @@ namespace Aura_OS.Interpreter.Commands.Filesystem
         /// </summary>
         public override void PrintHelp()
         {
-            Console.WriteLine("Usage:");
-            Console.WriteLine(" - chgvol {vol_name}");
+            Kernel.console.WriteLine("Usage:");
+            Kernel.console.WriteLine(" - chgvol {vol_name}");
         }
     }
 }
