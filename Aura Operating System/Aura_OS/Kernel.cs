@@ -136,43 +136,43 @@ namespace Aura_OS
 
             //LOAD FILES
 
-            programIco = new Bitmap(Convert.FromBase64String(Files.b64NoIcon));
+            programIco = new Bitmap(Files.NoIcon);
 
             System.CustomConsole.WriteLineOK("Program icon.");
 
-            terminalIco = new Bitmap(Convert.FromBase64String(Files.b64TerminalIcon));
+            terminalIco = new Bitmap(Files.TerminalIcon);
 
             System.CustomConsole.WriteLineOK("Terminal icon.");
 
-            powerIco = new Bitmap(Convert.FromBase64String(Files.b64PowerIcon));
+            powerIco = new Bitmap(Files.PowerIcon);
 
             System.CustomConsole.WriteLineOK("Power icon.");
 
-            connectedIco = new Bitmap(Convert.FromBase64String(Files.b64ConnectedIcon));
+            connectedIco = new Bitmap(Files.ConnectedIcon);
 
             System.CustomConsole.WriteLineOK("Connected icon.");
 
-            bootBitmap = new Bitmap(Convert.FromBase64String(Files.b64AuraLogo));
+            bootBitmap = new Bitmap(Files.AuraImage);
 
             System.CustomConsole.WriteLineOK("Aura logo.");
 
-            wallpaper = new Bitmap(Convert.FromBase64String(Files.b64Wallpaper));
+            //wallpaper = new Bitmap(Convert.FromBase64String(Files.b64Wallpaper));
 
-            System.CustomConsole.WriteLineOK("Wallpaper.");
+            //System.CustomConsole.WriteLineOK("Wallpaper.");
 
-            errorLogo = new Bitmap(Convert.FromBase64String(Files.b64ErrorLogo));
+            errorLogo = new Bitmap(Files.ErrorImage);
 
             System.CustomConsole.WriteLineOK("Error logo.");
 
-            programLogo = new Bitmap(Convert.FromBase64String(Files.b64ProgramIcon));
+            programLogo = new Bitmap(Files.ProgramImage);
 
             System.CustomConsole.WriteLineOK("Program icon 2.");
 
-            cursor = new Bitmap(Convert.FromBase64String(Files.b64cursorIcon));
+            cursor = new Bitmap(Files.CursorIcon);
 
             System.CustomConsole.WriteLineOK("Cursor.");
 
-            font = PCScreenFont.LoadFont(Convert.FromBase64String(Files.b64font));
+            font = PCScreenFont.LoadFont(Files.Font);
 
             System.CustomConsole.WriteLineOK("Font.");
         }
@@ -202,9 +202,9 @@ namespace Aura_OS
                         break;
                 }
 
-                //canvas.Clear(0x000000);
+                canvas.Clear(0x000000);
 
-                canvas.DrawImage(wallpaper, 0, 0);
+                //canvas.DrawImage(wallpaper, 0, 0);
 
                 //canvas.DrawImage(bootBitmap, (int)(screenWidth / 2 - bootBitmap.Width / 2), (int)(screenHeight / 2 - bootBitmap.Height / 2));
 

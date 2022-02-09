@@ -5,6 +5,32 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <None Remove="Resources\AuraLogo.bmp" />
+      <None Remove="Resources\connected.bmp" />
+      <None Remove="Resources\Cursor.bmp" />
+      <None Remove="Resources\error.bmp" />
+      <None Remove="Resources\power.bmp" />
+      <None Remove="Resources\Program.bmp" />
+      <None Remove="Resources\programIco.bmp" />
+      <None Remove="Resources\terminalIco.bmp" />
+      <None Remove="Resources\Tetris.gb" />
+      <None Remove="Resources\zap-ext-light16.psf" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <EmbeddedResource Include="Resources\AuraLogo.bmp" />
+      <EmbeddedResource Include="Resources\connected.bmp" />
+      <EmbeddedResource Include="Resources\Cursor.bmp" />
+      <EmbeddedResource Include="Resources\error.bmp" />
+      <EmbeddedResource Include="Resources\power.bmp" />
+      <EmbeddedResource Include="Resources\Program.bmp" />
+      <EmbeddedResource Include="Resources\programIco.bmp" />
+      <EmbeddedResource Include="Resources\terminalIco.bmp" />
+      <EmbeddedResource Include="Resources\Tetris.gb" />
+      <EmbeddedResource Include="Resources\zap-ext-light16.psf" />
+    </ItemGroup>
+
+    <ItemGroup>
         <PackageReference Include="Cosmos.System2" Version="0-*" NoWarn="NU1604" />
     </ItemGroup>
 

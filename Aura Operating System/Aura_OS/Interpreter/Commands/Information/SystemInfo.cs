@@ -35,7 +35,7 @@ namespace Aura_OS.System.Shell.cmdIntr.SystemInfomation
             Kernel.console.WriteLine("Total memory:              " + Memory.TotalMemory + "MB");
             Kernel.console.WriteLine("Used memory:               " + Memory.GetUsedMemory() + "MB");
             Kernel.console.WriteLine("Free memory:               " + Memory.GetFreeMemory() + "MB");
-            //Kernel.console.WriteLine("Processor(s):              " + CPU.GetCPUBrandString());
+            Kernel.console.WriteLine("Processor(s):              " + CPU.GetCPUBrandString());
             Kernel.console.WriteLine("Console mode:              " + Kernel.console.GetConsoleInfo());
             Kernel.console.WriteLine("Screen size:               " + Kernel.canvas.Mode.Columns + "x" + Kernel.canvas.Mode.Rows);
 

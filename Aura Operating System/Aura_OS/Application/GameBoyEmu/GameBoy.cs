@@ -25,7 +25,7 @@ namespace Aura_OS.Application.GameBoyEmu
 
         public GameBoyEmu(uint width, uint height, uint x = 0, uint y = 0) : base("GameBoyEmu", width, height, x, y)
         {
-            Rom = Convert.FromBase64String(Files.b64TetrisRom);
+            Rom = Files.TetrisRom;
 
             mmu = new MMU();
             cpu = new CPU(mmu);
