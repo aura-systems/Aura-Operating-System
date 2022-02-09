@@ -21,7 +21,7 @@ namespace Aura_OS
             //Top bar
             Width = (uint)(Kernel.WindowManager.apps.Count * Kernel.programLogo.Width + Kernel.WindowManager.apps.Count * Devide);
 
-            Kernel.canvas.DrawFilledRectangle(Kernel.WhitePen, 0, 0, (int)Kernel.screenWidth, 24);
+            Kernel.canvas.DrawFilledRectangle(Kernel.avgColPen, 0, 0, (int)Kernel.screenWidth, 24);
 
             uint strX = 0;
             uint strY = 0;
