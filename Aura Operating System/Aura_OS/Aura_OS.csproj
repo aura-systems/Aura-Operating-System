@@ -25,6 +25,7 @@
     <ItemGroup>
       <None Remove="Resources\AuraLogo.bmp" />
       <None Remove="Resources\connected.bmp" />
+      <None Remove="Resources\CosmosLogo.bmp" />
       <None Remove="Resources\Cursor.bmp" />
       <None Remove="Resources\error.bmp" />
       <None Remove="Resources\power.bmp" />
@@ -39,6 +40,7 @@
     <ItemGroup>
       <EmbeddedResource Include="Resources\AuraLogo.bmp" />
       <EmbeddedResource Include="Resources\connected.bmp" />
+      <EmbeddedResource Include="Resources\CosmosLogo.bmp" />
       <EmbeddedResource Include="Resources\Cursor.bmp" />
       <EmbeddedResource Include="Resources\error.bmp" />
       <EmbeddedResource Include="Resources\power.bmp" />

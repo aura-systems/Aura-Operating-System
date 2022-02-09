@@ -14,6 +14,10 @@ namespace Aura_OS
         public static byte[] AuraImage;
 
         //.bmp
+        [ManifestResourceStream(ResourceName = "Aura_OS.Resources.CosmosLogo.bmp")]
+        public static byte[] CosmosLogo;
+
+        //.bmp
         [ManifestResourceStream(ResourceName = "Aura_OS.Resources.Program.bmp")]
         public static byte[] ProgramImage;
 

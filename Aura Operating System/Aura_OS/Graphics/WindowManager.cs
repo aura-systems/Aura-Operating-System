@@ -14,7 +14,8 @@ namespace Aura_OS.Graphics
         {
             apps = new List<App>();
             apps.Add(Kernel.console);
-            apps.Add(Kernel.systeminfo);
+            apps.Add(Kernel.memoryInfo);
+            apps.Add(Kernel.systemInfo);
             apps.Add(Kernel.gameBoyEmu);
         }
 

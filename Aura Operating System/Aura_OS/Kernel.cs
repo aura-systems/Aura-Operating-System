@@ -45,7 +45,9 @@ namespace Aura_OS
         public static Bitmap programLogo;
         public static Bitmap errorLogo;
 
-        public static Bitmap bootBitmap;
+        public static Bitmap AuraLogo;
+        public static Bitmap CosmosLogo;
+
         public static Bitmap wallpaper;
 
         public static Bitmap cursor;
@@ -68,7 +70,8 @@ namespace Aura_OS
         public static WindowManager WindowManager;
 
         public static Terminal console;
-        public static SystemInfo systeminfo;
+        public static MemoryInfo memoryInfo;
+        public static SystemInfo systemInfo;
         public static GameBoyEmu gameBoyEmu;
 
         public static CommandManager CommandManager;
@@ -112,8 +115,11 @@ namespace Aura_OS
             console = new Terminal(700, 600, 40, 40);
             console.Initialize();
 
-            systeminfo = new SystemInfo(400, 300, 40, 40);
-            systeminfo.Initialize();
+            memoryInfo = new MemoryInfo(400, 300, 40, 40);
+            memoryInfo.Initialize();
+
+            systemInfo = new SystemInfo(402, 197, 40, 40);
+            systemInfo.Initialize();
 
             gameBoyEmu = new GameBoyEmu(160 + 2, 144 + 20, 40, 40);
             gameBoyEmu.Initialize();
@@ -152,9 +158,13 @@ namespace Aura_OS
 
             System.CustomConsole.WriteLineOK("Connected icon.");
 
-            bootBitmap = new Bitmap(Files.AuraImage);
+            AuraLogo = new Bitmap(Files.AuraImage);
 
             System.CustomConsole.WriteLineOK("Aura logo.");
+
+            CosmosLogo = new Bitmap(Files.CosmosLogo);
+
+            System.CustomConsole.WriteLineOK("CosmosLogo logo.");
 
             wallpaper = new Bitmap(Files.Wallpaper);
 
