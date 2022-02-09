@@ -59,7 +59,7 @@ namespace Aura_OS
         public static Canvas canvas;
         public static Pen WhitePen = new Pen(Color.White);
         public static Pen BlackPen = new Pen(Color.Black);
-        public static Pen avgColPen = new Pen(Color.DimGray);
+        public static Pen avgColPen = new Pen(Color.PowderBlue);
         public static Dock dock;
 
         //PROCESSES
@@ -156,9 +156,9 @@ namespace Aura_OS
 
             System.CustomConsole.WriteLineOK("Aura logo.");
 
-            //wallpaper = new Bitmap(Convert.FromBase64String(Files.b64Wallpaper));
+            wallpaper = new Bitmap(Files.Wallpaper);
 
-            //System.CustomConsole.WriteLineOK("Wallpaper.");
+            System.CustomConsole.WriteLineOK("Wallpaper.");
 
             errorLogo = new Bitmap(Files.ErrorImage);
 
@@ -202,9 +202,9 @@ namespace Aura_OS
                         break;
                 }
 
-                canvas.Clear(0x000000);
+                //canvas.Clear(0x000000);
 
-                //canvas.DrawImage(wallpaper, 0, 0);
+                canvas.DrawImage(wallpaper, 0, 0);
 
                 //canvas.DrawImage(bootBitmap, (int)(screenWidth / 2 - bootBitmap.Width / 2), (int)(screenHeight / 2 - bootBitmap.Height / 2));
 

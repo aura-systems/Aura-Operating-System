@@ -14,6 +14,7 @@
       <None Remove="Resources\programIco.bmp" />
       <None Remove="Resources\terminalIco.bmp" />
       <None Remove="Resources\Tetris.gb" />
+      <None Remove="Resources\wallpaper1920.bmp" />
       <None Remove="Resources\zap-ext-light16.psf" />
     </ItemGroup>
 
@@ -27,6 +28,7 @@
       <EmbeddedResource Include="Resources\programIco.bmp" />
       <EmbeddedResource Include="Resources\terminalIco.bmp" />
       <EmbeddedResource Include="Resources\Tetris.gb" />
+      <EmbeddedResource Include="Resources\wallpaper1920.bmp" />
       <EmbeddedResource Include="Resources\zap-ext-light16.psf" />
     </ItemGroup>
 
