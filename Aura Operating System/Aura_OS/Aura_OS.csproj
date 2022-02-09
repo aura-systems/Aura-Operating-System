@@ -1,12 +1,16 @@
 ﻿<Project InitialTargets="GetVersion" Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <Year>$([System.DateTime]::Now.ToString("yyyy"))</Year>
-    <Month>$([System.DateTime]::Now.ToString("MM"))</Month>
-    <Date>$([System.DateTime]::Now.ToString("dd"))</Date>
-    <Time>$([System.DateTime]::Now.ToString("HHmm"))</Time>
-    <SomeThing>
-      <![CDATA[
+    <PropertyGroup>
+        <TargetFramework>net5.0</TargetFramework>
+    </PropertyGroup>
+
+	<PropertyGroup>
+		<Year>$([System.DateTime]::Now.ToString("yyyy"))</Year>
+		<Month>$([System.DateTime]::Now.ToString("MM"))</Month>
+		<Date>$([System.DateTime]::Now.ToString("dd"))</Date>
+		<Time>$([System.DateTime]::Now.ToString("HHmm"))</Time>
+		<SomeThing>
+			<![CDATA[
         namespace Aura_OS
 {
     public class VersionInfo
@@ -15,31 +19,45 @@
     }
 }
        ]]>
-    </SomeThing>
-  </PropertyGroup>
+		</SomeThing>
+	</PropertyGroup>
 
-  <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
-  </PropertyGroup>
+    <ItemGroup>
+      <None Remove="Resources\AuraLogo.bmp" />
+      <None Remove="Resources\connected.bmp" />
+      <None Remove="Resources\CosmosLogo.bmp" />
+      <None Remove="Resources\Cursor.bmp" />
+      <None Remove="Resources\error.bmp" />
+      <None Remove="Resources\power.bmp" />
+      <None Remove="Resources\Program.bmp" />
+      <None Remove="Resources\programIco.bmp" />
+      <None Remove="Resources\terminalIco.bmp" />
+      <None Remove="Resources\Tetris.gb" />
+      <None Remove="Resources\wallpaper1920.bmp" />
+      <None Remove="Resources\zap-ext-light16.psf" />
+    </ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Cosmos.System2" Version="0-*" NoWarn="NU1604" />
-  </ItemGroup>
+    <ItemGroup>
+      <EmbeddedResource Include="Resources\AuraLogo.bmp" />
+      <EmbeddedResource Include="Resources\connected.bmp" />
+      <EmbeddedResource Include="Resources\CosmosLogo.bmp" />
+      <EmbeddedResource Include="Resources\Cursor.bmp" />
+      <EmbeddedResource Include="Resources\error.bmp" />
+      <EmbeddedResource Include="Resources\power.bmp" />
+      <EmbeddedResource Include="Resources\Program.bmp" />
+      <EmbeddedResource Include="Resources\programIco.bmp" />
+      <EmbeddedResource Include="Resources\terminalIco.bmp" />
+      <EmbeddedResource Include="Resources\Tetris.gb" />
+      <EmbeddedResource Include="Resources\wallpaper1920.bmp" />
+      <EmbeddedResource Include="Resources\zap-ext-light16.psf" />
+    </ItemGroup>
 
-  <ItemGroup>
-    <Reference Include="IL2CPU.API">
-      <HintPath>$(AppData)\Cosmos User Kit\Build\IL2CPU\IL2CPU.API.dll</HintPath>
-    </Reference>
-    <Reference Include="XSharp">
-      <HintPath>$(AppData)\Cosmos User Kit\Build\IL2CPU\XSharp.dll</HintPath>
-    </Reference>
-    <Reference Include="IL2CPU">
-      <HintPath>$(AppData)\Cosmos User Kit\Build\IL2CPU\IL2CPU.dll</HintPath>
-    </Reference>
-  </ItemGroup>
-  
-  <Target Name="GetVersion">
-    <WriteLinesToFile File="Properties\VersionInfo.cs" Lines="$(SomeThing)" Overwrite="true" />
-  </Target>
+    <ItemGroup>
+        <PackageReference Include="Cosmos.System2" Version="0-*" NoWarn="NU1604" />
+    </ItemGroup>
+
+	<Target Name="GetVersion">
+		<WriteLinesToFile File="Properties\VersionInfo.cs" Lines="$(SomeThing)" Overwrite="true" />
+	</Target>
 
 </Project>

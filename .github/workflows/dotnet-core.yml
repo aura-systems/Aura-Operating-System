@@ -21,15 +21,17 @@ jobs:
       uses: microsoft/setup-msbuild@v1.0.0
       env:
         ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
+    - name: Install Visual C++ 2010 Service Pack 1 Redistributable Update
+      run: choco install vcredist2010
     - name: Clone Cosmos
       run: |
         mkdir Cosmos
         mkdir c:/CosmosRun
         cd Cosmos
-        git clone https://github.com/aura-systems/Common
-        git clone https://github.com/aura-systems/IL2CPU
-        git clone https://github.com/aura-systems/Cosmos
-        git clone https://github.com/aura-systems/XSharp
+        git clone https://github.com/CosmosOS/Common
+        git clone https://github.com/CosmosOS/IL2CPU
+        git clone https://github.com/CosmosOS/Cosmos
+        git clone https://github.com/CosmosOS/XSharp
     - name: Build Cosmos
       run: |
         cd Cosmos/Cosmos
