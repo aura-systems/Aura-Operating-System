@@ -16,7 +16,7 @@
 * PS/2 Keyboard + Mouse.
 * 重新启动 + ACPI 关机。
 * 多语言。
-* Command interpreter.
+* 命令解释器
 * 错误捕捉。
 * GUI (SVGAII, VBE)
 * 网络 (ARP, IPV4, ICMP, UDP, DNS, DHCP, TCP, HTTP)
