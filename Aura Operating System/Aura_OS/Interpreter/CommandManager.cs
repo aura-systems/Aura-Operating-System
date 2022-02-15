@@ -76,7 +76,6 @@ namespace Aura_OS.Interpreter
             CMDs.Add(new CommandRmdir(new string[] { "rmdir", "rmd" }));
             CMDs.Add(new CommandCat(new string[] { "cat" }));
             CMDs.Add(new CommandCD(new string[] { "cd" }));
-            CMDs.Add(new CommandChangeVol(new string[] { "chgvol", "cv" }));
             CMDs.Add(new CommandMkfil(new string[] { "touch", "mkfil", "mf" }));
             CMDs.Add(new CommandRmfil(new string[] { "rmfil", "rmf" }));
             CMDs.Add(new CommandHex(new string[] { "hex" }));
@@ -209,6 +208,13 @@ namespace Aura_OS.Interpreter
         /// <param name="command">Command</param>
         private ReturnInfo CheckCommand(ICommand command)
         {
+            if (command.Type == CommandType.Filesystem)
+            {
+                if (Kernel.VirtualFileSystem == null || Kernel.VirtualFileSystem.GetVolumes().Count == 0)
+                {
+                    return new ReturnInfo(command, ReturnCode.ERROR, "No volume detected!");
+                }
+            }
             if (command.Type == CommandType.Network)
             {
                 if (NetworkStack.ConfigEmpty())
