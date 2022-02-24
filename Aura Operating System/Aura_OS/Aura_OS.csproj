@@ -20,6 +20,7 @@
 }
        ]]>
 		</SomeThing>
+		<AllowUnsafeBlocks>True</AllowUnsafeBlocks>
 	</PropertyGroup>
 
     <ItemGroup>
@@ -28,6 +29,7 @@
       <None Remove="Resources\CosmosLogo.bmp" />
       <None Remove="Resources\Cursor.bmp" />
       <None Remove="Resources\error.bmp" />
+      <None Remove="Resources\noruntime.exe" />
       <None Remove="Resources\power.bmp" />
       <None Remove="Resources\Program.bmp" />
       <None Remove="Resources\programIco.bmp" />
@@ -43,6 +45,7 @@
       <EmbeddedResource Include="Resources\CosmosLogo.bmp" />
       <EmbeddedResource Include="Resources\Cursor.bmp" />
       <EmbeddedResource Include="Resources\error.bmp" />
+      <EmbeddedResource Include="Resources\noruntime.exe" />
       <EmbeddedResource Include="Resources\power.bmp" />
       <EmbeddedResource Include="Resources\Program.bmp" />
       <EmbeddedResource Include="Resources\programIco.bmp" />

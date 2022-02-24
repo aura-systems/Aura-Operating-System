@@ -76,6 +76,8 @@ namespace Aura_OS
 
         public static CommandManager CommandManager;
 
+        public static API auraApi;
+
         public static bool Pressed;
         public static int FreeCount = 0;
 
@@ -126,6 +128,9 @@ namespace Aura_OS
 
             WindowManager = new WindowManager();
             WindowManager.Initialize();
+
+            auraApi = new API();
+            auraApi.Initialize();
 
             //START MOUSE
             MouseManager.ScreenWidth = screenWidth;
