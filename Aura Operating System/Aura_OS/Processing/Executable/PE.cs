@@ -1,4 +1,6 @@
 ﻿using Aura_OS.Processing;
+using Cosmos.Core;
+using Cosmos.Core.Memory;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,15 +14,15 @@ namespace Aura_OS.Processing.Executable
         public byte[] data;
         public byte[] text;
 
+        int p = 0;
+        uint address = 0;
+        uint data_addr = 0;
+        uint ib = 0;
+
         private static List<Section> sections = new List<Section>();
 
         public PE32(byte[] file)
         {
-            int p = 0;
-            uint address = 0;
-            uint data_addr = 0;
-            uint ib = 0;
-
             for (int i = 0; i < file.Length; i++)
             {
                 p = i;
@@ -102,6 +104,32 @@ namespace Aura_OS.Processing.Executable
                                 Console.WriteLine(name + "=0x" + ((int)sec->VirtualAddress).ToString("X"));
                             }
                         }
+
+                        for (int i = 0; i < sections.Count; i++)
+                        {
+                            if (sections[i].Name == ".text")
+                            {
+                                text = new byte[sections[i].Size];
+                                p = (int)(uint)sections[i].Address;
+                                baseP = p;
+                                for (int b = 0; b < (int)(uint)sections[i].Size; b++)
+                                {
+                                    text[b] = file[baseP + b];
+                                    p++;
+                                }
+                            }
+                            else if (sections[i].Name == ".data")
+                            {
+                                data = new byte[sections[i].Size];
+                                p = (int)(uint)sections[i].Address;
+                                baseP = p;
+                                for (int b = 0; b < (int)(uint)sections[i].Size; b++)
+                                {
+                                    data[b] = file[baseP + b];
+                                    p++;
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -109,22 +137,16 @@ namespace Aura_OS.Processing.Executable
 
         public void Start()
         {
-            /*// We do not have paging working and I an to lazy to relocate this
-            // so we are just loading this were the PE header tells us to
-            // may be bad, because we 'could' be overwritting something
-            // in RAM. Im not sure.... Lets hope not
-            byte* dptr = (byte*)ib + address;
-            for (int i = 0; i < text.Length; i++)
-            {
-                dptr[i] = text[i];
-            }
-            dptr = (byte*)ib + data_addr;
-            for (int i = 0; i < data.Length; i++)
-            {
-                dptr[i] = data[i];
-            }
+            var address = Heap.Alloc((uint)text.Length);
+            var address2 = Heap.Alloc((uint)data.Length);
+
+            var textBlock = new MemoryBlock((uint)address, (uint)text.Length);
+            textBlock.Copy(text);
+            var dataBlock = new MemoryBlock((uint)address2, (uint)data.Length);
+            dataBlock.Copy(data);
+
             Caller cl = new Caller();
-            cl.CallCode(ib + address); // Jump!!!!!*/
+            cl.CallCode((uint)address);
         }
 
         public string GetArchitecture(ushort arch)

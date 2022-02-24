@@ -108,6 +108,7 @@ namespace Aura_OS.Interpreter
             CMDs.Add(new CommandAction(new string[] { "exec" }, () =>
             {
                 var pe = new PE32(Files.Program);
+                pe.Start();
             }));
         }
 
