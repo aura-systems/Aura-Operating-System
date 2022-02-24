@@ -35,7 +35,42 @@ namespace Aura_OS.Processing.Executable
             else
             {
                 Console.WriteLine("Start: " + p.ToString());
+
+                byte[] hdr = new byte[(sizeof(PeHeader))];
+
+                for (int i = 0; i < sizeof(PeHeader); i++)
+                {
+                    hdr[i] = file[p + i];
+                }
+
+                fixed (byte* ptr = hdr)
+                {
+                    PeHeader* header = (PeHeader*)ptr;
+                    Console.WriteLine("Arch=0x" + header->mMachine.ToString("X"));
+                    Console.WriteLine("Number of sections=" + header->mNumberOfSections);
+                    Console.WriteLine("Number of symbols=" + header->mNumberOfSymbols);
+                }
             } 
+        }
+
+        public void Start()
+        {
+            /*// We do not have paging working and I an to lazy to relocate this
+            // so we are just loading this were the PE header tells us to
+            // may be bad, because we 'could' be overwritting something
+            // in RAM. Im not sure.... Lets hope not
+            byte* dptr = (byte*)ib + address;
+            for (int i = 0; i < text.Length; i++)
+            {
+                dptr[i] = text[i];
+            }
+            dptr = (byte*)ib + data_addr;
+            for (int i = 0; i < data.Length; i++)
+            {
+                dptr[i] = data[i];
+            }
+            Caller cl = new Caller();
+            cl.CallCode(ib + address); // Jump!!!!!*/
         }
 
         #region Nested Types
