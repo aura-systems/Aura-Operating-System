@@ -72,6 +72,36 @@ namespace Aura_OS.Processing.Executable
                         Console.WriteLine("Base of code=0x" + opt->mBaseOfCode.ToString("X"));
                         Console.WriteLine("Base of data=0x" + opt->mBaseOfData.ToString("X"));
                         Console.WriteLine("Image base=0x" + opt->mImageBase.ToString("X"));
+
+                        for (int s = 0; s < header->mNumberOfSections; s++)
+                        {
+
+                            fixed (byte* ptr3 = tmp)
+                            {
+                                baseP = p;
+                                for (int i = 0; i < 40; i++)
+                                {
+                                    tmp[i] = file[baseP + i];
+                                    p++;
+                                }
+
+                                SectionHeader* sec = (SectionHeader*)ptr3;
+
+                                string name = "";
+                                for (int c = 0; sec->Name[c] != 0; c++)
+                                    name += ((char)sec->Name[c]).ToString();
+
+                                Section section = new Section();
+                                section.Name = name;
+                                section.Address = (uint)sec->PointerToRawData;
+                                section.RelocationCount = (uint)sec->NumberOfRelocations;
+                                section.RelocationPtr = (uint)sec->PointerToRelocations;
+                                section.Size = (uint)sec->SizeOfRawData;
+                                sections.Add(section);
+
+                                Console.WriteLine(name + "=0x" + ((int)sec->VirtualAddress).ToString("X"));
+                            }
+                        }
                     }
                 }
             }
