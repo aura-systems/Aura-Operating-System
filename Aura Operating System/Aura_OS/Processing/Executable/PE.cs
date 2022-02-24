@@ -37,20 +37,44 @@ namespace Aura_OS.Processing.Executable
                 Console.WriteLine("Start: " + p.ToString());
 
                 byte[] hdr = new byte[(sizeof(PeHeader))];
-
+                int baseP = p;
                 for (int i = 0; i < sizeof(PeHeader); i++)
                 {
-                    hdr[i] = file[p + i];
+                    hdr[i] = file[baseP + i];
+                    p++;
                 }
 
                 fixed (byte* ptr = hdr)
                 {
-                    PeHeader* header = (PeHeader*)ptr;
-                    Console.WriteLine("Arch=0x" + header->mMachine.ToString("X"));
+                    var header = (PeHeader*)ptr;
+
+                    Console.WriteLine("Arch=" + GetArchitecture(header->mMachine));
                     Console.WriteLine("Number of sections=" + header->mNumberOfSections);
                     Console.WriteLine("Number of symbols=" + header->mNumberOfSymbols);
+
+                    byte[] ohdr = new byte[header->mSizeOfOptionalHeader];
+
+                    baseP = p;
+                    for (int i = 0; i < header->mSizeOfOptionalHeader; i++)
+                    {
+                        ohdr[i] = file[baseP + i];
+                        p++;
+                    }
+                    fixed (byte* ptr2 = ohdr)
+                    {
+                        Pe32OptionalHeader* opt = (Pe32OptionalHeader*)ptr2;
+
+                        byte[] tmp = new byte[40];
+                        address = opt->mBaseOfCode;
+                        data_addr = opt->mBaseOfData;
+                        ib = opt->mImageBase;
+
+                        Console.WriteLine("Base of code=0x" + opt->mBaseOfCode.ToString("X"));
+                        Console.WriteLine("Base of data=0x" + opt->mBaseOfData.ToString("X"));
+                        Console.WriteLine("Image base=0x" + opt->mImageBase.ToString("X"));
+                    }
                 }
-            } 
+            }
         }
 
         public void Start()
@@ -71,6 +95,21 @@ namespace Aura_OS.Processing.Executable
             }
             Caller cl = new Caller();
             cl.CallCode(ib + address); // Jump!!!!!*/
+        }
+
+        public string GetArchitecture(ushort arch)
+        {
+            switch (arch)
+            {
+                case 0x014c:
+                    return "x86";
+                case 0x0200:
+                    return "Intel Itanium";
+                case 0x8664:
+                    return "x64";
+                default:
+                    return "Unknown architecture";
+            }
         }
 
         #region Nested Types
