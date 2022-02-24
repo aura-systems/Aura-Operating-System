@@ -1,184 +1,166 @@
-﻿using System;
+﻿using Aura_OS.Processing;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace Aura_OS.Processing.Executable
 {
-    public class PE
+    public unsafe class PE32
     {
-        byte[] File;
+        public byte[] data;
+        public byte[] text;
 
-        public PE(byte[] file)
+        private static List<Section> sections = new List<Section>();
+
+        public PE32(byte[] file)
         {
-            File = file;
+            int p = 0;
+            uint address = 0;
+            uint data_addr = 0;
+            uint ib = 0;
+
+            for (int i = 0; i < (int)file.Length; i++)
+            {
+                p = i;
+                if (file[i] == (byte)'P' && file[i] == (byte)'E')
+                    break;
+            }
+
+            if (p == file.Length - 1)
+            {
+                Console.WriteLine("Not a Portable Executable.");
+            }
+            else
+            {
+                Console.WriteLine("Start: " + p.ToString());
+            } 
         }
 
-        public void Parse()
+        #region Nested Types
+
+        [StructLayout(LayoutKind.Explicit, Pack = 1)]
+        unsafe struct Pe32OptionalHeader
         {
-            DOSHeader header = new DOSHeader();
-            header.e_magic = (ushort)((File[0] << 8) | File[1]);
-            header.e_cblp = (ushort)((File[2] << 8) | File[3]);
-            header.e_cp = (ushort)((File[4] << 8) | File[5]);
-            header.e_crlc = (ushort)((File[6] << 8) | File[7]);
-            header.e_cparhdr = (ushort)((File[8] << 8) | File[9]);
-            header.e_minalloc = (ushort)((File[10] << 8) | File[11]);
-            header.e_maxalloc = (ushort)((File[12] << 8) | File[13]);
-            header.e_ss = (ushort)((File[14] << 8) | File[15]);
-            header.e_sp = (ushort)((File[16] << 8) | File[17]);
-            header.e_csum = (ushort)((File[18] << 8) | File[19]);
-
-            Console.WriteLine("e_magic=0x" + header.e_magic.ToString("X"));
+            [FieldOffset(0)]
+            public ushort mMagic; // 0x010b - PE32, 0x020b - PE32+ (64 bit)
+            [FieldOffset(2)]
+            public byte mMajorLinkerVersion;
+            [FieldOffset(3)]
+            public byte mMinorLinkerVersion;
+            [FieldOffset(4)]
+            public uint mSizeOfCode;
+            [FieldOffset(8)]
+            public uint mSizeOfInitializedData;
+            [FieldOffset(12)]
+            public uint mSizeOfUninitializedData;
+            [FieldOffset(16)]
+            public uint mAddressOfEntryPoint;
+            [FieldOffset(20)]
+            public uint mBaseOfCode;
+            [FieldOffset(24)]
+            public uint mBaseOfData;
+            [FieldOffset(28)]
+            public uint mImageBase;
+            [FieldOffset(32)]
+            public uint mSectionAlignment;
+            [FieldOffset(36)]
+            public uint mFileAlignment;
+            [FieldOffset(40)]
+            public ushort mMajorOperatingSystemVersion;
+            [FieldOffset(42)]
+            public ushort mMinorOperatingSystemVersion;
+            [FieldOffset(44)]
+            public ushort mMajorImageVersion;
+            [FieldOffset(46)]
+            public ushort mMinorImageVersion;
+            [FieldOffset(48)]
+            public ushort mMajorSubsystemVersion;
+            [FieldOffset(50)]
+            public ushort mMinorSubsystemVersion;
+            [FieldOffset(52)]
+            public uint mWin32VersionValue;
+            [FieldOffset(56)]
+            public uint mSizeOfImage;
+            [FieldOffset(60)]
+            public uint mSizeOfHeaders;
+            [FieldOffset(64)]
+            public uint mCheckSum;
+            [FieldOffset(68)]
+            public ushort mSubsystem;
+            [FieldOffset(70)]
+            public ushort mDllCharacteristics;
+            [FieldOffset(72)]
+            public uint mSizeOfStackReserve;
+            [FieldOffset(76)]
+            public uint mSizeOfStackCommit;
+            [FieldOffset(80)]
+            public uint mSizeOfHeapReserve;
+            [FieldOffset(84)]
+            public uint mSizeOfHeapCommit;
+            [FieldOffset(88)]
+            public uint mLoaderFlags;
+            [FieldOffset(92)]
+            public uint mNumberOfRvaAndSizes;
         }
-    }
 
-    [StructLayout(LayoutKind.Sequential)]
-    unsafe struct DOSHeader
-    {
-        public ushort e_magic;              // Magic number
-        public ushort e_cblp;               // Bytes on last page of file
-        public ushort e_cp;                 // Pages in file
-        public ushort e_crlc;               // Relocations
-        public ushort e_cparhdr;            // Size of header in paragraphs
-        public ushort e_minalloc;           // Minimum extra paragraphs needed
-        public ushort e_maxalloc;           // Maximum extra paragraphs needed
-        public ushort e_ss;                 // Initial (relative) SS value
-        public ushort e_sp;                 // Initial SP value
-        public ushort e_csum;               // Checksum
-        public ushort e_ip;                 // Initial IP value
-        public ushort e_cs;                 // Initial (relative) CS value
-        public ushort e_lfarlc;             // File address of relocation table
-        public ushort e_ovno;               // Overlay number
-        public fixed ushort e_res1[4];      // Reserved words
-        public ushort e_oemid;              // OEM identifier (for e_oeminfo)
-        public ushort e_oeminfo;            // OEM information; e_oemid specific
-        public fixed ushort e_res2[10];     // Reserved words
-        public int e_lfanew;                // File address of new exe header
-    }
+        [StructLayout(LayoutKind.Explicit, Pack = 1)]
+        unsafe struct PeHeader
+        {
+            [FieldOffset(0)]
+            public uint mMagic;
+            [FieldOffset(4)]
+            public ushort mMachine;
+            [FieldOffset(6)]
+            public ushort mNumberOfSections;
+            [FieldOffset(8)]
+            public uint mTimeDateStamp;
+            [FieldOffset(12)]
+            public uint mPointerToSymbolTable;
+            [FieldOffset(16)]
+            public uint mNumberOfSymbols;
+            [FieldOffset(20)]
+            public ushort mSizeOfOptionalHeader;
+            [FieldOffset(22)]
+            public ushort mCharacteristics;
+        }
 
-    [StructLayout(LayoutKind.Sequential)]
-    struct FileHeader
-    {
-        public ushort Machine;
-        public ushort NumberOfSections;
-        public uint TimeDateStamp;
-        public uint PointerToSymbolTable;
-        public uint NumberOfSymbols;
-        public ushort SizeOfOptionalHeader;
-        public ushort Characteristics;
-    }
+        [StructLayout(LayoutKind.Explicit, Pack = 1)]
+        struct SectionHeader
+        {
+            [FieldOffset(0)]
+            public fixed byte Name[8];
+            [FieldOffset(8)]
+            public uint PhysicalAddress;
+            [FieldOffset(12)]
+            public uint VirtualAddress;
+            [FieldOffset(16)]
+            public uint SizeOfRawData;
+            [FieldOffset(20)]
+            public uint PointerToRawData;
+            [FieldOffset(24)]
+            public uint PointerToRelocations;
+            [FieldOffset(28)]
+            public uint PointerToLinenumbers;
+            [FieldOffset(32)]
+            public ushort NumberOfRelocations;
+            [FieldOffset(34)]
+            public ushort NumberOfLinenumbers;
+            [FieldOffset(36)]
+            public uint Characteristics;
+        }
 
-    enum SubSystemType : ushort
-    {
-        Unknown = 0,
-        Native = 1,
-        WindowsGUI = 2,
-        WindowsCUI = 3,
-        PosixCUI = 7,
-        WindowsCEGui = 9,
-        EfiApplication = 10,
-        EfiBootServiceDriver = 11,
-        EfiRuntimeDriver = 12,
-        EfiRom = 13,
-        Xbox = 14
-    }
+        public class Section
+        {
+            #region Fields
 
-    enum DllCharacteristicsType : ushort
-    {
-        RES_0 = 0x0001,
-        RES_1 = 0x0002,
-        RES_2 = 0x0004,
-        RES_3 = 0x0008,
-        DynamicBase = 0x0040,
-        ForceIntegrity = 0x0080,
-        NxCompat = 0x0100,
-        NoIsolation = 0x0200,
-        NoSEH = 0x0400,
-        NoBind = 0x0800,
-        RES_4 = 0x1000,
-        WDMDriver = 0x2000,
-        TerminalServerName = 0x8000
-    }
+            public uint Address, Size, RelocationPtr, RelocationCount;
+            public string Name;
 
-    [StructLayout(LayoutKind.Sequential)]
-    struct DataDirectory
-    {
-        public uint VirtualAddress;
-        public uint Size;
-    }
+            #endregion Fields
+        }
 
-    [StructLayout(LayoutKind.Sequential, Pack = 1)]
-    struct OptionalHeaders64
-    {
-        public ushort Magic;
-        public byte MajorLinkerVersion;
-        public byte MinorLinkerVersion;
-        public uint SizeOfCode;
-        public uint SizeOfInitializedData;
-        public uint SizeOfUninitializedData;
-        public uint AddressOfEntryPoint;
-        public uint BaseOfCode;
-        public ulong ImageBase;
-        public uint SectionAlignment;
-        public uint FileAlignment;
-        public ushort MajorOperatingSystemVersion;
-        public ushort MinorOperatingSystemVersion;
-        public ushort MajorImageVersion;
-        public ushort MinorImageVersion;
-        public ushort MajorSubsystemVersion;
-        public ushort MinorSubsystemVersion;
-        public uint Win32VersionValue;
-        public uint SizeOfImage;
-        public uint SizeOfHeaders;
-        public uint CheckSum;
-        public SubSystemType Subsystem;
-        public DllCharacteristicsType DllCharacteristics;
-        public ulong SizeOfStackReserve;
-        public ulong SizeOfStackCommit;
-        public ulong SizeOfHeapReserve;
-        public ulong SizeOfHeapCommit;
-        public uint LoaderFlags;
-        public uint NumberOfRvaAndSizes;
-        public DataDirectory ExportTable;
-        public DataDirectory ImportTable;
-        public DataDirectory ResourceTable;
-        public DataDirectory ExceptionTable;
-        public DataDirectory CertificateTable;
-        public DataDirectory BaseRelocationTable;
-        public DataDirectory Debug;
-        public DataDirectory Architecture;
-        public DataDirectory GlobalPtr;
-        public DataDirectory TLSTable;
-        public DataDirectory LoadConfigTable;
-        public DataDirectory BoundImport;
-        public DataDirectory IAT;
-        public DataDirectory DelayImportDescriptor;
-        public DataDirectory CLRRuntimeHeader;
-        public DataDirectory Reserved;
-    }
-
-    [StructLayout(LayoutKind.Sequential, Pack = 1)]
-    struct NtHeaders64
-    {
-        public uint Signature;
-        public FileHeader FileHeader;
-        public OptionalHeaders64 OptionalHeader;
-    }
-
-    [StructLayout(LayoutKind.Sequential)]
-    unsafe struct SectionHeader
-    {
-        public fixed byte Name[8];
-        public uint PhysicalAddress_VirtualSize;
-        public uint VirtualAddress;
-        public uint SizeOfRawData;
-        public uint PointerToRawData;
-        public uint PointerToRelocations;
-        public uint PointerToLineNumbers;
-        public ushort NumberOfRelocations;
-        public ushort NumberOfLineNumbers;
-        public uint Characteristics;
+        #endregion Nested Types
     }
 }
