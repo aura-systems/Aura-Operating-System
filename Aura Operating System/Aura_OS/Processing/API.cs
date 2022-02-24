@@ -31,6 +31,15 @@ namespace Aura_OS.Processing
                 if (aContext.EAX == 0x01) //Print function.
                 {
                     Kernel.console.WriteLine("Print called!");
+
+                    byte* dat = (byte*)aContext.ESI;
+
+                    Kernel.console.WriteLine("ESI=0x" + aContext.ESI.ToString("X"));
+
+                    for (int i = 0; dat[i] != 0; i++)
+                    {
+                        Console.Write((char)dat[i]);
+                    }
                 }
             }
         }

@@ -145,6 +145,9 @@ namespace Aura_OS.Processing.Executable
             var dataBlock = new MemoryBlock((uint)address2, (uint)data.Length);
             dataBlock.Copy(data);
 
+            Kernel.console.WriteLine("text=0x" + ((uint)address).ToString("X"));
+            Kernel.console.WriteLine("data=0x" + ((uint)address2).ToString("X"));
+
             Caller cl = new Caller();
             cl.CallCode((uint)address);
         }
