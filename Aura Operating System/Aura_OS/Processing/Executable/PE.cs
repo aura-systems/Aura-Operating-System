@@ -21,10 +21,10 @@ namespace Aura_OS.Processing.Executable
             uint data_addr = 0;
             uint ib = 0;
 
-            for (int i = 0; i < (int)file.Length; i++)
+            for (int i = 0; i < file.Length; i++)
             {
                 p = i;
-                if (file[i] == (byte)'P' && file[i] == (byte)'E')
+                if (file[i] == (byte)'P' && file[i + 1] == (byte)'E')
                     break;
             }
 
