@@ -20,6 +20,7 @@ using Aura_OS.System.Shell.cmdIntr.SystemInfomation;
 using Aura_OS.System.Shell.cmdIntr;
 using Aura_OS.Interpreter.Commands.Util;
 using Aura_OS.Interpreter.Commands.Filesystem;
+using Aura_OS.Processing.Executable;
 
 namespace Aura_OS.Interpreter
 {
@@ -57,7 +58,7 @@ namespace Aura_OS.Interpreter
             CMDs.Add(new CommandUdp(new string[] { "udp" }));
             CMDs.Add(new CommandDns(new string[] { "dns" }));
             CMDs.Add(new CommandWget(new string[] { "wget" }));
-            //CMDs.Add(new CommandFtp(new string[] { "ftp" }));
+            CMDs.Add(new CommandFtp(new string[] { "ftp" }));
             CMDs.Add(new CommandHttpServer(new string[] { "httpserver" }));
 
             CMDs.Add(new CommandVersion(new string[] { "version", "ver", "about" }));

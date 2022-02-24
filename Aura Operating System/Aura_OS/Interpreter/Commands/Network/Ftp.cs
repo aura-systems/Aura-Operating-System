@@ -35,11 +35,11 @@ namespace Aura_OS.System.Shell.cmdIntr.Network
         {
             try
             {
-                //var xServer = new FtpServer(Global.vFS, Global.current_directory, true);
+                var xServer = new FtpServer(Kernel.VirtualFileSystem, Kernel.CurrentDirectory, true);
 
                 Kernel.console.WriteLine("FTP Server listening at " + NetworkConfig.CurrentConfig.Value.IPAddress.ToString() + ":21 ...");
 
-                //xServer.Listen();
+                xServer.Listen();
             }
             catch (Exception ex)
             {
