@@ -11,13 +11,19 @@ namespace Aura_OS.Processing.Executable
 {
     public unsafe class PE32
     {
+        public static byte* ProgramAdress = null;
+
         public byte[] data;
         public byte[] text;
+        public byte[] managed;
 
         int p = 0;
         uint address = 0;
+        uint managed_addr = 0;
         uint data_addr = 0;
         uint ib = 0;
+
+        uint address_entrypoint = 0;
 
         private static List<Section> sections = new List<Section>();
 
@@ -71,13 +77,15 @@ namespace Aura_OS.Processing.Executable
                         data_addr = opt->mBaseOfData;
                         ib = opt->mImageBase;
 
-                        Console.WriteLine("Base of code=0x" + opt->mBaseOfCode.ToString("X"));
-                        Console.WriteLine("Base of data=0x" + opt->mBaseOfData.ToString("X"));
-                        Console.WriteLine("Image base=0x" + opt->mImageBase.ToString("X"));
+                        address_entrypoint = opt->mAddressOfEntryPoint;
+
+                        Console.WriteLine("Base of code=0x" + address.ToString("X"));
+                        Console.WriteLine("Base of data=0x" + data_addr.ToString("X"));
+                        Console.WriteLine("Image base=0x" + ib.ToString("X"));
+                        Console.WriteLine("Address Entry Point=0x" + address_entrypoint.ToString("X"));
 
                         for (int s = 0; s < header->mNumberOfSections; s++)
                         {
-
                             fixed (byte* ptr3 = tmp)
                             {
                                 baseP = p;
@@ -96,6 +104,7 @@ namespace Aura_OS.Processing.Executable
                                 Section section = new Section();
                                 section.Name = name;
                                 section.Address = (uint)sec->PointerToRawData;
+                                section.VirtualAddress = (uint)sec->VirtualAddress;
                                 section.RelocationCount = (uint)sec->NumberOfRelocations;
                                 section.RelocationPtr = (uint)sec->PointerToRelocations;
                                 section.Size = (uint)sec->SizeOfRawData;
@@ -110,23 +119,26 @@ namespace Aura_OS.Processing.Executable
                             if (sections[i].Name == ".text")
                             {
                                 text = new byte[sections[i].Size];
-                                p = (int)(uint)sections[i].Address;
-                                baseP = p;
-                                for (int b = 0; b < (int)(uint)sections[i].Size; b++)
+                                for (int b = 0; b < (int)sections[i].Size; b++)
                                 {
-                                    text[b] = file[baseP + b];
-                                    p++;
+                                    text[b] = file[sections[i].Address + b];
                                 }
                             }
                             else if (sections[i].Name == ".data")
                             {
                                 data = new byte[sections[i].Size];
-                                p = (int)(uint)sections[i].Address;
-                                baseP = p;
-                                for (int b = 0; b < (int)(uint)sections[i].Size; b++)
+                                for (int b = 0; b < (int)sections[i].Size; b++)
                                 {
-                                    data[b] = file[baseP + b];
-                                    p++;
+                                    data[b] = file[sections[i].Address + b];
+                                }
+                            }
+                            else if (sections[i].Name.StartsWith(".managed"))
+                            {
+                                managed_addr = sections[i].VirtualAddress;
+                                managed = new byte[sections[i].Size];
+                                for (int b = 0; b < (int)sections[i].Size; b++)
+                                {
+                                    managed[b] = file[sections[i].Address + b];
                                 }
                             }
                         }
@@ -137,19 +149,19 @@ namespace Aura_OS.Processing.Executable
 
         public void Start()
         {
-            var address = Heap.Alloc((uint)text.Length);
-            var address2 = Heap.Alloc((uint)data.Length);
+            ProgramAdress = Heap.Alloc((uint)(ib + data_addr + data.Length));
 
-            var textBlock = new MemoryBlock((uint)address, (uint)text.Length);
+            //relocate sections to virtual addresses
+            var textBlock = new MemoryBlock((uint)(ProgramAdress + ib + address), (uint)text.Length);
             textBlock.Copy(text);
-            var dataBlock = new MemoryBlock((uint)address2, (uint)data.Length);
+            var managedBlock = new MemoryBlock((uint)(ProgramAdress + ib + managed_addr), (uint)managed.Length);
+            managedBlock.Copy(managed);
+            var dataBlock = new MemoryBlock((uint)(ProgramAdress + ib + data_addr), (uint)data.Length);
             dataBlock.Copy(data);
 
-            Kernel.console.WriteLine("text=0x" + ((uint)address).ToString("X"));
-            Kernel.console.WriteLine("data=0x" + ((uint)address2).ToString("X"));
-
+            //call address entry point (should be Main in .managed section)
             Caller cl = new Caller();
-            cl.CallCode((uint)address);
+            cl.CallCode((uint)(ProgramAdress + ib + address_entrypoint));
         }
 
         public string GetArchitecture(ushort arch)
@@ -284,7 +296,7 @@ namespace Aura_OS.Processing.Executable
         {
             #region Fields
 
-            public uint Address, Size, RelocationPtr, RelocationCount;
+            public uint Address, VirtualAddress, Size, RelocationPtr, RelocationCount;
             public string Name;
 
             #endregion Fields

@@ -29,6 +29,7 @@
       <None Remove="Resources\CosmosLogo.bmp" />
       <None Remove="Resources\Cursor.bmp" />
       <None Remove="Resources\error.bmp" />
+      <None Remove="Resources\exec.exe" />
       <None Remove="Resources\noruntime.exe" />
       <None Remove="Resources\power.bmp" />
       <None Remove="Resources\Program.bmp" />

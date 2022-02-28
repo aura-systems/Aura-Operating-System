@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Aura_OS.Processing.Executable;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -26,22 +27,34 @@ namespace Aura_OS.Processing
         {
             if (aContext.Interrupt == 0x48) //API interrupt.
             {
-                Kernel.console.WriteLine("Aura API called!");
-
                 if (aContext.EAX == 0x01) //Print function.
                 {
-                    Kernel.console.WriteLine("Print called!");
+                    byte* dat = PE32.ProgramAdress + aContext.EDI;
 
-                    byte* dat = (byte*)aContext.ESI;
-
-                    Kernel.console.WriteLine("ESI=0x" + aContext.ESI.ToString("X"));
-
-                    for (int i = 0; dat[i] != 0; i++)
-                    {
-                        Console.Write((char)dat[i]);
-                    }
+                    Console.Write(GetUnicodeString(dat));
+                }
+                if (aContext.EAX == 0x02) //Clear function.
+                {
+                    Kernel.console.Clear();
                 }
             }
+        }
+
+        public static string GetUnicodeString(byte *str)
+        {
+            string test = "";
+
+            int len = str[4] * 2;
+
+            for (int i = 0; i < len; i++)
+            {
+                if (str[8 + i] != 0)
+                {
+                    test += (char)str[8 + i];
+                }
+            }
+
+            return test;
         }
     }
 }
