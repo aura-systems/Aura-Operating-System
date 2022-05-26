@@ -11,9 +11,9 @@ using Cosmos.System.Network.IPv4;
 using Cosmos.System.Network.Config;
 using Cosmos.System.Network.IPv4.TCP;
 using System.Text;
-using Cosmos.System.Network.IPv4.TCP.FTP;
 using Aura_OS;
 using Aura_OS.Interpreter;
+using CosmosFtpServer;
 
 namespace Aura_OS.System.Shell.cmdIntr.Network
 {
