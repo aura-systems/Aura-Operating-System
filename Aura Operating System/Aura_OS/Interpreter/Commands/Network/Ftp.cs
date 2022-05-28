@@ -37,7 +37,7 @@ namespace Aura_OS.System.Shell.cmdIntr.Network
             {
                 var xServer = new FtpServer(Kernel.VirtualFileSystem, Kernel.CurrentDirectory, true);
 
-                Kernel.console.WriteLine("FTP Server listening at " + NetworkConfig.CurrentConfig.Value.IPAddress.ToString() + ":21 ...");
+                Kernel.console.WriteLine("FTP Server listening at " + NetworkConfiguration.CurrentAddress + ":21 ...");
 
                 xServer.Listen();
             }
