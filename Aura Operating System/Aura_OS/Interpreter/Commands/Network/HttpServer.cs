@@ -11,7 +11,6 @@ using Cosmos.System.Network.IPv4;
 using Cosmos.System.Network.Config;
 using Cosmos.System.Network.IPv4.TCP;
 using System.Text;
-using Cosmos.System.Network.IPv4.TCP.FTP;
 using SimpleHttpServer;
 using SimpleHttpServer.Models;
 using SimpleHttpServer.RouteHandlers;

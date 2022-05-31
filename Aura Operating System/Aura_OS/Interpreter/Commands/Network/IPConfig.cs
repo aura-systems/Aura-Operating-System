@@ -36,18 +36,18 @@ namespace Aura_OS.System.Shell.cmdIntr.Network
             {
                 Kernel.console.WriteLine("No network configuration detected! Use ipconfig /help");
             }
-            foreach (NetworkDevice device in NetworkConfig.Keys)
+            foreach (NetworkConfig config in NetworkConfiguration.NetworkConfigs)
             {
-                switch (device.CardType)
+                switch (config.Device.CardType)
                 {
                     case CardType.Ethernet:
-                        Kernel.console.Write("Ethernet Card : " + device.NameID + " - " + device.Name);
+                        Kernel.console.Write("Ethernet Card : " + config.Device.NameID + " - " + config.Device.Name);
                         break;
                     case CardType.Wireless:
-                        Kernel.console.Write("Wireless Card : " + device.NameID + " - " + device.Name);
+                        Kernel.console.Write("Wireless Card : " + config.Device.NameID + " - " + config.Device.Name);
                         break;
                 }
-                if (NetworkConfig.CurrentConfig.Key == device)
+                if (NetworkConfiguration.CurrentNetworkConfig.Device == config.Device)
                 {
                     Kernel.console.WriteLine(" (current)");
                 }
@@ -56,10 +56,10 @@ namespace Aura_OS.System.Shell.cmdIntr.Network
                     Kernel.console.WriteLine();
                 }
                
-                Kernel.console.WriteLine("MAC Address          : " + device.MACAddress.ToString());
-                Kernel.console.WriteLine("IP Address           : " + NetworkConfig.Get(device).IPAddress.ToString());
-                Kernel.console.WriteLine("Subnet mask          : " + NetworkConfig.Get(device).SubnetMask.ToString());
-                Kernel.console.WriteLine("Default Gateway      : " + NetworkConfig.Get(device).DefaultGateway.ToString());
+                Kernel.console.WriteLine("MAC Address          : " + config.Device.MACAddress.ToString());
+                Kernel.console.WriteLine("IP Address           : " + config.IPConfig.IPAddress.ToString());
+                Kernel.console.WriteLine("Subnet mask          : " + config.IPConfig.SubnetMask.ToString());
+                Kernel.console.WriteLine("Default Gateway      : " + config.IPConfig.DefaultGateway.ToString());
                 Kernel.console.WriteLine("DNS Nameservers      : ");
                 foreach (Address dnsnameserver in DNSConfig.DNSNameservers)
                 {
@@ -82,8 +82,7 @@ namespace Aura_OS.System.Shell.cmdIntr.Network
                 xClient.SendReleasePacket();
                 xClient.Close();
 
-                NetworkConfig.Keys.Clear();
-                NetworkConfig.Values.Clear();
+                NetworkConfiguration.ClearConfigs();
             }
             else if (arguments[0] == "/ask")
             {
@@ -91,12 +90,11 @@ namespace Aura_OS.System.Shell.cmdIntr.Network
                 if (xClient.SendDiscoverPacket() != -1)
                 {
                     xClient.Close();
-                    Kernel.console.WriteLine("Configuration applied! Your local IPv4 Address is " + NetworkConfig.CurrentConfig.Value.IPAddress.ToString() + ".");
+                    Kernel.console.WriteLine("Configuration applied! Your local IPv4 Address is " + NetworkConfiguration.CurrentAddress + ".");
                 }
                 else
                 {
-                    NetworkConfig.Keys.Clear();
-                    NetworkConfig.Values.Clear();
+                    NetworkConfiguration.ClearConfigs();
 
                     xClient.Close();
                     return new ReturnInfo(this, ReturnCode.ERROR, "DHCP Discover failed. Can't apply dynamic IPv4 address.");
