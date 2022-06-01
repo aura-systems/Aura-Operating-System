@@ -28,6 +28,7 @@ namespace Aura_OS.System.Shell.cmdIntr.SystemInfomation
             Kernel.console.WriteLine("Computer name:             " + Kernel.ComputerName);
             Kernel.console.WriteLine("Operating system name:     Aura");
             Kernel.console.WriteLine("Kernel name:               Cosmos");
+            Kernel.console.WriteLine(".NET version:              6.0");
             Kernel.console.WriteLine("Operating system version:  " + Kernel.Version);
             Kernel.console.WriteLine("Operating system revision: " + Kernel.Revision);
             Kernel.console.WriteLine("Date and time:             " + Time.MonthString() + "/" + Time.DayString() + "/" + Time.YearString() + ", " + Time.TimeString(true, true, true));
