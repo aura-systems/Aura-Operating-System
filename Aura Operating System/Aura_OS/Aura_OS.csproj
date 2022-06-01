@@ -1,8 +1,8 @@
 ﻿<Project InitialTargets="GetVersion" Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-      <TargetFramework>net5.0</TargetFramework>
-  </PropertyGroup>
+	<PropertyGroup>
+        <TargetFramework>net6.0</TargetFramework>
+    </PropertyGroup>
 
 	<PropertyGroup>
 		<Year>$([System.DateTime]::Now.ToString("yyyy"))</Year>
