@@ -9,7 +9,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Aura_OS\Aura_OS.csproj" />
+      <ProjectReference Include="..\Aura_OS\Aura_OS.csproj" NoWarn="NU1604;NU1605"/>
     </ItemGroup>
 
 </Project>
