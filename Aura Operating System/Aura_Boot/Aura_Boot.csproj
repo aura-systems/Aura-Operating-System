@@ -11,7 +11,7 @@
         <DebugEnabled>False</DebugEnabled>
         <DebugMode>Source</DebugMode>
         <IgnoreDebugStubAttribute>False</IgnoreDebugStubAttribute>
-        <ISOFile>bin\Debug\net5.0\Aura_Boot.iso</ISOFile>
+        <ISOFile>bin\Debug\net6.0\Aura_Boot.iso</ISOFile>
         <CompileVBEMultiboot>False</CompileVBEMultiboot>
         <ExtractMapFile>False</ExtractMapFile>
         <PxeInterface>192.168.0.8</PxeInterface>
@@ -30,7 +30,7 @@
         <Bochs_PxeInterface>10.204.128.41</Bochs_PxeInterface>
         <Bochs_EnableBochsDebug>True</Bochs_EnableBochsDebug>
         <Bochs_StartBochsDebugGui>True</Bochs_StartBochsDebugGui>
-        <Bochs_ISOFile>bin\Debug\net5.0\Aura_Boot.iso</Bochs_ISOFile>
+        <Bochs_ISOFile>bin\Debug\net6.0\Aura_Boot.iso</Bochs_ISOFile>
         <Bochs_CompileVBEMultiboot>False</Bochs_CompileVBEMultiboot>
         <Bochs_ExtractMapFile>False</Bochs_ExtractMapFile>
         <Description>Use VMware Player or Workstation to deploy and debug.</Description>
@@ -46,7 +46,7 @@
         <VMware_PxeInterface>10.204.128.41</VMware_PxeInterface>
         <VMware_EnableBochsDebug>True</VMware_EnableBochsDebug>
         <VMware_StartBochsDebugGui>True</VMware_StartBochsDebugGui>
-        <VMware_ISOFile>bin\Debug\net5.0\Aura_Boot.iso</VMware_ISOFile>
+        <VMware_ISOFile>bin\Debug\net6.0\Aura_Boot.iso</VMware_ISOFile>
         <VMware_CompileVBEMultiboot>False</VMware_CompileVBEMultiboot>
         <VMware_ExtractMapFile>False</VMware_ExtractMapFile>
         <Bochs_Description>Use Bochs emulator to deploy and debug.</Bochs_Description>
@@ -62,7 +62,7 @@
         <ISO_PxeInterface>10.204.128.41</ISO_PxeInterface>
         <ISO_EnableBochsDebug>True</ISO_EnableBochsDebug>
         <ISO_StartBochsDebugGui>True</ISO_StartBochsDebugGui>
-        <ISO_ISOFile>bin\Debug\net5.0\Aura_Boot.iso</ISO_ISOFile>
+        <ISO_ISOFile>bin\Debug\net6.0\Aura_Boot.iso</ISO_ISOFile>
         <ISO_CompileVBEMultiboot>False</ISO_CompileVBEMultiboot>
         <ISO_ExtractMapFile>False</ISO_ExtractMapFile>
         <CosmosDebugPort>Serial: COM1</CosmosDebugPort>
@@ -82,7 +82,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <PlugsReference Include="$(MSBuildProjectDirectory)\..\Aura_Plugs\bin\Debug\net5.0\Aura_Plugs.dll" />
+      <PlugsReference Include="$(MSBuildProjectDirectory)\..\Aura_Plugs\bin\Debug\net6.0\Aura_Plugs.dll" />
     </ItemGroup>
 
 </Project>
