@@ -216,7 +216,6 @@ namespace WaveOS.GUI
         }
     }
 
-
     public class WaveLabel : WaveElement
     {
         public string Text = "";
@@ -224,10 +223,10 @@ namespace WaveOS.GUI
 
         public override void Draw()
         {
-            if(parent2 == null)
-                Aura_OS.Kernel.GUI.DrawString(relativeX, relativeY, parent, Text, Color);
+            if (parent2 == null)
+                Aura_OS.Kernel.canvas.DrawString(Text, Aura_OS.Kernel.font, Color, relativeX, relativeY);
             //else
-                //Canv.DrawString(relativeX, relativeY, parent2, Text, Color);
+            //Canv.DrawString(relativeX, relativeY, parent2, Text, Color);
         }
     }
 
@@ -355,12 +354,12 @@ namespace WaveOS.GUI
 
                 Aura_OS.Kernel.GUI.DrawFilledRectangle(relativeX + 2, relativeY + 2, Width - 4, Height - 4, 0, pen2);
             }
-            if(TextAlignment == TextAlignment.Left)
-                Aura_OS.Kernel.GUI.DrawString(relativeX + 3, relativeY + (Height / 2) - 7, this, Text, Color);
+            if (TextAlignment == TextAlignment.Left)
+                Aura_OS.Kernel.canvas.DrawString(Text, Aura_OS.Kernel.font, Color, relativeX + 3, relativeY + (Height / 2) - 7 - 4);
             else if (TextAlignment == TextAlignment.Center)
-                Aura_OS.Kernel.GUI.DrawString((relativeX + (Width / 2)) - ((Text.Length * 8) / 2), relativeY + (Height / 2) - 7, this, Text, Color);
-            else if(TextAlignment == TextAlignment.Right) //Not implemented, uses Center setting
-                Aura_OS.Kernel.GUI.DrawString((relativeX + (Width / 2)) - ((Text.Length * 8) / 2), relativeY + (Height / 2) - 7, this, Text, Color);
+                Aura_OS.Kernel.canvas.DrawString(Text, Aura_OS.Kernel.font, Color, (relativeX + (Width / 2)) - ((Text.Length * 8) / 2), relativeY + (Height / 2) - 7 - 4);
+            else if (TextAlignment == TextAlignment.Right) //Not implemented, uses Center setting
+                Aura_OS.Kernel.canvas.DrawString(Text, Aura_OS.Kernel.font, Color, (relativeX + (Width / 2)) - ((Text.Length * 8) / 2), relativeY + (Height / 2) - 7 - 4);
         }
     }
 
@@ -431,11 +430,11 @@ namespace WaveOS.GUI
                 Aura_OS.Kernel.GUI.DrawFilledRectangle(relativeX, relativeY, Width, Height, 0, pen);
             }
             if (TextAlignment == TextAlignment.Left)
-                Aura_OS.Kernel.GUI.DrawString(relativeX + 3, relativeY + (Height / 2) - 7, this, Text, Color);
+                Aura_OS.Kernel.canvas.DrawString(Text, Aura_OS.Kernel.font, Color, relativeX + 3, relativeY + (Height / 2) - 7);
             else if (TextAlignment == TextAlignment.Center)
-                Aura_OS.Kernel.GUI.DrawString((relativeX + (Width / 2)) - ((Text.Length * 8) / 2), relativeY + (Height / 2) - 7, this, Text, Color);
+                Aura_OS.Kernel.canvas.DrawString(Text, Aura_OS.Kernel.font, Color,  (relativeX + (Width / 2)) - ((Text.Length * 8) / 2), relativeY + (Height / 2) - 7);
             else if (TextAlignment == TextAlignment.Right) //Not implemented, uses Center setting
-                Aura_OS.Kernel.GUI.DrawString((relativeX + (Width / 2)) - ((Text.Length * 8) / 2), relativeY + (Height / 2) - 7, this, Text, Color);
+                Aura_OS.Kernel.canvas.DrawString(Text, Aura_OS.Kernel.font, Color,  (relativeX + (Width / 2)) - ((Text.Length * 8) / 2), relativeY + (Height / 2) - 7);
 
             if(itemList.children.Count > 0)
             {

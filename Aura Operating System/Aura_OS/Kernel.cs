@@ -18,7 +18,8 @@ using System.Drawing;
 using Aura_OS.System;
 using Aura_OS.Interpreter;
 using Aura_OS.Application.GameBoyEmu;
-using Aura_OS.Graphics;
+using WaveOS;
+using WaveOS.Managers;
 
 namespace Aura_OS
 {
@@ -68,6 +69,7 @@ namespace Aura_OS
         public static ProcessManager ProcessManager;
 
         public static Terminal console;
+        public static MemoryInfo memoryInfo;
         //public static MemoryInfo memoryInfo;
         //public static SystemInfo systemInfo;
         //public static GameBoyEmu gameBoyEmu;
@@ -116,12 +118,15 @@ namespace Aura_OS
             CommandManager = new CommandManager();
             CommandManager.Initialize();
 
-            /*console = new Terminal(700, 600, 40, 40);
-            console.Initialize();
-
-            memoryInfo = new MemoryInfo(400, 300, 40, 40);
+            memoryInfo = new MemoryInfo(400, 300);
             memoryInfo.Initialize();
+            WindowManager.AddWindow(memoryInfo);
 
+            console = new Terminal(700, 600, 40, 40);
+            console.Initialize();
+            WindowManager.AddWindow(console);
+
+            /*
             systemInfo = new SystemInfo(402, 197, 40, 40);
             systemInfo.Initialize();
 
@@ -132,8 +137,13 @@ namespace Aura_OS
             WindowManager.Initialize();*/
 
             //START MOUSE
+            //MouseManager.ScreenWidth = screenWidth;
+            //MouseManager.ScreenHeight = screenHeight;
+
             MouseManager.ScreenWidth = screenWidth;
             MouseManager.ScreenHeight = screenHeight;
+            MouseManager.X = (uint)screenWidth / 2;
+            MouseManager.Y = (uint)screenHeight / 2;
 
             BootTime = Time.MonthString() + "/" + Time.DayString() + "/" + Time.YearString() + ", " + Time.TimeString(true, true, true);
 
@@ -208,7 +218,7 @@ namespace Aura_OS
 
                 FreeCount = Heap.Collect();
 
-                switch (MouseManager.MouseState)
+                /*switch (MouseManager.MouseState)
                 {
                     case MouseState.Left:
                         Pressed = true;
@@ -216,7 +226,7 @@ namespace Aura_OS
                     case MouseState.None:
                         Pressed = false;
                         break;
-                }
+                }*/
 
                 //canvas.Clear(0x000000);
 
@@ -224,18 +234,22 @@ namespace Aura_OS
 
                 //canvas.DrawImage(bootBitmap, (int)(screenWidth / 2 - bootBitmap.Width / 2), (int)(screenHeight / 2 - bootBitmap.Height / 2));
 
-                canvas.DrawString("fps=" + _fps, font, WhitePen, 2, (int)screenHeight - (font.Height * 2));
-                canvas.DrawString("Aura Operating System [" + Version + "." + Revision + "]", font, WhitePen, 2, (int)screenHeight - font.Height);
+                canvas.DrawString("fps=" + _fps, font, WhitePen, 2, (int)screenHeight - (font.Height * 4));
+                canvas.DrawString("Aura Operating System [" + Version + "." + Revision + "]", font, WhitePen, 2, (int)screenHeight - (font.Height * 3));
+
+                WaveInput.BeforeUpdate();
 
                 WindowManager.Run();
 
                 //WindowManager.DrawWindows();
 
-                dock.Update();
+                //dock.Update();
 
-                DrawCursor(MouseManager.X, MouseManager.Y);
+                //DrawCursor(MouseManager.X, MouseManager.Y);
 
                 canvas.Display();
+
+                WaveInput.AfterUpdate();
             }
             catch (Exception ex)
             {

@@ -1,4 +1,5 @@
 ﻿using Cosmos.System;
+using Cosmos.System.Graphics;
 using System;
 using System.Collections.Generic;
 using WaveOS.Apps;
@@ -10,6 +11,11 @@ namespace WaveOS.GUI
 {
     public class WaveTaskbar : WaveWindow
     {
+        public Pen pen = new Pen(System.Drawing.Color.FromArgb(223, 223, 223));
+        public Pen pen2 = new Pen(System.Drawing.Color.FromArgb(128, 128, 128));
+        public Pen pen3 = new Pen(System.Drawing.Color.FromArgb(127, 127, 127));
+        public Pen pen4 = new Pen(System.Drawing.Color.FromArgb(223, 223, 223));
+
         public List<WaveWindow> openWindows = new List<WaveWindow>();
 
         public TasksPanel TasksPanel;
@@ -19,7 +25,7 @@ namespace WaveOS.GUI
         public WaveStackPanel StartButtonPanel;
 
         public bool showStartMenu = false;
-        List<Color> StartGradient;
+        List<Pen> StartGradient;
         public WaveTaskbar(int X, int Y, int width, int height, Apps.WindowManager host) : base("Wave OS Taskbar", X, Y, width, height, host)
         {
             borderless = true;
@@ -27,7 +33,7 @@ namespace WaveOS.GUI
             StayOnTop = true;
 
 
-            startButton = new WaveButton() { Text = "Start", X = 2, Y = 4, Width = 54, Height = 22, parent = this, Color = Color.Black,
+            startButton = new WaveButton() { Text = "Start", X = 2, Y = 4, Width = 54, Height = 22, parent = this, Color = Aura_OS.Kernel.BlackPen,
                 onClick = () => 
                 {
                     showStartMenu = !showStartMenu;
@@ -75,29 +81,12 @@ namespace WaveOS.GUI
                 Text = "Reboot",
                 parent2 = StartButtonPanel,
                 TextAlignment = TextAlignment.Left,
-                onClick = () => { Kernel.instance.Restart(); },
+                onClick = () => { Cosmos.System.Power.Reboot(); },
 
             };
 
             List<StartMenuItem> items = new List<StartMenuItem>() {
-                new StartMenuItem(152)
-                {
-                    Width = 152,
-                    Height = 32,
-                    parent = this,
-                    Text = "Open",
-                    parent2 = StartButtonPanel,
-                    TextAlignment = TextAlignment.Left,
-                    onClick = () => {
-                        var window = new WaveWindow("Window", 10, 10, 200, 200, Host);
-                        window.children = new List<WaveElement>() {
-                        new WaveLabel() { Text = "Hello there", X = 100, Y = 100, parent = window } };
-
-                        Host.OpenWindow(window);
-                    }
-                },
-                rebootMenu
-                
+                rebootMenu  
             };
 
             foreach (var item in items)
@@ -116,7 +105,7 @@ namespace WaveOS.GUI
                 X = startButton.X + startButton.Width + 2,
                 Y = 4,
                 parent = this,
-                Width = Canv.Width - (startButton.X + startButton.Width + 2) - 66,
+                Width = Aura_OS.Kernel.canvas.Mode.Columns - (startButton.X + startButton.Width + 2) - 66,
                 Height = 22
             };
 
@@ -146,7 +135,7 @@ namespace WaveOS.GUI
                 }
             };
 
-            StartGradient = GetGradients(new Color(0, 0, 128), new Color(0, 0, 255), 50);
+            StartGradient = WaveWindow.GetGradients(new Pen(System.Drawing.Color.FromArgb(0, 0, 128)), new Pen(System.Drawing.Color.FromArgb(0, 0, 255)), 50);
         }
 
         private void Host_WindowClosed(WaveWindow window)
@@ -194,7 +183,7 @@ namespace WaveOS.GUI
                         Height = 22,
                         parent = this,
                         parent2 = TasksPanel,
-                        Color = Color.Black,
+                        Color = Aura_OS.Kernel.BlackPen,
                         tag = item
                     };
 
@@ -254,8 +243,8 @@ namespace WaveOS.GUI
         {
             base.Draw();
 
-            Canv.DrawFilledRectangle(X, Y, Width, 1, 0, new Color(223, 223, 223));
-            Canv.DrawFilledRectangle(X, Y + 1, Width, 1, 0, Color.White);
+            Aura_OS.Kernel.GUI.DrawFilledRectangle(X, Y, Width, 1, 0, pen);
+            Aura_OS.Kernel.GUI.DrawFilledRectangle(X, Y + 1, Width, 1, 0, Aura_OS.Kernel.WhitePen);
 
             DrawSystemTray();
 
@@ -263,25 +252,25 @@ namespace WaveOS.GUI
             {
                 StartPanel.Draw();
 
-                Canv.DrawVerticalGradient(StartPanel.relativeX + 3, StartPanel.relativeY + 3, 21, StartPanel.Height - 6, StartGradient);
+                Aura_OS.Kernel.GUI.DrawVerticalGradient(StartPanel.relativeX + 3, StartPanel.relativeY + 3, 21, StartPanel.Height - 6, StartGradient);
             }
         }
 
         public void DrawSystemTray()
         {
             //Top shadow
-            Canv.DrawFilledRectangle(Width - 60, Y + 4, 51, 1, 0, new Color(128, 128, 128));
+            Aura_OS.Kernel.GUI.DrawFilledRectangle(Width - 60, Y + 4, 51, 1, 0, pen2);
 
             //Left shadow
-            Canv.DrawFilledRectangle(Width - 60, Y + 4, 1, 18, 0, new Color(128, 128, 128));
+            Aura_OS.Kernel.GUI.DrawFilledRectangle(Width - 60, Y + 4, 1, 18, 0, pen2);
 
             //Bottom shadow
-            Canv.DrawFilledRectangle(Width - 60, Y + 22, 51, 1, 0, Color.White);
+            Aura_OS.Kernel.GUI.DrawFilledRectangle(Width - 60, Y + 22, 51, 1, 0, Aura_OS.Kernel.WhitePen);
 
             //Right shadow
-            Canv.DrawFilledRectangle(Width - 8, Y + 4, 1, 18, 0, Color.White);
+            Aura_OS.Kernel.GUI.DrawFilledRectangle(Width - 8, Y + 4, 1, 18, 0, Aura_OS.Kernel.WhitePen);
 
-            Canv.DrawString(Width - 54, Y + 6, GetTime(), Color.Black);
+            Aura_OS.Kernel.canvas.DrawString(GetTime(), Aura_OS.Kernel.font, Aura_OS.Kernel.BlackPen, Width - 54, Y + 6);
         }
 
         string GetTime()

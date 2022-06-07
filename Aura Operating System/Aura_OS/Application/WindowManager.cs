@@ -17,16 +17,6 @@ namespace WaveOS.Apps
 {
     public class WindowManager : WaveGUIApp
     {
-        [ManifestResourceStream(ResourceName = "WaveOS.Assets.Cursor3.bmp")]
-        static byte[] pointer;
-
-        //[ManifestResourceStream(ResourceName = "WaveOS.Assets.Wallpaper.bmp")]
-        //static byte[] wallpaper;
-
-        //public Formats.Bitmap pointerImg;
-        //public static Formats.Bitmap wallpaperImg;
-        public Graphics.Color desktopColor = new WaveOS.Graphics.Color((byte)Aura_OS.Kernel.rnd.Next(255), (byte)Aura_OS.Kernel.rnd.Next(255), (byte)Aura_OS.Kernel.rnd.Next(255));
-
         public bool drawBG = false;
 
         public List<WaveWindow> windows = new List<WaveWindow>();
@@ -47,14 +37,6 @@ namespace WaveOS.Apps
             //    pointerImg = new Formats.Bitmap(pointer);
             //wallpaperImg = new Formats.Bitmap(wallpaper);
 
-            OpenWindow(new WaveWindow("Test window", 50, 50, 200, 200, this));
-            OpenWindow(new WaveWindow("Second Window", 270, 100, 200, 300, this));
-            //OpenWindow(new WaveWindow("Third Window", 400, 300, 300, 100, this));
-
-            WaveWindow window = new WaveWindow("Third Window", 400, 300, 300, 100, this);
-            window.children.Add(new WaveButton() { X = 0, Y = 0, parent = window, Text = "aa", Width = 20, Height = 20 });
-            OpenWindow(window);
-
             OpenWindow(new WaveTaskbar(0, Aura_OS.Kernel.canvas.Mode.Rows - 28, Aura_OS.Kernel.canvas.Mode.Columns, 28, this));
         }
 
@@ -71,23 +53,7 @@ namespace WaveOS.Apps
                 {
                     Cosmos.System.Power.Reboot();
                 }
-
-                if (k.Key == ConsoleKeyEx.P)
-                {
-                    desktopColor = new WaveOS.Graphics.Color((byte)Aura_OS.Kernel.rnd.Next(255), (byte)Aura_OS.Kernel.rnd.Next(255), (byte)Aura_OS.Kernel.rnd.Next(255));
-                }
-
-                if (k.Key == ConsoleKeyEx.O)
-                {
-                    drawBG = !drawBG;
-                }
             }
-
-            Aura_OS.Kernel.canvas.Clear(desktopColor.ARGB);
-
-            //if (drawBG)
-                //Canv.DrawBitmap(0, 0, wallpaperImg);
-
 
             for (int i = windows.Count - 1; i >= 0; i--)
             {
@@ -143,7 +109,7 @@ namespace WaveOS.Apps
                 windowToSetInActive = null;
             }
 
-            //Aura_OS.Kernel.canvas.DrawImage((int)Mouse.X, (int)Mouse.Y, pointerImg);
+            Aura_OS.Kernel.canvas.DrawImageAlpha(Aura_OS.Kernel.cursor, (int)Mouse.X, (int)Mouse.Y);
 
             //Canv.DrawString(0, 0, WaveShell.Canv.FPS + " FPS", Graphics.Color.White);
 
@@ -156,6 +122,14 @@ namespace WaveOS.Apps
         WaveWindow windowToSetActive;
         WaveWindow windowToSetInActive;
         int freeWindID = 0;
+
+        internal void AddWindow(WaveWindow window)
+        {
+            window.windID = freeWindID;
+            freeWindID++;
+            window.State = WindowState.Minimized;
+            windows.Add(window);
+        }
 
         internal void OpenWindow(WaveWindow window)
         {

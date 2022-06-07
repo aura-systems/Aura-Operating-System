@@ -97,8 +97,13 @@ namespace WaveOS.GUI
         WaveButton CloseButton;
         WaveButton MaximizeButton;
         WaveButton MinimizeButton;
-        List<Color> titleBarGradients;
-        List<Color> inactiveBarGradients;
+        List<Pen> titleBarGradients;
+        List<Pen> inactiveBarGradients;
+
+        public static readonly Pen DeepBlue = new Pen(System.Drawing.Color.FromArgb(255, 51, 47, 208));
+        public static readonly Pen Red = new Pen(System.Drawing.Color.FromArgb(255, 255, 0, 0));
+        public static readonly Pen LightGray = new Pen(System.Drawing.Color.FromArgb(255, 125, 125, 125));
+        public static readonly Pen DeepGray = new Pen(System.Drawing.Color.FromArgb(255, 25, 25, 25));
 
         public WaveWindow(string title, int x, int y, int width, int height, WindowManager host) : base(title, ProcessType.Program)
         {
@@ -113,7 +118,7 @@ namespace WaveOS.GUI
                 Anchor = AnchorStyles.Right | AnchorStyles.Top
             };
 
-            MaximizeButton = new WaveButton() { Text = "□", parent = this, X = CloseButton.X + 18, Y = 5, Width = 16, Height = 14, ignoreTitleBar = true, Color = Aura_OS.Kernel.BlackPen,
+            MaximizeButton = new WaveButton() { Text = "o", parent = this, X = CloseButton.X + 18, Y = 5, Width = 16, Height = 14, ignoreTitleBar = true, Color = Aura_OS.Kernel.BlackPen,
                 onClick = () => { if (State == WindowState.Normal) State = WindowState.Maximized; else State = WindowState.Normal; },
                 Anchor = AnchorStyles.Right | AnchorStyles.Top
             };
@@ -123,29 +128,31 @@ namespace WaveOS.GUI
                 Anchor = AnchorStyles.Right | AnchorStyles.Top
             };
 
-            titleBarGradients = GetGradients(Color.DeepBlue, Color.Red, 50);
-            inactiveBarGradients = GetGradients(Color.LightGray, Color.DeepGray, 50);
+            titleBarGradients = GetGradients(DeepBlue, Red, 50);
+            inactiveBarGradients = GetGradients(LightGray, DeepGray, 50);
         }
 
-        public static List<Color> GetGradients(Color start, Color end, int steps)
+        public static List<Pen> GetGradients(Pen start, Pen end, int steps)
         {
-            List<Color> list = new List<Color>();
+            List<Pen> list = new List<Pen>();
 
-            int stepA = ((end.A - start.A) / (steps - 1));
-            int stepR = ((end.R - start.R) / (steps - 1));
-            int stepG = ((end.G - start.G) / (steps - 1));
-            int stepB = ((end.B - start.B) / (steps - 1));
+            int stepA = ((end.Color.A - start.Color.A) / (steps - 1));
+            int stepR = ((end.Color.R - start.Color.R) / (steps - 1));
+            int stepG = ((end.Color.G - start.Color.G) / (steps - 1));
+            int stepB = ((end.Color.B - start.Color.B) / (steps - 1));
 
             for (int i = 0; i < steps; i++)
             {
-                list.Add( new Color((byte)(start.A + (stepA * i)),
-                                            (byte)(start.R + (stepR * i)),
-                                            (byte)(start.G + (stepG * i)),
-                                            (byte)(start.B + (stepB * i))) );
+                list.Add( new Pen(System.Drawing.Color.FromArgb((byte)(start.Color.A + (stepA * i)),
+                                            (byte)(start.Color.A + (stepR * i)),
+                                            (byte)(start.Color.G + (stepG * i)),
+                                            (byte)(start.Color.B + (stepB * i)))));
             }
 
             return list;
         }
+
+        public virtual void UpdateWindow() { }
 
         public Pen pen = new Pen(System.Drawing.Color.FromArgb(191, 191, 191));
 
@@ -193,10 +200,7 @@ namespace WaveOS.GUI
                         float e = (float)i / (Width - 6);
                         e = e * titleBarGradients.Count;
 
-                        var color = System.Drawing.Color.FromArgb(Active ? titleBarGradients[(int)e].ARGB : inactiveBarGradients[(int)e].ARGB);
-                        var pen = new Pen(color);
-
-                        Aura_OS.Kernel.GUI.DrawLine((X + 3) + i, Y + 3, (X + 3) + i, (Y + 3) + 18, pen);
+                        Aura_OS.Kernel.GUI.DrawLine((X + 3) + i, Y + 3, (X + 3) + i, (Y + 3) + 18, Active ? titleBarGradients[(int)e] : inactiveBarGradients[(int)e]);
                     }
                 }
             }
@@ -214,21 +218,18 @@ namespace WaveOS.GUI
                         float e = (float)i / (Width);
                         e = e * titleBarGradients.Count;
 
-                        var color = System.Drawing.Color.FromArgb(Active ? titleBarGradients[(int)e].ARGB : inactiveBarGradients[(int)e].ARGB);
-                        var pen = new Pen(color);
-
-                        Aura_OS.Kernel.GUI.DrawLine(X + i, Y, X + i, Y + 18, pen);
+                        Aura_OS.Kernel.GUI.DrawLine(X + i, Y, X + i, Y + 18, Active ? titleBarGradients[(int)e] : inactiveBarGradients[(int)e]);
                     }
                 }
             }
 
             if(State == WindowState.Normal && !borderless)
             {
-                Aura_OS.Kernel.GUI.DrawString(X + 5, Y + 4, MinimizeButton.relativeX - (X + 5), 16, title, Aura_OS.Kernel.WhitePen);
+                Aura_OS.Kernel.canvas.DrawString(title, Aura_OS.Kernel.font, Aura_OS.Kernel.WhitePen, X + 5, Y + 4);
             }
             else if(State == WindowState.Maximized && !borderless)
             {
-                Aura_OS.Kernel.GUI.DrawString(X + 5, Y + 2, title, Aura_OS.Kernel.WhitePen);
+                Aura_OS.Kernel.canvas.DrawString(title, Aura_OS.Kernel.font, Aura_OS.Kernel.WhitePen, X + 5, Y + 2);
             }
 
             if (controlbox)
@@ -370,6 +371,8 @@ namespace WaveOS.GUI
 
             if (activeHit)
                 WaveInput.MouseHit = true;
+
+            UpdateWindow();
         }
 
         public void UpdateElement(WaveElement item)

@@ -15,7 +15,7 @@ namespace Aura_OS
         public Pen Colour;
     }
 
-    public class Terminal : WaveOS.WaveGUIApp
+    public class Terminal : WaveOS.GUI.WaveWindow
     {
         GUI Graphics;
 
@@ -104,7 +104,7 @@ namespace Aura_OS
         public int CursorSize { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
         public bool CursorVisible;
 
-        public Terminal(uint width, uint height, uint x = 0, uint y = 0) : base()
+        public Terminal(uint width, uint height, uint x = 0, uint y = 0) : base("Terminal", (int)x, (int)y, (int)width, (int)height, Kernel.WindowManager)
         {
             //Icon = Kernel.terminalIco;
 

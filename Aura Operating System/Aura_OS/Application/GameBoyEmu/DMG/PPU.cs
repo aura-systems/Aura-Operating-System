@@ -4,6 +4,7 @@ using static ProjectDMG.Utils.BitOps;
 
 namespace ProjectDMG
 {
+    /*
     public class PPU
     {
 
@@ -340,4 +341,5 @@ namespace ProjectDMG
             return isBit(5, LCDC) && WY <= LY;
         }
     }
+    */
 }
