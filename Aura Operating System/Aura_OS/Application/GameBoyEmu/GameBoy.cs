@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 
 namespace Aura_OS.Application.GameBoyEmu
 {
+    /*
     public class GameBoyEmu : App
     {
         public byte[] Rom;
@@ -79,5 +80,5 @@ namespace Aura_OS.Application.GameBoyEmu
 
             cpu.UpdateIME();
         }
-    }
+    }*/
 }

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace Aura_OS.Graphics
 {
+    /*
     public class WindowManager
     {
         public List<App> apps;
@@ -24,5 +25,5 @@ namespace Aura_OS.Graphics
             foreach (App app in apps)
                 app.Update();
         }
-    }
+    }*/
 }

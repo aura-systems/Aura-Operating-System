@@ -67,12 +67,10 @@ namespace Aura_OS
         //PROCESSES
         public static ProcessManager ProcessManager;
 
-        public static WindowManager WindowManager;
-
         public static Terminal console;
-        public static MemoryInfo memoryInfo;
-        public static SystemInfo systemInfo;
-        public static GameBoyEmu gameBoyEmu;
+        //public static MemoryInfo memoryInfo;
+        //public static SystemInfo systemInfo;
+        //public static GameBoyEmu gameBoyEmu;
 
         public static CommandManager CommandManager;
 
@@ -85,6 +83,12 @@ namespace Aura_OS
 
         public static CosmosVFS VirtualFileSystem = new CosmosVFS();
         public static Dictionary<string, string> EnvironmentVariables = new Dictionary<string, string>();
+
+        public static Random rnd = new Random();
+
+        public static GUI GUI = new GUI();
+
+        public static WaveOS.Apps.WindowManager WindowManager = new WaveOS.Apps.WindowManager();
 
         public static void BeforeRun()
         {
@@ -112,7 +116,7 @@ namespace Aura_OS
             CommandManager = new CommandManager();
             CommandManager.Initialize();
 
-            console = new Terminal(700, 600, 40, 40);
+            /*console = new Terminal(700, 600, 40, 40);
             console.Initialize();
 
             memoryInfo = new MemoryInfo(400, 300, 40, 40);
@@ -125,13 +129,15 @@ namespace Aura_OS
             gameBoyEmu.Initialize();
 
             WindowManager = new WindowManager();
-            WindowManager.Initialize();
+            WindowManager.Initialize();*/
 
             //START MOUSE
             MouseManager.ScreenWidth = screenWidth;
             MouseManager.ScreenHeight = screenHeight;
 
             BootTime = Time.MonthString() + "/" + Time.DayString() + "/" + Time.YearString() + ", " + Time.TimeString(true, true, true);
+
+            WindowManager.Initialize();
 
             Running = true;
         }
@@ -221,7 +227,9 @@ namespace Aura_OS
                 canvas.DrawString("fps=" + _fps, font, WhitePen, 2, (int)screenHeight - (font.Height * 2));
                 canvas.DrawString("Aura Operating System [" + Version + "." + Revision + "]", font, WhitePen, 2, (int)screenHeight - font.Height);
 
-                WindowManager.DrawWindows();
+                WindowManager.Run();
+
+                //WindowManager.DrawWindows();
 
                 dock.Update();
 

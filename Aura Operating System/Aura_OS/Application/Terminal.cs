@@ -15,7 +15,7 @@ namespace Aura_OS
         public Pen Colour;
     }
 
-    public class Terminal : App
+    public class Terminal : WaveOS.WaveGUIApp
     {
         GUI Graphics;
 
@@ -104,11 +104,11 @@ namespace Aura_OS
         public int CursorSize { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
         public bool CursorVisible;
 
-        public Terminal(uint width, uint height, uint x = 0, uint y = 0) : base("Terminal", width, height, x, y)
+        public Terminal(uint width, uint height, uint x = 0, uint y = 0) : base()
         {
-            Icon = Kernel.terminalIco;
+            //Icon = Kernel.terminalIco;
 
-            Graphics = new GUI();
+
 
             Pallete[0] = 0xFF000000; // Black
             Pallete[1] = 0xFF0000AB; // Darkblue
@@ -145,7 +145,7 @@ namespace Aura_OS
             BeforeCommand();
         }
 
-        public override void UpdateApp()
+        /*public override void UpdateApp()
         {
             KeyEvent keyEvent = null;
 
@@ -236,7 +236,7 @@ namespace Aura_OS
                 }
             }
 
-            Kernel.canvas.DrawFilledRectangle(Kernel.BlackPen, (int)x, (int)y, (int)width, (int)height);
+            Kernel.canvas.DrawFilledRectangle(Kernel.BlackPen, (int)base.X, (int)base.Y, (int)base.Width, (int)base.Height);
 
             DrawTerminal();
 
@@ -244,7 +244,7 @@ namespace Aura_OS
             {
                 DrawCursor();
             }
-        }
+        }*/
 
         void DrawTerminal()
         {
@@ -255,7 +255,7 @@ namespace Aura_OS
                     if (Text[i][j].Char == null || Text[i][j].Char == '\n')
                         continue;
 
-                    Graphics.WriteByte((char)Text[i][j].Char, (int)Kernel.console.x + j * Kernel.font.Width, (int)Kernel.console.y + i * Kernel.font.Height, Text[i][j].Colour);
+                    Graphics.WriteByte((char)Text[i][j].Char, (int)Kernel.console.X + j * Kernel.font.Width, (int)Kernel.console.Y + i * Kernel.font.Height, Text[i][j].Colour);
                 }
             }
 
@@ -265,7 +265,7 @@ namespace Aura_OS
 
                 for (int i = 0; i < Command.Length; i++)
                 {
-                    Graphics.WriteByte(Command[i], (int)Kernel.console.x + ((baseX + i) * Kernel.font.Width), (int)Kernel.console.y + mY * Kernel.font.Height, ForegroundPen);
+                    Graphics.WriteByte(Command[i], (int)Kernel.console.X + ((baseX + i) * Kernel.font.Width), (int)Kernel.console.Y + mY * Kernel.font.Height, ForegroundPen);
                 }
             }
         }

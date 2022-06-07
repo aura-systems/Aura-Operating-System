@@ -18,6 +18,7 @@ namespace Aura_OS
 
         public void Update()
         {
+            /*
             //Top bar
             Width = (uint)(Kernel.WindowManager.apps.Count * Kernel.programLogo.Width + Kernel.WindowManager.apps.Count * Devide);
 
@@ -88,7 +89,7 @@ namespace Aura_OS
                         }
                     }
                 }
-            }
+            }*/
         }
     }
 }
