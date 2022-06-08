@@ -26,7 +26,7 @@ namespace WaveOS.GUI
 
         public bool showStartMenu = false;
         List<Pen> StartGradient;
-        public WaveTaskbar(int X, int Y, int width, int height, Apps.WindowManager host) : base("Wave OS Taskbar", X, Y, width, height, host)
+        public WaveTaskbar(int X, int Y, int width, int height, Apps.WindowManager host) : base("Wave OS Taskbar", X, Y, width, height, host, new Pen(System.Drawing.Color.FromArgb(191, 191, 191)))
         {
             borderless = true;
             controlbox = false;
@@ -225,7 +225,7 @@ namespace WaveOS.GUI
 
                 if (WaveInput.WasLMBPressed())
                 {
-                    if (!WaveInput.IsMouseWithin(X + 3, Y - 341, 178, 341))
+                    if (!WaveInput.IsMouseWithin(WindowX + 3, WindowY - 341, 178, 341))
                     {
                         if (!WaveInput.IsMouseWithin(startButton))
                         {
@@ -243,8 +243,8 @@ namespace WaveOS.GUI
         {
             base.Draw();
 
-            Aura_OS.Kernel.GUI.DrawFilledRectangle(X, Y, Width, 1, 0, pen);
-            Aura_OS.Kernel.GUI.DrawFilledRectangle(X, Y + 1, Width, 1, 0, Aura_OS.Kernel.WhitePen);
+            Aura_OS.Kernel.GUI.DrawFilledRectangle(WindowX, WindowY, Width, 1, 0, pen);
+            Aura_OS.Kernel.GUI.DrawFilledRectangle(WindowX, WindowY + 1, Width, 1, 0, Aura_OS.Kernel.WhitePen);
 
             DrawSystemTray();
 
@@ -259,18 +259,18 @@ namespace WaveOS.GUI
         public void DrawSystemTray()
         {
             //Top shadow
-            Aura_OS.Kernel.GUI.DrawFilledRectangle(Width - 60, Y + 4, 51, 1, 0, pen2);
+            Aura_OS.Kernel.GUI.DrawFilledRectangle(Width - 60, WindowY + 4, 51, 1, 0, pen2);
 
             //Left shadow
-            Aura_OS.Kernel.GUI.DrawFilledRectangle(Width - 60, Y + 4, 1, 18, 0, pen2);
+            Aura_OS.Kernel.GUI.DrawFilledRectangle(Width - 60, WindowY + 4, 1, 18, 0, pen2);
 
             //Bottom shadow
-            Aura_OS.Kernel.GUI.DrawFilledRectangle(Width - 60, Y + 22, 51, 1, 0, Aura_OS.Kernel.WhitePen);
+            Aura_OS.Kernel.GUI.DrawFilledRectangle(Width - 60, WindowY + 22, 51, 1, 0, Aura_OS.Kernel.WhitePen);
 
             //Right shadow
-            Aura_OS.Kernel.GUI.DrawFilledRectangle(Width - 8, Y + 4, 1, 18, 0, Aura_OS.Kernel.WhitePen);
+            Aura_OS.Kernel.GUI.DrawFilledRectangle(Width - 8, WindowY + 4, 1, 18, 0, Aura_OS.Kernel.WhitePen);
 
-            Aura_OS.Kernel.canvas.DrawString(GetTime(), Aura_OS.Kernel.font, Aura_OS.Kernel.BlackPen, Width - 54, Y + 6);
+            Aura_OS.Kernel.canvas.DrawString(GetTime(), Aura_OS.Kernel.font, Aura_OS.Kernel.BlackPen, Width - 54, WindowY + 6);
         }
 
         string GetTime()

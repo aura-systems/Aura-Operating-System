@@ -42,12 +42,12 @@ namespace WaveOS.GUI
             {
                 if (EnumHelper.IsAnchorSet(Anchor, AnchorStyles.Left))
                     if (parent2 == null) //3 is the border size, make border size customizable in the future?
-                        return (parent.X + X) + 3;
+                        return (parent.WindowX + X) + 3;
                     else
                         return parent2.relativeX + X;
                 else
                     if(parent2 == null)
-                        return (parent.X + parent.Width) - X;
+                        return (parent.WindowX + parent.Width) - X;
                     else
                         return (parent2.relativeX + parent2.Width) - X;
             }
@@ -56,12 +56,12 @@ namespace WaveOS.GUI
             {
                 if (EnumHelper.IsAnchorSet(Anchor, AnchorStyles.Top))
                     if(parent2 == null)
-                        return (!ignoreTitleBar) ? (parent.Y + ((!parent.borderless) ? parent.titleBarHeight : 0)) + Y : parent.Y + Y;
+                        return (!ignoreTitleBar) ? (parent.WindowY + ((!parent.borderless) ? parent.titleBarHeight : 0)) + Y : parent.WindowY + Y;
                     else
                         return (parent2.relativeY) + Y;
                 else
                     if(parent2 == null)
-                        return (parent.Y + parent.Height) - Y;
+                        return (parent.WindowY + parent.Height) - Y;
                     else
                         return (parent2.relativeY + parent2.Height) - Y;
             }
@@ -355,11 +355,11 @@ namespace WaveOS.GUI
                 Aura_OS.Kernel.GUI.DrawFilledRectangle(relativeX + 2, relativeY + 2, Width - 4, Height - 4, 0, pen2);
             }
             if (TextAlignment == TextAlignment.Left)
-                Aura_OS.Kernel.canvas.DrawString(Text, Aura_OS.Kernel.font, Color, relativeX + 3, relativeY + (Height / 2) - 7 - 4);
+                Aura_OS.Kernel.canvas.DrawString(Text, Aura_OS.Kernel.font, Color, relativeX + 3, relativeY + (Height / 2) - 7 - 2);
             else if (TextAlignment == TextAlignment.Center)
-                Aura_OS.Kernel.canvas.DrawString(Text, Aura_OS.Kernel.font, Color, (relativeX + (Width / 2)) - ((Text.Length * 8) / 2), relativeY + (Height / 2) - 7 - 4);
+                Aura_OS.Kernel.canvas.DrawString(Text, Aura_OS.Kernel.font, Color, (relativeX + (Width / 2)) - ((Text.Length * 8) / 2), relativeY + (Height / 2) - 7 - 2);
             else if (TextAlignment == TextAlignment.Right) //Not implemented, uses Center setting
-                Aura_OS.Kernel.canvas.DrawString(Text, Aura_OS.Kernel.font, Color, (relativeX + (Width / 2)) - ((Text.Length * 8) / 2), relativeY + (Height / 2) - 7 - 4);
+                Aura_OS.Kernel.canvas.DrawString(Text, Aura_OS.Kernel.font, Color, (relativeX + (Width / 2)) - ((Text.Length * 8) / 2), relativeY + (Height / 2) - 7 - 2);
         }
     }
 

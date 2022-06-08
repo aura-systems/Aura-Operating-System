@@ -17,8 +17,6 @@ namespace Aura_OS
 
     public class Terminal : WaveOS.GUI.WaveWindow
     {
-        GUI Graphics;
-
         internal const char LineFeed = '\n';
         internal const char CarriageReturn = '\r';
         internal const char Tab = '\t';
@@ -104,9 +102,9 @@ namespace Aura_OS
         public int CursorSize { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
         public bool CursorVisible;
 
-        public Terminal(uint width, uint height, uint x = 0, uint y = 0) : base("Terminal", (int)x, (int)y, (int)width, (int)height, Kernel.WindowManager)
+        public Terminal(uint width, uint height, uint x = 0, uint y = 0) : base("Terminal", (int)x, (int)y, (int)width, (int)height, Kernel.WindowManager, new Pen(Color.Black))
         {
-            //Icon = Kernel.terminalIco;
+            Icon = Kernel.terminalIco;
 
 
 
@@ -145,7 +143,7 @@ namespace Aura_OS
             BeforeCommand();
         }
 
-        /*public override void UpdateApp()
+        public override void UpdateWindow()
         {
             KeyEvent keyEvent = null;
 
@@ -236,7 +234,7 @@ namespace Aura_OS
                 }
             }
 
-            Kernel.canvas.DrawFilledRectangle(Kernel.BlackPen, (int)base.X, (int)base.Y, (int)base.Width, (int)base.Height);
+            //Kernel.canvas.DrawFilledRectangle(Kernel.BlackPen, (int)base.X, (int)base.Y, (int)base.Width, (int)base.Height);
 
             DrawTerminal();
 
@@ -244,9 +242,9 @@ namespace Aura_OS
             {
                 DrawCursor();
             }
-        }*/
+        }
 
-        void DrawTerminal()
+        public void DrawTerminal()
         {
             for (int i = 0; i < mRows; i++)
             {
@@ -255,7 +253,7 @@ namespace Aura_OS
                     if (Text[i][j].Char == null || Text[i][j].Char == '\n')
                         continue;
 
-                    Graphics.WriteByte((char)Text[i][j].Char, (int)Kernel.console.X + j * Kernel.font.Width, (int)Kernel.console.Y + i * Kernel.font.Height, Text[i][j].Colour);
+                    Kernel.GUI.WriteByte((char)Text[i][j].Char, (int)Kernel.console.X + j * Kernel.font.Width + WindowX, (int)Kernel.console.Y + i * Kernel.font.Height + WindowY, Text[i][j].Colour);
                 }
             }
 
@@ -265,7 +263,7 @@ namespace Aura_OS
 
                 for (int i = 0; i < Command.Length; i++)
                 {
-                    Graphics.WriteByte(Command[i], (int)Kernel.console.X + ((baseX + i) * Kernel.font.Width), (int)Kernel.console.Y + mY * Kernel.font.Height, ForegroundPen);
+                    Kernel.GUI.WriteByte(Command[i], (int)Kernel.console.X + ((baseX + i) * Kernel.font.Width) + WindowX, (int)Kernel.console.Y + mY * Kernel.font.Height + WindowY, ForegroundPen);
                 }
             }
         }
@@ -288,7 +286,7 @@ namespace Aura_OS
 
         public void DrawCursor()
         {
-            Graphics.SetCursorPos(mX, mY);
+            Kernel.GUI.SetCursorPos(mX, mY);
         }
 
         /// <summary>

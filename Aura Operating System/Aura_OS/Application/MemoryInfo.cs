@@ -7,7 +7,7 @@ namespace Aura_OS
 {
     public class MemoryInfo : WaveOS.GUI.WaveWindow
     {
-        public MemoryInfo(uint width, uint height, uint x = 0, uint y = 0) : base("MemoryInfo", (int)x, (int)y, (int)width, (int)height, Kernel.WindowManager)
+        public MemoryInfo(uint width, uint height, uint x = 0, uint y = 0) : base("MemoryInfo", (int)x, (int)y, (int)width, (int)height, Kernel.WindowManager, new Cosmos.System.Graphics.Pen(Color.FromArgb(191, 191, 191)))
         {
 
         }

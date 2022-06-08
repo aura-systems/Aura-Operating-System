@@ -29,10 +29,12 @@ namespace WaveOS.GUI
     }
     public class WaveWindow : Process
     {
+        public Bitmap Icon;
+
         public int windID;
         public string title;
         public bool Active = false;
-        public int X, Y, SavedX, SavedY, IX, IY;
+        public int WindowX, WindowY, SavedX, SavedY, IX, IY;
         WindowState _state = WindowState.Normal;
         public WindowState savedState = WindowState.Normal;
 
@@ -43,9 +45,9 @@ namespace WaveOS.GUI
                 {
                     if (_state == WindowState.Normal)
                     {
-                        SavedX = X; SavedY = Y;
+                        SavedX = WindowX; SavedY = WindowY;
 
-                        X = 0; Y = 0;
+                        WindowX = 0; WindowY = 0;
 
                         SavedWidth = Width; SavedHeight = Height;
 
@@ -59,7 +61,7 @@ namespace WaveOS.GUI
                 {
                     if (_state == WindowState.Maximized)
                     {
-                        X = SavedX; Y = SavedY;
+                        WindowX = SavedX; WindowY = SavedY;
 
                         Width = SavedWidth; Height = SavedHeight;
 
@@ -99,16 +101,21 @@ namespace WaveOS.GUI
         WaveButton MinimizeButton;
         List<Pen> titleBarGradients;
         List<Pen> inactiveBarGradients;
+        Pen Background;
 
         public static readonly Pen DeepBlue = new Pen(System.Drawing.Color.FromArgb(255, 51, 47, 208));
         public static readonly Pen Red = new Pen(System.Drawing.Color.FromArgb(255, 255, 0, 0));
         public static readonly Pen LightGray = new Pen(System.Drawing.Color.FromArgb(255, 125, 125, 125));
         public static readonly Pen DeepGray = new Pen(System.Drawing.Color.FromArgb(255, 25, 25, 25));
 
-        public WaveWindow(string title, int x, int y, int width, int height, WindowManager host) : base(title, ProcessType.Program)
+        public WaveWindow(string title, int x, int y, int width, int height, WindowManager host, Pen background) : base(title, ProcessType.Program)
         {
+            Background = background;
+
+            Icon = Aura_OS.Kernel.programIco;
+
             this.title = title;
-            this.X = x; this.Y = y;
+            this.WindowX = x; this.WindowY = y;
             Width = width; Height = height;
 
             Host = host;
@@ -154,8 +161,6 @@ namespace WaveOS.GUI
 
         public virtual void UpdateWindow() { }
 
-        public Pen pen = new Pen(System.Drawing.Color.FromArgb(191, 191, 191));
-
         public virtual void Draw()
         {
             if (State == WindowState.Minimized) return;
@@ -165,7 +170,7 @@ namespace WaveOS.GUI
             {
                 if (!borderless)
                 {
-                    Aura_OS.Kernel.GUI.Draw3DBorder(X, Y, Width, Height + titleBarHeight);
+                    Aura_OS.Kernel.GUI.Draw3DBorder(WindowX, WindowY, Width, Height + titleBarHeight);
 
                     ////Draw 3D border
                     ////Top and left white lines
@@ -187,9 +192,9 @@ namespace WaveOS.GUI
 
                 //Window bg
                 if(!borderless)
-                    Aura_OS.Kernel.GUI.DrawFilledRectangle(X + 2, Y + 2, Width - 4, (Height + titleBarHeight) - 4, 0, pen);
+                    Aura_OS.Kernel.GUI.DrawFilledRectangle(WindowX + 2, WindowY + 2, Width - 4, (Height + titleBarHeight) - 4, 0, Background);
                 else
-                    Aura_OS.Kernel.GUI.DrawFilledRectangle(X, Y, Width, Height, 0, pen);
+                    Aura_OS.Kernel.GUI.DrawFilledRectangle(WindowX, WindowY, Width, Height, 0, Background);
 
                 if (!borderless)
                 {
@@ -200,14 +205,14 @@ namespace WaveOS.GUI
                         float e = (float)i / (Width - 6);
                         e = e * titleBarGradients.Count;
 
-                        Aura_OS.Kernel.GUI.DrawLine((X + 3) + i, Y + 3, (X + 3) + i, (Y + 3) + 18, Active ? titleBarGradients[(int)e] : inactiveBarGradients[(int)e]);
+                        Aura_OS.Kernel.GUI.DrawLine((WindowX + 3) + i, WindowY + 3, (WindowX + 3) + i, (WindowY + 3) + 18, Active ? titleBarGradients[(int)e] : inactiveBarGradients[(int)e]);
                     }
                 }
             }
             else if(State == WindowState.Maximized)
             {
                 //Window bg
-                Aura_OS.Kernel.GUI.DrawFilledRectangle(X, Y + 2, Width, (Height + titleBarHeight) - 2, 0, pen);
+                Aura_OS.Kernel.GUI.DrawFilledRectangle(WindowX, WindowY + 2, Width, (Height + titleBarHeight) - 2, 0, Background);
 
                 if (!borderless)
                 {
@@ -218,18 +223,18 @@ namespace WaveOS.GUI
                         float e = (float)i / (Width);
                         e = e * titleBarGradients.Count;
 
-                        Aura_OS.Kernel.GUI.DrawLine(X + i, Y, X + i, Y + 18, Active ? titleBarGradients[(int)e] : inactiveBarGradients[(int)e]);
+                        Aura_OS.Kernel.GUI.DrawLine(WindowX + i, WindowY, WindowX + i, WindowY + 18, Active ? titleBarGradients[(int)e] : inactiveBarGradients[(int)e]);
                     }
                 }
             }
 
             if(State == WindowState.Normal && !borderless)
             {
-                Aura_OS.Kernel.canvas.DrawString(title, Aura_OS.Kernel.font, Aura_OS.Kernel.WhitePen, X + 5, Y + 4);
+                Aura_OS.Kernel.canvas.DrawString(title, Aura_OS.Kernel.font, Aura_OS.Kernel.WhitePen, WindowX + 5, WindowY + 4);
             }
             else if(State == WindowState.Maximized && !borderless)
             {
-                Aura_OS.Kernel.canvas.DrawString(title, Aura_OS.Kernel.font, Aura_OS.Kernel.WhitePen, X + 5, Y + 2);
+                Aura_OS.Kernel.canvas.DrawString(title, Aura_OS.Kernel.font, Aura_OS.Kernel.WhitePen, WindowX + 5, WindowY + 2);
             }
 
             if (controlbox)
@@ -237,6 +242,8 @@ namespace WaveOS.GUI
                 CloseButton.Draw();
                 MaximizeButton.Draw();
                 MinimizeButton.Draw();
+
+                Aura_OS.Kernel.canvas.DrawImage(Icon, (int)(WindowX + 2), (int)(WindowY + 2));
             }
 
             //Draw children
@@ -250,7 +257,7 @@ namespace WaveOS.GUI
         {
             bool activeHit = false;
 
-            if (!WaveInput.MouseHit && WaveInput.WasLMBPressed() && WaveInput.IsMouseWithin(X, Y, Width, Height + titleBarHeight))
+            if (!WaveInput.MouseHit && WaveInput.WasLMBPressed() && WaveInput.IsMouseWithin(WindowX, WindowY, Width, Height + titleBarHeight))
             {
                 activeHit = true;
                 if (!Active)
@@ -267,28 +274,28 @@ namespace WaveOS.GUI
             //Resizing window
             if (!borderless && !WaveInput.MouseHit && State != WindowState.Maximized && WaveInput.WasLMBPressed() && !Moving && ResizeState == WindowResizeState.None)
             {
-                if(WaveInput.IsMouseWithin(X, Y, Width, resizeBorder))
+                if(WaveInput.IsMouseWithin(WindowX, WindowY, Width, resizeBorder))
                 {
                     WaveInput.MouseHit = true;
                     ResizeState |= WindowResizeState.Top;
                     IY = (int)Mouse.Y;
                 }
 
-                if(WaveInput.IsMouseWithin(X, (Y + Height + titleBarHeight) - resizeBorder, Width, resizeBorder))
+                if(WaveInput.IsMouseWithin(WindowX, (WindowY + Height + titleBarHeight) - resizeBorder, Width, resizeBorder))
                 {
                     WaveInput.MouseHit = true;
                     ResizeState |= WindowResizeState.Bottom;
                     IY = (int)Mouse.Y;
                 }
 
-                if(WaveInput.IsMouseWithin(X, Y, resizeBorder, Height + titleBarHeight))
+                if(WaveInput.IsMouseWithin(WindowX, WindowY, resizeBorder, Height + titleBarHeight))
                 {
                     WaveInput.MouseHit = true;
                     ResizeState |= WindowResizeState.Left;
                     IX = (int)Mouse.X;
                 }
 
-                if(WaveInput.IsMouseWithin((X + Width) - resizeBorder, Y, resizeBorder, Height + titleBarHeight))
+                if(WaveInput.IsMouseWithin((WindowX + Width) - resizeBorder, WindowY, resizeBorder, Height + titleBarHeight))
                 {
                     WaveInput.MouseHit = true;
                     ResizeState |= WindowResizeState.Right;
@@ -305,7 +312,7 @@ namespace WaveOS.GUI
                     {
                         Height -= (int)Mouse.Y - IY;
                         IY = (int)Mouse.Y;
-                        Y = (int)Mouse.Y;
+                        WindowY = (int)Mouse.Y;
                     }
                 }
                 else if (EnumHelper.IsResizeSet(ResizeState, WindowResizeState.Bottom))
@@ -323,7 +330,7 @@ namespace WaveOS.GUI
                     {
                         Width -= (int)Mouse.X - IX;
                         IX = (int)Mouse.X;
-                        X = (int)Mouse.X;
+                        WindowX = (int)Mouse.X;
                     }
                 }
                 else if (EnumHelper.IsResizeSet(ResizeState, WindowResizeState.Right))
@@ -343,21 +350,21 @@ namespace WaveOS.GUI
             //Moving window
             if (!borderless && State != WindowState.Maximized && !WaveInput.MouseHit && WaveInput.WasLMBPressed()
                 && !Moving && ResizeState == WindowResizeState.None
-                && WaveInput.IsMouseWithin(X, Y, Width, titleBarHeight) 
+                && WaveInput.IsMouseWithin(WindowX, WindowY, Width, titleBarHeight) 
                 && !WaveInput.IsMouseWithin(CloseButton.relativeX, CloseButton.relativeY, CloseButton.Width, CloseButton.Height)
                 && !WaveInput.IsMouseWithin(MaximizeButton.relativeX, MaximizeButton.relativeY, MaximizeButton.Width, MaximizeButton.Height)
                 && !WaveInput.IsMouseWithin(MinimizeButton.relativeX, MinimizeButton.relativeY, MinimizeButton.Width, MinimizeButton.Height))
             {
                 Moving = true;
-                IX = (int)Mouse.X - X;
-                IY = (int)Mouse.Y - Y;
+                IX = (int)Mouse.X - WindowX;
+                IY = (int)Mouse.Y - WindowY;
                 WaveInput.MouseHit = true;
             }
 
             if(Mouse.MouseState == Cosmos.System.MouseState.Left && Moving)
             {
-                X = (int)Mouse.X - IX;
-                Y = (int)Mouse.Y - IY;
+                WindowX = (int)Mouse.X - IX;
+                WindowY = (int)Mouse.Y - IY;
             }
             else
             {
