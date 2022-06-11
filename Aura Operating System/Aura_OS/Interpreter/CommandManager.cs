@@ -20,6 +20,7 @@ using Aura_OS.System.Shell.cmdIntr.SystemInfomation;
 using Aura_OS.System.Shell.cmdIntr;
 using Aura_OS.Interpreter.Commands.Util;
 using Aura_OS.Interpreter.Commands.Filesystem;
+using Aura_OS.Processing.Executable;
 
 namespace Aura_OS.Interpreter
 {
