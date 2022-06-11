@@ -57,8 +57,8 @@
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="Cosmos.System2" Version="0-*" NoWarn="NU1604" />
-      <PackageReference Include="CosmosFtpServer" Version="1.0.0" />
+      <PackageReference Include="Cosmos.System2" Version="0-*" NoWarn="NU1604;NU1605" />
+	  <PackageReference Include="CosmosFtpServer" Version="1.0.1" NoWarn="NU1604;NU1605" />
     </ItemGroup>
   
     <ItemGroup>
