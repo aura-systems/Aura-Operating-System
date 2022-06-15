@@ -16,6 +16,8 @@ namespace Aura_OS
         uint Height = 30;
         uint Devide = 20;
 
+        public bool Clicked = false;
+
         public void Update()
         {
             //Top bar
@@ -57,22 +59,17 @@ namespace Aura_OS
                     Kernel.canvas.DrawImage(Kernel.programLogo, (int)app.dockX, (int)app.dockY);
                     i++;
 
-                    int _i = 0;
-
-                    if (_i != 0)
-                    {
-                        _i--;
-                    }
-
                     if (MouseManager.X > app.dockX && MouseManager.X < app.dockX + app.dockWidth && MouseManager.Y > app.dockY && MouseManager.Y < app.dockY + app.dockHeight)
                     {
                         Kernel.canvas.DrawString(app.name, Kernel.font, Kernel.WhitePen, (int)(app.dockX - ((app.name.Length * 8) / 2) + app.dockWidth / 2), (int)(app.dockY - 20));
                     }
 
-                    if (MouseManager.MouseState == MouseState.Left && _i == 0)
+                    if (MouseManager.MouseState == MouseState.Left)
                     {
-                        if (MouseManager.X > app.dockX && MouseManager.X < app.dockX + app.dockWidth && MouseManager.Y > app.dockY && MouseManager.Y < app.dockY + app.dockHeight)
+                        if (!Clicked && MouseManager.X > app.dockX && MouseManager.X < app.dockX + app.dockWidth && MouseManager.Y > app.dockY && MouseManager.Y < app.dockY + app.dockHeight)
                         {
+                            Clicked = true;
+
                             app.visible = !app.visible;
 
                             if (app.visible)
@@ -83,9 +80,11 @@ namespace Aura_OS
                             {
                                 app.Stop();
                             }
-
-                            _i = 60;
                         }
+                    }
+                    else 
+                    {
+                        Clicked = false;
                     }
                 }
             }
