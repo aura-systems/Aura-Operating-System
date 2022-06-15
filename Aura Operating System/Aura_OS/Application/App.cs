@@ -8,6 +8,8 @@ namespace Aura_OS
 {
     public class App : Process
     {
+        public static bool HasWindowMoving = false;
+
         public Bitmap Icon;
 
         public readonly uint baseWidth;
@@ -67,8 +69,10 @@ namespace Aura_OS
             {
                 if (Kernel.Pressed)
                 {
-                    if (MouseManager.X > baseX && MouseManager.X < baseX + baseWidth && MouseManager.Y > baseY && MouseManager.Y < baseY + MoveBarHeight)
+                    if (!HasWindowMoving && MouseManager.X > baseX && MouseManager.X < baseX + baseWidth && MouseManager.Y > baseY && MouseManager.Y < baseY + MoveBarHeight)
                     {
+                        HasWindowMoving = true;
+
                         //Focus window
                         foreach (var app in Kernel.WindowManager.apps)
                         {
@@ -93,6 +97,7 @@ namespace Aura_OS
                 {
                     pressed = false;
                     lck = false;
+                    HasWindowMoving = false;
                 }
 
                 if (pressed)
