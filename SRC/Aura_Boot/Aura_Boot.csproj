@@ -15,7 +15,7 @@
         <CompileVBEMultiboot>True</CompileVBEMultiboot>
         <ExtractMapFile>False</ExtractMapFile>
         <PxeInterface>192.168.0.8</PxeInterface>
-        <Launch>Qemu</Launch>
+        <Launch>VMware</Launch>
         <VisualStudioDebugPort>Pipe: Cosmos\Serial</VisualStudioDebugPort>
         <EnableBochsDebug>True</EnableBochsDebug>
         <StartBochsDebugGui>True</StartBochsDebugGui>
@@ -69,7 +69,7 @@
         <VMwareEdition>Workstation</VMwareEdition>
         <EnableGDB>False</EnableGDB>
         <StartCosmosGDB>False</StartCosmosGDB>
-        <QemuVideoDriver>VBE</QemuVideoDriver>
+        <QemuVideoDriver>VMWare</QemuVideoDriver>
         <VBEResolution>1024x768x32</VBEResolution>
         <QemuMemory>256</QemuMemory>
         <QemuNetworkDevice>RTL8139</QemuNetworkDevice>
