@@ -4,7 +4,7 @@
 
 [English](https://github.com/aura-systems/Aura-Operating-System/blob/master/README.md) | Chinese
 
-一个基于Cosmos的操作系统，由Alexy DA CRUZ (GeomTech)和 Valentin Charbonnier (valentinbreiz)使用C#开发。请阅读 [我们的Wiki](https://github.com/aura-systems/Aura-Operating-System/wiki) 获得更多信息 🌼
+一个基于Cosmos的操作系统，由Alexy DA CRUZ (GeomTech)和 Valentin Charbonnier (valentinbreiz)使用C#开发。请阅读 [我们的Wiki](https://github.com/aura-systems/Aura-Operating-System/wiki/%E7%AE%80%E4%BD%93%E4%B8%AD%E6%96%87-%7C-%E4%B8%BB%E9%A1%B5) 获得更多信息 🌼
 
 ## 支持的特性
 
