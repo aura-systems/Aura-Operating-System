@@ -54,7 +54,9 @@
 
     <ItemGroup>
         <PackageReference Include="Cosmos.System2" Version="0-*" NoWarn="NU1604;NU1605" />
-        <PackageReference Include="CosmosFtpServer" Version="1.0.1" NoWarn="NU1604;NU1605" />
+        <PackageReference Include="CosmosFtpServer" Version="1.0.2">
+        <NoWarn>NU1605;NU1604;NU1103</NoWarn>
+    </PackageReference>
     </ItemGroup>
 
 	<Target Name="GetVersion">
