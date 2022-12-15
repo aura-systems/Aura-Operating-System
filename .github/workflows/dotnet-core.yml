@@ -80,6 +80,6 @@ jobs:
         Copy-Item -Path "Cosmos\Cosmos\source\Cosmos.Debug.Kernel.Plugs.Asm\bin\Debug\netstandard2.0\*" -Destination "C:\Users\runneradmin\AppData\Roaming\Cosmos User Kit\Kernel\" -Force
     - name: Build Aura Operating System
       run: |
-        cd "Aura Operating System"
+        cd "SRC"
         msbuild "Aura_OS.sln" /t:Restore
         msbuild "Aura_OS.sln" /maxcpucount
