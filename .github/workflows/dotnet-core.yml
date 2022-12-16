@@ -16,8 +16,6 @@ jobs:
         include:
           - os: ubuntu-latest
             target: Linux
-          - os: windows-latest
-            target: Windows
 
     steps:
       - uses: actions/checkout@v3
