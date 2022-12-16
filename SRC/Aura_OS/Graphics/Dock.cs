@@ -35,7 +35,7 @@ namespace Aura_OS
             }
 
             string time = Time.TimeString(true, true, true);
-            Kernel.canvas.DrawString(time, Kernel.font, Kernel.BlackPen, (int)((Kernel.screenWidth / 2) - ((time.Length * Kernel.font.Width) / 2)), (int)(strY + 4));
+            Kernel.canvas.DrawString(time, Kernel.font, Kernel.BlackColor, (int)((Kernel.screenWidth / 2) - ((time.Length * Kernel.font.Width) / 2)), (int)(strY + 4));
             if (Kernel.Pressed)
             {
                 if (MouseManager.X > strX && MouseManager.X < strX + Kernel.powerIco.Width && MouseManager.Y > strY && MouseManager.Y < strY + 24)
@@ -61,7 +61,7 @@ namespace Aura_OS
 
                     if (MouseManager.X > app.dockX && MouseManager.X < app.dockX + app.dockWidth && MouseManager.Y > app.dockY && MouseManager.Y < app.dockY + app.dockHeight)
                     {
-                        Kernel.canvas.DrawString(app.name, Kernel.font, Kernel.WhitePen, (int)(app.dockX - ((app.name.Length * 8) / 2) + app.dockWidth / 2), (int)(app.dockY - 20));
+                        Kernel.canvas.DrawString(app.name, Kernel.font, Kernel.WhiteColor, (int)(app.dockX - ((app.name.Length * 8) / 2) + app.dockWidth / 2), (int)(app.dockY - 20));
                     }
 
                     if (MouseManager.MouseState == MouseState.Left)

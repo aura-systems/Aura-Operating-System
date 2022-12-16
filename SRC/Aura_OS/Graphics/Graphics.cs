@@ -17,7 +17,7 @@ namespace Aura_OS.System.Graphics
 {
     public class GUI
     {
-        public void DrawFilledRectangle(Pen pen, int x_start, int y_start, int width, int height)
+        public void DrawFilledRectangle(Color pen, int x_start, int y_start, int width, int height)
         {
             if (height == -1)
             {
@@ -30,16 +30,16 @@ namespace Aura_OS.System.Graphics
             }
         }
 
-        public void WriteByte(char ch, int mX, int mY, Pen pen)
+        public void WriteByte(char ch, int mX, int mY, Color color)
         {
-            Kernel.canvas.DrawChar((char)ch, Kernel.font, pen, mX, mY);
+            Kernel.canvas.DrawChar((char)ch, Kernel.font, color, mX, mY);
         }
 
         public void SetCursorPos(int mX, int mY)
         {
             if (Kernel.console.CursorVisible)
             {
-                DrawFilledRectangle(Kernel.console.ForegroundPen, (int)Kernel.console.x + mX * Kernel.font.Width,
+                DrawFilledRectangle(Kernel.console.ForegroundColor, (int)Kernel.console.x + mX * Kernel.font.Width,
                     (int)Kernel.console.y + mY * Kernel.font.Height + Kernel.font.Height, 8, 4);
             }
         }

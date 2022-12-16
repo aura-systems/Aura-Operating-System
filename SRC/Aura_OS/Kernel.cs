@@ -59,9 +59,9 @@ namespace Aura_OS
         public static uint screenHeight = 768;
 
         public static Canvas canvas;
-        public static Pen WhitePen = new Pen(Color.White);
-        public static Pen BlackPen = new Pen(Color.Black);
-        public static Pen avgColPen = new Pen(Color.PowderBlue);
+        public static Color WhiteColor = Color.White;
+        public static Color BlackColor = Color.Black;
+        public static Color avgColPen = Color.PowderBlue;
         public static Dock dock;
 
         //PROCESSES
@@ -218,8 +218,8 @@ namespace Aura_OS
 
                 //canvas.DrawImage(bootBitmap, (int)(screenWidth / 2 - bootBitmap.Width / 2), (int)(screenHeight / 2 - bootBitmap.Height / 2));
 
-                canvas.DrawString("fps=" + _fps, font, WhitePen, 2, (int)screenHeight - (font.Height * 2));
-                canvas.DrawString("Aura Operating System [" + Version + "." + Revision + "]", font, WhitePen, 2, (int)screenHeight - font.Height);
+                canvas.DrawString("fps=" + _fps, font, WhiteColor, 2, (int)screenHeight - (font.Height * 2));
+                canvas.DrawString("Aura Operating System [" + Version + "." + Revision + "]", font, WhiteColor, 2, (int)screenHeight - font.Height);
 
                 WindowManager.DrawWindows();
 

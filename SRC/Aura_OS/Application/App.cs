@@ -109,11 +109,11 @@ namespace Aura_OS
                     y = (uint)(MouseManager.Y - py + MoveBarHeight);
                 }
 
-                Kernel.canvas.DrawFilledRectangle(Kernel.WhitePen, (int)baseX, (int)baseY, (int)baseWidth, (int)baseHeight);
+                Kernel.canvas.DrawFilledRectangle(Kernel.WhiteColor, (int)baseX, (int)baseY, (int)baseWidth, (int)baseHeight);
                 Kernel.canvas.DrawRectangle(Kernel.avgColPen, (int)baseX, (int)baseY, (int)baseWidth, (int)baseHeight);
 
                 Kernel.canvas.DrawImage(Icon, (int)(baseX + 2), (int)(baseY + 2));
-                Kernel.canvas.DrawString(name, Kernel.font, Kernel.BlackPen, (int)(baseX + Icon.Width + 2), (int)(baseY + 2));
+                Kernel.canvas.DrawString(name, Kernel.font, Kernel.BlackColor, (int)(baseX + Icon.Width + 2), (int)(baseY + 2));
 
                 UpdateApp();
             }

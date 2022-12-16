@@ -12,7 +12,7 @@ namespace Aura_OS
     public struct Cell
     {
         public char ?Char;
-        public Pen Colour;
+        public Color Colour;
     }
 
     public class Terminal : App
@@ -77,7 +77,7 @@ namespace Aura_OS
             get { return mRows; }
         }
 
-        public Pen ForegroundPen = new Pen(Color.White);
+        public Color ForegroundColor = Color.White;
         public static uint foreground = (byte)ConsoleColor.White;
         public ConsoleColor Foreground
         {
@@ -85,7 +85,7 @@ namespace Aura_OS
             set
             {
                 foreground = (uint)value;
-                ForegroundPen = new Pen(Color.FromArgb((int)Pallete[foreground]));
+                ForegroundColor = Color.FromArgb((int)Pallete[foreground]);
             }
         }
 
@@ -236,7 +236,7 @@ namespace Aura_OS
                 }
             }
 
-            Kernel.canvas.DrawFilledRectangle(Kernel.BlackPen, (int)x, (int)y, (int)width, (int)height);
+            Kernel.canvas.DrawFilledRectangle(Kernel.BlackColor, (int)x, (int)y, (int)width, (int)height);
 
             DrawTerminal();
 
@@ -265,7 +265,7 @@ namespace Aura_OS
 
                 for (int i = 0; i < Command.Length; i++)
                 {
-                    Graphics.WriteByte(Command[i], (int)Kernel.console.x + ((baseX + i) * Kernel.font.Width), (int)Kernel.console.y + mY * Kernel.font.Height, ForegroundPen);
+                    Graphics.WriteByte(Command[i], (int)Kernel.console.x + ((baseX + i) * Kernel.font.Width), (int)Kernel.console.y + mY * Kernel.font.Height, ForegroundColor);
                 }
             }
         }
@@ -372,7 +372,7 @@ namespace Aura_OS
         /// <param name="aChar">A char to write</param>
         public void Write(char aChar)
         {
-            Text[mY][mX] = new Cell() { Char = aChar, Colour = ForegroundPen };
+            Text[mY][mX] = new Cell() { Char = aChar, Colour = ForegroundColor };
             mX++;
             if (mX == mCols)
             {
