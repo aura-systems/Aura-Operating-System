@@ -8,77 +8,115 @@ on:
 
 jobs:
   build:
-
-    runs-on: windows-latest
+    name: Build & test Lamscript on ${{ matrix.os }} with ${{ matrix.compiler }}.
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        include:
+          - os: ubuntu-latest
+            target: Linux
+          - os: windows-latest
+            target: Windows
 
     steps:
-    - uses: actions/checkout@v2
-    - name: Setup .NET Core
-      uses: actions/setup-dotnet@v1
-      with:
-        dotnet-version: '6.0.x'
-    - name: Add msbuild to PATH
-      uses: microsoft/setup-msbuild@v1.0.0
-      env:
-        ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
-    - name: Install Visual C++ 2010 Service Pack 1 Redistributable Update
-      run: choco install vcredist2010
-    - name: Clone Cosmos
-      run: |
-        mkdir Cosmos
-        mkdir c:/CosmosRun
-        cd Cosmos
-        git clone https://github.com/CosmosOS/Common
-        git clone https://github.com/CosmosOS/IL2CPU
-        git clone https://github.com/CosmosOS/Cosmos
-        git clone https://github.com/CosmosOS/XSharp
-    - name: Build Cosmos
-      run: |
-        cd Cosmos/Cosmos
-        msbuild Build.sln /t:Restore
-        msbuild Build.sln /maxcpucount /verbosity:normal /t:Build
-    - name: Publish IL2CPU
-      run: |
-        dotnet publish Cosmos\IL2CPU\source\IL2CPU -r win10-x64 -o "c:\CosmosRun\Build\IL2CPU\"
-    - name: Pack packages
-      run: |
-        cd Cosmos/Cosmos/source
-        dotnet pack Cosmos.Build.Tasks/Cosmos.Build.Tasks.csproj --output c:\packages
-        dotnet pack Cosmos.Common/Cosmos.Common.csproj --output c:\packages
-        dotnet pack Cosmos.Core/Cosmos.Core.csproj --output c:\packages
-        dotnet pack Cosmos.Core_Plugs/Cosmos.Core_Plugs.csproj --output c:\packages
-        dotnet pack Cosmos.Core_Asm/Cosmos.Core_Asm.csproj --output c:\packages
-        dotnet pack Cosmos.HAL2/Cosmos.HAL2.csproj --output c:\packages
-        dotnet pack Cosmos.System2/Cosmos.System2.csproj --output c:\packages
-        dotnet pack Cosmos.System2_Plugs/Cosmos.System2_Plugs.csproj --output c:\packages
-        dotnet pack Cosmos.Debug.Kernel/Cosmos.Debug.Kernel.csproj --output c:\packages
-        dotnet pack Cosmos.Debug.Kernel.Plugs.Asm/Cosmos.Debug.Kernel.Plugs.Asm.csproj --output c:\packages
-        dotnet pack Cosmos.Debug.Kernel.Plugs.Asm/Cosmos.Debug.Kernel.Plugs.Asm.csproj --output c:\packages
-        cd ../../IL2CPU/source
-        dotnet pack IL2CPU.API/IL2CPU.API.csproj --output c:\packages
-    - name: Install packages
-      run: |
-        nuget sources Add -Name "Cosmos Local Package Feed" -Source "c:\packages"
-        cd "C:\Users\runneradmin\AppData\Roaming\"
-        mkdir "Cosmos User Kit"
-        cd "Cosmos User Kit"
-        mkdir "Build"
-        mkdir "Kernel"
-        cd "Build"
-        mkdir "IL2CPU"
-    - name: Install files
-      run: |
-        copy "Cosmos\IL2CPU\source\IL2CPU\bin\Debug\net6.0\*" "C:\Users\runneradmin\AppData\Roaming\Cosmos User Kit\Build\IL2CPU\"
-        Copy-Item -Path "Cosmos\Cosmos\source\Cosmos.Common\bin\Debug\net6.0\*" -Destination "C:\Users\runneradmin\AppData\Roaming\Cosmos User Kit\Kernel\" -Force
-        Copy-Item -Path "Cosmos\Cosmos\source\Cosmos.Core_Asm\bin\Debug\net6.0\*" -Destination "C:\Users\runneradmin\AppData\Roaming\Cosmos User Kit\Kernel\" -Force
-        Copy-Item -Path "Cosmos\Cosmos\source\Cosmos.Core_Plugs\bin\Debug\net6.0\*" -Destination "C:\Users\runneradmin\AppData\Roaming\Cosmos User Kit\Kernel\" -Force
-        Copy-Item -Path "Cosmos\Cosmos\source\Cosmos.Core\bin\Debug\net6.0\*" -Destination "C:\Users\runneradmin\AppData\Roaming\Cosmos User Kit\Kernel\" -Force
-        Copy-Item -Path "Cosmos\Cosmos\source\Cosmos.System2\bin\Debug\net6.0\*" -Destination "C:\Users\runneradmin\AppData\Roaming\Cosmos User Kit\Kernel\" -Force
-        Copy-Item -Path "Cosmos\Cosmos\source\Cosmos.HAL2\bin\Debug\net6.0\*" -Destination "C:\Users\runneradmin\AppData\Roaming\Cosmos User Kit\Kernel\" -Force
-        Copy-Item -Path "Cosmos\Cosmos\source\Cosmos.System2_Plugs\bin\Debug\net6.0\*" -Destination "C:\Users\runneradmin\AppData\Roaming\Cosmos User Kit\Kernel\" -Force
-        Copy-Item -Path "Cosmos\Cosmos\source\Cosmos.Debug.Kernel\bin\Debug\netstandard2.0\*" -Destination "C:\Users\runneradmin\AppData\Roaming\Cosmos User Kit\Kernel\" -Force
-        Copy-Item -Path "Cosmos\Cosmos\source\Cosmos.Debug.Kernel.Plugs.Asm\bin\Debug\netstandard2.0\*" -Destination "C:\Users\runneradmin\AppData\Roaming\Cosmos User Kit\Kernel\" -Force
-    - name: Build Aura Operating System
-      run: |
-        cd "SRC"
-        dotnet build "Aura_OS.sln"
+      - uses: actions/checkout@v3
+      - name: Setup .NET Core
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: '6.0.x'
+
+      - name: Add msbuild to PATH
+        if: ${{ matrix.os == 'windows-latest' }}
+        uses: microsoft/setup-msbuild@v1.0.2
+        env:
+          ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
+          
+      - name: Install Visual C++ 2010 Service Pack 1 Redistributable Update
+        if: ${{ matrix.os == 'windows-latest' }}
+        run: choco install vcredist2010
+        
+      - name: Clone Cosmos
+        if: ${{ matrix.os == 'windows-latest' }}
+        run: |
+          mkdir Cosmos
+          mkdir c:/CosmosRun
+          cd Cosmos
+          git clone https://github.com/CosmosOS/Common
+          git clone https://github.com/CosmosOS/IL2CPU
+          git clone https://github.com/CosmosOS/Cosmos
+          git clone https://github.com/CosmosOS/XSharp
+      - name: Build Cosmos
+        if: ${{ matrix.os == 'windows-latest' }}
+        run: |
+          cd Cosmos/Cosmos
+          msbuild Build.sln /t:Restore
+          msbuild Build.sln /maxcpucount /verbosity:normal /t:Build
+      - name: Build Cosmos
+        if: ${{ matrix.os == 'ubuntu-latest' }}
+        run: |
+          sudo apt-get install yasm mkisofs make binutils git && \
+            cd ~ && \
+            mkdir cosmos && \
+            cd cosmos && \
+            git clone https://github.com/CosmosOS/Cosmos --depth 1 && \
+            git clone https://github.com/CosmosOS/IL2CPU --depth 1 && \
+            git clone https://github.com/CosmosOS/XSharp --depth 1 && \
+            git clone https://github.com/CosmosOS/Common --depth 1 && \
+            cd Cosmos && \
+            make all && \
+            sudo make install && \
+            make nuget-install
+      - name: Publish IL2CPU
+        if: ${{ matrix.os == 'windows-latest' }}
+        run: |
+          dotnet publish Cosmos\IL2CPU\source\IL2CPU -r win10-x64 -o "c:\CosmosRun\Build\IL2CPU\"
+      - name: Pack packages
+        if: ${{ matrix.os == 'windows-latest' }}
+        run: |
+          cd Cosmos/Cosmos/source
+          dotnet pack Cosmos.Build.Tasks/Cosmos.Build.Tasks.csproj --output c:\packages
+          dotnet pack Cosmos.Common/Cosmos.Common.csproj --output c:\packages
+          dotnet pack Cosmos.Core/Cosmos.Core.csproj --output c:\packages
+          dotnet pack Cosmos.Core_Plugs/Cosmos.Core_Plugs.csproj --output c:\packages
+          dotnet pack Cosmos.Core_Asm/Cosmos.Core_Asm.csproj --output c:\packages
+          dotnet pack Cosmos.HAL2/Cosmos.HAL2.csproj --output c:\packages
+          dotnet pack Cosmos.System2/Cosmos.System2.csproj --output c:\packages
+          dotnet pack Cosmos.System2_Plugs/Cosmos.System2_Plugs.csproj --output c:\packages
+          dotnet pack Cosmos.Debug.Kernel/Cosmos.Debug.Kernel.csproj --output c:\packages
+          dotnet pack Cosmos.Debug.Kernel.Plugs.Asm/Cosmos.Debug.Kernel.Plugs.Asm.csproj --output c:\packages
+          dotnet pack Cosmos.Debug.Kernel.Plugs.Asm/Cosmos.Debug.Kernel.Plugs.Asm.csproj --output c:\packages
+          cd ../../IL2CPU/source
+          dotnet pack IL2CPU.API/IL2CPU.API.csproj --output c:\packages
+      - name: Install packages
+        if: ${{ matrix.os == 'windows-latest' }}
+        run: |
+          nuget sources Add -Name "Cosmos Local Package Feed" -Source "c:\packages"
+          cd "C:\Users\runneradmin\AppData\Roaming\"
+          mkdir "Cosmos User Kit"
+          cd "Cosmos User Kit"
+          mkdir "Build"
+          mkdir "Kernel"
+          cd "Build"
+          mkdir "IL2CPU"
+      - name: Install files
+        if: ${{ matrix.os == 'windows-latest' }}
+        run: |
+          copy "Cosmos\IL2CPU\source\IL2CPU\bin\Debug\net6.0\*" "C:\Users\runneradmin\AppData\Roaming\Cosmos User Kit\Build\IL2CPU\"
+          Copy-Item -Path "Cosmos\Cosmos\source\Cosmos.Common\bin\Debug\net6.0\*" -Destination "C:\Users\runneradmin\AppData\Roaming\Cosmos User Kit\Kernel\" -Force
+          Copy-Item -Path "Cosmos\Cosmos\source\Cosmos.Core_Asm\bin\Debug\net6.0\*" -Destination "C:\Users\runneradmin\AppData\Roaming\Cosmos User Kit\Kernel\" -Force
+          Copy-Item -Path "Cosmos\Cosmos\source\Cosmos.Core_Plugs\bin\Debug\net6.0\*" -Destination "C:\Users\runneradmin\AppData\Roaming\Cosmos User Kit\Kernel\" -Force
+          Copy-Item -Path "Cosmos\Cosmos\source\Cosmos.Core\bin\Debug\net6.0\*" -Destination "C:\Users\runneradmin\AppData\Roaming\Cosmos User Kit\Kernel\" -Force
+          Copy-Item -Path "Cosmos\Cosmos\source\Cosmos.System2\bin\Debug\net6.0\*" -Destination "C:\Users\runneradmin\AppData\Roaming\Cosmos User Kit\Kernel\" -Force
+          Copy-Item -Path "Cosmos\Cosmos\source\Cosmos.HAL2\bin\Debug\net6.0\*" -Destination "C:\Users\runneradmin\AppData\Roaming\Cosmos User Kit\Kernel\" -Force
+          Copy-Item -Path "Cosmos\Cosmos\source\Cosmos.System2_Plugs\bin\Debug\net6.0\*" -Destination "C:\Users\runneradmin\AppData\Roaming\Cosmos User Kit\Kernel\" -Force
+          Copy-Item -Path "Cosmos\Cosmos\source\Cosmos.Debug.Kernel\bin\Debug\netstandard2.0\*" -Destination "C:\Users\runneradmin\AppData\Roaming\Cosmos User Kit\Kernel\" -Force
+          Copy-Item -Path "Cosmos\Cosmos\source\Cosmos.Debug.Kernel.Plugs.Asm\bin\Debug\netstandard2.0\*" -Destination "C:\Users\runneradmin\AppData\Roaming\Cosmos User Kit\Kernel\" -Force
+      - name: Restore dependancies
+        run: |
+          cd "SRC"
+          dotnet restore
+      - name: Build Aura Operating System
+        run: |
+          cd "SRC"
+          sudo dotnet build --no-restore
