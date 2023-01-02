@@ -4,22 +4,22 @@
 
 [English](https://github.com/aura-systems/Aura-Operating-System/blob/master/README.md) | Chinese
 
-一个基于Cosmos的操作系统，由Alexy DA CRUZ (GeomTech)和 Valentin Charbonnier (valentinbreiz)使用C#开发。请阅读 [我们的Wiki](https://github.com/aura-systems/Aura-Operating-System/wiki/%E7%AE%80%E4%BD%93%E4%B8%AD%E6%96%87-%7C-%E4%B8%BB%E9%A1%B5) 获得更多信息 🌼
+一个基于[Cosmos](https://github.com/CosmosOS/Cosmos)的操作系统，由 Alexy DA CRUZ (GeomTech)和 Valentin Charbonnier (valentinbreiz)使用 C#开发。请阅读 [我们的 Wiki](https://github.com/aura-systems/Aura-Operating-System/wiki/%E7%AE%80%E4%BD%93%E4%B8%AD%E6%96%87-%7C-%E4%B8%BB%E9%A1%B5) 获得更多信息 🌼
 
 ## 支持的特性
 
-请看 [Aura进程表](https://github.com/aura-systems/Aura-Operating-System/projects/4) 或者我们的 [路线图](https://github.com/aura-systems/Aura-Operating-System/projects/3) 来了解我们之后将会推出什么。
+请看 [Aura 进程表](https://github.com/aura-systems/Aura-Operating-System/projects/4) 或者我们的 [路线图](https://github.com/aura-systems/Aura-Operating-System/projects/3) 来了解我们之后将会推出什么。
 
-* ATA IDE / AHCI 驱动器。
-* FAT32/16/12 + VFS系统。
-* PCI 设备扫描。
-* PS/2 Keyboard + Mouse.
-* 重新启动 + ACPI 关机。
-* 多语言。
-* 命令解释器
-* 错误捕捉。
-* GUI (SVGAII, VBE)
-* 网络 (ARP, IPV4, ICMP, UDP, DNS, DHCP, TCP, HTTP)
+- ATA IDE / AHCI 驱动器。
+- FAT32/16/12 + VFS 系统。
+- PCI 设备扫描。
+- PS/2 Keyboard + Mouse.
+- 重新启动 + ACPI 关机。
+- 多语言。
+- 命令解释器
+- 错误捕捉。
+- GUI (SVGAII, VBE)
+- 网络 (ARP, IPV4, ICMP, UDP, DNS, DHCP, TCP, HTTP)
 
 ## 屏幕截图
 
