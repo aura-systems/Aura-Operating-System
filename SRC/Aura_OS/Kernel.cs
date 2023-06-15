@@ -95,14 +95,14 @@ namespace Aura_OS
             System.CustomConsole.WriteLineInfo("Initializing localization...");
 
             Encoding.RegisterProvider(CosmosEncodingProvider.Instance);
-            KeyboardManager.SetKeyLayout(new Sys.ScanMaps.FR_Standard());
+            KeyboardManager.SetKeyLayout(new Sys.ScanMaps.FRStandardLayout());
 
             LoadFiles();
 
             CustomConsole.WriteLineInfo("Starting Canvas...");
 
             //START GRAPHICS
-            canvas = FullScreenCanvas.GetFullScreenCanvas(new Mode((int)screenWidth, (int)screenHeight, ColorDepth.ColorDepth32));
+            canvas = FullScreenCanvas.GetFullScreenCanvas(new Mode(screenWidth, screenHeight, ColorDepth.ColorDepth32));
             dock = new Dock();
 
             //START PROCESSES

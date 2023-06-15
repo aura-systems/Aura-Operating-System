@@ -26,11 +26,11 @@ namespace Aura_OS.System.Shell.cmdIntr.c_Console
             switch (arguments[0])
             {
                 case "azerty":
-                    Sys.KeyboardManager.SetKeyLayout(new Sys.ScanMaps.FR_Standard());
+                    Sys.KeyboardManager.SetKeyLayout(new Sys.ScanMaps.FRStandardLayout());
                     break;
 
                 case "qwerty":
-                    Sys.KeyboardManager.SetKeyLayout(new Sys.ScanMaps.US_Standard());
+                    Sys.KeyboardManager.SetKeyLayout(new Sys.ScanMaps.USStandardLayout());
                     break;
                 default:
                     return new ReturnInfo(this, ReturnCode.ERROR, "This keyboardmap isn't supported, please type: setkeyboardmap /help");                            

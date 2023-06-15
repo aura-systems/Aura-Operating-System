@@ -55,8 +55,8 @@ namespace Aura_OS.System.Shell.cmdIntr.Network
 
             try
             {
-                int width = int.Parse(arguments[0]);
-                int height = int.Parse(arguments[1]);
+                uint width = uint.Parse(arguments[0]);
+                uint height = uint.Parse(arguments[1]);
 
                 bool modeExists = false;
 

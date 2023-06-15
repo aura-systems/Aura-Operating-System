@@ -49,7 +49,7 @@ namespace Aura_OS.System.Shell.cmdIntr.Network
 
                 //Uri uri = new Uri(arguments[0]); Missing plugs
 
-                dnsClient.Connect(DNSConfig.Server(0));
+                dnsClient.Connect(DNSConfig.DNSNameservers[0]);
                 dnsClient.SendAsk(arguments[0]);
                 Address address = dnsClient.Receive();
                 dnsClient.Close();

@@ -17,13 +17,13 @@ namespace ProjectDMG {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void SetPixel(int x, int y, int colour) {
             int index = x + (y * Width);
-            Bitmap.rawData[index] = colour;
+            Bitmap.RawData[index] = colour;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public int GetPixel(int x, int y) {
             int index = x + (y * Width);
-            return Bitmap.rawData[index];
+            return Bitmap.RawData[index];
         }
     }
 }
