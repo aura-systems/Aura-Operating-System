@@ -62,7 +62,7 @@ namespace Aura_OS.System.Shell.cmdIntr.Network
 
                 foreach (var mode in Kernel.canvas.AvailableModes)
                 {
-                    if (mode.Columns == width && mode.Rows == height)
+                    if (mode.Width == width && mode.Height == height)
                     {
                         modeExists = true;
                     }

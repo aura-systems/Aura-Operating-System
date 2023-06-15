@@ -89,7 +89,7 @@ namespace Aura_OS
             }
         }
 
-        public Pen BackgroundPen = new Pen(Color.Black);
+        public Color BackgroundColor = Color.Black;
         public static uint background = (byte)ConsoleColor.Black;
         public ConsoleColor Background
         {
@@ -97,7 +97,7 @@ namespace Aura_OS
             set
             {
                 background = (uint)value;
-                BackgroundPen = new Pen(Color.FromArgb((int)Pallete[background]));
+                BackgroundColor = Color.FromArgb((int)Pallete[background]);
             }
         }
 
