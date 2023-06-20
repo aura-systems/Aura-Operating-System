@@ -25,7 +25,7 @@ namespace Aura_OS.System.Graphics.UI
         public Window(string name, int x, int y, int width, int height) : base(x, y, width, height)
         {
             Name = name;
-            Close = new Button(Kernel.CloseNormal, X + Width - 20, Y + 5, 18, 18);
+            Close = new Button(Kernel.CloseNormal, X + Width - 20, Y + 5);
             TopBar = new Panel(Kernel.DarkBlue, X + 3, Y + 3, Width - 6, 18);
         }
 
@@ -36,7 +36,7 @@ namespace Aura_OS.System.Graphics.UI
             TopBar.X = X + 3;
             TopBar.Y = Y + 3;
             TopBar.Update();
-            Kernel.canvas.DrawString(Name, Kernel.font, Kernel.WhiteColor, X + 2, Y + 2);
+            Kernel.canvas.DrawString(Name, PCScreenFont.Default, Kernel.WhiteColor, X + 5, Y + 4);
             Close.X = X + Width - 20;
             Close.Y = Y + 5;
             Close.Update();
