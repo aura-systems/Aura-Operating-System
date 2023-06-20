@@ -56,5 +56,9 @@ namespace Aura_OS
         //1920x1024
         [ManifestResourceStream(ResourceName = "Aura_OS.Resources.wallpaper1920.bmp")]
         public static byte[] Wallpaper;
+
+        // UI
+        [ManifestResourceStream(ResourceName = "Aura_OS.Resources.UI.close_normal.bmp")]
+        public static byte[] CloseNormal;
     }
 }

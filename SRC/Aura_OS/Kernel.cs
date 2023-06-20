@@ -54,6 +54,9 @@ namespace Aura_OS
         public static PCScreenFont font;
         public static PCScreenFont fontTerminal;
 
+        // UI
+        public static Bitmap CloseNormal;
+
         //GRAPHICS
         public static uint screenWidth = 1024;
         public static uint screenHeight = 768;
@@ -62,6 +65,13 @@ namespace Aura_OS
         public static Color WhiteColor = Color.White;
         public static Color BlackColor = Color.Black;
         public static Color avgColPen = Color.PowderBlue;
+
+        //WIN95 Colors
+        public static Color Gray = Color.FromArgb(0xff, 0xdf, 0xdf, 0xdf);
+        public static Color DarkGrayLight = Color.FromArgb(0xff, 0xc0, 0xc0, 0xc0);
+        public static Color DarkGray = Color.FromArgb(0xff, 0x80, 0x80, 0x80);
+        public static Color DarkBlue = Color.FromArgb(0xff, 0x00, 0x00, 0x80);
+
         public static Dock dock;
 
         //PROCESSES
@@ -185,6 +195,11 @@ namespace Aura_OS
             font = PCScreenFont.LoadFont(Files.Font);
 
             System.CustomConsole.WriteLineOK("Font.");
+
+            // UI
+            CloseNormal = new Bitmap(Files.CloseNormal);
+
+            System.CustomConsole.WriteLineOK("CloseNormal icon.");
         }
 
         public static void Run()

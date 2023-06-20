@@ -23,21 +23,6 @@
 	</PropertyGroup>
 
     <ItemGroup>
-      <None Remove="Resources\AuraLogo.bmp" />
-      <None Remove="Resources\connected.bmp" />
-      <None Remove="Resources\CosmosLogo.bmp" />
-      <None Remove="Resources\Cursor.bmp" />
-      <None Remove="Resources\error.bmp" />
-      <None Remove="Resources\power.bmp" />
-      <None Remove="Resources\Program.bmp" />
-      <None Remove="Resources\programIco.bmp" />
-      <None Remove="Resources\terminalIco.bmp" />
-      <None Remove="Resources\Tetris.gb" />
-      <None Remove="Resources\wallpaper1920.bmp" />
-      <None Remove="Resources\zap-ext-light16.psf" />
-    </ItemGroup>
-
-    <ItemGroup>
       <EmbeddedResource Include="Resources\AuraLogo.bmp" />
       <EmbeddedResource Include="Resources\connected.bmp" />
       <EmbeddedResource Include="Resources\CosmosLogo.bmp" />
@@ -50,6 +35,7 @@
       <EmbeddedResource Include="Resources\Tetris.gb" />
       <EmbeddedResource Include="Resources\wallpaper1920.bmp" />
       <EmbeddedResource Include="Resources\zap-ext-light16.psf" />
+      <EmbeddedResource Include="Resources\UI\close_normal.bmp" />
     </ItemGroup>
 
     <ItemGroup>
