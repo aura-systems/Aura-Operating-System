@@ -42,6 +42,8 @@ namespace Aura_OS.System.Graphics.UI
             Kernel.canvas.DrawLine(Kernel.BlackColor, X, Y + Height, X + Width + 1, Y + Height);
             Kernel.canvas.DrawLine(Kernel.DarkGray, X + Width - 1, Y + 1, X + Width - 1, Y + Height);
             Kernel.canvas.DrawLine(Kernel.BlackColor, X + Width, Y, X + Width, Y + Height);
+
+            Kernel.canvas.DrawImage(Kernel.Start, X + 3, Y + 3);
         }
     }
 }

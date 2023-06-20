@@ -60,5 +60,8 @@ namespace Aura_OS
         // UI
         [ManifestResourceStream(ResourceName = "Aura_OS.Resources.UI.close_normal.bmp")]
         public static byte[] CloseNormal;
+
+        [ManifestResourceStream(ResourceName = "Aura_OS.Resources.UI.start.bmp")]
+        public static byte[] Start;
     }
 }

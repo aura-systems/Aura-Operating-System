@@ -1,5 +1,6 @@
 using Aura_OS.Processing;
 using Aura_OS.System;
+using Aura_OS.System.Graphics.UI;
 using Cosmos.Core;
 using Cosmos.Core.Memory;
 using Cosmos.HAL;
@@ -12,82 +13,28 @@ namespace Aura_OS
 {
     public class Dock
     {
-        uint Width = 200;
-        uint Height = 30;
-        uint Devide = 20;
+        Element StartButton;
+        int taskbarHeight = 33;
+        int startY;
 
-        public bool Clicked = false;
+        public Dock()
+        {
+            startY = (int)(Kernel.screenHeight - taskbarHeight);
 
+            // Start button
+            int startButtonWidth = 28;
+            int startButtonHeight = 28;
+            int startButtonX = 2;
+            int startButtonY = (int)Kernel.screenHeight - startButtonHeight - 3;
+            StartButton = new Element(startButtonX, startButtonY, startButtonWidth, startButtonHeight);
+        }
+        
         public void Update()
         {
-            //Top bar
-            Width = (uint)(Kernel.WindowManager.apps.Count * Kernel.programLogo.Width + Kernel.WindowManager.apps.Count * Devide);
-
-            Kernel.canvas.DrawFilledRectangle(Kernel.avgColPen, 0, 0, (int)Kernel.screenWidth, 24);
-
-            uint strX = 0;
-            uint strY = 0;
-            Kernel.canvas.DrawImage(Kernel.powerIco, (int)strX, (int)strY);
-
-            if (!NetworkStack.ConfigEmpty())
-            {
-                Kernel.canvas.DrawImage(Kernel.connectedIco, (int)(Kernel.screenWidth - 24), (int)strY);
-            }
-
-            string time = Time.TimeString(true, true, true);
-            Kernel.canvas.DrawString(time, Kernel.font, Kernel.BlackColor, (int)((Kernel.screenWidth / 2) - ((time.Length * Kernel.font.Width) / 2)), (int)(strY + 4));
-            if (Kernel.Pressed)
-            {
-                if (MouseManager.X > strX && MouseManager.X < strX + Kernel.powerIco.Width && MouseManager.Y > strY && MouseManager.Y < strY + 24)
-                {
-                    ACPI.Shutdown();
-                }
-            }
-
-            //Dock
-            Kernel.canvas.DrawFilledRectangle(Kernel.avgColPen, (int)(Kernel.screenWidth - Width) / 2, (int)(Kernel.screenHeight - Height), (int)Width, (int)Height);
-
-            int i = 0;
-            foreach (var process in Kernel.ProcessManager.Processes)
-            {
-                if (process.Type == ProcessType.Program)
-                {
-                    var app = process as App;
-
-                    app.dockX = (uint)(Devide / 2 + ((Kernel.screenWidth - Width) / 2) + (Kernel.programLogo.Width * i) + (Devide * i));
-                    app.dockY = Kernel.screenHeight - Kernel.programLogo.Height - Devide / 2;
-                    Kernel.canvas.DrawImage(Kernel.programLogo, (int)app.dockX, (int)app.dockY);
-                    i++;
-
-                    if (MouseManager.X > app.dockX && MouseManager.X < app.dockX + app.dockWidth && MouseManager.Y > app.dockY && MouseManager.Y < app.dockY + app.dockHeight)
-                    {
-                        Kernel.canvas.DrawString(app.name, Kernel.font, Kernel.WhiteColor, (int)(app.dockX - ((app.name.Length * 8) / 2) + app.dockWidth / 2), (int)(app.dockY - 20));
-                    }
-
-                    if (MouseManager.MouseState == MouseState.Left)
-                    {
-                        if (!Clicked && MouseManager.X > app.dockX && MouseManager.X < app.dockX + app.dockWidth && MouseManager.Y > app.dockY && MouseManager.Y < app.dockY + app.dockHeight)
-                        {
-                            Clicked = true;
-
-                            app.visible = !app.visible;
-
-                            if (app.visible)
-                            {
-                                Kernel.ProcessManager.Start(app);
-                            }
-                            else
-                            {
-                                app.Stop();
-                            }
-                        }
-                    }
-                    else 
-                    {
-                        Clicked = false;
-                    }
-                }
-            }
+            // Taskbar
+            Kernel.canvas.DrawLine(Kernel.WhiteColor, 0, startY, (int)Kernel.screenWidth + 10, startY);
+            Kernel.canvas.DrawFilledRectangle(Kernel.Gray, 0, startY + 1, (int)Kernel.screenWidth, taskbarHeight - 1);
+            StartButton.Update();
         }
     }
 }

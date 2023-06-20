@@ -36,6 +36,7 @@
       <EmbeddedResource Include="Resources\wallpaper1920.bmp" />
       <EmbeddedResource Include="Resources\zap-ext-light16.psf" />
       <EmbeddedResource Include="Resources\UI\close_normal.bmp" />
+      <EmbeddedResource Include="Resources\UI\start.bmp" />
     </ItemGroup>
 
     <ItemGroup>

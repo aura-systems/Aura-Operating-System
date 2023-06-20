@@ -56,6 +56,7 @@ namespace Aura_OS
 
         // UI
         public static Bitmap CloseNormal;
+        public static Bitmap Start;
 
         //GRAPHICS
         public static uint screenWidth = 1024;
@@ -200,6 +201,10 @@ namespace Aura_OS
             CloseNormal = new Bitmap(Files.CloseNormal);
 
             System.CustomConsole.WriteLineOK("CloseNormal icon.");
+
+            Start = new Bitmap(Files.Start);
+
+            System.CustomConsole.WriteLineOK("Start icon.");
         }
 
         public static void Run()
@@ -233,8 +238,8 @@ namespace Aura_OS
 
                 //canvas.DrawImage(bootBitmap, (int)(screenWidth / 2 - bootBitmap.Width / 2), (int)(screenHeight / 2 - bootBitmap.Height / 2));
 
-                canvas.DrawString("fps=" + _fps, font, WhiteColor, 2, (int)screenHeight - (font.Height * 2));
-                canvas.DrawString("Aura Operating System [" + Version + "." + Revision + "]", font, WhiteColor, 2, (int)screenHeight - font.Height);
+                canvas.DrawString("Aura Operating System [" + Version + "." + Revision + "]", font, WhiteColor, 2, 0);
+                canvas.DrawString("fps=" + _fps, font, WhiteColor, 2, font.Height);
 
                 WindowManager.DrawWindows();
 
