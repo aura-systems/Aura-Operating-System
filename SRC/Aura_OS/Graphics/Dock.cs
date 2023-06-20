@@ -17,6 +17,8 @@ namespace Aura_OS
         int taskbarHeight = 33;
         int startY;
         Element StartButton;
+        public bool Clicked = false;
+        
         public Dock()
         {
             startY = (int)(Kernel.screenHeight - taskbarHeight);
@@ -47,6 +49,29 @@ namespace Aura_OS
                     var button = new Button(app.name, buttonX, (int)Kernel.screenHeight - 28 - 3, app.name.Length * (8 + 1) , 28);
                     buttonX += app.name.Length * (8 + 1) + 4;
                     button.Update();
+
+                    if (MouseManager.MouseState == MouseState.Left)
+                    {
+                        if (!Clicked && button.IsInside((int)MouseManager.X, (int)MouseManager.Y))
+                        {
+                            Clicked = true;
+
+                            app.visible = !app.visible;
+
+                            if (app.visible)
+                            {
+                                Kernel.ProcessManager.Start(app);
+                            }
+                            else
+                            {
+                                app.Stop();
+                            }
+                        }
+                    }
+                    else 
+                    {
+                        Clicked = false;
+                    }
                 }
             }
         }

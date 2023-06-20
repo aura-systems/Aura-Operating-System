@@ -22,7 +22,12 @@ namespace Aura_OS.Graphics
         public void DrawWindows()
         {
             foreach (App app in apps)
-                app.Update();
+            {
+                if (app.Running)
+                {
+                    app.Update();
+                }
+            }  
         }
     }
 }

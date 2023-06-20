@@ -43,5 +43,10 @@ namespace Aura_OS.System.Graphics.UI
             Kernel.canvas.DrawLine(Kernel.DarkGray, X + Width - 1, Y + 1, X + Width - 1, Y + Height);
             Kernel.canvas.DrawLine(Kernel.BlackColor, X + Width, Y, X + Width, Y + Height);
         }
+
+        public bool IsInside(int x, int y)
+        {
+            return (x >= X && x <= X + Width) && (y >= Y && y <= Y + Height);
+        }
     }
 }

@@ -74,7 +74,12 @@ namespace Aura_OS
             {
                 if (Kernel.Pressed)
                 {
-                    if (!HasWindowMoving && MouseManager.X > baseX && MouseManager.X < baseX + baseWidth && MouseManager.Y > baseY && MouseManager.Y < baseY + MoveBarHeight)
+                    if (!HasWindowMoving && Window.Close.IsInside((int)MouseManager.X, (int)MouseManager.Y))
+                    {
+                        Stop();
+                        return;
+                    }
+                    else if (!HasWindowMoving && Window.TopBar.IsInside((int)MouseManager.X, (int)MouseManager.Y))
                     {
                         HasWindowMoving = true;
 
