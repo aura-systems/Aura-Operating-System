@@ -132,7 +132,7 @@ namespace Aura_OS
             systemInfo = new SystemInfo(402, 197, 40, 40);
             systemInfo.Initialize();
 
-            gameBoyEmu = new GameBoyEmu(160 + 2, 144 + 20, 40, 40);
+            gameBoyEmu = new GameBoyEmu(160 + 4, 144 + 22, 40, 40);
             gameBoyEmu.Initialize();
 
             WindowManager = new WindowManager();

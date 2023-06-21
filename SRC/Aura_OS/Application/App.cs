@@ -30,7 +30,7 @@ namespace Aura_OS
             this.x = x + 2;
             this.y = y + Window.TopBar.Height + 2;
             this.width = width - 4;
-            this.height = height - Window.TopBar.Height - 3;
+            this.height = height - (Window.TopBar.Height + 2);
         }
 
         public virtual void UpdateApp() { }
@@ -90,7 +90,7 @@ namespace Aura_OS
                     Window.Y = (int)(MouseManager.Y - py);
 
                     x = (int)(MouseManager.X - px + 2);
-                    y = (int)(MouseManager.Y - py + Window.TopBar.Height);
+                    y = (int)(MouseManager.Y - py + Window.TopBar.Height + 2);
                 }
 
                 DrawWindow();

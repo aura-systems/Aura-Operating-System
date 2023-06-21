@@ -118,7 +118,7 @@ namespace Aura_OS
 
         public Terminal(int width, int height, int x = 0, int y = 0) : base("Terminal", width, height, x, y)
         {
-            // Window.Icon = Kernel.terminalIco;
+            Window.Icon = Kernel.terminalIco;
 
             Graphics = new GUI();
 
