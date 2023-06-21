@@ -13,20 +13,11 @@ namespace Aura_OS
 
         public Bitmap Icon;
 
-        public readonly uint baseWidth;
-        public readonly uint baseHeight;
-        public readonly uint width;
-        public readonly uint height;
+        public readonly int width;
+        public readonly int height;
 
-        public uint dockX;
-        public uint dockY;
-        public uint dockWidth = 40;
-        public uint dockHeight = 30;
-
-        public uint baseX;
-        public uint baseY;
-        public uint x;
-        public uint y;
+        public int x;
+        public int y;
         public string name;
 
         int px;
@@ -40,14 +31,9 @@ namespace Aura_OS
 
         public Window Window;
 
-        public App(string name, uint width, uint height, uint x = 0, uint y = 0) : base(name, ProcessType.Program)
+        public App(string name, int width, int height, int x = 0, int y = 0) : base(name, ProcessType.Program)
         {
             Icon = Kernel.programIco;
-
-            baseWidth = width;
-            baseHeight = height;
-            baseX = x;
-            baseY = y;
 
             this.x = x + 2;
             this.y = y + MoveBarHeight;
@@ -56,7 +42,7 @@ namespace Aura_OS
 
             this.name = name;
 
-            Window = new Window(name, (int)baseX, (int)baseY, (int)baseWidth, (int)baseHeight);
+            Window = new Window(name, x, y, width, height);
         }
 
         public virtual void UpdateApp() { }
@@ -97,8 +83,8 @@ namespace Aura_OS
                         this.pressed = true;
                         if (!lck)
                         {
-                            px = (int)((int)MouseManager.X - this.baseX);
-                            py = (int)((int)MouseManager.Y - this.baseY);
+                            px = (int)MouseManager.X - Window.X;
+                            py = (int)MouseManager.Y - Window.Y;
                             lck = true;
                         }
                     }
@@ -112,11 +98,11 @@ namespace Aura_OS
 
                 if (pressed)
                 {
-                    baseX = (uint)(MouseManager.X - px);
-                    baseY = (uint)(MouseManager.Y - py);
+                    Window.X = (int)(MouseManager.X - px);
+                    Window.Y = (int)(MouseManager.Y - py);
 
-                    x = (uint)(MouseManager.X - px + 2);
-                    y = (uint)(MouseManager.Y - py + MoveBarHeight);
+                    x = (int)(MouseManager.X - px + 2);
+                    y = (int)(MouseManager.Y - py + MoveBarHeight);
                 }
 
                 DrawWindow();
@@ -131,16 +117,7 @@ namespace Aura_OS
 
         public void DrawWindow()
         {
-            // Calculate content dimensions
-            int contentWidth = (int)(baseWidth - 1);
-            int contentHeight = (int)(baseHeight - 1);
-            
-            Window.X = (int)baseX;
-            Window.Y = (int)baseY;
-            Window.Width = (int)contentWidth;
-            Window.Height = (int)contentHeight;
             Window.Update();
-
             UpdateApp();
         }
     }

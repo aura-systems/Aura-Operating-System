@@ -7,7 +7,7 @@ namespace Aura_OS
 {
     public class MemoryInfo : App
     {
-        public MemoryInfo(uint width, uint height, uint x = 0, uint y = 0) : base("MemoryInfo", width, height, x, y)
+        public MemoryInfo(int width, int height, int x = 0, int y = 0) : base("MemoryInfo", width, height, x, y)
         {
 
         }

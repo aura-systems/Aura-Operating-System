@@ -10,7 +10,7 @@ namespace Aura_OS
     {
         public Color GreenPen = Color.Green;
 
-        public SystemInfo(uint width, uint height, uint x = 0, uint y = 0) : base("SystemInfo", width, height, x, y)
+        public SystemInfo(int width, int height, int x = 0, int y = 0) : base("SystemInfo", width, height, x, y)
         {
         }
 

@@ -23,7 +23,7 @@ namespace Aura_OS.Application.GameBoyEmu
         int cyclesThisUpdate = 0;
         int cpuCycles = 0;
 
-        public GameBoyEmu(uint width, uint height, uint x = 0, uint y = 0) : base("GameBoyEmu", width, height, x, y)
+        public GameBoyEmu(int width, int height, int x = 0, int y = 0) : base("GameBoyEmu", width, height, x, y)
         {
             Rom = Files.TetrisRom;
 

@@ -116,7 +116,7 @@ namespace Aura_OS
         public int CursorSize { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
         public bool CursorVisible;
 
-        public Terminal(uint width, uint height, uint x = 0, uint y = 0) : base("Terminal", width, height, x, y)
+        public Terminal(int width, int height, int x = 0, int y = 0) : base("Terminal", width, height, x, y)
         {
             Icon = Kernel.terminalIco;
 
