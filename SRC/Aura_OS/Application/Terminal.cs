@@ -85,7 +85,13 @@ namespace Aura_OS
             set
             {
                 foreground = (uint)value;
-                ForegroundColor = Color.FromArgb((int)Pallete[foreground]);
+
+                uint color = Pallete[foreground];
+                byte r = (byte)((color >> 16) & 0xFF); // Extract the red component
+                byte g = (byte)((color >> 8) & 0xFF); // Extract the green component
+                byte b = (byte)(color & 0xFF); // Extract the blue component
+
+                ForegroundColor = Color.FromArgb(0xFF, r, g, b);
             }
         }
 
@@ -97,7 +103,13 @@ namespace Aura_OS
             set
             {
                 background = (uint)value;
-                BackgroundColor = Color.FromArgb((int)Pallete[background]);
+
+                uint color = Pallete[background];
+                byte r = (byte)((color >> 16) & 0xFF); // Extract the red component
+                byte g = (byte)((color >> 8) & 0xFF); // Extract the green component
+                byte b = (byte)(color & 0xFF); // Extract the blue component
+
+                BackgroundColor = Color.FromArgb(0xFF, r, g, b);
             }
         }
 
