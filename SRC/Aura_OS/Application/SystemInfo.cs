@@ -16,12 +16,23 @@ namespace Aura_OS
 
         public override void UpdateApp()
         {
-            Kernel.canvas.DrawString("Aura [version " + Kernel.Version + "-" + Kernel.Revision + "]", Kernel.font, Kernel.BlackColor, (int)x, (int)y);
-            Kernel.canvas.DrawString("Created by Alexy DA CRUZ and Valentin CHARBONNIER.", Kernel.font, Kernel.BlackColor, (int)x, (int)y + (1 * Kernel.font.Height));
-            Kernel.canvas.DrawString("Website: github.com/aura-systems", Kernel.font, GreenPen, (int)x, (int)y + (3 * Kernel.font.Height));
+            var title = "Aura Operating System";
+            var version = "[version " + Kernel.Version + "-" + Kernel.Revision + "]";
 
-            Kernel.canvas.DrawImage(Kernel.AuraLogo, (int)x + 8, (int)y + (4 * Kernel.font.Height));
-            Kernel.canvas.DrawImage(Kernel.CosmosLogo, (int)(x + 8 + Kernel.AuraLogo.Width + 16), (int)y + (4 * Kernel.font.Height) + 16);
+            Kernel.canvas.DrawString(title, Cosmos.System.Graphics.Fonts.PCScreenFont.Default, Kernel.BlackColor, x + (width / 2) - (title.Length * Cosmos.System.Graphics.Fonts.PCScreenFont.Default.Width / 2), y + (1 * Kernel.font.Height));
+            Kernel.canvas.DrawString(version, Kernel.font, Kernel.BlackColor, x + (width / 2) - (version.Length * Kernel.font.Width / 2), y + (3 * Kernel.font.Height));
+
+            var credit = "Created by Alexy DA CRUZ and Valentin CHARBONNIER.";
+            var website = "Project: github.com/aura-systems/Aura-Operating-System";
+            var website2 = "Kernel: github.com/CosmosOS/Cosmos";
+
+            Kernel.canvas.DrawString(credit, Kernel.font, Kernel.BlackColor, x + (width / 2) - (credit.Length * Kernel.font.Width / 2), y + (5 * Kernel.font.Height));
+            Kernel.canvas.DrawString(website, Kernel.font, GreenPen, x + (width / 2) - (website.Length * Kernel.font.Width / 2), y + (7 * Kernel.font.Height));
+
+            Kernel.canvas.DrawImageAlpha(Kernel.AuraLogo, x + (width / 2) - ((int)Kernel.AuraLogo.Width / 2), y + (9 * Kernel.font.Height));
+
+            Kernel.canvas.DrawString(website2, Kernel.font, GreenPen, x + (width / 2) - (website2.Length * Kernel.font.Width / 2), y + (19 * Kernel.font.Height));
+            Kernel.canvas.DrawImageAlpha(Kernel.CosmosLogo, x + (width / 2) - ((int)Kernel.CosmosLogo.Width / 2), y + (21 * Kernel.font.Height));
         }
     }
 }
