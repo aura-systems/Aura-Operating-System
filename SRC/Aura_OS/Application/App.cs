@@ -10,39 +10,27 @@ namespace Aura_OS
     public class App : Process
     {
         public static bool HasWindowMoving = false;
-
-        public Bitmap Icon;
-
         public readonly int width;
         public readonly int height;
 
         public int x;
         public int y;
-        public string name;
-
         int px;
         int py;
         bool lck = false;
-
         bool pressed;
         public bool visible = false;
-
-        const int MoveBarHeight = 20;
 
         public Window Window;
 
         public App(string name, int width, int height, int x = 0, int y = 0) : base(name, ProcessType.Program)
         {
-            Icon = Kernel.programIco;
+            Window = new Window(name, x, y, width, height);
 
             this.x = x + 2;
-            this.y = y + MoveBarHeight;
+            this.y = y + Window.TopBar.Height + 2;
             this.width = width - 4;
-            this.height = height - MoveBarHeight - 1;
-
-            this.name = name;
-
-            Window = new Window(name, x, y, width, height);
+            this.height = height - Window.TopBar.Height - 3;
         }
 
         public virtual void UpdateApp() { }
@@ -102,16 +90,10 @@ namespace Aura_OS
                     Window.Y = (int)(MouseManager.Y - py);
 
                     x = (int)(MouseManager.X - px + 2);
-                    y = (int)(MouseManager.Y - py + MoveBarHeight);
+                    y = (int)(MouseManager.Y - py + Window.TopBar.Height);
                 }
 
                 DrawWindow();
-
-                //Kernel.canvas.DrawFilledRectangle(Kernel.WhiteColor, (int)baseX, (int)baseY, (int)baseWidth, (int)baseHeight);
-                //Kernel.canvas.DrawRectangle(Kernel.avgColPen, (int)baseX, (int)baseY, (int)baseWidth, (int)baseHeight);
-
-                //Kernel.canvas.DrawImage(Icon, (int)(baseX + 2), (int)(baseY + 2));
-                //Kernel.canvas.DrawString(name, Kernel.font, Kernel.BlackColor, (int)(baseX + Icon.Width + 2), (int)(baseY + 2));
             }
         }
 

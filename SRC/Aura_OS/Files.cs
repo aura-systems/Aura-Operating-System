@@ -26,11 +26,11 @@ namespace Aura_OS
         public static byte[] CursorIcon;
 
         //16x16 .bmp
-        [ManifestResourceStream(ResourceName = "Aura_OS.Resources.terminalIco.bmp")]
+        [ManifestResourceStream(ResourceName = "Aura_OS.Resources.UI.utilities-terminal.bmp")]
         public static byte[] TerminalIcon;
 
         //16x16 .bmp
-        [ManifestResourceStream(ResourceName = "Aura_OS.Resources.programIco.bmp")]
+        [ManifestResourceStream(ResourceName = "Aura_OS.Resources.UI.window.bmp")]
         public static byte[] NoIcon;
 
         //8x16 .psf (version 1 https://www.zap.org.au/projects/console-fonts-zap/)

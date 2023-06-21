@@ -30,13 +30,13 @@
       <EmbeddedResource Include="Resources\error.bmp" />
       <EmbeddedResource Include="Resources\power.bmp" />
       <EmbeddedResource Include="Resources\Program.bmp" />
-      <EmbeddedResource Include="Resources\programIco.bmp" />
-      <EmbeddedResource Include="Resources\terminalIco.bmp" />
       <EmbeddedResource Include="Resources\Tetris.gb" />
       <EmbeddedResource Include="Resources\wallpaper1920.bmp" />
       <EmbeddedResource Include="Resources\zap-ext-light16.psf" />
       <EmbeddedResource Include="Resources\UI\close_normal.bmp" />
       <EmbeddedResource Include="Resources\UI\start.bmp" />
+      <EmbeddedResource Include="Resources\UI\window.bmp" />
+      <EmbeddedResource Include="Resources\UI\utilities-terminal.bmp" />
     </ItemGroup>
 
     <ItemGroup>

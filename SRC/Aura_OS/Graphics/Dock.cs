@@ -28,7 +28,7 @@ namespace Aura_OS
             int startButtonHeight = 28;
             int startButtonX = 2;
             int startButtonY = (int)Kernel.screenHeight - startButtonHeight - 3;
-            StartButton = new Element(startButtonX, startButtonY, startButtonWidth, startButtonHeight);
+            StartButton = new Button(Kernel.Start, startButtonX, startButtonY, startButtonWidth, startButtonHeight);
         }
         
         public void Update()
@@ -37,7 +37,6 @@ namespace Aura_OS
             Kernel.canvas.DrawLine(Kernel.WhiteColor, 0, startY, (int)Kernel.screenWidth + 10, startY);
             Kernel.canvas.DrawFilledRectangle(Kernel.Gray, 0, startY + 1, (int)Kernel.screenWidth, taskbarHeight - 1);
             StartButton.Update();
-            Kernel.canvas.DrawImage(Kernel.Start, 5, (int)Kernel.screenHeight - 28);
 
             int buttonX = 36;
             foreach (var process in Kernel.ProcessManager.Processes)
@@ -46,8 +45,9 @@ namespace Aura_OS
                 {
                     var app = process as App;
 
-                    var button = new Button(app.name, buttonX, (int)Kernel.screenHeight - 28 - 3, app.name.Length * (8 + 1) , 28);
-                    buttonX += app.name.Length * (8 + 1) + 4;
+                    var spacing = app.Name.Length * 9 + (int)app.Window.Icon.Width;
+                    var button = new Button(app.Window.Icon, app.Name, buttonX, (int)Kernel.screenHeight - 28 - 3, spacing, 28);
+                    buttonX += spacing + 4;
                     button.Update();
 
                     if (MouseManager.MouseState == MouseState.Left)

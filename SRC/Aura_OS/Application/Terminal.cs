@@ -118,7 +118,7 @@ namespace Aura_OS
 
         public Terminal(int width, int height, int x = 0, int y = 0) : base("Terminal", width, height, x, y)
         {
-            Icon = Kernel.terminalIco;
+            // Window.Icon = Kernel.terminalIco;
 
             Graphics = new GUI();
 
@@ -248,7 +248,7 @@ namespace Aura_OS
                 }
             }
 
-            Kernel.canvas.DrawFilledRectangle(Kernel.BlackColor, (int)x, (int)y, (int)width, (int)height);
+            Kernel.canvas.DrawFilledRectangle(Kernel.BlackColor, x, y, width, height);
 
             DrawTerminal();
 
@@ -267,7 +267,7 @@ namespace Aura_OS
                     if (Text[i][j].Char == null || Text[i][j].Char == '\n')
                         continue;
 
-                    Graphics.WriteByte((char)Text[i][j].Char, (int)Kernel.console.x + j * Kernel.font.Width, (int)Kernel.console.y + i * Kernel.font.Height, Text[i][j].Colour);
+                    Graphics.WriteByte((char)Text[i][j].Char, Kernel.console.x + j * Kernel.font.Width, Kernel.console.y + i * Kernel.font.Height, Text[i][j].Colour);
                 }
             }
 
@@ -277,7 +277,7 @@ namespace Aura_OS
 
                 for (int i = 0; i < Command.Length; i++)
                 {
-                    Graphics.WriteByte(Command[i], (int)Kernel.console.x + ((baseX + i) * Kernel.font.Width), (int)Kernel.console.y + mY * Kernel.font.Height, ForegroundColor);
+                    Graphics.WriteByte(Command[i], Kernel.console.x + ((baseX + i) * Kernel.font.Width), Kernel.console.y + mY * Kernel.font.Height, ForegroundColor);
                 }
             }
         }

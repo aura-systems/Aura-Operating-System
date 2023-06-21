@@ -35,6 +35,18 @@ namespace Aura_OS.System.Graphics.UI
             Image = image;
         }
 
+        public Button(Bitmap image, string text, int x, int y, int width, int height) : base(x, y, width, height)
+        {
+            Text = text;
+            Image = image;
+        }
+
+        public Button(Bitmap image, string text, int x, int y) : base(x, y, (int)image.Width, (int)image.Height)
+        {
+            Text = text;
+            Image = image;
+        }
+
         public override void Update()
         {
             Kernel.canvas.DrawFilledRectangle(Kernel.DarkGrayLight, X + 2, Y + 2, Width - 3, Height - 3);
@@ -48,13 +60,23 @@ namespace Aura_OS.System.Graphics.UI
             Kernel.canvas.DrawLine(Kernel.DarkGray, X + Width - 1, Y + 1, X + Width - 1, Y + Height);
             Kernel.canvas.DrawLine(Kernel.BlackColor, X + Width, Y, X + Width, Y + Height);
 
-            if (Text != null)
+            if (Text != null && Image != null)
+            {
+                Kernel.canvas.DrawString(Text, Kernel.font, Kernel.BlackColor, X + 4 + (int)Image.Width + 4, Y + (Height / 2 - Kernel.font.Height / 2));
+
+                int imageX = X + 4;
+                int imageY = Y + (Height / 2 - (int)Image.Height / 2);
+                Kernel.canvas.DrawImageAlpha(Image, imageX, imageY);
+            }
+            else if (Text != null)
             {
                 Kernel.canvas.DrawString(Text, Kernel.font, Kernel.BlackColor, X + 4, Y + (Height / 2 - Kernel.font.Height / 2));
             }
             else if (Image != null)
             {
-                Kernel.canvas.DrawImage(Image, X, Y);
+                int imageX = X + (Width / 2 - (int)Image.Width / 2);
+                int imageY = Y + (Height / 2 - (int)Image.Height / 2);
+                Kernel.canvas.DrawImageAlpha(Image, imageX, imageY);
             }
         }
     }

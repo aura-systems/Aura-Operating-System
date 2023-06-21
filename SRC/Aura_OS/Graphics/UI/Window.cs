@@ -18,12 +18,14 @@ namespace Aura_OS.System.Graphics.UI
 {
     public class Window : Element
     {
+        public Bitmap Icon;
         public string Name;
         public Button Close;
         public Panel TopBar;
 
         public Window(string name, int x, int y, int width, int height) : base(x, y, width, height)
         {
+            Icon = Kernel.programIco;
             Name = name;
             Close = new Button(Kernel.CloseNormal, X + Width - 20, Y + 5);
             TopBar = new Panel(Kernel.DarkBlue, X + 3, Y + 3, Width - 6, 18);
