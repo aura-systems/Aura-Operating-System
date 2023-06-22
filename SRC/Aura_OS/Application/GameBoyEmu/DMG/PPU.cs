@@ -296,7 +296,7 @@ namespace ProjectDMG
 
         public void RenderFrame()
         {
-            Kernel.canvas.DrawImage(bmp.Bitmap, (int)Kernel.gameBoyEmu.x + 1, (int)Kernel.gameBoyEmu.y + 1);
+            Kernel.canvas.DrawImage(bmp.Bitmap, Kernel.gameBoyEmu.x, Kernel.gameBoyEmu.y);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

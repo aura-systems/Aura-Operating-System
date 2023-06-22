@@ -11,8 +11,9 @@ namespace Aura_OS
 {
     public struct Cell
     {
-        public char ?Char;
-        public Color Colour;
+        public char Char;
+        public Color ForegroundColor;
+        public Color BackgroundColor;
     }
 
     public class Terminal : App
@@ -145,6 +146,17 @@ namespace Aura_OS
             mCols = mWidth / Kernel.font.Width - 1;
             mRows = mHeight / Kernel.font.Height - 2;
 
+            Text = new Cell[mRows][];
+            for (int i = 0; i < mRows; i++)
+            {
+                Text[i] = new Cell[mCols];
+
+                for (int j = 0; j < mRows; j++)
+                {
+                    Text[i][j] = new Cell();
+                }
+            }
+
             ClearText();
 
             CursorVisible = true;
@@ -264,10 +276,10 @@ namespace Aura_OS
             {
                 for (int j = 0; j < mCols; j++)
                 {
-                    if (Text[i][j].Char == null || Text[i][j].Char == '\n')
+                    if (Text[i][j].Char == 0 || Text[i][j].Char == '\n')
                         continue;
 
-                    Graphics.WriteByte((char)Text[i][j].Char, Kernel.console.x + j * Kernel.font.Width, Kernel.console.y + i * Kernel.font.Height, Text[i][j].Colour);
+                    Graphics.WriteByte((char)Text[i][j].Char, Kernel.console.x + j * Kernel.font.Width, Kernel.console.y + i * Kernel.font.Height, Text[i][j].ForegroundColor);
                 }
             }
 
@@ -284,10 +296,12 @@ namespace Aura_OS
 
         private void ClearText()
         {
-            Text = new Cell[mRows][];
             for (int i = 0; i < mRows; i++)
             {
-                Text[i] = new Cell[mCols];
+                for (int j = 0; j < mCols; j++)
+                {
+                    Text[i][j].Char = (char)0;
+                }
             }
         }
 
@@ -384,7 +398,7 @@ namespace Aura_OS
         /// <param name="aChar">A char to write</param>
         public void Write(char aChar)
         {
-            Text[mY][mX] = new Cell() { Char = aChar, Colour = ForegroundColor };
+            Text[mY][mX] = new Cell() { Char = aChar, ForegroundColor = ForegroundColor, BackgroundColor = BackgroundColor };
             mX++;
             if (mX == mCols)
             {

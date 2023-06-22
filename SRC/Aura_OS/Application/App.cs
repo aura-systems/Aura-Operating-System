@@ -25,12 +25,12 @@ namespace Aura_OS
 
         public App(string name, int width, int height, int x = 0, int y = 0) : base(name, ProcessType.Program)
         {
-            Window = new Window(name, x, y, width, height);
+            Window = new Window(name, x, y, width + 1, height + 1);
 
-            this.x = x + 2;
-            this.y = y + Window.TopBar.Height + 2;
+            this.x = x + 3;
+            this.y = y + Window.TopBar.Height + 3;
             this.width = width - 4;
-            this.height = height - (Window.TopBar.Height + 2);
+            this.height = height - (Window.TopBar.Height + 4);
         }
 
         public virtual void UpdateApp() { }
@@ -89,8 +89,8 @@ namespace Aura_OS
                     Window.X = (int)(MouseManager.X - px);
                     Window.Y = (int)(MouseManager.Y - py);
 
-                    x = (int)(MouseManager.X - px + 2);
-                    y = (int)(MouseManager.Y - py + Window.TopBar.Height + 2);
+                    x = (int)(MouseManager.X - px + 3);
+                    y = (int)(MouseManager.Y - py + Window.TopBar.Height + 3);
                 }
 
                 DrawWindow();

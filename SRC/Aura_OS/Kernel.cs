@@ -59,8 +59,8 @@ namespace Aura_OS
         public static Bitmap Start;
 
         //GRAPHICS
-        public static uint screenWidth = 1024;
-        public static uint screenHeight = 768;
+        public static uint screenWidth = 1920;
+        public static uint screenHeight = 1080;
 
         public static Canvas canvas;
         public static Color WhiteColor = Color.White;
