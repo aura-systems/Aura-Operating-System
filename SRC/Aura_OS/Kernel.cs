@@ -84,6 +84,7 @@ namespace Aura_OS
         public static MemoryInfo memoryInfo;
         public static SystemInfo systemInfo;
         public static GameBoyEmu gameBoyEmu;
+        public static Cube cube;
 
         public static CommandManager CommandManager;
 
@@ -131,6 +132,9 @@ namespace Aura_OS
 
             systemInfo = new SystemInfo(402, 360, 40, 40);
             systemInfo.Initialize();
+
+            cube = new Cube(200, 200, 40, 40);
+            cube.Initialize();
 
             gameBoyEmu = new GameBoyEmu(160 + 4, 144 + 22, 40, 40);
             gameBoyEmu.Initialize();

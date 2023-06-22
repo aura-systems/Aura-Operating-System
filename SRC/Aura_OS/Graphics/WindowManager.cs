@@ -17,6 +17,7 @@ namespace Aura_OS.Graphics
             apps.Add(Kernel.memoryInfo);
             apps.Add(Kernel.systemInfo);
             apps.Add(Kernel.gameBoyEmu);
+            apps.Add(Kernel.cube);
         }
 
         public void DrawWindows()
