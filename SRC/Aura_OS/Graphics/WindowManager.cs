@@ -9,6 +9,7 @@ namespace Aura_OS.Graphics
     public class WindowManager
     {
         public List<App> apps;
+        public App Focused;
 
         public void Initialize()
         {

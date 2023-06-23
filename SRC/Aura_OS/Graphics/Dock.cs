@@ -59,6 +59,19 @@ namespace Aura_OS
 
                     var spacing = app.Name.Length * 9 + (int)app.Window.Icon.Width;
                     var button = new Button(app.Window.Icon, app.Name, buttonX, (int)Kernel.screenHeight - 28 - 3, spacing, 28);
+
+                    if (Kernel.WindowManager.Focused != null)
+                    {
+                        if (Kernel.WindowManager.Focused.Equals(app)) {
+                            button.Focused = true;
+                            app.Window.TopBar.Color = Kernel.DarkBlue;
+                        }
+                        else {
+                            button.Focused = false;
+                            app.Window.TopBar.Color = Kernel.DarkGray;
+                        }
+                    }
+                    
                     buttonX += spacing + 4;
                     button.Update();
 
@@ -73,6 +86,7 @@ namespace Aura_OS
                             if (app.visible)
                             {
                                 Kernel.ProcessManager.Start(app);
+                                Kernel.WindowManager.Focused = app;
                             }
                             else
                             {

@@ -48,6 +48,21 @@ namespace Aura_OS
             {
                 if (Kernel.Pressed)
                 {
+                    if (!HasWindowMoving && Window.IsInside((int)MouseManager.X, (int)MouseManager.Y))
+                    {
+                        //Focus window
+                        foreach (var app in Kernel.WindowManager.apps)
+                        {
+                            if (app.Equals(this))
+                            {
+                                Kernel.WindowManager.apps.Remove(app);
+                                Kernel.WindowManager.apps.Add(this);
+                                Kernel.WindowManager.Focused = this;
+                                break;
+                            }
+                        }
+                    }
+                    
                     if (!HasWindowMoving && Window.Close.IsInside((int)MouseManager.X, (int)MouseManager.Y))
                     {
                         Stop();
@@ -56,17 +71,6 @@ namespace Aura_OS
                     else if (!HasWindowMoving && Window.TopBar.IsInside((int)MouseManager.X, (int)MouseManager.Y))
                     {
                         HasWindowMoving = true;
-
-                        //Focus window
-                        foreach (var app in Kernel.WindowManager.apps)
-                        {
-                            if (app.Equals(this))
-                            {
-                                Kernel.WindowManager.apps.Remove(app);
-                                Kernel.WindowManager.apps.Add(this);
-                                break;
-                            }
-                        }
 
                         this.pressed = true;
                         if (!lck)
