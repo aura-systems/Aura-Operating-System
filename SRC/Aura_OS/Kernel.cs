@@ -72,6 +72,7 @@ namespace Aura_OS
         public static Color DarkGrayLight = Color.FromArgb(0xff, 0xc0, 0xc0, 0xc0);
         public static Color DarkGray = Color.FromArgb(0xff, 0x80, 0x80, 0x80);
         public static Color DarkBlue = Color.FromArgb(0xff, 0x00, 0x00, 0x80);
+        public static Color Pink = Color.FromArgb(0xff, 0xe7, 0x98, 0xde);
 
         public static Dock dock;
 

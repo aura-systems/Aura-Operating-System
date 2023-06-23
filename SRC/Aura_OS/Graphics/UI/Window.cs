@@ -28,7 +28,7 @@ namespace Aura_OS.System.Graphics.UI
             Icon = Kernel.programIco;
             Name = name;
             Close = new Button(Kernel.CloseNormal, X + Width - 20, Y + 5, true);
-            TopBar = new Panel(Kernel.DarkBlue, X + 3, Y + 3, Width - 5, 18);
+            TopBar = new Panel(Kernel.DarkBlue, Kernel.Pink, X + 3, Y + 3, Width - 5, 18);
         }
 
         public override void Update()

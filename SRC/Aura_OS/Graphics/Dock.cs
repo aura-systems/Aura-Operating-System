@@ -64,11 +64,12 @@ namespace Aura_OS
                     {
                         if (Kernel.WindowManager.Focused.Equals(app)) {
                             button.Focused = true;
-                            app.Window.TopBar.Color = Kernel.DarkBlue;
+                            app.Window.TopBar.Color1 = Kernel.DarkBlue;
+                            app.Window.TopBar.Color2 = Kernel.Pink;
                         }
                         else {
                             button.Focused = false;
-                            app.Window.TopBar.Color = Kernel.DarkGray;
+                            app.Window.TopBar.Color1 = Kernel.DarkGray;
                         }
                     }
                     
