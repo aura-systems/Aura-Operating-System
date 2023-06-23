@@ -171,92 +171,95 @@ namespace Aura_OS
 
         public override void UpdateApp()
         {
-            KeyEvent keyEvent = null;
-
-            if (KeyboardManager.TryReadKey(out keyEvent))
+            if (Kernel.WindowManager.Focused.Equals(this))
             {
-                switch (keyEvent.Key)
+                KeyEvent keyEvent = null;
+
+                if (KeyboardManager.TryReadKey(out keyEvent))
                 {
-                    case ConsoleKeyEx.Enter:
-                        if (ScrollMode)
-                        {
-                            break;
-                        }
-                        if (Command.Length > 0)
-                        {
-                            mX -= Command.Length;
-
-                            WriteLine(Command);
-
-                            Kernel.CommandManager.Execute(Command);
-
-                            Commands.Add(Command);
-                            CommandIndex = Commands.Count - 1;
-
-                            Command = string.Empty;
-                        }
-                        else
-                        {
-                            WriteLine();
-                            WriteLine();
-                        }
-
-                        BeforeCommand();
-                        break;
-                    case ConsoleKeyEx.Backspace:
-                        if (ScrollMode)
-                        {
-                            break;
-                        }
-                        if (Command.Length > 0)
-                        {
-                            Command = Command.Remove(Command.Length - 1);
-                            mX--;
-                        }
-                        break;
-                    case ConsoleKeyEx.UpArrow:
-                        if (KeyboardManager.ControlPressed)
-                        {
-                            ScrollUp();
-                        }
-                        else
-                        {
-                            if (CommandIndex >= 0)
+                    switch (keyEvent.Key)
+                    {
+                        case ConsoleKeyEx.Enter:
+                            if (ScrollMode)
+                            {
+                                break;
+                            }
+                            if (Command.Length > 0)
                             {
                                 mX -= Command.Length;
-                                Command = Commands[CommandIndex];
-                                CommandIndex--;
-                                mX += Command.Length;
+
+                                WriteLine(Command);
+
+                                Kernel.CommandManager.Execute(Command);
+
+                                Commands.Add(Command);
+                                CommandIndex = Commands.Count - 1;
+
+                                Command = string.Empty;
                             }
-                        }
-                        break;
-                    case ConsoleKeyEx.DownArrow:
-                        if (KeyboardManager.ControlPressed)
-                        {
-                            ScrollDown();
-                        }
-                        else
-                        {
-                            if (CommandIndex < Commands.Count - 1)
+                            else
                             {
-                                mX -= Command.Length;
-                                CommandIndex++;
-                                Command = Commands[CommandIndex];
-                                mX += Command.Length;
+                                WriteLine();
+                                WriteLine();
                             }
-                        }
-                        break;
-                    default:
-                        if (ScrollMode)
-                        {
+
+                            BeforeCommand();
                             break;
-                        }
-                        if (char.IsLetterOrDigit(keyEvent.KeyChar) || char.IsPunctuation(keyEvent.KeyChar) || char.IsSymbol(keyEvent.KeyChar) || (keyEvent.KeyChar == ' '))
-                        {
-                            Command += keyEvent.KeyChar;
-                            mX++;
-                        }
-                        break;
+                        case ConsoleKeyEx.Backspace:
+                            if (ScrollMode)
+                            {
+                                break;
+                            }
+                            if (Command.Length > 0)
+                            {
+                                Command = Command.Remove(Command.Length - 1);
+                                mX--;
+                            }
+                            break;
+                        case ConsoleKeyEx.UpArrow:
+                            if (KeyboardManager.ControlPressed)
+                            {
+                                ScrollUp();
+                            }
+                            else
+                            {
+                                if (CommandIndex >= 0)
+                                {
+                                    mX -= Command.Length;
+                                    Command = Commands[CommandIndex];
+                                    CommandIndex--;
+                                    mX += Command.Length;
+                                }
+                            }
+                            break;
+                        case ConsoleKeyEx.DownArrow:
+                            if (KeyboardManager.ControlPressed)
+                            {
+                                ScrollDown();
+                            }
+                            else
+                            {
+                                if (CommandIndex < Commands.Count - 1)
+                                {
+                                    mX -= Command.Length;
+                                    CommandIndex++;
+                                    Command = Commands[CommandIndex];
+                                    mX += Command.Length;
+                                }
+                            }
+                            break;
+                        default:
+                            if (ScrollMode)
+                            {
+                                break;
+                            }
+                            if (char.IsLetterOrDigit(keyEvent.KeyChar) || char.IsPunctuation(keyEvent.KeyChar) || char.IsSymbol(keyEvent.KeyChar) || (keyEvent.KeyChar == ' '))
+                            {
+                                Command += keyEvent.KeyChar;
+                                mX++;
+                            }
+                            break;
+                    }
                 }
             }
 

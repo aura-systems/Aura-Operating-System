@@ -40,9 +40,12 @@ namespace Aura_OS.Application.GameBoyEmu
 
         public override void UpdateApp()
         {
-            if (KeyboardManager.TryReadKey(out keyEvent))
+            if (Kernel.WindowManager.Focused.Equals(this))
             {
-                joypad.handleKeyDown(keyEvent.Key);
+                if (KeyboardManager.TryReadKey(out keyEvent))
+                {
+                    joypad.handleKeyDown(keyEvent.Key);
+                }
             }
 
             while (cyclesThisUpdate < Constants.CYCLES_PER_UPDATE)
