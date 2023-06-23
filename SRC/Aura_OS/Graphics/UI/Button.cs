@@ -20,10 +20,17 @@ namespace Aura_OS.System.Graphics.UI
         public string Text;
         public Bitmap Image;
         public bool NoBorder = false;
+        public bool Light = false;
 
         public Button(string text, int x, int y, int width, int height) : base(x, y, width, height)
         {
             Text = text;
+        }
+
+        public Button(string text, int x, int y, int width, int height, bool light = false) : base(x, y, width, height)
+        {
+            Text = text;
+            Light = light;
         }
 
         public Button(Bitmap image, int x, int y, int width, int height, bool noBorder = false) : base(x, y, width, height)
@@ -52,7 +59,16 @@ namespace Aura_OS.System.Graphics.UI
 
         public override void Update()
         {
-            if (!NoBorder)
+            if (!NoBorder && Light)
+            {
+                Kernel.canvas.DrawFilledRectangle(Kernel.Gray, X + 2, Y + 2, Width - 3, Height - 3);
+
+                Kernel.canvas.DrawLine(Kernel.DarkGray, X, Y, X + Width, Y);
+                Kernel.canvas.DrawLine(Kernel.DarkGray, X, Y, X, Y + Height);
+                Kernel.canvas.DrawLine(Kernel.WhiteColor, X, Y + Height, X + Width + 1, Y + Height);
+                Kernel.canvas.DrawLine(Kernel.WhiteColor, X + Width, Y, X + Width, Y + Height);
+            }
+            else if (!NoBorder && !Light)
             {
                 Kernel.canvas.DrawFilledRectangle(Kernel.DarkGrayLight, X + 2, Y + 2, Width - 3, Height - 3);
 

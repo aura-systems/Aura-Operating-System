@@ -16,7 +16,8 @@ namespace Aura_OS
     {
         int taskbarHeight = 33;
         int startY;
-        Element StartButton;
+        Button StartButton;
+        Button HourButton;
         public bool Clicked = false;
         
         public Dock()
@@ -29,6 +30,13 @@ namespace Aura_OS
             int startButtonX = 2;
             int startButtonY = (int)Kernel.screenHeight - startButtonHeight - 3;
             StartButton = new Button(Kernel.Start, startButtonX, startButtonY, startButtonWidth, startButtonHeight);
+
+            string time = Time.TimeString(true, true, true);
+            int hourButtonWidth = time.Length * (Kernel.font.Width + 1);
+            int hourButtonHeight = 28;
+            int hourButtonX = (int)(Kernel.screenWidth - (time.Length * (Kernel.font.Width + 1)) - 2);
+            int hourButtonY = (int)Kernel.screenHeight - 28 - 3;
+            HourButton = new Button(time, hourButtonX, hourButtonY, hourButtonWidth, hourButtonHeight, true);
         }
         
         public void Update()
@@ -37,6 +45,10 @@ namespace Aura_OS
             Kernel.canvas.DrawLine(Kernel.WhiteColor, 0, startY, (int)Kernel.screenWidth + 10, startY);
             Kernel.canvas.DrawFilledRectangle(Kernel.Gray, 0, startY + 1, (int)Kernel.screenWidth, taskbarHeight - 1);
             StartButton.Update();
+
+            string time = Time.TimeString(true, true, true);
+            HourButton.Text = time;
+            HourButton.Update();
 
             int buttonX = 36;
             foreach (var process in Kernel.ProcessManager.Processes)
