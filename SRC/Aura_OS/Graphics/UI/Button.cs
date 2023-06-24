@@ -73,7 +73,7 @@ namespace Aura_OS.System.Graphics.UI
             {
                 if (Focused)
                 {
-                    Kernel.canvas.DrawFilledRectangle(Kernel.Gray, X + 2, Y + 2, Width - 3, Height - 3);
+                    Utils.DrawGradient(Kernel.Gray, Kernel.Pink, X + 2, Y + 2, Width - 3, Height - 3);
 
                     Kernel.canvas.DrawLine(Kernel.BlackColor, X, Y, X + Width, Y);
                     Kernel.canvas.DrawLine(Kernel.Gray, X, Y + 1, X + Width, Y + 1);
