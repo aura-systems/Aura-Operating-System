@@ -1,4 +1,10 @@
-<p align="center"><img width=60% src="https://raw.githubusercontent.com/aura-systems/Aura-Operating-System/master/ARTWORK/auralogo.png"></p>
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/aura-systems/Aura-Operating-System/master/ARTWORK/auralogo_white.png">
+    <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/aura-systems/Aura-Operating-System/master/ARTWORK/auralogo_black.png">
+    <img width=60% alt="Shows a black logo in light color mode and a white one in dark color mode." src="">
+  </picture>
+</p>
 
 ![Build Status](https://github.com/aura-systems/Aura-Operating-System/workflows/.NET%20Core/badge.svg)[![Issues](https://img.shields.io/github/issues/aura-systems/Aura-Operating-System.svg)](https://github.com/aura-systems/Aura-Operating-System/issues)[![Pull requests](https://img.shields.io/github/issues-pr/aura-systems/Aura-Operating-System.svg)](https://github.com/aura-systems/Aura-Operating-System/pulls)[![Discord](https://img.shields.io/badge/通过-discord%20加入我们-blue.svg)](https://discord.gg/DFbAtVA)
 
