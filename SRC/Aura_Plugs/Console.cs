@@ -56,6 +56,7 @@ namespace Aura_Plugs
             else if (Kernel.console != null)
             {
                 Kernel.console.Write(aText);
+                Kernel.Run();
             }
         }
 

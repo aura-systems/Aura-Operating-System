@@ -37,6 +37,8 @@
       <EmbeddedResource Include="Resources\UI\start.bmp" />
       <EmbeddedResource Include="Resources\UI\window.bmp" />
       <EmbeddedResource Include="Resources\UI\utilities-terminal.bmp" />
+      <EmbeddedResource Include="Resources\Framework\System.Private.CoreLib.dll" />
+      <EmbeddedResource Include="Resources\TestApp.dll" />
     </ItemGroup>
 
     <ItemGroup>
@@ -49,5 +51,10 @@
 	<Target Name="GetVersion">
 		<WriteLinesToFile File="Properties\VersionInfo.cs" Lines="$(SomeThing)" Overwrite="true" />
 	</Target>
+
+    <ItemGroup>
+      <ProjectReference Include="..\DotNetParser\LibDotNetClr\libDotNetClr.csproj" />
+      <ProjectReference Include="..\DotNetParser\LibDotNetParser\LibDotNetParser.csproj" />
+    </ItemGroup>
 
 </Project>

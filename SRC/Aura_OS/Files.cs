@@ -63,5 +63,9 @@ namespace Aura_OS
 
         [ManifestResourceStream(ResourceName = "Aura_OS.Resources.UI.start.bmp")]
         public static byte[] Start;
+        [ManifestResourceStream(ResourceName = "Aura_OS.Resources.Framework.System.Private.CoreLib.dll")]
+        public static byte[] Framework;
+        [ManifestResourceStream(ResourceName = "Aura_OS.Resources.TestApp.dll")]
+        public static byte[] TestApp;
     }
 }
