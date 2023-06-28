@@ -21,6 +21,7 @@
         <EnableGDB>False</EnableGDB>
         <StartCosmosGDB>False</StartCosmosGDB>
         <VBEResolution>800x600x32</VBEResolution>
+        <OptimizationLevel>3</OptimizationLevel>
     </PropertyGroup>
 
     <ItemGroup>

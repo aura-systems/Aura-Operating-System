@@ -69,6 +69,7 @@ namespace Aura_OS
                     
                     if (!HasWindowMoving && Window.Close.IsInside((int)MouseManager.X, (int)MouseManager.Y))
                     {
+                        Kernel.WindowManager.Focused = null;
                         Stop();
                         return;
                     }
