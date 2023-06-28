@@ -1,11 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿/*
+* PROJECT:          Aura Operating System Development
+* CONTENT:          Graphics utils class.
+* PROGRAMMERS:      Valentin Charbonnier <valentinbreiz@gmail.com>
+*/
 
-namespace Aura_OS.System.Graphics.UI
+using System.Drawing;
+
+namespace Aura_OS.System.UI.GUI.Components
 {
     public class Utils
     {

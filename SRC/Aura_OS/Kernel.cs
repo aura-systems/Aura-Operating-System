@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Text;
 using Sys = Cosmos.System;
-using Aura_OS.System.Graphics;
 using Aura_OS.System.Shell.cmdIntr;
 using Cosmos.Core;
 using Cosmos.Core.Memory;
@@ -18,7 +17,7 @@ using System.Drawing;
 using Aura_OS.System;
 using Aura_OS.Interpreter;
 using Aura_OS.Application.GameBoyEmu;
-using Aura_OS.Graphics;
+using Aura_OS.System.UI.GUI;
 
 namespace Aura_OS
 {
@@ -78,8 +77,8 @@ namespace Aura_OS
 
         //PROCESSES
         public static ProcessManager ProcessManager;
-
         public static WindowManager WindowManager;
+        public static System.UI.CUI.Console aConsole;
 
         public static Terminal console;
         public static MemoryInfo memoryInfo;
@@ -102,10 +101,10 @@ namespace Aura_OS
         public static void BeforeRun()
         {
             //Start Filesystem
-            VFSManager.RegisterVFS(VirtualFileSystem);
+            // VFSManager.RegisterVFS(VirtualFileSystem);
 
             //Load Localization
-            System.CustomConsole.WriteLineInfo("Initializing localization...");
+            CustomConsole.WriteLineInfo("Initializing localization...");
 
             Encoding.RegisterProvider(CosmosEncodingProvider.Instance);
             KeyboardManager.SetKeyLayout(new Sys.ScanMaps.FRStandardLayout());

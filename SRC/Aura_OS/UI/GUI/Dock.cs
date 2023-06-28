@@ -1,6 +1,6 @@
 using Aura_OS.Processing;
 using Aura_OS.System;
-using Aura_OS.System.Graphics.UI;
+using Aura_OS.System.UI.GUI.Components;
 using Cosmos.Core;
 using Cosmos.Core.Memory;
 using Cosmos.HAL;
@@ -10,7 +10,7 @@ using System;
 using System.Drawing;
 using System.Collections.Generic;
 
-namespace Aura_OS
+namespace Aura_OS.System.UI.GUI
 {
     public class Dock
     {

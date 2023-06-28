@@ -1,6 +1,10 @@
-using Cosmos.Core;
-using Cosmos.Core.Memory;
-using Cosmos.System;
+/*
+* PROJECT:          Aura Operating System Development
+* CONTENT:          3D cube application.
+* PROGRAMMERS:      Valentin Charbonnier <valentinbreiz@gmail.com>
+                    https://github.com/JPtheOne/3D-Perspective
+*/
+
 using System;
 using System.Drawing;
 

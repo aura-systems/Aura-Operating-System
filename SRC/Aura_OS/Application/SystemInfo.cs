@@ -1,8 +1,10 @@
-using Cosmos.Core;
-using Cosmos.Core.Memory;
-using Cosmos.System;
+/*
+* PROJECT:          Aura Operating System Development
+* CONTENT:          System information application.
+* PROGRAMMERS:      Valentin Charbonnier <valentinbreiz@gmail.com>
+*/
+
 using System.Drawing;
-using Cosmos.System.Graphics;
 
 namespace Aura_OS
 {

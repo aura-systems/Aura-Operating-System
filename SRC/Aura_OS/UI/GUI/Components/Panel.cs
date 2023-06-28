@@ -14,9 +14,9 @@ using System.Drawing;
 using System.Text;
 using Cosmos.System;
 
-namespace Aura_OS.System.Graphics.UI
+namespace Aura_OS.System.UI.GUI.Components
 {
-    public class Panel : Element
+    public class Panel : Component
     {
         public Color Color1;
         public Color? Color2;

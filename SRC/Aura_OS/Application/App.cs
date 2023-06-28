@@ -1,9 +1,13 @@
+/*
+* PROJECT:          Aura Operating System Development
+* CONTENT:          Base app class
+* PROGRAMMERS:      nifanfa <nifanfa@foxmail.com>
+                    Valentin Charbonnier <valentinbreiz@gmail.com>
+*/
+
 using Cosmos.System;
-using Cosmos.System.Graphics;
-using System.Drawing;
 using Aura_OS.Processing;
-using System;
-using Aura_OS.System.Graphics.UI;
+using Aura_OS.System.UI.GUI.Components;
 
 namespace Aura_OS
 {

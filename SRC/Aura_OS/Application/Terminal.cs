@@ -1,10 +1,14 @@
-using Aura_OS.System.Shell.cmdIntr;
+/*
+* PROJECT:          Aura Operating System Development
+* CONTENT:          Graphical terminal application.
+* PROGRAMMERS:      Valentin Charbonnier <valentinbreiz@gmail.com>
+*/
+
 using Aura_OS.System.Users;
 using Cosmos.System;
-using Cosmos.System.Graphics;
 using System;
 using System.Drawing;
-using Aura_OS.System.Graphics;
+using Aura_OS.System.UI.GUI;
 using System.Collections.Generic;
 
 namespace Aura_OS

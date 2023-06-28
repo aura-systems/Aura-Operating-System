@@ -13,16 +13,16 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Text;
 
-namespace Aura_OS.System.Graphics.UI
+namespace Aura_OS.System.UI.GUI.Components
 {
-    public class Element
+    public class Component
     {
         public int X;
         public int Y;
         public int Width;
         public int Height;
 
-        public Element(int x, int y, int width, int height)
+        public Component(int x, int y, int width, int height)
         {
             X = x;
             Y = y;

@@ -7,12 +7,15 @@
 using Aura_OS;
 using IL2CPU.API.Attribs;
 using System;
+using System.Text;
 
 namespace Aura_Plugs
 {
     [Plug(Target = typeof(global::System.Console))]
     public class ConsoleImpl
     {
+        private static Encoding ConsoleOutputEncoding = Encoding.ASCII;
+
         #region Write
 
         public static void Write(bool aBool)
@@ -45,7 +48,12 @@ namespace Aura_Plugs
 
         public static void Write(string aText)
         {
-            if (Kernel.console != null)
+            if (Kernel.aConsole != null)
+            {
+                byte[] aTextEncoded = ConsoleOutputEncoding.GetBytes(aText);
+                Kernel.aConsole.Write(aTextEncoded);
+            }
+            else if (Kernel.console != null)
             {
                 Kernel.console.Write(aText);
             }
@@ -136,6 +144,36 @@ namespace Aura_Plugs
         {
             Write(aBuffer, aIndex, aCount);
             WriteLine();
+        }
+
+        #endregion
+
+        #region ConsoleColors
+
+        public static ConsoleColor get_ForegroundColor()
+        {
+            if (Kernel.aConsole != null)
+            {
+                return Kernel.aConsole.Foreground;
+            }
+            else if (Kernel.console != null)
+            {
+                return Kernel.console.Foreground;
+            }
+
+            return ConsoleColor.White;
+        }
+
+        public static void set_ForegroundColor(ConsoleColor value)
+        {
+            if (Kernel.aConsole != null)
+            {
+                Kernel.aConsole.Foreground = value;
+            }
+            else if (Kernel.console != null)
+            {
+                Kernel.console.Foreground = value;
+            }
         }
 
         #endregion

@@ -14,9 +14,9 @@ using System.Drawing;
 using System.Text;
 using Cosmos.System;
 
-namespace Aura_OS.System.Graphics.UI
+namespace Aura_OS.System.UI.GUI.Components
 {
-    public class Window : Element
+    public class Window : Component
     {
         public Bitmap Icon;
         public string Name;

@@ -1,7 +1,11 @@
+/*
+* PROJECT:          Aura Operating System Development
+* CONTENT:          Memory information application.
+* PROGRAMMERS:      Valentin Charbonnier <valentinbreiz@gmail.com>
+*/
+
 using Cosmos.Core;
 using Cosmos.Core.Memory;
-using Cosmos.System;
-using System.Drawing;
 
 namespace Aura_OS
 {

@@ -13,7 +13,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Text;
 
-namespace Aura_OS.System.Graphics
+namespace Aura_OS.System.UI.GUI
 {
     public class GUI
     {
