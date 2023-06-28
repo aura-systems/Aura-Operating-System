@@ -101,7 +101,7 @@ namespace Aura_OS
         public static void BeforeRun()
         {
             //Start Filesystem
-            // VFSManager.RegisterVFS(VirtualFileSystem);
+            VFSManager.RegisterVFS(VirtualFileSystem);
 
             //Load Localization
             CustomConsole.WriteLineInfo("Initializing localization...");
