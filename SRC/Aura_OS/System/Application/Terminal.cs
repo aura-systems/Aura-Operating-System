@@ -344,15 +344,23 @@ namespace Aura_OS
 
         private void Scroll()
         {
-            TerminalHistory.Add(Text[0]);
-            TerminalHistoryIndex++;
+            Cell[] removedLine = Text[0];
 
             for (int i = 0; i < mRows - 1; i++)
             {
                 Text[i] = Text[i + 1];
             }
 
-            Text[mRows - 1] = new Cell[mCols];
+            // Use the removed line instead of creating a new one.
+            Text[mRows - 1] = removedLine;
+            TerminalHistory.Add(removedLine);
+            TerminalHistoryIndex++;
+
+            // Clear the reused line.
+            for (int i = 0; i < mCols; i++)
+            {
+                Text[mRows - 1][i].Char = (char)0;
+            }
         }
 
         private void ScrollUp()

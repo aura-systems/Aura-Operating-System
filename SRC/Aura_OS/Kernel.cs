@@ -27,7 +27,7 @@ namespace Aura_OS
         public static string userLogged = "root";
         public static string userLevelLogged = "admin";
         public static bool Running = false;
-        public static string Version = "0.5.3";
+        public static string Version = "0.6.0";
         public static string Revision = VersionInfo.revision;
         public static string langSelected = "en_US";
         public static string BootTime = "01/01/1970";
