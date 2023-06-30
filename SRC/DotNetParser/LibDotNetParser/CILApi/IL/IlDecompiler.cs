@@ -739,7 +739,20 @@ namespace LibDotNetParser.CILApi
                         return ret;
                     }
                 case OpCodeOperandType.InlineSwitch:
-                    throw new NotImplementedException();
+                    {
+                        int count = BitConverter.ToInt32(code, Offset + 1);
+                        Offset += 4; // Move past the count
+
+                        int[] targets = new int[count];
+                        for (int i = 0; i < count; i++)
+                        {
+                            targets[i] = BitConverter.ToInt32(code, Offset + 1 + (i * 4));
+                        }
+
+                        ret.Size += 4 * (count + 1);
+                        ret.Operand = targets;
+                        return ret;
+                    }
                 case OpCodeOperandType.ShortInlineR:
                     {
                         var numb2 = BitConverter.ToSingle(code, Offset + 1);

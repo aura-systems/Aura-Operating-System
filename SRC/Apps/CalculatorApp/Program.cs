@@ -12,7 +12,7 @@ namespace TestApp
             try
             {
                 Console.WriteLine("Calculating " + expression + " ...");
-                double result = Evaluate(expression);
+                int result = Evaluate(expression);
                 Console.WriteLine("The result is: " + result);
             }
             catch
@@ -21,10 +21,10 @@ namespace TestApp
             }
         }
 
-        static double Evaluate(string expression)
+        static int Evaluate(string expression)
         {
-            double number = 0;
-            double result = 0;
+            int number = 0;
+            int result = 0;
             char operation = '+';
 
             Console.WriteLine("Evaluate 1");
@@ -49,7 +49,11 @@ namespace TestApp
                 }
                 else if (c == '+' || c == '-' || c == '*' || c == '/')
                 {
-                    Console.WriteLine("Evaluate 5");
+                    Console.WriteLine("Evaluate 5.1");
+
+                    Console.WriteLine("result=" + result);
+                    Console.WriteLine("number=" + number);
+                    Console.WriteLine("operation=" + operation);
 
                     result = PerformOperation(result, number, operation);
 
@@ -71,8 +75,10 @@ namespace TestApp
             return result;
         }
 
-        static double PerformOperation(double left, double right, char operation)
+        static int PerformOperation(int left, int right, char operation)
         {
+            Console.WriteLine("PerformOperation 1.1");
+
             switch (operation)
             {
                 case '+':
