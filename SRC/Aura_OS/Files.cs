@@ -67,5 +67,7 @@ namespace Aura_OS
         public static byte[] Framework;
         [ManifestResourceStream(ResourceName = "Aura_OS.Resources.TestApp.dll")]
         public static byte[] TestApp;
+        [ManifestResourceStream(ResourceName = "Aura_OS.Resources.CalculatorApp.dll")]
+        public static byte[] CalculatorApp;
     }
 }

@@ -137,6 +137,22 @@ namespace Aura_OS.Interpreter
 
                 Console.WriteLine("Tests done.");
             }));
+
+            CMDs.Add(new CommandAction(new string[] { "calc" }, () =>
+            {
+                try
+                {
+                    var fl = new DotNetFile(Files.CalculatorApp);
+                    var clr = new DotNetClr(fl);
+
+                    clr.RegisterResolveCallBack(AssemblyCallback);
+                    clr.Start();
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.ToString());
+                }
+            }));
         }
 
         private static byte[] AssemblyCallback(string dll)
@@ -176,12 +192,12 @@ namespace Aura_OS.Interpreter
         }
         private static void TestRxObject(MethodArgStack[] Stack, ref MethodArgStack returnValue, DotNetMethod method)
         {
-            var cctor = fl.GetMethod("TestApp.Tests", "TestObject", ".ctor");
-            if (cctor == null)
-                throw new NullReferenceException();
-            var s = new CustomList<MethodArgStack>();
-            s.Add(MethodArgStack.String("value"));
-            returnValue = clr.CreateObject(cctor, s);
+            // var cctor = fl.GetMethod("TestApp.Tests", "TestObject", ".ctor");
+            // if (cctor == null)
+            //    throw new NullReferenceException();
+            // var s = new CustomList<MethodArgStack>();
+            // s.Add(MethodArgStack.String("value"));
+            // returnValue = clr.CreateObject(cctor, s);
         }
         private static void PrintWithColor(string text, ConsoleColor fg)
         {

@@ -2031,7 +2031,32 @@ namespace libDotNetClr
                         }
                     case OpCodes.OpCodesList.Switch:
                         {
-                            throw new NotImplementedException($"OpCode {item.OpCodeName} not implemented");
+                            var numb = stack[stack.Count - 1];
+
+                            if (numb.type != StackItemType.Int32)
+                            {
+                                throw new Exception("Switch statement value must be an integer.");
+                            }
+                            var index = (int)numb.value;
+                            var targets = (int[])item.Operand;
+                            if (index < 0 || index >= targets.Length)
+                            {
+                                // Index out of range of the switch targets, simply advance to the next instruction.
+                                i++;
+                                break;
+                            }
+
+                            // Jump to the target indexed by the switch value.
+                            var targetOffset = targets[index];
+                            ILInstruction inst = decompiler.GetInstructionAtOffset(targetOffset, -1);
+
+                            if (inst == null)
+                            {
+                                throw new Exception($"Invalid jump target at offset {targetOffset} in switch statement.");
+                            }
+
+                            i = inst.RelPosition - 1;
+                            break;
                         }
                     case OpCodes.OpCodesList.Tailcall:
                         {

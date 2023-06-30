@@ -39,6 +39,7 @@
       <EmbeddedResource Include="Resources\UI\utilities-terminal.bmp" />
       <EmbeddedResource Include="Resources\Framework\System.Private.CoreLib.dll" />
       <EmbeddedResource Include="Resources\TestApp.dll" />
+      <EmbeddedResource Include="Resources\CalculatorApp.dll" />
     </ItemGroup>
 
     <ItemGroup>

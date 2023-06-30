@@ -12,6 +12,7 @@ namespace libDotNetClr
         private void RegisterAllInternalMethods()
         {
             //Register internal methods
+            RegisterCustomInternalMethod("ReadLine", InternalMethod_Console_ReadLine);
             RegisterCustomInternalMethod("WriteLine", InternalMethod_Console_Writeline);
             RegisterCustomInternalMethod("Write", InternalMethod_Console_Write);
             RegisterCustomInternalMethod("ConsoleClear", InternalMethod_Console_Clear);
@@ -504,8 +505,8 @@ namespace libDotNetClr
         #region Implementation for various ToString methods
         private void Internal__System_Char_ToString(MethodArgStack[] Stack, ref MethodArgStack returnValue, DotNetMethod method)
         {
-            var c = Stack[Stack.Length - 1].value;
-            returnValue = new MethodArgStack() { value = (int)c, type = StackItemType.Int32 };
+            var c = (char)Stack[Stack.Length - 1].value;
+            returnValue = MethodArgStack.String(c.ToString());
         }
 
         private void Internal__System_String_get_Chars_1(MethodArgStack[] Stack, ref MethodArgStack returnValue, DotNetMethod method)
@@ -580,6 +581,15 @@ namespace libDotNetClr
         }
         #endregion
         #region Console class
+        private void InternalMethod_Console_ReadLine(MethodArgStack[] Stack, ref MethodArgStack returnValue, DotNetMethod method)
+        {
+            string line = Console.ReadLine();
+
+            var str = new MethodArgStack();
+            str.type = StackItemType.String;
+            str.value = line;
+            returnValue = str;
+        }
         private void InternalMethod_Console_Writeline(MethodArgStack[] Stack, ref MethodArgStack returnValue, DotNetMethod method)
         {
             if (Stack.Length == 0)
