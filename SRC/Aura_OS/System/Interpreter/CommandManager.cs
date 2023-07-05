@@ -20,6 +20,9 @@ using Aura_OS.System.Shell.cmdIntr.SystemInfomation;
 using Aura_OS.System.Shell.cmdIntr;
 using Aura_OS.Interpreter.Commands.Util;
 using Aura_OS.Interpreter.Commands.Filesystem;
+using LibDotNetParser.CILApi;
+using libDotNetClr;
+using LibDotNetParser;
 
 namespace Aura_OS.Interpreter
 {
@@ -41,6 +44,11 @@ namespace Aura_OS.Interpreter
             Kernel.ProcessManager.Register(this);
             Kernel.ProcessManager.Start(this);
         }
+
+        private static int NumbOfSuccesssTests = 0;
+        private static int NumbOfFailedTests = 0;
+        private static DotNetClr clr;
+        private static DotNetFile fl;
 
         public void RegisterAllCommands()
         {
@@ -104,6 +112,92 @@ namespace Aura_OS.Interpreter
                 };
                 test[2] = "test3"; //Should make a Null reference exception
             }));
+
+            CMDs.Add(new CommandAction(new string[] { "dotnet" }, () =>
+            {
+                Console.WriteLine("Parsing files...");
+
+                var fl = new DotNetFile(Files.TestApp);
+                var clr = new DotNetClr(fl);
+
+                Console.WriteLine("CLR created!");
+
+                //Register our internal methods
+                clr.RegisterResolveCallBack(AssemblyCallback);
+                clr.RegisterCustomInternalMethod("TestsComplete", TestsComplete);
+                clr.RegisterCustomInternalMethod("TestSuccess", TestSuccess);
+                clr.RegisterCustomInternalMethod("TestFail", TestFail);
+                clr.RegisterCustomInternalMethod("TestsRxObject", TestRxObject);
+
+                Console.WriteLine("Methods registered!");
+
+                Console.WriteLine("Starting tests...");
+
+                clr.Start();
+
+                Console.WriteLine("Tests done.");
+            }));
+
+            CMDs.Add(new CommandAction(new string[] { "calc" }, () =>
+            {
+                var fl = new DotNetFile(Files.CalculatorApp);
+                var clr = new DotNetClr(fl);
+
+                clr.RegisterResolveCallBack(AssemblyCallback);
+                clr.Start();
+            }));
+        }
+
+        private static byte[] AssemblyCallback(string dll)
+        {
+            if (dll == "System.Private.CoreLib")
+            {
+                return Files.Framework;
+            }
+            else
+            {
+                return null;
+            }
+        }
+        private static void TestSuccess(MethodArgStack[] Stack, ref MethodArgStack returnValue, DotNetMethod method)
+        {
+            var testName = (string)Stack[Stack.Length - 1].value;
+
+            PrintWithColor("Test Success: " + testName, ConsoleColor.Green);
+            NumbOfSuccesssTests++;
+        }
+
+        private static void TestsComplete(MethodArgStack[] Stack, ref MethodArgStack returnValue, DotNetMethod method)
+        {
+            Console.WriteLine();
+            PrintWithColor("All Tests Completed.", ConsoleColor.DarkYellow);
+            Console.WriteLine();
+            PrintWithColor("Passed tests: " + NumbOfSuccesssTests, ConsoleColor.Green);
+            PrintWithColor("Failed tests: " + NumbOfFailedTests, ConsoleColor.Red);
+        }
+
+        private static void TestFail(MethodArgStack[] Stack, ref MethodArgStack returnValue, DotNetMethod method)
+        {
+            var testName = (string)Stack[Stack.Length - 1].value;
+
+            PrintWithColor("Test Failure: " + testName, ConsoleColor.Red);
+            NumbOfFailedTests++;
+        }
+        private static void TestRxObject(MethodArgStack[] Stack, ref MethodArgStack returnValue, DotNetMethod method)
+        {
+            // var cctor = fl.GetMethod("TestApp.Tests", "TestObject", ".ctor");
+            // if (cctor == null)
+            //    throw new NullReferenceException();
+            // var s = new CustomList<MethodArgStack>();
+            // s.Add(MethodArgStack.String("value"));
+            // returnValue = clr.CreateObject(cctor, s);
+        }
+        private static void PrintWithColor(string text, ConsoleColor fg)
+        {
+            var old = Console.ForegroundColor;
+            Console.ForegroundColor = fg;
+            Console.WriteLine(text);
+            Console.ForegroundColor = old;
         }
 
         /// <summary>

@@ -48,14 +48,16 @@ namespace Aura_Plugs
 
         public static void Write(string aText)
         {
-            if (Kernel.aConsole != null)
+            if (Kernel.console != null)
+            {
+                Kernel.console.Write(aText);
+                Kernel.console.DrawTerminal(false);
+                Kernel.canvas.Display();
+            }
+            else if (Kernel.aConsole != null)
             {
                 byte[] aTextEncoded = ConsoleOutputEncoding.GetBytes(aText);
                 Kernel.aConsole.Write(aTextEncoded);
-            }
-            else if (Kernel.console != null)
-            {
-                Kernel.console.Write(aText);
             }
         }
 

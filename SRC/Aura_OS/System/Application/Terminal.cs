@@ -266,19 +266,14 @@ namespace Aura_OS
                     }
                 }
             }
-
-            Kernel.canvas.DrawFilledRectangle(Kernel.BlackColor, x, y, width, height);
-
-            DrawTerminal();
-
-            if (!ScrollMode)
-            {
-                DrawCursor();
-            }
+            
+            DrawTerminal();  
         }
 
-        void DrawTerminal()
+        public void DrawTerminal(bool drawPrompt = true)
         {
+            Kernel.canvas.DrawFilledRectangle(Kernel.BlackColor, x, y, width, height);
+
             for (int i = 0; i < mRows; i++)
             {
                 for (int j = 0; j < mCols; j++)
@@ -290,7 +285,7 @@ namespace Aura_OS
                 }
             }
 
-            if (Command.Length > 0)
+            if (Command.Length > 0 && drawPrompt)
             {
                 int baseX = mX - Command.Length;
 
@@ -298,6 +293,11 @@ namespace Aura_OS
                 {
                     Graphics.WriteByte(Command[i], Kernel.console.x + ((baseX + i) * Kernel.font.Width), Kernel.console.y + mY * Kernel.font.Height, ForegroundColor);
                 }
+            }
+
+            if (!ScrollMode)
+            {
+                DrawCursor();
             }
         }
 
