@@ -140,18 +140,11 @@ namespace Aura_OS.Interpreter
 
             CMDs.Add(new CommandAction(new string[] { "calc" }, () =>
             {
-                try
-                {
-                    var fl = new DotNetFile(Files.CalculatorApp);
-                    var clr = new DotNetClr(fl);
+                var fl = new DotNetFile(Files.CalculatorApp);
+                var clr = new DotNetClr(fl);
 
-                    clr.RegisterResolveCallBack(AssemblyCallback);
-                    clr.Start();
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine(ex.ToString());
-                }
+                clr.RegisterResolveCallBack(AssemblyCallback);
+                clr.Start();
             }));
         }
 

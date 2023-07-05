@@ -2,6 +2,6 @@ namespace Aura_OS
 {
     public class VersionInfo
     {
-        public static string revision = "300620231749";
+        public static string revision = "050720231727";
     }
 }
