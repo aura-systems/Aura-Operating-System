@@ -18,8 +18,7 @@ namespace SshDotNet
         static SshClient()
         {
             // Set default software version.
-            SshClient.SoftwareVersion = "WindowsSshServer" + 
-                Assembly.GetExecutingAssembly().GetName().Version.ToString();
+            SshClient.SoftwareVersion = "WindowsSshServer 0.1";
         }
 
         public static string SoftwareVersion
@@ -77,17 +76,17 @@ namespace SshDotNet
         
         private bool _isDisposed = false;                // True if object has been disposed.
 
-        public SshClient(IConnection connection)
+        public SshClient(byte[] connection)
             : this(connection, true)
         {
         }
 
-        public SshClient(Stream stream)
+        public SshClient(byte[] stream)
             : this(stream, true)
         {
         }
 
-        public SshClient(IConnection connection, bool addDefaultAlgorithms)
+        public SshClient(byte[] connection, bool addDefaultAlgorithms)
             : this(connection.GetStream(), addDefaultAlgorithms)
         {
             _connection = connection;

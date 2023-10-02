@@ -13,8 +13,8 @@ namespace Aura_OS.System.Interpreter.Commands.Network.SSH
     {
         private bool _isDisposed = false; // True if object has been disposed.
 
-        public SshConsoleClient(IConnection connection)
-            : base(connection)
+        public SshConsoleClient(byte[] data)
+            : base(data)
         {
         }
 

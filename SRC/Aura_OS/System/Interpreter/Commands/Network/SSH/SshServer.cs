@@ -104,6 +104,15 @@ namespace Aura_OS.System.Interpreter.Commands.Network.SSH
                 var data = client.Receive(ref endpoint);
 
                 Console.WriteLine("SSH - Data received!");
+
+                // Add new client to list.
+                var sshClient = new SshConsoleClient(data);
+
+                sshClient.Connected += client_Connected;
+                sshClient.Disconnected += client_Disconnected;
+                sshClient.ConnectionEstablished();
+
+                _clients.Add(sshClient);
             }
         }
 
@@ -163,50 +172,6 @@ namespace Aura_OS.System.Interpreter.Commands.Network.SSH
 
             // Clear list of clients.
             _clients.Clear();
-        }
-
-        private void AcceptTcpClient(IAsyncResult ar)
-        {
-            if (_isDisposed) return;
-
-            // Check that operation has completed.
-            if (!ar.IsCompleted) return;
-
-            //lock (_listenerLock)
-            {
-                // Check that operation used current TCP listener.
-                if (ar.AsyncState != _tcpListener || _tcpListener == null) return;
-
-                TcpClient tcpClient;
-
-                /*
-
-                try
-                {
-                    // Accept incoming connection attempt.
-                    tcpClient = _tcpListener.EndAcceptTcpClient(ar);
-                }
-                catch (SocketException exSocket)
-                {
-                    if (exSocket.SocketErrorCode == SocketError.ConnectionReset) return;
-
-                    throw exSocket;
-                }
-
-                // Begin accepting next incoming connected attempt.
-                _tcpListener.BeginAcceptTcpClient(new AsyncCallback(AcceptTcpClient), _tcpListener);
-
-                // Add new client to list.
-                var sshClient = new SshConsoleClient(new TcpConnection(tcpClient));
-
-                sshClient.Connected += client_Connected;
-                sshClient.Disconnected += client_Disconnected;
-                sshClient.ConnectionEstablished();
-
-                _clients.Add(sshClient);
-
-                */
-            }
         }
 
         private void client_Connected(object sender, EventArgs e)
