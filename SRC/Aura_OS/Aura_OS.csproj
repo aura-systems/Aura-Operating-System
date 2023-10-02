@@ -46,6 +46,16 @@
     </PackageReference>
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Libraries\" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Reference Include="DiffieHellman">
+        <HintPath>Libraries\DiffieHellman.dll</HintPath>
+      </Reference>
+    </ItemGroup>
+
 	<Target Name="GetVersion">
 		<WriteLinesToFile File="Properties\VersionInfo.cs" Lines="$(SomeThing)" Overwrite="true" />
 	</Target>

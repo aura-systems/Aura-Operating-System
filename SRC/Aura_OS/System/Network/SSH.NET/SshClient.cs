@@ -757,7 +757,7 @@ namespace SshDotNet
             // Ajoutez les algorithmes pris en charge à vos listes d'algorithmes.
 
             // Algorithme d'échange de clés (KexAlgorithm)
-            //this.KexAlgorithms.Add(new SshDiffieHellmanGroup14Sha1());
+            this.KexAlgorithms.Add(new SshDiffieHellmanGroup1Sha1());
 
             // Algorithmes de clé publique (PublicKeyAlgorithm)
             this.PublicKeyAlgorithms.Add(new SshRsa());
