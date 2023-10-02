@@ -1,0 +1,25 @@
+﻿General format
+
+      string    certificate or public key format identifier
+      byte[n]   key/certificate data
+      string    signature format identifier (as specified by the
+                public key/certificate format)
+      byte[n]   signature blob in format specific encoding.
+
+DSS format
+
+      string    "ssh-dss"
+      mpint     p
+      mpint     q
+      mpint     g
+      mpint     y
+      string    "ssh-dss"
+      string    dss_signature_blob
+
+RSA format
+
+      string    "ssh-rsa"
+      mpint     e
+      mpint     n
+      string    "ssh-rsa"
+      string    rsa_signature_blob

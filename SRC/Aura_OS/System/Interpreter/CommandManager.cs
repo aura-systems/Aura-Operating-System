@@ -104,6 +104,15 @@ namespace Aura_OS.Interpreter
                 };
                 test[2] = "test3"; //Should make a Null reference exception
             }));
+            CMDs.Add(new CommandAction(new string[] { "ssh" }, () =>
+            {
+                string[] test =
+                {
+                    "test1",
+                    "tert2"
+                };
+                test[2] = "test3"; //Should make a Null reference exception
+            }));
         }
 
         /// <summary>
