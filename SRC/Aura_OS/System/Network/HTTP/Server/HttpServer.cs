@@ -7,12 +7,12 @@
 * LICENSE:          LICENSES\SimpleHttpServer\LICENSE.md
 */
 
+using Aura_OS.System.Network.HTTP.SimpleHttpServer.Models;
 using Cosmos.System.Network.IPv4.TCP;
-using SimpleHttpServer.Models;
 using System;
 using System.Collections.Generic;
 
-namespace SimpleHttpServer
+namespace Aura_OS.System.Network.HTTP.SimpleHttpServer
 {
     public class HttpServer
     {

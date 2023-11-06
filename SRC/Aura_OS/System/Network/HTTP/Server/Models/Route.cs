@@ -8,8 +8,9 @@
 */
 
 using System;
+using Aura_OS.System.Network.HTTP.SimpleHttpServer;
 
-namespace SimpleHttpServer.Models
+namespace Aura_OS.System.Network.HTTP.SimpleHttpServer.Models
 {
     public class Route
     {

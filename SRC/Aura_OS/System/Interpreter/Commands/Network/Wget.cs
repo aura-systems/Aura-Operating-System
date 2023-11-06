@@ -13,6 +13,7 @@ using Cosmos.System.Network.IPv4.TCP;
 using System.Text;
 using Aura_OS;
 using Aura_OS.Interpreter;
+using Aura_OS.System.Network.HTTP.Client;
 
 namespace Aura_OS.System.Shell.cmdIntr.Network
 {
@@ -44,34 +45,11 @@ namespace Aura_OS.System.Shell.cmdIntr.Network
         {
             try
             {
-                var dnsClient = new DnsClient();
-                var tcpClient = new TcpClient(80);
-
-                //Uri uri = new Uri(arguments[0]); Missing plugs
-
-                dnsClient.Connect(DNSConfig.DNSNameservers[0]);
-                dnsClient.SendAsk(arguments[0]);
-                Address address = dnsClient.Receive();
-                dnsClient.Close();
-
-                tcpClient.Connect(address, 80);
-
-                string httpget = "GET / HTTP/1.1\r\n" +
-                                 "User-Agent: Wget (CosmosOS)\r\n" +
-                                 "Accept: */*\r\n" +
-                                 "Accept-Encoding: identity\r\n" +
-                                 "Host: " + arguments[0] + "\r\n" +
-                                 "Connection: Keep-Alive\r\n\r\n";
-
-                tcpClient.Send(Encoding.ASCII.GetBytes(httpget));
-
-                var ep = new EndPoint(Address.Zero, 0);
-                var data = tcpClient.Receive(ref ep);
-                tcpClient.Close();
-
-                string httpresponse = Encoding.ASCII.GetString(data);
-
-                Kernel.console.WriteLine(httpresponse);
+                TcpClientHttpRequest hr = new TcpClientHttpRequest();
+                hr.Action = "testingmcafeesites.com";
+                hr.Method = "get";
+                hr.Send();
+                //Kernel.console.WriteLine(hr.Response.Xml);
             }
             catch (Exception ex)
             {

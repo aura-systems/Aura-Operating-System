@@ -11,12 +11,12 @@ using Cosmos.System.Network.IPv4;
 using Cosmos.System.Network.Config;
 using Cosmos.System.Network.IPv4.TCP;
 using System.Text;
-using SimpleHttpServer;
-using SimpleHttpServer.Models;
-using SimpleHttpServer.RouteHandlers;
+using Aura_OS.System.Network.HTTP.SimpleHttpServer;
+using Aura_OS.System.Network.HTTP.SimpleHttpServer.RouteHandlers;
 using System.IO;
 using Aura_OS;
 using Aura_OS.Interpreter;
+using Aura_OS.System.Network.HTTP.SimpleHttpServer.Models;
 
 namespace Aura_OS.System.Shell.cmdIntr.Network
 {

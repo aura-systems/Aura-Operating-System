@@ -8,12 +8,13 @@
 */
 
 using Aura_OS;
-using SimpleHttpServer.Models;
+using Aura_OS.System.Network.HTTP.SimpleHttpServer;
+using Aura_OS.System.Network.HTTP.SimpleHttpServer.Models;
 using System;
 using System.Collections.Generic;
 using System.IO;
 
-namespace SimpleHttpServer.RouteHandlers
+namespace Aura_OS.System.Network.HTTP.SimpleHttpServer.RouteHandlers
 {
     public class LiveFile
     {
@@ -59,7 +60,8 @@ namespace SimpleHttpServer.RouteHandlers
         public string BasePath { get; set; }
         public bool ShowDirectories { get; set; }
 
-        public void Handle(HttpDiscussion discussion) {
+        public void Handle(HttpDiscussion discussion)
+        {
             var url_part = discussion.Request.Url;
 
             // do some basic sanitization of the URL, attempting to make sure they can't read files outside the basepath
@@ -68,7 +70,7 @@ namespace SimpleHttpServer.RouteHandlers
             url_part = url_part.Replace("/../", "/");
             url_part = url_part.Replace("//", "/");
             url_part = url_part.Replace(@"\\", @"\");
-            url_part = url_part.Replace(":", "");           
+            url_part = url_part.Replace(":", "");
             url_part = url_part.Replace("/", Path.DirectorySeparatorChar.ToString());
 
             foreach (var file in FilesPath)
@@ -89,7 +91,7 @@ namespace SimpleHttpServer.RouteHandlers
 
             discussion.Response = HttpBuilder.NotFound();
         }
-         
+
         private string GetExtension(string attachment_name)
         {
             var index_point = attachment_name.IndexOf(".");
@@ -105,8 +107,10 @@ namespace SimpleHttpServer.RouteHandlers
     public class QuickMimeTypeMapper
     {
 
-        public static string GetMimeType(string extension) {
-            if (extension == null) {
+        public static string GetMimeType(string extension)
+        {
+            if (extension == null)
+            {
                 throw new ArgumentNullException("extension");
             }
 

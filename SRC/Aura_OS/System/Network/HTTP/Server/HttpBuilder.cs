@@ -7,9 +7,9 @@
 * LICENSE:          LICENSES\SimpleHttpServer\LICENSE.md
 */
 
-using SimpleHttpServer.Models;
+using Aura_OS.System.Network.HTTP.SimpleHttpServer.Models;
 
-namespace SimpleHttpServer
+namespace Aura_OS.System.Network.HTTP.SimpleHttpServer
 {
     class HttpBuilder
     {

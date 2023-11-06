@@ -7,15 +7,15 @@
 * LICENSE:          LICENSES\SimpleHttpServer\LICENSE.md
 */
 
+using Aura_OS.System.Network.HTTP.SimpleHttpServer.Models;
 using Cosmos.System.Network.IPv4;
 using Cosmos.System.Network.IPv4.TCP;
-using SimpleHttpServer.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace SimpleHttpServer
+namespace Aura_OS.System.Network.HTTP.SimpleHttpServer
 {
     //used because Event with return type is not supported by Cosmos.
     public class HttpDiscussion
@@ -39,8 +39,8 @@ namespace SimpleHttpServer
             var request = GetRequest(tcpClient);
 
             // route and handle the request...
-            var response = RouteRequest(tcpClient, request);      
-          
+            var response = RouteRequest(tcpClient, request);
+
             Console.WriteLine("{0} {1}", response.StatusCode, request.Url);
 
             // build a default response for errors
@@ -94,7 +94,7 @@ namespace SimpleHttpServer
                 }
                 string name = lines[i].Substring(0, separator);
                 int pos = separator + 1;
-                while ((pos < lines[i].Length) && (lines[i][pos] == ' '))
+                while (pos < lines[i].Length && lines[i][pos] == ' ')
                 {
                     pos++;
                 }

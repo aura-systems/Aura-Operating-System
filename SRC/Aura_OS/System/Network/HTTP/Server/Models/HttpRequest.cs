@@ -11,7 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace SimpleHttpServer.Models
+namespace Aura_OS.System.Network.HTTP.SimpleHttpServer.Models
 {
     public class HttpRequest
     {
@@ -22,19 +22,19 @@ namespace SimpleHttpServer.Models
 
         public HttpRequest()
         {
-            this.Headers = new Dictionary<string, string>();
+            Headers = new Dictionary<string, string>();
         }
 
         public override string ToString()
         {
-            if (!string.IsNullOrWhiteSpace(this.Content))
+            if (!string.IsNullOrWhiteSpace(Content))
             {
                 if (!Headers.ContainsKey("Content-Length"))
                 {
                     Headers.Add("Content-Length", Content.Length.ToString());
                 }
-                    
-            }   
+
+            }
 
             //make string from fields
             var sb = new StringBuilder();

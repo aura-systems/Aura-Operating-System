@@ -17,7 +17,7 @@ using System.Text;
 //       must be loaded into memory in the the Content property. If you want to send large files,
 //       this has to be reworked so a handler can write to the output stream instead. 
 
-namespace SimpleHttpServer.Models
+namespace Aura_OS.System.Network.HTTP.SimpleHttpServer.Models
 {
     public enum HttpStatusCode
     {
@@ -50,7 +50,7 @@ namespace SimpleHttpServer.Models
         {
             set
             {
-                this.setContent(value, encoding: Encoding.UTF8);
+                setContent(value, encoding: Encoding.UTF8);
             }
         }
 
@@ -65,13 +65,13 @@ namespace SimpleHttpServer.Models
 
         public HttpResponse()
         {
-            this.Headers = new Dictionary<string, string>();
+            Headers = new Dictionary<string, string>();
         }
 
         // informational only tostring...
         public override string ToString()
         {
-            return string.Format("HTTP status {0} {1}", this.StatusCode, this.ReasonPhrase);
+            return string.Format("HTTP status {0} {1}", StatusCode, ReasonPhrase);
         }
     }
 }
