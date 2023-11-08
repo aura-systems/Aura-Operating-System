@@ -1,14 +1,14 @@
-﻿using Cosmos.HAL;
+﻿using Aura_OS.System.Application.Emulators.GameBoyEmu.DMG;
+using Aura_OS.System.Application.Emulators.GameBoyEmu.Utils;
+using Cosmos.HAL;
 using Cosmos.System;
-using ProjectDMG;
-using ProjectDMG.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Aura_OS.Application.GameBoyEmu
+namespace Aura_OS.System.Application.Emulators.GameBoyEmu
 {
     public class GameBoyEmu : App
     {
@@ -74,7 +74,7 @@ namespace Aura_OS.Application.GameBoyEmu
             byte IF = mmu.IF;
             for (int i = 0; i < 5; i++)
             {
-                if ((((IE & IF) >> i) & 0x1) == 1)
+                if (((IE & IF) >> i & 0x1) == 1)
                 {
                     cpu.ExecuteInterrupt(i);
                 }

@@ -16,8 +16,8 @@ using Aura_OS.Processing;
 using System.Drawing;
 using Aura_OS.System;
 using Aura_OS.Interpreter;
-using Aura_OS.Application.GameBoyEmu;
 using Aura_OS.System.UI.GUI;
+using Aura_OS.System.Application.Emulators.GameBoyEmu;
 
 namespace Aura_OS
 {

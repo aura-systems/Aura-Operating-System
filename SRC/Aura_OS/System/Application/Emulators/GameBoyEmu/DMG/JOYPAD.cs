@@ -1,8 +1,10 @@
 ﻿using Cosmos.System;
-using static ProjectDMG.Utils.BitOps;
+using static Aura_OS.System.Application.Emulators.GameBoyEmu.Utils.BitOps;
 
-namespace ProjectDMG {
-    public class JOYPAD {
+namespace Aura_OS.System.Application.Emulators.GameBoyEmu.DMG
+{
+    public class JOYPAD
+    {
 
         private const int JOYPAD_INTERRUPT = 4;
         private const byte PAD_MASK = 0x10;
@@ -10,39 +12,52 @@ namespace ProjectDMG {
         private byte pad = 0xF;
         private byte buttons = 0xF;
 
-        public void handleKeyDown(ConsoleKeyEx e) {
+        public void handleKeyDown(ConsoleKeyEx e)
+        {
             byte b = GetKeyBit(e);
-            if ((b & PAD_MASK) == PAD_MASK) {
+            if ((b & PAD_MASK) == PAD_MASK)
+            {
                 pad = (byte)(pad & ~(b & 0xF));
-            } else if((b & BUTTON_MASK) == BUTTON_MASK) {
+            }
+            else if ((b & BUTTON_MASK) == BUTTON_MASK)
+            {
                 buttons = (byte)(buttons & ~(b & 0xF));
             }
         }
 
-        public void handleKeyUp(ConsoleKeyEx e) {
+        public void handleKeyUp(ConsoleKeyEx e)
+        {
             byte b = GetKeyBit(e);
-            if ((b & PAD_MASK) == PAD_MASK) {
-                pad = (byte)(pad | (b & 0xF));
-            } else if ((b & BUTTON_MASK) == BUTTON_MASK) {
-                buttons = (byte)(buttons | (b & 0xF));
+            if ((b & PAD_MASK) == PAD_MASK)
+            {
+                pad = (byte)(pad | b & 0xF);
+            }
+            else if ((b & BUTTON_MASK) == BUTTON_MASK)
+            {
+                buttons = (byte)(buttons | b & 0xF);
             }
         }
 
-        public void update(MMU mmu) {
+        public void update(MMU mmu)
+        {
             byte JOYP = mmu.JOYP;
-            if(!isBit(4, JOYP)) {
-                mmu.JOYP = (byte)((JOYP & 0xF0) | pad);
-                if(pad != 0xF) mmu.requestInterrupt(JOYPAD_INTERRUPT);
+            if (!isBit(4, JOYP))
+            {
+                mmu.JOYP = (byte)(JOYP & 0xF0 | pad);
+                if (pad != 0xF) mmu.requestInterrupt(JOYPAD_INTERRUPT);
             }
-            if (!isBit(5, JOYP)) {
-                mmu.JOYP = (byte)((JOYP & 0xF0) | buttons);
+            if (!isBit(5, JOYP))
+            {
+                mmu.JOYP = (byte)(JOYP & 0xF0 | buttons);
                 if (buttons != 0xF) mmu.requestInterrupt(JOYPAD_INTERRUPT);
             }
             if ((JOYP & 0b00110000) == 0b00110000) mmu.JOYP = 0xFF;
         }
 
-        private byte GetKeyBit(ConsoleKeyEx e) {
-            switch (e) {
+        private byte GetKeyBit(ConsoleKeyEx e)
+        {
+            switch (e)
+            {
                 case ConsoleKeyEx.D:
                 case ConsoleKeyEx.RightArrow:
                     return 0x11;

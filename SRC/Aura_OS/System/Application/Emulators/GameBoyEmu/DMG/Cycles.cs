@@ -4,8 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ProjectDMG {
-    public static class Cycles {
+namespace Aura_OS.System.Application.Emulators.GameBoyEmu.DMG
+{
+    public static class Cycles
+    {
 
         //This covers the base cpu cycle values
         // 0 values are special cases for branchs that are specially dealed below

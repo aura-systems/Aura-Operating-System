@@ -1,8 +1,9 @@
 ﻿using Aura_OS;
+using Aura_OS.System.Application.Emulators.GameBoyEmu.Utils;
 using System.Runtime.CompilerServices;
-using static ProjectDMG.Utils.BitOps;
+using static Aura_OS.System.Application.Emulators.GameBoyEmu.Utils.BitOps;
 
-namespace ProjectDMG
+namespace Aura_OS.System.Application.Emulators.GameBoyEmu.DMG
 {
     public class PPU
     {
@@ -169,7 +170,7 @@ namespace ProjectDMG
             for (int p = 0; p < SCREEN_WIDTH; p++)
             {
                 byte x = isWin && p >= WX ? (byte)(p - WX) : (byte)(p + SCX);
-                if ((p & 0x7) == 0 || ((p + SCX) & 0x7) == 0)
+                if ((p & 0x7) == 0 || (p + SCX & 0x7) == 0)
                 {
                     ushort tileCol = (ushort)(x / 8);
                     ushort tileAdress = (ushort)(tileMap + tileRow + tileCol);
@@ -200,15 +201,15 @@ namespace ProjectDMG
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private int GetColorIdBits(int colorBit, byte l, byte h)
         {
-            int hi = (h >> colorBit) & 0x1;
-            int lo = (l >> colorBit) & 0x1;
-            return (hi << 1 | lo);
+            int hi = h >> colorBit & 0x1;
+            int lo = l >> colorBit & 0x1;
+            return hi << 1 | lo;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public int GetColorIdThroughtPalette(int palette, int colorId)
         {
-            return (palette >> colorId * 2) & 0x3;
+            return palette >> colorId * 2 & 0x3;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -250,13 +251,13 @@ namespace ProjectDMG
                 byte tile = mmu.readOAM(i + 2); //Byte2 - Tile/Pattern Number
                 byte attr = mmu.readOAM(i + 3); //Byte3 - Attributes/Flags
 
-                if ((LY >= y) && (LY < (y + spriteSize(LCDC))))
+                if (LY >= y && LY < y + spriteSize(LCDC))
                 {
                     byte palette = isBit(4, attr) ? mmu.OBP1 : mmu.OBP0; //Bit4   Palette number  **Non CGB Mode Only** (0=OBP0, 1=OBP1)
 
-                    int tileRow = isYFlipped(attr) ? spriteSize(LCDC) - 1 - (LY - y) : (LY - y);
+                    int tileRow = isYFlipped(attr) ? spriteSize(LCDC) - 1 - (LY - y) : LY - y;
 
-                    ushort tileddress = (ushort)(0x8000 + (tile * 16) + (tileRow * 2));
+                    ushort tileddress = (ushort)(0x8000 + tile * 16 + tileRow * 2);
                     byte lo = mmu.readVRAM(tileddress);
                     byte hi = mmu.readVRAM((ushort)(tileddress + 1));
 
@@ -266,7 +267,7 @@ namespace ProjectDMG
                         int colorId = GetColorIdBits(IdPos, lo, hi);
                         int colorIdThroughtPalette = GetColorIdThroughtPalette(palette, colorId);
 
-                        if ((x + p) >= 0 && (x + p) < SCREEN_WIDTH)
+                        if (x + p >= 0 && x + p < SCREEN_WIDTH)
                         {
                             if (!isTransparent(colorId) && (isAboveBG(attr) || isBGWhite(mmu.BGP, x + p, LY)))
                             {

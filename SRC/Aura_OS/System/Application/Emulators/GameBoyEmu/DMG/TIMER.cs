@@ -1,7 +1,9 @@
 ﻿using System;
 
-namespace ProjectDMG {
-    public class TIMER {
+namespace Aura_OS.System.Application.Emulators.GameBoyEmu.DMG
+{
+    public class TIMER
+    {
 
         private const int DMG_DIV_FREQ = 256;              //16384Hz
         private const int CGB_DIV_FREQ = DMG_DIV_FREQ * 2; //32768Hz
@@ -15,27 +17,34 @@ namespace ProjectDMG {
         private int divCounter;
         private int timerCounter;
 
-        public void update(int cycles, MMU mmu) {
+        public void update(int cycles, MMU mmu)
+        {
             handleDivider(cycles, mmu);
             handleTimer(cycles, mmu);
         }
 
-        private void handleDivider(int cycles, MMU mmu) {
+        private void handleDivider(int cycles, MMU mmu)
+        {
             divCounter += cycles;
-            while (divCounter >= DMG_DIV_FREQ) {
+            while (divCounter >= DMG_DIV_FREQ)
+            {
                 mmu.DIV++;
                 divCounter -= DMG_DIV_FREQ;
             }
         }
 
-        private void handleTimer(int cycles, MMU mmu) {
-            if (mmu.TAC_ENABLED) {
+        private void handleTimer(int cycles, MMU mmu)
+        {
+            if (mmu.TAC_ENABLED)
+            {
                 timerCounter += cycles;
-                while (timerCounter >= TAC_FREQ[mmu.TAC_FREQ]) {
+                while (timerCounter >= TAC_FREQ[mmu.TAC_FREQ])
+                {
                     mmu.TIMA++;
                     timerCounter -= TAC_FREQ[mmu.TAC_FREQ];
                 }
-                if (mmu.TIMA == 0xFF) {
+                if (mmu.TIMA == 0xFF)
+                {
                     mmu.requestInterrupt(TIMER_INTERRUPT);
                     mmu.TIMA = mmu.TMA;
                 }

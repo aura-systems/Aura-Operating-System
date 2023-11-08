@@ -1,7 +1,9 @@
 ﻿using System;
 
-namespace ProjectDMG.DMG.GamePak {
-    class MBC3 : IGamePak {
+namespace Aura_OS.System.Application.Emulators.GameBoyEmu.DMG.GamePak
+{
+    class MBC3 : IGamePak
+    {
 
         private byte[] ROM;
         private byte[] ERAM = new byte[0x8000]; //MBC1 MAX ERAM on 4 banks
@@ -20,15 +22,19 @@ namespace ProjectDMG.DMG.GamePak {
         private byte RTC_6;  //Bit 6  Halt(0=Active, 1=Stop Timer)
         private byte RTC_7;  //Bit 7  Day Counter Carry Bit(1=Counter Overflow)
 
-        public void Init(byte[] ROM) {
+        public void Init(byte[] ROM)
+        {
             this.ROM = ROM;
         }
 
-        public byte ReadERAM(ushort addr) {
-            if (ERAM_ENABLED) {
-                switch (RAM_BANK) {
+        public byte ReadERAM(ushort addr)
+        {
+            if (ERAM_ENABLED)
+            {
+                switch (RAM_BANK)
+                {
                     case int r when RAM_BANK >= 0x00 && RAM_BANK <= 0x03:
-                        return ERAM[(ERAM_OFFSET * RAM_BANK) + (addr & 0x1FFF)];
+                        return ERAM[ERAM_OFFSET * RAM_BANK + (addr & 0x1FFF)];
                     case 0x08:
                         return RTC_S;
                     case 0x09:
@@ -42,24 +48,34 @@ namespace ProjectDMG.DMG.GamePak {
                     default:
                         return 0xFF;
                 }
-            } else {
+            }
+            else
+            {
                 return 0xFF;
             }
         }
 
-        public byte ReadLoROM(ushort addr) {
+        public byte ReadLoROM(ushort addr)
+        {
             return ROM[addr];
         }
 
-        public byte ReadHiROM(ushort addr) {
-            return ROM[(ROM_OFFSET * ROM_BANK) + (addr & 0x3FFF)];
+        public byte ReadHiROM(ushort addr)
+        {
+            return ROM[ROM_OFFSET * ROM_BANK + (addr & 0x3FFF)];
         }
 
-        public void WriteERAM(ushort addr, byte value) {
-            if (ERAM_ENABLED) {
-                switch (RAM_BANK) {
-                    case 0x00: case 0x01: case 0x02: case 0x03:
-                        ERAM[(ERAM_OFFSET * RAM_BANK) + (addr & 0x1FFF)] = value;
+        public void WriteERAM(ushort addr, byte value)
+        {
+            if (ERAM_ENABLED)
+            {
+                switch (RAM_BANK)
+                {
+                    case 0x00:
+                    case 0x01:
+                    case 0x02:
+                    case 0x03:
+                        ERAM[ERAM_OFFSET * RAM_BANK + (addr & 0x1FFF)] = value;
                         break;
                     case 0x08:
                         RTC_S = value;
@@ -80,8 +96,10 @@ namespace ProjectDMG.DMG.GamePak {
             }
         }
 
-        public void WriteROM(ushort addr, byte value) {
-            switch (addr) {
+        public void WriteROM(ushort addr, byte value)
+        {
+            switch (addr)
+            {
                 case ushort r when addr >= 0x0000 && addr <= 0x1FFF:
                     ERAM_ENABLED = value == 0x0A ? true : false;
                     break;
@@ -91,7 +109,8 @@ namespace ProjectDMG.DMG.GamePak {
                         ROM_BANK++;
                     break;
                 case ushort r when addr >= 0x4000 && addr <= 0x5FFF:
-                    switch (value) {
+                    switch (value)
+                    {
                         case byte v when value >= 0x00 && value <= 0x03:
                         case byte s when value >= 0x08 && value <= 0xC0:
                             RAM_BANK = value;

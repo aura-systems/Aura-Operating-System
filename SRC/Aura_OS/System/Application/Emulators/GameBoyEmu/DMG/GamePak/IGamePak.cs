@@ -1,5 +1,7 @@
-﻿namespace ProjectDMG.DMG.GamePak {
-    interface IGamePak {
+﻿namespace Aura_OS.System.Application.Emulators.GameBoyEmu.DMG.GamePak
+{
+    interface IGamePak
+    {
         byte ReadLoROM(ushort addr);
         byte ReadHiROM(ushort addr);
         void WriteROM(ushort addr, byte value);

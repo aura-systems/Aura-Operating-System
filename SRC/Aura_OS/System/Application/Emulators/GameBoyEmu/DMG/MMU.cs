@@ -1,12 +1,14 @@
 ﻿using Aura_OS;
-using ProjectDMG.DMG.GamePak;
+using Aura_OS.System.Application.Emulators.GameBoyEmu.DMG.GamePak;
 using System;
 using System.IO;
 using System.Runtime.CompilerServices;
-using static ProjectDMG.Utils.BitOps;
+using static Aura_OS.System.Application.Emulators.GameBoyEmu.Utils.BitOps;
 
-namespace ProjectDMG {
-    public class MMU {
+namespace Aura_OS.System.Application.Emulators.GameBoyEmu.DMG
+{
+    public class MMU
+    {
 
         //GamePak
         private IGamePak gamePak;
@@ -55,7 +57,8 @@ namespace ProjectDMG {
 
         public byte JOYP { get { return IO[0x00]; } set { IO[0x00] = value; } }//FF00 - JOYP
 
-        public MMU() {
+        public MMU()
+        {
             //FF4D - KEY1 - CGB Mode Only - Prepare Speed Switch
             //HardCoded to FF to identify DMG as 00 is GBC
             IO[0x4D] = 0xFF;
@@ -81,8 +84,10 @@ namespace ProjectDMG {
             IO[0x49] = 0xFF;
         }
 
-        public byte readByte(ushort addr) {
-            switch (addr) {                           // General Memory Map 64KB
+        public byte readByte(ushort addr)
+        {
+            switch (addr)
+            {                           // General Memory Map 64KB
                 case ushort _ when addr <= 0x3FFF:    //0000-3FFF 16KB ROM Bank 00 (in cartridge, private at bank 00)
                     return gamePak.ReadLoROM(addr);
                 case ushort _ when addr <= 0x7FFF:    // 4000-7FFF 16KB ROM Bank 01..NN(in cartridge, switchable bank number)
@@ -148,8 +153,10 @@ namespace ProjectDMG {
             //}
         }
 
-        public void writeByte(ushort addr, byte b) {
-            switch (addr) {                            // General Memory Map 64KB
+        public void writeByte(ushort addr, byte b)
+        {
+            switch (addr)
+            {                            // General Memory Map 64KB
                 case ushort _ when addr <= 0x7FFF:     //0000-3FFF 16KB ROM Bank 00 (in cartridge, private at bank 00) 4000-7FFF 16KB ROM Bank 01..NN(in cartridge, switchable bank number)
                     gamePak.WriteROM(addr, b);
                     break;
@@ -178,7 +185,8 @@ namespace ProjectDMG {
                     //Console.WriteLine("Warning: Tried to write to NOT USABLE space");
                     break;
                 case ushort _ when addr <= 0xFF7F:    // FF00-FF7F IO Ports
-                    switch (addr) {
+                    switch (addr)
+                    {
                         case 0xFF0F: b |= 0xE0; break; // IF returns 1 on first 3 unused bits
                         case 0xFF04:                //DIV on write = 0
                         case 0xFF44: b = 0; break;  //LY on write = 0
@@ -197,50 +205,68 @@ namespace ProjectDMG {
             }
         }
 
-        public ushort readWord(ushort addr) {
+        public ushort readWord(ushort addr)
+        {
             return (ushort)(readByte((ushort)(addr + 1)) << 8 | readByte(addr));
         }
 
-        public void writeWord(ushort addr, ushort w) {
+        public void writeWord(ushort addr, ushort w)
+        {
             writeByte((ushort)(addr + 1), (byte)(w >> 8));
             writeByte(addr, (byte)w);
         }
 
-        public byte readOAM(int addr) {
+        public byte readOAM(int addr)
+        {
             return OAM[addr];
         }
 
-        public byte readVRAM(int addr) {
+        public byte readVRAM(int addr)
+        {
             return VRAM[addr & 0x1FFF];
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void requestInterrupt(byte b) {
+        public void requestInterrupt(byte b)
+        {
             IF = bitSet(b, IF);
         }
 
-        private void DMA(byte b) {
+        private void DMA(byte b)
+        {
             ushort addr = (ushort)(b << 8);
-            for (byte i = 0; i < OAM.Length; i++) {
+            for (byte i = 0; i < OAM.Length; i++)
+            {
                 OAM[i] = readByte((ushort)(addr + i));
             }
         }
 
-        public void loadGamePak(byte[] rom) {
-            switch (rom[0x147]) {
+        public void loadGamePak(byte[] rom)
+        {
+            switch (rom[0x147])
+            {
                 case 0x00:
                     gamePak = new MBC0();
                     break;
-                case 0x01: case 0x02: case 0x03:
+                case 0x01:
+                case 0x02:
+                case 0x03:
                     gamePak = new MBC1();
                     break;
-                case 0x05: case 0x06:
+                case 0x05:
+                case 0x06:
                     gamePak = new MBC2();
                     break;
-                case 0x0F: case 0x10: case 0x11: case 0x12: case 0x13:
+                case 0x0F:
+                case 0x10:
+                case 0x11:
+                case 0x12:
+                case 0x13:
                     gamePak = new MBC3();
                     break;
-                case 0x19: case 0x1A: case 0x1B:
+                case 0x19:
+                case 0x1A:
+                case 0x1B:
                     gamePak = new MBC5();
                     break;
                 default:

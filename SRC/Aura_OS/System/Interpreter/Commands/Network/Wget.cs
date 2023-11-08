@@ -45,7 +45,7 @@ namespace Aura_OS.System.Shell.cmdIntr.Network
             try
             {
                 var dnsClient = new DnsClient();
-                var tcpClient = new TcpClient(80);
+                var tcpClient = new TcpClient();
 
                 //Uri uri = new Uri(arguments[0]); Missing plugs
 
