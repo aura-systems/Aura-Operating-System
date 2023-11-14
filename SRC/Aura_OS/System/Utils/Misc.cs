@@ -31,6 +31,36 @@ namespace Aura_OS.System.Utils
             }
         }
 
+        /// <summary>
+        /// Check if the domain name is valid based on information from RFC 1035
+        /// </summary>
+        /// <param name="domainName">Valid or not valid domain name</param>
+        /// <returns>Boolean depending of the domain name param</returns>
+        public static bool isValidDomainName(string domainName)
+        {
+            if (domainName.Length < 1)
+            {
+                return false;
+            }
+            
+            if (domainName.Length > 255)
+            {
+                return false;
+            }
+
+            string[] labels = domainName.Split('.');
+            if (labels.length > 63)
+            {
+                return false;
+            }
+
+            // to implement
+            // string pattern = @"^(?:(?=[a-z0-9-]{1,63}\.)[a-z0-9]+(?:-[a-z0-9]+)*\.)+[a-z]{2,}$";
+            // https://stackoverflow.com/questions/106179/regular-expression-to-match-dns-hostname-or-ip-address
+            
+            return true;
+        }
+
         public static bool IsIPv4Address(string ip)
         {
             string[] items = ip.Split('.');
