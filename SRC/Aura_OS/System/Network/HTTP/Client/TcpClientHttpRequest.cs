@@ -1,21 +1,18 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.IO;
+using System.Net;
+using System.Net.Sockets;
 using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using Cosmos.System.Network.IPv4.TCP;
-using Cosmos.System.Network.IPv4.UDP.DNS;
-using Cosmos.System.Network.Config;
-using Cosmos.System.Network.IPv4;
 
 namespace Aura_OS.System.Network.HTTP.Client
 {
     public class TcpClientHttpRequest : IDisposable
     {
         private TcpClient _client;
-        private byte[] _stream;
+        private NetworkStream _stream;
         private BasicUri _remote;
         private object _close_lock = new object();
         private string _method = "GET";
@@ -29,7 +26,7 @@ namespace Aura_OS.System.Network.HTTP.Client
         private int _maximumAutomaticRedirections = 500;
         private IRequestProxy _proxy;
         private HttpResponse _response;
-        private NameValueCollection _headers = new NameValueCollection();
+        private Dictionary<string, string> _headers = new Dictionary<string, string>();
         public TcpClientHttpRequest()
         {
             _headers.Add("Connection", "Keep-Alive");
@@ -46,6 +43,18 @@ namespace Aura_OS.System.Network.HTTP.Client
                 {
                     if (_client != null)
                     {
+                        if (_stream != null)
+                        {
+                            try
+                            {
+                                _stream.Close();
+                                _stream.Dispose();
+                            }
+                            finally
+                            {
+                                _stream = null;
+                            }
+                        }
                         _client.Close();
                         _client = null;
                     }
@@ -88,7 +97,7 @@ namespace Aura_OS.System.Network.HTTP.Client
             BasicUri uri = new BasicUri(_action);
             _headers["Host"] = uri.Authority;
             string http = _method + " " + uri.PathAndQuery + " HTTP/1.1\r\n";
-            foreach (string head in _headers)
+            foreach (string head in _headers.Values)
             {
                 http += head + ": " + _headers[head] + "\r\n";
             }
@@ -114,38 +123,31 @@ namespace Aura_OS.System.Network.HTTP.Client
             }
             else
             {
-                var dnsClient = new DnsClient();
-                dnsClient.Connect(DNSConfig.DNSNameservers[0]);
-                dnsClient.SendAsk(uri.Host);
-                Address address = dnsClient.Receive();
-                dnsClient.Close();
-
                 byte[] request = encode.GetBytes(http);
                 if (_client == null || _remote == null || string.Compare(_remote.Authority, uri.Authority, true) != 0)
                 {
                     _remote = uri;
                     this.Close();
-                    _client = new TcpClient(address, uri.Port);
+                    _client = new TcpClient(uri.Host, uri.Port);
                 }
                 try
                 {
-                    _stream = getData(uri);
-                    _client.Send(request);
+                    _stream = getStream(uri);
+                    _stream.Write(request, 0, request.Length);
                 }
                 catch
                 {
                     this.Close();
-                    
-                    _client = new TcpClient(address, uri.Port);
-                    _stream = getData(uri);
-                    _client.Send(request);
+                    _client = new TcpClient(uri.Host, uri.Port);
+                    _stream = getStream(uri);
+                    _stream.Write(request, 0, request.Length);
                 }
                 receive(_stream, redirections, uri, encode);
             }
         }
-        protected void receive(byte[] stream, int redirections, BasicUri uri, Encoding encode)
+        protected void receive(NetworkStream stream, int redirections, BasicUri uri, Encoding encode)
         {
-            /*
+            //stream.ReadTimeout = _timeout; TO PLUG
             _response = null;
             byte[] bytes = new Byte[1024];
             int overs = bytes.Length;
@@ -191,8 +193,8 @@ namespace Aura_OS.System.Network.HTTP.Client
                         chunkStream.Write(bytes, idx + 4, bytes.Length - idx - 4);
                         _response = new HttpResponse(this, headStream.ToArray());
                         _response.Received += bytes.Length - idx - 4;
-                        if (_response.StatusCode == global::System.Net.HttpStatusCode.Redirect ||
-                            _response.StatusCode == global::System.Net.HttpStatusCode.Moved)
+                        if (_response.StatusCode == HttpStatusCode.Redirect ||
+                            _response.StatusCode == HttpStatusCode.Moved)
                         {
                             if (string.Compare(_method, "post", true) == 0)
                             {
@@ -214,12 +216,12 @@ namespace Aura_OS.System.Network.HTTP.Client
                             this.closeTcp();
                             if (++redirections > _maximumAutomaticRedirections)
                             {
-                                throw new global::System.Net.WebException("重定向超过 " + _maximumAutomaticRedirections + " 次。");
+                                throw new WebException("重定向超过 " + _maximumAutomaticRedirections + " 次。");
                             }
                             string url = _response.Headers["Location"];
                             if (!string.IsNullOrEmpty(url))
                             {
-                                if (Uri.IsWellFormedUriString(url, UriKind.Relative))
+                                if (BasicUri.IsWellFormedUriString(url, UriKind.Relative))
                                 {
                                     if (!url.StartsWith("/"))
                                     {
@@ -227,7 +229,7 @@ namespace Aura_OS.System.Network.HTTP.Client
                                         url = Address.AbsolutePath.Remove(eidx) + "/" + url;
                                     }
                                     url = Address.Scheme + "://" + Address.Authority + url;
-                                    url = new Uri(url).AbsoluteUri;
+                                    url = new BasicUri(url).AbsoluteUri;
                                 }
                             }
                             Action = url;
@@ -236,7 +238,7 @@ namespace Aura_OS.System.Network.HTTP.Client
                             Send(null, redirections);
                             return;
                         }
-                        else if (_response.StatusCode == global::System.Net.HttpStatusCode.Continue)
+                        else if (_response.StatusCode == HttpStatusCode.Continue)
                         {
                             _response = null;
                             headStream = new MemoryStream();
@@ -250,59 +252,9 @@ namespace Aura_OS.System.Network.HTTP.Client
                 }
                 if (_response != null)
                 {
-                    if (string.Compare(_response.TransferEncoding, "chunked") == 0)
+                    if (_response.ContentLength <= chunkStream.Length)
                     {
-                        byte[] chunks = chunkStream.ToArray();
-                        int lidx = 0;
-                        int chunkSize = -1;
-                        bool isContinue = false;
-                        bool isBreak = false;
-                        do
-                        {
-                            isContinue = false;
-                            idx = Utils.findBytes(chunks, new byte[] { 13, 10 }, lidx);
-                            if (idx != -1)
-                            {
-                                string[] chu = encode.GetString(chunks, lidx, idx - lidx).Split(new char[] { ';' }, 1);
-                                if (int.TryParse(chu[0], global::System.Globalization.NumberStyles.HexNumber, null, out chunkSize))
-                                {
-                                    int esize = chunks.Length - idx - 2;
-                                    if (esize >= chunkSize + 2)
-                                    {
-                                        chunkStream.Close();
-                                        chunkStream = new MemoryStream();
-                                        chunkStream.Write(chunks, idx + 2 + chunkSize + 2, esize - chunkSize - 2);
-                                        bodyStream.Write(chunks, idx + 2, chunkSize);
-                                        lidx = idx + 2 + chunkSize + 2;
-                                        if (chunkStream.Length == 5)
-                                        {
-                                            idx = Utils.findBytes(chunks, new byte[] { 48, 13, 10, 13, 10 }, 0);
-                                            if (idx != 0)
-                                            {
-                                                isBreak = true;
-                                                break;
-                                            }
-                                        }
-                                        isContinue = true;
-                                    }
-                                }
-                                else
-                                {
-                                    chunkSize = -1;
-                                }
-                            }
-                        } while (isContinue);
-                        if (isBreak)
-                        {
-                            break;
-                        }
-                    }
-                    else if (_response.ContentLength >= 0)
-                    {
-                        if (_response.ContentLength <= chunkStream.Length)
-                        {
-                            break;
-                        }
+                        break;
                     }
                 }
             }
@@ -314,18 +266,18 @@ namespace Aura_OS.System.Network.HTTP.Client
                 chunkStream.Close();
                 this.closeTcp();
                 List<string> sb = new List<string>();
-                sb.Add(_method.ToUpper() + " " + new Uri(_action).PathAndQuery + " HTTP/1.1");
-                foreach (string header in _headers)
+                sb.Add(_method.ToUpper() + " " + new BasicUri(_action).PathAndQuery + " HTTP/1.1");
+                foreach (string header in _headers.Values)
                 {
                     sb.Add(header + ": " + _headers[header]);
                 }
                 if (exception == null)
                 {
-                    throw new global::System.Net.WebException("读取失败。" + string.Join("\r\n", sb.ToArray()));
+                    throw new WebException("读取失败。" + string.Join("\r\n", sb.ToArray()));
                 }
                 else
                 {
-                    throw new global::System.Net.WebException(exception.Message + "\r\n" + string.Join("\r\n", sb.ToArray()), exception);
+                    throw new WebException(exception.Message + "\r\n" + string.Join("\r\n", sb.ToArray()), exception);
                 }
             }
             if (string.Compare(_response.TransferEncoding, "chunked") == 0)
@@ -343,7 +295,6 @@ namespace Aura_OS.System.Network.HTTP.Client
             headStream.Close();
             bodyStream.Close();
             chunkStream.Close();
-            */
             this.closeTcp();
         }
         protected bool closeTcp()
@@ -358,10 +309,9 @@ namespace Aura_OS.System.Network.HTTP.Client
             }
             return false;
         }
-        protected byte[] getData(BasicUri uri)
+        protected NetworkStream getStream(BasicUri uri)
         {
-            var ep = new EndPoint(Cosmos.System.Network.IPv4.Address.Zero, 0);
-            return _client.Receive(ref ep);
+            return _client.GetStream();
         }
 
         public string Method
@@ -387,7 +337,7 @@ namespace Aura_OS.System.Network.HTTP.Client
                 {
                     if (!BasicUri.IsWellFormedUriString(value, UriKind.Absolute))
                     {
-                        throw new global::System.Net.WebException("不正确的URI“" + value + "”");
+                        throw new WebException("不正确的URI“" + value + "”");
                     }
                     BasicUri uri = new BasicUri(value);
                     _action = uri.AbsoluteUri;
@@ -434,7 +384,7 @@ namespace Aura_OS.System.Network.HTTP.Client
         {
             get { return _response; }
         }
-        public NameValueCollection Headers
+        public Dictionary<string, string> Headers
         {
             get { return _headers; }
         }
@@ -507,9 +457,9 @@ namespace Aura_OS.System.Network.HTTP.Client
         #region utils
         public class Utils
         {
-            public static NameValueCollection ParseHttpRequestHeader(string head)
+            public static Dictionary<string, string> ParseHttpRequestHeader(string head)
             {
-                NameValueCollection headers = new NameValueCollection();
+                Dictionary<string, string> headers = new Dictionary<string, string>();
                 if (!string.IsNullOrEmpty(head))
                 {
                     string[] hs = head.Split(new string[] { "\r\n" }, StringSplitOptions.None);
@@ -536,8 +486,7 @@ namespace Aura_OS.System.Network.HTTP.Client
                 int idx = -1, idx2 = startIndex - 1;
                 do
                 {
-                    idx2 = idx = Array.FindIndex<byte>(source, Math.Min(idx2 + 1, source.Length), delegate (byte b)
-                    {
+                    idx2 = idx = Array.FindIndex<byte>(source, Math.Min(idx2 + 1, source.Length), delegate (byte b) {
                         return b == find[0];
                     });
                     if (idx2 != -1)
@@ -662,8 +611,8 @@ namespace Aura_OS.System.Network.HTTP.Client
             private int _received = 0;
             private string _contentType;
             private string _server;
-            private NameValueCollection _headers = new NameValueCollection();
-            private global::System.Net.HttpStatusCode _statusCode;
+            private Dictionary<string, string> _headers = new Dictionary<string, string>();
+            private HttpStatusCode _statusCode;
             private byte[] _stream = new byte[] { };
             private string _xml;
             public HttpResponse(TcpClientHttpRequest ie, byte[] headBytes)
@@ -682,7 +631,7 @@ namespace Aura_OS.System.Network.HTTP.Client
                 idx = head.IndexOf(' ');
                 if (idx != -1)
                 {
-                    _statusCode = (global::System.Net.HttpStatusCode)int.Parse(head.Remove(idx));
+                    _statusCode = (HttpStatusCode)int.Parse(head.Remove(idx));
                     head = head.Substring(idx + 1);
                 }
                 idx = head.IndexOf("\r\n");
@@ -703,13 +652,12 @@ namespace Aura_OS.System.Network.HTTP.Client
                         switch (n.ToLower())
                         {
                             case "set-cookie":
-                                //TODO
                                 break;
                             case "content-length":
                                 if (!int.TryParse(v, out _contentLength)) _contentLength = -1;
                                 break;
                             case "content-type":
-                                idx = v.IndexOf("charset=", StringComparison.CurrentCultureIgnoreCase);
+                                idx = v.IndexOf("charset=");
                                 if (idx != -1)
                                 {
                                     string charset = v.Substring(idx + 8);
@@ -751,20 +699,10 @@ namespace Aura_OS.System.Network.HTTP.Client
             {
                 switch (_contentEncoding.ToLower())
                 {
+                    case "gzip":
+                    case "deflate":
                     default:
                         return _stream;
-                }
-            }
-            public void Save(string filename)
-            {
-                using (FileStream fs = new FileStream(filename, FileMode.Create))
-                {
-                    switch (_contentEncoding.ToLower())
-                    {
-                        default:
-                            fs.Write(_stream, 0, _stream.Length);
-                            break;
-                    }
                 }
             }
             public string TranslateUrlToAbsolute(string url)
@@ -797,6 +735,8 @@ namespace Aura_OS.System.Network.HTTP.Client
                     {
                         switch (_contentEncoding.ToLower())
                         {
+                            case "gzip":
+                            case "deflate":
                             default:
                                 _xml = Encoding.GetEncoding(_charset).GetString(_stream);
                                 break;
@@ -855,11 +795,11 @@ namespace Aura_OS.System.Network.HTTP.Client
             {
                 get { return _server; }
             }
-            public NameValueCollection Headers
+            public Dictionary<string, string> Headers
             {
                 get { return _headers; }
             }
-            public global::System.Net.HttpStatusCode StatusCode
+            public HttpStatusCode StatusCode
             {
                 get { return _statusCode; }
             }
