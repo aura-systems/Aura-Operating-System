@@ -58,7 +58,6 @@ namespace Aura_OS.Interpreter
             CMDs.Add(new CommandDns(new string[] { "dns" }));
             CMDs.Add(new CommandWget(new string[] { "wget" }));
             CMDs.Add(new CommandFtp(new string[] { "ftp" }));
-            CMDs.Add(new CommandHttpServer(new string[] { "httpserver" }));
 
             CMDs.Add(new CommandVersion(new string[] { "version", "ver", "about" }));
             CMDs.Add(new CommandSystemInfo(new string[] { "systeminfo", "sysinfo" }));

@@ -9,10 +9,9 @@ using System.Collections.Generic;
 using Cosmos.System.Network.IPv4.UDP.DNS;
 using Cosmos.System.Network.IPv4;
 using Cosmos.System.Network.Config;
-using Cosmos.System.Network.IPv4.TCP;
-using System.Text;
-using Aura_OS;
+using CosmosHttp.Client;
 using Aura_OS.Interpreter;
+using System.IO;
 
 namespace Aura_OS.System.Shell.cmdIntr.Network
 {
@@ -42,43 +41,88 @@ namespace Aura_OS.System.Shell.cmdIntr.Network
         /// <param name="arguments">Arguments</param>
         public override ReturnInfo Execute(List<string> arguments)
         {
+            string url = arguments[0];
+
+            if (url.StartsWith("https://"))
+            {
+                return new ReturnInfo(this, ReturnCode.ERROR_ARG, "HTTPS currently not supported, please use http://");
+            }
+
+            string path = ExtractPathFromUrl(url);
+            string domainName = ExtractDomainNameFromUrl(url);
+
             try
             {
                 var dnsClient = new DnsClient();
-                var tcpClient = new TcpClient();
-
-                //Uri uri = new Uri(arguments[0]); Missing plugs
 
                 dnsClient.Connect(DNSConfig.DNSNameservers[0]);
-                dnsClient.SendAsk(arguments[0]);
+                dnsClient.SendAsk(domainName);
                 Address address = dnsClient.Receive();
                 dnsClient.Close();
 
-                tcpClient.Connect(address, 80);
+                HttpRequest request = new();
+                request.IP = address.ToString();
+                request.Path = path;
+                request.Method = "GET";
+                request.Send();
 
-                string httpget = "GET / HTTP/1.1\r\n" +
-                                 "User-Agent: Wget (CosmosOS)\r\n" +
-                                 "Accept: */*\r\n" +
-                                 "Accept-Encoding: identity\r\n" +
-                                 "Host: " + arguments[0] + "\r\n" +
-                                 "Connection: Keep-Alive\r\n\r\n";
+                string httpresponse = request.Response.Content;
 
-                tcpClient.Send(Encoding.ASCII.GetBytes(httpget));
+                File.WriteAllText(Kernel.CurrentDirectory + "file.html", httpresponse);
 
-                var ep = new EndPoint(Address.Zero, 0);
-                var data = tcpClient.Receive(ref ep);
-                tcpClient.Close();
-
-                string httpresponse = Encoding.ASCII.GetString(data);
-
-                Kernel.console.WriteLine(httpresponse);
+                Kernel.console.WriteLine(url + " saved to file.html");
             }
             catch (Exception ex)
             {
-                Kernel.console.WriteLine("Exception: " + ex);
+                return new ReturnInfo(this, ReturnCode.ERROR_ARG, "Exception: " + ex);
             }
 
             return new ReturnInfo(this, ReturnCode.OK);
+        }
+
+        private string ExtractDomainNameFromUrl(string url)
+        {
+            int start;
+            if (url.Contains("://"))
+            {
+                start = url.IndexOf("://") + 3;
+            }
+            else
+            {
+                start = 0;
+            }
+
+            int end = url.IndexOf("/", start);
+            if (end == -1)
+            {
+                end = url.Length;
+            }
+
+            return url[start..end];
+        }
+
+
+        private string ExtractPathFromUrl(string url)
+        {
+            int start;
+            if (url.Contains("://"))
+            {
+                start = url.IndexOf("://") + 3;
+            }
+            else
+            {
+                start = 0;
+            }
+
+            int indexOfSlash = url.IndexOf("/", start);
+            if (indexOfSlash != -1)
+            {
+                return url.Substring(indexOfSlash);
+            }
+            else
+            {
+                return "/";
+            }
         }
 
         /// <summary>
@@ -87,8 +131,7 @@ namespace Aura_OS.System.Shell.cmdIntr.Network
         public override void PrintHelp()
         {
             Kernel.console.WriteLine("Usage:");
-            Kernel.console.WriteLine(" - dns {domain_name}");
-            Kernel.console.WriteLine(" - dns {dns_server_ip} {domain_name}");
+            Kernel.console.WriteLine(" - wget {url}");
         }
     }
 }
