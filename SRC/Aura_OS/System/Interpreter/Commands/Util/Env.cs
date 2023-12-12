@@ -46,8 +46,8 @@ namespace Aura_OS.Interpreter.Commands.Util
         /// </summary>
         public override void PrintHelp()
         {
-            Kernel.console.WriteLine("Usage:");
-            Kernel.console.WriteLine(" - export {var_name} {var_value}");
+            Console.WriteLine("Usage:");
+            Console.WriteLine(" - export {var_name} {var_value}");
         }
     }
 }

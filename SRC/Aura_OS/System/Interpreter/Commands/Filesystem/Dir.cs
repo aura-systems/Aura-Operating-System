@@ -27,7 +27,7 @@ namespace Aura_OS.Interpreter.Commands.Filesystem
         {
             DirectoryListing.DispDirectories(Kernel.CurrentDirectory);
             DirectoryListing.DispFiles(Kernel.CurrentDirectory);
-            Kernel.console.WriteLine();
+            Console.WriteLine();
             return new ReturnInfo(this, ReturnCode.OK);
         }
 
@@ -70,7 +70,7 @@ namespace Aura_OS.Interpreter.Commands.Filesystem
                 }
             }
 
-            Kernel.console.WriteLine();
+            Console.WriteLine();
             return new ReturnInfo(this, ReturnCode.OK);
         }
 
@@ -79,8 +79,8 @@ namespace Aura_OS.Interpreter.Commands.Filesystem
         /// </summary>
         public override void PrintHelp()
         {
-            Kernel.console.WriteLine("Usage:");
-            Kernel.console.WriteLine(" - dir {directory}");
+            Console.WriteLine("Usage:");
+            Console.WriteLine(" - dir {directory}");
         }
 
         class DirectoryListing
@@ -96,9 +96,9 @@ namespace Aura_OS.Interpreter.Commands.Filesystem
                 {
                     if (!dir.StartsWith("."))
                     {
-                        Kernel.console.Foreground = ConsoleColor.Yellow;
-                        Kernel.console.Write(dir + "\t");
-                        Kernel.console.Foreground = ConsoleColor.White;
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        Console.Write(dir + "\t");
+                        Console.ForegroundColor = ConsoleColor.White;
                     }
                 }
             }
@@ -129,21 +129,21 @@ namespace Aura_OS.Interpreter.Commands.Filesystem
                     {
                         if (lastext == "conf")
                         {
-                            Kernel.console.Foreground = ConsoleColor.Red;
-                            Kernel.console.Write(file + "\t");
-                            Kernel.console.Foreground = ConsoleColor.White;
+                            Console.ForegroundColor = ConsoleColor.Red;
+                            Console.Write(file + "\t");
+                            Console.ForegroundColor = ConsoleColor.White;
                         }
                         else if (file.StartsWith("passwd"))
                         {
-                            Kernel.console.Foreground = ConsoleColor.Red;
-                            Kernel.console.Write(file + "\t");
-                            Kernel.console.Foreground = ConsoleColor.White;
+                            Console.ForegroundColor = ConsoleColor.Red;
+                            Console.Write(file + "\t");
+                            Console.ForegroundColor = ConsoleColor.White;
                         }
                         else
                         {
-                            Kernel.console.Foreground = ConsoleColor.Blue;
-                            Kernel.console.Write(file + "\t");
-                            Kernel.console.Foreground = ConsoleColor.White;
+                            Console.ForegroundColor = ConsoleColor.Blue;
+                            Console.Write(file + "\t");
+                            Console.ForegroundColor = ConsoleColor.White;
                         }
                     }
                 }
@@ -163,25 +163,25 @@ namespace Aura_OS.Interpreter.Commands.Filesystem
 
                     if (lastext == "conf")
                     {
-                        Kernel.console.Foreground = ConsoleColor.Red;
-                        Kernel.console.Write(file + "\t");
-                        Kernel.console.Foreground = ConsoleColor.White;
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.Write(file + "\t");
+                        Console.ForegroundColor = ConsoleColor.White;
                     }
                     else if (file.StartsWith("passwd"))
                     {
-                        Kernel.console.Foreground = ConsoleColor.Red;
-                        Kernel.console.Write(file + "\t");
-                        Kernel.console.Foreground = ConsoleColor.White;
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.Write(file + "\t");
+                        Console.ForegroundColor = ConsoleColor.White;
                     }
                     else if (file.StartsWith("."))
                     {
-                        Kernel.console.Foreground = ConsoleColor.Magenta;
-                        Kernel.console.Write(file + "\t");
-                        Kernel.console.Foreground = ConsoleColor.White;
+                        Console.ForegroundColor = ConsoleColor.Magenta;
+                        Console.Write(file + "\t");
+                        Console.ForegroundColor = ConsoleColor.White;
                     }
                     else
                     {
-                        Kernel.console.Write(file + "\t");
+                        Console.Write(file + "\t");
                     }
                 }
             }

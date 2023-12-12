@@ -58,5 +58,10 @@ namespace Aura_OS.System
             Console.ForegroundColor = ConsoleColor.White;
             Console.Write(text + "\n");
         }
+
+        public static void Clear()
+        {
+            Console.Clear();
+        }
     }
 }

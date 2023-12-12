@@ -75,9 +75,9 @@ namespace Aura_OS.Interpreter.Commands.Filesystem
         /// </summary>
         public override void PrintHelp()
         {
-            Kernel.console.WriteLine("Available commands:");
-            Kernel.console.WriteLine("- cd {directory}    change current directory");
-            Kernel.console.WriteLine("- cd ..             go to last directory");
+            Console.WriteLine("Available commands:");
+            Console.WriteLine("- cd {directory}    change current directory");
+            Console.WriteLine("- cd ..             go to last directory");
         }
     }
 }

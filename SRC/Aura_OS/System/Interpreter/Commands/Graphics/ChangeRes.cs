@@ -11,7 +11,6 @@ using Cosmos.System.Network.IPv4;
 using Cosmos.System.Network.Config;
 using Aura_OS;
 using Cosmos.System.Graphics;
-using Cosmos.System;
 using Aura_OS.Interpreter;
 
 namespace Aura_OS.System.Shell.cmdIntr.Network
@@ -32,11 +31,11 @@ namespace Aura_OS.System.Shell.cmdIntr.Network
         /// <param name="arguments">Arguments</param>
         public override ReturnInfo Execute()
         {
-            Kernel.console.WriteLine("Available modes:");
+            Console.WriteLine("Available modes:");
 
             foreach (var mode in Kernel.canvas.AvailableModes)
             {
-                Kernel.console.WriteLine("- " + mode.ToString());
+                Console.WriteLine("- " + mode.ToString());
             }
 
             return new ReturnInfo(this, ReturnCode.OK);
@@ -73,8 +72,8 @@ namespace Aura_OS.System.Shell.cmdIntr.Network
                     Kernel.screenWidth = (uint)width;
                     Kernel.screenHeight = (uint)height;
 
-                    MouseManager.ScreenWidth = (uint)width;
-                    MouseManager.ScreenHeight = (uint)height;
+                    Cosmos.System.MouseManager.ScreenWidth = (uint)width;
+                    Cosmos.System.MouseManager.ScreenHeight = (uint)height;
 
                     Kernel.canvas = FullScreenCanvas.GetFullScreenCanvas(new Mode(width, height, ColorDepth.ColorDepth32));
 
@@ -96,9 +95,9 @@ namespace Aura_OS.System.Shell.cmdIntr.Network
         /// </summary>
         public override void PrintHelp()
         {
-            Kernel.console.WriteLine("Usage:");
-            Kernel.console.WriteLine(" - changeres");
-            Kernel.console.WriteLine(" - changeres {x} {y}");
+            Console.WriteLine("Usage:");
+            Console.WriteLine(" - changeres");
+            Console.WriteLine(" - changeres {x} {y}");
         }
     }
 }

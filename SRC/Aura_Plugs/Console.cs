@@ -48,14 +48,14 @@ namespace Aura_Plugs
 
         public static void Write(string aText)
         {
-            if (Kernel.aConsole != null)
+            if (Kernel.console != null)
+            {
+                Kernel.console.Write(aText);
+            }
+            else if (Kernel.aConsole != null)
             {
                 byte[] aTextEncoded = ConsoleOutputEncoding.GetBytes(aText);
                 Kernel.aConsole.Write(aTextEncoded);
-            }
-            else if (Kernel.console != null)
-            {
-                Kernel.console.Write(aText);
             }
         }
 
@@ -152,13 +152,13 @@ namespace Aura_Plugs
 
         public static ConsoleColor get_ForegroundColor()
         {
-            if (Kernel.aConsole != null)
-            {
-                return Kernel.aConsole.Foreground;
-            }
-            else if (Kernel.console != null)
+            if (Kernel.console != null)
             {
                 return Kernel.console.Foreground;
+            }
+            else if (Kernel.aConsole != null)
+            {
+                return Kernel.aConsole.Foreground;
             }
 
             return ConsoleColor.White;
@@ -166,13 +166,31 @@ namespace Aura_Plugs
 
         public static void set_ForegroundColor(ConsoleColor value)
         {
-            if (Kernel.aConsole != null)
+            if (Kernel.console != null)
+            {
+                Kernel.console.Foreground = value;
+            }
+            else if (Kernel.aConsole != null)
             {
                 Kernel.aConsole.Foreground = value;
             }
-            else if (Kernel.console != null)
+        }
+
+        public static void Beep()
+        {
+            Cosmos.System.PCSpeaker.Beep();
+        }
+
+        //TODO: Console uses TextWriter - intercept and plug it instead
+        public static void Clear()
+        {
+            if (Kernel.console != null)
             {
-                Kernel.console.Foreground = value;
+                Kernel.console.Clear();
+            }
+            else if (Kernel.aConsole != null)
+            {
+                Kernel.aConsole.Clear();
             }
         }
 

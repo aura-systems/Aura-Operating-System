@@ -33,7 +33,7 @@ namespace Aura_OS.System.Shell.cmdIntr.Util
             {
                 string line = Conversion.D2(device.bus) + ":" + Conversion.D2(device.slot) + ":" + Conversion.D2(device.function) + " - " + "0x" + Conversion.D4(Conversion.DecToHex(device.VendorID)) + ":0x" + Conversion.D4(Conversion.DecToHex(device.DeviceID)) + " : " + DeviceClass.GetTypeString(device) + ": " + DeviceClass.GetDeviceString(device);
                 
-                Kernel.console.WriteLine(line);
+                Console.WriteLine(line);
                 count++;
 
                 if (count == Kernel.console.Rows - 4)

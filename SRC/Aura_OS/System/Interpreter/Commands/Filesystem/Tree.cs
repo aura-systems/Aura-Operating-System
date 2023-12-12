@@ -56,25 +56,25 @@ namespace Aura_OS.Interpreter.Commands.Filesystem
         {
             var directories = Directory.GetDirectories(directory);
 
-            Kernel.console.Foreground = ConsoleColor.Blue;
+            Console.ForegroundColor = ConsoleColor.Blue;
             foreach (string file in Directory.GetFiles(directory))
             {
                 for (int i = 0; i < depth; i++)
                 {
-                    Kernel.console.Write(" ");
+                    Console.Write(" ");
                 }
-                Kernel.console.WriteLine(file);
+                Console.WriteLine(file);
             }
-            Kernel.console.Foreground = ConsoleColor.White;
+            Console.ForegroundColor = ConsoleColor.White;
 
             for (int j = 0; j < directories.Length; j++)
             {
-                Kernel.console.Foreground = ConsoleColor.Yellow;
+                Console.ForegroundColor = ConsoleColor.Yellow;
                 for (int i = 0; i < depth; i++)
                 {
-                    Kernel.console.Write(" ");
+                    Console.Write(" ");
                 }
-                Kernel.console.WriteLine(directories[j]);
+                Console.WriteLine(directories[j]);
                 DoTree(directory + "/" + directories[j], depth + 4);
             }
         }

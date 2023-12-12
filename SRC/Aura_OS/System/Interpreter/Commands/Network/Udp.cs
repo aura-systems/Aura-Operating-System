@@ -45,7 +45,7 @@ namespace Aura_OS.System.Shell.cmdIntr.Network
                 }
                 int port = Int32.Parse(arguments[1]);
 
-                Kernel.console.WriteLine("Listening at " + port + "...");
+                Console.WriteLine("Listening at " + port + "...");
 
                 var client = new UdpClient(port);
 
@@ -53,7 +53,7 @@ namespace Aura_OS.System.Shell.cmdIntr.Network
 
                 byte[] received = client.Receive(ref RemoteIpEndPoint);
 
-                Kernel.console.WriteLine("Received UDP packet from " + RemoteIpEndPoint.Address.ToString() + ": \"" + Encoding.ASCII.GetString(received) + "\"");
+                Console.WriteLine("Received UDP packet from " + RemoteIpEndPoint.Address.ToString() + ": \"" + Encoding.ASCII.GetString(received) + "\"");
 
                 client.Close();
 
@@ -76,7 +76,7 @@ namespace Aura_OS.System.Shell.cmdIntr.Network
                 xClient.Connect(ip, port);
 
                 xClient.Send(Encoding.ASCII.GetBytes(message));
-                Kernel.console.WriteLine("Sent UDP packet to " + ip.ToString() + ":" + port);
+                Console.WriteLine("Sent UDP packet to " + ip.ToString() + ":" + port);
 
                 xClient.Close();
                 return new ReturnInfo(this, ReturnCode.OK);
@@ -92,9 +92,9 @@ namespace Aura_OS.System.Shell.cmdIntr.Network
         /// </summary>
         public override void PrintHelp()
         {
-            Kernel.console.WriteLine("Usage:");
-            Kernel.console.WriteLine(" - udp /l {port}                       listen for an UDP packet at a specific port");
-            Kernel.console.WriteLine(" - udp /s {ip} {port} {text_message}   send an UDP packet to and IP/port");
+            Console.WriteLine("Usage:");
+            Console.WriteLine(" - udp /l {port}                       listen for an UDP packet at a specific port");
+            Console.WriteLine(" - udp /s {ip} {port} {text_message}   send an UDP packet to and IP/port");
         }
     }
 }

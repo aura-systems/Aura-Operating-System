@@ -6,6 +6,7 @@
 
 
 using Aura_OS.Interpreter;
+using System;
 
 namespace Aura_OS.System.Shell.cmdIntr.SystemInfomation
 {
@@ -24,7 +25,7 @@ namespace Aura_OS.System.Shell.cmdIntr.SystemInfomation
         /// </summary>
         public override ReturnInfo Execute()
         {
-            Kernel.console.WriteLine("The current time is:  " + Time.MonthString() + "/" + Time.DayString() + "/" + Time.YearString() + ", " + Time.TimeString(true, true, true));
+            Console.WriteLine("The current time is:  " + Time.MonthString() + "/" + Time.DayString() + "/" + Time.YearString() + ", " + Time.TimeString(true, true, true));
             return new ReturnInfo(this, ReturnCode.OK);
         }
     }

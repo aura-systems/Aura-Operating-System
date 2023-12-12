@@ -50,7 +50,7 @@ namespace Aura_OS.System.Shell.cmdIntr.Network
             else if (arguments.Count == 1)
             {
                 xClient.Connect(DNSConfig.DNSNameservers[0]);
-                Kernel.console.WriteLine("DNS used : " + DNSConfig.DNSNameservers[0].ToString());
+                Console.WriteLine("DNS used : " + DNSConfig.DNSNameservers[0].ToString());
                 xClient.SendAsk(arguments[0]);
                 domainname = arguments[0];
             }
@@ -71,7 +71,7 @@ namespace Aura_OS.System.Shell.cmdIntr.Network
             }
             else
             {
-                Kernel.console.WriteLine(domainname + " is " + address.ToString());
+                Console.WriteLine(domainname + " is " + address.ToString());
             }
 
             return new ReturnInfo(this, ReturnCode.OK);
@@ -82,9 +82,9 @@ namespace Aura_OS.System.Shell.cmdIntr.Network
         /// </summary>
         public override void PrintHelp()
         {
-            Kernel.console.WriteLine("Usage:");
-            Kernel.console.WriteLine(" - dns {domain_name}");
-            Kernel.console.WriteLine(" - dns {dns_server_ip} {domain_name}");
+            Console.WriteLine("Usage:");
+            Console.WriteLine(" - dns {domain_name}");
+            Console.WriteLine(" - dns {dns_server_ip} {domain_name}");
         }
     }
 }

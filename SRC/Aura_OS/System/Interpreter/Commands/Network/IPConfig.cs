@@ -34,36 +34,36 @@ namespace Aura_OS.System.Shell.cmdIntr.Network
         {
             if (NetworkStack.ConfigEmpty())
             {
-                Kernel.console.WriteLine("No network configuration detected! Use ipconfig /help");
+                Console.WriteLine("No network configuration detected! Use ipconfig /help");
             }
             foreach (NetworkConfig config in NetworkConfiguration.NetworkConfigs)
             {
                 switch (config.Device.CardType)
                 {
                     case CardType.Ethernet:
-                        Kernel.console.Write("Ethernet Card : " + config.Device.NameID + " - " + config.Device.Name);
+                        Console.Write("Ethernet Card : " + config.Device.NameID + " - " + config.Device.Name);
                         break;
                     case CardType.Wireless:
-                        Kernel.console.Write("Wireless Card : " + config.Device.NameID + " - " + config.Device.Name);
+                        Console.Write("Wireless Card : " + config.Device.NameID + " - " + config.Device.Name);
                         break;
                 }
                 if (NetworkConfiguration.CurrentNetworkConfig.Device == config.Device)
                 {
-                    Kernel.console.WriteLine(" (current)");
+                    Console.WriteLine(" (current)");
                 }
                 else
                 {
-                    Kernel.console.WriteLine();
+                    Console.WriteLine();
                 }
                
-                Kernel.console.WriteLine("MAC Address          : " + config.Device.MACAddress.ToString());
-                Kernel.console.WriteLine("IP Address           : " + config.IPConfig.IPAddress.ToString());
-                Kernel.console.WriteLine("Subnet mask          : " + config.IPConfig.SubnetMask.ToString());
-                Kernel.console.WriteLine("Default Gateway      : " + config.IPConfig.DefaultGateway.ToString());
-                Kernel.console.WriteLine("DNS Nameservers      : ");
+                Console.WriteLine("MAC Address          : " + config.Device.MACAddress.ToString());
+                Console.WriteLine("IP Address           : " + config.IPConfig.IPAddress.ToString());
+                Console.WriteLine("Subnet mask          : " + config.IPConfig.SubnetMask.ToString());
+                Console.WriteLine("Default Gateway      : " + config.IPConfig.DefaultGateway.ToString());
+                Console.WriteLine("DNS Nameservers      : ");
                 foreach (Address dnsnameserver in DNSConfig.DNSNameservers)
                 {
-                    Kernel.console.WriteLine("                       " + dnsnameserver.ToString());
+                    Console.WriteLine("                       " + dnsnameserver.ToString());
                 }
             }
 
@@ -90,7 +90,7 @@ namespace Aura_OS.System.Shell.cmdIntr.Network
                 if (xClient.SendDiscoverPacket() != -1)
                 {
                     xClient.Close();
-                    Kernel.console.WriteLine("Configuration applied! Your local IPv4 Address is " + NetworkConfiguration.CurrentAddress + ".");
+                    Console.WriteLine("Configuration applied! Your local IPv4 Address is " + NetworkConfiguration.CurrentAddress + ".");
                 }
                 else
                 {
@@ -107,10 +107,10 @@ namespace Aura_OS.System.Shell.cmdIntr.Network
                     switch (device.CardType)
                     {
                         case CardType.Ethernet:
-                            Kernel.console.WriteLine("Ethernet Card - " + device.NameID + " - " + device.Name + " (" + device.MACAddress + ")");
+                            Console.WriteLine("Ethernet Card - " + device.NameID + " - " + device.Name + " (" + device.MACAddress + ")");
                             break;
                         case CardType.Wireless:
-                            Kernel.console.WriteLine("Wireless Card - " + device.NameID + " - " + device.Name + " (" + device.MACAddress + ")");
+                            Console.WriteLine("Wireless Card - " + device.NameID + " - " + device.Name + " (" + device.MACAddress + ")");
                             break;
                     }
                 }
@@ -147,12 +147,12 @@ namespace Aura_OS.System.Shell.cmdIntr.Network
                     if (ip != null && subnet != null && gw != null)
                     {
                         IPConfig.Enable(nic, ip, subnet, gw);
-                        Kernel.console.WriteLine("Config OK!");
+                        Console.WriteLine("Config OK!");
                     }
                     else if (ip != null && subnet != null)
                     {
                         IPConfig.Enable(nic, ip, subnet, ip);
-                        Kernel.console.WriteLine("Config OK!");
+                        Console.WriteLine("Config OK!");
                     }
                     else
                     {
@@ -169,12 +169,12 @@ namespace Aura_OS.System.Shell.cmdIntr.Network
                 if (arguments[1] == "-add")
                 {
                     DNSConfig.Add(Address.Parse(arguments[2]));
-                    Kernel.console.WriteLine(arguments[2] + " has been added to nameservers.");
+                    Console.WriteLine(arguments[2] + " has been added to nameservers.");
                 }
                 else if (arguments[1] == "-rem")
                 {
                     DNSConfig.Remove(Address.Parse(arguments[2]));
-                    Kernel.console.WriteLine(arguments[2] + " has been removed from nameservers list.");
+                    Console.WriteLine(arguments[2] + " has been removed from nameservers list.");
                 }
                 else
                 {
@@ -193,16 +193,16 @@ namespace Aura_OS.System.Shell.cmdIntr.Network
         /// </summary>
         public override void PrintHelp()
         {
-            Kernel.console.WriteLine("Available commands:");
-            Kernel.console.WriteLine("- ipconfig /listnic      List network devices");
-            Kernel.console.WriteLine("- ipconfig /ask          Find the DHCP server and ask a new IP address");
-            Kernel.console.WriteLine("- ipconfig /release      Tell the DHCP server to make the IP address available");
-            Kernel.console.WriteLine("- ipconfig /set          Manually set an IP Address");
-            Kernel.console.WriteLine("     Usage:");
-            Kernel.console.WriteLine("     - ipconfig /set {device} {IPv4} {Subnet} {Gateway}");
-            Kernel.console.WriteLine("- ipconfig /nameserver   Manually set an DNS server");
-            Kernel.console.WriteLine("     Usage:");
-            Kernel.console.WriteLine("     - ipconfig /nameserver {-add|-rem} {IPv4}");
+            Console.WriteLine("Available commands:");
+            Console.WriteLine("- ipconfig /listnic      List network devices");
+            Console.WriteLine("- ipconfig /ask          Find the DHCP server and ask a new IP address");
+            Console.WriteLine("- ipconfig /release      Tell the DHCP server to make the IP address available");
+            Console.WriteLine("- ipconfig /set          Manually set an IP Address");
+            Console.WriteLine("     Usage:");
+            Console.WriteLine("     - ipconfig /set {device} {IPv4} {Subnet} {Gateway}");
+            Console.WriteLine("- ipconfig /nameserver   Manually set an DNS server");
+            Console.WriteLine("     Usage:");
+            Console.WriteLine("     - ipconfig /nameserver {-add|-rem} {IPv4}");
         }
     }
 }

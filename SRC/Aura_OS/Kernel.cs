@@ -134,27 +134,23 @@ namespace Aura_OS
             canvas = FullScreenCanvas.GetFullScreenCanvas(new Mode(screenWidth, screenHeight, ColorDepth.ColorDepth32));
             dock = new Dock();
 
-            CustomConsole.WriteLineInfo("Init terminal...");
+            aConsole = null;
+
             console = new Terminal(700, 600, 40, 40);
             console.Initialize();
 
-            CustomConsole.WriteLineInfo("Init memory info...");
             memoryInfo = new MemoryInfo(400, 300, 40, 40);
             memoryInfo.Initialize();
 
-            CustomConsole.WriteLineInfo("Init system info...");
             systemInfo = new SystemInfo(402, 360, 40, 40);
             systemInfo.Initialize();
 
-            CustomConsole.WriteLineInfo("Init cube...");
             cube = new Cube(200, 200, 40, 40);
             cube.Initialize();
 
-            CustomConsole.WriteLineInfo("Init gameboy emulator...");
             gameBoyEmu = new GameBoyEmu(160 + 4, 144 + 22, 40, 40);
             gameBoyEmu.Initialize();
 
-            CustomConsole.WriteLineInfo("Starting Window Manager...");
             WindowManager = new WindowManager();
             WindowManager.Initialize();
 
@@ -175,56 +171,56 @@ namespace Aura_OS
 
             programIco = new Bitmap(Files.NoIcon);
 
-            System.CustomConsole.WriteLineOK("Program icon.");
+            CustomConsole.WriteLineOK("Program icon.");
 
             terminalIco = new Bitmap(Files.TerminalIcon);
 
-            System.CustomConsole.WriteLineOK("Terminal icon.");
+            CustomConsole.WriteLineOK("Terminal icon.");
 
             powerIco = new Bitmap(Files.PowerIcon);
 
-            System.CustomConsole.WriteLineOK("Power icon.");
+            CustomConsole.WriteLineOK("Power icon.");
 
             connectedIco = new Bitmap(Files.ConnectedIcon);
 
-            System.CustomConsole.WriteLineOK("Connected icon.");
+            CustomConsole.WriteLineOK("Connected icon.");
 
             AuraLogo = new Bitmap(Files.AuraImage);
 
-            System.CustomConsole.WriteLineOK("Aura logo.");
+            CustomConsole.WriteLineOK("Aura logo.");
 
             CosmosLogo = new Bitmap(Files.CosmosLogo);
 
-            System.CustomConsole.WriteLineOK("CosmosLogo logo.");
+            CustomConsole.WriteLineOK("CosmosLogo logo.");
 
             wallpaper = new Bitmap(Files.Wallpaper);
 
-            System.CustomConsole.WriteLineOK("Wallpaper.");
+            CustomConsole.WriteLineOK("Wallpaper.");
 
             errorLogo = new Bitmap(Files.ErrorImage);
 
-            System.CustomConsole.WriteLineOK("Error logo.");
+            CustomConsole.WriteLineOK("Error logo.");
 
             programLogo = new Bitmap(Files.ProgramImage);
 
-            System.CustomConsole.WriteLineOK("Program icon 2.");
+            CustomConsole.WriteLineOK("Program icon 2.");
 
             cursor = new Bitmap(Files.CursorIcon);
 
-            System.CustomConsole.WriteLineOK("Cursor.");
+            CustomConsole.WriteLineOK("Cursor.");
 
             font = PCScreenFont.LoadFont(Files.Font);
 
-            System.CustomConsole.WriteLineOK("Font.");
+            CustomConsole.WriteLineOK("Font.");
 
             // UI
             CloseNormal = new Bitmap(Files.CloseNormal);
 
-            System.CustomConsole.WriteLineOK("CloseNormal icon.");
+            CustomConsole.WriteLineOK("CloseNormal icon.");
 
             Start = new Bitmap(Files.Start);
 
-            System.CustomConsole.WriteLineOK("Start icon.");
+            CustomConsole.WriteLineOK("Start icon.");
         }
 
         public static void Run()

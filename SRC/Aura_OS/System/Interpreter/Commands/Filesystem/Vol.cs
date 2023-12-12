@@ -76,7 +76,7 @@ namespace Aura_OS.Interpreter.Commands.Filesystem
 
                     ourDisk.DeletePartition(index);
 
-                    Kernel.console.WriteLine("Partition #" + (index + 1) + " deleted on disk #" + disknumber + "!");
+                    Console.WriteLine("Partition #" + (index + 1) + " deleted on disk #" + disknumber + "!");
 
                     Kernel.VirtualFileSystem.Disks.Clear();
                     Kernel.VirtualFileSystem.Initialize(false);
@@ -107,7 +107,7 @@ namespace Aura_OS.Interpreter.Commands.Filesystem
 
                     ourDisk.CreatePartition(size);
 
-                    Kernel.console.WriteLine("Partition created on disk #" + disknumber + "!");
+                    Console.WriteLine("Partition created on disk #" + disknumber + "!");
 
                     Kernel.VirtualFileSystem.Disks.Clear();
                     Kernel.VirtualFileSystem.Initialize(false);
@@ -159,8 +159,8 @@ namespace Aura_OS.Interpreter.Commands.Filesystem
             {
                 string type = disk.IsMBR ? "MBR" : "GPT";
 
-                Kernel.console.WriteLine();
-                Kernel.console.WriteLine("Disk #: " + counter + " (" + type + ")");
+                Console.WriteLine();
+                Console.WriteLine("Disk #: " + counter + " (" + type + ")");
 
                 disk.DisplayInformation();
 
@@ -185,7 +185,7 @@ namespace Aura_OS.Interpreter.Commands.Filesystem
 
                     disk.FormatPartition(partition, "FAT32", true);
 
-                    Kernel.console.WriteLine("Partition #" + (partition + 1) + " formatted to FAT32 on disk #" + driveName + "!");
+                    Console.WriteLine("Partition #" + (partition + 1) + " formatted to FAT32 on disk #" + driveName + "!");
 
                     Kernel.VirtualFileSystem.Disks.Clear();
                     Kernel.VirtualFileSystem.Initialize(false);
@@ -235,19 +235,19 @@ namespace Aura_OS.Interpreter.Commands.Filesystem
         {
             var vols = Kernel.VirtualFileSystem.GetVolumes();
 
-            Kernel.console.WriteLine();
-            Kernel.console.WriteLine("  Volume ###\tFormat\tSize");
-            Kernel.console.WriteLine("  ----------\t------\t--------");
+            Console.WriteLine();
+            Console.WriteLine("  Volume ###\tFormat\tSize");
+            Console.WriteLine("  ----------\t------\t--------");
 
             foreach (var vol in vols)
             {
                 if (vol.mName == Kernel.CurrentVolume && vols.Count > 1)
                 {
-                    Kernel.console.WriteLine(" >" + vol.mName + "\t   \t" + Kernel.VirtualFileSystem.GetFileSystemType(vol.mName) + " \t" + vol.mSize + " MB\t" + vol.mParent);
+                    Console.WriteLine(" >" + vol.mName + "\t   \t" + Kernel.VirtualFileSystem.GetFileSystemType(vol.mName) + " \t" + vol.mSize + " MB\t" + vol.mParent);
                 }
                 else
                 {
-                    Kernel.console.WriteLine("  " + vol.mName + "\t   \t" + Kernel.VirtualFileSystem.GetFileSystemType(vol.mName) + " \t" + vol.mSize + " MB\t" + vol.mParent);
+                    Console.WriteLine("  " + vol.mName + "\t   \t" + Kernel.VirtualFileSystem.GetFileSystemType(vol.mName) + " \t" + vol.mSize + " MB\t" + vol.mParent);
                 }
             }
 
@@ -259,13 +259,13 @@ namespace Aura_OS.Interpreter.Commands.Filesystem
         /// </summary>
         public override void PrintHelp()
         {
-            Kernel.console.WriteLine("Available commands:");
-            Kernel.console.WriteLine("- vol /l                                  List volumes");
-            Kernel.console.WriteLine("- vol /cv {volume}                        Change current volume");
-            Kernel.console.WriteLine("- vol /lp                                 List partitions");
-            Kernel.console.WriteLine("- vol /fp {disknumber} {partitionnumber}  Format partition to FAT32");
-            Kernel.console.WriteLine("- vol /mp {disknumber} {size}             Make MBR partition");
-            Kernel.console.WriteLine("- vol /dp {disknumber} {partitionnumber}  Delete partition");
+            Console.WriteLine("Available commands:");
+            Console.WriteLine("- vol /l                                  List volumes");
+            Console.WriteLine("- vol /cv {volume}                        Change current volume");
+            Console.WriteLine("- vol /lp                                 List partitions");
+            Console.WriteLine("- vol /fp {disknumber} {partitionnumber}  Format partition to FAT32");
+            Console.WriteLine("- vol /mp {disknumber} {size}             Make MBR partition");
+            Console.WriteLine("- vol /dp {disknumber} {partitionnumber}  Delete partition");
         }
     }
 }

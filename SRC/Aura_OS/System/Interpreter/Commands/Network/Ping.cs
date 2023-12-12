@@ -62,7 +62,7 @@ namespace Aura_OS.System.Shell.cmdIntr.Network
 
             try
             {
-                Kernel.console.WriteLine("Sending ping to " + destination.ToString());
+                Console.WriteLine("Sending ping to " + destination.ToString());
 
                 var xClient = new ICMPClient();
                 xClient.Connect(destination);
@@ -79,18 +79,18 @@ namespace Aura_OS.System.Shell.cmdIntr.Network
 
                     if (second == -1)
                     {
-                        Kernel.console.WriteLine("Destination host unreachable.");
+                        Console.WriteLine("Destination host unreachable.");
                         PacketLost++;
                     }
                     else
                     {
                         if (second < 1)
                         {
-                            Kernel.console.WriteLine("Reply received from " + endpoint.Address.ToString() + " time < 1s");
+                            Console.WriteLine("Reply received from " + endpoint.Address.ToString() + " time < 1s");
                         }
                         else if (second >= 1)
                         {
-                            Kernel.console.WriteLine("Reply received from " + endpoint.Address.ToString() + " time " + second + "s");
+                            Console.WriteLine("Reply received from " + endpoint.Address.ToString() + " time " + second + "s");
                         }
 
                         PacketReceived++;
@@ -106,9 +106,9 @@ namespace Aura_OS.System.Shell.cmdIntr.Network
 
             PercentLoss = 25 * PacketLost;
 
-            Kernel.console.WriteLine();
-            Kernel.console.WriteLine("Ping statistics for " + destination.ToString() + ":");
-            Kernel.console.WriteLine("    Packets: Sent = " + PacketSent + ", Received = " + PacketReceived + ", Lost = " + PacketLost + " (" + PercentLoss + "% loss)");
+            Console.WriteLine();
+            Console.WriteLine("Ping statistics for " + destination.ToString() + ":");
+            Console.WriteLine("    Packets: Sent = " + PacketSent + ", Received = " + PacketReceived + ", Lost = " + PacketLost + " (" + PercentLoss + "% loss)");
 
             return new ReturnInfo(this, ReturnCode.OK);
         }
@@ -118,9 +118,9 @@ namespace Aura_OS.System.Shell.cmdIntr.Network
         /// </summary>
         public override void PrintHelp()
         {
-            Kernel.console.WriteLine("Usage:");
-            Kernel.console.WriteLine(" - ping {ip}");
-            Kernel.console.WriteLine(" - ping {domain_name}");
+            Console.WriteLine("Usage:");
+            Console.WriteLine(" - ping {ip}");
+            Console.WriteLine(" - ping {domain_name}");
         }
     }
 }

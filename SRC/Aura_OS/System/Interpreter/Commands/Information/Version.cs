@@ -24,15 +24,15 @@ namespace Aura_OS.System.Shell.cmdIntr.SystemInfomation
         /// </summary>
         public override ReturnInfo Execute()
         {
-            Kernel.console.Foreground = ConsoleColor.White;
-            Kernel.console.WriteLine("Aura [version " + Kernel.Version + "-" + Kernel.Revision + "]");
-            Kernel.console.WriteLine("Created by Alexy DA CRUZ and Valentin CHARBONNIER.");
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.WriteLine("Aura [version " + Kernel.Version + "-" + Kernel.Revision + "]");
+            Console.WriteLine("Created by Alexy DA CRUZ and Valentin CHARBONNIER.");
 
-            Kernel.console.WriteLine();
+            Console.WriteLine();
 
-            Kernel.console.Foreground = ConsoleColor.Green;
-            Kernel.console.WriteLine("Website: github.com/aura-systems");
-            Kernel.console.Foreground = ConsoleColor.White;
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine("Website: github.com/aura-systems");
+            Console.ForegroundColor = ConsoleColor.White;
 
             return new ReturnInfo(this, ReturnCode.OK);
         }

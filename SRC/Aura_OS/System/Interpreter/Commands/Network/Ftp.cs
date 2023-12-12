@@ -37,7 +37,7 @@ namespace Aura_OS.System.Shell.cmdIntr.Network
                 /*
                 var xServer = new FtpServer(Kernel.VirtualFileSystem, Kernel.CurrentDirectory, true);
 
-                Kernel.console.WriteLine("FTP Server listening at " + NetworkConfiguration.CurrentAddress + ":21 ...");
+                Console.WriteLine("FTP Server listening at " + NetworkConfiguration.CurrentAddress + ":21 ...");
 
                 xServer.Listen();*/
             }
@@ -54,8 +54,8 @@ namespace Aura_OS.System.Shell.cmdIntr.Network
         /// </summary>
         public override void PrintHelp()
         {
-            Kernel.console.WriteLine("Usage:");
-            Kernel.console.WriteLine(" - ftp");
+            Console.WriteLine("Usage:");
+            Console.WriteLine(" - ftp");
         }
     }
 }

@@ -44,7 +44,7 @@ namespace Aura_OS.Interpreter.Commands.Filesystem
             }
             else
             {
-                Kernel.console.WriteLine(file + " already exists!");
+                Console.WriteLine(file + " already exists!");
             }
             return new ReturnInfo(this, ReturnCode.OK);
         }

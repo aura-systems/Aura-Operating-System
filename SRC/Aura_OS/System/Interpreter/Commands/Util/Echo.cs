@@ -37,7 +37,7 @@ namespace Aura_OS.Interpreter.Commands.Util
                 {
                     try
                     {
-                        Kernel.console.WriteLine(Kernel.EnvironmentVariables[argument.Remove(0, 1)]);
+                        Console.WriteLine(Kernel.EnvironmentVariables[argument.Remove(0, 1)]);
                     }
                     catch
                     {
@@ -46,7 +46,7 @@ namespace Aura_OS.Interpreter.Commands.Util
                 }
                 else
                 {
-                    Kernel.console.WriteLine(argument);
+                    Console.WriteLine(argument);
                 }
             }
             return new ReturnInfo(this, ReturnCode.OK);

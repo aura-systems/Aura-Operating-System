@@ -39,7 +39,7 @@ namespace Aura_OS.Interpreter.Commands.Filesystem
 
             if (dir.Contains("."))
             {
-                Kernel.console.WriteLine("You can't have a dot in your directory name.");
+                Console.WriteLine("You can't have a dot in your directory name.");
             }
 
             else
@@ -86,9 +86,9 @@ namespace Aura_OS.Interpreter.Commands.Filesystem
                         Directory.CreateDirectory(Kernel.CurrentDirectory + newName);
 
                         //display text to inform the user that the directory has been created with an another name
-                        Kernel.console.Foreground = ConsoleColor.Yellow;
+                        Console.ForegroundColor = ConsoleColor.Yellow;
 
-                        Kernel.console.WriteLine("That folder existed already, directory \"" + newName + "\" has been created.");
+                        Console.WriteLine("That folder existed already, directory \"" + newName + "\" has been created.");
                     }
                     else
                     {
@@ -96,9 +96,9 @@ namespace Aura_OS.Interpreter.Commands.Filesystem
                         Directory.CreateDirectory(Kernel.CurrentDirectory + dir + "(1)");
 
                         //display text to inform the user that the directory has been created with an another name
-                        Kernel.console.Foreground = ConsoleColor.Yellow;
+                        Console.ForegroundColor = ConsoleColor.Yellow;
 
-                        Kernel.console.WriteLine("That folder existed already, directory \"" + dir + "(1)" + "\" has been created.");
+                        Console.WriteLine("That folder existed already, directory \"" + dir + "(1)" + "\" has been created.");
                     }
                 }
             }
@@ -110,8 +110,8 @@ namespace Aura_OS.Interpreter.Commands.Filesystem
         /// </summary>
         public override void PrintHelp()
         {
-            Kernel.console.WriteLine("Usage:");
-            Kernel.console.WriteLine(" - mkdir {directory}");
+            Console.WriteLine("Usage:");
+            Console.WriteLine(" - mkdir {directory}");
         }
     }
 }

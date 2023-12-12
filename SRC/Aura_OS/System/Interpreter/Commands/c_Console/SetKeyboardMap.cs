@@ -43,9 +43,9 @@ namespace Aura_OS.System.Shell.cmdIntr.c_Console
         /// </summary>
         public override void PrintHelp()
         {
-            Kernel.console.WriteLine("Available keyboards map:");
-            Kernel.console.WriteLine("- setkeyboardmap azerty");
-            Kernel.console.WriteLine("- setkeyboardmap qwerty");
+            Console.WriteLine("Available keyboards map:");
+            Console.WriteLine("- setkeyboardmap azerty");
+            Console.WriteLine("- setkeyboardmap qwerty");
         }
     }
 }

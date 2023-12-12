@@ -26,7 +26,7 @@ namespace Aura_OS.System.Shell.cmdIntr.Power
         /// </summary>
         public override ReturnInfo Execute()
         {
-            Kernel.console.WriteLine("Restarting...");
+            Console.WriteLine("Restarting...");
             Sys.Power.Reboot();
             return new ReturnInfo(this, ReturnCode.OK);
         }

@@ -70,7 +70,7 @@ namespace Aura_OS.System.Shell.cmdIntr.Network
 
                 File.WriteAllText(Kernel.CurrentDirectory + "file.html", httpresponse);
 
-                Kernel.console.WriteLine(url + " saved to file.html");
+                Console.WriteLine(url + " saved to file.html");
             }
             catch (Exception ex)
             {
@@ -130,8 +130,8 @@ namespace Aura_OS.System.Shell.cmdIntr.Network
         /// </summary>
         public override void PrintHelp()
         {
-            Kernel.console.WriteLine("Usage:");
-            Kernel.console.WriteLine(" - wget {url}");
+            Console.WriteLine("Usage:");
+            Console.WriteLine(" - wget {url}");
         }
     }
 }

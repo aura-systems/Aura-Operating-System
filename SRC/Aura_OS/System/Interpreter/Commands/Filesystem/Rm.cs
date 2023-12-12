@@ -41,7 +41,7 @@ namespace Aura_OS.Interpreter.Commands.Filesystem
             }
             else
             {
-                Kernel.console.WriteLine(path + " does not exist!");
+                Console.WriteLine(path + " does not exist!");
             }
 
             return new ReturnInfo(this, ReturnCode.ERROR);
@@ -52,8 +52,8 @@ namespace Aura_OS.Interpreter.Commands.Filesystem
         /// </summary>
         public override void PrintHelp()
         {
-            Kernel.console.WriteLine("Usage:");
-            Kernel.console.WriteLine(" - rm {file/directory}");
+            Console.WriteLine("Usage:");
+            Console.WriteLine(" - rm {file/directory}");
         }
     }
 }

@@ -50,26 +50,26 @@ namespace Aura_OS.System.Shell.cmdIntr.Util
             int count = 0;
             foreach (var command in Kernel.CommandManager.CMDs)
             {
-                Kernel.console.Write("- ");
+                Console.Write("- ");
                 if (showaliases)
                 {
                     for (int i = 0; i < command.CommandValues.Length; i++)
                     {
                         if (i != command.CommandValues.Length - 1)
                         {
-                            Kernel.console.Write(command.CommandValues[i] + ", ");
+                            Console.Write(command.CommandValues[i] + ", ");
                         }
                         else
                         {
-                            Kernel.console.Write(command.CommandValues[i]);
+                            Console.Write(command.CommandValues[i]);
                         }
                     }
                 }
                 else
                 {
-                    Kernel.console.Write(command.CommandValues[0]);
+                    Console.Write(command.CommandValues[0]);
                 }
-                Kernel.console.WriteLine(" (" + command.Description + ")");
+                Console.WriteLine(" (" + command.Description + ")");
 
                 count++;
                 if (count == Kernel.console.Rows - 3)
@@ -78,8 +78,8 @@ namespace Aura_OS.System.Shell.cmdIntr.Util
                     count = 0;
                 }
             }
-            Kernel.console.WriteLine();
-            Kernel.console.WriteLine("You can see more information about a specific command by typing: {command} /help");
+            Console.WriteLine();
+            Console.WriteLine("You can see more information about a specific command by typing: {command} /help");
             return new ReturnInfo(this, ReturnCode.OK);
         }
 
@@ -88,8 +88,8 @@ namespace Aura_OS.System.Shell.cmdIntr.Util
         /// </summary>
         public override void PrintHelp()
         {
-            Kernel.console.WriteLine("Available command:");
-            Kernel.console.WriteLine("- help /alias    show command aliases.");
+            Console.WriteLine("Available command:");
+            Console.WriteLine("- help /alias    show command aliases.");
         }
     }
 }

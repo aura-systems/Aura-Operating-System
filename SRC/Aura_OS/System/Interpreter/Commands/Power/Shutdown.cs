@@ -26,7 +26,7 @@ namespace Aura_OS.System.Shell.cmdIntr.Power
         /// </summary>
         public override ReturnInfo Execute()
         {
-            Kernel.console.WriteLine("Shutting Down...");
+            Console.WriteLine("Shutting Down...");
             Sys.Power.Shutdown();
             return new ReturnInfo(this, ReturnCode.OK);
         }

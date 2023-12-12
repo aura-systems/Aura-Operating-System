@@ -7,6 +7,7 @@
 using Aura_OS.Core;
 using Aura_OS.Interpreter;
 using Cosmos.Core;
+using System;
 
 namespace Aura_OS.System.Shell.cmdIntr.SystemInfomation
 {
@@ -25,20 +26,20 @@ namespace Aura_OS.System.Shell.cmdIntr.SystemInfomation
         /// </summary>
         public override ReturnInfo Execute()
         {
-            Kernel.console.WriteLine("Computer name:             " + Kernel.ComputerName);
-            Kernel.console.WriteLine("Operating system name:     Aura");
-            Kernel.console.WriteLine("Kernel name:               Cosmos-devkit");
-            Kernel.console.WriteLine(".NET version:              6.0");
-            Kernel.console.WriteLine("Operating system version:  " + Kernel.Version);
-            Kernel.console.WriteLine("Operating system revision: " + Kernel.Revision);
-            Kernel.console.WriteLine("Date and time:             " + Time.MonthString() + "/" + Time.DayString() + "/" + Time.YearString() + ", " + Time.TimeString(true, true, true));
-            Kernel.console.WriteLine("System Boot Time:          " + Kernel.BootTime);
-            Kernel.console.WriteLine("Total memory:              " + Memory.TotalMemory + "MB");
-            Kernel.console.WriteLine("Used memory:               " + Memory.GetUsedMemory() + "MB");
-            Kernel.console.WriteLine("Free memory:               " + Memory.GetFreeMemory() + "MB");
-            Kernel.console.WriteLine("Processor(s):              " + CPU.GetCPUBrandString());
-            Kernel.console.WriteLine("Console mode:              " + Kernel.console.GetConsoleInfo());
-            Kernel.console.WriteLine("Screen size:               " + Kernel.canvas.Mode.Width + "x" + Kernel.canvas.Mode.Height);
+            Console.WriteLine("Computer name:             " + Kernel.ComputerName);
+            Console.WriteLine("Operating system name:     Aura");
+            Console.WriteLine("Kernel name:               Cosmos-devkit");
+            Console.WriteLine(".NET version:              6.0");
+            Console.WriteLine("Operating system version:  " + Kernel.Version);
+            Console.WriteLine("Operating system revision: " + Kernel.Revision);
+            Console.WriteLine("Date and time:             " + Time.MonthString() + "/" + Time.DayString() + "/" + Time.YearString() + ", " + Time.TimeString(true, true, true));
+            Console.WriteLine("System Boot Time:          " + Kernel.BootTime);
+            Console.WriteLine("Total memory:              " + Memory.TotalMemory + "MB");
+            Console.WriteLine("Used memory:               " + Memory.GetUsedMemory() + "MB");
+            Console.WriteLine("Free memory:               " + Memory.GetFreeMemory() + "MB");
+            Console.WriteLine("Processor(s):              " + CPU.GetCPUBrandString());
+            Console.WriteLine("Console mode:              " + Kernel.console.GetConsoleInfo());
+            Console.WriteLine("Screen size:               " + Kernel.canvas.Mode.Width + "x" + Kernel.canvas.Mode.Height);
 
             return new ReturnInfo(this, ReturnCode.OK);
         }
