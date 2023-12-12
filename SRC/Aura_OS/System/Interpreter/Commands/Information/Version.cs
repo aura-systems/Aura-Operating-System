@@ -68,18 +68,18 @@ namespace Aura_OS.System.Shell.cmdIntr.SystemInfomation
 
                 if (versionComparisonResult > 0)
                 {
-                    Console.WriteLine("Aura [version " + Kernel.Version + "-" + Kernel.Revision + "], you are on a dev version.");
+                    Console.WriteLine("Aura [version " + Kernel.Version + "-" + Kernel.Revision + "], you are on a dev version (last release is " + latestVersion + "-" + latestRevision + ").");
                 }
                 else if (versionComparisonResult < 0)
                 {
-                    Console.WriteLine("Aura [version " + Kernel.Version + "-" + Kernel.Revision + "], your version is outdated.");
+                    Console.WriteLine("Aura [version " + Kernel.Version + "-" + Kernel.Revision + "], your version is outdated (last release is " + latestVersion + "-" + latestRevision + ").");
                 }
                 else
                 {
                     int revisionComparisonResult = string.Compare(Kernel.Revision, latestRevision);
                     if (revisionComparisonResult < 0)
                     {
-                        Console.WriteLine("Aura [version " + Kernel.Version + "-" + Kernel.Revision + "], your version is outdated.");
+                        Console.WriteLine("Aura [version " + Kernel.Version + "-" + Kernel.Revision + "], your version is outdated (last release is " + latestVersion + "-" + latestRevision + ").");
                     }
                     else
                     {
