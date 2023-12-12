@@ -72,11 +72,10 @@ namespace Aura_OS.Interpreter
             CMDs.Add(new CommandVol(new string[] { "vol" }));
             CMDs.Add(new CommandDir(new string[] { "dir", "ls", "l" }));
             CMDs.Add(new CommandMkdir(new string[] { "mkdir", "md" }));
-            CMDs.Add(new CommandRmdir(new string[] { "rmdir", "rmd" }));
             CMDs.Add(new CommandCat(new string[] { "cat" }));
             CMDs.Add(new CommandCD(new string[] { "cd" }));
             CMDs.Add(new CommandMkfil(new string[] { "touch", "mkfil", "mf" }));
-            CMDs.Add(new CommandRmfil(new string[] { "rmfil", "rmf" }));
+            CMDs.Add(new CommandRm(new string[] { "rm", "rmf", "rmd" }));
             CMDs.Add(new CommandHex(new string[] { "hex" }));
             CMDs.Add(new CommandTree(new string[] { "tree" }));
             CMDs.Add(new CommandRun(new string[] { "run" }));
