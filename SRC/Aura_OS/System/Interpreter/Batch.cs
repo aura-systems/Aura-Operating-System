@@ -22,22 +22,25 @@ namespace Aura_OS.Interpreter
                     string[] lines = File.ReadAllLines(filename);
                     foreach (string line in lines)
                     {
-                        if (!(line.StartsWith(";")))// don't read the line if it start with ";" for comment
+                        string processedLine = line.Replace("\r", "").Replace("\n", "");
+
+                        if (!(line.StartsWith(";") || line.Equals("")))
                         {
+                            System.CustomConsole.WriteLineInfo(line);
                             Kernel.CommandManager.Execute(line);
+                            System.CustomConsole.WriteLineOK(line);
                         }
                     }
                 }
                 else
                 {
-                    Kernel.console.WriteLine("This file is not a valid script.");
+                    System.CustomConsole.WriteLineError("This file is not a valid script.");
                 }
             }
             catch (Exception ex)
             {
-                Kernel.console.WriteLine(ex.Message);
+                System.CustomConsole.WriteLineError(ex.Message);
             }
-
         }
     }
 }

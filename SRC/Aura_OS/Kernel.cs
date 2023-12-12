@@ -110,14 +110,21 @@ namespace Aura_OS
             Encoding.RegisterProvider(CosmosEncodingProvider.Instance);
             KeyboardManager.SetKeyLayout(new Sys.ScanMaps.USStandardLayout());
 
-            try
+            //START PROCESSES
+            CustomConsole.WriteLineInfo("Starting process manager...");
+            ProcessManager = new ProcessManager();
+            ProcessManager.Initialize();
+
+            CustomConsole.WriteLineInfo("Starting command manager...");
+            CommandManager = new CommandManager();
+            CommandManager.Initialize();
+
+            if (File.Exists(CurrentDirectory + "boot.bat"))
             {
-                if (File.Exists(CurrentDirectory + "boot.bat"))
-                {
-                    Batch.Execute(CurrentDirectory + "boot.bat");
-                }
+                CustomConsole.WriteLineInfo("Detected boot.bat, executing script...");
+
+                Batch.Execute(CurrentDirectory + "boot.bat");
             }
-            catch { }
 
             LoadFiles();
 
@@ -127,28 +134,27 @@ namespace Aura_OS
             canvas = FullScreenCanvas.GetFullScreenCanvas(new Mode(screenWidth, screenHeight, ColorDepth.ColorDepth32));
             dock = new Dock();
 
-            //START PROCESSES
-            ProcessManager = new ProcessManager();
-            ProcessManager.Initialize();
-
-            CommandManager = new CommandManager();
-            CommandManager.Initialize();
-
+            CustomConsole.WriteLineInfo("Init terminal...");
             console = new Terminal(700, 600, 40, 40);
             console.Initialize();
 
+            CustomConsole.WriteLineInfo("Init memory info...");
             memoryInfo = new MemoryInfo(400, 300, 40, 40);
             memoryInfo.Initialize();
 
+            CustomConsole.WriteLineInfo("Init system info...");
             systemInfo = new SystemInfo(402, 360, 40, 40);
             systemInfo.Initialize();
 
+            CustomConsole.WriteLineInfo("Init cube...");
             cube = new Cube(200, 200, 40, 40);
             cube.Initialize();
 
+            CustomConsole.WriteLineInfo("Init gameboy emulator...");
             gameBoyEmu = new GameBoyEmu(160 + 4, 144 + 22, 40, 40);
             gameBoyEmu.Initialize();
 
+            CustomConsole.WriteLineInfo("Starting Window Manager...");
             WindowManager = new WindowManager();
             WindowManager.Initialize();
 
