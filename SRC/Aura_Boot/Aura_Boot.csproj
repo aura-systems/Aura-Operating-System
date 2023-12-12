@@ -26,16 +26,6 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <None Remove="isoFiles\UI\Images\AuraLogo.bmp" />
-      <None Remove="isoFiles\UI\Images\CosmosLogo.bmp" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <EmbeddedResource Include="isoFiles\UI\Images\AuraLogo.bmp" />
-      <EmbeddedResource Include="isoFiles\UI\Images\CosmosLogo.bmp" />
-    </ItemGroup>
-
-    <ItemGroup>
         <PackageReference Include="Cosmos.Build" Version="0-*" NoWarn="NU1604" />
         <PackageReference Include="Cosmos.Debug.Kernel" Version="0-*" NoWarn="NU1604" />
         <PackageReference Include="Cosmos.System2" Version="0-*" NoWarn="NU1604" />
