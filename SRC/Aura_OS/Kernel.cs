@@ -18,6 +18,7 @@ using Aura_OS.System;
 using Aura_OS.Interpreter;
 using Aura_OS.System.UI.GUI;
 using Aura_OS.System.Application.Emulators.GameBoyEmu;
+using System.IO;
 
 namespace Aura_OS
 {
@@ -108,6 +109,15 @@ namespace Aura_OS
 
             Encoding.RegisterProvider(CosmosEncodingProvider.Instance);
             KeyboardManager.SetKeyLayout(new Sys.ScanMaps.FRStandardLayout());
+
+            try
+            {
+                if (File.Exists(CurrentDirectory + "boot.bat"))
+                {
+                    Batch.Execute(CurrentDirectory + "boot.bat");
+                }
+            }
+            catch { }
 
             LoadFiles();
 
