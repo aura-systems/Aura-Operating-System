@@ -22,6 +22,9 @@ namespace Aura_OS
 
     public class Terminal : App
     {
+        public string CommandOutput = "";
+        public bool Redirect = false;
+
         GUI Graphics;
 
         internal const char LineFeed = '\n';
@@ -329,12 +332,19 @@ namespace Aura_OS
         /// </summary>
         private void DoLineFeed()
         {
-            mY++;
-            mX = 0;
-            if (mY == mRows)
+            if (Redirect)
             {
-                Scroll();
-                mY--;
+                CommandOutput += "\n";
+            }
+            else
+            {
+                mY++;
+                mX = 0;
+                if (mY == mRows)
+                {
+                    Scroll();
+                    mY--;
+                }
             }
         }
 
@@ -413,11 +423,19 @@ namespace Aura_OS
         /// <param name="aChar">A char to write</param>
         public void Write(char aChar)
         {
-            Text[mY][mX] = new Cell() { Char = aChar, ForegroundColor = ForegroundColor, BackgroundColor = BackgroundColor };
-            mX++;
-            if (mX == mCols)
+            if (Redirect)
             {
-                DoLineFeed();
+                CommandOutput += aChar;
+            }
+            else
+            {
+                Text[mY][mX] = new Cell() { Char = aChar, ForegroundColor = ForegroundColor, BackgroundColor = BackgroundColor };
+
+                mX++;
+                if (mX == mCols)
+                {
+                    DoLineFeed();
+                }
             }
         }
 

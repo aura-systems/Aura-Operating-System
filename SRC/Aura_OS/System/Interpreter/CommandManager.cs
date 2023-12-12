@@ -2,6 +2,7 @@
 * PROJECT:          Aura Operating System Development
 * CONTENT:          Command Interpreter - CommandManager
 * PROGRAMMER(S):    John Welsh <djlw78@gmail.com>
+*                   Valentin Charbonnier <valentinbreiz@gmail.com>
 */
 
 using Aura_OS.System.Shell.cmdIntr.c_Console;
@@ -26,7 +27,7 @@ namespace Aura_OS.Interpreter
     public class CommandManager : Process
     {
         public List<ICommand> CMDs = new List<ICommand>();
-
+        
         public CommandManager() : base("cmdManager", ProcessType.KernelComponent)
         {
 
@@ -120,6 +121,16 @@ namespace Aura_OS.Interpreter
 
             #region Parse command
 
+            string[] parts = cmd.Split(new char[] { '>' }, 2);
+            string redirectionPart = parts.Length > 1 ? parts[1].Trim() : null;
+            cmd = parts[0].Trim();
+
+            if (!string.IsNullOrEmpty(redirectionPart))
+            {
+                Kernel.console.Redirect = true;
+                Kernel.console.CommandOutput = "";
+            }
+
             List<string> arguments = Misc.ParseCommandLine(cmd);
 
             string firstarg = arguments[0]; //command name
@@ -161,6 +172,17 @@ namespace Aura_OS.Interpreter
 
                     ProcessCommandResult(result);
 
+                    if (Kernel.console.Redirect)
+                    {
+                        Kernel.console.Redirect = false;
+
+                        Kernel.console.WriteLine();
+
+                        HandleRedirection(redirectionPart, Kernel.console.CommandOutput);
+
+                        Kernel.console.CommandOutput = "";
+                    }
+
                     return;
                 }
             }
@@ -170,6 +192,15 @@ namespace Aura_OS.Interpreter
             Kernel.console.Foreground = ConsoleColor.White;
 
             Kernel.console.WriteLine();
+
+            if (Kernel.console.Redirect)
+            {
+                Kernel.console.Redirect = false;
+
+                HandleRedirection(redirectionPart, Kernel.console.CommandOutput);
+
+                Kernel.console.CommandOutput = "";
+            }
         }
 
         /// <summary>
@@ -245,5 +276,11 @@ namespace Aura_OS.Interpreter
             Kernel.console.WriteLine();
         }
 
+        private void HandleRedirection(string filePath, string commandOutput)
+        {
+            string fullPath = Kernel.CurrentDirectory + filePath;
+
+            File.WriteAllText(fullPath, commandOutput);
+        }
     }
 }

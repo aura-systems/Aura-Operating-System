@@ -108,7 +108,7 @@ namespace Aura_OS
             CustomConsole.WriteLineInfo("Initializing localization...");
 
             Encoding.RegisterProvider(CosmosEncodingProvider.Instance);
-            KeyboardManager.SetKeyLayout(new Sys.ScanMaps.FRStandardLayout());
+            KeyboardManager.SetKeyLayout(new Sys.ScanMaps.USStandardLayout());
 
             try
             {
