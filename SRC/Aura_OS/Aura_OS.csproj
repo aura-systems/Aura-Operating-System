@@ -34,11 +34,8 @@
 
     <ItemGroup>
         <PackageReference Include="Cosmos.System2" Version="0-*" NoWarn="NU1604;NU1605" />
-        <PackageReference Include="CosmosHttp" Version="1.0.2" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Folder Include="System\Network\" />
+        <PackageReference Include="CosmosHttp" Version="1.0.3" />
+        <PackageReference Include="jzero" Version="0.4.5" />
     </ItemGroup>
 
 	<Target Name="GetVersion">
