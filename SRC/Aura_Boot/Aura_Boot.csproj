@@ -22,7 +22,18 @@
         <StartCosmosGDB>False</StartCosmosGDB>
         <VBEResolution>800x600x32</VBEResolution>
         <OptimizationLevel>3</OptimizationLevel>
+        <Timeout>0</Timeout>
     </PropertyGroup>
+
+    <ItemGroup>
+      <None Remove="isoFiles\UI\Images\AuraLogo.bmp" />
+      <None Remove="isoFiles\UI\Images\CosmosLogo.bmp" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <EmbeddedResource Include="isoFiles\UI\Images\AuraLogo.bmp" />
+      <EmbeddedResource Include="isoFiles\UI\Images\CosmosLogo.bmp" />
+    </ItemGroup>
 
     <ItemGroup>
         <PackageReference Include="Cosmos.Build" Version="0-*" NoWarn="NU1604" />

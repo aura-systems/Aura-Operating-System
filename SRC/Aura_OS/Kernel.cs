@@ -1,9 +1,13 @@
-﻿using System;
+﻿/*
+* PROJECT:          Aura Operating System Development
+* CONTENT:          Kernel.cs, the main init class + main loop class
+* PROGRAMMER(S):    Valentin Charbonnier <valentinbreiz@gmail.com>
+*/
+
+using System;
 using System.Collections.Generic;
 using System.Text;
 using Sys = Cosmos.System;
-using Aura_OS.System.Shell.cmdIntr;
-using Cosmos.Core;
 using Cosmos.Core.Memory;
 using Cosmos.HAL;
 using Cosmos.System;
@@ -167,60 +171,53 @@ namespace Aura_OS
         {
             System.CustomConsole.WriteLineInfo("Loading files...");
 
-            //LOAD FILES
+            var vols = VirtualFileSystem.GetVolumes();
+            string isoVol = CurrentVolume;
 
-            programIco = new Bitmap(Files.NoIcon);
+            foreach (var vol in vols)
+            {
+                if (VirtualFileSystem.GetFileSystemType(vol.mName).Equals("ISO9660"))
+                {
+                    isoVol = vol.mName;
 
-            CustomConsole.WriteLineOK("Program icon.");
+                    CustomConsole.WriteLineOK("ISO9660 vol is " + isoVol);
+                }
+            }
 
-            terminalIco = new Bitmap(Files.TerminalIcon);
-
-            CustomConsole.WriteLineOK("Terminal icon.");
-
-            powerIco = new Bitmap(Files.PowerIcon);
-
-            CustomConsole.WriteLineOK("Power icon.");
-
-            connectedIco = new Bitmap(Files.ConnectedIcon);
-
-            CustomConsole.WriteLineOK("Connected icon.");
-
-            AuraLogo = new Bitmap(Files.AuraImage);
-
-            CustomConsole.WriteLineOK("Aura logo.");
-
-            CosmosLogo = new Bitmap(Files.CosmosLogo);
-
-            CustomConsole.WriteLineOK("CosmosLogo logo.");
-
-            wallpaper = new Bitmap(Files.Wallpaper);
-
-            CustomConsole.WriteLineOK("Wallpaper.");
-
+            // LOAD FILE
             errorLogo = new Bitmap(Files.ErrorImage);
+            CustomConsole.WriteLineOK("error.bmp image loaded.");
 
-            CustomConsole.WriteLineOK("Error logo.");
+            // Wallpapers
+            wallpaper = new Bitmap(Files.Wallpaper);
+            CustomConsole.WriteLineOK("wallpaper-1.bmp wallpaper loaded.");
 
-            programLogo = new Bitmap(Files.ProgramImage);
+            // Images
+            AuraLogo = new Bitmap(File.ReadAllBytes(isoVol + "UI\\Images\\AuraLogo.bmp"));
+            CustomConsole.WriteLineOK("AuraLogo.bmp image loaded.");
 
-            CustomConsole.WriteLineOK("Program icon 2.");
+            CosmosLogo = new Bitmap(File.ReadAllBytes(isoVol + "UI\\Images\\CosmosLogo.bmp"));
+            CustomConsole.WriteLineOK("CosmosLogo.bmp image loaded.");
 
-            cursor = new Bitmap(Files.CursorIcon);
+            // Fonts
+            font = PCScreenFont.LoadFont(File.ReadAllBytes(isoVol + "UI\\Fonts\\zap-ext-light16.psf"));
+            CustomConsole.WriteLineOK("zap-ext-light16.psf font loaded.");
 
-            CustomConsole.WriteLineOK("Cursor.");
+            // Icons
+            CloseNormal = new Bitmap(File.ReadAllBytes(isoVol + "UI\\Images\\Icons\\close_normal.bmp"));
+            CustomConsole.WriteLineOK("close_normal.bmp icon loaded.");
 
-            font = PCScreenFont.LoadFont(Files.Font);
+            Start = new Bitmap(File.ReadAllBytes(isoVol + "UI\\Images\\Icons\\start.bmp"));
+            CustomConsole.WriteLineOK("start.bmp icon loaded.");
 
-            CustomConsole.WriteLineOK("Font.");
+            terminalIco = new Bitmap(File.ReadAllBytes(isoVol + "UI\\Images\\Icons\\utilities-terminal.bmp"));
+            CustomConsole.WriteLineOK("utilities-terminal.bmp icon loaded.");
 
-            // UI
-            CloseNormal = new Bitmap(Files.CloseNormal);
+            programIco = new Bitmap(File.ReadAllBytes(isoVol + "UI\\Images\\Icons\\window.bmp"));
+            CustomConsole.WriteLineOK("window.bmp icon loaded.");
 
-            CustomConsole.WriteLineOK("CloseNormal icon.");
-
-            Start = new Bitmap(Files.Start);
-
-            CustomConsole.WriteLineOK("Start icon.");
+            cursor = new Bitmap(File.ReadAllBytes(isoVol + "UI\\Images\\Icons\\cursor.bmp"));
+            CustomConsole.WriteLineOK("cursor.bmp icon loaded.");
         }
 
         public static void Run()
