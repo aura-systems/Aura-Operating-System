@@ -21,6 +21,7 @@ using Aura_OS.System.Shell.cmdIntr.SystemInfomation;
 using Aura_OS.System.Shell.cmdIntr;
 using Aura_OS.Interpreter.Commands.Util;
 using Aura_OS.Interpreter.Commands.Filesystem;
+using UniLua;
 
 namespace Aura_OS.Interpreter
 {
@@ -103,6 +104,7 @@ namespace Aura_OS.Interpreter
                 };
                 test[2] = "test3"; //Should make a Null reference exception
             }));
+            CMDs.Add(new CommandLua(new string[] { "lua" }));
         }
 
         /// <summary>
