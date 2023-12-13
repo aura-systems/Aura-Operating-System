@@ -25,6 +25,7 @@ See the [Aura Progression](https://github.com/aura-systems/Aura-Operating-System
 - Exception Handler.
 - GUI (SVGAII, VBE)
 - Networking (ARP, IPV4, ICMP, UDP, DNS, DHCP, TCP, HTTP)
+- Lua 5.2 interpreter
 
 ## Screenshots
 

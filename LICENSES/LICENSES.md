@@ -37,3 +37,9 @@ Open source project used in Aura Operating System:
 - Description: Simple Http Server.
 - Location: [Aura Operating System/Aura OS/System/Network/SimpleHttpServer/]
 - License file: [LICENSE.MD](https://github.com/aura-systems/Aura-Operating-System/blob/master/LICENSES/SimpleHttpServer/LICENSE.md)
+
+### UniLua
+- Description: Lua 2.5 interpreter.
+- Project: [github.com/xebecnan/UniLua](https://github.com/xebecnan/UniLua)
+- Location: [SRC/Aura_OS/System/Interpreter/UniLua]
+- License file: [LICENSE.MD](https://github.com/aura-systems/Aura-Operating-System/blob/master/LICENSES/UniLua/LICENSE.txt)

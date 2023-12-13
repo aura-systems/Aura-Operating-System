@@ -26,6 +26,7 @@
 - 错误捕捉。
 - GUI (SVGAII, VBE)
 - 网络 (ARP, IPV4, ICMP, UDP, DNS, DHCP, TCP, HTTP)
+- 解释器 Lua 5.2
 
 ## 屏幕截图
 
