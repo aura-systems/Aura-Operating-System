@@ -104,32 +104,7 @@ namespace Aura_OS.Interpreter
                 };
                 test[2] = "test3"; //Should make a Null reference exception
             }));
-            CMDs.Add(new CommandAction(new string[] { "lua" }, () =>
-            {
-                try
-                {
-                    // create Lua VM instance
-                    var Lua = LuaAPI.NewState();
-
-                    Console.WriteLine("Lua VM created.");
-
-                    // load base libraries
-                    Lua.L_OpenLibs();
-
-                    Console.WriteLine("Base libs opened.");
-
-                    // load and run Lua script file
-                    var LuaScriptFile = Kernel.CurrentDirectory + "main.lua";
-                    var status = Lua.L_DoFile(LuaScriptFile);
-
-                    Console.WriteLine("main.lua loaded and ran.");
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine("Ex:" + e);
-                }
-                
-            }));
+            CMDs.Add(new CommandLua(new string[] { "lua" }));
         }
 
         /// <summary>

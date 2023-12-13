@@ -17,9 +17,9 @@ namespace UniLua
 		public LuaState State;
 		public LLex		Lexer;
 
-		public Dictionary<TValue, int> H;
+		public Dictionary<int, int> H;
 
-		public int NumActVar;
+        public int NumActVar;
 		public int FreeReg;
 
 		public int Pc;
@@ -30,7 +30,7 @@ namespace UniLua
 		public FuncState()
 		{
 			Proto = new LuaProto();
-			H = new Dictionary<TValue, int>();
+			H = new Dictionary<int, int>();
 			NumActVar = 0;
 			FreeReg = 0;
 		}

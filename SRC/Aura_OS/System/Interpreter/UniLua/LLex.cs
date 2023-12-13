@@ -180,7 +180,7 @@ namespace UniLua
 		private static Dictionary<string, TK> ReservedWordDict;
 		static LLex()
 		{
-			ReservedWordDict = new Dictionary<string, TK>();
+            ReservedWordDict = new Dictionary<string, TK>();
 			ReservedWordDict.Add("and", TK.AND);
 			ReservedWordDict.Add("break", TK.BREAK);
 			ReservedWordDict.Add("do", TK.DO);
@@ -203,7 +203,7 @@ namespace UniLua
 			ReservedWordDict.Add("true", TK.TRUE);
 			ReservedWordDict.Add("until", TK.UNTIL);
 			ReservedWordDict.Add("while", TK.WHILE);
-		}
+        }
 
         public LLex( ILuaState lua, ILoadInfo loadinfo, string name )
         {

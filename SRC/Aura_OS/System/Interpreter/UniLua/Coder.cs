@@ -803,22 +803,22 @@ namespace UniLua
 		public static int StringK( FuncState fs, string s )
 		{
 			var o = new TValue();
-			o.SetSValue(s);
-			return AddK( fs, ref o, ref o );
+            o.SetSValue(s);
+            return AddK( fs, ref o, ref o );
 		}
 
 		public static int NumberK( FuncState fs, double r )
 		{
 			var o = new TValue();
 			o.SetNValue(r);
-			return AddK( fs, ref o, ref o );
+            return AddK( fs, ref o, ref o );
 		}
 
 		private static int BoolK( FuncState fs, bool b )
 		{
 			var o = new TValue();
 			o.SetBValue(b);
-			return AddK( fs, ref o, ref o );
+            return AddK( fs, ref o, ref o );
 		}
 
 		private static int NilK( FuncState fs )
@@ -831,25 +831,27 @@ namespace UniLua
 
 			var o = new TValue();
 			o.SetNilValue();
-			return AddK( fs, ref o, ref o );
+            return AddK( fs, ref o, ref o );
 		}
 
-		public static int AddK( FuncState fs, ref TValue key, ref TValue v )
-		{
-			int idx;
-			if( fs.H.TryGetValue( key, out idx ) )
-				return idx;
+        public static int AddK(FuncState fs, ref TValue key, ref TValue v)
+        {
+            int idx;
+            int keyHash = key.GetHashCode();
 
-			idx = fs.Proto.K.Count;
-			fs.H.Add( key, idx );
+            if (fs.H.TryGetValue(keyHash, out idx))
+                return idx;
 
-			var newItem = new StkId();
-			newItem.V.SetObj(ref v);
-			fs.Proto.K.Add(newItem);
-			return idx;
-		}
+            idx = fs.Proto.K.Count;
+            fs.H.Add(keyHash, idx);
 
-		public static void Indexed( FuncState fs, ExpDesc t, ExpDesc k )
+            var newItem = new StkId();
+            newItem.V.SetObj(ref v);
+            fs.Proto.K.Add(newItem);
+            return idx;
+        }
+
+        public static void Indexed( FuncState fs, ExpDesc t, ExpDesc k )
 		{
 			t.Ind.T = t.Info;
 			t.Ind.Idx = Exp2RK( fs, k );

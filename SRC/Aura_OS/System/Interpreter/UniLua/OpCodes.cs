@@ -85,79 +85,79 @@ namespace UniLua
 		iAx,
 	}
 
-	internal struct OpCodeMode
+	internal class OpCodeMode
 	{
 		public bool 		TMode;
 		public bool 		AMode;
 		public OpArgMask 	BMode;
 		public OpArgMask 	CMode;
 		public OpMode		OpMode;
-	}
+
+        public OpCodeMode(bool tMode, bool aMode, OpArgMask bMode, OpArgMask cMode, OpMode opMode)
+        {
+            TMode = tMode;
+            AMode = aMode;
+            BMode = bMode;
+            CMode = cMode;
+            OpMode = opMode;
+        }
+    }
 
 	internal static class OpCodeInfo
 	{
 		public static OpCodeMode GetMode( OpCode op )
 		{
-			return Info[op];
+			return Info[(int)op];
 		}
 
-		private static Dictionary<OpCode, OpCodeMode> Info;
+		private static Dictionary<int, OpCodeMode> Info;
 
 		static OpCodeInfo()
 		{
-			Info = new Dictionary<OpCode, OpCodeMode>();
-			Info.Add( OpCode.OP_MOVE, 		M(false, true,  OpArgMask.OpArgR, OpArgMask.OpArgN, OpMode.iABC) );
-			Info.Add( OpCode.OP_LOADK, 		M(false, true,  OpArgMask.OpArgK, OpArgMask.OpArgN, OpMode.iABx) );
-			Info.Add( OpCode.OP_LOADKX, 	M(false, true,  OpArgMask.OpArgN, OpArgMask.OpArgN, OpMode.iABx) );
-			Info.Add( OpCode.OP_LOADBOOL, 	M(false, true,  OpArgMask.OpArgU, OpArgMask.OpArgU, OpMode.iABC) );
-			Info.Add( OpCode.OP_LOADNIL, 	M(false, true,  OpArgMask.OpArgU, OpArgMask.OpArgN, OpMode.iABC) );
-			Info.Add( OpCode.OP_GETUPVAL, 	M(false, true,  OpArgMask.OpArgU, OpArgMask.OpArgN, OpMode.iABC) );
-			Info.Add( OpCode.OP_GETTABUP, 	M(false, true,  OpArgMask.OpArgU, OpArgMask.OpArgK, OpMode.iABC) );
-			Info.Add( OpCode.OP_GETTABLE, 	M(false, true,  OpArgMask.OpArgR, OpArgMask.OpArgK, OpMode.iABC) );
-			Info.Add( OpCode.OP_SETTABUP, 	M(false, false, OpArgMask.OpArgK, OpArgMask.OpArgK, OpMode.iABC) );
-			Info.Add( OpCode.OP_SETUPVAL, 	M(false, false, OpArgMask.OpArgU, OpArgMask.OpArgN, OpMode.iABC) );
-			Info.Add( OpCode.OP_SETTABLE, 	M(false, false, OpArgMask.OpArgK, OpArgMask.OpArgK, OpMode.iABC) );
-			Info.Add( OpCode.OP_NEWTABLE, 	M(false, true,  OpArgMask.OpArgU, OpArgMask.OpArgU, OpMode.iABC) );
-			Info.Add( OpCode.OP_SELF, 		M(false, true,  OpArgMask.OpArgR, OpArgMask.OpArgK, OpMode.iABC) );
-			Info.Add( OpCode.OP_ADD, 		M(false, true,  OpArgMask.OpArgK, OpArgMask.OpArgK, OpMode.iABC) );
-			Info.Add( OpCode.OP_SUB, 		M(false, true,  OpArgMask.OpArgK, OpArgMask.OpArgK, OpMode.iABC) );
-			Info.Add( OpCode.OP_MUL, 		M(false, true,  OpArgMask.OpArgK, OpArgMask.OpArgK, OpMode.iABC) );
-			Info.Add( OpCode.OP_DIV, 		M(false, true,  OpArgMask.OpArgK, OpArgMask.OpArgK, OpMode.iABC) );
-			Info.Add( OpCode.OP_MOD, 		M(false, true,  OpArgMask.OpArgK, OpArgMask.OpArgK, OpMode.iABC) );
-			Info.Add( OpCode.OP_POW, 		M(false, true,  OpArgMask.OpArgK, OpArgMask.OpArgK, OpMode.iABC) );
-			Info.Add( OpCode.OP_UNM, 		M(false, true,  OpArgMask.OpArgR, OpArgMask.OpArgN, OpMode.iABC) );
-			Info.Add( OpCode.OP_NOT, 		M(false, true,  OpArgMask.OpArgR, OpArgMask.OpArgN, OpMode.iABC) );
-			Info.Add( OpCode.OP_LEN, 		M(false, true,  OpArgMask.OpArgR, OpArgMask.OpArgN, OpMode.iABC) );
-			Info.Add( OpCode.OP_CONCAT, 	M(false, true,  OpArgMask.OpArgR, OpArgMask.OpArgR, OpMode.iABC) );
-			Info.Add( OpCode.OP_JMP, 		M(false, false, OpArgMask.OpArgR, OpArgMask.OpArgN, OpMode.iAsBx) );
-			Info.Add( OpCode.OP_EQ, 		M(true,  false, OpArgMask.OpArgK, OpArgMask.OpArgK, OpMode.iABC) );
-			Info.Add( OpCode.OP_LT, 		M(true,  false, OpArgMask.OpArgK, OpArgMask.OpArgK, OpMode.iABC) );
-			Info.Add( OpCode.OP_LE, 		M(true,  false, OpArgMask.OpArgK, OpArgMask.OpArgK, OpMode.iABC) );
-			Info.Add( OpCode.OP_TEST, 		M(true,  false, OpArgMask.OpArgN, OpArgMask.OpArgU, OpMode.iABC) );
-			Info.Add( OpCode.OP_TESTSET, 	M(true,  true,  OpArgMask.OpArgR, OpArgMask.OpArgU, OpMode.iABC) );
-			Info.Add( OpCode.OP_CALL, 		M(false, true,  OpArgMask.OpArgU, OpArgMask.OpArgU, OpMode.iABC) );
-			Info.Add( OpCode.OP_TAILCALL, 	M(false, true,  OpArgMask.OpArgU, OpArgMask.OpArgU, OpMode.iABC) );
-			Info.Add( OpCode.OP_RETURN, 	M(false, false, OpArgMask.OpArgU, OpArgMask.OpArgN, OpMode.iABC) );
-			Info.Add( OpCode.OP_FORLOOP, 	M(false, true,  OpArgMask.OpArgR, OpArgMask.OpArgN, OpMode.iAsBx) );
-			Info.Add( OpCode.OP_FORPREP, 	M(false, true,  OpArgMask.OpArgR, OpArgMask.OpArgN, OpMode.iAsBx) );
-			Info.Add( OpCode.OP_TFORCALL, 	M(false, false, OpArgMask.OpArgN, OpArgMask.OpArgU, OpMode.iABC) );
-			Info.Add( OpCode.OP_TFORLOOP, 	M(false, true,  OpArgMask.OpArgR, OpArgMask.OpArgN, OpMode.iAsBx) );
-			Info.Add( OpCode.OP_SETLIST, 	M(false, false, OpArgMask.OpArgU, OpArgMask.OpArgU, OpMode.iABC) );
-			Info.Add( OpCode.OP_CLOSURE, 	M(false, true,  OpArgMask.OpArgU, OpArgMask.OpArgN, OpMode.iABx) );
-			Info.Add( OpCode.OP_VARARG, 	M(false, true,  OpArgMask.OpArgU, OpArgMask.OpArgN, OpMode.iABC) );
-			Info.Add( OpCode.OP_EXTRAARG, 	M(false, false, OpArgMask.OpArgU, OpArgMask.OpArgU, OpMode.iAx) );
-		}
-
-		private static OpCodeMode M(bool t, bool a, OpArgMask b, OpArgMask c, OpMode op)
-		{
-			return new OpCodeMode {
-				TMode = t,
-				AMode = a,
-				BMode = b,
-				CMode = c,
-				OpMode = op,
-			};
-		}
+            Info = new Dictionary<int, OpCodeMode>();
+            var opCode = OpCode.OP_MOVE;
+            var opCodeMode = new OpCodeMode(false, true, OpArgMask.OpArgR, OpArgMask.OpArgN, OpMode.iABC);
+            Info.Add((int)opCode, opCodeMode);
+            Info.Add( (int)OpCode.OP_LOADK, 		new OpCodeMode(false, true,  OpArgMask.OpArgK, OpArgMask.OpArgN, OpMode.iABx) );
+			Info.Add( (int)OpCode.OP_LOADKX, 	new OpCodeMode(false, true,  OpArgMask.OpArgN, OpArgMask.OpArgN, OpMode.iABx) );
+			Info.Add( (int)OpCode.OP_LOADBOOL, 	new OpCodeMode(false, true,  OpArgMask.OpArgU, OpArgMask.OpArgU, OpMode.iABC) );
+			Info.Add( (int)OpCode.OP_LOADNIL, 	new OpCodeMode(false, true,  OpArgMask.OpArgU, OpArgMask.OpArgN, OpMode.iABC) );
+			Info.Add( (int)OpCode.OP_GETUPVAL, 	new OpCodeMode(false, true,  OpArgMask.OpArgU, OpArgMask.OpArgN, OpMode.iABC) );
+			Info.Add( (int)OpCode.OP_GETTABUP, 	new OpCodeMode(false, true,  OpArgMask.OpArgU, OpArgMask.OpArgK, OpMode.iABC) );
+			Info.Add( (int)OpCode.OP_GETTABLE, 	new OpCodeMode(false, true,  OpArgMask.OpArgR, OpArgMask.OpArgK, OpMode.iABC) );
+			Info.Add( (int)OpCode.OP_SETTABUP, 	new OpCodeMode(false, false, OpArgMask.OpArgK, OpArgMask.OpArgK, OpMode.iABC) );
+			Info.Add( (int)OpCode.OP_SETUPVAL, 	new OpCodeMode(false, false, OpArgMask.OpArgU, OpArgMask.OpArgN, OpMode.iABC) );
+			Info.Add( (int)OpCode.OP_SETTABLE, 	new OpCodeMode(false, false, OpArgMask.OpArgK, OpArgMask.OpArgK, OpMode.iABC) );
+			Info.Add( (int)OpCode.OP_NEWTABLE, 	new OpCodeMode(false, true,  OpArgMask.OpArgU, OpArgMask.OpArgU, OpMode.iABC) );
+			Info.Add( (int)OpCode.OP_SELF, 		new OpCodeMode(false, true,  OpArgMask.OpArgR, OpArgMask.OpArgK, OpMode.iABC) );
+			Info.Add( (int)OpCode.OP_ADD, 		new OpCodeMode(false, true,  OpArgMask.OpArgK, OpArgMask.OpArgK, OpMode.iABC) );
+			Info.Add( (int)OpCode.OP_SUB, 		new OpCodeMode(false, true,  OpArgMask.OpArgK, OpArgMask.OpArgK, OpMode.iABC) );
+			Info.Add( (int)OpCode.OP_MUL, 		new OpCodeMode(false, true,  OpArgMask.OpArgK, OpArgMask.OpArgK, OpMode.iABC) );
+			Info.Add( (int)OpCode.OP_DIV, 		new OpCodeMode(false, true,  OpArgMask.OpArgK, OpArgMask.OpArgK, OpMode.iABC) );
+			Info.Add( (int)OpCode.OP_MOD, 		new OpCodeMode(false, true,  OpArgMask.OpArgK, OpArgMask.OpArgK, OpMode.iABC) );
+			Info.Add( (int)OpCode.OP_POW, 		new OpCodeMode(false, true,  OpArgMask.OpArgK, OpArgMask.OpArgK, OpMode.iABC) );
+			Info.Add( (int)OpCode.OP_UNM, 		new OpCodeMode(false, true,  OpArgMask.OpArgR, OpArgMask.OpArgN, OpMode.iABC) );
+			Info.Add( (int)OpCode.OP_NOT, 		new OpCodeMode(false, true,  OpArgMask.OpArgR, OpArgMask.OpArgN, OpMode.iABC) );
+            Info.Add( (int)OpCode.OP_LEN, 		new OpCodeMode(false, true,  OpArgMask.OpArgR, OpArgMask.OpArgN, OpMode.iABC) );
+			Info.Add( (int)OpCode.OP_CONCAT, 	new OpCodeMode(false, true,  OpArgMask.OpArgR, OpArgMask.OpArgR, OpMode.iABC) );
+			Info.Add( (int)OpCode.OP_JMP, 		new OpCodeMode(false, false, OpArgMask.OpArgR, OpArgMask.OpArgN, OpMode.iAsBx) );
+			Info.Add( (int)OpCode.OP_EQ, 		new OpCodeMode(true,  false, OpArgMask.OpArgK, OpArgMask.OpArgK, OpMode.iABC) );
+			Info.Add( (int)OpCode.OP_LT, 		new OpCodeMode(true,  false, OpArgMask.OpArgK, OpArgMask.OpArgK, OpMode.iABC) );
+			Info.Add( (int)OpCode.OP_LE, 		new OpCodeMode(true,  false, OpArgMask.OpArgK, OpArgMask.OpArgK, OpMode.iABC) );
+			Info.Add( (int)OpCode.OP_TEST, 		new OpCodeMode(true,  false, OpArgMask.OpArgN, OpArgMask.OpArgU, OpMode.iABC) );
+			Info.Add( (int)OpCode.OP_TESTSET, 	new OpCodeMode(true,  true,  OpArgMask.OpArgR, OpArgMask.OpArgU, OpMode.iABC) );
+			Info.Add( (int)OpCode.OP_CALL, 		new OpCodeMode(false, true,  OpArgMask.OpArgU, OpArgMask.OpArgU, OpMode.iABC) );
+			Info.Add( (int)OpCode.OP_TAILCALL, 	new OpCodeMode(false, true,  OpArgMask.OpArgU, OpArgMask.OpArgU, OpMode.iABC) );
+			Info.Add( (int)OpCode.OP_RETURN, 	new OpCodeMode(false, false, OpArgMask.OpArgU, OpArgMask.OpArgN, OpMode.iABC) );
+			Info.Add( (int)OpCode.OP_FORLOOP, 	new OpCodeMode(false, true,  OpArgMask.OpArgR, OpArgMask.OpArgN, OpMode.iAsBx) );
+			Info.Add( (int)OpCode.OP_FORPREP, 	new OpCodeMode(false, true,  OpArgMask.OpArgR, OpArgMask.OpArgN, OpMode.iAsBx) );
+			Info.Add( (int)OpCode.OP_TFORCALL, 	new OpCodeMode(false, false, OpArgMask.OpArgN, OpArgMask.OpArgU, OpMode.iABC) );
+			Info.Add( (int)OpCode.OP_TFORLOOP, 	new OpCodeMode(false, true,  OpArgMask.OpArgR, OpArgMask.OpArgN, OpMode.iAsBx) );
+			Info.Add( (int)OpCode.OP_SETLIST, 	new OpCodeMode(false, false, OpArgMask.OpArgU, OpArgMask.OpArgU, OpMode.iABC) );
+			Info.Add( (int)OpCode.OP_CLOSURE, 	new OpCodeMode(false, true,  OpArgMask.OpArgU, OpArgMask.OpArgN, OpMode.iABx) );
+			Info.Add( (int)OpCode.OP_VARARG, 	new OpCodeMode(false, true,  OpArgMask.OpArgU, OpArgMask.OpArgN, OpMode.iABC) );
+			Info.Add( (int)OpCode.OP_EXTRAARG, 	new OpCodeMode(false, false, OpArgMask.OpArgU, OpArgMask.OpArgU, OpMode.iAx) );
+        }
 	}
 
 }

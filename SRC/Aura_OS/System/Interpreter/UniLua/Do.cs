@@ -71,7 +71,14 @@ namespace UniLua
 
 			ErrFunc = errFunc;
 			ThreadStatus status = D_RawRunProtected<T>( func, ref ud );
-
+			if( status != ThreadStatus.LUA_OK ) // an error occurred?
+			{
+				F_Close( Stack[oldTopIndex] );
+				SetErrorObj( status, Stack[oldTopIndex] );
+				CI = BaseCI[oldCIIndex];
+				AllowHook = oldAllowHook;
+				NumNonYieldable = oldNumNonYieldable;
+			}
 			ErrFunc = oldErrFunc;
 			return status;
 		}
