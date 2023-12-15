@@ -18,6 +18,7 @@ namespace Aura_OS.System.UI.GUI
         int startY;
         Button StartButton;
         Button HourButton;
+        Button NetworkButton;
         public bool Clicked = false;
         
         public Dock()
@@ -37,6 +38,12 @@ namespace Aura_OS.System.UI.GUI
             int hourButtonX = (int)(Kernel.screenWidth - (time.Length * (Kernel.font.Width + 1)) - 2);
             int hourButtonY = (int)Kernel.screenHeight - 28 - 3;
             HourButton = new Button(time, hourButtonX, hourButtonY, hourButtonWidth, hourButtonHeight, true);
+
+            int networkButtonWidth = 16;
+            int networkButtonHeight = 16;
+            int netoworkButtonX = (int)(Kernel.screenWidth - (time.Length * (Kernel.font.Width + 1)) - 2) - 20;
+            int networkButtonY = (int)Kernel.screenHeight - 25;
+            NetworkButton = new Button(Kernel.networkOfflineIco, netoworkButtonX, networkButtonY, networkButtonWidth, networkButtonHeight, true);
         }
         
         public void Update()
@@ -49,6 +56,24 @@ namespace Aura_OS.System.UI.GUI
             string time = Time.TimeString(true, true, true);
             HourButton.Text = time;
             HourButton.Update();
+
+            if (Kernel.NetworkTransmitting)
+            {
+                NetworkButton.Image = Kernel.networkTransmitIco;
+            }
+            else
+            {
+                if (Kernel.NetworkConnected)
+                {
+                    NetworkButton.Image = Kernel.networkIdleIco;
+                }
+                else
+                {
+                    NetworkButton.Image = Kernel.networkOfflineIco;
+                }
+            }
+
+            NetworkButton.Update();
 
             int buttonX = 36;
             foreach (var process in Kernel.ProcessManager.Processes)

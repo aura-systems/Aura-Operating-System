@@ -40,11 +40,17 @@ namespace Aura_OS
         public static string CurrentVolume = @"0:\";
         public static string CurrentDirectory = @"0:\";
 
+        public static bool NetworkConnected = false;
+        public static bool NetworkTransmitting = false;
+
         //FILES
         public static Bitmap programIco;
         public static Bitmap terminalIco;
         public static Bitmap powerIco;
         public static Bitmap connectedIco;
+        public static Bitmap networkTransmitIco;
+        public static Bitmap networkIdleIco;
+        public static Bitmap networkOfflineIco;
 
         public static Bitmap programLogo;
         public static Bitmap errorLogo;
@@ -218,6 +224,15 @@ namespace Aura_OS
 
             cursor = new Bitmap(File.ReadAllBytes(isoVol + "UI\\Images\\Icons\\cursor.bmp"));
             CustomConsole.WriteLineOK("cursor.bmp icon loaded.");
+
+            networkTransmitIco = new Bitmap(File.ReadAllBytes(isoVol + "UI\\Images\\Icons\\network-transmit.bmp"));
+            CustomConsole.WriteLineOK("network-transmit.bmp icon loaded.");
+
+            networkIdleIco = new Bitmap(File.ReadAllBytes(isoVol + "UI\\Images\\Icons\\network-idle.bmp"));
+            CustomConsole.WriteLineOK("network-idle.bmp icon loaded.");
+
+            networkOfflineIco = new Bitmap(File.ReadAllBytes(isoVol + "UI\\Images\\Icons\\network-offline.bmp"));
+            CustomConsole.WriteLineOK("network-offline.bmp icon loaded.");
         }
 
         public static void Run()

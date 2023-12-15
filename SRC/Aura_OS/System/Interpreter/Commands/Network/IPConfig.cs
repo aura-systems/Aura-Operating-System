@@ -83,6 +83,8 @@ namespace Aura_OS.System.Shell.cmdIntr.Network
                 xClient.Close();
 
                 NetworkConfiguration.ClearConfigs();
+
+                Kernel.NetworkConnected = false;
             }
             else if (arguments[0] == "/ask")
             {
@@ -91,6 +93,7 @@ namespace Aura_OS.System.Shell.cmdIntr.Network
                 {
                     xClient.Close();
                     Console.WriteLine("Configuration applied! Your local IPv4 Address is " + NetworkConfiguration.CurrentAddress + ".");
+                    Kernel.NetworkConnected = true;
                 }
                 else
                 {
@@ -148,11 +151,13 @@ namespace Aura_OS.System.Shell.cmdIntr.Network
                     {
                         IPConfig.Enable(nic, ip, subnet, gw);
                         Console.WriteLine("Config OK!");
+                        Kernel.NetworkConnected = true;
                     }
                     else if (ip != null && subnet != null)
                     {
                         IPConfig.Enable(nic, ip, subnet, ip);
                         Console.WriteLine("Config OK!");
+                        Kernel.NetworkConnected = true;
                     }
                     else
                     {
