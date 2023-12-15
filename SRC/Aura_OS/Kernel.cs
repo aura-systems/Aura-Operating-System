@@ -51,6 +51,8 @@ namespace Aura_OS
         public static Bitmap networkTransmitIco;
         public static Bitmap networkIdleIco;
         public static Bitmap networkOfflineIco;
+        public static Bitmap directoryIco;
+        public static Bitmap fileIco;
 
         public static Bitmap programLogo;
         public static Bitmap errorLogo;
@@ -233,6 +235,12 @@ namespace Aura_OS
 
             networkOfflineIco = new Bitmap(File.ReadAllBytes(isoVol + "UI\\Images\\Icons\\network-offline.bmp"));
             CustomConsole.WriteLineOK("network-offline.bmp icon loaded.");
+
+            directoryIco = new Bitmap(File.ReadAllBytes(isoVol + "UI\\Images\\Icons\\folder.bmp"));
+            CustomConsole.WriteLineOK("folder.bmp icon loaded.");
+
+            fileIco = new Bitmap(File.ReadAllBytes(isoVol + "UI\\Images\\Icons\\document-new.bmp"));
+            CustomConsole.WriteLineOK("document-new.bmp icon loaded.");
         }
 
         public static void Run()
@@ -269,6 +277,11 @@ namespace Aura_OS
                 canvas.DrawString("Aura Operating System [" + Version + "." + Revision + "]", font, WhiteColor, 2, 0);
                 canvas.DrawString("fps=" + _fps, font, WhiteColor, 2, font.Height);
 
+                if (VirtualFileSystem != null && VirtualFileSystem.GetVolumes().Count > 0)
+                {
+                    DrawDesktopItems();
+                }
+
                 WindowManager.DrawWindows();
 
                 dock.Update();
@@ -282,6 +295,52 @@ namespace Aura_OS
                 System.Crash.WriteException(ex);
             }
         }
+
+        public static void DrawDesktopItems()
+        {
+            int startX = 10;
+            int startY = 40;
+            int iconSpacing = 60;
+
+            int currentX = startX;
+            int currentY = startY;
+
+            string[] directories = Directory.GetDirectories(Kernel.CurrentVolume);
+            string[] files = Directory.GetFiles(Kernel.CurrentVolume);
+
+            foreach (string directory in directories)
+            {
+                string folderName = Path.GetFileName(directory);
+                DrawIconAndText(directoryIco, folderName, currentX, currentY);
+
+                currentY += iconSpacing;
+                if (currentY + iconSpacing > screenHeight - 64)
+                {
+                    currentY = startY;
+                    currentX += iconSpacing;
+                }
+            }
+
+            foreach (string file in files)
+            {
+                string fileName = Path.GetFileName(file);
+                DrawIconAndText(fileIco, fileName, currentX, currentY);
+
+                currentY += iconSpacing;
+                if (currentY + iconSpacing > screenHeight - 64)
+                {
+                    currentY = startY;
+                    currentX += iconSpacing;
+                }
+            }
+        }
+
+        private static void DrawIconAndText(Bitmap bitmap, string text, int x, int y)
+        {
+            canvas.DrawImageAlpha(bitmap, x + 6, y);
+            canvas.DrawString(text, font, WhiteColor, x, y + 35);
+        }
+
 
         public static void DrawCursor(uint x, uint y)
         {
