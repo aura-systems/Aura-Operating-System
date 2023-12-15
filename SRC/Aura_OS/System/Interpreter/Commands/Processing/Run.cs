@@ -18,7 +18,7 @@ namespace Aura_OS.System.Interpreter.Commands.Processing
     {
         public CommandRun(string[] commandvalues) : base(commandvalues, CommandType.Filesystem)
         {
-            Description = "to run a program (supports .bat and .cexe files)";
+            Description = "to run a program (supports .bat and .lua .cexe files)";
         }
 
         public override ReturnInfo Execute(List<string> arguments)
