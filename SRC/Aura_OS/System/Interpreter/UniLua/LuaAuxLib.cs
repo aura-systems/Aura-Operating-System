@@ -58,7 +58,8 @@ namespace UniLua
 
 		ThreadStatus L_LoadString( string s );
 		ThreadStatus L_LoadBytes( byte[] bytes, string name );
-		ThreadStatus L_DoString( string s );
+        ThreadStatus L_DoByteArray(byte[] file, string name);
+        ThreadStatus L_DoString( string s );
 		ThreadStatus L_DoFile( string filename );
 		
 
@@ -483,7 +484,15 @@ namespace UniLua
 			return L_LoadBuffer( s, s );
 		}
 
-		public ThreadStatus L_DoString( string s )
+        public ThreadStatus L_DoByteArray(byte[] file, string name)
+        {
+            var status = L_LoadBytes(file, name);
+            if (status != ThreadStatus.LUA_OK)
+                return status;
+            return API.PCall(0, LuaDef.LUA_MULTRET, 0);
+        }
+
+        public ThreadStatus L_DoString( string s )
 		{
 			var status = L_LoadString( s );
 			if( status != ThreadStatus.LUA_OK )

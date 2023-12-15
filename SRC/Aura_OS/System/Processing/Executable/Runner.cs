@@ -1,38 +1,22 @@
 ﻿/*
 * PROJECT:          Aura Operating System Development
-* CONTENT:          Command Interpreter - Lua
-* PROGRAMMER(S):    John Welsh <djlw78@gmail.com>
-*                   Valentin Charbonnier <valentinbreiz@gmail.com>
+* CONTENT:          Executable runner
+* PROGRAMMER(S):    Valentin Charbonnier <valentinbreiz@gmail.com>
 */
 
-using Aura_OS.System.Shell.cmdIntr;
 using System;
+using System.IO;
+using System.IO.Compression;
 using System.Collections.Generic;
+using Aura_OS.Interpreter;
 using UniLua;
 
-namespace Aura_OS.Interpreter.Commands.Util
+namespace Aura_OS.System.Processing.Executable
 {
-    class CommandLua : ICommand
+    public class ExecutableRunner
     {
-        /// <summary>
-        /// Empty constructor.
-        /// </summary>
-        public CommandLua(string[] commandvalues) : base(commandvalues)
+        public static void Run(Executable executable)
         {
-            Description = "to execute a Lua script";
-        }
-
-        /// <summary>
-        /// CommandLua
-        /// </summary>
-        /// <param name="arguments">Arguments</param>
-        public override ReturnInfo Execute(List<string> arguments)
-        {
-            if (arguments.Count == 0)
-            {
-                return new ReturnInfo(this, ReturnCode.ERROR_ARG);
-            }
-
             try
             {
                 // create Lua VM instance
@@ -41,9 +25,7 @@ namespace Aura_OS.Interpreter.Commands.Util
                 // load base libraries
                 Lua.L_OpenLibs();
 
-                // load and run Lua script file
-                var LuaScriptFile = Kernel.CurrentDirectory + arguments[0];
-                var status = Lua.L_DoFile(LuaScriptFile);
+                var status = Lua.L_DoByteArray(executable.LuaScript, "main.lua");
 
                 // capture errors
                 if (status != ThreadStatus.LUA_OK)
@@ -87,10 +69,8 @@ namespace Aura_OS.Interpreter.Commands.Util
             }
             catch (Exception e)
             {
-                return new ReturnInfo(this, ReturnCode.ERROR, e.ToString());
+                Console.WriteLine(e.ToString());
             }
-            
-            return new ReturnInfo(this, ReturnCode.OK);
         }
     }
 }

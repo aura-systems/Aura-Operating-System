@@ -24,6 +24,7 @@ using Aura_OS.Interpreter.Commands.Filesystem;
 using UniLua;
 using System.IO.Compression;
 using Ionic.Zlib;
+using Aura_OS.System.Interpreter.Commands.Processing;
 
 namespace Aura_OS.Interpreter
 {
@@ -73,7 +74,6 @@ namespace Aura_OS.Interpreter
             //CMDs.Add(new CommandCrash(new string[] { "crash" }));
 
             CMDs.Add(new CommandLsprocess(new string[] { "lsprocess" }));
-            CMDs.Add(new CommandLua(new string[] { "lua" }));
 
             CMDs.Add(new CommandVol(new string[] { "vol" }));
             CMDs.Add(new CommandDir(new string[] { "dir", "ls", "l" }));
