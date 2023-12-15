@@ -22,6 +22,8 @@ using Aura_OS.System.Shell.cmdIntr;
 using Aura_OS.Interpreter.Commands.Util;
 using Aura_OS.Interpreter.Commands.Filesystem;
 using UniLua;
+using System.IO.Compression;
+using Ionic.Zlib;
 
 namespace Aura_OS.Interpreter
 {
@@ -67,9 +69,11 @@ namespace Aura_OS.Interpreter
             CMDs.Add(new CommandHelp(new string[] { "help" }));
 
             CMDs.Add(new CommandChangeRes(new string[] { "changeres", "cr" }));
-            CMDs.Add(new CommandLsprocess(new string[] { "lsprocess" }));
             CMDs.Add(new CommandLspci(new string[] { "lspci" }));
             //CMDs.Add(new CommandCrash(new string[] { "crash" }));
+
+            CMDs.Add(new CommandLsprocess(new string[] { "lsprocess" }));
+            CMDs.Add(new CommandLua(new string[] { "lua" }));
 
             CMDs.Add(new CommandVol(new string[] { "vol" }));
             CMDs.Add(new CommandDir(new string[] { "dir", "ls", "l" }));
@@ -81,6 +85,9 @@ namespace Aura_OS.Interpreter
             CMDs.Add(new CommandHex(new string[] { "hex" }));
             CMDs.Add(new CommandTree(new string[] { "tree" }));
             CMDs.Add(new CommandRun(new string[] { "run" }));
+            CMDs.Add(new CommandCopy(new string[] { "cp" }));
+
+            CMDs.Add(new CommandZip(new string[] { "zip" }));
 
             /*
             CMDs.Add(new CommandPCName(new string[] { "pcn" }));
@@ -104,7 +111,6 @@ namespace Aura_OS.Interpreter
                 };
                 test[2] = "test3"; //Should make a Null reference exception
             }));
-            CMDs.Add(new CommandLua(new string[] { "lua" }));
         }
 
         /// <summary>

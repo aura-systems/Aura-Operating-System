@@ -2,6 +2,7 @@
 
     <PropertyGroup>
         <TargetFramework>net6.0</TargetFramework>
+		<DefineConstants>TRACE;NOASYNC</DefineConstants>
     </PropertyGroup>
 
 	<PropertyGroup>
@@ -36,6 +37,7 @@
         <PackageReference Include="Cosmos.System2" Version="0-*" NoWarn="NU1604;NU1605" />
         <PackageReference Include="CosmosHttp" Version="1.0.3" />
         <PackageReference Include="jzero" Version="0.4.5" />
+        <PackageReference Include="Zlib.Portable" Version="1.11.0" />
     </ItemGroup>
 
 	<Target Name="GetVersion">

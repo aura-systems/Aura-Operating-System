@@ -5,6 +5,7 @@
 */
 
 using Aura_OS;
+using Cosmos.System.Graphics;
 using IL2CPU.API.Attribs;
 using System;
 using System.Text;
@@ -51,6 +52,10 @@ namespace Aura_Plugs
             if (Kernel.console != null)
             {
                 Kernel.console.Write(aText);
+
+                Kernel.WindowManager.DrawWindows();
+                Kernel.dock.Update();
+                Kernel.canvas.Display();
             }
             else if (Kernel.aConsole != null)
             {

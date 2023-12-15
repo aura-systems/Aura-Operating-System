@@ -50,7 +50,6 @@ namespace Aura_OS
             }
         }
 
-
         protected int mY = 0;
         public int Y
         {
@@ -195,9 +194,13 @@ namespace Aura_OS
                             {
                                 mX -= Command.Length;
 
+                                ScrollMode = true;
+
                                 WriteLine(Command);
 
                                 Kernel.CommandManager.Execute(Command);
+
+                                ScrollMode = false;
 
                                 Commands.Add(Command);
                                 CommandIndex = Commands.Count - 1;
@@ -270,18 +273,13 @@ namespace Aura_OS
                 }
             }
 
-            Kernel.canvas.DrawFilledRectangle(Kernel.BlackColor, x, y, width, height);
-
             DrawTerminal();
-
-            if (!ScrollMode)
-            {
-                DrawCursor();
-            }
         }
 
-        void DrawTerminal()
+        public void DrawTerminal()
         {
+            Kernel.canvas.DrawFilledRectangle(Kernel.BlackColor, x, y, width, height);
+
             for (int i = 0; i < mRows; i++)
             {
                 for (int j = 0; j < mCols; j++)
@@ -293,14 +291,19 @@ namespace Aura_OS
                 }
             }
 
-            if (Command.Length > 0)
+            if (!ScrollMode)
             {
-                int baseX = mX - Command.Length;
-
-                for (int i = 0; i < Command.Length; i++)
+                if (Command.Length > 0)
                 {
-                    Graphics.WriteByte(Command[i], Kernel.console.x + ((baseX + i) * Kernel.font.Width), Kernel.console.y + mY * Kernel.font.Height, ForegroundColor);
+                    int baseX = mX - Command.Length;
+
+                    for (int i = 0; i < Command.Length; i++)
+                    {
+                        Graphics.WriteByte(Command[i], Kernel.console.x + ((baseX + i) * Kernel.font.Width), Kernel.console.y + mY * Kernel.font.Height, ForegroundColor);
+                    }
                 }
+
+                DrawCursor();
             }
         }
 
