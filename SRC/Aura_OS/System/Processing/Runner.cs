@@ -10,12 +10,14 @@ using System.IO.Compression;
 using System.Collections.Generic;
 using Aura_OS.Interpreter;
 using UniLua;
+using System.Text;
+using System.Xml.Linq;
 
 namespace Aura_OS.System.Processing
 {
     public class ExecutableRunner
     {
-        public static void Run(Executable executable)
+        public static void Run(Executable executable, List<string> args)
         {
             try
             {
@@ -25,47 +27,48 @@ namespace Aura_OS.System.Processing
                 // load base libraries
                 Lua.L_OpenLibs();
 
-                var status = Lua.L_DoByteArray(executable.LuaScript, "main.lua");
-
-                // capture errors
-                if (status != ThreadStatus.LUA_OK)
+                foreach (var source in executable.LuaSources.Keys)
                 {
-                    throw new Exception(Lua.ToString(-1));
-                }
+                    var status = Lua.L_LoadBytes(executable.LuaSources[source], source);
 
-                // ensuare the value returned by 'framework/main.lua' is a Lua table
-                if (!Lua.IsTable(-1))
-                {
-                    throw new Exception(
-                          "start's return value is not a table");
-                }
+                    Console.WriteLine(Encoding.ASCII.GetString(executable.LuaSources[source]));
+                    Console.WriteLine(source + " added.");
+                    Console.ReadKey();
 
-                var AwakeRef = StoreMethod("main");
-
-                Lua.Pop(1);
-
-                CallMethod(AwakeRef);
-
-                int StoreMethod(string name)
-                {
-                    Lua.GetField(-1, name);
-                    if (!Lua.IsFunction(-1))
-                    {
-                        throw new Exception(string.Format(
-                            "method {0} not found!", name));
-                    }
-                    return Lua.L_Ref(LuaDef.LUA_REGISTRYINDEX);
-                }
-
-                void CallMethod(int funcRef)
-                {
-                    Lua.RawGetI(LuaDef.LUA_REGISTRYINDEX, funcRef);
-                    var status = Lua.PCall(0, 0, 0);
+                    // capture errors
                     if (status != ThreadStatus.LUA_OK)
                     {
-                        Console.WriteLine(Lua.ToString(-1));
+                        throw new Exception(Lua.ToString(-1));
                     }
                 }
+
+                Console.WriteLine("Files added");
+                Console.ReadKey();
+
+                Lua.GetGlobal("main");
+
+                if (!Lua.IsFunction(-1))
+                {
+                    throw new Exception(string.Format(
+                        "method {0} not found!", "main"));
+                }
+
+                foreach (var arg in args)
+                {
+                    Console.WriteLine("arg=" + arg);
+                    Console.ReadKey();
+
+                    Lua.PushString(arg);
+                }
+
+                Console.WriteLine("Args pushed");
+                Console.WriteLine("args.Count=" + args.Count);
+                Console.ReadKey();
+
+                Lua.Call(args.Count, 0);
+
+                Console.WriteLine("called");
+                Console.ReadKey();
             }
             catch (Exception e)
             {

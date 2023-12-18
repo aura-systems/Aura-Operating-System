@@ -23,53 +23,69 @@ namespace Aura_OS.System.Interpreter.Commands.Processing
 
         public override ReturnInfo Execute(List<string> arguments)
         {
-            string filePath = Path.Combine(Kernel.CurrentDirectory, arguments[0]);
-
-            string fileExtension = Path.GetExtension(filePath);
-
-            if (fileExtension == string.Empty)
+            try
             {
-                foreach (var package in Kernel.PackageManager.Packages)
+                string filePath = Path.Combine(Kernel.CurrentDirectory, arguments[0]);
+
+                string fileExtension = Path.GetExtension(filePath);
+
+                List<string> args = new List<string>();
+                if (arguments.Count > 0)
                 {
-                    if (package.Name == arguments[0])
+                    for (int i = 1; i < arguments.Count; i++)
                     {
-                        return RunCexe(package.Executable);
+                        args.Add(arguments[i]);
                     }
                 }
 
-                return new ReturnInfo(this, ReturnCode.ERROR, "This package does not exist.");
+                if (fileExtension == string.Empty)
+                {
+                    foreach (var package in Kernel.PackageManager.Packages)
+                    {
+                        if (package.Name == arguments[0])
+                        {
+                            return RunCexe(package.Executable, args);
+                        }
+                    }
+
+                    return new ReturnInfo(this, ReturnCode.ERROR, "This package does not exist.");
+                }
+                else
+                {
+                    if (!File.Exists(filePath))
+                    {
+                        return new ReturnInfo(this, ReturnCode.ERROR, "This file does not exist.");
+                    }
+
+                    switch (fileExtension.ToLower())
+                    {
+                        case ".bat":
+                            Batch.Execute(filePath);
+                            break;
+                        case ".cexe":
+                            byte[] executableBytes = File.ReadAllBytes(filePath);
+                            Executable executable = new(executableBytes);
+                            return RunCexe(executable, args);
+                        case ".lua":
+                            return RunLua(filePath);
+                        default:
+                            return new ReturnInfo(this, ReturnCode.ERROR, "Unsupported file type.");
+                    }
+                }
+
+                return new ReturnInfo(this, ReturnCode.OK);
             }
-            else
+            catch (Exception ex)
             {
-                if (!File.Exists(filePath))
-                {
-                    return new ReturnInfo(this, ReturnCode.ERROR, "This file does not exist.");
-                }
-
-                switch (fileExtension.ToLower())
-                {
-                    case ".bat":
-                        Batch.Execute(filePath);
-                        break;
-                    case ".cexe":
-                        byte[] executableBytes = File.ReadAllBytes(filePath);
-                        Executable executable = new(executableBytes);
-                        return RunCexe(executable);
-                    case ".lua":
-                        return RunLua(filePath);
-                    default:
-                        return new ReturnInfo(this, ReturnCode.ERROR, "Unsupported file type.");
-                }
+                return new ReturnInfo(this, ReturnCode.ERROR, ex.ToString());
             }
-
-            return new ReturnInfo(this, ReturnCode.OK);
         }
 
-        private ReturnInfo RunCexe(Executable executable)
+        private ReturnInfo RunCexe(Executable executable, List<string> args)
         {
             try
             {
-                ExecutableRunner.Run(executable);
+                ExecutableRunner.Run(executable, args);
 
                 return new ReturnInfo(this, ReturnCode.OK);
             }
