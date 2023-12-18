@@ -36,7 +36,7 @@ namespace Aura_OS.System.Shell.cmdIntr.SystemInfomation
             }
             else
             {
-                string json = Http.DownloadFile("http://aura.valentin.bzh");
+                string json = Http.DownloadFile("http://aura.valentin.bzh/os.json");
 
                 JsonReader rdr = new(json);
                 rdr.ReadObjectStart();

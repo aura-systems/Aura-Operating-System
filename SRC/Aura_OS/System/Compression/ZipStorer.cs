@@ -448,13 +448,6 @@ namespace System.IO.Compression
                 result = this.ExtractFile(_zfe, output);
             }
 
-            if (result)
-            {
-                File.SetCreationTime(_filename, _zfe.CreationTime);
-                File.SetLastWriteTime(_filename, _zfe.ModifyTime);
-                File.SetLastAccessTime(_filename, _zfe.AccessTime);
-            }
-
             return result;
         }
 

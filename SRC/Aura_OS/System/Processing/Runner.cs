@@ -11,7 +11,7 @@ using System.Collections.Generic;
 using Aura_OS.Interpreter;
 using UniLua;
 
-namespace Aura_OS.System.Processing.Executable
+namespace Aura_OS.System.Processing
 {
     public class ExecutableRunner
     {

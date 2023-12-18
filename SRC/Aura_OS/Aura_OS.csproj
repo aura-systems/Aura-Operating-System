@@ -35,7 +35,7 @@
 
     <ItemGroup>
         <PackageReference Include="Cosmos.System2" Version="0-*" NoWarn="NU1604;NU1605" />
-        <PackageReference Include="CosmosHttp" Version="1.0.3" />
+        <PackageReference Include="CosmosHttp" Version="1.0.4" />
         <PackageReference Include="jzero" Version="0.4.5" />
         <PackageReference Include="Zlib.Portable" Version="1.11.0" />
     </ItemGroup>

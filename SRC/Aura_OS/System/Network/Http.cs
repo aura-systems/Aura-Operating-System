@@ -9,11 +9,39 @@ using Cosmos.System.Network.IPv4.UDP.DNS;
 using Cosmos.System.Network.IPv4;
 using CosmosHttp.Client;
 using System.Net;
+using System.Text;
 
 namespace Aura_OS.System.Network
 {
     public static class Http
     {
+        public static byte[] DownloadRawFile(string url)
+        {
+            if (url.StartsWith("https://"))
+            {
+                throw new WebException("HTTPS currently not supported, please use http://");
+            }
+
+            string path = ExtractPathFromUrl(url);
+            string domainName = ExtractDomainNameFromUrl(url);
+
+            var dnsClient = new DnsClient();
+
+            dnsClient.Connect(DNSConfig.DNSNameservers[0]);
+            dnsClient.SendAsk(domainName);
+            Address address = dnsClient.Receive();
+            dnsClient.Close();
+
+            HttpRequest request = new();
+            request.IP = address.ToString();
+            request.Domain = domainName;
+            request.Path = path;
+            request.Method = "GET";
+            request.Send();
+
+            return request.Response.GetStream();
+        }
+
         public static string DownloadFile(string url)
         {
             if (url.StartsWith("https://"))

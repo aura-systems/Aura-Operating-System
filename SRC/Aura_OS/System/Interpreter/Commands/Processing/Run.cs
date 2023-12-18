@@ -9,8 +9,8 @@ using Aura_OS.System.Shell.cmdIntr;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using Aura_OS.System.Processing.Executable;
 using UniLua;
+using Aura_OS.System.Processing;
 
 namespace Aura_OS.System.Interpreter.Commands.Processing
 {
@@ -25,35 +25,50 @@ namespace Aura_OS.System.Interpreter.Commands.Processing
         {
             string filePath = Path.Combine(Kernel.CurrentDirectory, arguments[0]);
 
-            if (!File.Exists(filePath))
-            {
-                return new ReturnInfo(this, ReturnCode.ERROR, "This file does not exist.");
-            }
-
             string fileExtension = Path.GetExtension(filePath);
 
-            switch (fileExtension.ToLower())
+            if (fileExtension == string.Empty)
             {
-                case ".bat":
-                    Batch.Execute(filePath);
-                    break;
-                case ".cexe":
-                     return RunCexe(filePath);
-                case ".lua":
-                    return RunLua(filePath);
-                default:
-                    return new ReturnInfo(this, ReturnCode.ERROR, "Unsupported file type.");
+                foreach (var package in Kernel.PackageManager.Packages)
+                {
+                    if (package.Name == arguments[0])
+                    {
+                        return RunCexe(package.Executable);
+                    }
+                }
+
+                return new ReturnInfo(this, ReturnCode.ERROR, "This package does not exist.");
+            }
+            else
+            {
+                if (!File.Exists(filePath))
+                {
+                    return new ReturnInfo(this, ReturnCode.ERROR, "This file does not exist.");
+                }
+
+                switch (fileExtension.ToLower())
+                {
+                    case ".bat":
+                        Batch.Execute(filePath);
+                        break;
+                    case ".cexe":
+                        byte[] executableBytes = File.ReadAllBytes(filePath);
+                        Executable executable = new(executableBytes);
+                        return RunCexe(executable);
+                    case ".lua":
+                        return RunLua(filePath);
+                    default:
+                        return new ReturnInfo(this, ReturnCode.ERROR, "Unsupported file type.");
+                }
             }
 
             return new ReturnInfo(this, ReturnCode.OK);
         }
 
-        private ReturnInfo RunCexe(string filePath)
+        private ReturnInfo RunCexe(Executable executable)
         {
             try
             {
-                byte[] executableBytes = File.ReadAllBytes(filePath);
-                Executable executable = new Executable(executableBytes);
                 ExecutableRunner.Run(executable);
 
                 return new ReturnInfo(this, ReturnCode.OK);

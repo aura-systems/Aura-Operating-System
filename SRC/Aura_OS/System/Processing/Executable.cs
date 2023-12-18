@@ -10,7 +10,7 @@ using System.IO;
 using System.IO.Compression;
 using System.Text;
 
-namespace Aura_OS.System.Processing.Executable
+namespace Aura_OS.System.Processing
 {
     public class Executable
     {
@@ -45,7 +45,7 @@ namespace Aura_OS.System.Processing.Executable
             }
 
             ZipContent = new byte[ArchiveSize];
-            
+
             Array.Copy(executableBytes, SignatureSize + ArchiveSizeLength, ZipContent, 0, ArchiveSize);
 
             LuaScript = ExtractLuaScript();
@@ -73,7 +73,7 @@ namespace Aura_OS.System.Processing.Executable
                     }
                 }
             }
-            
+
 
             throw new Exception("Could not find 'main.lua' in the executable.");
         }

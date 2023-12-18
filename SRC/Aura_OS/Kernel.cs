@@ -23,6 +23,7 @@ using Aura_OS.Interpreter;
 using Aura_OS.System.UI.GUI;
 using Aura_OS.System.Application.Emulators.GameBoyEmu;
 using System.IO;
+using Aura_OS.System.Processing;
 
 namespace Aura_OS
 {
@@ -101,6 +102,8 @@ namespace Aura_OS
 
         public static CommandManager CommandManager;
 
+        public static PackageManager PackageManager;
+
         public static bool Pressed;
         public static int FreeCount = 0;
 
@@ -165,6 +168,9 @@ namespace Aura_OS
 
             WindowManager = new WindowManager();
             WindowManager.Initialize();
+
+            PackageManager = new PackageManager();
+            PackageManager.Initialize();
 
             //START MOUSE
             MouseManager.ScreenWidth = screenWidth;
