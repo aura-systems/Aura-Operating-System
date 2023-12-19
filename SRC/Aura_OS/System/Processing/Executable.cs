@@ -20,12 +20,12 @@ namespace Aura_OS.System.Processing
 
         public string Signature { get; private set; }
         public int ArchiveSize { get; private set; }
-        public byte[] LuaScript { get; private set; }
-
+        public Dictionary<string, byte[]> LuaSources { get; set; }
         private byte[] ZipContent { get; set; }
 
         public Executable(byte[] executableBytes)
         {
+            LuaSources = new Dictionary<string, byte[]>();
             ParseExecutable(executableBytes);
         }
 
@@ -48,11 +48,13 @@ namespace Aura_OS.System.Processing
 
             Array.Copy(executableBytes, SignatureSize + ArchiveSizeLength, ZipContent, 0, ArchiveSize);
 
-            LuaScript = ExtractLuaScript();
+            ExtractLuaScripts();
         }
 
-        private byte[] ExtractLuaScript()
+        private void ExtractLuaScripts()
         {
+            bool mainFound = false;
+
             using (MemoryStream zipStream = new MemoryStream(ZipContent))
             {
                 using (ZipStorer zip = ZipStorer.Open(zipStream, FileAccess.Read))
@@ -61,21 +63,25 @@ namespace Aura_OS.System.Processing
 
                     foreach (ZipStorer.ZipFileEntry entry in dir)
                     {
-
-                        if (entry.FilenameInZip == "main.lua")
+                        using (MemoryStream fileStream = new MemoryStream())
                         {
-                            using (MemoryStream fileStream = new MemoryStream())
+                            zip.ExtractFile(entry, fileStream);
+                            byte[] script = fileStream.ToArray();
+                            LuaSources.Add(entry.FilenameInZip, script);
+
+                            if (entry.FilenameInZip == "main.lua")
                             {
-                                zip.ExtractFile(entry, fileStream);
-                                return fileStream.ToArray();
+                                mainFound = true;
                             }
                         }
                     }
                 }
             }
 
-
-            throw new Exception("Could not find 'main.lua' in the executable.");
+            if (!mainFound)
+            {
+                throw new Exception("Could not find 'main.lua' in the executable.");
+            }
         }
     }
 }

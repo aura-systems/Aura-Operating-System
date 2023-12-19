@@ -4,6 +4,10 @@ namespace UniLua
 	using System;
 	using System.IO;
 	using System.Collections.Generic;
+    using Aura_OS.System.Processing;
+    using System.Text;
+    using System.Xml.Linq;
+    using Cosmos.HAL.Drivers.Video.SVGAII;
 
 	public struct NameFuncPair
 	{
@@ -57,7 +61,7 @@ namespace UniLua
 		ThreadStatus L_LoadFileX( string filename, string mode );
 
 		ThreadStatus L_LoadString( string s );
-		ThreadStatus L_LoadBytes( byte[] bytes, string name );
+		ThreadStatus L_LoadBytes( byte[] bytes, string name);
         ThreadStatus L_DoByteArray(byte[] file, string name);
         ThreadStatus L_DoString( string s );
 		ThreadStatus L_DoFile( string filename );
@@ -433,9 +437,11 @@ namespace UniLua
 			return API.Load( loadinfo, name, mode );
 		}
 
-		public ThreadStatus L_LoadBytes( byte[] bytes, string name )
+		public ThreadStatus L_LoadBytes( byte[] bytes, string name)
 		{
-			var loadinfo = new BytesLoadInfo( bytes );
+            LuaFile.VirtualFiles.Add(name, bytes);
+
+            var loadinfo = new BytesLoadInfo( bytes );
 			return API.Load( loadinfo, name, null );
 		}
 
@@ -462,12 +468,19 @@ namespace UniLua
 			API.PushString( "@" + filename );
 			try
 			{
-				using( var loadinfo = LuaFile.OpenFile( filename ) )
-				{
-					loadinfo.SkipComment();
-					status = API.Load( loadinfo, API.ToString(-1), mode );
-				}
-			}
+				var loadinfo = LuaFile.OpenFile(filename);
+
+                if (loadinfo.GetType() == typeof(FileLoadInfo))
+                {
+                    ((FileLoadInfo)loadinfo).SkipComment();
+                    status = API.Load(((FileLoadInfo)loadinfo), API.ToString(-1), mode);
+                    ((FileLoadInfo)loadinfo).Dispose();
+                }
+                else if (loadinfo.GetType() == typeof(BytesLoadInfo))
+                {
+                    status = API.Load(loadinfo, filename, null);
+                }
+            }
 			catch( LuaRuntimeException e )
 			{
 				API.PushString( string.Format( "cannot open {0}: {1}",
@@ -577,7 +590,8 @@ namespace UniLua
 				new NameFuncPair( LuaMathLib.LIB_NAME, 	LuaMathLib.OpenLib  ),
 				new NameFuncPair( LuaDebugLib.LIB_NAME, LuaDebugLib.OpenLib ),
 				new NameFuncPair( LuaEncLib.LIB_NAME,	LuaEncLib.OpenLib	),
-			};
+                new NameFuncPair( LuaCosmosCryptoLib.LIB_NAME,   LuaCosmosCryptoLib.OpenLib   ),
+            };
 
 			for( var i=0; i<define.Length; ++i)
 			{
