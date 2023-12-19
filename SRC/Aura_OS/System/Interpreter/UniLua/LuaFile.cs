@@ -7,7 +7,7 @@ namespace UniLua
 	public delegate string PathHook(string filename);
 	public class LuaFile
 	{
-        public static Dictionary<string, byte[]> VirtualFiles = new Dictionary<string, byte[]>();
+		public static Dictionary<string, byte[]> VirtualFiles;
 
         public static ILoadInfo OpenFile( string filename )
 		{

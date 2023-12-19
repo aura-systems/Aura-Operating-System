@@ -23,6 +23,8 @@ namespace Aura_OS.System.Processing
         {
             try
             {
+                LuaFile.VirtualFiles = new Dictionary<string, byte[]>();
+
                 // create Lua VM instance
                 var Lua = LuaAPI.NewState();
 
