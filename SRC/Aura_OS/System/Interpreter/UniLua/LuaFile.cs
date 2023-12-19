@@ -7,14 +7,32 @@ namespace UniLua
 	public delegate string PathHook(string filename);
 	public class LuaFile
 	{
-		public static FileLoadInfo OpenFile( string filename )
+        public static Dictionary<string, byte[]> VirtualFiles = new Dictionary<string, byte[]>();
+
+        public static ILoadInfo OpenFile( string filename )
 		{
-			return new FileLoadInfo( File.Open(filename, FileMode.Open, FileAccess.Read, FileShare.ReadWrite ) );
+            foreach (var file in VirtualFiles.Keys)
+            {
+                if (file == filename)
+                {
+                    return new BytesLoadInfo(VirtualFiles[filename]); ;
+                }
+            }
+
+            return new FileLoadInfo( File.Open(filename, FileMode.Open, FileAccess.Read, FileShare.ReadWrite ) );
 		}
 
 		public static bool Readable( string filename )
 		{
-			try {
+            foreach (var file in VirtualFiles.Keys)
+            {
+                if (file == filename)
+                {
+                    return true;
+                }
+            }
+
+            try {
 				using( var stream = File.Open(filename, FileMode.Open, FileAccess.Read, FileShare.ReadWrite ) ) {
 					return true;
 				}

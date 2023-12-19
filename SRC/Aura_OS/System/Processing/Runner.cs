@@ -12,6 +12,8 @@ using Aura_OS.Interpreter;
 using UniLua;
 using System.Text;
 using System.Xml.Linq;
+using System.Diagnostics;
+using Cosmos.Core;
 
 namespace Aura_OS.System.Processing
 {
@@ -29,11 +31,19 @@ namespace Aura_OS.System.Processing
 
                 foreach (var source in executable.LuaSources.Keys)
                 {
-                    var status = Lua.L_LoadBytes(executable.LuaSources[source], source);
+                    if (source == "main.lua")
+                    {
+                        continue;
+                    }
 
-                    Console.WriteLine(Encoding.ASCII.GetString(executable.LuaSources[source]));
-                    Console.WriteLine(source + " added.");
-                    Console.ReadKey();
+                    LoadLuaFile(source);
+                }
+
+                LoadLuaFile("main.lua");
+
+                void LoadLuaFile(string fileName)
+                {
+                    var status = Lua.L_LoadBytes(executable.LuaSources[fileName], fileName);
 
                     // capture errors
                     if (status != ThreadStatus.LUA_OK)
@@ -42,17 +52,7 @@ namespace Aura_OS.System.Processing
                     }
                 }
 
-                Console.WriteLine("Files added");
-                Console.ReadKey();
-
-                Lua.GetGlobal("main");
-
-                if (!Lua.IsFunction(-1))
-                {
-                    throw new Exception(string.Format(
-                        "method {0} not found!", "main"));
-                }
-
+                /*
                 foreach (var arg in args)
                 {
                     Console.WriteLine("arg=" + arg);
@@ -63,12 +63,13 @@ namespace Aura_OS.System.Processing
 
                 Console.WriteLine("Args pushed");
                 Console.WriteLine("args.Count=" + args.Count);
-                Console.ReadKey();
+                Console.ReadKey();*/
 
-                Lua.Call(args.Count, 0);
-
-                Console.WriteLine("called");
-                Console.ReadKey();
+                var status = Lua.PCall(0, LuaDef.LUA_MULTRET, 0);
+                if (status != ThreadStatus.LUA_OK)
+                {
+                    throw new Exception(Lua.ToString(-1));
+                }
             }
             catch (Exception e)
             {
