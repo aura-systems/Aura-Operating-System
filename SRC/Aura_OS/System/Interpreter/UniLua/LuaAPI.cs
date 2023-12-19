@@ -1626,13 +1626,13 @@ namespace UniLua
 			}
 		}
 
-		// private void RegisterGlobalFunc( string name, CSharpFunctionDelegate f )
-		// {
-		// 	API.PushCSharpFunction( f );
-		// 	API.SetGlobal( name );
-		// }
+        // private void RegisterGlobalFunc( string name, CSharpFunctionDelegate f )
+        // {
+        // 	API.PushCSharpFunction( f );
+        // 	API.SetGlobal( name );
+        // }
 
-	}
+    }
 
 }
 

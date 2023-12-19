@@ -85,7 +85,8 @@ namespace Aura_OS.System.Interpreter.Commands.Processing
         {
             try
             {
-                ExecutableRunner.Run(executable, args);
+                ExecutableRunner runner = new();
+                runner.Run(executable, args);
 
                 return new ReturnInfo(this, ReturnCode.OK);
             }

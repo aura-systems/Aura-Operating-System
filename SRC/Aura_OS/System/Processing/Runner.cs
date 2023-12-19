@@ -19,7 +19,7 @@ namespace Aura_OS.System.Processing
 {
     public class ExecutableRunner
     {
-        public static void Run(Executable executable, List<string> args)
+        public void Run(Executable executable, List<string> args)
         {
             try
             {
@@ -28,6 +28,19 @@ namespace Aura_OS.System.Processing
 
                 // load base libraries
                 Lua.L_OpenLibs();
+
+                Lua.NewTable();
+                Lua.PushValue(-1);
+                Lua.SetGlobal("arg");
+
+                Lua.PushString("main.lua");
+                Lua.RawSetI(-2, 0);
+
+                for (int i = 0; i < args.Count; i++)
+                {
+                    Lua.PushString(args[i]);
+                    Lua.RawSetI(-2, i + 1);
+                }
 
                 foreach (var source in executable.LuaSources.Keys)
                 {
@@ -52,24 +65,14 @@ namespace Aura_OS.System.Processing
                     }
                 }
 
-                /*
-                foreach (var arg in args)
-                {
-                    Console.WriteLine("arg=" + arg);
-                    Console.ReadKey();
-
-                    Lua.PushString(arg);
-                }
-
-                Console.WriteLine("Args pushed");
-                Console.WriteLine("args.Count=" + args.Count);
-                Console.ReadKey();*/
-
                 var status = Lua.PCall(0, LuaDef.LUA_MULTRET, 0);
                 if (status != ThreadStatus.LUA_OK)
                 {
                     throw new Exception(Lua.ToString(-1));
                 }
+
+                LuaFile.VirtualFiles.Clear();
+                LuaFile.VirtualFiles = null;
             }
             catch (Exception e)
             {
