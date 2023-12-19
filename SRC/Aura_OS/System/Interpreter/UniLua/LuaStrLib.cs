@@ -887,13 +887,20 @@ namespace UniLua
 			return StrFindAux( lua, false );
 		}
 
-		private static int Str_Rep( ILuaState lua )
-		{
-			// TODO
-			throw new System.NotImplementedException();
-		}
+        private static int Str_Rep(ILuaState lua)
+        {
+            string s = lua.L_CheckString(1);
+            int n = lua.L_CheckInteger(2);
 
-		private static int Str_Reverse( ILuaState lua )
+            StringBuilder sb = new StringBuilder(s.Length * n);
+            for (int i = 0; i < n; ++i)
+                sb.Append(s);
+
+            lua.PushString(sb.ToString());
+            return 1;
+        }
+
+        private static int Str_Reverse( ILuaState lua )
 		{
 			string s = lua.L_CheckString(1);
 			StringBuilder sb = new StringBuilder(s.Length);
