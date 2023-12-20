@@ -23,12 +23,20 @@ namespace Aura_OS.System.UI.GUI.Components
         public Button Close;
         public Panel TopBar;
 
+        public bool Borders;
+
+        public Window(int x, int y, int width, int height) : base(x, y, width, height)
+        {
+            Borders = false;
+        }
+
         public Window(string name, int x, int y, int width, int height) : base(x, y, width, height)
         {
             Icon = Kernel.programIco;
             Name = name;
             Close = new Button(Kernel.CloseNormal, X + Width - 20, Y + 5, true);
             TopBar = new Panel(Kernel.DarkBlue, Kernel.Pink, X + 3, Y + 3, Width - 5, 18);
+            Borders = true;
         }
 
         public override void Update()
@@ -44,13 +52,16 @@ namespace Aura_OS.System.UI.GUI.Components
             Kernel.canvas.DrawLine(Kernel.DarkGray, X + Width - 1, Y + 1, X + Width - 1, Y + Height);
             Kernel.canvas.DrawLine(Kernel.BlackColor, X + Width, Y, X + Width, Y + Height);
 
-            TopBar.X = X + 3;
-            TopBar.Y = Y + 3;
-            TopBar.Update();
-            Kernel.canvas.DrawString(Name, PCScreenFont.Default, Kernel.WhiteColor, X + 5, Y + 4);
-            Close.X = X + Width - 20;
-            Close.Y = Y + 5;
-            Close.Update();
+            if (Borders)
+            {
+                TopBar.X = X + 3;
+                TopBar.Y = Y + 3;
+                TopBar.Update();
+                Kernel.canvas.DrawString(Name, PCScreenFont.Default, Kernel.WhiteColor, X + 5, Y + 4);
+                Close.X = X + Width - 20;
+                Close.Y = Y + 5;
+                Close.Update();
+            }
         }
     }
 }

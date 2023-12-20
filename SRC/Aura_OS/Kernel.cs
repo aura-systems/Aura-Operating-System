@@ -130,6 +130,12 @@ namespace Aura_OS
             ProcessManager = new ProcessManager();
             ProcessManager.Initialize();
 
+            LoadFiles();
+
+            CustomConsole.WriteLineInfo("Starting dock...");
+            dock = new Dock();
+            dock.Initialize();
+
             CustomConsole.WriteLineInfo("Starting command manager...");
             CommandManager = new CommandManager();
             CommandManager.Initialize();
@@ -141,13 +147,10 @@ namespace Aura_OS
                 Batch.Execute(CurrentDirectory + "boot.bat");
             }
 
-            LoadFiles();
-
             CustomConsole.WriteLineInfo("Starting Canvas...");
 
             //START GRAPHICS
             canvas = FullScreenCanvas.GetFullScreenCanvas(new Mode(screenWidth, screenHeight, ColorDepth.ColorDepth32));
-            dock = new Dock();
 
             aConsole = null;
 
@@ -288,9 +291,7 @@ namespace Aura_OS
                     DrawDesktopItems();
                 }
 
-                WindowManager.DrawWindows();
-
-                dock.Update();
+                ProcessManager.Update();
 
                 DrawCursor(MouseManager.X, MouseManager.Y);
 

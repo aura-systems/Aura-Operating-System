@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -17,6 +18,8 @@ namespace Aura_OS.Processing
 
         public bool Register(Process process)
         {
+            Kernel.dock.UpdateApplicationButtons();
+
             for (int i = 0; i < Processes.Count; i++)
             {
                 if (Processes[i] == process) { return false; }
@@ -29,6 +32,8 @@ namespace Aura_OS.Processing
 
         public bool Start(Process process)
         {
+            Kernel.dock.UpdateApplicationButtons();
+
             for (int i = 0; i < Processes.Count; i++)
             {
                 if (Processes[i] == process) { Processes[i].Start(); return true; }
@@ -38,11 +43,21 @@ namespace Aura_OS.Processing
 
         public bool Stop(Process process)
         {
+            Kernel.dock.UpdateApplicationButtons();
+
             for (int i = 0; i < Processes.Count; i++)
             {
                 if (Processes[i] == process) { Processes[i].Stop(); return true; }
             }
             return false;
+        }
+
+        public void Update()
+        {
+            for (int i = 0; i < Processes.Count; i++)
+            {
+                Processes[i].Update();
+            }
         }
     }
 }
