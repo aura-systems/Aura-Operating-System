@@ -65,14 +65,13 @@ namespace Aura_OS.System.Graphics.UI.GUI
             NetworkButton.NoBorder = true;
 
             int menuWidth = 168;
-            int menuHeight = 350;
+            int menuHeight = 32 * 8;
             int menuX = 0;
             int menuY = (int)(Kernel.screenHeight - menuHeight - taskbarHeight);
             StartMenu = new StartMenu(menuX, menuY, menuWidth, menuHeight);
 
             // Applications
             Applications = new List<ApplicationButton>();
-            UpdateApplicationButtons();
         }
 
         public override void Initialize()

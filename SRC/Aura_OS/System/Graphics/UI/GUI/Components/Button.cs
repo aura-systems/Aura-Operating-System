@@ -5,16 +5,19 @@
 */
 
 using Cosmos.System.Graphics;
+using System;
 using System.Drawing;
 
 namespace Aura_OS.System.Graphics.UI.GUI.Components
 {
     public class Button : Component
     {
-        public Color BackColor = Color.Gray;
-
         public string Text;
         public Bitmap Image;
+        public Action action;
+
+        public Color BackColor = Color.LightGray;
+        public Color TextColor = Color.Black;
         public bool NoBorder = false;
         public bool Light = false;
         public bool Focused = false;
@@ -93,7 +96,7 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
 
             if (Text != null && Image != null)
             {
-                Kernel.canvas.DrawString(Text, Kernel.font, Kernel.BlackColor, X + 4 + (int)Image.Width + 4, Y + (Height / 2 - Kernel.font.Height / 2));
+                Kernel.canvas.DrawString(Text, Kernel.font, TextColor, X + 4 + (int)Image.Width + 4, Y + (Height / 2 - Kernel.font.Height / 2));
 
                 int imageX = X + 4;
                 int imageY = Y + (Height / 2 - (int)Image.Height / 2);
@@ -101,7 +104,7 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
             }
             else if (Text != null)
             {
-                Kernel.canvas.DrawString(Text, Kernel.font, Kernel.BlackColor, X + 4, Y + (Height / 2 - Kernel.font.Height / 2));
+                Kernel.canvas.DrawString(Text, Kernel.font, TextColor, X + 4, Y + (Height / 2 - Kernel.font.Height / 2));
             }
             else if (Image != null)
             {
