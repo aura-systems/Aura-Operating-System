@@ -7,10 +7,11 @@
 
 using System;
 using System.Runtime.CompilerServices;
+using Aura_OS.System.Graphics.UI;
 using Cosmos.HAL;
 using Cosmos.System.Graphics;
 
-namespace Aura_OS.System.UI.CUI
+namespace Aura_OS.System.Graphics.UI.CUI
 {
 
     public class Console : UI.Console
@@ -47,7 +48,7 @@ namespace Aura_OS.System.UI.CUI
             get { return mText.Rows; }
         }
 
-        protected Cosmos.HAL.TextScreenBase mText;
+        protected TextScreenBase mText;
 
         public Console(TextScreenBase textScreen)
         {

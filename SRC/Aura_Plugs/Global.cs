@@ -22,7 +22,7 @@ namespace Aura_OS.System.Plugs
         {
             // We must init Console before calling Inits.
             // This is part of the "minimal" boot to allow output.
-            Kernel.aConsole = new UI.CUI.Console(textScreen);
+            Kernel.aConsole = new Graphics.UI.CUI.Console(textScreen);
 
             CustomConsole.WriteLineInfo("Initializing the Hardware Abstraction Layer (HAL)...");
             Cosmos.HAL.Global.Init(textScreen, initScrollWheel, initPS2, initNetwork, ideInit);

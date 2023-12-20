@@ -1,6 +1,4 @@
 using Aura_OS.Processing;
-using Aura_OS.System;
-using Aura_OS.System.UI.GUI.Components;
 using Cosmos.Core;
 using Cosmos.Core.Memory;
 using Cosmos.HAL;
@@ -10,8 +8,9 @@ using System;
 using System.Drawing;
 using System.Collections.Generic;
 using System.Xml.Linq;
+using Aura_OS.System.Graphics.UI.GUI.Components;
 
-namespace Aura_OS.System.UI.GUI
+namespace Aura_OS.System.Graphics.UI.GUI
 {
     public class ApplicationButton
     {
@@ -48,21 +47,21 @@ namespace Aura_OS.System.UI.GUI
             int startButtonHeight = 28;
             int startButtonX = 2;
             int startButtonY = (int)Kernel.screenHeight - startButtonHeight - 3;
-            StartButton = new Button(Kernel.Start, startButtonX, startButtonY, startButtonWidth, startButtonHeight);
+            StartButton = new Button(ResourceManager.GetImage("00-start.bmp"), startButtonX, startButtonY, startButtonWidth, startButtonHeight);
 
             string time = Time.TimeString(true, true, true);
             int hourButtonWidth = time.Length * (Kernel.font.Width + 1);
             int hourButtonHeight = 28;
-            int hourButtonX = (int)(Kernel.screenWidth - (time.Length * (Kernel.font.Width + 1)) - 2);
+            int hourButtonX = (int)(Kernel.screenWidth - time.Length * (Kernel.font.Width + 1) - 2);
             int hourButtonY = (int)Kernel.screenHeight - 28 - 3;
             HourButton = new Button(time, hourButtonX, hourButtonY, hourButtonWidth, hourButtonHeight);
             HourButton.Light = true;
 
             int networkButtonWidth = 16;
             int networkButtonHeight = 16;
-            int netoworkButtonX = (int)(Kernel.screenWidth - (time.Length * (Kernel.font.Width + 1)) - 2) - 20;
+            int netoworkButtonX = (int)(Kernel.screenWidth - time.Length * (Kernel.font.Width + 1) - 2) - 20;
             int networkButtonY = (int)Kernel.screenHeight - 25;
-            NetworkButton = new Button(Kernel.networkOfflineIco, netoworkButtonX, networkButtonY, networkButtonWidth, networkButtonHeight);
+            NetworkButton = new Button(ResourceManager.GetImage("16-network-offline.bmp"), netoworkButtonX, networkButtonY, networkButtonWidth, networkButtonHeight);
             NetworkButton.NoBorder = true;
 
             int menuWidth = 168;
@@ -210,17 +209,17 @@ namespace Aura_OS.System.UI.GUI
         {
             if (Kernel.NetworkTransmitting)
             {
-                NetworkButton.Image = Kernel.networkTransmitIco;
+                //NetworkButton.Image = Kernel.networkTransmitIco;
             }
             else
             {
                 if (Kernel.NetworkConnected)
                 {
-                    NetworkButton.Image = Kernel.networkIdleIco;
+                    NetworkButton.Image = ResourceManager.GetImage("16-network-idle.bmp");
                 }
                 else
                 {
-                    NetworkButton.Image = Kernel.networkOfflineIco;
+                    NetworkButton.Image = ResourceManager.GetImage("16-network-offline.bmp");
                 }
             }
 

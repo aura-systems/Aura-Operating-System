@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Aura_OS.System.UI.GUI
+namespace Aura_OS.System.Graphics.UI.GUI
 {
     public class WindowManager
     {
@@ -29,7 +29,7 @@ namespace Aura_OS.System.UI.GUI
                 {
                     app.Update();
                 }
-            }  
+            }
         }
     }
 }

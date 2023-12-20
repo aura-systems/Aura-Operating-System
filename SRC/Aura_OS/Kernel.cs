@@ -20,10 +20,11 @@ using Aura_OS.Processing;
 using System.Drawing;
 using Aura_OS.System;
 using Aura_OS.Interpreter;
-using Aura_OS.System.UI.GUI;
 using Aura_OS.System.Application.Emulators.GameBoyEmu;
 using System.IO;
 using Aura_OS.System.Processing;
+using Aura_OS.System.Graphics.UI.GUI;
+using Aura_OS.System.Graphics;
 
 namespace Aura_OS
 {
@@ -45,20 +46,6 @@ namespace Aura_OS
         public static bool NetworkTransmitting = false;
 
         //FILES
-        public static Bitmap programIco;
-        public static Bitmap terminalIco;
-        public static Bitmap powerIco;
-        public static Bitmap connectedIco;
-        public static Bitmap networkTransmitIco;
-        public static Bitmap networkIdleIco;
-        public static Bitmap networkOfflineIco;
-        public static Bitmap directoryIco;
-        public static Bitmap fileIco;
-        public static Bitmap rebootIco;
-        public static Bitmap shutdownIco;
-        public static Bitmap terminalIco2;
-        public static Bitmap programIco2;
-
         public static Bitmap programLogo;
         public static Bitmap errorLogo;
 
@@ -68,13 +55,8 @@ namespace Aura_OS
 
         public static Bitmap wallpaper;
 
-        public static Bitmap cursor;
         public static PCScreenFont font;
         public static PCScreenFont fontTerminal;
-
-        // UI
-        public static Bitmap CloseNormal;
-        public static Bitmap Start;
 
         //GRAPHICS
         public static uint screenWidth = 1920;
@@ -97,7 +79,7 @@ namespace Aura_OS
         //PROCESSES
         public static ProcessManager ProcessManager;
         public static WindowManager WindowManager;
-        public static System.UI.CUI.Console aConsole;
+        public static System.Graphics.UI.CUI.Console aConsole;
 
         public static Terminal console;
         public static MemoryInfo memoryInfo;
@@ -230,52 +212,29 @@ namespace Aura_OS
             font = PCScreenFont.LoadFont(File.ReadAllBytes(isoVol + "UI\\Fonts\\zap-ext-light16.psf"));
             CustomConsole.WriteLineOK("zap-ext-light16.psf font loaded.");
 
-            Heap.Collect();
-
             // Icons
-            CloseNormal = new Bitmap(File.ReadAllBytes(isoVol + "UI\\Images\\Icons\\close_normal.bmp"));
-            CustomConsole.WriteLineOK("close_normal.bmp icon loaded.");
+            LoadImage(isoVol + "UI\\Images\\Icons\\16\\close.bmp", "16");
+            // LoadImage(isoVol + "UI\\Images\\Icons\\16\\network-idle.bmp", "16");
+            LoadImage(isoVol + "UI\\Images\\Icons\\16\\network-offline.bmp", "16");
+            LoadImage(isoVol + "UI\\Images\\Icons\\16\\network-transmit.bmp", "16");
+            LoadImage(isoVol + "UI\\Images\\Icons\\16\\program.bmp", "16");
+            LoadImage(isoVol + "UI\\Images\\Icons\\16\\terminal.bmp", "16");
+            LoadImage(isoVol + "UI\\Images\\Icons\\24\\program.bmp", "24");
+            LoadImage(isoVol + "UI\\Images\\Icons\\24\\reboot.bmp", "24");
+            LoadImage(isoVol + "UI\\Images\\Icons\\24\\shutdown.bmp", "24");
+            LoadImage(isoVol + "UI\\Images\\Icons\\24\\terminal.bmp", "24");
+            LoadImage(isoVol + "UI\\Images\\Icons\\32\\file.bmp", "32");
+            LoadImage(isoVol + "UI\\Images\\Icons\\32\\folder.bmp", "32");
+            LoadImage(isoVol + "UI\\Images\\Icons\\cursor.bmp", "00");
+            LoadImage(isoVol + "UI\\Images\\Icons\\start.bmp", "00");
+        }
 
-            Start = new Bitmap(File.ReadAllBytes(isoVol + "UI\\Images\\Icons\\start.bmp"));
-            CustomConsole.WriteLineOK("start.bmp icon loaded.");
-
-            terminalIco = new Bitmap(File.ReadAllBytes(isoVol + "UI\\Images\\Icons\\utilities-terminal.bmp"));
-            CustomConsole.WriteLineOK("utilities-terminal.bmp icon loaded.");
-
-            programIco = new Bitmap(File.ReadAllBytes(isoVol + "UI\\Images\\Icons\\program.bmp"));
-            CustomConsole.WriteLineOK("program.bmp icon loaded.");
-
-            cursor = new Bitmap(File.ReadAllBytes(isoVol + "UI\\Images\\Icons\\cursor.bmp"));
-            CustomConsole.WriteLineOK("cursor.bmp icon loaded.");
-
-            networkTransmitIco = new Bitmap(File.ReadAllBytes(isoVol + "UI\\Images\\Icons\\network-transmit.bmp"));
-            CustomConsole.WriteLineOK("network-transmit.bmp icon loaded.");
-
-            networkIdleIco = new Bitmap(File.ReadAllBytes(isoVol + "UI\\Images\\Icons\\network-idle.bmp"));
-            CustomConsole.WriteLineOK("network-idle.bmp icon loaded.");
-
-            networkOfflineIco = new Bitmap(File.ReadAllBytes(isoVol + "UI\\Images\\Icons\\network-offline.bmp"));
-            CustomConsole.WriteLineOK("network-offline.bmp icon loaded.");
-
-            directoryIco = new Bitmap(File.ReadAllBytes(isoVol + "UI\\Images\\Icons\\folder.bmp"));
-            CustomConsole.WriteLineOK("folder.bmp icon loaded.");
-
-            fileIco = new Bitmap(File.ReadAllBytes(isoVol + "UI\\Images\\Icons\\document-new.bmp"));
-            CustomConsole.WriteLineOK("document-new.bmp icon loaded.");
-
-            Heap.Collect();
-
-            rebootIco = new Bitmap(File.ReadAllBytes(isoVol + "UI\\Images\\Icons\\system-reboot.bmp"));
-            CustomConsole.WriteLineOK("system-reboot.bmp icon loaded.");
-
-            shutdownIco = new Bitmap(File.ReadAllBytes(isoVol + "UI\\Images\\Icons\\system-shutdown.bmp"));
-            CustomConsole.WriteLineOK("system-shutdown.bmp icon loaded.");
-
-            programIco2 = new Bitmap(File.ReadAllBytes(isoVol + "UI\\Images\\Icons\\window-big.bmp"));
-            CustomConsole.WriteLineOK("window-big.bmp icon loaded.");
-
-            terminalIco2 = new Bitmap(File.ReadAllBytes(isoVol + "UI\\Images\\Icons\\console-24.bmp"));
-            CustomConsole.WriteLineOK("console-24.bmp icon loaded.");
+        public static void LoadImage(string path, string type)
+        {
+            string fileName = Path.GetFileName(path);
+            Bitmap bitmap = new(File.ReadAllBytes(path));
+            ResourceManager.Icons.Add(type + "-" + fileName, bitmap);
+            CustomConsole.WriteLineOK(fileName + " icon loaded.");
         }
 
         public static void Run()
@@ -344,7 +303,7 @@ namespace Aura_OS
             foreach (string directory in directories)
             {
                 string folderName = Path.GetFileName(directory);
-                DrawIconAndText(directoryIco, folderName, currentX, currentY);
+                DrawIconAndText(ResourceManager.GetImage("32-folder.bmp"), folderName, currentX, currentY);
 
                 currentY += iconSpacing;
                 if (currentY + iconSpacing > screenHeight - 64)
@@ -357,7 +316,7 @@ namespace Aura_OS
             foreach (string file in files)
             {
                 string fileName = Path.GetFileName(file);
-                DrawIconAndText(fileIco, fileName, currentX, currentY);
+                DrawIconAndText(ResourceManager.GetImage("32-file.bmp"), fileName, currentX, currentY);
 
                 currentY += iconSpacing;
                 if (currentY + iconSpacing > screenHeight - 64)
@@ -377,7 +336,7 @@ namespace Aura_OS
 
         public static void DrawCursor(uint x, uint y)
         {
-            canvas.DrawImageAlpha(cursor, (int)x, (int)y);
+            canvas.DrawImageAlpha(ResourceManager.GetImage("00-cursor.bmp"), (int)x, (int)y);
         }
     }
 }

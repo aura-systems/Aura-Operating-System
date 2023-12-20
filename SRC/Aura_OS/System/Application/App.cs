@@ -7,7 +7,7 @@
 
 using Cosmos.System;
 using Aura_OS.Processing;
-using Aura_OS.System.UI.GUI.Components;
+using Aura_OS.System.Graphics.UI.GUI.Components;
 
 namespace Aura_OS
 {

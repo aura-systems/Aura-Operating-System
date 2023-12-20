@@ -7,7 +7,6 @@
 using Cosmos.Core;
 using Cosmos.System.Graphics;
 using Cosmos.System.Graphics.Fonts;
-using Aura_OS;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -15,7 +14,7 @@ using System.Text;
 using Cosmos.System;
 using System.Runtime.InteropServices;
 
-namespace Aura_OS.System.UI.GUI.Components
+namespace Aura_OS.System.Graphics.UI.GUI.Components
 {
     public class Window : Component
     {
@@ -33,9 +32,9 @@ namespace Aura_OS.System.UI.GUI.Components
 
         public Window(string name, int x, int y, int width, int height) : base(x, y, width, height)
         {
-            Icon = Kernel.programIco;
+            Icon = ResourceManager.GetImage("16-program.bmp");
             Name = name;
-            Close = new Button(Kernel.CloseNormal, X + Width - 20, Y + 5);
+            Close = new Button(ResourceManager.GetImage("16-close.bmp"), X + Width - 20, Y + 5);
             Close.NoBorder = true;
             TopBar = new Panel(Kernel.DarkBlue, Kernel.Pink, X + 3, Y + 3, Width - 5, 18);
             Borders = true;

@@ -8,8 +8,9 @@ using Aura_OS.System.Users;
 using Cosmos.System;
 using System;
 using System.Drawing;
-using Aura_OS.System.UI.GUI;
 using System.Collections.Generic;
+using Aura_OS.System.Graphics.UI.GUI;
+using Aura_OS.System.Graphics;
 
 namespace Aura_OS
 {
@@ -125,7 +126,7 @@ namespace Aura_OS
 
         public Terminal(int width, int height, int x = 0, int y = 0) : base("Terminal", width, height, x, y)
         {
-            Window.Icon = Kernel.terminalIco;
+            Window.Icon = ResourceManager.GetImage("16-terminal.bmp");
 
             Graphics = new GUI();
 

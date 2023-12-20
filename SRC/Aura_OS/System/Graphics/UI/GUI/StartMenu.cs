@@ -7,16 +7,15 @@
 using Cosmos.Core;
 using Cosmos.System.Graphics;
 using Cosmos.System.Graphics.Fonts;
-using Aura_OS;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Text;
 using Cosmos.System;
-using Aura_OS.System.UI.GUI.Components;
 using Aura_OS.Processing;
+using Aura_OS.System.Graphics.UI.GUI.Components;
 
-namespace Aura_OS.System.UI.GUI
+namespace Aura_OS.System.Graphics.UI.GUI
 {
     public class StartMenu : Window
     {
@@ -35,7 +34,7 @@ namespace Aura_OS.System.UI.GUI
             {
                 if (app.Type == ProcessType.Program)
                 {
-                    var button = new Button(Kernel.shutdownIco, app.Name, X + 4, Y + buttonY, width, 36);
+                    var button = new Button(ResourceManager.GetImage("24-program.bmp"), app.Name, X + 4, Y + buttonY, width, 36);
                     button.NoBorder = true;
                     buttons.Add(button);
                     buttonY += 36;

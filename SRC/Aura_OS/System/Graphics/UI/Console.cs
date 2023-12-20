@@ -10,7 +10,7 @@ using System.Text;
 using Cosmos.System.Graphics;
 using IL2CPU.API.Attribs;
 
-namespace Aura_OS.System.UI
+namespace Aura_OS.System.Graphics.UI
 {
     public abstract class Console
     {
@@ -23,7 +23,7 @@ namespace Aura_OS.System.UI
         {
 
         }
-        
+
         public bool writecommand = false;
         public int commandindex = -1;
         public string cmd;
