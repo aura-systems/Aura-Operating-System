@@ -13,6 +13,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Text;
 using Cosmos.System;
+using System.Runtime.InteropServices;
 
 namespace Aura_OS.System.UI.GUI.Components
 {
@@ -34,7 +35,8 @@ namespace Aura_OS.System.UI.GUI.Components
         {
             Icon = Kernel.programIco;
             Name = name;
-            Close = new Button(Kernel.CloseNormal, X + Width - 20, Y + 5, true);
+            Close = new Button(Kernel.CloseNormal, X + Width - 20, Y + 5);
+            Close.NoBorder = true;
             TopBar = new Panel(Kernel.DarkBlue, Kernel.Pink, X + 3, Y + 3, Width - 5, 18);
             Borders = true;
         }

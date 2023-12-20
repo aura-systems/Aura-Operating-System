@@ -54,10 +54,15 @@ namespace Aura_OS
         public static Bitmap networkOfflineIco;
         public static Bitmap directoryIco;
         public static Bitmap fileIco;
+        public static Bitmap rebootIco;
+        public static Bitmap shutdownIco;
+        public static Bitmap terminalIco2;
+        public static Bitmap programIco2;
 
         public static Bitmap programLogo;
         public static Bitmap errorLogo;
 
+        public static Bitmap AuraLogo2;
         public static Bitmap AuraLogo;
         public static Bitmap CosmosLogo;
 
@@ -169,6 +174,8 @@ namespace Aura_OS
             gameBoyEmu = new GameBoyEmu(160 + 4, 144 + 22, 40, 40);
             gameBoyEmu.Initialize();
 
+            dock.UpdateApplicationButtons();
+
             WindowManager = new WindowManager();
             WindowManager.Initialize();
 
@@ -213,12 +220,17 @@ namespace Aura_OS
             AuraLogo = new Bitmap(File.ReadAllBytes(isoVol + "UI\\Images\\AuraLogo.bmp"));
             CustomConsole.WriteLineOK("AuraLogo.bmp image loaded.");
 
+            AuraLogo2 = new Bitmap(File.ReadAllBytes(isoVol + "UI\\Images\\aura.bmp"));
+            CustomConsole.WriteLineOK("aura.bmp image loaded.");
+
             CosmosLogo = new Bitmap(File.ReadAllBytes(isoVol + "UI\\Images\\CosmosLogo.bmp"));
             CustomConsole.WriteLineOK("CosmosLogo.bmp image loaded.");
 
             // Fonts
             font = PCScreenFont.LoadFont(File.ReadAllBytes(isoVol + "UI\\Fonts\\zap-ext-light16.psf"));
             CustomConsole.WriteLineOK("zap-ext-light16.psf font loaded.");
+
+            Heap.Collect();
 
             // Icons
             CloseNormal = new Bitmap(File.ReadAllBytes(isoVol + "UI\\Images\\Icons\\close_normal.bmp"));
@@ -230,8 +242,8 @@ namespace Aura_OS
             terminalIco = new Bitmap(File.ReadAllBytes(isoVol + "UI\\Images\\Icons\\utilities-terminal.bmp"));
             CustomConsole.WriteLineOK("utilities-terminal.bmp icon loaded.");
 
-            programIco = new Bitmap(File.ReadAllBytes(isoVol + "UI\\Images\\Icons\\window.bmp"));
-            CustomConsole.WriteLineOK("window.bmp icon loaded.");
+            programIco = new Bitmap(File.ReadAllBytes(isoVol + "UI\\Images\\Icons\\program.bmp"));
+            CustomConsole.WriteLineOK("program.bmp icon loaded.");
 
             cursor = new Bitmap(File.ReadAllBytes(isoVol + "UI\\Images\\Icons\\cursor.bmp"));
             CustomConsole.WriteLineOK("cursor.bmp icon loaded.");
@@ -250,6 +262,20 @@ namespace Aura_OS
 
             fileIco = new Bitmap(File.ReadAllBytes(isoVol + "UI\\Images\\Icons\\document-new.bmp"));
             CustomConsole.WriteLineOK("document-new.bmp icon loaded.");
+
+            Heap.Collect();
+
+            rebootIco = new Bitmap(File.ReadAllBytes(isoVol + "UI\\Images\\Icons\\system-reboot.bmp"));
+            CustomConsole.WriteLineOK("system-reboot.bmp icon loaded.");
+
+            shutdownIco = new Bitmap(File.ReadAllBytes(isoVol + "UI\\Images\\Icons\\system-shutdown.bmp"));
+            CustomConsole.WriteLineOK("system-shutdown.bmp icon loaded.");
+
+            programIco2 = new Bitmap(File.ReadAllBytes(isoVol + "UI\\Images\\Icons\\window-big.bmp"));
+            CustomConsole.WriteLineOK("window-big.bmp icon loaded.");
+
+            terminalIco2 = new Bitmap(File.ReadAllBytes(isoVol + "UI\\Images\\Icons\\console-24.bmp"));
+            CustomConsole.WriteLineOK("console-24.bmp icon loaded.");
         }
 
         public static void Run()

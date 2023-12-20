@@ -33,7 +33,7 @@ namespace Aura_OS.System.UI.GUI
         Button StartButton;
         Button HourButton;
         Button NetworkButton;
-        Window StartMenu;
+        StartMenu StartMenu;
         List<ApplicationButton> Applications;
 
         public bool Clicked = false;
@@ -55,19 +55,21 @@ namespace Aura_OS.System.UI.GUI
             int hourButtonHeight = 28;
             int hourButtonX = (int)(Kernel.screenWidth - (time.Length * (Kernel.font.Width + 1)) - 2);
             int hourButtonY = (int)Kernel.screenHeight - 28 - 3;
-            HourButton = new Button(time, hourButtonX, hourButtonY, hourButtonWidth, hourButtonHeight, true);
+            HourButton = new Button(time, hourButtonX, hourButtonY, hourButtonWidth, hourButtonHeight);
+            HourButton.Light = true;
 
             int networkButtonWidth = 16;
             int networkButtonHeight = 16;
             int netoworkButtonX = (int)(Kernel.screenWidth - (time.Length * (Kernel.font.Width + 1)) - 2) - 20;
             int networkButtonY = (int)Kernel.screenHeight - 25;
-            NetworkButton = new Button(Kernel.networkOfflineIco, netoworkButtonX, networkButtonY, networkButtonWidth, networkButtonHeight, true);
+            NetworkButton = new Button(Kernel.networkOfflineIco, netoworkButtonX, networkButtonY, networkButtonWidth, networkButtonHeight);
+            NetworkButton.NoBorder = true;
 
             int menuWidth = 168;
-            int menuHeight = 500;
+            int menuHeight = 350;
             int menuX = 0;
             int menuY = (int)(Kernel.screenHeight - menuHeight - taskbarHeight);
-            StartMenu = new Window(menuX, menuY, menuWidth, menuHeight);
+            StartMenu = new StartMenu(menuX, menuY, menuWidth, menuHeight);
 
             // Applications
             Applications = new List<ApplicationButton>();

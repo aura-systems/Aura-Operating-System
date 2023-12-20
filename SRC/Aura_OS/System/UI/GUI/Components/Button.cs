@@ -5,11 +5,14 @@
 */
 
 using Cosmos.System.Graphics;
+using System.Drawing;
 
 namespace Aura_OS.System.UI.GUI.Components
 {
     public class Button : Component
     {
+        public Color BackColor = Color.Gray;
+
         public string Text;
         public Bitmap Image;
         public bool NoBorder = false;
@@ -21,22 +24,14 @@ namespace Aura_OS.System.UI.GUI.Components
             Text = text;
         }
 
-        public Button(string text, int x, int y, int width, int height, bool light = false) : base(x, y, width, height)
-        {
-            Text = text;
-            Light = light;
-        }
-
-        public Button(Bitmap image, int x, int y, int width, int height, bool noBorder = false) : base(x, y, width, height)
+        public Button(Bitmap image, int x, int y, int width, int height) : base(x, y, width, height)
         {
             Image = image;
-            NoBorder = noBorder;
         }
 
-        public Button(Bitmap image, int x, int y, bool noBorder = false) : base(x, y, (int)image.Width, (int)image.Height)
+        public Button(Bitmap image, int x, int y) : base(x, y, (int)image.Width, (int)image.Height)
         {
             Image = image;
-            NoBorder = noBorder;
         }
 
         public Button(Bitmap image, string text, int x, int y, int width, int height) : base(x, y, width, height)
@@ -90,6 +85,10 @@ namespace Aura_OS.System.UI.GUI.Components
                     Kernel.canvas.DrawLine(Kernel.DarkGray, X + Width - 1, Y + 1, X + Width - 1, Y + Height);
                     Kernel.canvas.DrawLine(Kernel.BlackColor, X + Width, Y, X + Width, Y + Height);
                 }
+            }
+            else
+            {
+                Kernel.canvas.DrawFilledRectangle(BackColor, X + 2, Y + 2, Width - 3, Height - 3);
             }
 
             if (Text != null && Image != null)
