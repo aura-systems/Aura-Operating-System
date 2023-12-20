@@ -214,9 +214,9 @@ namespace Aura_OS
 
             // Icons
             LoadImage(isoVol + "UI\\Images\\Icons\\16\\close.bmp", "16");
-            // LoadImage(isoVol + "UI\\Images\\Icons\\16\\network-idle.bmp", "16");
+            LoadImage(isoVol + "UI\\Images\\Icons\\16\\network-idle.bmp", "16");
             LoadImage(isoVol + "UI\\Images\\Icons\\16\\network-offline.bmp", "16");
-            LoadImage(isoVol + "UI\\Images\\Icons\\16\\network-transmit.bmp", "16");
+            //LoadImage(isoVol + "UI\\Images\\Icons\\16\\network-transmit.bmp", "16");
             LoadImage(isoVol + "UI\\Images\\Icons\\16\\program.bmp", "16");
             LoadImage(isoVol + "UI\\Images\\Icons\\16\\terminal.bmp", "16");
             LoadImage(isoVol + "UI\\Images\\Icons\\24\\program.bmp", "24");
@@ -284,7 +284,7 @@ namespace Aura_OS
             }
             catch (Exception ex)
             {
-                System.Crash.WriteException(ex);
+                Crash.StopKernel("Exception occured in Kernel.cs", ex.Message, "0x00000000", "0");
             }
         }
 

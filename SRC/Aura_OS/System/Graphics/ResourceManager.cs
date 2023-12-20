@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace Aura_OS.System.Graphics
 {
@@ -13,7 +14,16 @@ namespace Aura_OS.System.Graphics
 
         public static Bitmap GetImage(string key)
         {
-            return Icons[key];
+            try
+            {
+                Bitmap bitmap = Icons[key];
+                return bitmap;
+            }
+            catch
+            {
+                Crash.StopKernel(key + " not found", "Error while getting resource file.", "0x00000000", "0");
+                throw;
+            }
         }
     }
 }
