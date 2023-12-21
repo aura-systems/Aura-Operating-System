@@ -52,7 +52,9 @@ namespace Aura_OS.System.Application
 
             if (config.Template == typeof(Terminal))
             {
-                app = new Terminal(config.Weight, config.Height, config.X, config.Y);
+                var terminal = new Terminal(config.Weight, config.Height, config.X, config.Y);
+                Kernel.console = terminal;
+                app = terminal;
             }
             else if (config.Template == typeof(Cube))
             {

@@ -8,6 +8,7 @@
 using Cosmos.System;
 using Aura_OS.Processing;
 using Aura_OS.System.Graphics.UI.GUI.Components;
+using static Cosmos.HAL.PCIDevice;
 
 namespace Aura_OS
 {
@@ -65,6 +66,12 @@ namespace Aura_OS
                         Kernel.WindowManager.apps.Remove(this);
                         Kernel.ProcessManager.Processes.Remove(this);
                         Kernel.dock.UpdateApplicationButtons();
+
+                        if (this is Terminal)
+                        {
+                            Kernel.console = null;
+                        }
+
                         return;
                     }
                     else if (!HasWindowMoving && Window.TopBar.IsInside((int)MouseManager.X, (int)MouseManager.Y))
