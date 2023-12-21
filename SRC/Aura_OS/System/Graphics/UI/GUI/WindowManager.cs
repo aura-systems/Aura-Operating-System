@@ -1,4 +1,10 @@
-﻿using Cosmos.System;
+﻿/*
+* PROJECT:          Aura Operating System Development
+* CONTENT:          Window Manager
+* PROGRAMMERS:      Valentin Charbonnier <valentinbreiz@gmail.com>
+*/
+
+using Cosmos.System;
 using System;
 using System.Collections.Generic;
 using System.Threading;

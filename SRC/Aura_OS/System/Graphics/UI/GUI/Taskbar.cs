@@ -1,18 +1,17 @@
+/*
+* PROJECT:          Aura Operating System Development
+* CONTENT:          Taskbar
+* PROGRAMMER(S):    Valentin Charbonnier <valentinbreiz@gmail.com>
+*/
+
 using Aura_OS.Processing;
-using Cosmos.Core;
-using Cosmos.Core.Memory;
-using Cosmos.HAL;
 using Cosmos.System;
-using Cosmos.System.Network;
-using System;
-using System.Drawing;
 using System.Collections.Generic;
-using System.Xml.Linq;
 using Aura_OS.System.Graphics.UI.GUI.Components;
 
 namespace Aura_OS.System.Graphics.UI.GUI
 {
-    public class Dock : Process
+    public class Taskbar : Process
     {
         int taskbarHeight = 33;
         int startY;
@@ -27,7 +26,7 @@ namespace Aura_OS.System.Graphics.UI.GUI
 
         public Dictionary<string, Button> Buttons;
 
-        public Dock() : base("Docker", ProcessType.KernelComponent)
+        public Taskbar() : base("Docker", ProcessType.KernelComponent)
         {
             startY = (int)(Kernel.screenHeight - taskbarHeight);
 
@@ -126,16 +125,7 @@ namespace Aura_OS.System.Graphics.UI.GUI
 
                 if (Buttons[application.Name].IsInside((int)MouseManager.X, (int)MouseManager.Y))
                 {
-                    application.visible = !application.visible;
-
-                    if (application.visible)
-                    {
-                        Kernel.ProcessManager.Start(application);
-                    }
-                    else
-                    {
-                        application.Stop();
-                    }
+                    application.Window.Minimize.Action();
                 }
             }
         }

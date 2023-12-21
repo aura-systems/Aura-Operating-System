@@ -1,6 +1,6 @@
 ﻿/*
 * PROJECT:          Aura Operating System Development
-* CONTENT:          Window class
+* CONTENT:          Start menu
 * PROGRAMMERS:      Valentin Charbonnier <valentinbreiz@gmail.com>
 */
 
@@ -79,7 +79,7 @@ namespace Aura_OS.System.Graphics.UI.GUI
                     app.zIndex = Kernel.WindowManager.GetTopZIndex() + 1;
                     Kernel.WindowManager.MarkStackDirty();
 
-                    app.visible = true;
+                    app.Visible = true;
                     app.Focused = true;
 
                     Kernel.ProcessManager.Start(app);

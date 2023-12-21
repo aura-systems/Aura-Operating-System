@@ -1,8 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿/*
+* PROJECT:          Aura Operating System Development
+* CONTENT:          Process base class
+* PROGRAMMER(S):    Valentin Charbonnier <valentinbreiz@gmail.com>
+*/
 
 namespace Aura_OS.Processing
 {

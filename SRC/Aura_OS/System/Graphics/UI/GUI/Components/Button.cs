@@ -1,6 +1,6 @@
 /*
 * PROJECT:          Aura Operating System Development
-* CONTENT:          Window class
+* CONTENT:          Button class
 * PROGRAMMERS:      Valentin Charbonnier <valentinbreiz@gmail.com>
 */
 
@@ -18,6 +18,7 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
 
         public Color BackColor = Color.LightGray;
         public Color TextColor = Color.Black;
+        public bool NoBackground = false;
         public bool NoBorder = false;
         public bool Light = false;
         public bool Focused = false;
@@ -53,7 +54,10 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
         {
             if (!NoBorder && Light)
             {
-                Kernel.canvas.DrawFilledRectangle(Kernel.Gray, X + 2, Y + 2, Width - 3, Height - 3);
+                if (!NoBackground)
+                {
+                    Kernel.canvas.DrawFilledRectangle(Kernel.Gray, X + 2, Y + 2, Width - 3, Height - 3);
+                }     
 
                 Kernel.canvas.DrawLine(Kernel.DarkGray, X, Y, X + Width, Y);
                 Kernel.canvas.DrawLine(Kernel.DarkGray, X, Y, X, Y + Height);
@@ -64,7 +68,10 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
             {
                 if (Focused)
                 {
-                    Utils.DrawGradient(Kernel.Gray, Kernel.Pink, X + 2, Y + 2, Width - 3, Height - 3);
+                    if (!NoBackground)
+                    {
+                        Utils.DrawGradient(Kernel.Gray, Kernel.Pink, X + 2, Y + 2, Width - 3, Height - 3);
+                    }
 
                     Kernel.canvas.DrawLine(Kernel.BlackColor, X, Y, X + Width, Y);
                     Kernel.canvas.DrawLine(Kernel.Gray, X, Y + 1, X + Width, Y + 1);
@@ -77,7 +84,10 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
                 }
                 else
                 {
-                    Kernel.canvas.DrawFilledRectangle(Kernel.DarkGrayLight, X + 2, Y + 2, Width - 3, Height - 3);
+                    if (!NoBackground)
+                    {
+                        Kernel.canvas.DrawFilledRectangle(Kernel.DarkGrayLight, X + 2, Y + 2, Width - 3, Height - 3);
+                    }
 
                     Kernel.canvas.DrawLine(Kernel.WhiteColor, X, Y, X + Width, Y);
                     Kernel.canvas.DrawLine(Kernel.Gray, X, Y + 1, X + Width, Y + 1);
@@ -91,7 +101,10 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
             }
             else
             {
-                Kernel.canvas.DrawFilledRectangle(BackColor, X + 2, Y + 2, Width - 3, Height - 3);
+                if (!NoBackground)
+                {
+                    Kernel.canvas.DrawFilledRectangle(BackColor, X + 2, Y + 2, Width - 3, Height - 3);
+                }
             }
 
             if (Text != null && Image != null)

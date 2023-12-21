@@ -1,10 +1,12 @@
-﻿using Aura_OS.System.Application.Emulators.GameBoyEmu;
+﻿/*
+* PROJECT:          Aura Operating System Development
+* CONTENT:          Application Manager
+* PROGRAMMERS:      Valentin Charbonnier <valentinbreiz@gmail.com>
+*/
+
+using Aura_OS.System.Application.Emulators.GameBoyEmu;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Reflection.Metadata;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Aura_OS.System.Application
 {

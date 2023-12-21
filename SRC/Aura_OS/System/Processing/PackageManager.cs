@@ -1,10 +1,13 @@
-﻿using Aura_OS.System.Network;
+﻿/*
+* PROJECT:          Aura Operating System Development
+* CONTENT:          HTTP package manager for Cosmos (view https://github.com/aura-systems/CosmosExecutable to make packages)
+* PROGRAMMER(S):    Valentin Charbonnier <valentinbreiz@gmail.com>
+*/
+
+using Aura_OS.System.Network;
 using JZero;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Aura_OS.System.Processing
 {

@@ -31,6 +31,7 @@ namespace Aura_OS
 {
     public class Kernel
     {
+        public static Dictionary<string, string> EnvironmentVariables;
         public static string ComputerName = "aura-pc";
         public static string userLogged = "root";
         public static string userLevelLogged = "admin";
@@ -52,6 +53,7 @@ namespace Aura_OS
 
         public static Bitmap AuraLogo2;
         public static Bitmap AuraLogo;
+        public static Bitmap AuraLogoWhite;
         public static Bitmap CosmosLogo;
 
         public static Bitmap wallpaper;
@@ -75,19 +77,20 @@ namespace Aura_OS
         public static Color DarkBlue = Color.FromArgb(0xff, 0x00, 0x00, 0x80);
         public static Color Pink = Color.FromArgb(0xff, 0xe7, 0x98, 0xde);
 
-        public static Dock dock;
+        public static Taskbar dock;
 
-        //PROCESSES
+        // Managers
         public static ProcessManager ProcessManager;
         public static WindowManager WindowManager;
         public static ApplicationManager ApplicationManager;
+        public static CommandManager CommandManager;
+        public static PackageManager PackageManager;
+
+        // Textmode Console
         public static System.Graphics.UI.CUI.Console aConsole;
 
+        // Console application
         public static Terminal console;
-
-        public static CommandManager CommandManager;
-
-        public static PackageManager PackageManager;
 
         public static bool Pressed;
         public static int FreeCount = 0;
@@ -96,11 +99,13 @@ namespace Aura_OS
         public static int _fps = 0;
         public static int _deltaT = 0;
 
-        public static CosmosVFS VirtualFileSystem = new CosmosVFS();
-        public static Dictionary<string, string> EnvironmentVariables = new Dictionary<string, string>();
+        public static CosmosVFS VirtualFileSystem;
 
         public static void BeforeRun()
         {
+            EnvironmentVariables = new Dictionary<string, string>();
+            VirtualFileSystem = new CosmosVFS();
+
             //Start Filesystem
             VFSManager.RegisterVFS(VirtualFileSystem);
 
@@ -145,11 +150,13 @@ namespace Aura_OS
 
             //START GRAPHICS
             canvas = FullScreenCanvas.GetFullScreenCanvas(new Mode(screenWidth, screenHeight, ColorDepth.ColorDepth32));
+            canvas.DrawImage(AuraLogoWhite, (int)((screenWidth / 2) - (AuraLogoWhite.Width / 2)), (int)((screenHeight / 2) - (AuraLogoWhite.Height / 2)));
+            canvas.Display();
 
             aConsole = null;
 
             // CustomConsole.WriteLineInfo("Starting dock...");
-            dock = new Dock();
+            dock = new Taskbar();
             dock.Initialize();
 
             dock.UpdateApplicationButtons();
@@ -191,7 +198,7 @@ namespace Aura_OS
                 }
             }
 
-            // LOAD FILE
+            // Files
             errorLogo = new Bitmap(Files.ErrorImage);
             CustomConsole.WriteLineOK("error.bmp image loaded.");
 
@@ -202,6 +209,9 @@ namespace Aura_OS
             // Images
             AuraLogo = new Bitmap(File.ReadAllBytes(isoVol + "UI\\Images\\AuraLogo.bmp"));
             CustomConsole.WriteLineOK("AuraLogo.bmp image loaded.");
+
+            AuraLogoWhite = new Bitmap(File.ReadAllBytes(isoVol + "UI\\Images\\AuraLogoWhite.bmp"));
+            CustomConsole.WriteLineOK("AuraLogoWhite.bmp image loaded.");
 
             AuraLogo2 = new Bitmap(File.ReadAllBytes(isoVol + "UI\\Images\\aura.bmp"));
             CustomConsole.WriteLineOK("aura.bmp image loaded.");
@@ -215,6 +225,7 @@ namespace Aura_OS
 
             // Icons
             LoadImage(isoVol + "UI\\Images\\Icons\\16\\close.bmp", "16");
+            LoadImage(isoVol + "UI\\Images\\Icons\\16\\minimize.bmp", "16");
             LoadImage(isoVol + "UI\\Images\\Icons\\16\\network-idle.bmp", "16");
             LoadImage(isoVol + "UI\\Images\\Icons\\16\\network-offline.bmp", "16");
             //LoadImage(isoVol + "UI\\Images\\Icons\\16\\network-transmit.bmp", "16");

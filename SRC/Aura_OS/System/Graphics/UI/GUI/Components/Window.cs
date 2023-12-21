@@ -4,15 +4,8 @@
 * PROGRAMMERS:      Valentin Charbonnier <valentinbreiz@gmail.com>
 */
 
-using Cosmos.Core;
 using Cosmos.System.Graphics;
 using Cosmos.System.Graphics.Fonts;
-using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Text;
-using Cosmos.System;
-using System.Runtime.InteropServices;
 
 namespace Aura_OS.System.Graphics.UI.GUI.Components
 {
@@ -21,6 +14,7 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
         public Bitmap Icon;
         public string Name;
         public Button Close;
+        public Button Minimize;
         public Panel TopBar;
 
         public bool Borders;
@@ -35,7 +29,11 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
             Icon = ResourceManager.GetImage("16-program.bmp");
             Name = name;
             Close = new Button(ResourceManager.GetImage("16-close.bmp"), X + Width - 20, Y + 5);
+            Close.NoBackground = true;
             Close.NoBorder = true;
+            Minimize = new Button(ResourceManager.GetImage("16-minimize.bmp"), X + Width - 40, Y + 5);
+            Minimize.NoBackground = true;
+            Minimize.NoBorder = true;
             TopBar = new Panel(Kernel.DarkBlue, Kernel.Pink, X + 3, Y + 3, Width - 5, 18);
             Borders = true;
         }
@@ -62,6 +60,9 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
                 Close.X = X + Width - 20;
                 Close.Y = Y + 5;
                 Close.Update();
+                Minimize.X = X + Width - 40;
+                Minimize.Y = Y + 5;
+                Minimize.Update();
             }
         }
     }
