@@ -12,18 +12,6 @@ using Aura_OS.System.Graphics.UI.GUI.Components;
 
 namespace Aura_OS.System.Graphics.UI.GUI
 {
-    public class ApplicationButton
-    {
-        public Button Button;
-        public App Application;
-
-        public ApplicationButton(Button button, App application)
-        {
-            Button = button;
-            Application = application;
-        }
-    }
-
     public class Dock : Process
     {
         int taskbarHeight = 33;
@@ -33,10 +21,11 @@ namespace Aura_OS.System.Graphics.UI.GUI
         Button HourButton;
         Button NetworkButton;
         StartMenu StartMenu;
-        List<ApplicationButton> Applications;
 
         public bool Clicked = false;
         public bool ShowStartMenu = false;
+
+        public Dictionary<string, Button> Buttons;
 
         public Dock() : base("Docker", ProcessType.KernelComponent)
         {
@@ -70,8 +59,7 @@ namespace Aura_OS.System.Graphics.UI.GUI
             int menuY = (int)(Kernel.screenHeight - menuHeight - taskbarHeight);
             StartMenu = new StartMenu(menuX, menuY, menuWidth, menuHeight);
 
-            // Applications
-            Applications = new List<ApplicationButton>();
+            Buttons = new Dictionary<string, Button>();
         }
 
         public override void Initialize()
@@ -83,22 +71,17 @@ namespace Aura_OS.System.Graphics.UI.GUI
 
         public void UpdateApplicationButtons()
         {
-            Applications.Clear();
+            Buttons.Clear();
 
             int buttonX = 36;
-            foreach (var process in Kernel.ProcessManager.Processes)
+            foreach (var app in Kernel.WindowManager.apps)
             {
-                if (process.Type == ProcessType.Program)
-                {
-                    var app = process as App;
+                var spacing = app.Name.Length * 9 + (int)app.Window.Icon.Width;
+                var button = new Button(app.Window.Icon, app.Name, buttonX, (int)Kernel.screenHeight - 28 - 3, spacing, 28);
 
-                    var spacing = app.Name.Length * 9 + (int)app.Window.Icon.Width;
-                    var button = new Button(app.Window.Icon, app.Name, buttonX, (int)Kernel.screenHeight - 28 - 3, spacing, 28);
+                Buttons.Add(app.Name, button);
 
-                    Applications.Add(new ApplicationButton(button, app));
-
-                    buttonX += spacing + 4;
-                }
+                buttonX += spacing + 4;
             }
         }
 
@@ -127,38 +110,31 @@ namespace Aura_OS.System.Graphics.UI.GUI
                 ShowStartMenu = !ShowStartMenu;
             }
 
-            // Applications
-            for (int i = 0; i < Applications.Count; i++)
+            foreach (var application in  Kernel.WindowManager.apps)
             {
-                var app = Applications[i];
-
-                if (Kernel.WindowManager.Focused != null)
+                if (application.Focused)
                 {
-                    if (Kernel.WindowManager.Focused.Equals(app))
-                    {
-                        app.Button.Focused = true;
-                        app.Application.Window.TopBar.Color1 = Kernel.DarkBlue;
-                        app.Application.Window.TopBar.Color2 = Kernel.Pink;
-                    }
-                    else
-                    {
-                        app.Button.Focused = false;
-                        app.Application.Window.TopBar.Color1 = Kernel.DarkGray;
-                    }
+                    Buttons[application.Name].Focused = true;
+                    application.Window.TopBar.Color1 = Kernel.DarkBlue;
+                    application.Window.TopBar.Color2 = Kernel.Pink;
+                }
+                else
+                {
+                    Buttons[application.Name].Focused = false;
+                    application.Window.TopBar.Color1 = Kernel.DarkGray;
                 }
 
-                if (app.Button.IsInside((int)MouseManager.X, (int)MouseManager.Y))
+                if (Buttons[application.Name].IsInside((int)MouseManager.X, (int)MouseManager.Y))
                 {
-                    app.Application.visible = !app.Application.visible;
+                    application.visible = !application.visible;
 
-                    if (app.Application.visible)
+                    if (application.visible)
                     {
-                        Kernel.ProcessManager.Start(app.Application);
-                        Kernel.WindowManager.Focused = app.Application;
+                        Kernel.ProcessManager.Start(application);
                     }
                     else
                     {
-                        app.Application.Stop();
+                        application.Stop();
                     }
                 }
             }
@@ -188,11 +164,21 @@ namespace Aura_OS.System.Graphics.UI.GUI
 
         private void DrawApplications()
         {
-            for (int i = 0; i < Applications.Count; i++)
+            foreach (var application in Kernel.WindowManager.apps)
             {
-                var app = Applications[i];
+                if (application.Focused)
+                {
+                    Buttons[application.Name].Focused = true;
+                    application.Window.TopBar.Color1 = Kernel.DarkBlue;
+                    application.Window.TopBar.Color2 = Kernel.Pink;
+                }
+                else
+                {
+                    Buttons[application.Name].Focused = false;
+                    application.Window.TopBar.Color1 = Kernel.DarkGray;
+                }
 
-                app.Button.Update();
+                Buttons[application.Name].Update();
             }
         }
 

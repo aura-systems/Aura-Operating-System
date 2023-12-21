@@ -25,6 +25,7 @@ using System.IO;
 using Aura_OS.System.Processing;
 using Aura_OS.System.Graphics.UI.GUI;
 using Aura_OS.System.Graphics;
+using Aura_OS.System.Application;
 
 namespace Aura_OS
 {
@@ -79,13 +80,10 @@ namespace Aura_OS
         //PROCESSES
         public static ProcessManager ProcessManager;
         public static WindowManager WindowManager;
+        public static ApplicationManager ApplicationManager;
         public static System.Graphics.UI.CUI.Console aConsole;
 
         public static Terminal console;
-        public static MemoryInfo memoryInfo;
-        public static SystemInfo systemInfo;
-        public static GameBoyEmu gameBoyEmu;
-        public static Cube cube;
 
         public static CommandManager CommandManager;
 
@@ -117,22 +115,31 @@ namespace Aura_OS
             ProcessManager = new ProcessManager();
             ProcessManager.Initialize();
 
+            CustomConsole.WriteLineInfo("Loading files...");
             LoadFiles();
-
-            CustomConsole.WriteLineInfo("Starting dock...");
-            dock = new Dock();
-            dock.Initialize();
 
             CustomConsole.WriteLineInfo("Starting command manager...");
             CommandManager = new CommandManager();
             CommandManager.Initialize();
 
+            CustomConsole.WriteLineInfo("Checking for boot.bat script...");
             if (File.Exists(CurrentDirectory + "boot.bat"))
             {
-                CustomConsole.WriteLineInfo("Detected boot.bat, executing script...");
+                CustomConsole.WriteLineOK("Detected boot.bat, executing script...");
 
                 Batch.Execute(CurrentDirectory + "boot.bat");
             }
+
+            CustomConsole.WriteLineInfo("Starting package manager...");
+            PackageManager = new PackageManager();
+            PackageManager.Initialize();
+
+            CustomConsole.WriteLineInfo("Starting application manager...");
+            ApplicationManager = new ApplicationManager();
+            LoadApplications();
+
+            CustomConsole.WriteLineInfo("Starting window manager...");
+            WindowManager = new WindowManager();
 
             CustomConsole.WriteLineInfo("Starting Canvas...");
 
@@ -141,28 +148,11 @@ namespace Aura_OS
 
             aConsole = null;
 
-            console = new Terminal(700, 600, 40, 40);
-            console.Initialize();
-
-            memoryInfo = new MemoryInfo(400, 300, 40, 40);
-            memoryInfo.Initialize();
-
-            systemInfo = new SystemInfo(402, 360, 40, 40);
-            systemInfo.Initialize();
-
-            cube = new Cube(200, 200, 40, 40);
-            cube.Initialize();
-
-            gameBoyEmu = new GameBoyEmu(160 + 4, 144 + 22, 40, 40);
-            gameBoyEmu.Initialize();
+            // CustomConsole.WriteLineInfo("Starting dock...");
+            dock = new Dock();
+            dock.Initialize();
 
             dock.UpdateApplicationButtons();
-
-            WindowManager = new WindowManager();
-            WindowManager.Initialize();
-
-            PackageManager = new PackageManager();
-            PackageManager.Initialize();
 
             //START MOUSE
             MouseManager.ScreenWidth = screenWidth;
@@ -173,9 +163,20 @@ namespace Aura_OS
             Running = true;
         }
 
+        public static void LoadApplications()
+        {
+            System.CustomConsole.WriteLineInfo("Registering applications...");
+
+            ApplicationManager.RegisterApplication(typeof(Terminal), 40, 40, 700, 600);
+            ApplicationManager.RegisterApplication(typeof(MemoryInfo), 40, 40, 400, 300);
+            ApplicationManager.RegisterApplication(typeof(SystemInfo), 40, 40, 402, 360);
+            ApplicationManager.RegisterApplication(typeof(Cube), 40, 40, 200, 200);
+            ApplicationManager.RegisterApplication(typeof(GameBoyEmu), 40, 40, 160 + 4, 144 + 22);
+        }
+
         public static void LoadFiles()
         {
-            System.CustomConsole.WriteLineInfo("Loading files...");
+            CustomConsole.WriteLineInfo("Checking for ISO9660 volume...");
 
             var vols = VirtualFileSystem.GetVolumes();
             string isoVol = CurrentVolume;
@@ -186,7 +187,7 @@ namespace Aura_OS
                 {
                     isoVol = vol.mName;
 
-                    CustomConsole.WriteLineOK("ISO9660 vol is " + isoVol);
+                    CustomConsole.WriteLineOK("Volume is " + isoVol);
                 }
             }
 
@@ -262,30 +263,66 @@ namespace Aura_OS
                         break;
                 }
 
-                //canvas.Clear(0x000000);
-
-                canvas.DrawImage(wallpaper, 0, 0);
-
-                //canvas.DrawImage(bootBitmap, (int)(screenWidth / 2 - bootBitmap.Width / 2), (int)(screenHeight / 2 - bootBitmap.Height / 2));
-
-                canvas.DrawString("Aura Operating System [" + Version + "." + Revision + "]", font, WhiteColor, 2, 0);
-                canvas.DrawString("fps=" + _fps, font, WhiteColor, 2, font.Height);
-
-                if (VirtualFileSystem != null && VirtualFileSystem.GetVolumes().Count > 0)
-                {
-                    DrawDesktopItems();
-                }
-
-                ProcessManager.Update();
-
-                DrawCursor(MouseManager.X, MouseManager.Y);
+                UpdateUI();
 
                 canvas.Display();
             }
             catch (Exception ex)
             {
-                Crash.StopKernel("Exception occured in Kernel.cs", ex.Message, "0x00000000", "0");
+                if (ex.InnerException != null)
+                {
+                    Crash.StopKernel(ex.Message, ex.InnerException.Message, "0x00000000", "0");
+                }
+                else
+                {
+                    Crash.StopKernel("Fatal dotnet exception occured.", ex.Message, "0x00000000", "0");
+                }
             }
+        }
+
+        private static void UpdateUI()
+        {
+            //canvas.Clear(0x000000);
+
+            canvas.DrawImage(wallpaper, 0, 0);
+
+            //canvas.DrawImage(bootBitmap, (int)(screenWidth / 2 - bootBitmap.Width / 2), (int)(screenHeight / 2 - bootBitmap.Height / 2));
+
+            canvas.DrawString("Aura Operating System [" + Version + "." + Revision + "]", font, WhiteColor, 2, 0);
+            canvas.DrawString("fps=" + _fps, font, WhiteColor, 2, font.Height);
+
+            try
+            {
+                if (VirtualFileSystem != null && VirtualFileSystem.GetVolumes().Count > 0)
+                {
+                    DrawDesktopItems();
+                }
+            }
+            catch (Exception ex)
+            {
+                Crash.StopKernel("Fatal dotnet exception occured while drawing dekstop items.", ex.Message, "0x00000000", "0");
+            }
+
+            try
+            {
+                dock.Update();
+            }
+            catch (Exception ex)
+            {
+                Crash.StopKernel("Fatal dotnet exception occured while drawing taskbar.", ex.Message, "0x00000000", "0");
+            }
+
+            try
+            {
+                WindowManager.UpdateWindowStack();
+                WindowManager.DrawWindows();
+            }
+            catch (Exception ex)
+            {
+                Crash.StopKernel("Fatal dotnet exception occured while drawing windows.", ex.Message, "0x00000000", "0");
+            }
+
+            DrawCursor(MouseManager.X, MouseManager.Y);
         }
 
         public static void DrawDesktopItems()
@@ -297,8 +334,8 @@ namespace Aura_OS
             int currentX = startX;
             int currentY = startY;
 
-            string[] directories = Directory.GetDirectories(Kernel.CurrentVolume);
-            string[] files = Directory.GetFiles(Kernel.CurrentVolume);
+            string[] directories = Directory.GetDirectories(CurrentVolume);
+            string[] files = Directory.GetFiles(CurrentVolume);
 
             foreach (string directory in directories)
             {

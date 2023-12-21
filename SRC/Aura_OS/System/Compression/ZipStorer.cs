@@ -939,9 +939,11 @@ namespace System.IO.Compression
 
                     if (tag == 1 && size == 24)
                     {
+                        /*
                         _zfe.ModifyTime = DateTime.FromFileTime(BitConverter.ToInt64(buffer, pos + 12));
                         _zfe.AccessTime = DateTime.FromFileTime(BitConverter.ToInt64(buffer, pos + 20));
                         _zfe.CreationTime = DateTime.FromFileTime(BitConverter.ToInt64(buffer, pos + 28));
+                        */
                     }
                 }
 

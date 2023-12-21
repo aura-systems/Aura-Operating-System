@@ -12,11 +12,13 @@ namespace Aura_OS
 {
     public class Cube : App
     {
+        public static string ApplicationName = "Cube";
+
         public Vertex[] vertices;
         public int[][] faces;
         public int angle;
 
-        public Cube(int width, int height, int x = 0, int y = 0) : base("Cube", width, height, x, y)
+        public Cube(int width, int height, int x = 0, int y = 0) : base(ApplicationName, width, height, x, y)
         {
             vertices = new Vertex[]
             {

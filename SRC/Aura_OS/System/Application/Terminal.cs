@@ -23,6 +23,8 @@ namespace Aura_OS
 
     public class Terminal : App
     {
+        public static string ApplicationName = "Terminal";
+
         public string CommandOutput = "";
         public bool Redirect = false;
 
@@ -124,7 +126,7 @@ namespace Aura_OS
         public int CursorSize { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
         public bool CursorVisible;
 
-        public Terminal(int width, int height, int x = 0, int y = 0) : base("Terminal", width, height, x, y)
+        public Terminal(int width, int height, int x = 0, int y = 0) : base(ApplicationName, width, height, x, y)
         {
             Window.Icon = ResourceManager.GetImage("16-terminal.bmp");
 
@@ -178,7 +180,7 @@ namespace Aura_OS
 
         public override void UpdateApp()
         {
-            if (Kernel.WindowManager.Focused.Equals(this))
+            if (Focused)
             {
                 KeyEvent keyEvent = null;
 

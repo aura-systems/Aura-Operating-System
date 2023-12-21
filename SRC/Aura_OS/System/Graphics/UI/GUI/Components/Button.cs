@@ -14,7 +14,7 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
     {
         public string Text;
         public Bitmap Image;
-        public Action action;
+        public Action Action;
 
         public Color BackColor = Color.LightGray;
         public Color TextColor = Color.Black;

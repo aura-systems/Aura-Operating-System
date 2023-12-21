@@ -40,7 +40,7 @@ namespace Aura_OS.System.Application.Emulators.GameBoyEmu
 
         public override void UpdateApp()
         {
-            if (Kernel.WindowManager.Focused.Equals(this))
+            if (Focused)
             {
                 if (KeyboardManager.TryReadKey(out keyEvent))
                 {
