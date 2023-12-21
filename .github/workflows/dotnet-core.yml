@@ -62,7 +62,7 @@ jobs:
             git clone https://github.com/CosmosOS/XSharp --depth 1 && \
             git clone https://github.com/CosmosOS/Common --depth 1 && \
             cd Cosmos && \
-            make
+            sudo make
       - name: Publish IL2CPU
         if: ${{ matrix.os == 'windows-latest' }}
         run: |
