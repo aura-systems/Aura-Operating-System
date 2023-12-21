@@ -8,8 +8,9 @@ using Aura_OS.System.Users;
 using Cosmos.System;
 using System;
 using System.Drawing;
-using Aura_OS.System.UI.GUI;
 using System.Collections.Generic;
+using Aura_OS.System.Graphics.UI.GUI;
+using Aura_OS.System.Graphics;
 
 namespace Aura_OS
 {
@@ -22,6 +23,8 @@ namespace Aura_OS
 
     public class Terminal : App
     {
+        public static string ApplicationName = "Terminal";
+
         public string CommandOutput = "";
         public bool Redirect = false;
 
@@ -123,9 +126,9 @@ namespace Aura_OS
         public int CursorSize { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
         public bool CursorVisible;
 
-        public Terminal(int width, int height, int x = 0, int y = 0) : base("Terminal", width, height, x, y)
+        public Terminal(int width, int height, int x = 0, int y = 0) : base(ApplicationName, width, height, x, y)
         {
-            Window.Icon = Kernel.terminalIco;
+            Window.Icon = ResourceManager.GetImage("16-terminal.bmp");
 
             Graphics = new GUI();
 
@@ -177,7 +180,7 @@ namespace Aura_OS
 
         public override void UpdateApp()
         {
-            if (Kernel.WindowManager.Focused.Equals(this))
+            if (Focused)
             {
                 KeyEvent keyEvent = null;
 

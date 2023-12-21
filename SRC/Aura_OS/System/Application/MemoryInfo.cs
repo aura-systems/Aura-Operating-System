@@ -11,7 +11,9 @@ namespace Aura_OS
 {
     public class MemoryInfo : App
     {
-        public MemoryInfo(int width, int height, int x = 0, int y = 0) : base("MemoryInfo", width, height, x, y)
+        public static string ApplicationName = "MemoryInfo";
+
+        public MemoryInfo(int width, int height, int x = 0, int y = 0) : base(ApplicationName, width, height, x, y)
         {
 
         }

@@ -20,15 +20,18 @@ using Aura_OS.Processing;
 using System.Drawing;
 using Aura_OS.System;
 using Aura_OS.Interpreter;
-using Aura_OS.System.UI.GUI;
 using Aura_OS.System.Application.Emulators.GameBoyEmu;
 using System.IO;
 using Aura_OS.System.Processing;
+using Aura_OS.System.Graphics.UI.GUI;
+using Aura_OS.System.Graphics;
+using Aura_OS.System.Application;
 
 namespace Aura_OS
 {
     public class Kernel
     {
+        public static Dictionary<string, string> EnvironmentVariables;
         public static string ComputerName = "aura-pc";
         public static string userLogged = "root";
         public static string userLevelLogged = "admin";
@@ -45,31 +48,18 @@ namespace Aura_OS
         public static bool NetworkTransmitting = false;
 
         //FILES
-        public static Bitmap programIco;
-        public static Bitmap terminalIco;
-        public static Bitmap powerIco;
-        public static Bitmap connectedIco;
-        public static Bitmap networkTransmitIco;
-        public static Bitmap networkIdleIco;
-        public static Bitmap networkOfflineIco;
-        public static Bitmap directoryIco;
-        public static Bitmap fileIco;
-
         public static Bitmap programLogo;
         public static Bitmap errorLogo;
 
+        public static Bitmap AuraLogo2;
         public static Bitmap AuraLogo;
+        public static Bitmap AuraLogoWhite;
         public static Bitmap CosmosLogo;
 
         public static Bitmap wallpaper;
 
-        public static Bitmap cursor;
         public static PCScreenFont font;
         public static PCScreenFont fontTerminal;
-
-        // UI
-        public static Bitmap CloseNormal;
-        public static Bitmap Start;
 
         //GRAPHICS
         public static uint screenWidth = 1920;
@@ -87,22 +77,20 @@ namespace Aura_OS
         public static Color DarkBlue = Color.FromArgb(0xff, 0x00, 0x00, 0x80);
         public static Color Pink = Color.FromArgb(0xff, 0xe7, 0x98, 0xde);
 
-        public static Dock dock;
+        public static Taskbar dock;
 
-        //PROCESSES
+        // Managers
         public static ProcessManager ProcessManager;
         public static WindowManager WindowManager;
-        public static System.UI.CUI.Console aConsole;
-
-        public static Terminal console;
-        public static MemoryInfo memoryInfo;
-        public static SystemInfo systemInfo;
-        public static GameBoyEmu gameBoyEmu;
-        public static Cube cube;
-
+        public static ApplicationManager ApplicationManager;
         public static CommandManager CommandManager;
-
         public static PackageManager PackageManager;
+
+        // Textmode Console
+        public static System.Graphics.UI.CUI.Console aConsole;
+
+        // Console application
+        public static Terminal console;
 
         public static bool Pressed;
         public static int FreeCount = 0;
@@ -111,11 +99,13 @@ namespace Aura_OS
         public static int _fps = 0;
         public static int _deltaT = 0;
 
-        public static CosmosVFS VirtualFileSystem = new CosmosVFS();
-        public static Dictionary<string, string> EnvironmentVariables = new Dictionary<string, string>();
+        public static CosmosVFS VirtualFileSystem;
 
         public static void BeforeRun()
         {
+            EnvironmentVariables = new Dictionary<string, string>();
+            VirtualFileSystem = new CosmosVFS();
+
             //Start Filesystem
             VFSManager.RegisterVFS(VirtualFileSystem);
 
@@ -130,47 +120,46 @@ namespace Aura_OS
             ProcessManager = new ProcessManager();
             ProcessManager.Initialize();
 
+            CustomConsole.WriteLineInfo("Loading files...");
+            LoadFiles();
+
             CustomConsole.WriteLineInfo("Starting command manager...");
             CommandManager = new CommandManager();
             CommandManager.Initialize();
 
+            CustomConsole.WriteLineInfo("Checking for boot.bat script...");
             if (File.Exists(CurrentDirectory + "boot.bat"))
             {
-                CustomConsole.WriteLineInfo("Detected boot.bat, executing script...");
+                CustomConsole.WriteLineOK("Detected boot.bat, executing script...");
 
                 Batch.Execute(CurrentDirectory + "boot.bat");
             }
 
-            LoadFiles();
+            CustomConsole.WriteLineInfo("Starting package manager...");
+            PackageManager = new PackageManager();
+            PackageManager.Initialize();
+
+            CustomConsole.WriteLineInfo("Starting application manager...");
+            ApplicationManager = new ApplicationManager();
+            LoadApplications();
+
+            CustomConsole.WriteLineInfo("Starting window manager...");
+            WindowManager = new WindowManager();
 
             CustomConsole.WriteLineInfo("Starting Canvas...");
 
             //START GRAPHICS
             canvas = FullScreenCanvas.GetFullScreenCanvas(new Mode(screenWidth, screenHeight, ColorDepth.ColorDepth32));
-            dock = new Dock();
+            canvas.DrawImage(AuraLogoWhite, (int)((screenWidth / 2) - (AuraLogoWhite.Width / 2)), (int)((screenHeight / 2) - (AuraLogoWhite.Height / 2)));
+            canvas.Display();
 
             aConsole = null;
 
-            console = new Terminal(700, 600, 40, 40);
-            console.Initialize();
+            // CustomConsole.WriteLineInfo("Starting dock...");
+            dock = new Taskbar();
+            dock.Initialize();
 
-            memoryInfo = new MemoryInfo(400, 300, 40, 40);
-            memoryInfo.Initialize();
-
-            systemInfo = new SystemInfo(402, 360, 40, 40);
-            systemInfo.Initialize();
-
-            cube = new Cube(200, 200, 40, 40);
-            cube.Initialize();
-
-            gameBoyEmu = new GameBoyEmu(160 + 4, 144 + 22, 40, 40);
-            gameBoyEmu.Initialize();
-
-            WindowManager = new WindowManager();
-            WindowManager.Initialize();
-
-            PackageManager = new PackageManager();
-            PackageManager.Initialize();
+            dock.UpdateApplicationButtons();
 
             //START MOUSE
             MouseManager.ScreenWidth = screenWidth;
@@ -181,9 +170,20 @@ namespace Aura_OS
             Running = true;
         }
 
+        public static void LoadApplications()
+        {
+            System.CustomConsole.WriteLineInfo("Registering applications...");
+
+            ApplicationManager.RegisterApplication(typeof(Terminal), 40, 40, 700, 600);
+            ApplicationManager.RegisterApplication(typeof(MemoryInfo), 40, 40, 400, 300);
+            ApplicationManager.RegisterApplication(typeof(SystemInfo), 40, 40, 402, 360);
+            ApplicationManager.RegisterApplication(typeof(Cube), 40, 40, 200, 200);
+            ApplicationManager.RegisterApplication(typeof(GameBoyEmu), 40, 40, 160 + 4, 144 + 22);
+        }
+
         public static void LoadFiles()
         {
-            System.CustomConsole.WriteLineInfo("Loading files...");
+            CustomConsole.WriteLineInfo("Checking for ISO9660 volume...");
 
             var vols = VirtualFileSystem.GetVolumes();
             string isoVol = CurrentVolume;
@@ -194,11 +194,11 @@ namespace Aura_OS
                 {
                     isoVol = vol.mName;
 
-                    CustomConsole.WriteLineOK("ISO9660 vol is " + isoVol);
+                    CustomConsole.WriteLineOK("Volume is " + isoVol);
                 }
             }
 
-            // LOAD FILE
+            // Files
             errorLogo = new Bitmap(Files.ErrorImage);
             CustomConsole.WriteLineOK("error.bmp image loaded.");
 
@@ -210,6 +210,12 @@ namespace Aura_OS
             AuraLogo = new Bitmap(File.ReadAllBytes(isoVol + "UI\\Images\\AuraLogo.bmp"));
             CustomConsole.WriteLineOK("AuraLogo.bmp image loaded.");
 
+            AuraLogoWhite = new Bitmap(File.ReadAllBytes(isoVol + "UI\\Images\\AuraLogoWhite.bmp"));
+            CustomConsole.WriteLineOK("AuraLogoWhite.bmp image loaded.");
+
+            AuraLogo2 = new Bitmap(File.ReadAllBytes(isoVol + "UI\\Images\\aura.bmp"));
+            CustomConsole.WriteLineOK("aura.bmp image loaded.");
+
             CosmosLogo = new Bitmap(File.ReadAllBytes(isoVol + "UI\\Images\\CosmosLogo.bmp"));
             CustomConsole.WriteLineOK("CosmosLogo.bmp image loaded.");
 
@@ -218,35 +224,29 @@ namespace Aura_OS
             CustomConsole.WriteLineOK("zap-ext-light16.psf font loaded.");
 
             // Icons
-            CloseNormal = new Bitmap(File.ReadAllBytes(isoVol + "UI\\Images\\Icons\\close_normal.bmp"));
-            CustomConsole.WriteLineOK("close_normal.bmp icon loaded.");
+            LoadImage(isoVol + "UI\\Images\\Icons\\16\\close.bmp", "16");
+            LoadImage(isoVol + "UI\\Images\\Icons\\16\\minimize.bmp", "16");
+            LoadImage(isoVol + "UI\\Images\\Icons\\16\\network-idle.bmp", "16");
+            LoadImage(isoVol + "UI\\Images\\Icons\\16\\network-offline.bmp", "16");
+            //LoadImage(isoVol + "UI\\Images\\Icons\\16\\network-transmit.bmp", "16");
+            LoadImage(isoVol + "UI\\Images\\Icons\\16\\program.bmp", "16");
+            LoadImage(isoVol + "UI\\Images\\Icons\\16\\terminal.bmp", "16");
+            LoadImage(isoVol + "UI\\Images\\Icons\\24\\program.bmp", "24");
+            LoadImage(isoVol + "UI\\Images\\Icons\\24\\reboot.bmp", "24");
+            LoadImage(isoVol + "UI\\Images\\Icons\\24\\shutdown.bmp", "24");
+            LoadImage(isoVol + "UI\\Images\\Icons\\24\\terminal.bmp", "24");
+            LoadImage(isoVol + "UI\\Images\\Icons\\32\\file.bmp", "32");
+            LoadImage(isoVol + "UI\\Images\\Icons\\32\\folder.bmp", "32");
+            LoadImage(isoVol + "UI\\Images\\Icons\\cursor.bmp", "00");
+            LoadImage(isoVol + "UI\\Images\\Icons\\start.bmp", "00");
+        }
 
-            Start = new Bitmap(File.ReadAllBytes(isoVol + "UI\\Images\\Icons\\start.bmp"));
-            CustomConsole.WriteLineOK("start.bmp icon loaded.");
-
-            terminalIco = new Bitmap(File.ReadAllBytes(isoVol + "UI\\Images\\Icons\\utilities-terminal.bmp"));
-            CustomConsole.WriteLineOK("utilities-terminal.bmp icon loaded.");
-
-            programIco = new Bitmap(File.ReadAllBytes(isoVol + "UI\\Images\\Icons\\window.bmp"));
-            CustomConsole.WriteLineOK("window.bmp icon loaded.");
-
-            cursor = new Bitmap(File.ReadAllBytes(isoVol + "UI\\Images\\Icons\\cursor.bmp"));
-            CustomConsole.WriteLineOK("cursor.bmp icon loaded.");
-
-            networkTransmitIco = new Bitmap(File.ReadAllBytes(isoVol + "UI\\Images\\Icons\\network-transmit.bmp"));
-            CustomConsole.WriteLineOK("network-transmit.bmp icon loaded.");
-
-            networkIdleIco = new Bitmap(File.ReadAllBytes(isoVol + "UI\\Images\\Icons\\network-idle.bmp"));
-            CustomConsole.WriteLineOK("network-idle.bmp icon loaded.");
-
-            networkOfflineIco = new Bitmap(File.ReadAllBytes(isoVol + "UI\\Images\\Icons\\network-offline.bmp"));
-            CustomConsole.WriteLineOK("network-offline.bmp icon loaded.");
-
-            directoryIco = new Bitmap(File.ReadAllBytes(isoVol + "UI\\Images\\Icons\\folder.bmp"));
-            CustomConsole.WriteLineOK("folder.bmp icon loaded.");
-
-            fileIco = new Bitmap(File.ReadAllBytes(isoVol + "UI\\Images\\Icons\\document-new.bmp"));
-            CustomConsole.WriteLineOK("document-new.bmp icon loaded.");
+        public static void LoadImage(string path, string type)
+        {
+            string fileName = Path.GetFileName(path);
+            Bitmap bitmap = new(File.ReadAllBytes(path));
+            ResourceManager.Icons.Add(type + "-" + fileName, bitmap);
+            CustomConsole.WriteLineOK(fileName + " icon loaded.");
         }
 
         public static void Run()
@@ -274,32 +274,66 @@ namespace Aura_OS
                         break;
                 }
 
-                //canvas.Clear(0x000000);
-
-                canvas.DrawImage(wallpaper, 0, 0);
-
-                //canvas.DrawImage(bootBitmap, (int)(screenWidth / 2 - bootBitmap.Width / 2), (int)(screenHeight / 2 - bootBitmap.Height / 2));
-
-                canvas.DrawString("Aura Operating System [" + Version + "." + Revision + "]", font, WhiteColor, 2, 0);
-                canvas.DrawString("fps=" + _fps, font, WhiteColor, 2, font.Height);
-
-                if (VirtualFileSystem != null && VirtualFileSystem.GetVolumes().Count > 0)
-                {
-                    DrawDesktopItems();
-                }
-
-                WindowManager.DrawWindows();
-
-                dock.Update();
-
-                DrawCursor(MouseManager.X, MouseManager.Y);
+                UpdateUI();
 
                 canvas.Display();
             }
             catch (Exception ex)
             {
-                System.Crash.WriteException(ex);
+                if (ex.InnerException != null)
+                {
+                    Crash.StopKernel(ex.Message, ex.InnerException.Message, "0x00000000", "0");
+                }
+                else
+                {
+                    Crash.StopKernel("Fatal dotnet exception occured.", ex.Message, "0x00000000", "0");
+                }
             }
+        }
+
+        private static void UpdateUI()
+        {
+            //canvas.Clear(0x000000);
+
+            canvas.DrawImage(wallpaper, 0, 0);
+
+            //canvas.DrawImage(bootBitmap, (int)(screenWidth / 2 - bootBitmap.Width / 2), (int)(screenHeight / 2 - bootBitmap.Height / 2));
+
+            canvas.DrawString("Aura Operating System [" + Version + "." + Revision + "]", font, WhiteColor, 2, 0);
+            canvas.DrawString("fps=" + _fps, font, WhiteColor, 2, font.Height);
+
+            try
+            {
+                if (VirtualFileSystem != null && VirtualFileSystem.GetVolumes().Count > 0)
+                {
+                    DrawDesktopItems();
+                }
+            }
+            catch (Exception ex)
+            {
+                Crash.StopKernel("Fatal dotnet exception occured while drawing dekstop items.", ex.Message, "0x00000000", "0");
+            }
+
+            try
+            {
+                dock.Update();
+            }
+            catch (Exception ex)
+            {
+                Crash.StopKernel("Fatal dotnet exception occured while drawing taskbar.", ex.Message, "0x00000000", "0");
+            }
+
+            try
+            {
+                WindowManager.UpdateWindowStack();
+                WindowManager.DrawWindows();
+            }
+            catch (Exception ex)
+            {
+                Crash.StopKernel("Fatal dotnet exception occured while drawing windows.", ex.Message, "0x00000000", "0");
+            }
+
+            DrawCursor(MouseManager.X, MouseManager.Y);
         }
 
         public static void DrawDesktopItems()
@@ -311,13 +345,13 @@ namespace Aura_OS
             int currentX = startX;
             int currentY = startY;
 
-            string[] directories = Directory.GetDirectories(Kernel.CurrentVolume);
-            string[] files = Directory.GetFiles(Kernel.CurrentVolume);
+            string[] directories = Directory.GetDirectories(CurrentVolume);
+            string[] files = Directory.GetFiles(CurrentVolume);
 
             foreach (string directory in directories)
             {
                 string folderName = Path.GetFileName(directory);
-                DrawIconAndText(directoryIco, folderName, currentX, currentY);
+                DrawIconAndText(ResourceManager.GetImage("32-folder.bmp"), folderName, currentX, currentY);
 
                 currentY += iconSpacing;
                 if (currentY + iconSpacing > screenHeight - 64)
@@ -330,7 +364,7 @@ namespace Aura_OS
             foreach (string file in files)
             {
                 string fileName = Path.GetFileName(file);
-                DrawIconAndText(fileIco, fileName, currentX, currentY);
+                DrawIconAndText(ResourceManager.GetImage("32-file.bmp"), fileName, currentX, currentY);
 
                 currentY += iconSpacing;
                 if (currentY + iconSpacing > screenHeight - 64)
@@ -350,7 +384,7 @@ namespace Aura_OS
 
         public static void DrawCursor(uint x, uint y)
         {
-            canvas.DrawImageAlpha(cursor, (int)x, (int)y);
+            canvas.DrawImageAlpha(ResourceManager.GetImage("00-cursor.bmp"), (int)x, (int)y);
         }
     }
 }

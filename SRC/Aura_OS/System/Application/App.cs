@@ -7,7 +7,10 @@
 
 using Cosmos.System;
 using Aura_OS.Processing;
-using Aura_OS.System.UI.GUI.Components;
+using Aura_OS.System.Graphics.UI.GUI.Components;
+using static Cosmos.HAL.PCIDevice;
+using System;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace Aura_OS
 {
@@ -23,13 +26,40 @@ namespace Aura_OS
         int py;
         bool lck = false;
         bool pressed;
-        public bool visible = false;
-
+        
         public Window Window;
+        public bool Focused = false;
+        public bool Visible = false;
+        public int zIndex = 0;
 
         public App(string name, int width, int height, int x = 0, int y = 0) : base(name, ProcessType.Program)
         {
             Window = new Window(name, x, y, width + 1, height + 1);
+            Window.Close.Action = new Action(() =>
+            {
+                Stop();
+                Kernel.WindowManager.apps.Remove(this);
+                Kernel.ProcessManager.Processes.Remove(this);
+                Kernel.dock.UpdateApplicationButtons();
+
+                if (this is Terminal)
+                {
+                    Kernel.console = null;
+                }
+            });
+            Window.Minimize.Action = new Action(() =>
+            {
+                Visible = !Visible;
+
+                if (Visible)
+                {
+                    Kernel.ProcessManager.Start(this);
+                }
+                else
+                {
+                    Stop();
+                }
+            });
 
             this.x = x + 3;
             this.y = y + Window.TopBar.Height + 3;
@@ -48,32 +78,25 @@ namespace Aura_OS
 
         public override void Update()
         {
-            if (visible)
+            if (Visible)
             {
                 if (Kernel.Pressed)
                 {
                     if (!HasWindowMoving && Window.IsInside((int)MouseManager.X, (int)MouseManager.Y))
                     {
-                        //Focus window
-                        foreach (var app in Kernel.WindowManager.apps)
-                        {
-                            if (app.Equals(this))
-                            {
-                                Kernel.WindowManager.apps.Remove(app);
-                                Kernel.WindowManager.apps.Add(this);
-                                Kernel.WindowManager.Focused = this;
-                                break;
-                            }
-                        }
+                        BringToFront();
                     }
                     
                     if (!HasWindowMoving && Window.Close.IsInside((int)MouseManager.X, (int)MouseManager.Y))
                     {
-                        if (Kernel.WindowManager.Focused == this)
-                        {
-                            Kernel.WindowManager.Focused = null;
-                        }
-                        Stop();
+                        Window.Close.Action();
+
+                        return;
+                    }
+                    else if (!HasWindowMoving && Window.Minimize.IsInside((int)MouseManager.X, (int)MouseManager.Y))
+                    {
+                        Window.Minimize.Action();
+
                         return;
                     }
                     else if (!HasWindowMoving && Window.TopBar.IsInside((int)MouseManager.X, (int)MouseManager.Y))
@@ -107,6 +130,12 @@ namespace Aura_OS
 
                 DrawWindow();
             }
+        }
+
+        private void BringToFront()
+        {
+            zIndex = Kernel.WindowManager.GetTopZIndex() + 1;
+            Kernel.WindowManager.MarkStackDirty();
         }
 
         public void DrawWindow()

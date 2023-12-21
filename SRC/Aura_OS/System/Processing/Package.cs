@@ -1,9 +1,10 @@
-﻿using Aura_OS.System.Network;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿/*
+* PROJECT:          Aura Operating System Development
+* CONTENT:          Package class
+* PROGRAMMER(S):    Valentin Charbonnier <valentinbreiz@gmail.com>
+*/
+
+using Aura_OS.System.Network;
 
 namespace Aura_OS.System.Processing
 {

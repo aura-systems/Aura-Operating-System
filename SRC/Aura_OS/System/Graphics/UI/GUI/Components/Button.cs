@@ -1,17 +1,24 @@
 /*
 * PROJECT:          Aura Operating System Development
-* CONTENT:          Window class
+* CONTENT:          Button class
 * PROGRAMMERS:      Valentin Charbonnier <valentinbreiz@gmail.com>
 */
 
 using Cosmos.System.Graphics;
+using System;
+using System.Drawing;
 
-namespace Aura_OS.System.UI.GUI.Components
+namespace Aura_OS.System.Graphics.UI.GUI.Components
 {
     public class Button : Component
     {
         public string Text;
         public Bitmap Image;
+        public Action Action;
+
+        public Color BackColor = Color.LightGray;
+        public Color TextColor = Color.Black;
+        public bool NoBackground = false;
         public bool NoBorder = false;
         public bool Light = false;
         public bool Focused = false;
@@ -21,22 +28,14 @@ namespace Aura_OS.System.UI.GUI.Components
             Text = text;
         }
 
-        public Button(string text, int x, int y, int width, int height, bool light = false) : base(x, y, width, height)
-        {
-            Text = text;
-            Light = light;
-        }
-
-        public Button(Bitmap image, int x, int y, int width, int height, bool noBorder = false) : base(x, y, width, height)
+        public Button(Bitmap image, int x, int y, int width, int height) : base(x, y, width, height)
         {
             Image = image;
-            NoBorder = noBorder;
         }
 
-        public Button(Bitmap image, int x, int y, bool noBorder = false) : base(x, y, (int)image.Width, (int)image.Height)
+        public Button(Bitmap image, int x, int y) : base(x, y, (int)image.Width, (int)image.Height)
         {
             Image = image;
-            NoBorder = noBorder;
         }
 
         public Button(Bitmap image, string text, int x, int y, int width, int height) : base(x, y, width, height)
@@ -55,7 +54,10 @@ namespace Aura_OS.System.UI.GUI.Components
         {
             if (!NoBorder && Light)
             {
-                Kernel.canvas.DrawFilledRectangle(Kernel.Gray, X + 2, Y + 2, Width - 3, Height - 3);
+                if (!NoBackground)
+                {
+                    Kernel.canvas.DrawFilledRectangle(Kernel.Gray, X + 2, Y + 2, Width - 3, Height - 3);
+                }     
 
                 Kernel.canvas.DrawLine(Kernel.DarkGray, X, Y, X + Width, Y);
                 Kernel.canvas.DrawLine(Kernel.DarkGray, X, Y, X, Y + Height);
@@ -66,7 +68,10 @@ namespace Aura_OS.System.UI.GUI.Components
             {
                 if (Focused)
                 {
-                    Utils.DrawGradient(Kernel.Gray, Kernel.Pink, X + 2, Y + 2, Width - 3, Height - 3);
+                    if (!NoBackground)
+                    {
+                        Utils.DrawGradient(Kernel.Gray, Kernel.Pink, X + 2, Y + 2, Width - 3, Height - 3);
+                    }
 
                     Kernel.canvas.DrawLine(Kernel.BlackColor, X, Y, X + Width, Y);
                     Kernel.canvas.DrawLine(Kernel.Gray, X, Y + 1, X + Width, Y + 1);
@@ -79,7 +84,10 @@ namespace Aura_OS.System.UI.GUI.Components
                 }
                 else
                 {
-                    Kernel.canvas.DrawFilledRectangle(Kernel.DarkGrayLight, X + 2, Y + 2, Width - 3, Height - 3);
+                    if (!NoBackground)
+                    {
+                        Kernel.canvas.DrawFilledRectangle(Kernel.DarkGrayLight, X + 2, Y + 2, Width - 3, Height - 3);
+                    }
 
                     Kernel.canvas.DrawLine(Kernel.WhiteColor, X, Y, X + Width, Y);
                     Kernel.canvas.DrawLine(Kernel.Gray, X, Y + 1, X + Width, Y + 1);
@@ -91,10 +99,17 @@ namespace Aura_OS.System.UI.GUI.Components
                     Kernel.canvas.DrawLine(Kernel.BlackColor, X + Width, Y, X + Width, Y + Height);
                 }
             }
+            else
+            {
+                if (!NoBackground)
+                {
+                    Kernel.canvas.DrawFilledRectangle(BackColor, X + 2, Y + 2, Width - 3, Height - 3);
+                }
+            }
 
             if (Text != null && Image != null)
             {
-                Kernel.canvas.DrawString(Text, Kernel.font, Kernel.BlackColor, X + 4 + (int)Image.Width + 4, Y + (Height / 2 - Kernel.font.Height / 2));
+                Kernel.canvas.DrawString(Text, Kernel.font, TextColor, X + 4 + (int)Image.Width + 4, Y + (Height / 2 - Kernel.font.Height / 2));
 
                 int imageX = X + 4;
                 int imageY = Y + (Height / 2 - (int)Image.Height / 2);
@@ -102,7 +117,7 @@ namespace Aura_OS.System.UI.GUI.Components
             }
             else if (Text != null)
             {
-                Kernel.canvas.DrawString(Text, Kernel.font, Kernel.BlackColor, X + 4, Y + (Height / 2 - Kernel.font.Height / 2));
+                Kernel.canvas.DrawString(Text, Kernel.font, TextColor, X + 4, Y + (Height / 2 - Kernel.font.Height / 2));
             }
             else if (Image != null)
             {

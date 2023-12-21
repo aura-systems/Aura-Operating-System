@@ -7,13 +7,12 @@
 using Cosmos.Core;
 using Cosmos.System.Graphics;
 using Cosmos.System.Graphics.Fonts;
-using Aura_OS;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Text;
 
-namespace Aura_OS.System.UI.GUI.Components
+namespace Aura_OS.System.Graphics.UI.GUI.Components
 {
     public class Component
     {
@@ -36,7 +35,7 @@ namespace Aura_OS.System.UI.GUI.Components
 
         public bool IsInside(int x, int y)
         {
-            return (x >= X && x <= X + Width) && (y >= Y && y <= Y + Height);
+            return x >= X && x <= X + Width && y >= Y && y <= Y + Height;
         }
     }
 }

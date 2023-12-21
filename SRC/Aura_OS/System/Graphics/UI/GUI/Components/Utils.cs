@@ -6,7 +6,7 @@
 
 using System.Drawing;
 
-namespace Aura_OS.System.UI.GUI.Components
+namespace Aura_OS.System.Graphics.UI.GUI.Components
 {
     public class Utils
     {

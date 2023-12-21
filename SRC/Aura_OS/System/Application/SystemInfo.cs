@@ -10,9 +10,11 @@ namespace Aura_OS
 {
     public class SystemInfo : App
     {
+        public static string ApplicationName = "SystemInfo";
+
         public Color GreenPen = Color.Green;
 
-        public SystemInfo(int width, int height, int x = 0, int y = 0) : base("SystemInfo", width, height, x, y)
+        public SystemInfo(int width, int height, int x = 0, int y = 0) : base(ApplicationName, width, height, x, y)
         {
         }
 
