@@ -31,11 +31,11 @@ namespace Aura_OS.System.Graphics.UI.GUI
             startY = (int)(Kernel.screenHeight - taskbarHeight);
 
             // Start button
-            int startButtonWidth = 28;
+            int startButtonWidth = 72;
             int startButtonHeight = 28;
             int startButtonX = 2;
             int startButtonY = (int)Kernel.screenHeight - startButtonHeight - 3;
-            StartButton = new Button(ResourceManager.GetImage("00-start.bmp"), startButtonX, startButtonY, startButtonWidth, startButtonHeight);
+            StartButton = new Button(ResourceManager.GetImage("00-start.bmp"), "Start", startButtonX, startButtonY, startButtonWidth, startButtonHeight);
 
             string time = Time.TimeString(true, true, true);
             int hourButtonWidth = time.Length * (Kernel.font.Width + 1);
@@ -72,7 +72,7 @@ namespace Aura_OS.System.Graphics.UI.GUI
         {
             Buttons.Clear();
 
-            int buttonX = 36;
+            int buttonX = 76;
             foreach (var app in Kernel.WindowManager.apps)
             {
                 var spacing = app.Name.Length * 9 + (int)app.Window.Icon.Width;

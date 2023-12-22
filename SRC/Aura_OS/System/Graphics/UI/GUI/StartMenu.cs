@@ -4,18 +4,12 @@
 * PROGRAMMERS:      Valentin Charbonnier <valentinbreiz@gmail.com>
 */
 
-using Cosmos.Core;
 using Cosmos.System.Graphics;
-using Cosmos.System.Graphics.Fonts;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Text;
 using Cosmos.System;
-using Aura_OS.Processing;
 using Aura_OS.System.Graphics.UI.GUI.Components;
-using Aura_OS.System.Application;
-using System.Diagnostics;
 
 namespace Aura_OS.System.Graphics.UI.GUI
 {
@@ -34,13 +28,13 @@ namespace Aura_OS.System.Graphics.UI.GUI
             Ribbon = new Panel(Kernel.DarkBlue, X + 1, Y + 1, 26, height - 5);
             Logo = Kernel.AuraLogo2;
             buttons = new List<Button>();
-            Shutdown = new Button(ResourceManager.GetImage("24-shutdown.bmp"), "Shut Down.", X + 1 + Ribbon.Width, Y + Height - 32 - 4, Width - Ribbon.Width - 3, 36);
+            Shutdown = new Button(ResourceManager.GetImage("24-shutdown.bmp"), "Shut Down.", X + 1 + Ribbon.Width, Y + Height - 32 - 4, Width - Ribbon.Width - 3, 35);
             Shutdown.NoBorder = true;
             Shutdown.Action = new Action(() =>
             {
                 Power.Shutdown();
             });
-            Reboot = new Button(ResourceManager.GetImage("24-reboot.bmp"), "Reboot.", X + 1 + Ribbon.Width, Y + Height - 64 - 4, Width - Ribbon.Width - 3, 36);
+            Reboot = new Button(ResourceManager.GetImage("24-reboot.bmp"), "Reboot.", X + 1 + Ribbon.Width, Y + Height - 64 - 4, Width - Ribbon.Width - 3, 35);
             Reboot.NoBorder = true;
             Reboot.Action = new Action(() =>
             {
@@ -63,7 +57,7 @@ namespace Aura_OS.System.Graphics.UI.GUI
                     icon = ResourceManager.GetImage("24-program.bmp");
                 }
 
-                var button = new Button(icon, applicationConfig.Template.Name, X + 1 + Ribbon.Width, Y + buttonY + 1, Width - Ribbon.Width - 3, 36);
+                var button = new Button(icon, applicationConfig.Template.Name, X + 1 + Ribbon.Width, Y + buttonY + 1, Width - Ribbon.Width - 3, 35);
                 button.NoBorder = true;
                 button.Action = new Action(() =>
                 {
