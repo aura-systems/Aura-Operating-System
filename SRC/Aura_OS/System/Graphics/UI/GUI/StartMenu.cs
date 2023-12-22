@@ -84,6 +84,8 @@ namespace Aura_OS.System.Graphics.UI.GUI
 
                     Kernel.dock.UpdateApplicationButtons();
                     Kernel.WindowManager.UpdateFocusStatus();
+
+                    Kernel.dock.ShowStartMenu = false;
                 });
                 buttons.Add(button);
                 buttonY += 32;

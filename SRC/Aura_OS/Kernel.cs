@@ -233,6 +233,8 @@ namespace Aura_OS
             //LoadImage(isoVol + "UI\\Images\\Icons\\16\\network-transmit.bmp", "16");
             LoadImage(isoVol + "UI\\Images\\Icons\\16\\program.bmp", "16");
             LoadImage(isoVol + "UI\\Images\\Icons\\16\\terminal.bmp", "16");
+            LoadImage(isoVol + "UI\\Images\\Icons\\16\\drive.bmp", "16");
+            LoadImage(isoVol + "UI\\Images\\Icons\\16\\drive-readonly.bmp", "16");
             LoadImage(isoVol + "UI\\Images\\Icons\\24\\program.bmp", "24");
             LoadImage(isoVol + "UI\\Images\\Icons\\24\\reboot.bmp", "24");
             LoadImage(isoVol + "UI\\Images\\Icons\\24\\shutdown.bmp", "24");
