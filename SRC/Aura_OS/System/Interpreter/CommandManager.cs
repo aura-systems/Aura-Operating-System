@@ -25,6 +25,8 @@ using UniLua;
 using System.IO.Compression;
 using Ionic.Zlib;
 using Aura_OS.System.Interpreter.Commands.Processing;
+using Aura_OS.System.Application.Emulators.GameBoyEmu;
+using static Cosmos.HAL.PCIDevice;
 
 namespace Aura_OS.Interpreter
 {
@@ -87,6 +89,7 @@ namespace Aura_OS.Interpreter
             CMDs.Add(new CommandTree(new string[] { "tree" }));
             CMDs.Add(new CommandRun(new string[] { "run" }));
             CMDs.Add(new CommandCopy(new string[] { "cp" }));
+            CMDs.Add(new CommandPicture(new string[] { "pic" }));
 
             CMDs.Add(new CommandZip(new string[] { "zip" }));
 
