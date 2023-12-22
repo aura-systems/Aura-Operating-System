@@ -31,7 +31,7 @@ namespace Aura_OS.System.Graphics.UI.GUI
             startY = (int)(Kernel.screenHeight - taskbarHeight);
 
             // Start button
-            int startButtonWidth = 72;
+            int startButtonWidth = 70;
             int startButtonHeight = 28;
             int startButtonX = 2;
             int startButtonY = (int)Kernel.screenHeight - startButtonHeight - 3;
@@ -72,7 +72,7 @@ namespace Aura_OS.System.Graphics.UI.GUI
         {
             Buttons.Clear();
 
-            int buttonX = 76;
+            int buttonX = 74;
             foreach (var app in Kernel.WindowManager.apps)
             {
                 var spacing = app.Name.Length * 9 + (int)app.Window.Icon.Width;

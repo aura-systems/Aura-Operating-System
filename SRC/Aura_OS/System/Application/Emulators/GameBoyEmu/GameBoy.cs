@@ -29,7 +29,7 @@ namespace Aura_OS.System.Application.Emulators.GameBoyEmu
 
             mmu = new MMU();
             cpu = new CPU(mmu);
-            ppu = new PPU();
+            ppu = new PPU(x, y);
             timer = new TIMER();
             joypad = new JOYPAD();
 
@@ -66,6 +66,8 @@ namespace Aura_OS.System.Application.Emulators.GameBoyEmu
 
                 keyEvent = null;
             }
+            ppu.X = x;
+            ppu.Y = y;
         }
 
         private void handleInterrupts()

@@ -7,7 +7,8 @@ namespace Aura_OS.System.Application.Emulators.GameBoyEmu.DMG
 {
     public class PPU
     {
-
+        public int X;
+        public int Y;
         private const int SCREEN_WIDTH = 160;
         private const int SCREEN_HEIGHT = 144;
         private const int SCREEN_VBLANK_HEIGHT = 153;
@@ -24,9 +25,11 @@ namespace Aura_OS.System.Application.Emulators.GameBoyEmu.DMG
         public DirectBitmap bmp;
         private int scanlineCounter;
 
-        public PPU()
+        public PPU(int x, int y)
         {
             bmp = new DirectBitmap();
+            X = x;
+            Y = y;
         }
 
         public void update(int cycles, MMU mmu)
@@ -297,7 +300,7 @@ namespace Aura_OS.System.Application.Emulators.GameBoyEmu.DMG
 
         public void RenderFrame()
         {
-            //Kernel.canvas.DrawImage(bmp.Bitmap, Kernel.gameBoyEmu.x, Kernel.gameBoyEmu.y);
+            Kernel.canvas.DrawImage(bmp.Bitmap, X, Y);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
