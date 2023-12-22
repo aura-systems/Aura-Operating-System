@@ -52,6 +52,10 @@ namespace Aura_OS.System.Graphics.UI.GUI
                 {
                     icon = ResourceManager.GetImage("24-terminal.bmp");
                 }
+                else if (applicationConfig.Template.Name == "Explorer")
+                {
+                    icon = ResourceManager.GetImage("24-explorer.bmp");
+                }
                 else
                 {
                     icon = ResourceManager.GetImage("24-program.bmp");

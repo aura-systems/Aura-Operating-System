@@ -4,14 +4,6 @@
 * PROGRAMMERS:      Valentin Charbonnier <valentinbreiz@gmail.com>
 */
 
-using Cosmos.Core;
-using Cosmos.System.Graphics;
-using Cosmos.System.Graphics.Fonts;
-using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Text;
-
 namespace Aura_OS.System.Graphics.UI.GUI.Components
 {
     public class Component

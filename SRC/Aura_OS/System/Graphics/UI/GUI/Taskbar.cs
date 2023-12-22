@@ -53,7 +53,7 @@ namespace Aura_OS.System.Graphics.UI.GUI
             NetworkButton.NoBorder = true;
 
             int menuWidth = 168;
-            int menuHeight = 32 * 8;
+            int menuHeight = 32 * 9;
             int menuX = 0;
             int menuY = (int)(Kernel.screenHeight - menuHeight - taskbarHeight);
             StartMenu = new StartMenu(menuX, menuY, menuWidth, menuHeight);

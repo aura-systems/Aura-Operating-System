@@ -74,6 +74,10 @@ namespace Aura_OS.System.Application
             {
                 app = new GameBoyEmu(config.Weight, config.Height, config.X, config.Y);
             }
+            else if (config.Template == typeof(Explorer))
+            {
+                app = new Explorer(config.Weight, config.Height, config.X, config.Y);
+            }
             else
             {
                 throw new InvalidOperationException("Type d'application non reconnu.");

@@ -176,6 +176,7 @@ namespace Aura_OS
 
             ApplicationManager.RegisterApplication(typeof(Terminal), 40, 40, 700, 600);
             ApplicationManager.RegisterApplication(typeof(MemoryInfo), 40, 40, 400, 300);
+            ApplicationManager.RegisterApplication(typeof(Explorer), 40, 40, 500, 400);
             ApplicationManager.RegisterApplication(typeof(SystemInfo), 40, 40, 402, 360);
             ApplicationManager.RegisterApplication(typeof(Cube), 40, 40, 200, 200);
             ApplicationManager.RegisterApplication(typeof(GameBoyEmu), 40, 40, 160 + 4, 144 + 22);
@@ -224,6 +225,7 @@ namespace Aura_OS
             CustomConsole.WriteLineOK("zap-ext-light16.psf font loaded.");
 
             // Icons
+            LoadImage(isoVol + "UI\\Images\\Icons\\16\\up.bmp", "16");
             LoadImage(isoVol + "UI\\Images\\Icons\\16\\close.bmp", "16");
             LoadImage(isoVol + "UI\\Images\\Icons\\16\\minimize.bmp", "16");
             LoadImage(isoVol + "UI\\Images\\Icons\\16\\network-idle.bmp", "16");
@@ -235,6 +237,7 @@ namespace Aura_OS
             LoadImage(isoVol + "UI\\Images\\Icons\\24\\reboot.bmp", "24");
             LoadImage(isoVol + "UI\\Images\\Icons\\24\\shutdown.bmp", "24");
             LoadImage(isoVol + "UI\\Images\\Icons\\24\\terminal.bmp", "24");
+            LoadImage(isoVol + "UI\\Images\\Icons\\24\\explorer.bmp", "24");
             LoadImage(isoVol + "UI\\Images\\Icons\\32\\file.bmp", "32");
             LoadImage(isoVol + "UI\\Images\\Icons\\32\\folder.bmp", "32");
             LoadImage(isoVol + "UI\\Images\\Icons\\cursor.bmp", "00");
