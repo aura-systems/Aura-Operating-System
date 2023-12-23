@@ -13,6 +13,7 @@ using Cosmos.System;
 using System.Collections.Generic;
 using System.Drawing;
 using Aura_OS.System.Filesystem;
+using static Cosmos.HAL.PCIDevice;
 
 namespace Aura_OS.System.Processing.Application
 {
@@ -41,6 +42,32 @@ namespace Aura_OS.System.Processing.Application
             SpaceButton.Light = true;
             MainPanel = new Panel(Kernel.WhiteColor, x + 1 + 75, y + 1 + 22, width - 7 - 75, Window.Height - Window.TopBar.Height - TopPanel.Height - SpaceButton.Height - 8);
             MainPanel.Borders = true;
+            MainPanel.RightClick = new RightClick((int)MouseManager.X, (int)MouseManager.Y, 200, 1 * RightClickEntry.ConstHeight);
+            List<RightClickEntry> rightClickEntries = new List<RightClickEntry>();
+            RightClickEntry entry2 = new("Open in Terminal", 0, 0, MainPanel.RightClick.Width);
+            entry2.Action = new Action(() =>
+            {
+                Kernel.CurrentDirectory = CurrentPath;
+                var app = new Terminal(700, 600, 40, 40);
+                Kernel.console = app;
+                app.Initialize();
+
+                Kernel.WindowManager.apps.Add(app);
+                app.zIndex = Kernel.WindowManager.GetTopZIndex() + 1;
+                Kernel.WindowManager.MarkStackDirty();
+
+                app.Visible = true;
+                app.Focused = true;
+
+                Kernel.ProcessManager.Start(app);
+
+                Kernel.Taskbar.UpdateApplicationButtons();
+                Kernel.WindowManager.UpdateFocusStatus();
+
+                MainPanel.RightClick.Opened = false;
+            });
+            rightClickEntries.Add(entry2);
+            MainPanel.RightClick.Entries = rightClickEntries;
             LeftPanel = new Panel(Kernel.WhiteColor, x + 1, y + 1 + 22, 75, Window.Height - Window.TopBar.Height - TopPanel.Height - SpaceButton.Height - 8);
             LeftPanel.Borders = true;
             PathTextBox = new TextBox(x + 18 + 6, y + 3, width - 15 - 18, 18, CurrentPath);
@@ -48,35 +75,12 @@ namespace Aura_OS.System.Processing.Application
             Up = new Button(ResourceManager.GetImage("16-up.bmp"), x + 3, y + 3, 18, 18);
             Up.Action = new Action(() =>
             {
-                CurrentPath = RemoveLastDirectory(CurrentPath);
+                CurrentPath = Filesystem.Utils.GetParentPath(CurrentPath);
                 PathTextBox.Text = CurrentPath;
                 UpdateCurrentFolder();
             });
             UpdateCurrentFolder();
             UpdateDisks();
-        }
-
-        public string RemoveLastDirectory(string path)
-        {
-            if (string.IsNullOrEmpty(path))
-            {
-                return path;
-            }
-            if (path.EndsWith(Path.DirectorySeparatorChar.ToString()))
-            {
-                path = path.TrimEnd(Path.DirectorySeparatorChar);
-            }
-
-            int lastSeparatorIndex = path.LastIndexOf(Path.DirectorySeparatorChar);
-            if (lastSeparatorIndex <= 0)
-            {
-                return path + "\\";
-            }
-            if (lastSeparatorIndex == 2 && path[1] == ':')
-            {
-                return path.Substring(0, lastSeparatorIndex + 1);
-            }
-            return path.Substring(0, lastSeparatorIndex) + "\\";
         }
 
         public void UpdateDisks()
@@ -175,14 +179,14 @@ namespace Aura_OS.System.Processing.Application
                 var button = new FileButton(fileName, ResourceManager.GetImage("32-file.bmp"), x + startX + currentX, y + currentY, 32, 32);
                 button.Action = new Action(() =>
                 {
-                    StartPictureApplication(fileName);
+                    Kernel.ApplicationManager.StartFileApplication(fileName, CurrentPath);
                 });
                 button.RightClick = new RightClick((int)MouseManager.X, (int)MouseManager.Y, 200, 1 * RightClickEntry.ConstHeight);
                 List<RightClickEntry> rightClickEntries = new List<RightClickEntry>();
                 RightClickEntry entry = new("Open", 0, 0, button.RightClick.Width);
                 entry.Action = new Action(() =>
                 {
-                    StartPictureApplication(fileName);
+                    Kernel.ApplicationManager.StartFileApplication(fileName, CurrentPath);
                 });
                 rightClickEntries.Add(entry);
                 button.RightClick.Entries = rightClickEntries;
@@ -194,43 +198,6 @@ namespace Aura_OS.System.Processing.Application
                     currentY = startY;
                     currentX += iconSpacing;
                 }
-            }
-        }
-
-        private void StartPictureApplication(string fileName)
-        {
-            if (fileName.EndsWith(".bmp"))
-            {
-                string path = CurrentPath + fileName;
-                string name = fileName;
-                byte[] bytes = File.ReadAllBytes(path);
-                Bitmap bitmap = new Bitmap(bytes);
-                int width = name.Length * 8 + 50;
-
-                if (width < bitmap.Width)
-                {
-                    width = (int)bitmap.Width + 1;
-                }
-
-                var app = new Picture(name, bitmap, width, (int)bitmap.Height + 20);
-
-                app.Initialize();
-
-                Kernel.WindowManager.apps.Add(app);
-                app.zIndex = Kernel.WindowManager.GetTopZIndex() + 1;
-                Kernel.WindowManager.MarkStackDirty();
-
-                app.Visible = true;
-                app.Focused = true;
-
-                Kernel.ProcessManager.Start(app);
-
-                Kernel.dock.UpdateApplicationButtons();
-                Kernel.WindowManager.UpdateFocusStatus();
-            }
-            else
-            {
-
             }
         }
 
@@ -276,7 +243,7 @@ namespace Aura_OS.System.Processing.Application
             Up.X = x + 3;
             Up.Y = y + 3;
             Up.Update();
-            SpaceButton.Text = "Free Space: " + GetFreeSpace() + ", Capacity: " + GetCapacity() + ", Filesystem: " + Kernel.VirtualFileSystem.GetFileSystemType(Kernel.CurrentVolume);
+            SpaceButton.Text = "Free Space: " + Filesystem.Utils.GetFreeSpace() + ", Capacity: " + Filesystem.Utils.GetCapacity() + ", Filesystem: " + Kernel.VirtualFileSystem.GetFileSystemType(Kernel.CurrentVolume);
             SpaceButton.X = x;
             SpaceButton.Y = y + Window.Height - Window.TopBar.Height - 26;
             SpaceButton.Update();
@@ -343,7 +310,27 @@ namespace Aura_OS.System.Processing.Application
                         }
                     }
                     button.RightClick.Update();
+
+                    return;
                 }
+            }
+
+            if (MainPanel.RightClick.Opened)
+            {
+                foreach (var entry in MainPanel.RightClick.Entries)
+                {
+                    if (entry.IsInside((int)MouseManager.X, (int)MouseManager.Y))
+                    {
+                        entry.BackColor = Kernel.DarkBlue;
+                        entry.TextColor = Kernel.WhiteColor;
+                    }
+                    else
+                    {
+                        entry.BackColor = Color.LightGray;
+                        entry.TextColor = Kernel.BlackColor;
+                    }
+                }
+                MainPanel.RightClick.Update();
             }
         }
 
@@ -356,7 +343,16 @@ namespace Aura_OS.System.Processing.Application
                     button.RightClick.X = (int)MouseManager.X;
                     button.RightClick.Y = (int)MouseManager.Y;
                     button.RightClick.Opened = true;
+                    return;
                 }
+            }
+
+            if (MainPanel.IsInside((int)MouseManager.X, (int)MouseManager.Y))
+            {
+                MainPanel.RightClick.X = (int)MouseManager.X;
+                MainPanel.RightClick.Y = (int)MouseManager.Y;
+                MainPanel.RightClick.Opened = true;
+                return;
             }
         }
 
@@ -365,6 +361,7 @@ namespace Aura_OS.System.Processing.Application
             if (Up.IsInside((int)MouseManager.X, (int)MouseManager.Y))
             {
                 Up.Action();
+                return;
             }
 
             foreach (var button in Buttons)
@@ -376,6 +373,7 @@ namespace Aura_OS.System.Processing.Application
                     if (entry.IsInside((int)MouseManager.X, (int)MouseManager.Y))
                     {
                         entry.Action();
+                        return;
                     }
                 }
 
@@ -384,6 +382,7 @@ namespace Aura_OS.System.Processing.Application
                     if (button.Action != null)
                     {
                         button.Action();
+                        return;
                     }
                 }
             }
@@ -395,57 +394,15 @@ namespace Aura_OS.System.Processing.Application
                     if (button.Action != null)
                     {
                         button.Action();
+                        return;
                     }
                 }
             }
-        }
 
-        private string GetFreeSpace()
-        {
-            var available_space = Kernel.VirtualFileSystem.GetAvailableFreeSpace(Kernel.CurrentVolume);
-            return ConvertSize(available_space);
-        }
-
-        private string GetCapacity()
-        {
-            var total_size = Kernel.VirtualFileSystem.GetTotalSize(Kernel.CurrentVolume);
-            return ConvertSize(total_size);
-        }
-
-        public string ConvertSize(long bytes)
-        {
-            string suffix = " Bytes";
-            double size = bytes;
-
-            if (size >= 1024 * 1024 * 1024)
+            if (MainPanel.RightClick != null)
             {
-                size /= 1024 * 1024 * 1024;
-                suffix = "GB";
+                MainPanel.RightClick.Opened = false;
             }
-            else if (size >= 1024 * 1024)
-            {
-                size /= 1024 * 1024;
-                suffix = "MB";
-            }
-            else if (size >= 1024)
-            {
-                size /= 1024;
-                suffix = "KB";
-            }
-
-            return $"{Round(size)}{suffix}";
-        }
-
-        public string Round(double number)
-        {
-            string numStr = number.ToString();
-            int dotIndex = numStr.IndexOf('.');
-
-            if (dotIndex != -1)
-            {
-                return numStr.Substring(0, dotIndex);
-            }
-            return numStr;
         }
     }
 

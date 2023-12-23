@@ -56,7 +56,7 @@ namespace Aura_OS.System.Processing.Interpreter.Commands.Filesystem
 
                 Kernel.ProcessManager.Start(app);
 
-                Kernel.dock.UpdateApplicationButtons();
+                Kernel.Taskbar.UpdateApplicationButtons();
                 Kernel.WindowManager.UpdateFocusStatus();
 
                 return new ReturnInfo(this, ReturnCode.OK);

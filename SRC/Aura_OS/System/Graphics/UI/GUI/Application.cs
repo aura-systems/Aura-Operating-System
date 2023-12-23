@@ -39,7 +39,7 @@ namespace Aura_OS.System.Graphics.UI.GUI
                 Stop();
                 Kernel.WindowManager.apps.Remove(this);
                 Kernel.ProcessManager.Processes.Remove(this);
-                Kernel.dock.UpdateApplicationButtons();
+                Kernel.Taskbar.UpdateApplicationButtons();
 
                 if (this is Terminal)
                 {

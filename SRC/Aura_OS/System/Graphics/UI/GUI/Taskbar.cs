@@ -26,7 +26,7 @@ namespace Aura_OS.System.Graphics.UI.GUI
 
         public Dictionary<string, Button> Buttons;
 
-        public Taskbar() : base("Docker", ProcessType.KernelComponent)
+        public Taskbar() : base("Taskbar", ProcessType.KernelComponent)
         {
             startY = (int)(Kernel.screenHeight - taskbarHeight);
 

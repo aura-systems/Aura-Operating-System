@@ -83,10 +83,10 @@ namespace Aura_OS.System.Graphics.UI.GUI
 
                     Kernel.ProcessManager.Start(app);
 
-                    Kernel.dock.UpdateApplicationButtons();
+                    Kernel.Taskbar.UpdateApplicationButtons();
                     Kernel.WindowManager.UpdateFocusStatus();
 
-                    Kernel.dock.ShowStartMenu = false;
+                    Kernel.Taskbar.ShowStartMenu = false;
                 });
                 buttons.Add(button);
                 buttonY += 32;
@@ -161,9 +161,9 @@ namespace Aura_OS.System.Graphics.UI.GUI
 
         private void HandleClick()
         {
-            if (Kernel.dock.ShowStartMenu && !IsInside((int)MouseManager.X, (int)MouseManager.Y))
+            if (Kernel.Taskbar.ShowStartMenu && !IsInside((int)MouseManager.X, (int)MouseManager.Y))
             {
-                Kernel.dock.ShowStartMenu = false;
+                Kernel.Taskbar.ShowStartMenu = false;
                 return;
             }
 
