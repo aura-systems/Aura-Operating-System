@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using Cosmos.System;
 using Aura_OS.System.Graphics.UI.GUI.Components;
+using Aura_OS.System.Processing.Application;
 
 namespace Aura_OS.System.Graphics.UI.GUI
 {
@@ -52,6 +53,10 @@ namespace Aura_OS.System.Graphics.UI.GUI
                 {
                     icon = ResourceManager.GetImage("24-terminal.bmp");
                 }
+                else if (applicationConfig.Template.Name == "Explorer")
+                {
+                    icon = ResourceManager.GetImage("24-explorer.bmp");
+                }
                 else
                 {
                     icon = ResourceManager.GetImage("24-program.bmp");
@@ -66,7 +71,7 @@ namespace Aura_OS.System.Graphics.UI.GUI
                         return;
                     }
 
-                    App app = Kernel.ApplicationManager.Instantiate(applicationConfig);
+                    Application app = Kernel.ApplicationManager.Instantiate(applicationConfig);
                     app.Initialize();
 
                     Kernel.WindowManager.apps.Add(app);
@@ -78,8 +83,10 @@ namespace Aura_OS.System.Graphics.UI.GUI
 
                     Kernel.ProcessManager.Start(app);
 
-                    Kernel.dock.UpdateApplicationButtons();
+                    Kernel.Taskbar.UpdateApplicationButtons();
                     Kernel.WindowManager.UpdateFocusStatus();
+
+                    Kernel.Taskbar.ShowStartMenu = false;
                 });
                 buttons.Add(button);
                 buttonY += 32;
@@ -154,9 +161,9 @@ namespace Aura_OS.System.Graphics.UI.GUI
 
         private void HandleClick()
         {
-            if (Kernel.dock.ShowStartMenu && !IsInside((int)MouseManager.X, (int)MouseManager.Y))
+            if (Kernel.Taskbar.ShowStartMenu && !IsInside((int)MouseManager.X, (int)MouseManager.Y))
             {
-                Kernel.dock.ShowStartMenu = false;
+                Kernel.Taskbar.ShowStartMenu = false;
                 return;
             }
 

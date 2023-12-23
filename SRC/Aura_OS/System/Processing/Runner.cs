@@ -5,15 +5,8 @@
 */
 
 using System;
-using System.IO;
-using System.IO.Compression;
 using System.Collections.Generic;
-using Aura_OS.Interpreter;
 using UniLua;
-using System.Text;
-using System.Xml.Linq;
-using System.Diagnostics;
-using Cosmos.Core;
 
 namespace Aura_OS.System.Processing
 {
@@ -31,6 +24,7 @@ namespace Aura_OS.System.Processing
                 // load base libraries
                 Lua.L_OpenLibs();
 
+                // args
                 Lua.NewTable();
                 Lua.PushValue(-1);
                 Lua.SetGlobal("arg");

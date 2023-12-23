@@ -4,6 +4,7 @@
 * PROGRAMMERS:      Valentin Charbonnier <valentinbreiz@gmail.com>
 */
 
+using Aura_OS.System.Graphics.UI.GUI;
 using Cosmos.System;
 using System;
 using System.Collections.Generic;
@@ -13,12 +14,12 @@ namespace Aura_OS
 {
     public class WindowManager
     {
-        public List<App> apps;
+        public List<Application> apps;
         private bool isDirty = false;
 
         public WindowManager()
         {
-            apps = new List<App>();
+            apps = new List<Application>();
         }
 
         public void MarkStackDirty()
@@ -48,11 +49,11 @@ namespace Aura_OS
             }
         }
 
-        private void InsertionSort(List<App> apps)
+        private void InsertionSort(List<Application> apps)
         {
             for (int i = 1; i < apps.Count; i++)
             {
-                App currentApp = apps[i];
+                Application currentApp = apps[i];
                 int j = i - 1;
 
                 while (j >= 0 && apps[j].zIndex > currentApp.zIndex)
@@ -76,7 +77,7 @@ namespace Aura_OS
 
         public void DrawWindows()
         {
-            foreach (App app in apps)
+            foreach (Application app in apps)
             {
                 if (app.Running)
                 {

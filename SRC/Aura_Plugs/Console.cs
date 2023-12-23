@@ -54,7 +54,7 @@ namespace Aura_Plugs
                 Kernel.console.Write(aText);
 
                 Kernel.WindowManager.DrawWindows();
-                Kernel.dock.Update();
+                Kernel.Taskbar.Update();
                 Kernel.canvas.Display();
             }
             else if (Kernel.aConsole != null)

@@ -12,6 +12,7 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
     {
         public Color Color1;
         public Color? Color2;
+        public bool Borders = false;
 
         public Panel(Color color, int x, int y, int width, int height) : base(x, y, width, height)
         {
@@ -33,6 +34,14 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
             else
             {
                 Utils.DrawGradient(Color1, Color2.Value, X, Y, Width, Height);
+            }
+
+            if (Borders)
+            {
+                Kernel.canvas.DrawLine(Kernel.DarkGray, X, Y, X + Width, Y);
+                Kernel.canvas.DrawLine(Kernel.DarkGray, X, Y, X, Y + Height);
+                Kernel.canvas.DrawLine(Kernel.WhiteColor, X, Y + Height, X + Width + 1, Y + Height);
+                Kernel.canvas.DrawLine(Kernel.WhiteColor, X + Width, Y, X + Width, Y + Height);
             }
         }
     }
