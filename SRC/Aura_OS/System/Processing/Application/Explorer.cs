@@ -35,6 +35,8 @@ namespace Aura_OS.System.Processing.Application
 
         public Explorer(int width, int height, int x = 0, int y = 0) : base(ApplicationName, width, height, x, y)
         {
+            Window.Icon = ResourceManager.GetImage("16-explorer.bmp");
+
             CurrentPath = Kernel.CurrentVolume;
             TopPanel = new Panel(Kernel.Gray, x + 1, y + 1, width - 6, 23);
             TopPanel.Borders = true;

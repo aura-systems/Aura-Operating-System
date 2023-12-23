@@ -67,6 +67,7 @@ namespace Aura_OS
             LoadImage(isoVol + "UI\\Images\\Icons\\16\\up.bmp", "16");
             LoadImage(isoVol + "UI\\Images\\Icons\\16\\close.bmp", "16");
             LoadImage(isoVol + "UI\\Images\\Icons\\16\\minimize.bmp", "16");
+            LoadImage(isoVol + "UI\\Images\\Icons\\16\\explorer.bmp", "16");
             LoadImage(isoVol + "UI\\Images\\Icons\\16\\network-idle.bmp", "16");
             LoadImage(isoVol + "UI\\Images\\Icons\\16\\network-offline.bmp", "16");
             //LoadImage(isoVol + "UI\\Images\\Icons\\16\\network-transmit.bmp", "16");

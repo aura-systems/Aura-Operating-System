@@ -44,8 +44,8 @@ namespace Aura_OS.System.Processing.Application
         public void LoadApplications()
         {
             RegisterApplication(typeof(Terminal), 40, 40, 700, 600);
-            RegisterApplication(typeof(MemoryInfo), 40, 40, 400, 300);
             RegisterApplication(typeof(Explorer), 40, 40, 500, 400);
+            RegisterApplication(typeof(MemoryInfo), 40, 40, 400, 300);
             RegisterApplication(typeof(SystemInfo), 40, 40, 402, 360);
             RegisterApplication(typeof(Cube), 40, 40, 200, 200);
             RegisterApplication(typeof(GameBoyEmu), 40, 40, 160 + 4, 144 + 22);
