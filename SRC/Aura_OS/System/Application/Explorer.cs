@@ -216,7 +216,7 @@ namespace Aura_OS
             Up.X = x + 3;
             Up.Y = y + 3;
             Up.Update();
-            SpaceButton.Text = "Free Space: " + GetFreeSpace() + ", Capacity: " + GetCapacity();
+            SpaceButton.Text = "Free Space: " + GetFreeSpace() + ", Capacity: " + GetCapacity() + ", Filesystem:" + Kernel.VirtualFileSystem.GetFileSystemType(Kernel.CurrentVolume);
             SpaceButton.X = x;
             SpaceButton.Y = y + Window.Height - Window.TopBar.Height - 26;
             SpaceButton.Update();
