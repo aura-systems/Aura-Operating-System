@@ -216,7 +216,7 @@ namespace Aura_OS
             Up.X = x + 3;
             Up.Y = y + 3;
             Up.Update();
-            SpaceButton.Text = "Free Space: " + GetFreeSpace() + ", Capacity: " + GetCapacity() + ", Filesystem:" + Kernel.VirtualFileSystem.GetFileSystemType(Kernel.CurrentVolume);
+            SpaceButton.Text = "Free Space: " + GetFreeSpace() + ", Capacity: " + GetCapacity() + ", Filesystem: " + Kernel.VirtualFileSystem.GetFileSystemType(Kernel.CurrentVolume);
             SpaceButton.X = x;
             SpaceButton.Y = y + Window.Height - Window.TopBar.Height - 26;
             SpaceButton.Update();
@@ -310,7 +310,7 @@ namespace Aura_OS
 
         public string ConvertSize(long bytes)
         {
-            string suffix = "Bytes";
+            string suffix = " Bytes";
             double size = bytes;
 
             if (size >= 1024 * 1024 * 1024)
