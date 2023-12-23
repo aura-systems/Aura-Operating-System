@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using Cosmos.System;
 using Aura_OS.System.Graphics.UI.GUI.Components;
+using Aura_OS.System.Processing.Application;
 
 namespace Aura_OS.System.Graphics.UI.GUI
 {
@@ -70,7 +71,7 @@ namespace Aura_OS.System.Graphics.UI.GUI
                         return;
                     }
 
-                    App app = Kernel.ApplicationManager.Instantiate(applicationConfig);
+                    Application app = Kernel.ApplicationManager.Instantiate(applicationConfig);
                     app.Initialize();
 
                     Kernel.WindowManager.apps.Add(app);

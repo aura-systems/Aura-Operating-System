@@ -4,8 +4,11 @@
 * PROGRAMMERS:      Valentin Charbonnier <valentinbreiz@gmail.com>
 */
 
+using Cosmos.System;
 using Cosmos.System.Graphics;
 using Cosmos.System.Graphics.Fonts;
+using System.Collections.Generic;
+using System;
 
 namespace Aura_OS.System.Graphics.UI.GUI.Components
 {
@@ -31,7 +34,7 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
             Close = new Button(ResourceManager.GetImage("16-close.bmp"), X + Width - 20, Y + 5);
             Close.NoBackground = true;
             Close.NoBorder = true;
-            Minimize = new Button(ResourceManager.GetImage("16-minimize.bmp"), X + Width - 40, Y + 5);
+            Minimize = new Button(ResourceManager.GetImage("16-minimize.bmp"), X + Width - 38, Y + 5);
             Minimize.NoBackground = true;
             Minimize.NoBorder = true;
             TopBar = new Panel(Kernel.DarkBlue, Kernel.Pink, X + 3, Y + 3, Width - 5, 18);
@@ -60,7 +63,7 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
                 Close.X = X + Width - 20;
                 Close.Y = Y + 5;
                 Close.Update();
-                Minimize.X = X + Width - 40;
+                Minimize.X = X + Width - 38;
                 Minimize.Y = Y + 5;
                 Minimize.Update();
             }

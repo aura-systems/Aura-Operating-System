@@ -1,0 +1,290 @@
+﻿/*
+* PROJECT:          Aura Operating System Development
+* CONTENT:          Command Interpreter - CommandManager
+* PROGRAMMER(S):    John Welsh <djlw78@gmail.com>
+*                   Valentin Charbonnier <valentinbreiz@gmail.com>
+*/
+
+using Aura_OS.System.Utils;
+using Cosmos.System.Network;
+using Aura_OS.Processing;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using Aura_OS.System.Processing.Interpreter.Commands.Util;
+using Aura_OS.System.Processing.Interpreter.Commands.Filesystem;
+using Aura_OS.System.Processing.Interpreter.Commands.Power;
+using Aura_OS.System.Processing.Interpreter.Commands.c_Console;
+using Aura_OS.System.Processing.Interpreter.Commands.Network;
+using Aura_OS.System.Processing.Interpreter.Commands.SystemInfomation;
+using Aura_OS.System.Processing.Interpreter.Commands.Graphics;
+using Aura_OS.System.Processing.Interpreter.Commands.Processing;
+
+namespace Aura_OS.System.Processing.Interpreter
+{
+    public class CommandManager : Process
+    {
+        public List<ICommand> CMDs = new List<ICommand>();
+        
+        public CommandManager() : base("cmdManager", ProcessType.KernelComponent)
+        {
+
+        }
+
+        public override void Initialize()
+        {
+            base.Initialize();
+
+            RegisterAllCommands();
+
+            Kernel.ProcessManager.Register(this);
+            Kernel.ProcessManager.Start(this);
+        }
+
+        public void RegisterAllCommands()
+        {
+            CMDs.Add(new CommandReboot(new string[] { "reboot", "rb" }));
+            CMDs.Add(new CommandShutdown(new string[] { "shutdown", "sd" }));
+
+            CMDs.Add(new CommandClear(new string[] { "clear", "clr" }));
+            CMDs.Add(new CommandKeyboardMap(new string[] { "setkeyboardmap", "setkeyboard" }));
+            CMDs.Add(new CommandEnv(new string[] { "export", "set" }));
+            CMDs.Add(new CommandEcho(new string[] { "echo" }));
+
+            CMDs.Add(new CommandIPConfig(new string[] { "ipconfig", "ifconfig", "netconf" }));
+            CMDs.Add(new CommandPing(new string[] { "ping" }));
+            CMDs.Add(new CommandUdp(new string[] { "udp" }));
+            CMDs.Add(new CommandDns(new string[] { "dns" }));
+            CMDs.Add(new CommandWget(new string[] { "wget" }));
+            CMDs.Add(new CommandFtp(new string[] { "ftp" }));
+            CMDs.Add(new CommandPackage(new string[] { "package", "pkg" }));
+
+            CMDs.Add(new CommandVersion(new string[] { "version", "ver", "about" }));
+            CMDs.Add(new CommandSystemInfo(new string[] { "systeminfo", "sysinfo" }));
+            CMDs.Add(new CommandTime(new string[] { "time", "date" }));
+            CMDs.Add(new CommandHelp(new string[] { "help" }));
+
+            CMDs.Add(new CommandChangeRes(new string[] { "changeres", "cr" }));
+            CMDs.Add(new CommandLspci(new string[] { "lspci" }));
+            //CMDs.Add(new CommandCrash(new string[] { "crash" }));
+
+            CMDs.Add(new CommandLsprocess(new string[] { "lsprocess" }));
+
+            CMDs.Add(new CommandVol(new string[] { "vol" }));
+            CMDs.Add(new CommandDir(new string[] { "dir", "ls", "l" }));
+            CMDs.Add(new CommandMkdir(new string[] { "mkdir", "md" }));
+            CMDs.Add(new CommandCat(new string[] { "cat" }));
+            CMDs.Add(new CommandCD(new string[] { "cd" }));
+            CMDs.Add(new CommandMkfil(new string[] { "touch", "mkfil", "mf" }));
+            CMDs.Add(new CommandRm(new string[] { "rm", "rmf", "rmd" }));
+            CMDs.Add(new CommandHex(new string[] { "hex" }));
+            CMDs.Add(new CommandTree(new string[] { "tree" }));
+            CMDs.Add(new CommandRun(new string[] { "run" }));
+            CMDs.Add(new CommandCopy(new string[] { "cp" }));
+            CMDs.Add(new CommandPicture(new string[] { "pic" }));
+
+            CMDs.Add(new CommandZip(new string[] { "zip" }));
+
+            /*
+            CMDs.Add(new CommandPCName(new string[] { "pcn" }));
+
+            CMDs.Add(new CommandMIV(new string[] { "miv", "edit" }));*/
+
+            CMDs.Add(new CommandAction(new string[] { "beep" }, () =>
+            {
+                Cosmos.System.PCSpeaker.Beep();
+            }));
+            CMDs.Add(new CommandAction(new string[] { "crash" }, () =>
+            {
+                throw new Exception("Exception test");
+            }));
+            CMDs.Add(new CommandAction(new string[] { "crashn" }, () =>
+            {
+                string[] test =
+                {
+                    "test1",
+                    "tert2"
+                };
+                test[2] = "test3"; //Should make a Null reference exception
+            }));
+        }
+
+        /// <summary>
+        /// Shell Interpreter
+        /// </summary>
+        /// <param name="cmd">Command</param>
+        public void Execute(string cmd)
+        {
+            //CommandsHistory.Add(cmd); //adding last command to the commands history
+
+            if (cmd.Length <= 0)
+            {
+                Kernel.console.WriteLine();
+                return;
+            }
+
+            #region Parse command
+
+            string[] parts = cmd.Split(new char[] { '>' }, 2);
+            string redirectionPart = parts.Length > 1 ? parts[1].Trim() : null;
+            cmd = parts[0].Trim();
+
+            if (!string.IsNullOrEmpty(redirectionPart))
+            {
+                Kernel.console.Redirect = true;
+                Kernel.console.CommandOutput = "";
+            }
+
+            List<string> arguments = Misc.ParseCommandLine(cmd);
+
+            string firstarg = arguments[0]; //command name
+
+            if (arguments.Count > 0)
+            {
+                arguments.RemoveAt(0); //get only arguments
+            }
+
+            #endregion
+
+            foreach (var command in CMDs)
+            {
+                if (command.ContainsCommand(firstarg))
+                {
+                    ReturnInfo result;
+
+                    if (arguments.Count > 0 && (arguments[0] == "/help" || arguments[0] == "/h"))
+                    {
+                        ShowHelp(command);
+                        result = new ReturnInfo(command, ReturnCode.OK);
+                    }
+                    else
+                    {
+                        result = CheckCommand(command);
+
+                        if (result.Code == ReturnCode.OK)
+                        {
+                            if (arguments.Count == 0)
+                            {
+                                result = command.Execute();
+                            }
+                            else
+                            {
+                                result = command.Execute(arguments);
+                            }
+                        }
+                    }
+
+                    ProcessCommandResult(result);
+
+                    if (Kernel.console.Redirect)
+                    {
+                        Kernel.console.Redirect = false;
+
+                        Kernel.console.WriteLine();
+
+                        HandleRedirection(redirectionPart, Kernel.console.CommandOutput);
+
+                        Kernel.console.CommandOutput = "";
+                    }
+
+                    return;
+                }
+            }
+
+            Kernel.console.Foreground = ConsoleColor.DarkRed;
+            Kernel.console.WriteLine("Unknown command.");
+            Kernel.console.Foreground = ConsoleColor.White;
+
+            Kernel.console.WriteLine();
+
+            if (Kernel.console.Redirect)
+            {
+                Kernel.console.Redirect = false;
+
+                HandleRedirection(redirectionPart, Kernel.console.CommandOutput);
+
+                Kernel.console.CommandOutput = "";
+            }
+        }
+
+        /// <summary>
+        /// Show command description
+        /// </summary>
+        /// <param name="command">Command</param>
+        private void ShowHelp(ICommand command)
+        {
+            Kernel.console.WriteLine("Description: " + command.Description + ".");
+            Kernel.console.WriteLine();
+            if (command.CommandValues.Length > 1)
+            {
+                Kernel.console.Write("Aliases: ");
+                for (int i = 0; i < command.CommandValues.Length; i++)
+                {
+                    if (i != command.CommandValues.Length - 1)
+                    {
+                        Kernel.console.Write(command.CommandValues[i] + ", ");
+                    }
+                    else
+                    {
+                        Kernel.console.Write(command.CommandValues[i]);
+                    }
+                }
+                Kernel.console.WriteLine();
+                Kernel.console.WriteLine();
+            }
+            command.PrintHelp();
+        }
+
+        /// <summary>
+        /// Check command availability to avoid unwanted behavior.
+        /// </summary>
+        /// <param name="command">Command</param>
+        private ReturnInfo CheckCommand(ICommand command)
+        {
+            if (command.Type == CommandType.Filesystem)
+            {
+                if (Kernel.VirtualFileSystem == null || Kernel.VirtualFileSystem.GetVolumes().Count == 0)
+                {
+                    return new ReturnInfo(command, ReturnCode.ERROR, "No volume detected!");
+                }
+            }
+            if (command.Type == CommandType.Network)
+            {
+                if (NetworkStack.ConfigEmpty())
+                {
+                    return new ReturnInfo(command, ReturnCode.ERROR, "No network configuration detected! Use ipconfig /set.");
+                }
+            }
+            return new ReturnInfo(command, ReturnCode.OK);
+        }
+
+        /// <summary>
+        /// Process result info of the command
+        /// </summary>
+        /// <param name="result">Result information</param>
+        private void ProcessCommandResult(ReturnInfo result)
+        {
+            if (result.Code == ReturnCode.ERROR_ARG)
+            {
+                Kernel.console.Foreground = ConsoleColor.DarkRed;
+                Kernel.console.WriteLine("Command arguments are incorrectly formatted.");
+                Kernel.console.Foreground = ConsoleColor.White;
+            }
+            else if (result.Code == ReturnCode.ERROR)
+            {
+                Kernel.console.Foreground = ConsoleColor.DarkRed;
+                Kernel.console.WriteLine("Error: " + result.Info);
+                Kernel.console.Foreground = ConsoleColor.White;
+            }
+
+            Kernel.console.WriteLine();
+        }
+
+        private void HandleRedirection(string filePath, string commandOutput)
+        {
+            string fullPath = Kernel.CurrentDirectory + filePath;
+
+            File.WriteAllText(fullPath, commandOutput);
+        }
+    }
+}

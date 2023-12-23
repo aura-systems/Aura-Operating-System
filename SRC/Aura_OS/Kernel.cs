@@ -19,13 +19,13 @@ using Cosmos.System.Graphics.Fonts;
 using Aura_OS.Processing;
 using System.Drawing;
 using Aura_OS.System;
-using Aura_OS.Interpreter;
-using Aura_OS.System.Application.Emulators.GameBoyEmu;
 using System.IO;
 using Aura_OS.System.Processing;
 using Aura_OS.System.Graphics.UI.GUI;
 using Aura_OS.System.Graphics;
-using Aura_OS.System.Application;
+using Aura_OS.System.Processing.Application;
+using Aura_OS.System.Processing.Application.Emulators.GameBoyEmu;
+using Aura_OS.System.Processing.Interpreter;
 
 namespace Aura_OS
 {
