@@ -157,13 +157,7 @@ namespace Aura_OS
 
             aConsole = null;
 
-            Desktop = new Desktop(0, 0, (int)screenWidth, (int)screenHeight);
-
-            // CustomConsole.WriteLineInfo("Starting dock...");
-            Taskbar = new Taskbar();
-            Taskbar.Initialize();
-
-            Taskbar.UpdateApplicationButtons();
+            StartUI();
 
             //START MOUSE
             MouseManager.ScreenWidth = screenWidth;
@@ -172,6 +166,17 @@ namespace Aura_OS
             BootTime = Time.MonthString() + "/" + Time.DayString() + "/" + Time.YearString() + ", " + Time.TimeString(true, true, true);
 
             Running = true;
+        }
+
+        public static void StartUI()
+        {
+            Desktop = new Desktop(0, 0, (int)screenWidth, (int)screenHeight);
+
+            // CustomConsole.WriteLineInfo("Starting dock...");
+            Taskbar = new Taskbar();
+            Taskbar.Initialize();
+
+            Taskbar.UpdateApplicationButtons();
         }
 
         public static void Run()
@@ -218,6 +223,8 @@ namespace Aura_OS
 
         private static void UpdateUI()
         {
+            canvas.Clear(0x000000);
+
             Desktop.Update();
             Desktop.Draw();
 
