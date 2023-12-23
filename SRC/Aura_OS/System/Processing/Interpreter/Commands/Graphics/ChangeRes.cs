@@ -74,7 +74,12 @@ namespace Aura_OS.System.Processing.Interpreter.Commands.Graphics
                     Cosmos.System.MouseManager.ScreenWidth = width;
                     Cosmos.System.MouseManager.ScreenHeight = height;
 
+                    Kernel.screenWidth = width;
+                    Kernel.screenHeight = height;
+
                     Kernel.canvas = FullScreenCanvas.GetFullScreenCanvas(new Mode(width, height, ColorDepth.ColorDepth32));
+
+                    Kernel.StartUI();
 
                     return new ReturnInfo(this, ReturnCode.OK);
                 }
