@@ -30,36 +30,14 @@ namespace Aura_OS.Interpreter.Commands.Filesystem
 
             try
             {
-                if (dir == "..")
+                string error;
+                if (System.Filesystem.CurrentPath.Set(dir, out error))
                 {
-                    Directory.SetCurrentDirectory(Kernel.CurrentDirectory);
-
-                    var root = Kernel.VirtualFileSystem.GetDirectory(Kernel.CurrentDirectory);
-
-                    if (Kernel.CurrentDirectory != Kernel.CurrentVolume)
-                    {
-                        Kernel.CurrentDirectory = root.mParent.mFullPath;
-                    }
-                }
-                else if (dir == Kernel.CurrentVolume)
-                { 
-                    Kernel.CurrentDirectory = Kernel.CurrentVolume;
+                    return new ReturnInfo(this, ReturnCode.OK);
                 }
                 else
                 {
-                    if (Directory.Exists(Kernel.CurrentDirectory + dir))
-                    {
-                        Directory.SetCurrentDirectory(Kernel.CurrentDirectory);
-                        Kernel.CurrentDirectory = Kernel.CurrentDirectory + dir + @"\";
-                    }
-                    else if (File.Exists(Kernel.CurrentDirectory + dir))
-                    {
-                        return new ReturnInfo(this, ReturnCode.ERROR, "Error: This is a file.");
-                    }
-                    else
-                    {
-                        return new ReturnInfo(this, ReturnCode.ERROR, "This directory doesn't exist!");
-                    }
+                    return new ReturnInfo(this, ReturnCode.ERROR, error);
                 }
 
                 return new ReturnInfo(this, ReturnCode.OK);

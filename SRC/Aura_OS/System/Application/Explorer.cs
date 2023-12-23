@@ -12,6 +12,8 @@ using System;
 using Cosmos.System;
 using System.Collections.Generic;
 using System.Drawing;
+using Aura_OS.Interpreter;
+using Aura_OS.System.Filesystem;
 
 namespace Aura_OS
 {
@@ -21,6 +23,7 @@ namespace Aura_OS
 
         string CurrentPath = "";
         public bool Clicked = false;
+        public bool RightClicked = false;
         public Panel TopPanel;
         public Panel LeftPanel;
         public Panel MainPanel;
@@ -51,7 +54,34 @@ namespace Aura_OS
                 UpdateCurrentFolder();
             });
             UpdateCurrentFolder();
+            UpdateDisks();
+        }
 
+        public string RemoveLastDirectory(string path)
+        {
+            if (string.IsNullOrEmpty(path))
+            {
+                return path;
+            }
+            if (path.EndsWith(Path.DirectorySeparatorChar.ToString()))
+            {
+                path = path.TrimEnd(Path.DirectorySeparatorChar);
+            }
+
+            int lastSeparatorIndex = path.LastIndexOf(Path.DirectorySeparatorChar);
+            if (lastSeparatorIndex <= 0)
+            {
+                return path + "\\";
+            }
+            if (lastSeparatorIndex == 2 && path[1] == ':')
+            {
+                return path.Substring(0, lastSeparatorIndex + 1);
+            }
+            return path.Substring(0, lastSeparatorIndex) + "\\";
+        }
+
+        public void UpdateDisks()
+        {
             Disks = new List<Button>();
             var vols = Kernel.VirtualFileSystem.GetVolumes();
             foreach (var vol in vols)
@@ -83,29 +113,6 @@ namespace Aura_OS
             }
         }
 
-        public string RemoveLastDirectory(string path)
-        {
-            if (string.IsNullOrEmpty(path))
-            {
-                return path;
-            }
-            if (path.EndsWith(Path.DirectorySeparatorChar.ToString()))
-            {
-                path = path.TrimEnd(Path.DirectorySeparatorChar);
-            }
-
-            int lastSeparatorIndex = path.LastIndexOf(Path.DirectorySeparatorChar);
-            if (lastSeparatorIndex <= 0)
-            {
-                return path + "\\";
-            }
-            if (lastSeparatorIndex == 2 && path[1] == ':')
-            {
-                return path.Substring(0, lastSeparatorIndex + 1);
-            }
-            return path.Substring(0, lastSeparatorIndex) + "\\";
-        }
-
         public void UpdateCurrentFolder()
         {
             int startX = 3;
@@ -129,6 +136,30 @@ namespace Aura_OS
                     PathTextBox.Text = CurrentPath;
                     UpdateCurrentFolder();
                 });
+
+                button.RightClick = new RightClick((int)MouseManager.X, (int)MouseManager.Y, 200, 2 * RightClickEntry.ConstHeight);
+                List<RightClickEntry> rightClickEntries = new List<RightClickEntry>();
+                RightClickEntry entry = new("Open", 0, 0, button.RightClick.Width);
+                entry.Action = new Action(() =>
+                {
+                    string error;
+                    string path = CurrentPath + folderName;
+                    PathTextBox.Text = path;
+                    CurrentPath = path;
+                    UpdateCurrentFolder();
+                    button.RightClick.Opened = false;
+                });
+                rightClickEntries.Add(entry);
+                RightClickEntry entry2 = new("Delete", 0, 0, button.RightClick.Width);
+                entry2.Action = new Action(() =>
+                {
+                    Entries.ForceRemove(CurrentPath + folderName);
+                    UpdateCurrentFolder();
+                    button.RightClick.Opened = false;
+                });
+                rightClickEntries.Add(entry2);
+                button.RightClick.Entries = rightClickEntries;
+
                 Buttons.Add(button);
 
                 currentY += iconSpacing;
@@ -145,36 +176,17 @@ namespace Aura_OS
                 var button = new FileButton(fileName, ResourceManager.GetImage("32-file.bmp"), x + startX + currentX, y + currentY, 32, 32);
                 button.Action = new Action(() =>
                 {
-                    if (fileName.EndsWith(".bmp"))
-                    {
-                        string path = CurrentPath + fileName;
-                        string name = fileName;
-                        byte[] bytes = File.ReadAllBytes(path);
-                        Bitmap bitmap = new Bitmap(bytes);
-                        int width = name.Length * 8 + 50;
-
-                        if (width < bitmap.Width)
-                        {
-                            width = (int)bitmap.Width + 1;
-                        }
-
-                        var app = new Picture(name, bitmap, width, (int)bitmap.Height + 20);
-
-                        app.Initialize();
-
-                        Kernel.WindowManager.apps.Add(app);
-                        app.zIndex = Kernel.WindowManager.GetTopZIndex() + 1;
-                        Kernel.WindowManager.MarkStackDirty();
-
-                        app.Visible = true;
-                        app.Focused = true;
-
-                        Kernel.ProcessManager.Start(app);
-
-                        Kernel.dock.UpdateApplicationButtons();
-                        Kernel.WindowManager.UpdateFocusStatus();
-                    }
+                    StartPictureApplication(fileName);
                 });
+                button.RightClick = new RightClick((int)MouseManager.X, (int)MouseManager.Y, 200, 1 * RightClickEntry.ConstHeight);
+                List<RightClickEntry> rightClickEntries = new List<RightClickEntry>();
+                RightClickEntry entry = new("Open", 0, 0, button.RightClick.Width);
+                entry.Action = new Action(() =>
+                {
+                    StartPictureApplication(fileName);
+                });
+                rightClickEntries.Add(entry);
+                button.RightClick.Entries = rightClickEntries;
                 Buttons.Add(button);
 
                 currentY += iconSpacing;
@@ -183,6 +195,43 @@ namespace Aura_OS
                     currentY = startY;
                     currentX += iconSpacing;
                 }
+            }
+        }
+
+        private void StartPictureApplication(string fileName)
+        {
+            if (fileName.EndsWith(".bmp"))
+            {
+                string path = CurrentPath + fileName;
+                string name = fileName;
+                byte[] bytes = File.ReadAllBytes(path);
+                Bitmap bitmap = new Bitmap(bytes);
+                int width = name.Length * 8 + 50;
+
+                if (width < bitmap.Width)
+                {
+                    width = (int)bitmap.Width + 1;
+                }
+
+                var app = new Picture(name, bitmap, width, (int)bitmap.Height + 20);
+
+                app.Initialize();
+
+                Kernel.WindowManager.apps.Add(app);
+                app.zIndex = Kernel.WindowManager.GetTopZIndex() + 1;
+                Kernel.WindowManager.MarkStackDirty();
+
+                app.Visible = true;
+                app.Focused = true;
+
+                Kernel.ProcessManager.Start(app);
+
+                Kernel.dock.UpdateApplicationButtons();
+                Kernel.WindowManager.UpdateFocusStatus();
+            }
+            else
+            {
+
             }
         }
 
@@ -195,10 +244,22 @@ namespace Aura_OS
                     Clicked = true;
                 }
             }
+            else if (MouseManager.MouseState == MouseState.Right)
+            {
+                if (!RightClicked)
+                {
+                    RightClicked = true;
+                }
+            }
             else if (Clicked)
             {
                 Clicked = false;
                 HandleClick();
+            }
+            else if (RightClicked)
+            {
+                RightClicked = false;
+                HandleRightClick();
             }
 
             TopPanel.X = x + 1;
@@ -230,7 +291,7 @@ namespace Aura_OS
 
             foreach (var button in Buttons)
             {
-                button.X = x + 75 + startX + currentX;
+                button.X = x + 78 + startX + currentX;
                 button.Y = y + currentY;
 
                 currentY += iconSpacing;
@@ -264,6 +325,40 @@ namespace Aura_OS
 
                 button.Update();
             }
+
+            foreach (var button in Buttons)
+            {
+                if (button.RightClick.Opened)
+                {
+                    foreach (var entry in button.RightClick.Entries)
+                    {
+                        if (entry.IsInside((int)MouseManager.X, (int)MouseManager.Y))
+                        {
+                            entry.BackColor = Kernel.DarkBlue;
+                            entry.TextColor = Kernel.WhiteColor;
+                        }
+                        else
+                        {
+                            entry.BackColor = Color.LightGray;
+                            entry.TextColor = Kernel.BlackColor;
+                        }
+                    }
+                    button.RightClick.Update();
+                }
+            }
+        }
+
+        private void HandleRightClick()
+        {
+            foreach (var button in Buttons)
+            {
+                if (button.IsInside((int)MouseManager.X, (int)MouseManager.Y))
+                {
+                    button.RightClick.X = (int)MouseManager.X;
+                    button.RightClick.Y = (int)MouseManager.Y;
+                    button.RightClick.Opened = true;
+                }
+            }
         }
 
         private void HandleClick()
@@ -275,6 +370,16 @@ namespace Aura_OS
 
             foreach (var button in Buttons)
             {
+                button.RightClick.Opened = false;
+
+                foreach (var entry in button.RightClick.Entries)
+                {
+                    if (entry.IsInside((int)MouseManager.X, (int)MouseManager.Y))
+                    {
+                        entry.Action();
+                    }
+                }
+
                 if (button.IsInside((int)MouseManager.X, (int)MouseManager.Y))
                 {
                     if (button.Action != null)

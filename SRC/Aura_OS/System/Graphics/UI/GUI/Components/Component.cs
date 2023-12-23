@@ -12,6 +12,7 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
         public int Y;
         public int Width;
         public int Height;
+        public RightClick RightClick;
 
         public Component(int x, int y, int width, int height)
         {

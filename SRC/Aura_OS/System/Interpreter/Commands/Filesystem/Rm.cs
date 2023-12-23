@@ -29,19 +29,9 @@ namespace Aura_OS.Interpreter.Commands.Filesystem
             string path = arguments[0];
             string fullPath = Kernel.CurrentDirectory + path;
 
-            if (File.Exists(fullPath))
+            if (System.Filesystem.Entries.ForceRemove(fullPath))
             {
-                File.Delete(fullPath);
                 return new ReturnInfo(this, ReturnCode.OK);
-            }
-            else if (Directory.Exists(fullPath))
-            {
-                Directory.Delete(fullPath, true);
-                return new ReturnInfo(this, ReturnCode.OK);
-            }
-            else
-            {
-                Console.WriteLine(path + " does not exist!");
             }
 
             return new ReturnInfo(this, ReturnCode.ERROR);

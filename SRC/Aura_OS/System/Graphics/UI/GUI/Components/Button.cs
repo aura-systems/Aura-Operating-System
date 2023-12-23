@@ -56,7 +56,7 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
             {
                 if (!NoBackground)
                 {
-                    Kernel.canvas.DrawFilledRectangle(Kernel.Gray, X + 2, Y + 2, Width - 3, Height - 3);
+                    Kernel.canvas.DrawFilledRectangle(BackColor, X + 2, Y + 2, Width - 3, Height - 3);
                 }     
 
                 Kernel.canvas.DrawLine(Kernel.DarkGray, X, Y, X + Width, Y);
@@ -86,7 +86,7 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
                 {
                     if (!NoBackground)
                     {
-                        Kernel.canvas.DrawFilledRectangle(Kernel.DarkGrayLight, X + 2, Y + 2, Width - 3, Height - 3);
+                        Kernel.canvas.DrawFilledRectangle(BackColor, X + 2, Y + 2, Width - 3, Height - 3);
                     }
 
                     Kernel.canvas.DrawLine(Kernel.WhiteColor, X, Y, X + Width, Y);
