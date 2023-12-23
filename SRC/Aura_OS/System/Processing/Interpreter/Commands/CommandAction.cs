@@ -1,9 +1,12 @@
-﻿using Aura_OS.System.Processing.Interpreter;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿/*
+* PROJECT:          Aura Operating System Development
+* CONTENT:          Base class for classless commands
+* PROGRAMMER(S):    Valentin Charbonnier <valentinbreiz@gmail.com>
+*/
 
-namespace Aura_OS.System.Processing.Interpreter
+using System;
+
+namespace Aura_OS.System.Processing.Interpreter.Commands
 {
     class CommandAction : ICommand
     {

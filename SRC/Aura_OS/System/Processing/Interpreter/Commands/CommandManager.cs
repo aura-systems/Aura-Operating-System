@@ -20,7 +20,7 @@ using Aura_OS.System.Processing.Interpreter.Commands.SystemInfomation;
 using Aura_OS.System.Processing.Interpreter.Commands.Graphics;
 using Aura_OS.System.Processing.Interpreter.Commands.Processing;
 
-namespace Aura_OS.System.Processing.Interpreter
+namespace Aura_OS.System.Processing.Interpreter.Commands
 {
     public class CommandManager : Process
     {

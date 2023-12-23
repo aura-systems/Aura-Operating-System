@@ -7,7 +7,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Aura_OS.System.Processing.Interpreter
+namespace Aura_OS.System.Processing.Interpreter.Commands
 {
 
     /// <summary>
