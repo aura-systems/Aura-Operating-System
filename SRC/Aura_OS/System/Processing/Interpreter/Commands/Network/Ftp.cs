@@ -12,6 +12,7 @@ using Cosmos.System.Network.Config;
 using Cosmos.System.Network.IPv4.TCP;
 using System.Text;
 using Aura_OS.System.Processing.Interpreter;
+using CosmosFtpServer;
 
 namespace Aura_OS.System.Processing.Interpreter.Commands.Network
 {
@@ -33,12 +34,12 @@ namespace Aura_OS.System.Processing.Interpreter.Commands.Network
         {
             try
             {
-                /*
-                var xServer = new FtpServer(Kernel.VirtualFileSystem, Kernel.CurrentDirectory, true);
+                using (var xServer = new FtpServer(Kernel.VirtualFileSystem, Kernel.CurrentDirectory, true))
+                {
+                    Console.WriteLine("FTP Server listening at " + NetworkConfiguration.CurrentAddress + ":21 ...");
 
-                Console.WriteLine("FTP Server listening at " + NetworkConfiguration.CurrentAddress + ":21 ...");
-
-                xServer.Listen();*/
+                    xServer.Listen();
+                }
             }
             catch (Exception ex)
             {
