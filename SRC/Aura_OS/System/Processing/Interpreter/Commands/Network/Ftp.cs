@@ -23,13 +23,12 @@ namespace Aura_OS.System.Processing.Interpreter.Commands.Network
         /// </summary>
         public CommandFtp(string[] commandvalues) : base(commandvalues, CommandType.Network)
         {
-            Description = "to start a FTP server at port 21. (only ACTIVE mode supported yet).";
+            Description = "to start a FTP server at port 21.";
         }
 
         /// <summary>
-        /// CommandDns
+        /// CommandFtp
         /// </summary>
-        /// <param name="arguments">Arguments</param>
         public override ReturnInfo Execute()
         {
             try
@@ -50,12 +49,38 @@ namespace Aura_OS.System.Processing.Interpreter.Commands.Network
         }
 
         /// <summary>
+        /// CommandFtp
+        /// </summary>
+        /// <param name="arguments">Arguments</param>
+        public override ReturnInfo Execute(List<string> arguments)
+        {
+            try
+            {
+                string vol = arguments[0];
+
+                using (var xServer = new FtpServer(Kernel.VirtualFileSystem, vol, true))
+                {
+                    Console.WriteLine("FTP Server listening at " + NetworkConfiguration.CurrentAddress + ":21 ...");
+
+                    xServer.Listen();
+                }
+            }
+            catch (Exception ex)
+            {
+                return new ReturnInfo(this, ReturnCode.ERROR, ex.Message);
+            }
+
+            return new ReturnInfo(this, ReturnCode.OK);
+        }
+
+        /// <summary>
         /// Print /help information
         /// </summary>
         public override void PrintHelp()
         {
             Console.WriteLine("Usage:");
-            Console.WriteLine(" - ftp");
+            Console.WriteLine(" - ftp            Open FTP server with path 0:\\");
+            Console.WriteLine(" - ftp {path}     Open FTP server with custom path");
         }
     }
 }

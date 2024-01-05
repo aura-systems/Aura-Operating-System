@@ -37,7 +37,7 @@
         <PackageReference Include="acryptohashnet" Version="2.0.0" />
         <PackageReference Include="Cosmos.System2" Version="0-*" NoWarn="NU1604;NU1605" />
         <PackageReference Include="CosmosHttp" Version="1.0.4" />
-		<PackageReference Include="CosmosFtpServer" Version="1.0.6" />
+		<PackageReference Include="CosmosFtpServer" Version="1.0.8" />
         <PackageReference Include="jzero" Version="0.4.5" />
         <PackageReference Include="Zlib.Portable" Version="1.11.0" />
     </ItemGroup>
