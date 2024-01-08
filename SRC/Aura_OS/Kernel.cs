@@ -26,6 +26,7 @@ using Aura_OS.System.Graphics;
 using Aura_OS.System.Processing.Application;
 using Aura_OS.System.Processing.Interpreter;
 using Aura_OS.System.Processing.Interpreter.Commands;
+using Aura_OS.System.Graphics.UI.GUI.Components;
 
 namespace Aura_OS
 {
@@ -216,6 +217,8 @@ namespace Aura_OS
             }
         }
 
+        public static Component component;
+
         private static void UpdateUI()
         {
             Desktop.Update();
@@ -241,6 +244,27 @@ namespace Aura_OS
             catch (Exception ex)
             {
                 Crash.StopKernel("Fatal dotnet exception occured while drawing windows.", ex.Message, "0x00000000", "0");
+            }
+
+            if (component != null)
+            {
+                if  (component.RightClick != null && component.RightClick.Opened)
+                {
+                    foreach (var entry in component.RightClick.Entries)
+                    {
+                        if (entry.IsInside((int)MouseManager.X, (int)MouseManager.Y))
+                        {
+                            entry.BackColor = Kernel.DarkBlue;
+                            entry.TextColor = Kernel.WhiteColor;
+                        }
+                        else
+                        {
+                            entry.BackColor = Color.LightGray;
+                            entry.TextColor = Kernel.BlackColor;
+                        }
+                    }
+                    component.RightClick.Update();
+                }
             }
 
             DrawCursor(MouseManager.X, MouseManager.Y);

@@ -30,23 +30,7 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
 
         public virtual void Draw()
         {
-            if (RightClick != null && RightClick.Opened)
-            {
-                foreach (var entry in RightClick.Entries)
-                {
-                    if (entry.IsInside((int)MouseManager.X, (int)MouseManager.Y))
-                    {
-                        entry.BackColor = Kernel.DarkBlue;
-                        entry.TextColor = Kernel.WhiteColor;
-                    }
-                    else
-                    {
-                        entry.BackColor = Color.LightGray;
-                        entry.TextColor = Kernel.BlackColor;
-                    }
-                }
-                RightClick.Update();
-            }
+            
         }
 
         public virtual void Update()
@@ -60,6 +44,8 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
             }
             else if (MouseManager.MouseState == MouseState.Right)
             {
+                Kernel.component = null;
+
                 if (RightClick != null)
                 {
                     RightClicked = true;
@@ -106,6 +92,7 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
                     RightClick.X = (int)MouseManager.X;
                     RightClick.Y = (int)MouseManager.Y;
                     RightClick.Opened = true;
+                    Kernel.component = this;
                 }
             }
         }
