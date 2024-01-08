@@ -17,9 +17,6 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
         public int Height;
         public RightClick RightClick;
 
-        public bool LeftClicked = false;
-        public bool RightClicked = false;
-
         public Component(int x, int y, int width, int height)
         {
             X = x;
@@ -30,51 +27,11 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
 
         public virtual void Draw()
         {
-            if (RightClick != null && RightClick.Opened)
-            {
-                foreach (var entry in RightClick.Entries)
-                {
-                    if (entry.IsInside((int)MouseManager.X, (int)MouseManager.Y))
-                    {
-                        entry.BackColor = Kernel.DarkBlue;
-                        entry.TextColor = Kernel.WhiteColor;
-                    }
-                    else
-                    {
-                        entry.BackColor = Color.LightGray;
-                        entry.TextColor = Kernel.BlackColor;
-                    }
-                }
-                RightClick.Update();
-            }
+            
         }
 
         public virtual void Update()
         {
-            if (MouseManager.MouseState == MouseState.Left)
-            {
-                if (!LeftClicked)
-                {
-                    LeftClicked = true;
-                }
-            }
-            else if (MouseManager.MouseState == MouseState.Right)
-            {
-                if (RightClick != null)
-                {
-                    RightClicked = true;
-                }
-            }
-            else if (LeftClicked)
-            {
-                LeftClicked = false;
-                HandleLeftClick();
-            }
-            else if (RightClicked)
-            {
-                RightClicked = false;
-                HandleRightClick();
-            }
         }
 
         public virtual void HandleLeftClick()
@@ -83,6 +40,8 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
             {
                 if (RightClick.Opened)
                 {
+                    RightClick.Opened = false;
+
                     foreach (var entry in RightClick.Entries)
                     {
                         if (entry.IsInside((int)MouseManager.X, (int)MouseManager.Y))
@@ -91,22 +50,18 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
                             return;
                         }
                     }
-
-                    RightClick.Opened = false;
                 }
             }
         }
 
         public virtual void HandleRightClick()
         {
-            if (RightClick != null)
+            if (RightClick != null && IsInside((int)MouseManager.X, (int)MouseManager.Y))
             {
-                if (IsInside((int)MouseManager.X, (int)MouseManager.Y))
-                {
-                    RightClick.X = (int)MouseManager.X;
-                    RightClick.Y = (int)MouseManager.Y;
-                    RightClick.Opened = true;
-                }
+                RightClick.X = (int)MouseManager.X;
+                RightClick.Y = (int)MouseManager.Y;
+                RightClick.Opened = true;
+                Kernel.MouseManager.component = this;
             }
         }
 
