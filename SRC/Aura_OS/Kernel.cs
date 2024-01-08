@@ -84,6 +84,7 @@ namespace Aura_OS
         // Managers
         public static ProcessManager ProcessManager;
         public static WindowManager WindowManager;
+        public static System.Input.MouseManager MouseManager;
         public static ApplicationManager ApplicationManager;
         public static CommandManager CommandManager;
         public static PackageManager PackageManager;
@@ -149,6 +150,9 @@ namespace Aura_OS
             CustomConsole.WriteLineInfo("Starting window manager...");
             WindowManager = new WindowManager();
 
+            CustomConsole.WriteLineInfo("Starting mouse manager...");
+            MouseManager = new System.Input.MouseManager();
+
             CustomConsole.WriteLineInfo("Starting Canvas...");
 
             //START GRAPHICS
@@ -167,8 +171,8 @@ namespace Aura_OS
             Taskbar.UpdateApplicationButtons();
 
             //START MOUSE
-            MouseManager.ScreenWidth = screenWidth;
-            MouseManager.ScreenHeight = screenHeight;
+            Cosmos.System.MouseManager.ScreenWidth = screenWidth;
+            Cosmos.System.MouseManager.ScreenHeight = screenHeight;
 
             BootTime = Time.MonthString() + "/" + Time.DayString() + "/" + Time.YearString() + ", " + Time.TimeString(true, true, true);
 
@@ -189,17 +193,7 @@ namespace Aura_OS
                 _frames++;
 
                 FreeCount = Heap.Collect();
-
-                switch (MouseManager.MouseState)
-                {
-                    case MouseState.Left:
-                        Pressed = true;
-                        break;
-                    case MouseState.None:
-                        Pressed = false;
-                        break;
-                }
-
+                
                 UpdateUI();
 
                 canvas.Display();
@@ -216,8 +210,6 @@ namespace Aura_OS
                 }
             }
         }
-
-        public static Component component;
 
         private static void UpdateUI()
         {
@@ -246,28 +238,10 @@ namespace Aura_OS
                 Crash.StopKernel("Fatal dotnet exception occured while drawing windows.", ex.Message, "0x00000000", "0");
             }
 
-            if (component != null)
-            {
-                if  (component.RightClick != null && component.RightClick.Opened)
-                {
-                    foreach (var entry in component.RightClick.Entries)
-                    {
-                        if (entry.IsInside((int)MouseManager.X, (int)MouseManager.Y))
-                        {
-                            entry.BackColor = Kernel.DarkBlue;
-                            entry.TextColor = Kernel.WhiteColor;
-                        }
-                        else
-                        {
-                            entry.BackColor = Color.LightGray;
-                            entry.TextColor = Kernel.BlackColor;
-                        }
-                    }
-                    component.RightClick.Update();
-                }
-            }
+            MouseManager.Update();
+            MouseManager.DrawRightClick();
 
-            DrawCursor(MouseManager.X, MouseManager.Y);
+            DrawCursor(Cosmos.System.MouseManager.X, Cosmos.System.MouseManager.Y);
         }
 
         public static void DrawCursor(uint x, uint y)

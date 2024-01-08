@@ -1,10 +1,11 @@
-﻿using Cosmos.System.Graphics;
-using System;
+﻿/*
+* PROJECT:          Aura Operating System Development
+* CONTENT:          Resource Manager. Used to store icons
+* PROGRAMMERS:      Valentin Charbonnier <valentinbreiz@gmail.com>
+*/
+
+using Cosmos.System.Graphics;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Linq;
 
 namespace Aura_OS.System.Graphics
 {

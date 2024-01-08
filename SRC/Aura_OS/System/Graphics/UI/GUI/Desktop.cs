@@ -11,6 +11,7 @@ using Cosmos.System;
 using Aura_OS.System.Graphics.UI.GUI.Components;
 using Aura_OS.System.Processing.Application;
 using System.IO;
+using System.Drawing;
 
 namespace Aura_OS.System.Graphics.UI.GUI
 {
@@ -57,8 +58,6 @@ namespace Aura_OS.System.Graphics.UI.GUI
 
                 Kernel.Taskbar.UpdateApplicationButtons();
                 Kernel.WindowManager.UpdateFocusStatus();
-
-                RightClick.Opened = false;
             });
             rightClickEntries.Add(entry);
             RightClickEntry entry2 = new("OS Information", 0, 0, RightClick.Width);
@@ -78,8 +77,6 @@ namespace Aura_OS.System.Graphics.UI.GUI
 
                 Kernel.Taskbar.UpdateApplicationButtons();
                 Kernel.WindowManager.UpdateFocusStatus();
-
-                RightClick.Opened = false;
             });
             rightClickEntries.Add(entry2);
             RightClickEntry entry3 = new("Refresh Desktop", 0, 0, RightClick.Width);
