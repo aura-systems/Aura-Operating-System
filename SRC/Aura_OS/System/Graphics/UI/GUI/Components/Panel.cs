@@ -13,6 +13,7 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
         public Color Color1;
         public Color? Color2;
         public bool Borders = false;
+        public bool Background = true;
 
         public Panel(Color color, int x, int y, int width, int height) : base(x, y, width, height)
         {
@@ -27,13 +28,16 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
 
         public override void Update()
         {
-            if (Color2 == null)
+            if (Background)
             {
-                Kernel.canvas.DrawFilledRectangle(Color1, X, Y, Width, Height);
-            }
-            else
-            {
-                Utils.DrawGradient(Color1, Color2.Value, X, Y, Width, Height);
+                if (Color2 == null)
+                {
+                    Kernel.canvas.DrawFilledRectangle(Color1, X, Y, Width, Height);
+                }
+                else
+                {
+                    Utils.DrawGradient(Color1, Color2.Value, X, Y, Width, Height);
+                }
             }
 
             if (Borders)

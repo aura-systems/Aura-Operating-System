@@ -6,13 +6,11 @@
 
 using Aura_OS.System.Graphics;
 using Cosmos.System.Graphics;
-using System.IO;
 using Aura_OS.System.Graphics.UI.GUI.Components;
 using System;
 using Cosmos.System;
 using System.Collections.Generic;
 using System.Drawing;
-using Aura_OS.System.Filesystem;
 
 namespace Aura_OS.System.Processing.Application
 {
@@ -20,98 +18,39 @@ namespace Aura_OS.System.Processing.Application
     {
         public static string ApplicationName = "Explorer";
 
-        string CurrentPath = "";
         public bool Clicked = false;
         public bool RightClicked = false;
         public Panel TopPanel;
         public Panel LeftPanel;
-        public Panel MainPanel;
+        public FilesystemPanel MainPanel;
         Button SpaceButton;
         TextBox PathTextBox;
         Button Up;
-        List<Button> Buttons;
         List<Button> Disks;
 
-        private static string copyPath;
-
-        public Explorer(int width, int height, int x = 0, int y = 0) : base(ApplicationName, width, height, x, y)
+        public Explorer(string currentPath, int width, int height, int x = 0, int y = 0) : base(ApplicationName, width, height, x, y)
         {
             Window.Icon = ResourceManager.GetImage("16-explorer.bmp");
 
-            CurrentPath = Kernel.CurrentVolume;
             TopPanel = new Panel(Kernel.Gray, x + 1, y + 1, width - 6, 23);
             TopPanel.Borders = true;
             SpaceButton = new Button("", x + 3, y + Window.Height - 19, Window.Width - 6, 20);
             SpaceButton.Light = true;
-            MainPanel = new Panel(Kernel.WhiteColor, x + 1 + 75, y + 1 + 22, width - 7 - 75, Window.Height - Window.TopBar.Height - TopPanel.Height - SpaceButton.Height - 8);
+            MainPanel = new FilesystemPanel(currentPath, Color.Black, Kernel.WhiteColor, x + 1 + 75, y + 1 + 22, width - 7 - 75, Window.Height - Window.TopBar.Height - TopPanel.Height - SpaceButton.Height - 8);
             MainPanel.Borders = true;
-
-            MainPanel.RightClick = new RightClick((int)MouseManager.X, (int)MouseManager.Y, 200, 1 * RightClickEntry.ConstHeight);
-            List<RightClickEntry> rightClickEntries = new List<RightClickEntry>();
-
-            RightClickEntry entry2 = new("Open in Terminal", 0, 0, MainPanel.RightClick.Width);
-            entry2.Action = new Action(() =>
-            {
-                Kernel.CurrentDirectory = CurrentPath;
-                var app = new Terminal(700, 600, 40, 40);
-                Kernel.console = app;
-                app.Initialize();
-
-                Kernel.WindowManager.apps.Add(app);
-                app.zIndex = Kernel.WindowManager.GetTopZIndex() + 1;
-                Kernel.WindowManager.MarkStackDirty();
-
-                app.Visible = true;
-                app.Focused = true;
-
-                Kernel.ProcessManager.Start(app);
-
-                Kernel.Taskbar.UpdateApplicationButtons();
-                Kernel.WindowManager.UpdateFocusStatus();
-
-                MainPanel.RightClick.Opened = false;
-            });
-
-            rightClickEntries.Add(entry2);
-            RightClickEntry entryPaste = new("Paste", 0, 0, MainPanel.RightClick.Width);
-            entryPaste.Action = new Action(() =>
-            {
-                if (copyPath != null) 
-                {
-                    Entries.ForceCopy(copyPath, CurrentPath);
-                    UpdateCurrentFolder();
-                    copyPath = null;
-                }
-
-                MainPanel.RightClick.Opened = false;
-            });
-            rightClickEntries.Add(entryPaste);
-
-            RightClickEntry entryRefresh = new("Refresh", 0, 0, MainPanel.RightClick.Width);
-            entryRefresh.Action = new Action(() =>
-            {
-                PathTextBox.Text = CurrentPath;
-                UpdateCurrentFolder();
-
-                MainPanel.RightClick.Opened = false;
-            });
-            rightClickEntries.Add(entryRefresh);
-
-            MainPanel.RightClick.Entries = rightClickEntries;
 
             LeftPanel = new Panel(Kernel.WhiteColor, x + 1, y + 1 + 22, 75, Window.Height - Window.TopBar.Height - TopPanel.Height - SpaceButton.Height - 8);
             LeftPanel.Borders = true;
-            PathTextBox = new TextBox(x + 18 + 6, y + 3, width - 15 - 18, 18, CurrentPath);
-            Buttons = new List<Button>();
+            PathTextBox = new TextBox(x + 18 + 6, y + 3, width - 15 - 18, 18, MainPanel.CurrentPath);
             Up = new Button(ResourceManager.GetImage("16-up.bmp"), x + 3, y + 3, 18, 18);
             Up.Action = new Action(() =>
             {
-                CurrentPath = Filesystem.Utils.GetParentPath(CurrentPath);
-                PathTextBox.Text = CurrentPath;
-                UpdateCurrentFolder();
+                MainPanel.CurrentPath = Filesystem.Utils.GetParentPath(MainPanel.CurrentPath);
+                PathTextBox.Text = MainPanel.CurrentPath;
+                MainPanel.UpdateCurrentFolder(x, y, height);
             });
 
-            UpdateCurrentFolder();
+            MainPanel.UpdateCurrentFolder(x, y, height);
             UpdateDisks();
         }
 
@@ -141,132 +80,14 @@ namespace Aura_OS.System.Processing.Application
                 button.NoBackground = true;
                 button.Action = new Action(() =>
                 {
-                    CurrentPath = path;
+                    MainPanel.CurrentPath = path;
                     Kernel.CurrentVolume = path;
                     Kernel.CurrentDirectory = path;
                     PathTextBox.Text = path;
-                    UpdateCurrentFolder();
+                    MainPanel.UpdateCurrentFolder(x, y, height);
                 });
 
                 Disks.Add(button);
-            }
-        }
-
-        public void UpdateCurrentFolder()
-        {
-            int startX = 3;
-            int startY = 24 + 3;
-            int iconSpacing = 60;
-
-            int currentX = startX;
-            int currentY = startY;
-
-            string[] directories = Directory.GetDirectories(CurrentPath);
-            string[] files = Directory.GetFiles(CurrentPath);
-
-            Buttons.Clear();
-            foreach (string directory in directories)
-            {
-                string folderName = Path.GetFileName(directory);
-                var button = new FileButton(folderName, ResourceManager.GetImage("32-folder.bmp"), x + startX + currentX, y + currentY, 32, 32);
-                button.Action = new Action(() =>
-                {
-                    CurrentPath = CurrentPath + directory + "\\";
-                    PathTextBox.Text = CurrentPath;
-                    UpdateCurrentFolder();
-                });
-
-                button.RightClick = new RightClick((int)MouseManager.X, (int)MouseManager.Y, 200, 3 * RightClickEntry.ConstHeight);
-                List<RightClickEntry> rightClickEntries = new List<RightClickEntry>();
-                RightClickEntry entry = new("Open", 0, 0, button.RightClick.Width);
-                entry.Action = new Action(() =>
-                {
-                    string path = CurrentPath + folderName;
-                    PathTextBox.Text = path;
-                    CurrentPath = path;
-                    UpdateCurrentFolder();
-                    button.RightClick.Opened = false;
-                });
-                rightClickEntries.Add(entry);
-
-                RightClickEntry copyEntry = new("Copy", 0, 0, button.RightClick.Width);
-                copyEntry.Action = new Action(() =>
-                {
-                    string path = CurrentPath + folderName;
-                    copyPath = path;
-                    button.RightClick.Opened = false;
-                });
-                rightClickEntries.Add(copyEntry);
-
-                RightClickEntry entry2 = new("Delete", 0, 0, button.RightClick.Width);
-                entry2.Action = new Action(() =>
-                {
-                    Entries.ForceRemove(CurrentPath + folderName);
-                    UpdateCurrentFolder();
-                    button.RightClick.Opened = false;
-                });
-                rightClickEntries.Add(entry2);
-
-                button.RightClick.Entries = rightClickEntries;
-
-                Buttons.Add(button);
-
-                currentY += iconSpacing;
-                if (currentY + iconSpacing > height - 32)
-                {
-                    currentY = startY;
-                    currentX += iconSpacing;
-                }
-            }
-
-            foreach (string file in files)
-            {
-                string fileName = Path.GetFileName(file);
-                var button = new FileButton(fileName, ResourceManager.GetImage("32-file.bmp"), x + startX + currentX, y + currentY, 32, 32);
-                button.Action = new Action(() =>
-                {
-                    Kernel.ApplicationManager.StartFileApplication(fileName, CurrentPath);
-                });
-
-                button.RightClick = new RightClick((int)MouseManager.X, (int)MouseManager.Y, 200, 1 * RightClickEntry.ConstHeight);
-                List<RightClickEntry> rightClickEntries = new List<RightClickEntry>();
-
-                RightClickEntry entry = new("Open", 0, 0, button.RightClick.Width);
-                entry.Action = new Action(() =>
-                {
-                    Kernel.ApplicationManager.StartFileApplication(fileName, CurrentPath);
-                    button.RightClick.Opened = false;
-                });
-                rightClickEntries.Add(entry);
-
-                RightClickEntry copyEntry = new("Copy", 0, 0, button.RightClick.Width);
-                copyEntry.Action = new Action(() =>
-                {
-                    string path = CurrentPath + fileName;
-                    copyPath = path;
-                    button.RightClick.Opened = false;
-                });
-                rightClickEntries.Add(copyEntry);
-
-                RightClickEntry entry2 = new("Delete", 0, 0, button.RightClick.Width);
-                entry2.Action = new Action(() =>
-                {
-                    Entries.ForceRemove(CurrentPath + fileName);
-                    UpdateCurrentFolder();
-                    button.RightClick.Opened = false;
-                });
-                rightClickEntries.Add(entry2);
-
-                button.RightClick.Entries = rightClickEntries;
-
-                Buttons.Add(button);
-
-                currentY += iconSpacing;
-                if (currentY + iconSpacing > height - 32)
-                {
-                    currentY = startY;
-                    currentX += iconSpacing;
-                }
             }
         }
 
@@ -280,7 +101,8 @@ namespace Aura_OS.System.Processing.Application
             LeftPanel.Update();
             MainPanel.X = x + 1 + 75;
             MainPanel.Y = y + TopPanel.Height;
-            MainPanel.Update();
+            MainPanel.Update(x + 78, y, height);
+            PathTextBox.Text = MainPanel.CurrentPath;
             PathTextBox.X = x + 9 + 18;
             PathTextBox.Y = y + 3;
             PathTextBox.Update();
@@ -294,32 +116,10 @@ namespace Aura_OS.System.Processing.Application
 
             int startX = 3;
             int startY = 24 + 3;
-            int iconSpacing = 60;
+            int iconSpacing = 19;
 
             int currentX = startX;
             int currentY = startY;
-
-            foreach (var button in Buttons)
-            {
-                button.X = x + 78 + startX + currentX;
-                button.Y = y + currentY;
-
-                currentY += iconSpacing;
-                if (currentY + iconSpacing > height - 32)
-                {
-                    currentY = startY;
-                    currentX += iconSpacing;
-                }
-
-                button.Update();
-            }
-
-            startX = 3;
-            startY = 24 + 3;
-            iconSpacing = 19;
-
-            currentX = startX;
-            currentY = startY;
 
             foreach (var button in Disks)
             {
@@ -335,71 +135,6 @@ namespace Aura_OS.System.Processing.Application
 
                 button.Update();
             }
-
-            foreach (var button in Buttons)
-            {
-                if (button.RightClick.Opened)
-                {
-                    foreach (var entry in button.RightClick.Entries)
-                    {
-                        if (entry.IsInside((int)MouseManager.X, (int)MouseManager.Y))
-                        {
-                            entry.BackColor = Kernel.DarkBlue;
-                            entry.TextColor = Kernel.WhiteColor;
-                        }
-                        else
-                        {
-                            entry.BackColor = Color.LightGray;
-                            entry.TextColor = Kernel.BlackColor;
-                        }
-                    }
-                    button.RightClick.Update();
-
-                    return;
-                }
-            }
-
-            if (MainPanel.RightClick.Opened)
-            {
-                foreach (var entry in MainPanel.RightClick.Entries)
-                {
-                    if (entry.IsInside((int)MouseManager.X, (int)MouseManager.Y))
-                    {
-                        entry.BackColor = Kernel.DarkBlue;
-                        entry.TextColor = Kernel.WhiteColor;
-                    }
-                    else
-                    {
-                        entry.BackColor = Color.LightGray;
-                        entry.TextColor = Kernel.BlackColor;
-                    }
-                }
-                MainPanel.RightClick.Update();
-            }
-        }
-
-        public override void HandleRightClick()
-        {
-            base.HandleRightClick();
-
-            foreach (var button in Buttons)
-            {
-                if (button.IsInside((int)MouseManager.X, (int)MouseManager.Y))
-                {
-                    button.RightClick.X = (int)MouseManager.X;
-                    button.RightClick.Y = (int)MouseManager.Y;
-                    button.RightClick.Opened = true;
-                    return;
-                }
-            }
-
-            if (MainPanel.IsInside((int)MouseManager.X, (int)MouseManager.Y))
-            {
-                MainPanel.RightClick.X = (int)MouseManager.X;
-                MainPanel.RightClick.Y = (int)MouseManager.Y;
-                MainPanel.RightClick.Opened = true;
-                return;
-            }
         }
 
         public override void HandleLeftClick()
@@ -410,32 +145,6 @@ namespace Aura_OS.System.Processing.Application
             {
                 Up.Action();
                 return;
-            }
-
-            foreach (var button in Buttons)
-            {
-                if (button.RightClick.Opened)
-                {
-                    button.RightClick.Opened = false;
-
-                    foreach (var entry in button.RightClick.Entries)
-                    {
-                        if (entry.IsInside((int)MouseManager.X, (int)MouseManager.Y))
-                        {
-                            entry.Action();
-                            return;
-                        }
-                    }
-                }
-
-                if (button.IsInside((int)MouseManager.X, (int)MouseManager.Y))
-                {
-                    if (button.Action != null)
-                    {
-                        button.Action();
-                        return;
-                    }
-                }
             }
 
             foreach (var button in Disks)
@@ -450,48 +159,14 @@ namespace Aura_OS.System.Processing.Application
                 }
             }
 
-            foreach (var button in MainPanel.RightClick.Entries)
-            {
-                if (button.IsInside((int)MouseManager.X, (int)MouseManager.Y))
-                {
-                    if (button.Action != null)
-                    {
-                        button.Action();
-                        return;
-                    }
-                }
-            }
-
-            if (MainPanel.RightClick != null)
-            {
-                MainPanel.RightClick.Opened = false;
-            }
-        }
-    }
-
-    public class FileButton : Button
-    {
-        public string FileName { get; private set; }
-        public string FilePath { get; private set; }
-        public Bitmap Icon { get; private set; }
-        public int X { get; private set; }
-        public int Y { get; private set; }
-
-        public FileButton(string filePath, Bitmap icon, int x, int y, int width, int height)
-            : base(icon, x, y, width, height)
-        {
-            NoBorder = true;
-            NoBackground = true;
-            FileName = filePath;
-            Icon = icon;
-            X = x;
-            Y = y;
+            MainPanel.HandleLeftClick();
         }
 
-        public override void Update()
+        public override void HandleRightClick()
         {
-            base.Update();
-            Kernel.canvas.DrawString(FileName, Kernel.font, Kernel.BlackColor, base.X, base.Y + 35);
+            base.HandleRightClick();
+
+            MainPanel.HandleRightClick();
         }
     }
 }

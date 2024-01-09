@@ -13,7 +13,7 @@ namespace Aura_OS.System.Graphics.UI.GUI
 {
     public class Taskbar : Process
     {
-        int taskbarHeight = 33;
+        public int taskbarHeight = 33;
         int startY;
 
         Button StartButton;

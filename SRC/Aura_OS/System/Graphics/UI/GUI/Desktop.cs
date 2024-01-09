@@ -4,47 +4,34 @@
 * PROGRAMMERS:      Valentin Charbonnier <valentinbreiz@gmail.com>
 */
 
-using Cosmos.System.Graphics;
 using System;
-using System.Collections.Generic;
-using Cosmos.System;
 using Aura_OS.System.Graphics.UI.GUI.Components;
 using Aura_OS.System.Processing.Application;
-using System.IO;
 using System.Drawing;
+using Aura_OS.System.Filesystem;
+using System.Collections.Generic;
+using Cosmos.System;
 
 namespace Aura_OS.System.Graphics.UI.GUI
 {
-    public class DesktopIcon
-    {
-        public Bitmap Icon { get; set; }
-        public string Label { get; set; }
-        public int X { get; set; }
-        public int Y { get; set; }
-
-        public DesktopIcon(Bitmap icon, string label, int x, int y)
-        {
-            Icon = icon;
-            Label = label;
-            X = x;
-            Y = y;
-        }
-    }
-
     public class Desktop : Component
     {
-        private List<string> directories;
-        private List<string> files;
-        private List<DesktopIcon> iconPositions;
+        public FilesystemPanel MainPanel;
 
         public Desktop(int x, int y, int width, int height) : base(x, y, width, height)
         {
-            RightClick = new RightClick((int)MouseManager.X, (int)MouseManager.Y, 200, 3 * RightClickEntry.ConstHeight);
+            MainPanel = new FilesystemPanel(Kernel.CurrentVolume, Color.White, Kernel.WhiteColor, x + 4, y + 16 + 4, width - 7 - 75, height - Kernel.Taskbar.taskbarHeight);
+            MainPanel.OpenNewWindow = true;
+            MainPanel.Borders = false;
+            MainPanel.Background = false;
+
+            MainPanel.RightClick = new RightClick((int)MouseManager.X, (int)MouseManager.Y, 200, 5 * RightClickEntry.ConstHeight);
             List<RightClickEntry> rightClickEntries = new List<RightClickEntry>();
-            RightClickEntry entry = new("Open in Explorer", 0, 0, RightClick.Width);
+
+            RightClickEntry entry = new("Open in Explorer", 0, 0, MainPanel.RightClick.Width);
             entry.Action = new Action(() =>
             {
-                Explorer app = new(500, 400, 40, 40);
+                Explorer app = new(Kernel.CurrentVolume, 500, 400, 40, 40);
                 app.Initialize();
 
                 Kernel.WindowManager.apps.Add(app);
@@ -60,8 +47,31 @@ namespace Aura_OS.System.Graphics.UI.GUI
                 Kernel.WindowManager.UpdateFocusStatus();
             });
             rightClickEntries.Add(entry);
-            RightClickEntry entry2 = new("OS Information", 0, 0, RightClick.Width);
+
+            RightClickEntry entry2 = new("Open in Terminal", 0, 0, MainPanel.RightClick.Width);
             entry2.Action = new Action(() =>
+            {
+                var app = new Terminal(700, 600, 40, 40);
+                Kernel.console = app;
+                app.Initialize();
+
+                Kernel.WindowManager.apps.Add(app);
+                app.zIndex = Kernel.WindowManager.GetTopZIndex() + 1;
+                Kernel.WindowManager.MarkStackDirty();
+
+                app.Visible = true;
+                app.Focused = true;
+
+                Kernel.ProcessManager.Start(app);
+
+                Kernel.Taskbar.UpdateApplicationButtons();
+                Kernel.WindowManager.UpdateFocusStatus();
+            });
+
+            rightClickEntries.Add(entry2);
+
+            RightClickEntry entryInfo = new("OS Information", 0, 0, MainPanel.RightClick.Width);
+            entryInfo.Action = new Action(() =>
             {
                 SystemInfo app = new(402, 360, 40, 40);
                 app.Initialize();
@@ -78,18 +88,31 @@ namespace Aura_OS.System.Graphics.UI.GUI
                 Kernel.Taskbar.UpdateApplicationButtons();
                 Kernel.WindowManager.UpdateFocusStatus();
             });
-            rightClickEntries.Add(entry2);
-            RightClickEntry entry3 = new("Refresh Desktop", 0, 0, RightClick.Width);
-            entry3.Action = new Action(() =>
+            rightClickEntries.Add(entryInfo);
+
+            RightClickEntry entryPaste = new("Paste", 0, 0, MainPanel.RightClick.Width);
+            entryPaste.Action = new Action(() =>
             {
-                RefreshDesktop();
-
-                RightClick.Opened = false;
+                if (Kernel.Clipboard != null)
+                {
+                    Entries.ForceCopy(Kernel.Clipboard, MainPanel.CurrentPath);
+                    MainPanel.UpdateCurrentFolder(x, y, height);
+                    Kernel.Clipboard = null;
+                }
             });
-            rightClickEntries.Add(entry3);
-            RightClick.Entries = rightClickEntries;
+            rightClickEntries.Add(entryPaste);
 
-            RefreshDesktop();
+            RightClickEntry entryRefresh = new("Refresh Desktop", 0, 0, MainPanel.RightClick.Width);
+            entryRefresh.Action = new Action(() =>
+            {
+                MainPanel.CurrentPath = Kernel.CurrentVolume;
+                MainPanel.UpdateCurrentFolder(x, y, height);
+            });
+            rightClickEntries.Add(entryRefresh);
+
+            MainPanel.RightClick.Entries = rightClickEntries;
+
+            MainPanel.UpdateCurrentFolder(x, y, height);
         }
 
         public override void Draw()
@@ -99,72 +122,21 @@ namespace Aura_OS.System.Graphics.UI.GUI
 
             Kernel.canvas.DrawImage(Kernel.wallpaper, X, Y);
 
-            DrawDesktopItems();
+            MainPanel.Update(X, Y, Height);
         }
 
-        private void ReadDirectoriesAndFiles()
+        public override void HandleLeftClick()
         {
-            directories = new List<string>(Directory.GetDirectories(Kernel.CurrentVolume));
-            files = new List<string>(Directory.GetFiles(Kernel.CurrentVolume));
+            base.HandleLeftClick();
+
+            MainPanel.HandleLeftClick();
         }
 
-        private void RefreshDesktop()
+        public override void HandleRightClick()
         {
-            if (Kernel.VirtualFileSystem != null && Kernel.VirtualFileSystem.GetVolumes().Count > 0)
-            {
-                ReadDirectoriesAndFiles();
-                CalculateIconPositions();
-            }
-        }
+            base.HandleRightClick();
 
-        private void CalculateIconPositions()
-        {
-            iconPositions = new();
-
-            int startX = 10;
-            int startY = 40;
-            int iconSpacing = 60;
-
-            int currentX = startX;
-            int currentY = startY;
-
-            foreach (string directory in directories)
-            {
-                string folderName = Path.GetFileName(directory);
-                iconPositions.Add(new DesktopIcon(ResourceManager.GetImage("32-folder.bmp"), folderName, currentX, currentY));
-                UpdatePosition(ref currentX, ref currentY, iconSpacing);
-            }
-
-            foreach (string file in files)
-            {
-                string fileName = Path.GetFileName(file);
-                iconPositions.Add(new DesktopIcon(ResourceManager.GetImage("32-file.bmp"), fileName, currentX, currentY));
-                UpdatePosition(ref currentX, ref currentY, iconSpacing);
-            }
-        }
-
-        private void UpdatePosition(ref int x, ref int y, int spacing)
-        {
-            y += spacing;
-            if (y + spacing > Kernel.screenHeight - 64)
-            {
-                y = 40;
-                x += spacing;
-            }
-        }
-
-        public void DrawDesktopItems()
-        {
-            foreach (var iconInfo in iconPositions)
-            {
-                DrawIconAndText(iconInfo.Icon, iconInfo.Label, iconInfo.X, iconInfo.Y);
-            }
-        }
-
-        private void DrawIconAndText(Bitmap bitmap, string text, int x, int y)
-        {
-            Kernel.canvas.DrawImageAlpha(bitmap, x + 6, y);
-            Kernel.canvas.DrawString(text, Kernel.font, Kernel.WhiteColor, x, y + 35);
+            MainPanel.HandleRightClick();
         }
     }
 }

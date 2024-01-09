@@ -42,6 +42,8 @@ namespace Aura_OS
         public static string langSelected = "en_US";
         public static string BootTime = "01/01/1970";
 
+        public static string Clipboard { get; internal set; }
+
         public static string CurrentVolume = @"0:\";
         public static string CurrentDirectory = @"0:\";
 
