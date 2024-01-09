@@ -205,31 +205,6 @@ namespace Aura_OS.System.Processing.Application
 
         public override void UpdateApp()
         {
-            if (MouseManager.MouseState == MouseState.Left)
-            {
-                if (!Clicked)
-                {
-                    Clicked = true;
-                }
-            }
-            else if (MouseManager.MouseState == MouseState.Right)
-            {
-                if (!RightClicked)
-                {
-                    RightClicked = true;
-                }
-            }
-            else if (Clicked)
-            {
-                Clicked = false;
-                HandleClick();
-            }
-            else if (RightClicked)
-            {
-                RightClicked = false;
-                HandleRightClick();
-            }
-
             TopPanel.X = x + 1;
             TopPanel.Y = y + 1;
             TopPanel.Update();
@@ -336,8 +311,10 @@ namespace Aura_OS.System.Processing.Application
             }
         }
 
-        private void HandleRightClick()
+        public override void HandleRightClick()
         {
+            base.HandleRightClick();
+
             foreach (var button in Buttons)
             {
                 if (button.IsInside((int)MouseManager.X, (int)MouseManager.Y))
@@ -358,8 +335,10 @@ namespace Aura_OS.System.Processing.Application
             }
         }
 
-        private void HandleClick()
+        public override void HandleLeftClick()
         {
+            base.HandleLeftClick();
+
             if (Up.IsInside((int)MouseManager.X, (int)MouseManager.Y))
             {
                 Up.Action();

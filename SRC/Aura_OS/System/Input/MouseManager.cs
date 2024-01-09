@@ -29,15 +29,16 @@ namespace Aura_OS.System.Input
                 case MouseState.Left:
                     if (!LeftClicked)
                     {
+                        DetermineTopComponentForLeftClick();
+                        LeftClicked = true;
                         if (component != null)
                         {
                             if (component.RightClick != null && component.RightClick.Opened)
                             {
-                                DetermineTopComponentForLeftClick();
+                                component.RightClick.Opened = false;
                             }
                             component = null;
                         }
-                        LeftClicked = true;
                     }
                     RightClicked = false;
                     Kernel.Pressed = true;
@@ -86,7 +87,7 @@ namespace Aura_OS.System.Input
 
             if (topApplication != null)
             {
-                topApplication.Window.HandleLeftClick();
+                topApplication.HandleLeftClick();
             }
             else
             {
@@ -110,7 +111,7 @@ namespace Aura_OS.System.Input
 
             if (topApplication != null)
             {
-                topApplication.Window.HandleRightClick();
+                topApplication.HandleRightClick();
             }
             else
             {

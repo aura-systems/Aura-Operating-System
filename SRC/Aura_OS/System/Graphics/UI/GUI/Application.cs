@@ -10,6 +10,7 @@ using Aura_OS.Processing;
 using Aura_OS.System.Graphics.UI.GUI.Components;
 using System;
 using Aura_OS.System.Processing.Application;
+using System.Collections.Generic;
 
 namespace Aura_OS.System.Graphics.UI.GUI
 {
@@ -60,11 +61,44 @@ namespace Aura_OS.System.Graphics.UI.GUI
                 }
             });
 
+            Window.TopBar.RightClick = new RightClick((int)MouseManager.X, (int)MouseManager.Y, 200, 2 * RightClickEntry.ConstHeight);
+            List<RightClickEntry> rightClickEntries = new List<RightClickEntry>();
+            RightClickEntry entry = new("Close", 0, 0, Window.TopBar.RightClick.Width);
+            entry.Action = new Action(() =>
+            {
+                Window.Close.Action();
+            });
+            rightClickEntries.Add(entry);
+            RightClickEntry entry2 = new("Minimize", 0, 0, Window.TopBar.RightClick.Width);
+            entry2.Action = new Action(() =>
+            {
+                Window.Minimize.Action();
+            });
+            rightClickEntries.Add(entry2);
+            Window.TopBar.RightClick.Entries = rightClickEntries;
+
             this.x = x + 3;
             this.y = y + Window.TopBar.Height + 3;
             this.width = width - 4;
             this.height = height - (Window.TopBar.Height + 4);
         }
+
+        public virtual void HandleLeftClick()
+        {
+            if (Window.TopBar.IsInside((int)MouseManager.X, (int)MouseManager.Y))
+            {
+                Window.TopBar.HandleLeftClick();
+            }
+        }
+
+        public virtual void HandleRightClick()
+        {
+            if (Window.TopBar.IsInside((int)MouseManager.X, (int)MouseManager.Y))
+            {
+                Window.TopBar.HandleRightClick();
+            }
+        }
+
 
         public virtual void UpdateApp() { }
 
