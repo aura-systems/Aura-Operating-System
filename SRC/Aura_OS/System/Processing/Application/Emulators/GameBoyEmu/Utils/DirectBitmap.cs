@@ -17,6 +17,13 @@ namespace Aura_OS.System.Processing.Application.Emulators.GameBoyEmu.Utils
             Bitmap = new Bitmap((uint)Width, (uint)Height, ColorDepth.ColorDepth32);
         }
 
+        public DirectBitmap(int width, int height)
+        {
+            Width = width;
+            Height = height;
+            Bitmap = new Bitmap((uint)Width, (uint)Height, ColorDepth.ColorDepth32);
+        }
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void SetPixel(int x, int y, int colour)
         {
