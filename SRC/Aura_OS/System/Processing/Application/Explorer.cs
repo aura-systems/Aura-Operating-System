@@ -13,7 +13,6 @@ using Cosmos.System;
 using System.Collections.Generic;
 using System.Drawing;
 using Aura_OS.System.Filesystem;
-using static Cosmos.HAL.PCIDevice;
 
 namespace Aura_OS.System.Processing.Application
 {
