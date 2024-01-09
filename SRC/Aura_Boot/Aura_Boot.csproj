@@ -12,7 +12,7 @@
         <DebugMode>Source</DebugMode>
         <IgnoreDebugStubAttribute>False</IgnoreDebugStubAttribute>
         <ISOFile>bin\Debug\net6.0\Aura_Boot.iso</ISOFile>
-        <CompileVBEMultiboot>False</CompileVBEMultiboot>
+        <CompileVBEMultiboot>True</CompileVBEMultiboot>
         <ExtractMapFile>False</ExtractMapFile>
         <Launch>VMware</Launch>
         <VisualStudioDebugPort>Pipe: Cosmos\Serial</VisualStudioDebugPort>
@@ -20,9 +20,10 @@
         <VMwareEdition>Workstation</VMwareEdition>
         <EnableGDB>False</EnableGDB>
         <StartCosmosGDB>False</StartCosmosGDB>
-        <VBEResolution>800x600x32</VBEResolution>
+        <VBEResolution>1920x1080x32</VBEResolution>
         <OptimizationLevel>3</OptimizationLevel>
         <Timeout>0</Timeout>
+        <RemoveBootDebugOutput>True</RemoveBootDebugOutput>
     </PropertyGroup>
 
     <ItemGroup>

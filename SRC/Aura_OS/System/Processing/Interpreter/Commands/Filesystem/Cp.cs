@@ -5,6 +5,7 @@
 *                   Valentin Charbonnier <valentinbreiz@gmail.com>
 */
 
+using Aura_OS.System.Filesystem;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -33,43 +34,19 @@ namespace Aura_OS.System.Processing.Interpreter.Commands.Filesystem
 
             try
             {
-                if (File.Exists(sourcePath))
+                if (Entries.ForceCopy(sourcePath, destPath))
                 {
-                    File.Copy(sourcePath, destPath, overwrite: true);
-                }
-                else if (Directory.Exists(sourcePath))
-                {
-                    CopyDirectory(sourcePath, destPath);
+                    return new ReturnInfo(this, ReturnCode.OK);
                 }
                 else
                 {
-                    Console.WriteLine("Source path does not exist!");
-                    return new ReturnInfo(this, ReturnCode.ERROR);
+                    return new ReturnInfo(this, ReturnCode.ERROR, "Failed to copy.");
                 }
-
-                return new ReturnInfo(this, ReturnCode.OK);
             }
             catch (Exception ex)
             {
                 Console.WriteLine("Error: " + ex.Message);
                 return new ReturnInfo(this, ReturnCode.ERROR);
-            }
-        }
-
-        private void CopyDirectory(string sourceDir, string destDir)
-        {
-            Directory.CreateDirectory(destDir);
-
-            foreach (var file in Directory.GetFiles(sourceDir))
-            {
-                string dest = Path.Combine(destDir, Path.GetFileName(file));
-                File.Copy(file, dest);
-            }
-
-            foreach (var directory in Directory.GetDirectories(sourceDir))
-            {
-                string dest = Path.Combine(destDir, Path.GetFileName(directory));
-                CopyDirectory(directory, dest);
             }
         }
 

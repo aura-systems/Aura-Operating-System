@@ -33,6 +33,8 @@ namespace Aura_OS.System.Processing.Application
         List<Button> Buttons;
         List<Button> Disks;
 
+        private static string copyPath;
+
         public Explorer(int width, int height, int x = 0, int y = 0) : base(ApplicationName, width, height, x, y)
         {
             Window.Icon = ResourceManager.GetImage("16-explorer.bmp");
@@ -44,8 +46,10 @@ namespace Aura_OS.System.Processing.Application
             SpaceButton.Light = true;
             MainPanel = new Panel(Kernel.WhiteColor, x + 1 + 75, y + 1 + 22, width - 7 - 75, Window.Height - Window.TopBar.Height - TopPanel.Height - SpaceButton.Height - 8);
             MainPanel.Borders = true;
+
             MainPanel.RightClick = new RightClick((int)MouseManager.X, (int)MouseManager.Y, 200, 1 * RightClickEntry.ConstHeight);
             List<RightClickEntry> rightClickEntries = new List<RightClickEntry>();
+
             RightClickEntry entry2 = new("Open in Terminal", 0, 0, MainPanel.RightClick.Width);
             entry2.Action = new Action(() =>
             {
@@ -68,8 +72,34 @@ namespace Aura_OS.System.Processing.Application
 
                 MainPanel.RightClick.Opened = false;
             });
+
             rightClickEntries.Add(entry2);
+            RightClickEntry entryPaste = new("Paste", 0, 0, MainPanel.RightClick.Width);
+            entryPaste.Action = new Action(() =>
+            {
+                if (copyPath != null) 
+                {
+                    Entries.ForceCopy(copyPath, CurrentPath);
+                    UpdateCurrentFolder();
+                    copyPath = null;
+                }
+
+                MainPanel.RightClick.Opened = false;
+            });
+            rightClickEntries.Add(entryPaste);
+
+            RightClickEntry entryRefresh = new("Refresh", 0, 0, MainPanel.RightClick.Width);
+            entryRefresh.Action = new Action(() =>
+            {
+                PathTextBox.Text = CurrentPath;
+                UpdateCurrentFolder();
+
+                MainPanel.RightClick.Opened = false;
+            });
+            rightClickEntries.Add(entryRefresh);
+
             MainPanel.RightClick.Entries = rightClickEntries;
+
             LeftPanel = new Panel(Kernel.WhiteColor, x + 1, y + 1 + 22, 75, Window.Height - Window.TopBar.Height - TopPanel.Height - SpaceButton.Height - 8);
             LeftPanel.Borders = true;
             PathTextBox = new TextBox(x + 18 + 6, y + 3, width - 15 - 18, 18, CurrentPath);
@@ -81,6 +111,7 @@ namespace Aura_OS.System.Processing.Application
                 PathTextBox.Text = CurrentPath;
                 UpdateCurrentFolder();
             });
+
             UpdateCurrentFolder();
             UpdateDisks();
         }
@@ -89,10 +120,12 @@ namespace Aura_OS.System.Processing.Application
         {
             Disks = new List<Button>();
             var vols = Kernel.VirtualFileSystem.GetVolumes();
+
             foreach (var vol in vols)
             {
                 string path = vol.mName;
                 Bitmap icon = null;
+
                 if (Kernel.VirtualFileSystem.GetFileSystemType(vol.mName).Equals("ISO9660"))
                 {
                     icon = ResourceManager.GetImage("16-drive-readonly.bmp");
@@ -101,6 +134,7 @@ namespace Aura_OS.System.Processing.Application
                 {
                     icon = ResourceManager.GetImage("16-drive.bmp");
                 }
+
                 var button = new Button(icon, path, x, y + y, 16 + path.Length * 8, 16);
                 button.TextColor = Color.Black;
                 button.Text = path;
@@ -114,6 +148,7 @@ namespace Aura_OS.System.Processing.Application
                     PathTextBox.Text = path;
                     UpdateCurrentFolder();
                 });
+
                 Disks.Add(button);
             }
         }
@@ -142,12 +177,11 @@ namespace Aura_OS.System.Processing.Application
                     UpdateCurrentFolder();
                 });
 
-                button.RightClick = new RightClick((int)MouseManager.X, (int)MouseManager.Y, 200, 2 * RightClickEntry.ConstHeight);
+                button.RightClick = new RightClick((int)MouseManager.X, (int)MouseManager.Y, 200, 3 * RightClickEntry.ConstHeight);
                 List<RightClickEntry> rightClickEntries = new List<RightClickEntry>();
                 RightClickEntry entry = new("Open", 0, 0, button.RightClick.Width);
                 entry.Action = new Action(() =>
                 {
-                    string error;
                     string path = CurrentPath + folderName;
                     PathTextBox.Text = path;
                     CurrentPath = path;
@@ -155,6 +189,16 @@ namespace Aura_OS.System.Processing.Application
                     button.RightClick.Opened = false;
                 });
                 rightClickEntries.Add(entry);
+
+                RightClickEntry copyEntry = new("Copy", 0, 0, button.RightClick.Width);
+                copyEntry.Action = new Action(() =>
+                {
+                    string path = CurrentPath + folderName;
+                    copyPath = path;
+                    button.RightClick.Opened = false;
+                });
+                rightClickEntries.Add(copyEntry);
+
                 RightClickEntry entry2 = new("Delete", 0, 0, button.RightClick.Width);
                 entry2.Action = new Action(() =>
                 {
@@ -163,6 +207,7 @@ namespace Aura_OS.System.Processing.Application
                     button.RightClick.Opened = false;
                 });
                 rightClickEntries.Add(entry2);
+
                 button.RightClick.Entries = rightClickEntries;
 
                 Buttons.Add(button);
@@ -183,15 +228,38 @@ namespace Aura_OS.System.Processing.Application
                 {
                     Kernel.ApplicationManager.StartFileApplication(fileName, CurrentPath);
                 });
+
                 button.RightClick = new RightClick((int)MouseManager.X, (int)MouseManager.Y, 200, 1 * RightClickEntry.ConstHeight);
                 List<RightClickEntry> rightClickEntries = new List<RightClickEntry>();
+
                 RightClickEntry entry = new("Open", 0, 0, button.RightClick.Width);
                 entry.Action = new Action(() =>
                 {
                     Kernel.ApplicationManager.StartFileApplication(fileName, CurrentPath);
+                    button.RightClick.Opened = false;
                 });
                 rightClickEntries.Add(entry);
+
+                RightClickEntry copyEntry = new("Copy", 0, 0, button.RightClick.Width);
+                copyEntry.Action = new Action(() =>
+                {
+                    string path = CurrentPath + fileName;
+                    copyPath = path;
+                    button.RightClick.Opened = false;
+                });
+                rightClickEntries.Add(copyEntry);
+
+                RightClickEntry entry2 = new("Delete", 0, 0, button.RightClick.Width);
+                entry2.Action = new Action(() =>
+                {
+                    Entries.ForceRemove(CurrentPath + fileName);
+                    UpdateCurrentFolder();
+                    button.RightClick.Opened = false;
+                });
+                rightClickEntries.Add(entry2);
+
                 button.RightClick.Entries = rightClickEntries;
+
                 Buttons.Add(button);
 
                 currentY += iconSpacing;
@@ -347,14 +415,17 @@ namespace Aura_OS.System.Processing.Application
 
             foreach (var button in Buttons)
             {
-                button.RightClick.Opened = false;
-
-                foreach (var entry in button.RightClick.Entries)
+                if (button.RightClick.Opened)
                 {
-                    if (entry.IsInside((int)MouseManager.X, (int)MouseManager.Y))
+                    button.RightClick.Opened = false;
+
+                    foreach (var entry in button.RightClick.Entries)
                     {
-                        entry.Action();
-                        return;
+                        if (entry.IsInside((int)MouseManager.X, (int)MouseManager.Y))
+                        {
+                            entry.Action();
+                            return;
+                        }
                     }
                 }
 
@@ -369,6 +440,18 @@ namespace Aura_OS.System.Processing.Application
             }
 
             foreach (var button in Disks)
+            {
+                if (button.IsInside((int)MouseManager.X, (int)MouseManager.Y))
+                {
+                    if (button.Action != null)
+                    {
+                        button.Action();
+                        return;
+                    }
+                }
+            }
+
+            foreach (var button in MainPanel.RightClick.Entries)
             {
                 if (button.IsInside((int)MouseManager.X, (int)MouseManager.Y))
                 {
