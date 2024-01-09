@@ -131,9 +131,27 @@ namespace Aura_OS.System.Processing.Application
                 Kernel.Taskbar.UpdateApplicationButtons();
                 Kernel.WindowManager.UpdateFocusStatus();
             }
-            else
+            else if (fileName.EndsWith(".gb"))
             {
+                string path = currentPath + fileName;
+                string name = fileName;
+                byte[] bytes = File.ReadAllBytes(path);
 
+                var app = new GameBoyEmu(bytes, name, 160 + 4, 144 + 22, 40, 40);
+
+                app.Initialize();
+
+                Kernel.WindowManager.apps.Add(app);
+                app.zIndex = Kernel.WindowManager.GetTopZIndex() + 1;
+                Kernel.WindowManager.MarkStackDirty();
+
+                app.Visible = true;
+                app.Focused = true;
+
+                Kernel.ProcessManager.Start(app);
+
+                Kernel.Taskbar.UpdateApplicationButtons();
+                Kernel.WindowManager.UpdateFocusStatus();
             }
         }
     }
