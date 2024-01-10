@@ -33,20 +33,5 @@ namespace ManagedDoom
                 "DOOM.WAD",
                 "DOOM1.WAD"
             };
-
-        public static SfmlMusic GetSfmlMusicInstance(Config config, Wad wad)
-        {
-            return null;
-            // TODO: load music
-            /*var sfPath = Path.Combine(GetExeDirectory(), "TimGM6mb.sf2");
-            if (File.Exists(sfPath))
-            {
-                return new SfmlMusic(config, wad, sfPath);
-            }
-            else
-            {
-                return null;
-            }*/
-        }
     }
 }

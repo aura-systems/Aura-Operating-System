@@ -38,8 +38,6 @@ namespace ManagedDoom
 
         private CommonResource resource;
         private SfmlRenderer renderer;
-        private SfmlSound sound;
-        private SfmlMusic music;
         private SfmlUserInput userInput;
 
         private static List<DoomEvent> Events { get; set; }
@@ -110,12 +108,12 @@ namespace ManagedDoom
 
                 if (!args.nosound.Present && !args.nosfx.Present)
                 {
-                    sound = new SfmlSound(config, resource.Wad);
+
                 }
 
                 if (!args.nosound.Present && !args.nomusic.Present)
                 {
-                    music = ConfigUtilities.GetSfmlMusicInstance(config, resource.Wad);
+
                 }
 
                 userInput = new SfmlUserInput(config, window, !args.nomouse.Present);
@@ -127,8 +125,7 @@ namespace ManagedDoom
                 options.GameMode = resource.Wad.GameMode;
                 options.MissionPack = resource.Wad.MissionPack;
                 options.Renderer = renderer;
-                options.Sound = sound;
-                options.Music = music;
+
                 options.UserInput = userInput;
 
                 menu = new DoomMenu(this);
@@ -614,17 +611,7 @@ namespace ManagedDoom
                 userInput = null;
             }
 
-            if (music != null)
-            {
-                music.Dispose();
-                music = null;
-            }
 
-            if (sound != null)
-            {
-                sound.Dispose();
-                sound = null;
-            }
 
             if (renderer != null)
             {
