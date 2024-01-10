@@ -171,14 +171,30 @@ namespace ManagedDoom
 
         private static string[] GetValues(string[] args, string name)
         {
-            return args
-                .SkipWhile(arg => arg != name)
-                .Skip(1)
-                .TakeWhile(arg => arg[0] != '-')
-                .ToArray();
+            List<string> result = new List<string>();
+            bool nameFound = false;
+
+            foreach (string arg in args)
+            {
+                if (!nameFound)
+                {
+                    if (arg == name)
+                    {
+                        nameFound = true;
+                    }
+                }
+                else
+                {
+                    if (arg.StartsWith("-"))
+                    {
+                        break;
+                    }
+                    result.Add(arg);
+                }
+            }
+
+            return result.ToArray();
         }
-
-
 
         public class Arg
         {
