@@ -70,8 +70,7 @@ namespace ManagedDoom
                     name = "E" + options.Episode + "M" + options.Map;
                 }
 
-                Console.Write("Load map '" + name + "': ");
-                Console.ReadKey();
+                Aura_OS.System.Processing.Application.DoomApp.debugger.Write("Load map '" + name + "': ");
 
                 var map = wad.GetLumpNumber(name);
 
@@ -115,12 +114,11 @@ namespace ManagedDoom
                     title = DoomInfo.MapTitles.Doom[options.Episode - 1][options.Map - 1];
                 }
 
-                Console.WriteLine("OK");
-                Console.ReadKey();
+                Aura_OS.System.Processing.Application.DoomApp.debugger.WriteLine("OK");
             }
             catch (Exception e)
             {
-                Console.WriteLine("Failed");
+                Aura_OS.System.Processing.Application.DoomApp.debugger.WriteLine("Failed");
                 ExceptionDispatchInfo.Throw(e);
             }
         }

@@ -260,7 +260,7 @@ namespace ManagedDoom
             }
 
             DoEvents();
-            //Console.WriteLine("events: {0} ms", (float)(watch.ElapsedMilliseconds) / 1000);
+            //Aura_OS.System.Processing.Application.DoomApp.debugger.WriteLine("events: {0} ms", (float)(watch.ElapsedMilliseconds) / 1000);
             // watch.Restart();
             if (Update() == UpdateResult.Completed)
             {
@@ -268,7 +268,7 @@ namespace ManagedDoom
                 // TODO: handle config save
                 return;
             }
-            //Console.WriteLine("update: {0} ms", watch.ElapsedMilliseconds);
+            //Aura_OS.System.Processing.Application.DoomApp.debugger.WriteLine("update: {0} ms", watch.ElapsedMilliseconds);
         }
 
         public static bool IsKeyPressed(DoomKey key)

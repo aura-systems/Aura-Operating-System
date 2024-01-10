@@ -33,8 +33,7 @@ namespace ManagedDoom
         {
             try
             {
-                Console.Write("Load sprites: ");
-                Console.ReadKey();
+                Aura_OS.System.Processing.Application.DoomApp.debugger.Write("Load sprites: ");
 
                 var temp = new Dictionary<string, List<SpriteInfo>>();
                 for (var i = 0; i < (int)Sprite.Count; i++)
@@ -134,13 +133,11 @@ namespace ManagedDoom
                     spriteDefs[i] = new SpriteDef(frames);
                 }
 
-                Console.WriteLine("OK (" + cache.Count + " sprites)");
-                Console.ReadKey();
+                Aura_OS.System.Processing.Application.DoomApp.debugger.WriteLine("OK (" + cache.Count + " sprites)");
             }
             catch (Exception e)
             {
-                Console.WriteLine("Failed");
-                Console.ReadKey();
+                Aura_OS.System.Processing.Application.DoomApp.debugger.WriteLine("Failed");
                 ExceptionDispatchInfo.Throw(e);
             }
         }

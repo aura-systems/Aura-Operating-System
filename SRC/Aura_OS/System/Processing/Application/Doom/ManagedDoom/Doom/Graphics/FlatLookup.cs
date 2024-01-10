@@ -86,8 +86,7 @@ namespace ManagedDoom
         {
             try
             {
-                Console.Write("Load flats: ");
-                Console.ReadKey();
+                Aura_OS.System.Processing.Application.DoomApp.debugger.Write("Load flats: ");
 
                 var firstFlat = wad.GetLumpNumber("F_START") + 1;
                 var lastFlat = wad.GetLumpNumber("F_END") - 1;
@@ -117,13 +116,11 @@ namespace ManagedDoom
                 skyFlatNumber = nameToNumber["F_SKY1"];
                 skyFlat = nameToFlat["F_SKY1"];
 
-                Console.WriteLine("OK (" + nameToFlat.Count + " flats)");
-                Console.ReadKey();
+                Aura_OS.System.Processing.Application.DoomApp.debugger.WriteLine("OK (" + nameToFlat.Count + " flats)");
             }
             catch (Exception e)
             {
-                Console.WriteLine("Failed");
-                Console.ReadKey();
+                Aura_OS.System.Processing.Application.DoomApp.debugger.WriteLine("Failed");
                 ExceptionDispatchInfo.Throw(e);
             }
         }
@@ -132,7 +129,7 @@ namespace ManagedDoom
         {
             try
             {
-                Console.Write("Load flats: ");
+                Aura_OS.System.Processing.Application.DoomApp.debugger.Write("Load flats: ");
                 
                 var allFlats = new List<int>();
                 var flatZone = false;
@@ -197,11 +194,11 @@ namespace ManagedDoom
                 skyFlatNumber = nameToNumber["F_SKY1"];
                 skyFlat = nameToFlat["F_SKY1"];
 
-                Console.WriteLine("OK (" + nameToFlat.Count + " flats)");
+                Aura_OS.System.Processing.Application.DoomApp.debugger.WriteLine("OK (" + nameToFlat.Count + " flats)");
             }
             catch (Exception e)
             {
-                Console.WriteLine("Failed");
+                Aura_OS.System.Processing.Application.DoomApp.debugger.WriteLine("Failed");
                 ExceptionDispatchInfo.Throw(e);
             }
         }

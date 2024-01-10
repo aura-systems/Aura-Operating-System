@@ -29,8 +29,7 @@ namespace ManagedDoom
         {
             try
             {
-                Console.Write("Load texture animation info: ");
-                Console.ReadKey();
+                Aura_OS.System.Processing.Application.DoomApp.debugger.Write("Load texture animation info: ");
 
                 var list = new List<TextureAnimationInfo>();
 
@@ -76,12 +75,11 @@ namespace ManagedDoom
 
                 animations = list.ToArray();
 
-                Console.WriteLine("OK");
-                Console.ReadKey();
+                Aura_OS.System.Processing.Application.DoomApp.debugger.WriteLine("OK");
             }
             catch (Exception e)
             {
-                Console.WriteLine("Failed");
+                Aura_OS.System.Processing.Application.DoomApp.debugger.WriteLine("Failed");
                 ExceptionDispatchInfo.Throw(e);
             }
         }

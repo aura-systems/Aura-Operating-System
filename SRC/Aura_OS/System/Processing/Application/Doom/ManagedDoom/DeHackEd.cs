@@ -34,21 +34,18 @@ namespace ManagedDoom
                 // Ensure the static members are initialized.
                 DoomInfo.Strings.PRESSKEY.GetHashCode();
 
-                Console.Write("Apply DeHackEd patches: ");
-                Console.ReadKey();
+                Aura_OS.System.Processing.Application.DoomApp.debugger.Write("Apply DeHackEd patches: ");
 
                 foreach (var fileName in fileNames)
                 {
                     ReadFile(fileName);
                 }
 
-                Console.WriteLine("OK (" + string.Join(", ", fileNames.Select(x => Path.GetFileName(x))) + ")");
-                Console.ReadKey();
+                Aura_OS.System.Processing.Application.DoomApp.debugger.WriteLine("OK (" + string.Join(", ", fileNames.Select(x => Path.GetFileName(x))) + ")");
             }
             catch (Exception e)
             {
-                Console.WriteLine("Failed");
-                Console.ReadKey();
+                Aura_OS.System.Processing.Application.DoomApp.debugger.WriteLine("Failed");
                 ExceptionDispatchInfo.Throw(e);
             }
         }

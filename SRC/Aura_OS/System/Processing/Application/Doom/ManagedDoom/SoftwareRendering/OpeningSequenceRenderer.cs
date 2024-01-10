@@ -51,7 +51,7 @@ namespace ManagedDoom.SoftwareRendering
                     screen.DrawPatch(cache["CREDIT"], 0, 0, scale);
                     break;
             }
-            //Console.WriteLine($"OpeningSequence.Render {sequence.State} ms {watch.ElapsedMilliseconds}");
+            //Aura_OS.System.Processing.Application.DoomApp.debugger.WriteLine($"OpeningSequence.Render {sequence.State} ms {watch.ElapsedMilliseconds}");
         }
     }
 }

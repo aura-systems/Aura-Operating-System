@@ -145,8 +145,7 @@ namespace ManagedDoom
         {
             try
             {
-                Console.Write("Restore settings: ");
-                Console.ReadKey();
+                Aura_OS.System.Processing.Application.DoomApp.debugger.Write("Restore settings: ");
 
                 var dic = new Dictionary<string, string>();
                 foreach (var line in configLines)
@@ -186,13 +185,11 @@ namespace ManagedDoom
                 audio_musicvolume = GetInt(dic, nameof(audio_musicvolume), audio_musicvolume);
                 audio_randompitch = GetBool(dic, nameof(audio_randompitch), audio_randompitch);
 
-                Console.WriteLine("OK");
-                Console.ReadKey();
+                Aura_OS.System.Processing.Application.DoomApp.debugger.WriteLine("OK");
             }
             catch
             {
-                Console.WriteLine("Failed");
-                Console.ReadKey();
+                Aura_OS.System.Processing.Application.DoomApp.debugger.WriteLine("Failed");
             }
         }
 

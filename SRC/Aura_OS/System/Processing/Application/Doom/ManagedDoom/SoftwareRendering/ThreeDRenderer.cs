@@ -720,26 +720,26 @@ namespace ManagedDoom.SoftwareRendering
             extraLight = player.ExtraLight;
             fixedColorMap = player.FixedColorMap;
 
-            //Console.WriteLine("before clear {0} ms", watch.ElapsedMilliseconds);
+            //Aura_OS.System.Processing.Application.DoomApp.debugger.WriteLine("before clear {0} ms", watch.ElapsedMilliseconds);
             // watch.Restart();
             ClearPlaneRendering();
             ClearLighting();
             ClearRenderingHistory();
             ClearSpriteRendering();
-            //Console.WriteLine("clears (player={1}) {0} ms", watch.ElapsedMilliseconds, player);
+            //Aura_OS.System.Processing.Application.DoomApp.debugger.WriteLine("clears (player={1}) {0} ms", watch.ElapsedMilliseconds, player);
             //watch.Restart();
 
             RenderBspNode(world.Map.Nodes.Length - 1);
-            // Console.WriteLine("RenderBspNode {0} ms", watch.ElapsedMilliseconds);
+            // Aura_OS.System.Processing.Application.DoomApp.debugger.WriteLine("RenderBspNode {0} ms", watch.ElapsedMilliseconds);
             // watch.Restart();
             RenderSprites();
-            // Console.WriteLine("RenderSprites {0} ms", watch.ElapsedMilliseconds);
+            // Aura_OS.System.Processing.Application.DoomApp.debugger.WriteLine("RenderSprites {0} ms", watch.ElapsedMilliseconds);
             // watch.Restart();
             RenderMaskedTextures();
-            // Console.WriteLine("RenderMaskedTextures {0} ms", watch.ElapsedMilliseconds);
+            // Aura_OS.System.Processing.Application.DoomApp.debugger.WriteLine("RenderMaskedTextures {0} ms", watch.ElapsedMilliseconds);
             // watch.Restart();
             DrawPlayerSprites(player);
-            // Console.WriteLine("DrawPlayerSprites {0} ms", watch.ElapsedMilliseconds);
+            // Aura_OS.System.Processing.Application.DoomApp.debugger.WriteLine("DrawPlayerSprites {0} ms", watch.ElapsedMilliseconds);
             // watch.Restart();
 
 
@@ -747,7 +747,7 @@ namespace ManagedDoom.SoftwareRendering
             {
                 FillBackScreen();
             }
-            // Console.WriteLine("FillBackScreen (winsize={1}) {0} ms", watch.ElapsedMilliseconds, windowSize);
+            // Aura_OS.System.Processing.Application.DoomApp.debugger.WriteLine("FillBackScreen (winsize={1}) {0} ms", watch.ElapsedMilliseconds, windowSize);
 
         }
 
@@ -767,7 +767,7 @@ namespace ManagedDoom.SoftwareRendering
                     DrawSubsector(Node.GetSubsector(node));
                 }
                 // TODO: culprit
-                // Console.WriteLine("inside RenderBspNode draw subsector ({1}) {0} ms", watch.ElapsedMilliseconds, node);
+                // Aura_OS.System.Processing.Application.DoomApp.debugger.WriteLine("inside RenderBspNode draw subsector ({1}) {0} ms", watch.ElapsedMilliseconds, node);
                 // watch.Restart();
                 return;
             }
@@ -786,7 +786,7 @@ namespace ManagedDoom.SoftwareRendering
                 RenderBspNode(bsp.Children[side ^ 1]);
             }
             // TODO: culprit above
-            // Console.WriteLine("inside RenderBspNode end ({1}) {0} ms", watch.ElapsedMilliseconds, node);
+            // Aura_OS.System.Processing.Application.DoomApp.debugger.WriteLine("inside RenderBspNode end ({1}) {0} ms", watch.ElapsedMilliseconds, node);
             // watch.Restart();
         }
 
@@ -798,14 +798,14 @@ namespace ManagedDoom.SoftwareRendering
 
             // var watch = System.Diagnostics.Stopwatch.StartNew();
             AddSprites(target.Sector, validCount);
-            // Console.WriteLine("ThreeDRenderer.DrawSubsector add sprites: {0} ms", watch.ElapsedMilliseconds);
+            // Aura_OS.System.Processing.Application.DoomApp.debugger.WriteLine("ThreeDRenderer.DrawSubsector add sprites: {0} ms", watch.ElapsedMilliseconds);
             // watch.Restart();
             for (var i = 0; i < target.SegCount; i++)
             {
                 DrawSeg(world.Map.Segs[target.FirstSeg + i]);
             }
             // TODO: culprit 
-            // Console.WriteLine("ThreeDRenderer.DrawSubsector draw segs: {0} ms", watch.ElapsedMilliseconds);
+            // Aura_OS.System.Processing.Application.DoomApp.debugger.WriteLine("ThreeDRenderer.DrawSubsector draw segs: {0} ms", watch.ElapsedMilliseconds);
             // watch.Restart();
         }
 
@@ -948,7 +948,7 @@ namespace ManagedDoom.SoftwareRendering
             var angle1 = Geometry.PointToAngle(viewX, viewY, seg.Vertex1.X, seg.Vertex1.Y);
             var angle2 = Geometry.PointToAngle(viewX, viewY, seg.Vertex2.X, seg.Vertex2.Y);
 
-            // Console.WriteLine($"ThreeDRenderer.DrawSeg {seg} angles: {watch.ElapsedMilliseconds} ms");
+            // Aura_OS.System.Processing.Application.DoomApp.debugger.WriteLine($"ThreeDRenderer.DrawSeg {seg} angles: {watch.ElapsedMilliseconds} ms");
             // watch.Restart();
 
             // Clip to view edges.
@@ -1008,7 +1008,7 @@ namespace ManagedDoom.SoftwareRendering
             var frontSector = seg.FrontSector;
             var backSector = seg.BackSector;
 
-            // Console.WriteLine($"ThreeDRenderer.DrawSeg {seg} before draw: {watch.ElapsedMilliseconds} ms");
+            // Aura_OS.System.Processing.Application.DoomApp.debugger.WriteLine($"ThreeDRenderer.DrawSeg {seg} before draw: {watch.ElapsedMilliseconds} ms");
             // watch.Restart();
             // Single sided line?
             if (backSector == null)
@@ -1136,7 +1136,7 @@ namespace ManagedDoom.SoftwareRendering
 
             clipRangeCount = start + 1;
 
-            // Console.WriteLine($"ThreeDRenderer.DrawSolidWall {seg} before draw: {watch.ElapsedMilliseconds} ms");
+            // Aura_OS.System.Processing.Application.DoomApp.debugger.WriteLine($"ThreeDRenderer.DrawSolidWall {seg} before draw: {watch.ElapsedMilliseconds} ms");
             // watch.Restart();
         }
 
@@ -1188,7 +1188,7 @@ namespace ManagedDoom.SoftwareRendering
 
             // There is a fragment after *next.
             DrawPassWallRange(seg, rwAngle1, clipRanges[start].Last + 1, x2, false);
-            // Console.WriteLine("ThreeDRederer.drawPassWall : {0} ms", watch.ElapsedMilliseconds);
+            // Aura_OS.System.Processing.Application.DoomApp.debugger.WriteLine("ThreeDRederer.drawPassWall : {0} ms", watch.ElapsedMilliseconds);
 
         }
 
@@ -2298,7 +2298,7 @@ namespace ManagedDoom.SoftwareRendering
                 screenData[pos] = map[source[offset + ((frac.Data >> Fixed.FracBits) & 127)]];
                 frac += fracStep;
             }
-            //Console.WriteLine($"ThreeDRenderer.drwColumn. x:{x}, y1: {y1}, y2: {y2}. {watch.ElapsedMilliseconds} ms");
+            //Aura_OS.System.Processing.Application.DoomApp.debugger.WriteLine($"ThreeDRenderer.drwColumn. x:{x}, y1: {y1}, y2: {y2}. {watch.ElapsedMilliseconds} ms");
 
         }
 
@@ -2829,7 +2829,7 @@ namespace ManagedDoom.SoftwareRendering
                     frac += sprite.InvScale;
                 }
             }
-            // Console.WriteLine("Inside draw sprite {1} {0} ms", watch.ElapsedMilliseconds, sprite);
+            // Aura_OS.System.Processing.Application.DoomApp.debugger.WriteLine("Inside draw sprite {1} {0} ms", watch.ElapsedMilliseconds, sprite);
         }
 
 

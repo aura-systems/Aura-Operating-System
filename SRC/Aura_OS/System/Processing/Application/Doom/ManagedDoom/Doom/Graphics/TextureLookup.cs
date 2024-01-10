@@ -52,8 +52,7 @@ namespace ManagedDoom
         {
             try
             {
-                Console.Write("Load textures: ");
-                Console.ReadKey();
+                Aura_OS.System.Processing.Application.DoomApp.debugger.Write("Load textures: ");
 
                 textures = new List<Texture>();
                 nameToTexture = new Dictionary<string, Texture>();
@@ -81,12 +80,11 @@ namespace ManagedDoom
                     }
                 }
 
-                Console.WriteLine("OK (" + nameToTexture.Count + " textures)");
-                Console.ReadKey();
+                Aura_OS.System.Processing.Application.DoomApp.debugger.WriteLine("OK (" + nameToTexture.Count + " textures)");
             }
             catch (Exception e)
             {
-                Console.WriteLine("Failed");
+                Aura_OS.System.Processing.Application.DoomApp.debugger.WriteLine("Failed");
                 ExceptionDispatchInfo.Throw(e);
             }
         }

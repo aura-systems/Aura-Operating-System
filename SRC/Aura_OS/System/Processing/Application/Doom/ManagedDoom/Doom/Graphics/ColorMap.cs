@@ -30,8 +30,7 @@ namespace ManagedDoom
         {
             try
             {
-                Console.Write("Load color map: ");
-                Console.ReadKey();
+                Aura_OS.System.Processing.Application.DoomApp.debugger.Write("Load color map: ");
 
                 var raw = wad.ReadLump("COLORMAP");
                 var num = raw.Length / 256;
@@ -46,13 +45,11 @@ namespace ManagedDoom
                     }
                 }
 
-                Console.WriteLine("OK");
-                Console.ReadKey();
+                Aura_OS.System.Processing.Application.DoomApp.debugger.WriteLine("OK");
             }
             catch (Exception e)
             {
-                Console.WriteLine("Failed");
-                Console.ReadKey();
+                Aura_OS.System.Processing.Application.DoomApp.debugger.WriteLine("Failed");
                 ExceptionDispatchInfo.Throw(e);
             }
         }

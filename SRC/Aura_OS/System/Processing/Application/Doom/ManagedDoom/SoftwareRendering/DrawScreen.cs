@@ -80,7 +80,7 @@ namespace ManagedDoom.SoftwareRendering
                 DrawColumn(patch.Columns[frac.ToIntFloor()], drawX + i, drawY, scale);
                 frac += step;
             }
-            //Console.WriteLine($"DrawScreen.DrawPatch ({patch}, {x}, {y}, {scale}): {watch.ElapsedMilliseconds} ms");
+            //Aura_OS.System.Processing.Application.DoomApp.debugger.WriteLine($"DrawScreen.DrawPatch ({patch}, {x}, {y}, {scale}): {watch.ElapsedMilliseconds} ms");
         }
 
         public void DrawPatchFlip(Patch patch, int x, int y, int scale)
@@ -154,7 +154,7 @@ namespace ManagedDoom.SoftwareRendering
                     frac += step;
                 }
             }
-            //Console.WriteLine($"DrawColumns {source.Length}, x: {x}, y: {y} {watch.ElapsedMilliseconds}");
+            //Aura_OS.System.Processing.Application.DoomApp.debugger.WriteLine($"DrawColumns {source.Length}, x: {x}, y: {y} {watch.ElapsedMilliseconds}");
         }
 
         public void DrawText(IReadOnlyList<char> text, int x, int y, int scale)

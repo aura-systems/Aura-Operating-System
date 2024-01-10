@@ -4,6 +4,7 @@
 * PROGRAMMERS:      Valentin Charbonnier <valentinbreiz@gmail.com>
 */
 
+using Aura_OS.System.Processing.Application.Doom;
 using System;
 
 namespace Aura_OS.System.Processing.Application
@@ -13,6 +14,8 @@ namespace Aura_OS.System.Processing.Application
         public static string ApplicationName = "Doom";
 
         static ManagedDoom.DoomApplication app = null;
+
+        public static Debugger debugger = new Debugger();
 
         bool calledAfterRender = false;
 
@@ -42,6 +45,19 @@ namespace Aura_OS.System.Processing.Application
             uint[] downKeys = { };
 
             app.Run(upKeys, downKeys);
+
+            string[] lines = debugger.Text.Split('\n');
+            int maxLinesToShow = 17;
+            int startIndex = Math.Max(0, lines.Length - maxLinesToShow); // Ensure you don't go below 0
+            int dy = 0;
+
+            for (int i = startIndex; i < lines.Length; i++)
+            {
+                string line = lines[i];
+                Kernel.canvas.DrawString(line, Kernel.font, Kernel.BlackColor, x + 2, y + 200 + 4 + dy);
+                dy += 12;
+            }
+
         }
     }
 }

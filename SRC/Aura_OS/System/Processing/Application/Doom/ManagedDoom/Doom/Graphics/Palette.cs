@@ -38,8 +38,7 @@ namespace ManagedDoom
         {
             try
             {
-                Console.Write("Load palette: ");
-                Console.ReadKey();
+                Aura_OS.System.Processing.Application.DoomApp.debugger.Write("Load palette: ");
 
                 data = wad.ReadLump("PLAYPAL");
 
@@ -50,13 +49,11 @@ namespace ManagedDoom
                     palettes[i] = new uint[256];
                 }
 
-                Console.WriteLine("OK");
-                Console.ReadKey();
+                Aura_OS.System.Processing.Application.DoomApp.debugger.WriteLine("OK");
             }
             catch (Exception e)
             {
-                Console.WriteLine("Failed");
-                Console.ReadKey();
+                Aura_OS.System.Processing.Application.DoomApp.debugger.WriteLine("Failed");
                 ExceptionDispatchInfo.Throw(e);
             }
         }

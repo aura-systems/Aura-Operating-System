@@ -44,8 +44,7 @@ namespace ManagedDoom.UserInput
         {
             try
             {
-                Console.Write("Initialize user input: ");
-                Console.ReadKey();
+                Aura_OS.System.Processing.Application.DoomApp.debugger.Write("Initialize user input: ");
 
                 this.config = config;
 
@@ -70,13 +69,11 @@ namespace ManagedDoom.UserInput
                     window.SetMouseCursorVisible(false);
                 }
 
-                Console.WriteLine("OK");
-                Console.ReadKey();
+                Aura_OS.System.Processing.Application.DoomApp.debugger.WriteLine("OK");
             }
             catch (Exception e)
             {
-                Console.WriteLine("Failed");
-                Console.ReadKey();
+                Aura_OS.System.Processing.Application.DoomApp.debugger.WriteLine("Failed");
                 Dispose();
                 ExceptionDispatchInfo.Throw(e);
             }
@@ -292,7 +289,7 @@ namespace ManagedDoom.UserInput
 
         public void Dispose()
         {
-            Console.WriteLine("Shutdown user input.");
+            Aura_OS.System.Processing.Application.DoomApp.debugger.WriteLine("Shutdown user input.");
             Console.ReadKey();
 
             if (useMouse)

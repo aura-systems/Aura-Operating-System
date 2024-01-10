@@ -38,14 +38,8 @@ namespace ManagedDoom
         {
             try
             {
-                Console.Write("CommonResource A");
-                Console.ReadKey();
                 wad = new Wad(wadPaths);
-                Console.Write("CommonResource B");
-                Console.ReadKey();
                 palette = new Palette(wad);
-                Console.Write("CommonResource C");
-                Console.ReadKey();
                 colorMap = new ColorMap(wad);
                 textures = new TextureLookup(wad);
                 flats = new FlatLookup(wad);

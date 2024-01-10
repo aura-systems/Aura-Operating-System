@@ -84,8 +84,7 @@ namespace ManagedDoom.SoftwareRendering
         {
             try
             {
-                Console.Write("Initialize renderer: ");
-                Console.ReadKey();
+                Aura_OS.System.Processing.Application.DoomApp.debugger.Write("Initialize renderer: ");
 
                 this.config = config;
 
@@ -142,13 +141,11 @@ namespace ManagedDoom.SoftwareRendering
 
                 palette.ResetColors(gammaCorrectionParameters[config.video_gammacorrection]);
 
-                Console.WriteLine("OK");
-                Console.ReadKey();
+                Aura_OS.System.Processing.Application.DoomApp.debugger.WriteLine("OK");
             }
             catch (Exception e)
             {
-                Console.WriteLine("Failed");
-                Console.ReadKey();
+                Aura_OS.System.Processing.Application.DoomApp.debugger.WriteLine("Failed");
                 Dispose();
                 ExceptionDispatchInfo.Throw(e);
             }
@@ -169,7 +166,7 @@ namespace ManagedDoom.SoftwareRendering
             {
                 RenderGame(app.Game);
             }
-            //Console.WriteLine("RenderApplication 1st part: {0} s", (float)(watch.ElapsedMilliseconds) / 1000);
+            //Aura_OS.System.Processing.Application.DoomApp.debugger.WriteLine("RenderApplication 1st part: {0} s", (float)(watch.ElapsedMilliseconds) / 1000);
             //watch.Restart();
 
             if (!app.Menu.Active)
@@ -186,7 +183,7 @@ namespace ManagedDoom.SoftwareRendering
                         scale);
                 }
             }
-            //Console.WriteLine("RenderApplication 2nd part: {0} s", (float)(watch.ElapsedMilliseconds) / 1000);
+            //Aura_OS.System.Processing.Application.DoomApp.debugger.WriteLine("RenderApplication 2nd part: {0} s", (float)(watch.ElapsedMilliseconds) / 1000);
             //watch.Restart();
         }
 
@@ -215,7 +212,7 @@ namespace ManagedDoom.SoftwareRendering
                 {
                     // var watch2 = System.Diagnostics.Stopwatch.StartNew();
                     threeD.Render(displayPlayer);
-                    // Console.WriteLine("threeD.Render(displayPlayer) {0} ms", watch2.ElapsedMilliseconds);
+                    // Aura_OS.System.Processing.Application.DoomApp.debugger.WriteLine("threeD.Render(displayPlayer) {0} ms", watch2.ElapsedMilliseconds);
                     // watch2.Restart();
                     if (threeD.WindowSize < 8)
                     {
@@ -225,7 +222,7 @@ namespace ManagedDoom.SoftwareRendering
                     {
                         statusBar.Render(consolePlayer, false);
                     }
-                    // Console.WriteLine("statusBar.Render {0} ms", watch2.ElapsedMilliseconds);
+                    // Aura_OS.System.Processing.Application.DoomApp.debugger.WriteLine("statusBar.Render {0} ms", watch2.ElapsedMilliseconds);
                     // watch2.Restart();
                 }
 
@@ -246,17 +243,17 @@ namespace ManagedDoom.SoftwareRendering
             {
                 finale.Render(game.Finale);
             }
-            //Console.WriteLine("Render state {0}, {1} ms", game.State, watch.ElapsedMilliseconds);
+            //Aura_OS.System.Processing.Application.DoomApp.debugger.WriteLine("Render state {0}, {1} ms", game.State, watch.ElapsedMilliseconds);
         }
 
         public void Render(DoomApplication app)
         {
             //var watch = System.Diagnostics.Stopwatch.StartNew();
             RenderApplication(app);
-            //Console.WriteLine("RenderApplication: {0} s", (float)(watch.ElapsedMilliseconds) / 1000);
+            //Aura_OS.System.Processing.Application.DoomApp.debugger.WriteLine("RenderApplication: {0} s", (float)(watch.ElapsedMilliseconds) / 1000);
             //watch.Restart();
             RenderMenu(app);
-            //Console.WriteLine("RenderMenu: {0} s", (float)(watch.ElapsedMilliseconds) / 1000);
+            //Aura_OS.System.Processing.Application.DoomApp.debugger.WriteLine("RenderMenu: {0} s", (float)(watch.ElapsedMilliseconds) / 1000);
             //watch.Restart();
 
             var colors = palette[0];
@@ -329,7 +326,7 @@ namespace ManagedDoom.SoftwareRendering
         {
             RenderWithColorsAndScreenDataUnmarshalled(screen.Data, colors);
 
-            //Console.WriteLine("JS renderWithColorsAndScreenDataUnmarshalled: {0} s", watch.ElapsedMilliseconds);
+            //Aura_OS.System.Processing.Application.DoomApp.debugger.WriteLine("JS renderWithColorsAndScreenDataUnmarshalled: {0} s", watch.ElapsedMilliseconds);
             // watch.Restart();
 
             // DoomApplication.JSInProcessRuntime.InvokeVoid("renderWithColorsAndScreenData",  args);
@@ -463,8 +460,7 @@ namespace ManagedDoom.SoftwareRendering
 
         public void Dispose()
         {
-            Console.WriteLine("Shutdown renderer.");
-            Console.ReadKey();
+            Aura_OS.System.Processing.Application.DoomApp.debugger.WriteLine("Shutdown renderer.");
 
             if (sfmlSprite != null)
             {

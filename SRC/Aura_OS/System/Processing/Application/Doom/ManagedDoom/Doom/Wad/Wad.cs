@@ -37,8 +37,7 @@ namespace ManagedDoom
         {
             try
             {
-                Console.Write("Open wad files: ");
-                Console.ReadKey();
+                Aura_OS.System.Processing.Application.DoomApp.debugger.Write("Open wad files: ");
 
                 names = new List<string>();
                 streams = new List<Stream>();
@@ -53,15 +52,13 @@ namespace ManagedDoom
                 missionPack = GetMissionPack(names);
                 gameVersion = GetGameVersion(names);
 
-                Console.WriteLine("OK");
-                Console.ReadKey();
+                Aura_OS.System.Processing.Application.DoomApp.debugger.WriteLine("OK");
             }
             catch (Exception e)
             {
-                Console.WriteLine("Failed");
-                Console.ReadKey();
-                //Dispose();
-                //ExceptionDispatchInfo.Throw(e);
+                Aura_OS.System.Processing.Application.DoomApp.debugger.WriteLine("Failed");
+                Dispose();
+                ExceptionDispatchInfo.Throw(e);
             }
         }
 
@@ -161,8 +158,7 @@ namespace ManagedDoom
 
         public void Dispose()
         {
-            Console.WriteLine("Close wad files.");
-            Console.ReadKey();
+            Aura_OS.System.Processing.Application.DoomApp.debugger.WriteLine("Close wad files.");
 
             foreach (var stream in streams)
             {
