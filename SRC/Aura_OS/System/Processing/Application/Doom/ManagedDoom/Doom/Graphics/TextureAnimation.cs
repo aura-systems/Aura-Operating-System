@@ -30,6 +30,7 @@ namespace ManagedDoom
             try
             {
                 Console.Write("Load texture animation info: ");
+                Console.ReadKey();
 
                 var list = new List<TextureAnimationInfo>();
 
@@ -76,6 +77,7 @@ namespace ManagedDoom
                 animations = list.ToArray();
 
                 Console.WriteLine("OK");
+                Console.ReadKey();
             }
             catch (Exception e)
             {

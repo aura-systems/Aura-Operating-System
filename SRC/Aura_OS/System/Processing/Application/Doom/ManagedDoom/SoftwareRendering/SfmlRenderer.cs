@@ -81,6 +81,7 @@ namespace ManagedDoom.SoftwareRendering
             try
             {
                 Console.Write("Initialize renderer: ");
+                Console.ReadKey();
 
                 this.config = config;
 
@@ -138,10 +139,12 @@ namespace ManagedDoom.SoftwareRendering
                 palette.ResetColors(gammaCorrectionParameters[config.video_gammacorrection]);
 
                 Console.WriteLine("OK");
+                Console.ReadKey();
             }
             catch (Exception e)
             {
                 Console.WriteLine("Failed");
+                Console.ReadKey();
                 Dispose();
                 ExceptionDispatchInfo.Throw(e);
             }
@@ -387,6 +390,7 @@ namespace ManagedDoom.SoftwareRendering
         public void Dispose()
         {
             Console.WriteLine("Shutdown renderer.");
+            Console.ReadKey();
 
             if (sfmlSprite != null)
             {

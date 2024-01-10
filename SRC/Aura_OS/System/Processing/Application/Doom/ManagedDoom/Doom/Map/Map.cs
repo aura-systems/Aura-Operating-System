@@ -71,6 +71,7 @@ namespace ManagedDoom
                 }
 
                 Console.Write("Load map '" + name + "': ");
+                Console.ReadKey();
 
                 var map = wad.GetLumpNumber(name);
 
@@ -115,6 +116,7 @@ namespace ManagedDoom
                 }
 
                 Console.WriteLine("OK");
+                Console.ReadKey();
             }
             catch (Exception e)
             {

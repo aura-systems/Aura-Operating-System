@@ -35,6 +35,7 @@ namespace ManagedDoom
                 DoomInfo.Strings.PRESSKEY.GetHashCode();
 
                 Console.Write("Apply DeHackEd patches: ");
+                Console.ReadKey();
 
                 foreach (var fileName in fileNames)
                 {
@@ -42,10 +43,12 @@ namespace ManagedDoom
                 }
 
                 Console.WriteLine("OK (" + string.Join(", ", fileNames.Select(x => Path.GetFileName(x))) + ")");
+                Console.ReadKey();
             }
             catch (Exception e)
             {
                 Console.WriteLine("Failed");
+                Console.ReadKey();
                 ExceptionDispatchInfo.Throw(e);
             }
         }

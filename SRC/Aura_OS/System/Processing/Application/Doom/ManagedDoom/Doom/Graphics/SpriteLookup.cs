@@ -34,6 +34,7 @@ namespace ManagedDoom
             try
             {
                 Console.Write("Load sprites: ");
+                Console.ReadKey();
 
                 var temp = new Dictionary<string, List<SpriteInfo>>();
                 for (var i = 0; i < (int)Sprite.Count; i++)
@@ -134,10 +135,12 @@ namespace ManagedDoom
                 }
 
                 Console.WriteLine("OK (" + cache.Count + " sprites)");
+                Console.ReadKey();
             }
             catch (Exception e)
             {
                 Console.WriteLine("Failed");
+                Console.ReadKey();
                 ExceptionDispatchInfo.Throw(e);
             }
         }

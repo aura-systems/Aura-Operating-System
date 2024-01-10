@@ -39,6 +39,7 @@ namespace ManagedDoom
             try
             {
                 Console.Write("Load palette: ");
+                Console.ReadKey();
 
                 data = wad.ReadLump("PLAYPAL");
 
@@ -50,10 +51,12 @@ namespace ManagedDoom
                 }
 
                 Console.WriteLine("OK");
+                Console.ReadKey();
             }
             catch (Exception e)
             {
                 Console.WriteLine("Failed");
+                Console.ReadKey();
                 ExceptionDispatchInfo.Throw(e);
             }
         }

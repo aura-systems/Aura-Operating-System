@@ -45,6 +45,7 @@ namespace ManagedDoom.UserInput
             try
             {
                 Console.Write("Initialize user input: ");
+                Console.ReadKey();
 
                 this.config = config;
 
@@ -70,10 +71,12 @@ namespace ManagedDoom.UserInput
                 }
 
                 Console.WriteLine("OK");
+                Console.ReadKey();
             }
             catch (Exception e)
             {
                 Console.WriteLine("Failed");
+                Console.ReadKey();
                 Dispose();
                 ExceptionDispatchInfo.Throw(e);
             }
@@ -290,6 +293,7 @@ namespace ManagedDoom.UserInput
         public void Dispose()
         {
             Console.WriteLine("Shutdown user input.");
+            Console.ReadKey();
 
             if (useMouse)
             {

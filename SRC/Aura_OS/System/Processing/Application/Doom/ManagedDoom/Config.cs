@@ -146,6 +146,7 @@ namespace ManagedDoom
             try
             {
                 Console.Write("Restore settings: ");
+                Console.ReadKey();
 
                 var dic = new Dictionary<string, string>();
                 foreach (var line in configLines)
@@ -186,10 +187,12 @@ namespace ManagedDoom
                 audio_randompitch = GetBool(dic, nameof(audio_randompitch), audio_randompitch);
 
                 Console.WriteLine("OK");
+                Console.ReadKey();
             }
             catch
             {
                 Console.WriteLine("Failed");
+                Console.ReadKey();
             }
         }
 

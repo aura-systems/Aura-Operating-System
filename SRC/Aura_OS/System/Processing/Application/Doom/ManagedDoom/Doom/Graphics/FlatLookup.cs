@@ -87,6 +87,7 @@ namespace ManagedDoom
             try
             {
                 Console.Write("Load flats: ");
+                Console.ReadKey();
 
                 var firstFlat = wad.GetLumpNumber("F_START") + 1;
                 var lastFlat = wad.GetLumpNumber("F_END") - 1;
@@ -117,10 +118,12 @@ namespace ManagedDoom
                 skyFlat = nameToFlat["F_SKY1"];
 
                 Console.WriteLine("OK (" + nameToFlat.Count + " flats)");
+                Console.ReadKey();
             }
             catch (Exception e)
             {
                 Console.WriteLine("Failed");
+                Console.ReadKey();
                 ExceptionDispatchInfo.Throw(e);
             }
         }

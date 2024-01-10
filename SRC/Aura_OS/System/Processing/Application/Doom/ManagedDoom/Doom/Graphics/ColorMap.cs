@@ -31,6 +31,7 @@ namespace ManagedDoom
             try
             {
                 Console.Write("Load color map: ");
+                Console.ReadKey();
 
                 var raw = wad.ReadLump("COLORMAP");
                 var num = raw.Length / 256;
@@ -46,10 +47,12 @@ namespace ManagedDoom
                 }
 
                 Console.WriteLine("OK");
+                Console.ReadKey();
             }
             catch (Exception e)
             {
                 Console.WriteLine("Failed");
+                Console.ReadKey();
                 ExceptionDispatchInfo.Throw(e);
             }
         }

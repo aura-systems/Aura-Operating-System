@@ -53,6 +53,7 @@ namespace ManagedDoom
             try
             {
                 Console.Write("Load textures: ");
+                Console.ReadKey();
 
                 textures = new List<Texture>();
                 nameToTexture = new Dictionary<string, Texture>();
@@ -81,6 +82,7 @@ namespace ManagedDoom
                 }
 
                 Console.WriteLine("OK (" + nameToTexture.Count + " textures)");
+                Console.ReadKey();
             }
             catch (Exception e)
             {

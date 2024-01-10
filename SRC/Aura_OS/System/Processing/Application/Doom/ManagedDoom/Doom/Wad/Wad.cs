@@ -38,6 +38,7 @@ namespace ManagedDoom
             try
             {
                 Console.Write("Open wad files: ");
+                Console.ReadKey();
 
                 names = new List<string>();
                 streams = new List<Stream>();
@@ -53,10 +54,12 @@ namespace ManagedDoom
                 gameVersion = GetGameVersion(names);
 
                 Console.WriteLine("OK (" + string.Join(", ", fileNames.Select(x => Path.GetFileName(x))) + ")");
+                Console.ReadKey();
             }
             catch (Exception e)
             {
                 Console.WriteLine("Failed");
+                Console.ReadKey();
                 Dispose();
                 ExceptionDispatchInfo.Throw(e);
             }
@@ -159,6 +162,7 @@ namespace ManagedDoom
         public void Dispose()
         {
             Console.WriteLine("Close wad files.");
+            Console.ReadKey();
 
             foreach (var stream in streams)
             {
