@@ -33,7 +33,7 @@ namespace ManagedDoom
         private GameMode gameMode;
         private MissionPack missionPack;
 
-        public Wad(params string[] fileNames)
+        public Wad(string[] fileNames)
         {
             try
             {
@@ -53,15 +53,15 @@ namespace ManagedDoom
                 missionPack = GetMissionPack(names);
                 gameVersion = GetGameVersion(names);
 
-                Console.WriteLine("OK (" + string.Join(", ", fileNames.Select(x => Path.GetFileName(x))) + ")");
+                Console.WriteLine("OK");
                 Console.ReadKey();
             }
             catch (Exception e)
             {
                 Console.WriteLine("Failed");
                 Console.ReadKey();
-                Dispose();
-                ExceptionDispatchInfo.Throw(e);
+                //Dispose();
+                //ExceptionDispatchInfo.Throw(e);
             }
         }
 

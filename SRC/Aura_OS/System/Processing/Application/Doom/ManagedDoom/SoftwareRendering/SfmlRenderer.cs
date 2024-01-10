@@ -21,6 +21,7 @@ using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using Aura_OS;
 using Aura_OS.System.Processing.Application.Emulators.GameBoyEmu.Utils;
+using Cosmos.System.Graphics;
 using SFML.Graphics;
 using SFML.System;
 
@@ -75,6 +76,9 @@ namespace ManagedDoom.SoftwareRendering
         private int wipeBandCount;
         private int wipeHeight;
         private byte[] wipeBuffer;
+
+        public int X;
+        public int Y;
 
         public SfmlRenderer(Config config, RenderWindow window, CommonResource resource)
         {
@@ -323,18 +327,88 @@ namespace ManagedDoom.SoftwareRendering
 
         private void Display(uint[] colors)
         {
-            // var watch = System.Diagnostics.Stopwatch.StartNew();
-            var args = new object[] { screen.Data, colors, 320, 200 };
-            //Console.WriteLine("Screen data: " + BitConverter.ToString(screen.Data));
-
-            screen.bitmap = new DirectBitmap(screen.Data);
-            Kernel.canvas.DrawImage(screen.bitmap.Bitmap, 0, 0);
+            RenderWithColorsAndScreenDataUnmarshalled(screen.Data, colors);
 
             //Console.WriteLine("JS renderWithColorsAndScreenDataUnmarshalled: {0} s", watch.ElapsedMilliseconds);
             // watch.Restart();
 
             // DoomApplication.JSInProcessRuntime.InvokeVoid("renderWithColorsAndScreenData",  args);
         }
+
+        void RenderWithColorsAndScreenDataUnmarshalled(byte[] screenData, uint[] colors)
+        {
+            int width = 320;
+            int height = 200;
+            // Assuming 'canvas' is an object of a class that provides a similar interface to HTML Canvas.
+            var imageData = new byte[width * height * 4]; // Assuming an RGBA format
+            int x = 0;
+            int y = 0;
+
+            for (var i = 0; i < (width * height) / 4; i += 1)
+            {
+                uint screenDataItem = screenData[i];
+                int dataIndex;
+
+                for (var mask = 0; mask <= 24; mask += 8)
+                {
+                    dataIndex = y * (width * 4) + x;
+
+                    SetSinglePixel(imageData, dataIndex, colors, (screenDataItem >> mask) & 0xff);
+                    if (y >= height - 1)
+                    {
+                        y = 0;
+                        x += 4;
+                    }
+                    else
+                    {
+                        y += 1;
+                    }
+                    dataIndex = y * (width * 4) + x;
+                }
+            }
+
+            DrawPixels(imageData, width, height, X, Y);
+        }
+
+        void SetSinglePixel(byte[] imageData, int dataIndex, uint[] colors, uint colorIndex)
+        {
+            // Extract the RGBA components from the color
+            uint color = colors[colorIndex];
+
+            imageData[dataIndex] = (byte)(color & 0xff);
+            imageData[dataIndex + 1] = (byte)((color >> 8) & 0xff);
+            imageData[dataIndex + 2] = (byte)((color >> 16) & 0xff);
+            imageData[dataIndex + 3] = 255;
+        }
+
+
+        void DrawPixels(byte[] imageData, int width, int height, int dx, int dy, int? dirtyX = null, int? dirtyY = null, int? dirtyWidth = null, int? dirtyHeight = null)
+        {
+            dirtyX ??= 0;
+            dirtyY ??= 0;
+            dirtyWidth ??= width;
+            dirtyHeight ??= height;
+
+            int limitBottom = dirtyY.Value + dirtyHeight.Value;
+            int limitRight = dirtyX.Value + dirtyWidth.Value;
+
+            for (int y = dirtyY.Value; y < limitBottom; y++)
+            {
+                for (int x = dirtyX.Value; x < limitRight; x++)
+                {
+                    int pos = y * width + x;
+                    byte red = imageData[pos * 4];
+                    byte green = imageData[pos * 4 + 1];
+                    byte blue = imageData[pos * 4 + 2];
+                    byte alpha = imageData[pos * 4 + 3];
+
+                    // Assuming 'MyCanvas' has a method 'SetPixel' to draw individual pixels.
+                    // Replace 'System.Drawing.Color.FromArgb' with your color implementation if necessary.
+                    Kernel.canvas.DrawPoint(System.Drawing.Color.FromArgb(alpha, red, green, blue), x + dx, y + dy);
+                }
+            }
+        }
+
 
         private static int GetPaletteNumber(Player player)
         {

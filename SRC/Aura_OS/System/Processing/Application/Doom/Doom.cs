@@ -30,6 +30,9 @@ namespace Aura_OS.System.Processing.Application
 
         public override void UpdateApp()
         {
+            app.renderer.X = x;
+            app.renderer.Y = y;
+
             if (app == null)
             {
                 return;

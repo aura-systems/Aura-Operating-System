@@ -38,7 +38,7 @@ namespace ManagedDoom
         public RenderWindow window { get; internal set; }
 
         private CommonResource resource;
-        private SfmlRenderer renderer;
+        public SfmlRenderer renderer;
         private SfmlUserInput userInput;
 
         private static List<DoomEvent> Events { get; set; }
