@@ -49,7 +49,7 @@ namespace Aura_OS.System.Processing.Application
             RegisterApplication(typeof(SystemInfo), 40, 40, 402, 360);
             RegisterApplication(typeof(Cube), 40, 40, 200, 200);
             RegisterApplication(typeof(GameBoyEmu), 40, 40, 160 + 4, 144 + 22);
-            RegisterApplication(typeof(DoomApp), 40, 40, 640, 400);
+            RegisterApplication(typeof(DoomApp), 40, 40, 320, 200);
         }
 
         public void RegisterApplication(ApplicationConfig config)

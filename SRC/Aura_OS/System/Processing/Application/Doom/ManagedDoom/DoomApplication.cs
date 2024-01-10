@@ -27,6 +27,7 @@ using ManagedDoom.Audio;
 using ManagedDoom.UserInput;
 using System.IO;
 using System.Threading.Tasks;
+using Aura_OS;
 
 namespace ManagedDoom
 {
@@ -70,8 +71,6 @@ namespace ManagedDoom
 
         private bool quit;
         private string quitMessage;
-
-        public static HttpClient Http { get; internal set; }
         public static Stream WadStream { get; internal set; }
 
         public DoomApplication(CommandLineArgs args, String[] configLines)
@@ -84,6 +83,7 @@ namespace ManagedDoom
 
             try
             {
+                WadStream = new MemoryStream(Files.DoomWad);
                 config.video_screenwidth = Math.Clamp(config.video_screenwidth, 320, 3200);
                 config.video_screenheight = Math.Clamp(config.video_screenheight, 200, 2000);
                 var videoMode = VideoMode.CanvasMode;

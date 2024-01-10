@@ -21,6 +21,9 @@ namespace Aura_OS
         [ManifestResourceStream(ResourceName = "Aura_OS.Resources.wallpaper1920.bmp")]
         public static byte[] Wallpaper;
 
+        [ManifestResourceStream(ResourceName = "Aura_OS.Resources.doom1.wad")]
+        public static byte[] DoomWad;
+
         public static void LoadFiles()
         {
             CustomConsole.WriteLineInfo("Checking for ISO9660 volume...");

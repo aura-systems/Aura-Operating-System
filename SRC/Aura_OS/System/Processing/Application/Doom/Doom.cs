@@ -13,7 +13,6 @@ namespace Aura_OS.System.Processing.Application
         public static string ApplicationName = "Doom";
 
         static ManagedDoom.DoomApplication app = null;
-        private string wadUrl = "0:\\doom1.wad";
 
         bool calledAfterRender = false;
 
@@ -24,7 +23,6 @@ namespace Aura_OS.System.Processing.Application
 
         public DoomApp(int width, int height, int x = 0, int y = 0) : base(ApplicationName, width, height, x, y)
         {
-            Console.WriteLine(wadUrl);
             app = null;
             var commandLineArgs = new ManagedDoom.CommandLineArgs(args);
             app = new ManagedDoom.DoomApplication(commandLineArgs, configLines);
