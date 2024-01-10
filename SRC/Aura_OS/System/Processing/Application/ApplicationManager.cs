@@ -95,7 +95,7 @@ namespace Aura_OS.System.Processing.Application
             }
             else if (config.Template == typeof(DoomApp))
             {
-                app = new Explorer(Kernel.CurrentVolume, config.Weight, config.Height, config.X, config.Y);
+                app = new DoomApp(config.Weight, config.Height, config.X, config.Y);
             }
             else
             {
