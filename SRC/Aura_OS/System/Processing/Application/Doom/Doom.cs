@@ -4,25 +4,7 @@
 * PROGRAMMERS:      Valentin Charbonnier <valentinbreiz@gmail.com>
 */
 
-using Aura_OS.System.Graphics.UI.GUI;
-using Aura_OS.System.Graphics.UI.GUI.Components;
-using Cosmos.Core;
-using Cosmos.Core.Memory;
-using static ManagedDoom.CommandLineArgs;
 using System;
-using Aura_OS.System.Processing.Application.Emulators.GameBoyEmu.DMG;
-using Aura_OS.System.Processing.Application.Emulators.GameBoyEmu.Utils;
-using Aura_OS.System.Utils;
-using ManagedDoom.UserInput;
-using System.Reflection.Metadata;
-using ManagedDoom;
-using static Cosmos.HAL.PCIDevice;
-using Aura_OS.System.Processing.Interpreter;
-using ManagedDoom.Video;
-using System.Drawing;
-using System.Numerics;
-using Cosmos.HAL.BlockDevice;
-using ManagedDoom.Cosmos;
 
 namespace Aura_OS.System.Processing.Application
 {
@@ -30,63 +12,35 @@ namespace Aura_OS.System.Processing.Application
     {
         public static string ApplicationName = "Doom";
 
-        private int fpsScale;
-        private int frameCount;
+        static ManagedDoom.DoomApplication app = null;
+        private string wadUrl = "0:\\doom1.wad";
 
-        private Exception exception;
+        bool calledAfterRender = false;
 
-        private Doom doom;
+        static float framesPerSecond;
 
-        private CommandLineArgs args;
-        private ManagedDoom.Config config;
-        private GameContent content;
-
-        private IVideo video;
-        private IUserInput userInput;
+        private string[] args = { };
+        private string[] configLines = { };
 
         public DoomApp(int width, int height, int x = 0, int y = 0) : base(ApplicationName, width, height, x, y)
         {
-            video = new CosmosVideo(config, content);
-
-            doom = new Doom(args, config, content, video, null);
-
-            fpsScale = 1;
-            frameCount = -1;
+            Console.WriteLine(wadUrl);
+            app = null;
+            var commandLineArgs = new ManagedDoom.CommandLineArgs(args);
+            app = new ManagedDoom.DoomApplication(commandLineArgs, configLines);
         }
 
         public override void UpdateApp()
         {
-            try
+            if (app == null)
             {
-                frameCount++;
-
-                if (frameCount % fpsScale == 0)
-                {
-                    if (doom.Update() == UpdateResult.Completed)
-                    {
-                        Stop();
-                    }
-                }
-
-                DrawApp();
-            }
-            catch (Exception e)
-            {
-                exception = e;
+                return;
             }
 
-            if (exception != null)
-            {
-                Stop();
-            }
-        }
+            uint[] upKeys = { };
+            uint[] downKeys = { };
 
-        
-
-        public void DrawApp()
-        {
-            var frameFrac = Fixed.FromInt(frameCount % fpsScale + 1) / fpsScale;
-            
+            app.Run(upKeys, downKeys);
         }
     }
 }

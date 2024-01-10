@@ -181,8 +181,6 @@ namespace Aura_OS
             Running = true;
         }
 
-        private static int lastHeapCollectTime = -1;
-
         public static void Run()
         {
             try
@@ -192,18 +190,12 @@ namespace Aura_OS
                     _fps = _frames;
                     _frames = 0;
                     _deltaT = RTC.Second;
-
-                    lastHeapCollectTime++;
-
-                    if (lastHeapCollectTime >= 3)
-                    {
-                        FreeCount = Heap.Collect();
-                        lastHeapCollectTime = 0;
-                    }
                 }
 
                 _frames++;
 
+                FreeCount = Heap.Collect();
+                
                 UpdateUI();
 
                 canvas.Display();
