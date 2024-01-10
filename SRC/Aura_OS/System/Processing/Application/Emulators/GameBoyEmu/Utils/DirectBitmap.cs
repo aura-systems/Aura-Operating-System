@@ -12,6 +12,13 @@ namespace Aura_OS.System.Processing.Application.Emulators.GameBoyEmu.Utils
         public static int Height = 144;
         public static int Width = 160;
 
+        public DirectBitmap(int height, int width)
+        {
+            Width = width;
+            Height = height;
+            Bitmap = new Bitmap((uint)Width, (uint)Height, ColorDepth.ColorDepth32);
+        }
+
         public DirectBitmap()
         {
             Bitmap = new Bitmap((uint)Width, (uint)Height, ColorDepth.ColorDepth32);
