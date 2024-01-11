@@ -332,80 +332,60 @@ namespace ManagedDoom.SoftwareRendering
             // DoomApplication.JSInProcessRuntime.InvokeVoid("renderWithColorsAndScreenData",  args);
         }
 
-        void RenderWithColorsAndScreenDataUnmarshalled(byte[] screenData, uint[] colors)
+        public void RenderWithColorsAndScreenDataUnmarshalled(byte[] screenData, uint[] colors)
         {
             int width = 320;
             int height = 200;
-            // Assuming 'canvas' is an object of a class that provides a similar interface to HTML Canvas.
-            var imageData = new byte[width * height * 4]; // Assuming an RGBA format
+            DirectBitmap bitmap = new DirectBitmap(width, height);
+
             int x = 0;
             int y = 0;
 
-            for (var i = 0; i < (width * height) / 4; i += 1)
+            Aura_OS.System.Processing.Application.DoomApp.debugger.WriteLine("screenData.Length=" + screenData.Length);
+
+            for (int i = 0; i < screenData.Length; i++)
             {
-                uint screenDataItem = screenData[i];
-                int dataIndex;
-
-                for (var mask = 0; mask <= 24; mask += 8)
+                for (int mask = 0; mask <= 24; mask += 8)
                 {
-                    dataIndex = y * (width * 4) + x;
+                    uint colorIndex = (uint)(screenData[i] >> mask) & 0xff;
+                    if (colorIndex < colors.Length)
+                    {
+                        if (x < width && y < height)
+                        {
+                            SetSinglePixel(bitmap, x, y, colors, (uint)colorIndex);
+                        }
+                    }
 
-                    SetSinglePixel(imageData, dataIndex, colors, (screenDataItem >> mask) & 0xff);
-                    if (y >= height - 1)
+                    // Increment y after every pixel, but x only after every 4 pixels
+                    y++;
+                    if (y >= height)
                     {
                         y = 0;
-                        x += 4;
+                        x++;
                     }
-                    else
-                    {
-                        y += 1;
-                    }
-                    dataIndex = y * (width * 4) + x;
                 }
             }
 
-            DrawPixels(imageData, width, height, X, Y);
+            RenderBitmap(bitmap);
         }
 
-        void SetSinglePixel(byte[] imageData, int dataIndex, uint[] colors, uint colorIndex)
+        private void SetSinglePixel(DirectBitmap bitmap, int x, int y, uint[] colors, uint colorIndex)
         {
-            // Extract the RGBA components from the color
             uint color = colors[colorIndex];
 
-            imageData[dataIndex] = (byte)(color & 0xff);
-            imageData[dataIndex + 1] = (byte)((color >> 8) & 0xff);
-            imageData[dataIndex + 2] = (byte)((color >> 16) & 0xff);
-            imageData[dataIndex + 3] = 255;
+            byte r = (byte)(color & 0xff);
+            byte g = (byte)((color >> 8) & 0xff);
+            byte b = (byte)((color >> 16) & 0xff);
+            byte a = 255; // Assuming full opacity
+
+            bitmap.SetPixel(x, y, System.Drawing.Color.FromArgb(a, r, g, b).ToArgb());
         }
 
 
-        void DrawPixels(byte[] imageData, int width, int height, int dx, int dy, int? dirtyX = null, int? dirtyY = null, int? dirtyWidth = null, int? dirtyHeight = null)
+        private void RenderBitmap(DirectBitmap bitmap)
         {
-            dirtyX ??= 0;
-            dirtyY ??= 0;
-            dirtyWidth ??= width;
-            dirtyHeight ??= height;
-
-            int limitBottom = dirtyY.Value + dirtyHeight.Value;
-            int limitRight = dirtyX.Value + dirtyWidth.Value;
-
-            for (int y = dirtyY.Value; y < limitBottom; y++)
-            {
-                for (int x = dirtyX.Value; x < limitRight; x++)
-                {
-                    int pos = y * width + x;
-                    byte red = imageData[pos * 4];
-                    byte green = imageData[pos * 4 + 1];
-                    byte blue = imageData[pos * 4 + 2];
-                    byte alpha = imageData[pos * 4 + 3];
-
-                    // Assuming 'MyCanvas' has a method 'SetPixel' to draw individual pixels.
-                    // Replace 'System.Drawing.Color.FromArgb' with your color implementation if necessary.
-                    Kernel.canvas.DrawPoint(System.Drawing.Color.FromArgb(alpha, red, green, blue), x + dx, y + dy);
-                }
-            }
+            Kernel.canvas.DrawImage(bitmap.Bitmap, X, Y);
         }
-
 
         private static int GetPaletteNumber(Player player)
         {
