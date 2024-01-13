@@ -338,31 +338,20 @@ namespace ManagedDoom.SoftwareRendering
             int height = 200;
             DirectBitmap bitmap = new DirectBitmap(width, height);
 
-            int x = 0;
-            int y = 0;
-
-            Aura_OS.System.Processing.Application.DoomApp.debugger.WriteLine("screenData.Length=" + screenData.Length);
+            int x = 0, y = height - 1;
 
             for (int i = 0; i < screenData.Length; i++)
             {
-                for (int mask = 0; mask <= 24; mask += 8)
+                if (screenData[i] < colors.Length)
                 {
-                    uint colorIndex = (uint)(screenData[i] >> mask) & 0xff;
-                    if (colorIndex < colors.Length)
-                    {
-                        if (x < width && y < height)
-                        {
-                            SetSinglePixel(bitmap, x, y, colors, (uint)colorIndex);
-                        }
-                    }
+                    SetSinglePixel(bitmap, x, y, colors, screenData[i]);
+                }
 
-                    // Increment y after every pixel, but x only after every 4 pixels
-                    y++;
-                    if (y >= height)
-                    {
-                        y = 0;
-                        x++;
-                    }
+                y++;
+                if (y >= height)
+                {
+                    y = 0;
+                    x++;
                 }
             }
 
@@ -373,12 +362,12 @@ namespace ManagedDoom.SoftwareRendering
         {
             uint color = colors[colorIndex];
 
-            byte r = (byte)(color & 0xff);
-            byte g = (byte)((color >> 8) & 0xff);
-            byte b = (byte)((color >> 16) & 0xff);
-            byte a = 255; // Assuming full opacity
+            byte a = (byte)((color >> 24) & 0xff); // Alpha
+            byte b = (byte)((color >> 16) & 0xff); // Red
+            byte g = (byte)((color >> 8) & 0xff);  // Green
+            byte r = (byte)(color & 0xff);         // Blue
 
-            bitmap.SetPixel(x, y, System.Drawing.Color.FromArgb(a, r, g, b).ToArgb());
+            bitmap.SetPixel(x, y, System.Drawing.Color.FromArgb(r, g, b).ToArgb());
         }
 
 
