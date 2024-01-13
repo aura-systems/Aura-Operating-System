@@ -20,7 +20,7 @@ using System.Runtime.ExceptionServices;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using Aura_OS;
-using Aura_OS.System.Processing.Application.Emulators.GameBoyEmu.Utils;
+using Aura_OS.System.Graphics.UI.GUI.Components;
 using Cosmos.System.Graphics;
 using SFML.Graphics;
 using SFML.System;
@@ -367,7 +367,7 @@ namespace ManagedDoom.SoftwareRendering
             byte g = (byte)((color >> 8) & 0xff);  // Green
             byte r = (byte)(color & 0xff);         // Blue
 
-            bitmap.SetPixel(x, y, System.Drawing.Color.FromArgb(r, g, b).ToArgb());
+            bitmap.SetPixel(x, y, System.Drawing.Color.FromArgb(a, r, g, b).ToArgb());
         }
 
 

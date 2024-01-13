@@ -4,7 +4,7 @@ using System.Drawing.Imaging;
 using System.Runtime.CompilerServices;
 using Cosmos.System.Graphics;
 
-namespace Aura_OS.System.Processing.Application.Emulators.GameBoyEmu.Utils
+namespace Aura_OS.System.Graphics.UI.GUI.Components
 {
     public class DirectBitmap
     {

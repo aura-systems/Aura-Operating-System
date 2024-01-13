@@ -15,7 +15,7 @@
 
 
 
-using Aura_OS.System.Processing.Application.Emulators.GameBoyEmu.Utils;
+using Aura_OS.System.Graphics.UI.GUI.Components;
 using Cosmos.System.Graphics;
 using System;
 using System.Collections.Generic;
