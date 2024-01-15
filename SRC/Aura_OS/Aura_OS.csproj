@@ -24,10 +24,12 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+	  <None Remove="Resources\doom1.wad" />
 	  <None Remove="Resources\wallpaper-1.bmp" />
 	</ItemGroup>
 
     <ItemGroup>
+      <EmbeddedResource Include="Resources\doom1.wad" />
       <EmbeddedResource Include="Resources\error.bmp" />
       <EmbeddedResource Include="Resources\Tetris.gb" />
       <EmbeddedResource Include="Resources\wallpaper1920.bmp" />

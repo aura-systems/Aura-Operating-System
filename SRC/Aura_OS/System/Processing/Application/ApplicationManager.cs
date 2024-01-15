@@ -49,6 +49,7 @@ namespace Aura_OS.System.Processing.Application
             RegisterApplication(typeof(SystemInfo), 40, 40, 402, 360);
             RegisterApplication(typeof(Cube), 40, 40, 200, 200);
             RegisterApplication(typeof(GameBoyEmu), 40, 40, 160 + 4, 144 + 22);
+            RegisterApplication(typeof(DoomApp), 40, 40, 320 + 4, 200 + 22 + 200);
         }
 
         public void RegisterApplication(ApplicationConfig config)
@@ -91,6 +92,10 @@ namespace Aura_OS.System.Processing.Application
             else if (config.Template == typeof(Explorer))
             {
                 app = new Explorer(Kernel.CurrentVolume, config.Weight, config.Height, config.X, config.Y);
+            }
+            else if (config.Template == typeof(DoomApp))
+            {
+                app = new DoomApp(config.Weight, config.Height, config.X, config.Y);
             }
             else
             {
