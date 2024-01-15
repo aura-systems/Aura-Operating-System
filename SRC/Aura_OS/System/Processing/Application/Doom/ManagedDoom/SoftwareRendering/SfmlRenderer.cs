@@ -332,12 +332,12 @@ namespace ManagedDoom.SoftwareRendering
             // DoomApplication.JSInProcessRuntime.InvokeVoid("renderWithColorsAndScreenData",  args);
         }
 
+        int width = 320;
+        int height = 200;
+        public DirectBitmap bitmap = new DirectBitmap(320, 200);
+
         public void RenderWithColorsAndScreenDataUnmarshalled(byte[] screenData, uint[] colors)
         {
-            int width = 320;
-            int height = 200;
-            DirectBitmap bitmap = new DirectBitmap(width, height);
-
             int x = 0, y = height - 1;
 
             for (int i = 0; i < screenData.Length; i++)
