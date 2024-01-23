@@ -48,18 +48,18 @@ namespace Aura_Plugs
 
         public static void Write(string aText)
         {
-            if (Kernel.console != null)
+            if (Kernel.GetCurrentTerminal() != null)
             {
-                Kernel.console.Console.Write(aText);
+                Kernel.GetCurrentTerminal().Console.Write(aText);
 
                 Kernel.WindowManager.DrawWindows();
                 Kernel.Taskbar.Update();
                 Kernel.canvas.Display();
             }
-            else if (Kernel.aConsole != null)
+            else if (Kernel.TextmodeConsole != null)
             {
                 byte[] aTextEncoded = ConsoleOutputEncoding.GetBytes(aText);
-                Kernel.aConsole.Write(aTextEncoded);
+                Kernel.TextmodeConsole.Write(aTextEncoded);
             }
         }
 
@@ -156,13 +156,13 @@ namespace Aura_Plugs
 
         public static ConsoleColor get_ForegroundColor()
         {
-            if (Kernel.console != null)
+            if (Kernel.GetCurrentTerminal() != null)
             {
-                return Kernel.console.Console.Foreground;
+                return Kernel.GetCurrentTerminal().Console.Foreground;
             }
-            else if (Kernel.aConsole != null)
+            else if (Kernel.TextmodeConsole != null)
             {
-                return Kernel.aConsole.Foreground;
+                return Kernel.TextmodeConsole.Foreground;
             }
 
             return ConsoleColor.White;
@@ -170,13 +170,13 @@ namespace Aura_Plugs
 
         public static void set_ForegroundColor(ConsoleColor value)
         {
-            if (Kernel.console != null)
+            if (Kernel.GetCurrentTerminal() != null)
             {
-                Kernel.console.Console.Foreground = value;
+                Kernel.GetCurrentTerminal().Console.Foreground = value;
             }
-            else if (Kernel.aConsole != null)
+            else if (Kernel.TextmodeConsole != null)
             {
-                Kernel.aConsole.Foreground = value;
+                Kernel.TextmodeConsole.Foreground = value;
             }
         }
 
@@ -188,13 +188,13 @@ namespace Aura_Plugs
         //TODO: Console uses TextWriter - intercept and plug it instead
         public static void Clear()
         {
-            if (Kernel.console != null)
+            if (Kernel.GetCurrentTerminal() != null)
             {
-                Kernel.console.Console.Clear();
+                Kernel.GetCurrentTerminal().Console.Clear();
             }
-            else if (Kernel.aConsole != null)
+            else if (Kernel.TextmodeConsole != null)
             {
-                Kernel.aConsole.Clear();
+                Kernel.TextmodeConsole.Clear();
             }
         }
 

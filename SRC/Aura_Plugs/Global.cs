@@ -6,6 +6,7 @@
 
 using IL2CPU.API.Attribs;
 using Cosmos.HAL;
+using System.IO;
 
 namespace Aura_OS.System.Plugs
 {
@@ -22,12 +23,13 @@ namespace Aura_OS.System.Plugs
         {
             // We must init Console before calling Inits.
             // This is part of the "minimal" boot to allow output.
-            Kernel.aConsole = new Graphics.UI.CUI.Console(textScreen);
+
+            Kernel.TextmodeConsole = new Graphics.UI.CUI.Console(textScreen);
+
+            CustomConsole.WriteLineInfo("Starting Aura Operating System v" + Kernel.Version + "-" + Kernel.Revision);
 
             CustomConsole.WriteLineInfo("Initializing the Hardware Abstraction Layer (HAL)...");
             Cosmos.HAL.Global.Init(textScreen, initScrollWheel, initPS2, initNetwork, ideInit);
-
-            CustomConsole.WriteLineInfo("Starting Aura Operating System v" + Kernel.Version + "-" + Kernel.Revision);
 
             // TODO: @ascpixi: The end-user should have an option to exclude parts of
             //       Cosmos, such as the network stack, when they are not needed. As of

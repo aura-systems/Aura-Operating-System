@@ -36,8 +36,8 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
             entry2.Action = new Action(() =>
             {
                 Kernel.CurrentDirectory = CurrentPath;
+
                 var app = new Terminal(700, 600, 40, 40);
-                Kernel.console = app;
                 app.Initialize();
 
                 Kernel.WindowManager.apps.Add(app);

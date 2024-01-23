@@ -54,6 +54,9 @@ namespace Aura_OS.System.Processing.Application.Emulators.GameBoyEmu
 
         public override void UpdateApp()
         {
+            ppu.X = x;
+            ppu.Y = y;
+
             if (Focused)
             {
                 if (KeyboardManager.TryReadKey(out keyEvent))
@@ -80,8 +83,6 @@ namespace Aura_OS.System.Processing.Application.Emulators.GameBoyEmu
 
                 keyEvent = null;
             }
-            ppu.X = x;
-            ppu.Y = y;
         }
 
         private void handleInterrupts()

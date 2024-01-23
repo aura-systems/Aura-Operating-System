@@ -14,14 +14,12 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
     public struct Cell
     {
         public char Char;
-        public Color ForegroundColor;
-        public Color BackgroundColor;
+        public uint ForegroundColor;
+        public uint BackgroundColor;
     }
 
     public class Console : Component
     {
-        public GUI Graphics;
-
         internal const char LineFeed = '\n';
         internal const char CarriageReturn = '\r';
         internal const char Tab = '\t';
@@ -29,7 +27,7 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
 
         private static uint[] Pallete = new uint[16];
 
-        Cell[][] Text;
+        private Cell[][] Text;
 
         public int mX = 0;
         public int mY = 0;
@@ -80,8 +78,6 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
 
         public Console(int x, int y, int width, int height) : base(x, y, width, height)
         {
-            Graphics = new GUI();
-
             Pallete[0] = 0xFF000000; // Black
             Pallete[1] = 0xFF0000AB; // Darkblue
             Pallete[2] = 0xFF008000; // DarkGreen
@@ -140,17 +136,17 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
             }
         }
 
-        public void WriteByte(char ch, int mX, int mY, Color color)
+        public void WriteByte(char ch, int mX, int mY, uint color)
         {
-            Kernel.canvas.DrawChar(ch, Kernel.font, color, mX, mY);
+            Kernel.canvas.DrawChar(ch, Kernel.font, Color.FromArgb((int)color), mX, mY);
         }
 
         public void SetCursorPos(int mX, int mY)
         {
             if (CursorVisible)
             {
-                Kernel.canvas.DrawFilledRectangle(ForegroundColor, Kernel.console.x + mX * Kernel.font.Width,
-                    Kernel.console.y + mY * Kernel.font.Height + Kernel.font.Height, 8, 4);
+                Kernel.canvas.DrawFilledRectangle(ForegroundColor, X + mX * Kernel.font.Width,
+                    Y + mY * Kernel.font.Height + Kernel.font.Height, 8, 4);
             }
         }
 
@@ -278,7 +274,7 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
             }
             else
             {
-                Text[mY][mX] = new Cell() { Char = aChar, ForegroundColor = ForegroundColor, BackgroundColor = BackgroundColor };
+                Text[mY][mX] = new Cell() { Char = aChar, ForegroundColor = (uint)ForegroundColor.ToArgb(), BackgroundColor = (uint)BackgroundColor.ToArgb() };
 
                 mX++;
                 if (mX == mCols)

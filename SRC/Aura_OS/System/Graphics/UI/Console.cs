@@ -5,10 +5,7 @@
 */
 
 using System;
-using System.Collections.Generic;
-using System.Text;
 using Cosmos.System.Graphics;
-using IL2CPU.API.Attribs;
 
 namespace Aura_OS.System.Graphics.UI
 {

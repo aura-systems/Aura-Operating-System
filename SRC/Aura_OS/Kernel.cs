@@ -91,10 +91,7 @@ namespace Aura_OS
         public static PackageManager PackageManager;
 
         // Textmode Console
-        public static System.Graphics.UI.CUI.Console aConsole;
-
-        // Console application
-        public static Terminal console;
+        public static System.Graphics.UI.CUI.Console TextmodeConsole;
 
         public static bool Pressed;
         public static int FreeCount = 0;
@@ -107,6 +104,9 @@ namespace Aura_OS
 
         public static string CommandOutput = "";
         public static bool Redirect = false;
+
+        public static TextWriter stdout, stderror;
+        public static TextReader stdin;
 
         public static void BeforeRun()
         {
@@ -146,7 +146,7 @@ namespace Aura_OS
             CustomConsole.BootConsole = new(0, 0, (int)screenWidth, (int)screenHeight);
             CustomConsole.BootConsole.DrawBackground = false;
 
-            aConsole = null;
+            TextmodeConsole = null;
 
             CustomConsole.WriteLineInfo("Loading icons...");
             Files.LoadImages();
@@ -226,6 +226,22 @@ namespace Aura_OS
             }
         }
 
+        public static Terminal GetCurrentTerminal()
+        {
+            if (WindowManager != null && WindowManager.apps.Count > 0)
+            {
+                foreach (var app in WindowManager.apps)
+                {
+                    if (app.Name == "Terminal" && app.Focused == true)
+                    {
+                        return app as Terminal;
+                    }
+                }
+            }
+
+            return null;
+        }
+
         private static void UpdateUI()
         {
             Desktop.Update();
@@ -245,7 +261,7 @@ namespace Aura_OS
 
             try
             {
-                WindowManager.UpdateWindowStack();
+                // WindowManager.UpdateWindowStack();
                 WindowManager.DrawWindows();
             }
             catch (Exception ex)

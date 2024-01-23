@@ -9,7 +9,6 @@ using Cosmos.System;
 using System;
 using System.Drawing;
 using System.Collections.Generic;
-using Aura_OS.System.Graphics.UI.GUI;
 using Aura_OS.System.Graphics;
 
 namespace Aura_OS.System.Processing.Application
@@ -35,13 +34,16 @@ namespace Aura_OS.System.Processing.Application
         {
             Window.Icon = ResourceManager.GetImage("16-terminal.bmp");
 
-            CustomConsole.BootConsole = new(0, 0, width, height);
+            Console = new(x, y, width - 4, height - Window.TopBar.Height - 4);
 
             BeforeCommand();
         }
 
         public override void UpdateApp()
         {
+            Console.X = x;
+            Console.Y = y;
+
             if (Focused)
             {
                 KeyEvent keyEvent = null;
@@ -153,7 +155,7 @@ namespace Aura_OS.System.Processing.Application
 
                     for (int i = 0; i < Command.Length; i++)
                     {
-                        Console.WriteByte(Command[i], Kernel.console.x + (baseX + i) * Kernel.font.Width, Kernel.console.y + Console.mY * Kernel.font.Height, Console.ForegroundColor);
+                        Console.WriteByte(Command[i], Console.X + (baseX + i) * Kernel.font.Width, Console.Y + Console.mY * Kernel.font.Height, (uint)Console.ForegroundColor.ToArgb());
                     }
                 }
 
