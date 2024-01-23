@@ -4,6 +4,8 @@
 * PROGRAMMER(S):      John Welsh <djlw78@gmail.com>
 */
 
+using System;
+
 namespace Aura_OS.System.Processing.Interpreter.Commands.c_Console
 {
     class CommandClear : ICommand
@@ -21,7 +23,7 @@ namespace Aura_OS.System.Processing.Interpreter.Commands.c_Console
         /// </summary>
         public override ReturnInfo Execute()
         {
-            Kernel.console.Clear();
+            Console.Clear();
             return new ReturnInfo(this, ReturnCode.OK);
         }
     }

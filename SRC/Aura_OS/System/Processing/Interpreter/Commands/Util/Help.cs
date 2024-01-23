@@ -70,12 +70,14 @@ namespace Aura_OS.System.Processing.Interpreter.Commands.Util
                 }
                 Console.WriteLine(" (" + command.Description + ")");
 
+                /*
                 count++;
                 if (count == Kernel.console.Rows - 3)
                 {
                     //Console.ReadKey(); TODO FIX THIS
                     count = 0;
                 }
+                */
             }
             Console.WriteLine();
             Console.WriteLine("You can see more information about a specific command by typing: {command} /help");

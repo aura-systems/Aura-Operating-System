@@ -26,7 +26,6 @@ using Aura_OS.System.Graphics;
 using Aura_OS.System.Processing.Application;
 using Aura_OS.System.Processing.Interpreter;
 using Aura_OS.System.Processing.Interpreter.Commands;
-using Aura_OS.System.Graphics.UI.GUI.Components;
 
 namespace Aura_OS
 {
@@ -106,6 +105,9 @@ namespace Aura_OS
 
         public static CosmosVFS VirtualFileSystem;
 
+        public static string CommandOutput = "";
+        public static bool Redirect = false;
+
         public static void BeforeRun()
         {
             EnvironmentVariables = new Dictionary<string, string>();
@@ -113,12 +115,6 @@ namespace Aura_OS
 
             //Start Filesystem
             VFSManager.RegisterVFS(VirtualFileSystem);
-
-            //Load Localization
-            CustomConsole.WriteLineInfo("Initializing localization...");
-
-            Encoding.RegisterProvider(CosmosEncodingProvider.Instance);
-            KeyboardManager.SetKeyLayout(new Sys.ScanMaps.USStandardLayout());
 
             //START PROCESSES
             CustomConsole.WriteLineInfo("Starting process manager...");
@@ -140,6 +136,21 @@ namespace Aura_OS
                 Batch.Execute(CurrentDirectory + "boot.bat");
             }
 
+            CustomConsole.WriteLineInfo("Starting Canvas...");
+
+            //START GRAPHICS
+            canvas = FullScreenCanvas.GetFullScreenCanvas(new Mode(screenWidth, screenHeight, ColorDepth.ColorDepth32));
+            canvas.DrawImage(AuraLogoWhite, (int)((screenWidth / 2) - (AuraLogoWhite.Width / 2)), (int)((screenHeight / 2) - (AuraLogoWhite.Height / 2)));
+            canvas.Display();
+
+            CustomConsole.BootConsole = new(0, 0, (int)screenWidth, (int)screenHeight);
+            CustomConsole.BootConsole.DrawBackground = false;
+
+            aConsole = null;
+
+            CustomConsole.WriteLineInfo("Loading icons...");
+            Files.LoadImages();
+
             CustomConsole.WriteLineInfo("Starting package manager...");
             PackageManager = new PackageManager();
             PackageManager.Initialize();
@@ -155,33 +166,33 @@ namespace Aura_OS
             CustomConsole.WriteLineInfo("Starting mouse manager...");
             MouseManager = new System.Input.MouseManager();
 
-            CustomConsole.WriteLineInfo("Starting Canvas...");
-
-            //START GRAPHICS
-            canvas = FullScreenCanvas.GetFullScreenCanvas(new Mode(screenWidth, screenHeight, ColorDepth.ColorDepth32));
-            canvas.DrawImage(AuraLogoWhite, (int)((screenWidth / 2) - (AuraLogoWhite.Width / 2)), (int)((screenHeight / 2) - (AuraLogoWhite.Height / 2)));
-            canvas.Display();
-
-            aConsole = null;
+            CustomConsole.WriteLineInfo("Starting desktop...");
 
             Desktop = new Desktop(0, 0, (int)screenWidth, (int)screenHeight);
 
-            // CustomConsole.WriteLineInfo("Starting dock...");
+            CustomConsole.WriteLineInfo("Starting task bar...");
             Taskbar = new Taskbar();
             Taskbar.Initialize();
-
             Taskbar.UpdateApplicationButtons();
+
+            CustomConsole.WriteLineInfo("Starting mouse...");
 
             //START MOUSE
             Cosmos.System.MouseManager.ScreenWidth = screenWidth;
             Cosmos.System.MouseManager.ScreenHeight = screenHeight;
 
+            //Load Localization
+            CustomConsole.WriteLineInfo("Initializing localization...");
+
+            Encoding.RegisterProvider(CosmosEncodingProvider.Instance);
+            KeyboardManager.SetKeyLayout(new Sys.ScanMaps.USStandardLayout());
+
             BootTime = Time.MonthString() + "/" + Time.DayString() + "/" + Time.YearString() + ", " + Time.TimeString(true, true, true);
+
+            CustomConsole.WriteLineOK("Boot done.");
 
             Running = true;
         }
-
-        private static int lastHeapCollectTime = -1;
 
         public static void Run()
         {
@@ -192,17 +203,11 @@ namespace Aura_OS
                     _fps = _frames;
                     _frames = 0;
                     _deltaT = RTC.Second;
-
-                    lastHeapCollectTime++;
-
-                    if (lastHeapCollectTime >= 3)
-                    {
-                        FreeCount = Heap.Collect();
-                        lastHeapCollectTime = 0;
-                    }
                 }
 
                 _frames++;
+
+                FreeCount = Heap.Collect();
 
                 UpdateUI();
 
@@ -251,7 +256,7 @@ namespace Aura_OS
             MouseManager.Update();
             MouseManager.DrawRightClick();
 
-            DrawCursor(Cosmos.System.MouseManager.X, Cosmos.System.MouseManager.Y);
+            DrawCursor(Sys.MouseManager.X, Sys.MouseManager.Y);
         }
 
         public static void DrawCursor(uint x, uint y)

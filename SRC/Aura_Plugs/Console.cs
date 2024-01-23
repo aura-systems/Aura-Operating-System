@@ -5,14 +5,13 @@
 */
 
 using Aura_OS;
-using Cosmos.System.Graphics;
 using IL2CPU.API.Attribs;
 using System;
 using System.Text;
 
 namespace Aura_Plugs
 {
-    [Plug(Target = typeof(global::System.Console))]
+    [Plug(Target = typeof(Console))]
     public class ConsoleImpl
     {
         private static Encoding ConsoleOutputEncoding = Encoding.ASCII;
@@ -51,7 +50,7 @@ namespace Aura_Plugs
         {
             if (Kernel.console != null)
             {
-                Kernel.console.Write(aText);
+                Kernel.console.Console.Write(aText);
 
                 Kernel.WindowManager.DrawWindows();
                 Kernel.Taskbar.Update();
@@ -159,7 +158,7 @@ namespace Aura_Plugs
         {
             if (Kernel.console != null)
             {
-                return Kernel.console.Foreground;
+                return Kernel.console.Console.Foreground;
             }
             else if (Kernel.aConsole != null)
             {
@@ -173,7 +172,7 @@ namespace Aura_Plugs
         {
             if (Kernel.console != null)
             {
-                Kernel.console.Foreground = value;
+                Kernel.console.Console.Foreground = value;
             }
             else if (Kernel.aConsole != null)
             {
@@ -191,7 +190,7 @@ namespace Aura_Plugs
         {
             if (Kernel.console != null)
             {
-                Kernel.console.Clear();
+                Kernel.console.Console.Clear();
             }
             else if (Kernel.aConsole != null)
             {

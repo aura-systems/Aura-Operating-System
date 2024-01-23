@@ -18,12 +18,12 @@ namespace Aura_OS.System
         /// <param name="ex">Exception that stop the kernel</param>
         public static void WriteException(Exception ex)
         {
-            Kernel.console.WriteLine();
-            Kernel.console.WriteLine("An error occured in Aura Operating System:");
-            Kernel.console.WriteLine(ex.Message);
+            Console.WriteLine();
+            Console.WriteLine("An error occured in Aura Operating System:");
+            Console.WriteLine(ex.Message);
             if (ex.InnerException != null)
             {
-                Kernel.console.WriteLine(ex.InnerException.Message);
+                Console.WriteLine(ex.InnerException.Message);
             }
         }
 

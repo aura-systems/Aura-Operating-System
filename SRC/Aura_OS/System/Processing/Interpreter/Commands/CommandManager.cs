@@ -119,7 +119,7 @@ namespace Aura_OS.System.Processing.Interpreter.Commands
 
             if (cmd.Length <= 0)
             {
-                Kernel.console.WriteLine();
+                Console.WriteLine();
                 return;
             }
 
@@ -131,8 +131,8 @@ namespace Aura_OS.System.Processing.Interpreter.Commands
 
             if (!string.IsNullOrEmpty(redirectionPart))
             {
-                Kernel.console.Redirect = true;
-                Kernel.console.CommandOutput = "";
+                Kernel.Redirect = true;
+                Kernel.CommandOutput = "";
             }
 
             List<string> arguments = Misc.ParseCommandLine(cmd);
@@ -176,34 +176,34 @@ namespace Aura_OS.System.Processing.Interpreter.Commands
 
                     ProcessCommandResult(result);
 
-                    if (Kernel.console.Redirect)
+                    if (Kernel.Redirect)
                     {
-                        Kernel.console.Redirect = false;
+                        Kernel.Redirect = false;
 
-                        Kernel.console.WriteLine();
+                        Console.WriteLine();
 
-                        HandleRedirection(redirectionPart, Kernel.console.CommandOutput);
+                        HandleRedirection(redirectionPart, Kernel.CommandOutput);
 
-                        Kernel.console.CommandOutput = "";
+                        Kernel.CommandOutput = "";
                     }
 
                     return;
                 }
             }
 
-            Kernel.console.Foreground = ConsoleColor.DarkRed;
-            Kernel.console.WriteLine("Unknown command.");
-            Kernel.console.Foreground = ConsoleColor.White;
+            Console.ForegroundColor = ConsoleColor.DarkRed;
+            Console.WriteLine("Unknown command.");
+            Console.ForegroundColor = ConsoleColor.White;
 
-            Kernel.console.WriteLine();
+            Console.WriteLine();
 
-            if (Kernel.console.Redirect)
+            if (Kernel.Redirect)
             {
-                Kernel.console.Redirect = false;
+                Kernel.Redirect = false;
 
-                HandleRedirection(redirectionPart, Kernel.console.CommandOutput);
+                HandleRedirection(redirectionPart, Kernel.CommandOutput);
 
-                Kernel.console.CommandOutput = "";
+                Kernel.CommandOutput = "";
             }
         }
 
@@ -213,24 +213,24 @@ namespace Aura_OS.System.Processing.Interpreter.Commands
         /// <param name="command">Command</param>
         private void ShowHelp(ICommand command)
         {
-            Kernel.console.WriteLine("Description: " + command.Description + ".");
-            Kernel.console.WriteLine();
+            Console.WriteLine("Description: " + command.Description + ".");
+            Console.WriteLine();
             if (command.CommandValues.Length > 1)
             {
-                Kernel.console.Write("Aliases: ");
+                Console.Write("Aliases: ");
                 for (int i = 0; i < command.CommandValues.Length; i++)
                 {
                     if (i != command.CommandValues.Length - 1)
                     {
-                        Kernel.console.Write(command.CommandValues[i] + ", ");
+                        Console.Write(command.CommandValues[i] + ", ");
                     }
                     else
                     {
-                        Kernel.console.Write(command.CommandValues[i]);
+                        Console.Write(command.CommandValues[i]);
                     }
                 }
-                Kernel.console.WriteLine();
-                Kernel.console.WriteLine();
+                Console.WriteLine();
+                Console.WriteLine();
             }
             command.PrintHelp();
         }
@@ -266,18 +266,18 @@ namespace Aura_OS.System.Processing.Interpreter.Commands
         {
             if (result.Code == ReturnCode.ERROR_ARG)
             {
-                Kernel.console.Foreground = ConsoleColor.DarkRed;
-                Kernel.console.WriteLine("Command arguments are incorrectly formatted.");
-                Kernel.console.Foreground = ConsoleColor.White;
+                Console.ForegroundColor = ConsoleColor.DarkRed;
+                Console.WriteLine("Command arguments are incorrectly formatted.");
+                Console.ForegroundColor = ConsoleColor.White;
             }
             else if (result.Code == ReturnCode.ERROR)
             {
-                Kernel.console.Foreground = ConsoleColor.DarkRed;
-                Kernel.console.WriteLine("Error: " + result.Info);
-                Kernel.console.Foreground = ConsoleColor.White;
+                Console.ForegroundColor = ConsoleColor.DarkRed;
+                Console.WriteLine("Error: " + result.Info);
+                Console.ForegroundColor = ConsoleColor.White;
             }
 
-            Kernel.console.WriteLine();
+            Console.WriteLine();
         }
 
         private void HandleRedirection(string filePath, string commandOutput)

@@ -21,12 +21,14 @@ namespace Aura_OS
         [ManifestResourceStream(ResourceName = "Aura_OS.Resources.wallpaper1920.bmp")]
         public static byte[] Wallpaper;
 
+        private static string isoVol;
+
         public static void LoadFiles()
         {
             CustomConsole.WriteLineInfo("Checking for ISO9660 volume...");
 
             var vols = Kernel.VirtualFileSystem.GetVolumes();
-            string isoVol = Kernel.CurrentVolume;
+            isoVol = Kernel.CurrentVolume;
 
             foreach (var vol in vols)
             {
@@ -63,6 +65,11 @@ namespace Aura_OS
             Kernel.font = PCScreenFont.LoadFont(File.ReadAllBytes(isoVol + "UI\\Fonts\\zap-ext-light16.psf"));
             CustomConsole.WriteLineOK("zap-ext-light16.psf font loaded.");
 
+
+        }
+
+        public static void LoadImages()
+        {
             // Icons
             LoadImage(isoVol + "UI\\Images\\Icons\\16\\up.bmp", "16");
             LoadImage(isoVol + "UI\\Images\\Icons\\16\\close.bmp", "16");

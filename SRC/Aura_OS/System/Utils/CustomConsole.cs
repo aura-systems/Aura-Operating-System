@@ -12,56 +12,86 @@ namespace Aura_OS.System
 {
     public class CustomConsole
     {
+        public static System.Graphics.UI.GUI.Components.Console BootConsole;
+
         public static void WriteLineInfo(string text)
         {
-            Console.ForegroundColor = ConsoleColor.Cyan;
-            Console.Write("[Info] ");
-            Console.ForegroundColor = ConsoleColor.White;
-            Console.Write(text + "\n");
+            if (BootConsole != null)
+            {
+                BootConsole.Foreground = ConsoleColor.Cyan;
+                BootConsole.Write("[Info] ");
+                BootConsole.Foreground = ConsoleColor.White;
+                BootConsole.Write(text + "\n");
+                BootConsole.Draw();
+                Kernel.canvas.Display();
+            }
+            else
+            {
+                Console.ForegroundColor = ConsoleColor.Cyan;
+                Console.Write("[Info] ");
+                Console.ForegroundColor = ConsoleColor.White;
+                Console.Write(text + "\n");
+            }
         }
 
         public static void WriteLineWarning(string text)
         {
-            Console.ForegroundColor = ConsoleColor.Yellow;
-            Console.Write("[WARNING] ");
-            Console.ForegroundColor = ConsoleColor.White;
-            Console.Write(text + "\n");
-        }
-
-        /// <summary>
-        /// tipColor's text
-        /// [tipText(with tipColor)] text
-        /// </summary>
-        /// <param name="tipColor"></param>
-        /// <param name="text"></param>
-        /// <param name="tipText"></param>
-        public static void WriteLineCustom(ConsoleColor tipColor, string text, string tipText)
-        {
-            Console.ForegroundColor = tipColor;
-            Console.Write("[" + tipText + "] ");
-            Console.ForegroundColor = ConsoleColor.White;
-            Console.Write(text + "\n");
+            if (BootConsole != null)
+            {
+                BootConsole.Foreground = ConsoleColor.Yellow;
+                BootConsole.Write("[WARNING] ");
+                BootConsole.Foreground = ConsoleColor.White;
+                BootConsole.Write(text + "\n");
+                BootConsole.Draw();
+                Kernel.canvas.Display();
+            }
+            else
+            {
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.Write("[WARNING] ");
+                Console.ForegroundColor = ConsoleColor.White;
+                Console.Write(text + "\n");
+            }
         }
 
         public static void WriteLineOK(string text)
         {
-            Console.ForegroundColor = ConsoleColor.Green;
-            Console.Write("[OK] ");
-            Console.ForegroundColor = ConsoleColor.White;
-            Console.Write(text + "\n");
+            if (BootConsole != null)
+            {
+                BootConsole.Foreground = ConsoleColor.Green;
+                BootConsole.Write("[OK] ");
+                BootConsole.Foreground = ConsoleColor.White;
+                BootConsole.Write(text + "\n");
+                BootConsole.Draw();
+                Kernel.canvas.Display();
+            }
+            else
+            {
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.Write("[OK] ");
+                Console.ForegroundColor = ConsoleColor.White;
+                Console.Write(text + "\n");
+            }
         }
 
         public static void WriteLineError(string text)
         {
-            Console.ForegroundColor = ConsoleColor.DarkRed;
-            Console.Write("[Error] ");
-            Console.ForegroundColor = ConsoleColor.White;
-            Console.Write(text + "\n");
-        }
-
-        public static void Clear()
-        {
-            Console.Clear();
+            if (BootConsole != null)
+            {
+                BootConsole.Foreground = ConsoleColor.DarkRed;
+                BootConsole.Write("[Error] ");
+                BootConsole.Foreground = ConsoleColor.White;
+                BootConsole.Write(text + "\n");
+                BootConsole.Draw();
+                Kernel.canvas.Display();
+            }
+            else
+            {
+                Console.ForegroundColor = ConsoleColor.DarkRed;
+                Console.Write("[Error] ");
+                Console.ForegroundColor = ConsoleColor.White;
+                Console.Write(text + "\n");
+            } 
         }
     }
 }

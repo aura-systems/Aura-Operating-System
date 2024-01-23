@@ -25,155 +25,17 @@ namespace Aura_OS.System.Processing.Application
     {
         public static string ApplicationName = "Terminal";
 
-        public string CommandOutput = "";
-        public bool Redirect = false;
-
-        GUI Graphics;
-
-        internal const char LineFeed = '\n';
-        internal const char CarriageReturn = '\r';
-        internal const char Tab = '\t';
-        internal const char Space = ' ';
-
-        private static uint[] Pallete = new uint[16];
-
-        Cell[][] Text;
+        public System.Graphics.UI.GUI.Components.Console Console;
 
         List<string> Commands = new List<string>();
         private int CommandIndex = 0;
         public string Command = string.Empty;
 
-        protected int mX = 0;
-        public int X
-        {
-            get { return mX; }
-            set
-            {
-                mX = value;
-            }
-        }
-
-        protected int mY = 0;
-        public int Y
-        {
-            get { return mY; }
-            set
-            {
-                mY = value;
-            }
-        }
-
-        public static int mWidth;
-        public int Width
-        {
-            get { return mWidth; }
-        }
-
-        public static int mHeight;
-        public int Height
-        {
-            get { return mHeight; }
-        }
-
-        public static int mCols;
-        public int Cols
-        {
-            get { return mCols; }
-        }
-
-        public static int mRows;
-        public int Rows
-        {
-            get { return mRows; }
-        }
-
-        public Color ForegroundColor = Color.White;
-        public static uint foreground = (byte)ConsoleColor.White;
-        public ConsoleColor Foreground
-        {
-            get { return (ConsoleColor)foreground; }
-            set
-            {
-                foreground = (uint)value;
-
-                uint color = Pallete[foreground];
-                byte r = (byte)(color >> 16 & 0xFF); // Extract the red component
-                byte g = (byte)(color >> 8 & 0xFF); // Extract the green component
-                byte b = (byte)(color & 0xFF); // Extract the blue component
-
-                ForegroundColor = Color.FromArgb(0xFF, r, g, b);
-            }
-        }
-
-        public Color BackgroundColor = Color.Black;
-        public static uint background = (byte)ConsoleColor.Black;
-        public ConsoleColor Background
-        {
-            get { return (ConsoleColor)background; }
-            set
-            {
-                background = (uint)value;
-
-                uint color = Pallete[background];
-                byte r = (byte)(color >> 16 & 0xFF); // Extract the red component
-                byte g = (byte)(color >> 8 & 0xFF); // Extract the green component
-                byte b = (byte)(color & 0xFF); // Extract the blue component
-
-                BackgroundColor = Color.FromArgb(0xFF, r, g, b);
-            }
-        }
-
-        public int CursorSize { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-        public bool CursorVisible;
-
         public Terminal(int width, int height, int x = 0, int y = 0) : base(ApplicationName, width, height, x, y)
         {
             Window.Icon = ResourceManager.GetImage("16-terminal.bmp");
 
-            Graphics = new GUI();
-
-            Pallete[0] = 0xFF000000; // Black
-            Pallete[1] = 0xFF0000AB; // Darkblue
-            Pallete[2] = 0xFF008000; // DarkGreen
-            Pallete[3] = 0xFF008080; // DarkCyan
-            Pallete[4] = 0xFF800000; // DarkRed
-            Pallete[5] = 0xFF800080; // DarkMagenta
-            Pallete[6] = 0xFF808000; // DarkYellow
-            Pallete[7] = 0xFFC0C0C0; // Gray
-            Pallete[8] = 0xFF808080; // DarkGray
-            Pallete[9] = 0xFF5353FF; // Blue
-            Pallete[10] = 0xFF55FF55; // Green
-            Pallete[11] = 0xFF00FFFF; // Cyan
-            Pallete[12] = 0xFFAA0000; // Red
-            Pallete[13] = 0xFFFF00FF; // Magenta
-            Pallete[14] = 0xFFFFFF55; // Yellow
-            Pallete[15] = 0xFFFFFFFF; //White
-
-            mWidth = width;
-            mHeight = height;
-
-            mCols = mWidth / Kernel.font.Width - 1;
-            mRows = mHeight / Kernel.font.Height - 2;
-
-            Text = new Cell[mRows][];
-            for (int i = 0; i < mRows; i++)
-            {
-                Text[i] = new Cell[mCols];
-
-                for (int j = 0; j < mRows; j++)
-                {
-                    Text[i][j] = new Cell();
-                }
-            }
-
-            ClearText();
-
-            CursorVisible = true;
-
-            mX = 0;
-            mY = 0;
-
-            Command = string.Empty;
+            CustomConsole.BootConsole = new(0, 0, width, height);
 
             BeforeCommand();
         }
@@ -189,21 +51,21 @@ namespace Aura_OS.System.Processing.Application
                     switch (keyEvent.Key)
                     {
                         case ConsoleKeyEx.Enter:
-                            if (ScrollMode)
+                            if (Console.ScrollMode)
                             {
                                 break;
                             }
                             if (Command.Length > 0)
                             {
-                                mX -= Command.Length;
+                                Console.mX -= Command.Length;
 
-                                ScrollMode = true;
+                                Console.ScrollMode = true;
 
-                                WriteLine(Command);
+                                Console.WriteLine(Command);
 
                                 Kernel.CommandManager.Execute(Command);
 
-                                ScrollMode = false;
+                                Console.ScrollMode = false;
 
                                 Commands.Add(Command);
                                 CommandIndex = Commands.Count - 1;
@@ -212,64 +74,64 @@ namespace Aura_OS.System.Processing.Application
                             }
                             else
                             {
-                                WriteLine();
-                                WriteLine();
+                                Console.WriteLine();
+                                Console.WriteLine();
                             }
 
                             BeforeCommand();
                             break;
                         case ConsoleKeyEx.Backspace:
-                            if (ScrollMode)
+                            if (Console.ScrollMode)
                             {
                                 break;
                             }
                             if (Command.Length > 0)
                             {
                                 Command = Command.Remove(Command.Length - 1);
-                                mX--;
+                                Console.mX--;
                             }
                             break;
                         case ConsoleKeyEx.UpArrow:
                             if (KeyboardManager.ControlPressed)
                             {
-                                ScrollUp();
+                                Console.ScrollUp();
                             }
                             else
                             {
                                 if (CommandIndex >= 0)
                                 {
-                                    mX -= Command.Length;
+                                    Console.mX -= Command.Length;
                                     Command = Commands[CommandIndex];
                                     CommandIndex--;
-                                    mX += Command.Length;
+                                    Console.mX += Command.Length;
                                 }
                             }
                             break;
                         case ConsoleKeyEx.DownArrow:
                             if (KeyboardManager.ControlPressed)
                             {
-                                ScrollDown();
+                                Console.ScrollDown();
                             }
                             else
                             {
                                 if (CommandIndex < Commands.Count - 1)
                                 {
-                                    mX -= Command.Length;
+                                    Console.mX -= Command.Length;
                                     CommandIndex++;
                                     Command = Commands[CommandIndex];
-                                    mX += Command.Length;
+                                    Console.mX += Command.Length;
                                 }
                             }
                             break;
                         default:
-                            if (ScrollMode)
+                            if (Console.ScrollMode)
                             {
                                 break;
                             }
                             if (char.IsLetterOrDigit(keyEvent.KeyChar) || char.IsPunctuation(keyEvent.KeyChar) || char.IsSymbol(keyEvent.KeyChar) || keyEvent.KeyChar == ' ')
                             {
                                 Command += keyEvent.KeyChar;
-                                mX++;
+                                Console.mX++;
                             }
                             break;
                     }
@@ -281,201 +143,21 @@ namespace Aura_OS.System.Processing.Application
 
         public void DrawTerminal()
         {
-            Kernel.canvas.DrawFilledRectangle(Kernel.BlackColor, x, y, width, height);
+            Console.Draw();
 
-            for (int i = 0; i < mRows; i++)
-            {
-                for (int j = 0; j < mCols; j++)
-                {
-                    if (Text[i][j].Char == 0 || Text[i][j].Char == '\n')
-                        continue;
-
-                    Graphics.WriteByte(Text[i][j].Char, Kernel.console.x + j * Kernel.font.Width, Kernel.console.y + i * Kernel.font.Height, Text[i][j].ForegroundColor);
-                }
-            }
-
-            if (!ScrollMode)
+            if (!Console.ScrollMode)
             {
                 if (Command.Length > 0)
                 {
-                    int baseX = mX - Command.Length;
+                    int baseX = Console.mX - Command.Length;
 
                     for (int i = 0; i < Command.Length; i++)
                     {
-                        Graphics.WriteByte(Command[i], Kernel.console.x + (baseX + i) * Kernel.font.Width, Kernel.console.y + mY * Kernel.font.Height, ForegroundColor);
+                        Console.WriteByte(Command[i], Kernel.console.x + (baseX + i) * Kernel.font.Width, Kernel.console.y + Console.mY * Kernel.font.Height, Console.ForegroundColor);
                     }
                 }
 
-                DrawCursor();
-            }
-        }
-
-        private void ClearText()
-        {
-            for (int i = 0; i < mRows; i++)
-            {
-                for (int j = 0; j < mCols; j++)
-                {
-                    Text[i][j].Char = (char)0;
-                }
-            }
-        }
-
-        public void Clear()
-        {
-            ClearText();
-            mX = 0;
-            mY = -1;
-        }
-
-        public void DrawCursor()
-        {
-            Graphics.SetCursorPos(mX, mY);
-        }
-
-        /// <summary>
-        /// Scroll the console up and move crusor to the start of the line.
-        /// </summary>
-        private void DoLineFeed()
-        {
-            if (Redirect)
-            {
-                CommandOutput += "\n";
-            }
-            else
-            {
-                mY++;
-                mX = 0;
-                if (mY == mRows)
-                {
-                    Scroll();
-                    mY--;
-                }
-            }
-        }
-
-        List<Cell[]> TerminalHistory = new List<Cell[]>();
-        int TerminalHistoryIndex = 0;
-        bool ScrollMode = false;
-
-        private void Scroll()
-        {
-            Cell[] removedLine = Text[0];
-
-            for (int i = 0; i < mRows - 1; i++)
-            {
-                Text[i] = Text[i + 1];
-            }
-
-            // Use the removed line instead of creating a new one.
-            Text[mRows - 1] = removedLine;
-            TerminalHistory.Add(removedLine);
-            TerminalHistoryIndex++;
-
-            // Clear the reused line.
-            for (int i = 0; i < mCols; i++)
-            {
-                Text[mRows - 1][i].Char = (char)0;
-            }
-        }
-
-        private void ScrollUp()
-        {
-            if (TerminalHistoryIndex > 0)
-            {
-                ScrollMode = true;
-
-                for (int i = Rows - 1; i > 0; i--)
-                {
-                    Text[i] = Text[i - 1];
-                }
-
-                TerminalHistoryIndex--;
-
-                Text[0] = TerminalHistory[TerminalHistoryIndex];
-            }
-        }
-
-        private void ScrollDown()
-        {
-            TerminalHistoryIndex = 0;
-
-            TerminalHistory.Clear();
-
-            ScrollMode = false;
-
-            ClearText();
-            mX = 0;
-            mY = 0;
-            BeforeCommand();
-        }
-
-        private void DoCarriageReturn()
-        {
-            mX = 0;
-        }
-
-        private void DoTab()
-        {
-            Write(Space);
-            Write(Space);
-            Write(Space);
-            Write(Space);
-        }
-
-        /// <summary>
-        /// Write char to the console.
-        /// </summary>
-        /// <param name="aChar">A char to write</param>
-        public void Write(char aChar)
-        {
-            if (Redirect)
-            {
-                CommandOutput += aChar;
-            }
-            else
-            {
-                Text[mY][mX] = new Cell() { Char = aChar, ForegroundColor = ForegroundColor, BackgroundColor = BackgroundColor };
-
-                mX++;
-                if (mX == mCols)
-                {
-                    DoLineFeed();
-                }
-            }
-        }
-
-        public void Write(uint aInt) => Write(aInt.ToString());
-
-        public void Write(ulong aLong) => Write(aLong.ToString());
-
-        public void WriteLine() => Write(Environment.NewLine);
-
-        public void WriteLine(string aText) => Write(aText + Environment.NewLine);
-
-        public void Write(string aText)
-        {
-            for (int i = 0; i < aText.Length; i++)
-            {
-                switch (aText[i])
-                {
-                    case LineFeed:
-                        DoLineFeed();
-                        break;
-
-                    case CarriageReturn:
-                        DoCarriageReturn();
-                        break;
-
-                    case Tab:
-                        DoTab();
-                        break;
-
-                    /* Normal characters, simply write them */
-                    default:
-                        Write(aText[i]);
-                        break;
-                }
+                Console.DrawCursor();
             }
         }
 
@@ -486,30 +168,30 @@ namespace Aura_OS.System.Processing.Application
         /// </summary>
         public void BeforeCommand()
         {
-            Foreground = ConsoleColor.Blue;
-            Write(UserLevel.TypeUser);
+            Console.Foreground = ConsoleColor.Blue;
+            Console.Write(UserLevel.TypeUser);
 
-            Foreground = ConsoleColor.Yellow;
-            Write(Kernel.userLogged);
+            Console.Foreground = ConsoleColor.Yellow;
+            Console.Write(Kernel.userLogged);
 
-            Foreground = ConsoleColor.DarkGray;
-            Write("@");
+            Console.Foreground = ConsoleColor.DarkGray;
+            Console.Write("@");
 
-            Foreground = ConsoleColor.Blue;
-            Write(Kernel.ComputerName);
+            Console.Foreground = ConsoleColor.Blue;
+            Console.Write(Kernel.ComputerName);
 
-            Foreground = ConsoleColor.Gray;
-            Write("> ");
+            Console.Foreground = ConsoleColor.Gray;
+            Console.Write("> ");
 
-            Foreground = ConsoleColor.DarkGray;
-            Write(Kernel.CurrentDirectory + "~ ");
+            Console.Foreground = ConsoleColor.DarkGray;
+            Console.Write(Kernel.CurrentDirectory + "~ ");
 
-            Foreground = ConsoleColor.White;
+            Console.Foreground = ConsoleColor.White;
         }
 
         public string GetConsoleInfo()
         {
-            return Kernel.canvas.Name() + " (" + Kernel.console.Cols + "x" + Kernel.console.Rows + " - " + global::System.Console.OutputEncoding.BodyName + ")";
+            return Kernel.canvas.Name() + " (" + Console.mCols + "x" + Console.mRows + " - " + global::System.Console.OutputEncoding.BodyName + ")";
         }
 
         #endregion
