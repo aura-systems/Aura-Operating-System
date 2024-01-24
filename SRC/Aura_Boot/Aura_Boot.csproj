@@ -24,6 +24,7 @@
         <OptimizationLevel>3</OptimizationLevel>
         <Timeout>0</Timeout>
         <RemoveBootDebugOutput>True</RemoveBootDebugOutput>
+        <CompressionType>Gzip</CompressionType>
     </PropertyGroup>
 
     <ItemGroup>
