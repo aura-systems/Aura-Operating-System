@@ -66,11 +66,6 @@ namespace Aura_OS.System.Graphics.UI.GUI
                 button.NoBorder = true;
                 button.Action = new Action(() =>
                 {
-                    if (applicationConfig.Template == typeof(Terminal) && Kernel.console != null)
-                    {
-                        return;
-                    }
-
                     Application app = Kernel.ApplicationManager.Instantiate(applicationConfig);
                     app.Initialize();
 

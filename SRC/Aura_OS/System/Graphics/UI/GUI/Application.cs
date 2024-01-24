@@ -41,11 +41,6 @@ namespace Aura_OS.System.Graphics.UI.GUI
                 Kernel.WindowManager.apps.Remove(this);
                 Kernel.ProcessManager.Processes.Remove(this);
                 Kernel.Taskbar.UpdateApplicationButtons();
-
-                if (this is Terminal)
-                {
-                    Kernel.console = null;
-                }
             });
             Window.Minimize.Action = new Action(() =>
             {

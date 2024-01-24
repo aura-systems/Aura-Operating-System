@@ -1067,7 +1067,7 @@ namespace Aura_OS.System.Processing.Application.Emulators.GameBoyEmu.DMG
 
         private void warnUnsupportedOpcode(byte opcode)
         {
-            Kernel.console.WriteLine((PC - 1).ToString("x4") + " Unsupported operation " + opcode.ToString("x2"));
+            Console.WriteLine((PC - 1).ToString("x4") + " Unsupported operation " + opcode.ToString("x2"));
         }
 
         private int dev;
@@ -1075,7 +1075,7 @@ namespace Aura_OS.System.Processing.Application.Emulators.GameBoyEmu.DMG
         {
             dev += cycles;
             if (dev >= 23440108 /*&& PC == 0x35A*/) //0x100 23440108
-                Kernel.console.WriteLine("Cycle " + dev + " PC " + (PC - 1).ToString("x4") + " Stack: " + SP.ToString("x4") + " AF: " + A.ToString("x2") + "" + F.ToString("x2")
+                Console.WriteLine("Cycle " + dev + " PC " + (PC - 1).ToString("x4") + " Stack: " + SP.ToString("x4") + " AF: " + A.ToString("x2") + "" + F.ToString("x2")
                     + " BC: " + B.ToString("x2") + "" + C.ToString("x2") + " DE: " + D.ToString("x2") + "" + E.ToString("x2") + " HL: " + H.ToString("x2") + "" + L.ToString("x2")
                     + " op " + opcode.ToString("x2") + " D16 " + mmu.readWord(PC).ToString("x4") + " LY: " + mmu.LY.ToString("x2"));
         }

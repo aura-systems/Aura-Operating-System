@@ -125,7 +125,7 @@ namespace Aura_OS.System.Processing.Interpreter.Commands
         /// </summary>
         public virtual void PrintHelp()
         {
-            Kernel.console.WriteLine("No help information for this command!");
+            Console.WriteLine("No help information for this command!");
         }
 
         /// <summary>

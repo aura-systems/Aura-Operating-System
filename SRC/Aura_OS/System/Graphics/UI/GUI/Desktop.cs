@@ -11,6 +11,7 @@ using System.Drawing;
 using Aura_OS.System.Filesystem;
 using System.Collections.Generic;
 using Cosmos.System;
+using Aura_OS.System.Processing.Application.Terminal;
 
 namespace Aura_OS.System.Graphics.UI.GUI
 {
@@ -31,7 +32,7 @@ namespace Aura_OS.System.Graphics.UI.GUI
             RightClickEntry entry = new("Open in Explorer", 0, 0, MainPanel.RightClick.Width);
             entry.Action = new Action(() =>
             {
-                Explorer app = new(Kernel.CurrentVolume, 500, 400, 40, 40);
+                ExplorerApp app = new(Kernel.CurrentVolume, 500, 400, 40, 40);
                 app.Initialize();
 
                 Kernel.WindowManager.apps.Add(app);
@@ -51,8 +52,7 @@ namespace Aura_OS.System.Graphics.UI.GUI
             RightClickEntry entry2 = new("Open in Terminal", 0, 0, MainPanel.RightClick.Width);
             entry2.Action = new Action(() =>
             {
-                var app = new Terminal(700, 600, 40, 40);
-                Kernel.console = app;
+                TerminalApp app = new(700, 600, 40, 40);
                 app.Initialize();
 
                 Kernel.WindowManager.apps.Add(app);
@@ -73,7 +73,7 @@ namespace Aura_OS.System.Graphics.UI.GUI
             RightClickEntry entryInfo = new("OS Information", 0, 0, MainPanel.RightClick.Width);
             entryInfo.Action = new Action(() =>
             {
-                SystemInfo app = new(402, 360, 40, 40);
+                SystemInfoApp app = new(402, 360, 40, 40);
                 app.Initialize();
 
                 Kernel.WindowManager.apps.Add(app);

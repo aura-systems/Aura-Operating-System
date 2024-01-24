@@ -14,7 +14,7 @@ using System.Drawing;
 
 namespace Aura_OS.System.Processing.Application
 {
-    public class Explorer : Graphics.UI.GUI.Application
+    public class ExplorerApp : Graphics.UI.GUI.Application
     {
         public static string ApplicationName = "Explorer";
 
@@ -28,7 +28,7 @@ namespace Aura_OS.System.Processing.Application
         Button Up;
         List<Button> Disks;
 
-        public Explorer(string currentPath, int width, int height, int x = 0, int y = 0) : base(ApplicationName, width, height, x, y)
+        public ExplorerApp(string currentPath, int width, int height, int x = 0, int y = 0) : base(ApplicationName, width, height, x, y)
         {
             Window.Icon = ResourceManager.GetImage("16-explorer.bmp");
 

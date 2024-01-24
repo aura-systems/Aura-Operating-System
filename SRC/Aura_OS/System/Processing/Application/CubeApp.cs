@@ -11,7 +11,7 @@ using Aura_OS.System.Graphics.UI.GUI;
 
 namespace Aura_OS.System.Processing.Application
 {
-    public class Cube : Graphics.UI.GUI.Application
+    public class CubeApp : Graphics.UI.GUI.Application
     {
         public static string ApplicationName = "Cube";
 
@@ -19,7 +19,7 @@ namespace Aura_OS.System.Processing.Application
         public int[][] faces;
         public int angle;
 
-        public Cube(int width, int height, int x = 0, int y = 0) : base(ApplicationName, width, height, x, y)
+        public CubeApp(int width, int height, int x = 0, int y = 0) : base(ApplicationName, width, height, x, y)
         {
             vertices = new Vertex[]
             {

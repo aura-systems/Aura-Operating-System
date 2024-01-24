@@ -5,10 +5,7 @@
 */
 
 using System;
-using System.Collections.Generic;
-using System.Text;
 using Cosmos.System.Graphics;
-using IL2CPU.API.Attribs;
 
 namespace Aura_OS.System.Graphics.UI
 {
@@ -66,21 +63,5 @@ namespace Aura_OS.System.Graphics.UI
     {
         Text,
         Graphical
-    }
-
-    public static class ConsoleMode
-    {
-        public static string GetConsoleInfo()
-        {
-            /* if (Global.AConsole.Type == ConsoleType.Graphical)
-            {
-                return Global.AConsole.Name + " (" + Global.AConsole.Width + "x" + Global.AConsole.Height + " - " + global::System.Console.OutputEncoding.BodyName + ")";
-            }
-            else
-            {
-                return Global.AConsole.Name + " (" + global::System.Console.OutputEncoding.BodyName + ")";
-            } */
-            return "";
-        }
     }
 }

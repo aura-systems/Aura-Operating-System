@@ -269,7 +269,7 @@ namespace Aura_OS.System.Processing.Application.Emulators.GameBoyEmu.DMG
                     gamePak = new MBC5();
                     break;
                 default:
-                    Kernel.console.WriteLine("Unsupported MBC: " + rom[0x147].ToString("x2"));
+                    Console.WriteLine("Unsupported MBC: " + rom[0x147].ToString("x2"));
                     break;
             }
             gamePak.Init(rom);

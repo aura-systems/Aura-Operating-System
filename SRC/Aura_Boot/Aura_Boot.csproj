@@ -12,7 +12,7 @@
         <DebugMode>Source</DebugMode>
         <IgnoreDebugStubAttribute>False</IgnoreDebugStubAttribute>
         <ISOFile>bin\Debug\net6.0\Aura_Boot.iso</ISOFile>
-        <CompileVBEMultiboot>True</CompileVBEMultiboot>
+        <CompileVBEMultiboot>False</CompileVBEMultiboot>
         <ExtractMapFile>False</ExtractMapFile>
         <Launch>VMware</Launch>
         <VisualStudioDebugPort>Pipe: Cosmos\Serial</VisualStudioDebugPort>

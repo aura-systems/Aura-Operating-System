@@ -6,6 +6,7 @@
 
 using Aura_OS.System.Filesystem;
 using Aura_OS.System.Processing.Application;
+using Aura_OS.System.Processing.Application.Terminal;
 using Cosmos.System;
 using Cosmos.System.Graphics;
 using System;
@@ -36,8 +37,8 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
             entry2.Action = new Action(() =>
             {
                 Kernel.CurrentDirectory = CurrentPath;
-                var app = new Terminal(700, 600, 40, 40);
-                Kernel.console = app;
+
+                var app = new TerminalApp(700, 600, 40, 40);
                 app.Initialize();
 
                 Kernel.WindowManager.apps.Add(app);
@@ -326,7 +327,7 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
         {
             if (OpenNewWindow)
             {
-                Explorer app = new(CurrentPath + folderName + "\\", 500, 400, 40, 40);
+                ExplorerApp app = new(CurrentPath + folderName + "\\", 500, 400, 40, 40);
                 app.Initialize();
 
                 Kernel.WindowManager.apps.Add(app);

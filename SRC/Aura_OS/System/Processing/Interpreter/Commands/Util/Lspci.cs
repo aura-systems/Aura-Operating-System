@@ -34,11 +34,13 @@ namespace Aura_OS.System.Processing.Interpreter.Commands.Util
                 Console.WriteLine(line);
                 count++;
 
+                /*
                 if (count == Kernel.console.Rows - 4)
                 {
                     //Console.ReadKey();
                     count = 0;
                 }
+                */
             }
 
             return new ReturnInfo(this, ReturnCode.OK);
