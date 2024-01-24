@@ -29,6 +29,25 @@ namespace Aura_OS.System.Processing.Application.Terminal
                 _terminal.Console.Background = Console.BackgroundColor;
 
                 _terminal.Console.WriteLine(value);
+
+                Kernel.WindowManager.DrawWindows();
+                Kernel.Taskbar.Update();
+                Kernel.canvas.Display();
+            }
+        }
+
+        public override void Write(string value)
+        {
+            if (_isEnabled)
+            {
+                _terminal.Console.Foreground = Console.ForegroundColor;
+                _terminal.Console.Background = Console.BackgroundColor;
+
+                _terminal.Console.Write(value);
+
+                Kernel.WindowManager.DrawWindows();
+                Kernel.Taskbar.Update();
+                Kernel.canvas.Display();
             }
         }
 
@@ -40,6 +59,10 @@ namespace Aura_OS.System.Processing.Application.Terminal
                 _terminal.Console.Background = Console.BackgroundColor;
 
                 _terminal.Console.Write(value.ToString());
+
+                Kernel.WindowManager.DrawWindows();
+                Kernel.Taskbar.Update();
+                Kernel.canvas.Display();
             }
         }
 
