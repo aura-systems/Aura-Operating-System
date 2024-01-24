@@ -4,12 +4,7 @@
 * PROGRAMMERS:      Valentin Charbonnier <valentinbreiz@gmail.com>
 */
 
-using Aura_OS.System.Graphics.UI.GUI;
-using Cosmos.Core;
-using Cosmos.Core.Memory;
 using Cosmos.System.Graphics;
-using System.IO;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace Aura_OS.System.Processing.Application
 {

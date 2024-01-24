@@ -89,15 +89,11 @@ namespace Aura_OS.System.Graphics.UI.GUI
 
         public override void HandleLeftClick()
         {
-            base.HandleLeftClick();
-
             MainPanel.HandleLeftClick();
         }
 
         public override void HandleRightClick()
         {
-            base.HandleRightClick();
-
             MainPanel.HandleRightClick();
         }
     }

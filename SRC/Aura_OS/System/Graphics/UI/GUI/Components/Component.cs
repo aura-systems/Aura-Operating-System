@@ -61,7 +61,7 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
                 RightClick.X = (int)MouseManager.X;
                 RightClick.Y = (int)MouseManager.Y;
                 RightClick.Opened = true;
-                Kernel.MouseManager.component = this;
+                Kernel.MouseManager.TopComponent = this;
             }
         }
 

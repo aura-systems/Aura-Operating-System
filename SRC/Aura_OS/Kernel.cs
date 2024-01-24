@@ -25,7 +25,6 @@ using Aura_OS.System.Graphics.UI.GUI;
 using Aura_OS.System.Graphics;
 using Aura_OS.System.Processing.Interpreter;
 using Aura_OS.System.Processing.Interpreter.Commands;
-using Aura_OS.System.Processing.Application.Terminal;
 
 namespace Aura_OS
 {
@@ -93,7 +92,6 @@ namespace Aura_OS
         // Textmode Console
         public static System.Graphics.UI.CUI.Console TextmodeConsole;
 
-        public static bool Pressed;
         public static int FreeCount = 0;
 
         private static int _frames = 0;
