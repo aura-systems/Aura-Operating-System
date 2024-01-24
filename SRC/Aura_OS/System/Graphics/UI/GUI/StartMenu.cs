@@ -49,11 +49,11 @@ namespace Aura_OS.System.Graphics.UI.GUI
             {
                 Bitmap icon = null;
 
-                if (applicationConfig.Template.Name == "Terminal")
+                if (applicationConfig.Template.Name.StartsWith("Terminal"))
                 {
                     icon = ResourceManager.GetImage("24-terminal.bmp");
                 }
-                else if (applicationConfig.Template.Name == "Explorer")
+                else if (applicationConfig.Template.Name.StartsWith("Explorer"))
                 {
                     icon = ResourceManager.GetImage("24-explorer.bmp");
                 }
@@ -66,21 +66,7 @@ namespace Aura_OS.System.Graphics.UI.GUI
                 button.NoBorder = true;
                 button.Action = new Action(() =>
                 {
-                    Application app = Kernel.ApplicationManager.Instantiate(applicationConfig);
-                    app.Initialize();
-
-                    Kernel.WindowManager.apps.Add(app);
-                    app.zIndex = Kernel.WindowManager.GetTopZIndex() + 1;
-                    Kernel.WindowManager.MarkStackDirty();
-
-                    app.Visible = true;
-                    app.Focused = true;
-
-                    Kernel.ProcessManager.Start(app);
-
-                    Kernel.Taskbar.UpdateApplicationButtons();
-                    Kernel.WindowManager.UpdateFocusStatus();
-
+                    Kernel.ApplicationManager.StartApplication(applicationConfig);
                     Kernel.Taskbar.ShowStartMenu = false;
                 });
                 buttons.Add(button);

@@ -12,6 +12,7 @@ using Aura_OS.System.Filesystem;
 using System.Collections.Generic;
 using Cosmos.System;
 using Aura_OS.System.Processing.Application.Terminal;
+using Aura_OS.System.Processing;
 
 namespace Aura_OS.System.Graphics.UI.GUI
 {
@@ -32,40 +33,14 @@ namespace Aura_OS.System.Graphics.UI.GUI
             RightClickEntry entry = new("Open in Explorer", 0, 0, MainPanel.RightClick.Width);
             entry.Action = new Action(() =>
             {
-                ExplorerApp app = new(Kernel.CurrentVolume, 500, 400, 40, 40);
-                app.Initialize();
-
-                Kernel.WindowManager.apps.Add(app);
-                app.zIndex = Kernel.WindowManager.GetTopZIndex() + 1;
-                Kernel.WindowManager.MarkStackDirty();
-
-                app.Visible = true;
-                app.Focused = true;
-
-                Kernel.ProcessManager.Start(app);
-
-                Kernel.Taskbar.UpdateApplicationButtons();
-                Kernel.WindowManager.UpdateFocusStatus();
+                Kernel.ApplicationManager.StartApplication(typeof(ExplorerApp));
             });
             rightClickEntries.Add(entry);
 
             RightClickEntry entry2 = new("Open in Terminal", 0, 0, MainPanel.RightClick.Width);
             entry2.Action = new Action(() =>
             {
-                TerminalApp app = new(700, 600, 40, 40);
-                app.Initialize();
-
-                Kernel.WindowManager.apps.Add(app);
-                app.zIndex = Kernel.WindowManager.GetTopZIndex() + 1;
-                Kernel.WindowManager.MarkStackDirty();
-
-                app.Visible = true;
-                app.Focused = true;
-
-                Kernel.ProcessManager.Start(app);
-
-                Kernel.Taskbar.UpdateApplicationButtons();
-                Kernel.WindowManager.UpdateFocusStatus();
+                Kernel.ApplicationManager.StartApplication(typeof(TerminalApp));
             });
 
             rightClickEntries.Add(entry2);
@@ -73,20 +48,7 @@ namespace Aura_OS.System.Graphics.UI.GUI
             RightClickEntry entryInfo = new("OS Information", 0, 0, MainPanel.RightClick.Width);
             entryInfo.Action = new Action(() =>
             {
-                SystemInfoApp app = new(402, 360, 40, 40);
-                app.Initialize();
-
-                Kernel.WindowManager.apps.Add(app);
-                app.zIndex = Kernel.WindowManager.GetTopZIndex() + 1;
-                Kernel.WindowManager.MarkStackDirty();
-
-                app.Visible = true;
-                app.Focused = true;
-
-                Kernel.ProcessManager.Start(app);
-
-                Kernel.Taskbar.UpdateApplicationButtons();
-                Kernel.WindowManager.UpdateFocusStatus();
+                Kernel.ApplicationManager.StartApplication(typeof(SystemInfoApp));
             });
             rightClickEntries.Add(entryInfo);
 

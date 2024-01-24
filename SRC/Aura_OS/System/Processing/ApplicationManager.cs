@@ -4,8 +4,7 @@
 * PROGRAMMERS:      Valentin Charbonnier <valentinbreiz@gmail.com>
 */
 
-using Aura_OS.System.Filesystem;
-using Aura_OS.System.Graphics.UI.GUI;
+using Aura_OS.System.Processing.Application;
 using Aura_OS.System.Processing.Application.Emulators.GameBoyEmu;
 using Aura_OS.System.Processing.Application.Terminal;
 using Cosmos.System.Graphics;
@@ -13,7 +12,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 
-namespace Aura_OS.System.Processing.Application
+namespace Aura_OS.System.Processing
 {
     public class ApplicationConfig
     {
@@ -61,6 +60,55 @@ namespace Aura_OS.System.Processing.Application
         {
             ApplicationConfig config = new(template, x, y, weight, height);
             ApplicationTemplates.Add(config);
+        }
+
+        public void StartApplication(ApplicationConfig config)
+        {
+            Graphics.UI.GUI.Application app = Kernel.ApplicationManager.Instantiate(config);
+            app.Initialize();
+
+            Kernel.WindowManager.apps.Add(app);
+            app.zIndex = Kernel.WindowManager.GetTopZIndex() + 1;
+            Kernel.WindowManager.MarkStackDirty();
+
+            app.Visible = true;
+            app.Focused = true;
+
+            Kernel.ProcessManager.Start(app);
+
+            Kernel.Taskbar.UpdateApplicationButtons();
+            Kernel.WindowManager.UpdateFocusStatus();
+        }
+
+        public void StartApplication(Type appType)
+        {
+            Graphics.UI.GUI.Application app = Kernel.ApplicationManager.Instantiate(appType);
+            app.Initialize();
+
+            Kernel.WindowManager.apps.Add(app);
+            app.zIndex = Kernel.WindowManager.GetTopZIndex() + 1;
+            Kernel.WindowManager.MarkStackDirty();
+
+            app.Visible = true;
+            app.Focused = true;
+
+            Kernel.ProcessManager.Start(app);
+
+            Kernel.Taskbar.UpdateApplicationButtons();
+            Kernel.WindowManager.UpdateFocusStatus();
+        }
+
+        public Graphics.UI.GUI.Application Instantiate(Type appType)
+        {
+            foreach (var config in ApplicationTemplates)
+            {
+                if (config.Template == appType)
+                {
+                    return Instantiate(config);
+                }
+            }
+
+            throw new InvalidOperationException("Unknown app type.");
         }
 
         public Graphics.UI.GUI.Application Instantiate(ApplicationConfig config)

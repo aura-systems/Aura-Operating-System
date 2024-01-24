@@ -37,21 +37,7 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
             entry2.Action = new Action(() =>
             {
                 Kernel.CurrentDirectory = CurrentPath;
-
-                var app = new TerminalApp(700, 600, 40, 40);
-                app.Initialize();
-
-                Kernel.WindowManager.apps.Add(app);
-                app.zIndex = Kernel.WindowManager.GetTopZIndex() + 1;
-                Kernel.WindowManager.MarkStackDirty();
-
-                app.Visible = true;
-                app.Focused = true;
-
-                Kernel.ProcessManager.Start(app);
-
-                Kernel.Taskbar.UpdateApplicationButtons();
-                Kernel.WindowManager.UpdateFocusStatus();
+                Kernel.ApplicationManager.StartApplication(typeof(TerminalApp));
             });
 
             rightClickEntries.Add(entry2);
