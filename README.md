@@ -26,6 +26,7 @@ See the [Aura Progression](https://github.com/aura-systems/Aura-Operating-System
 - GUI (SVGAII, VBE)
 - Networking (ARP, IPV4, ICMP, UDP, DNS, DHCP, TCP, HTTP)
 - Lua 5.2 interpreter
+- Package manager
 
 ## Screenshots
 
