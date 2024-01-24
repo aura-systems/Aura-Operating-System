@@ -138,8 +138,6 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
 
         public override void HandleLeftClick()
         {
-            base.HandleLeftClick();
-
             foreach (var button in Buttons)
             {
                 if (button.RightClick.Opened)
@@ -166,22 +164,7 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
                 }
             }
 
-            foreach (var button in RightClick.Entries)
-            {
-                if (button.IsInside((int)MouseManager.X, (int)MouseManager.Y))
-                {
-                    if (button.Action != null)
-                    {
-                        button.Action();
-                        return;
-                    }
-                }
-            }
-
-            if (RightClick != null)
-            {
-                RightClick.Opened = false;
-            }
+            base.HandleLeftClick();
         }
 
         public override void HandleRightClick()
@@ -190,6 +173,11 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
             {
                 if (button.IsInside((int)MouseManager.X, (int)MouseManager.Y))
                 {
+                    if (button.RightClick != null && button.RightClick.Opened)
+                    {
+                        return;
+                    }
+
                     button.RightClick.X = (int)MouseManager.X;
                     button.RightClick.Y = (int)MouseManager.Y;
                     button.RightClick.Opened = true;

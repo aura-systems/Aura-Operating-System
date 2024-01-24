@@ -185,9 +185,13 @@ namespace Aura_OS
             global::System.Console.InputEncoding = Encoding.ASCII;
             global::System.Console.OutputEncoding = Encoding.ASCII;
 
+            CustomConsole.WriteLineInfo("Try cleaning memory...");
+            FreeCount = Heap.Collect();
+            CustomConsole.WriteLineInfo("Cosmos Memory Manager works.");
+
             BootTime = Time.MonthString() + "/" + Time.DayString() + "/" + Time.YearString() + ", " + Time.TimeString(true, true, true);
 
-            CustomConsole.WriteLineOK("Boot done.");
+            CustomConsole.WriteLineOK("Aura Operating System boot sequence done.");
 
             Running = true;
         }
