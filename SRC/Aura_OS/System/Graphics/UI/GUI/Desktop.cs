@@ -52,7 +52,7 @@ namespace Aura_OS.System.Graphics.UI.GUI
             RightClickEntry entry2 = new("Open in Terminal", 0, 0, MainPanel.RightClick.Width);
             entry2.Action = new Action(() =>
             {
-                Terminal app = new(700, 600, 40, 40);
+                TerminalApp app = new(700, 600, 40, 40);
                 app.Initialize();
 
                 Kernel.WindowManager.apps.Add(app);

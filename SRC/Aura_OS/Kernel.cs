@@ -224,7 +224,7 @@ namespace Aura_OS
             }
         }
 
-        public static Terminal GetCurrentTerminal()
+        public static TerminalApp GetCurrentTerminal()
         {
             if (WindowManager != null && WindowManager.apps.Count > 0)
             {
@@ -232,7 +232,7 @@ namespace Aura_OS
                 {
                     if (app.Name == "Terminal" && app.Focused == true)
                     {
-                        return app as Terminal;
+                        return app as TerminalApp;
                     }
                 }
             }

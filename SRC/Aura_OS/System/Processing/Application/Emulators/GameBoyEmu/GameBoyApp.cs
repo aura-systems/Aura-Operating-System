@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Aura_OS.System.Processing.Application.Emulators.GameBoyEmu
 {
-    public class GameBoyEmu : Graphics.UI.GUI.Application
+    public class GameBoyApp : Graphics.UI.GUI.Application
     {
         public byte[] Rom;
 
@@ -24,7 +24,7 @@ namespace Aura_OS.System.Processing.Application.Emulators.GameBoyEmu
         int cyclesThisUpdate = 0;
         int cpuCycles = 0;
 
-        public GameBoyEmu(byte[] rom, string name, int width, int height, int x = 0, int y = 0) : base(name, width, height, x, y)
+        public GameBoyApp(byte[] rom, string name, int width, int height, int x = 0, int y = 0) : base(name, width, height, x, y)
         {
             Rom = rom;
 
@@ -37,7 +37,7 @@ namespace Aura_OS.System.Processing.Application.Emulators.GameBoyEmu
             mmu.loadGamePak(Rom);
         }
 
-        public GameBoyEmu(int width, int height, int x = 0, int y = 0) : base("GameBoyEmu", width, height, x, y)
+        public GameBoyApp(int width, int height, int x = 0, int y = 0) : base("GameBoyEmu", width, height, x, y)
         {
             Rom = Files.TetrisRom;
 

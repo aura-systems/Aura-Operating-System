@@ -6,6 +6,7 @@
 
 using Aura_OS.System.Filesystem;
 using Aura_OS.System.Processing.Application;
+using Aura_OS.System.Processing.Application.Terminal;
 using Cosmos.System;
 using Cosmos.System.Graphics;
 using System;
@@ -37,7 +38,7 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
             {
                 Kernel.CurrentDirectory = CurrentPath;
 
-                var app = new Terminal(700, 600, 40, 40);
+                var app = new TerminalApp(700, 600, 40, 40);
                 app.Initialize();
 
                 Kernel.WindowManager.apps.Add(app);

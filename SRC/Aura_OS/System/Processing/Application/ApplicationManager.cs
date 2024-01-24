@@ -7,6 +7,7 @@
 using Aura_OS.System.Filesystem;
 using Aura_OS.System.Graphics.UI.GUI;
 using Aura_OS.System.Processing.Application.Emulators.GameBoyEmu;
+using Aura_OS.System.Processing.Application.Terminal;
 using Cosmos.System.Graphics;
 using System;
 using System.Collections.Generic;
@@ -43,12 +44,12 @@ namespace Aura_OS.System.Processing.Application
 
         public void LoadApplications()
         {
-            RegisterApplication(typeof(Terminal), 40, 40, 700, 600);
+            RegisterApplication(typeof(TerminalApp), 40, 40, 700, 600);
             RegisterApplication(typeof(ExplorerApp), 40, 40, 500, 400);
             RegisterApplication(typeof(MemoryInfoApp), 40, 40, 400, 300);
             RegisterApplication(typeof(SystemInfoApp), 40, 40, 402, 360);
             RegisterApplication(typeof(CubeApp), 40, 40, 200, 200);
-            RegisterApplication(typeof(GameBoyEmu), 40, 40, 160 + 4, 144 + 22);
+            RegisterApplication(typeof(GameBoyApp), 40, 40, 160 + 4, 144 + 22);
         }
 
         public void RegisterApplication(ApplicationConfig config)
@@ -66,9 +67,9 @@ namespace Aura_OS.System.Processing.Application
         {
             Graphics.UI.GUI.Application app = null;
 
-            if (config.Template == typeof(Terminal))
+            if (config.Template == typeof(TerminalApp))
             {
-                app = new Terminal(config.Weight, config.Height, config.X, config.Y);
+                app = new TerminalApp(config.Weight, config.Height, config.X, config.Y);
             }
             else if (config.Template == typeof(CubeApp))
             {
@@ -82,9 +83,9 @@ namespace Aura_OS.System.Processing.Application
             {
                 app = new MemoryInfoApp(config.Weight, config.Height, config.X, config.Y);
             }
-            else if (config.Template == typeof(GameBoyEmu))
+            else if (config.Template == typeof(GameBoyApp))
             {
-                app = new GameBoyEmu(config.Weight, config.Height, config.X, config.Y);
+                app = new GameBoyApp(config.Weight, config.Height, config.X, config.Y);
             }
             else if (config.Template == typeof(ExplorerApp))
             {
@@ -135,7 +136,7 @@ namespace Aura_OS.System.Processing.Application
                 string name = fileName;
                 byte[] bytes = File.ReadAllBytes(path);
 
-                var app = new GameBoyEmu(bytes, name, 160 + 4, 144 + 22, 40, 40);
+                var app = new GameBoyApp(bytes, name, 160 + 4, 144 + 22, 40, 40);
 
                 app.Initialize();
 
