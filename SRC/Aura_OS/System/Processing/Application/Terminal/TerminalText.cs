@@ -5,43 +5,54 @@
 */
 
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace Aura_OS.System.Processing.Application.Terminal
 {
     public class TerminalTextWriter : TextWriter
     {
         private TerminalApp _terminal;
+        private bool _isEnabled;
 
         public TerminalTextWriter(TerminalApp terminal)
         {
             _terminal = terminal;
+            _isEnabled = true;
+        }
+
+        public override void WriteLine(string value)
+        {
+            if (_isEnabled)
+            {
+                _terminal.Console.Foreground = Console.ForegroundColor;
+                _terminal.Console.Background = Console.BackgroundColor;
+
+                _terminal.Console.WriteLine(value);
+            }
         }
 
         public override void Write(char value)
         {
-            _terminal.WriteToConsole(value.ToString());
+            if (_isEnabled)
+            {
+                _terminal.Console.Foreground = Console.ForegroundColor;
+                _terminal.Console.Background = Console.BackgroundColor;
+
+                _terminal.Console.Write(value.ToString());
+            }
         }
 
-        public override Encoding Encoding => Encoding.UTF8;
-    }
+        public override Encoding Encoding => Encoding.ASCII;
 
-    public class TerminalTextReader : TextReader
-    {
-        private TerminalApp _terminal;
-
-        public TerminalTextReader(TerminalApp terminal)
+        public void Enable()
         {
-            _terminal = terminal;
+            _isEnabled = true;
         }
 
-        public override string ReadLine()
+        public void Disable()
         {
-            return _terminal.ReadLineFromConsole();
+            _isEnabled = false;
         }
     }
 }

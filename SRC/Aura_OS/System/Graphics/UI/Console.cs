@@ -64,20 +64,4 @@ namespace Aura_OS.System.Graphics.UI
         Text,
         Graphical
     }
-
-    public static class ConsoleMode
-    {
-        public static string GetConsoleInfo()
-        {
-            /* if (Global.AConsole.Type == ConsoleType.Graphical)
-            {
-                return Global.AConsole.Name + " (" + Global.AConsole.Width + "x" + Global.AConsole.Height + " - " + global::System.Console.OutputEncoding.BodyName + ")";
-            }
-            else
-            {
-                return Global.AConsole.Name + " (" + global::System.Console.OutputEncoding.BodyName + ")";
-            } */
-            return "";
-        }
-    }
 }

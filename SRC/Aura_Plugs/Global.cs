@@ -7,6 +7,7 @@
 using IL2CPU.API.Attribs;
 using Cosmos.HAL;
 using System.IO;
+using Cosmos.System;
 
 namespace Aura_OS.System.Plugs
 {
@@ -23,6 +24,7 @@ namespace Aura_OS.System.Plugs
         {
             // We must init Console before calling Inits.
             // This is part of the "minimal" boot to allow output.
+            Cosmos.System.Global.Console = new Console(textScreen);
 
             Kernel.TextmodeConsole = new Graphics.UI.CUI.Console(textScreen);
 

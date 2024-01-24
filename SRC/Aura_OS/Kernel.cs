@@ -181,9 +181,12 @@ namespace Aura_OS
 
             //Load Localization
             CustomConsole.WriteLineInfo("Initializing localization...");
-
             Encoding.RegisterProvider(CosmosEncodingProvider.Instance);
             KeyboardManager.SetKeyLayout(new Sys.ScanMaps.USStandardLayout());
+
+            CustomConsole.WriteLineInfo("Initializing ASCII encoding...");
+            global::System.Console.InputEncoding = Encoding.ASCII;
+            global::System.Console.OutputEncoding = Encoding.ASCII;
 
             BootTime = Time.MonthString() + "/" + Time.DayString() + "/" + Time.YearString() + ", " + Time.TimeString(true, true, true);
 
@@ -224,22 +227,6 @@ namespace Aura_OS
             }
         }
 
-        public static TerminalApp GetCurrentTerminal()
-        {
-            if (WindowManager != null && WindowManager.apps.Count > 0)
-            {
-                foreach (var app in WindowManager.apps)
-                {
-                    if (app.Name == "Terminal" && app.Focused == true)
-                    {
-                        return app as TerminalApp;
-                    }
-                }
-            }
-
-            return null;
-        }
-
         private static void UpdateUI()
         {
             Desktop.Update();
@@ -259,7 +246,7 @@ namespace Aura_OS
 
             try
             {
-                // WindowManager.UpdateWindowStack();
+                WindowManager.UpdateWindowStack();
                 WindowManager.DrawWindows();
             }
             catch (Exception ex)

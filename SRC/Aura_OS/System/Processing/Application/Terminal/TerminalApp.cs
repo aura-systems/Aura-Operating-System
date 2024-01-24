@@ -7,20 +7,11 @@
 using Aura_OS.System.Users;
 using Cosmos.System;
 using System;
-using System.Drawing;
 using System.Collections.Generic;
 using Aura_OS.System.Graphics;
-using System.IO;
 
 namespace Aura_OS.System.Processing.Application.Terminal
 {
-    public struct Cell
-    {
-        public char Char;
-        public Color ForegroundColor;
-        public Color BackgroundColor;
-    }
-
     public class TerminalApp : Graphics.UI.GUI.Application
     {
         private static string ApplicationName = "Terminal";
@@ -31,10 +22,14 @@ namespace Aura_OS.System.Processing.Application.Terminal
         private int CommandIndex = 0;
         private string Command = string.Empty;
 
+        private bool Redirect = false;
+        private TerminalTextWriter _writer;
+
         public TerminalApp(int width, int height, int x = 0, int y = 0) : base(ApplicationName, width, height, x, y)
         {
             Window.Icon = ResourceManager.GetImage("16-terminal.bmp");
 
+            _writer = new TerminalTextWriter(this);
             Console = new(x, y, width - 4, height - Window.TopBar.Height - 4);
 
             BeforeCommand();
@@ -47,6 +42,8 @@ namespace Aura_OS.System.Processing.Application.Terminal
 
             if (Focused)
             {
+                ActivateRedirection();
+
                 KeyEvent keyEvent = null;
 
                 if (KeyboardManager.TryReadKey(out keyEvent))
@@ -64,7 +61,7 @@ namespace Aura_OS.System.Processing.Application.Terminal
 
                                 Console.ScrollMode = true;
 
-                                Console.WriteLine(Command);
+                                global::System.Console.WriteLine(Command);
 
                                 Kernel.CommandManager.Execute(Command);
 
@@ -77,8 +74,8 @@ namespace Aura_OS.System.Processing.Application.Terminal
                             }
                             else
                             {
-                                Console.WriteLine();
-                                Console.WriteLine();
+                                global::System.Console.WriteLine();
+                                global::System.Console.WriteLine();
                             }
 
                             BeforeCommand();
@@ -140,6 +137,10 @@ namespace Aura_OS.System.Processing.Application.Terminal
                     }
                 }
             }
+            else
+            {
+                DeactivateRedirection();
+            }
 
             DrawTerminal();
         }
@@ -161,6 +162,26 @@ namespace Aura_OS.System.Processing.Application.Terminal
                 }
 
                 Console.DrawCursor();
+            }
+        }
+
+        public void ActivateRedirection()
+        {
+            if (Redirect == false)
+            {
+                global::System.Console.SetOut(_writer);
+                _writer.Enable();
+                Redirect = true;
+            }
+        }
+
+        public void DeactivateRedirection()
+        {
+            if (Redirect == true)
+            {
+                // global::System.Console.SetOut(global::System.Console.Out);
+                _writer.Disable();
+                Redirect = false;
             }
         }
 
@@ -190,11 +211,6 @@ namespace Aura_OS.System.Processing.Application.Terminal
             Console.Write(Kernel.CurrentDirectory + "~ ");
 
             Console.Foreground = ConsoleColor.White;
-        }
-
-        public string GetConsoleInfo()
-        {
-            return Kernel.canvas.Name() + " (" + Console.mCols + "x" + Console.mRows + " - " + global::System.Console.OutputEncoding.BodyName + ")";
         }
 
         #endregion

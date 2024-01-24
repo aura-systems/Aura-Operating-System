@@ -27,7 +27,7 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
 
         private static uint[] Pallete = new uint[16];
 
-        private Cell[][] Text;
+        private Cell[] Text;
 
         public int mX = 0;
         public int mY = 0;
@@ -98,16 +98,7 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
             mCols = width / Kernel.font.Width - 1;
             mRows = height / Kernel.font.Height - 2;
 
-            Text = new Cell[mRows][];
-            for (int i = 0; i < mRows; i++)
-            {
-                Text[i] = new Cell[mCols];
-
-                for (int j = 0; j < mRows; j++)
-                {
-                    Text[i][j] = new Cell();
-                }
-            }
+            Text = new Cell[mCols * mRows];
 
             ClearText();
 
@@ -115,6 +106,11 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
 
             mX = 0;
             mY = 0;
+        }
+
+        private int GetIndex(int row, int col)
+        {
+            return row * mCols + col;
         }
 
         public override void Draw()
@@ -128,10 +124,11 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
             {
                 for (int j = 0; j < mCols; j++)
                 {
-                    if (Text[i][j].Char == 0 || Text[i][j].Char == '\n')
+                    int index = GetIndex(i, j);
+                    if (Text[index].Char == 0 || Text[index].Char == '\n')
                         continue;
 
-                    WriteByte(Text[i][j].Char, X + j * Kernel.font.Width, Y + i * Kernel.font.Height, Text[i][j].ForegroundColor);
+                    WriteByte(Text[index].Char, X + j * Kernel.font.Width, Y + i * Kernel.font.Height, Text[index].ForegroundColor);
                 }
             }
         }
@@ -152,12 +149,11 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
 
         private void ClearText()
         {
-            for (int i = 0; i < mRows; i++)
+            for (int i = 0; i < Text.Length; i++)
             {
-                for (int j = 0; j < mCols; j++)
-                {
-                    Text[i][j].Char = (char)0;
-                }
+                Text[i].Char = (char)0;
+                Text[i].ForegroundColor = (uint)ForegroundColor.ToArgb();
+                Text[i].BackgroundColor = (uint)BackgroundColor.ToArgb();
             }
         }
 
@@ -200,23 +196,21 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
 
         private void Scroll()
         {
-            Cell[] removedLine = Text[0];
+            Cell[] lineToHistory = new Cell[mCols];
+            Array.Copy(Text, 0, lineToHistory, 0, mCols);
+            TerminalHistory.Add(lineToHistory);
 
-            for (int i = 0; i < mRows - 1; i++)
+            Array.Copy(Text, mCols, Text, 0, (mRows - 1) * mCols);
+
+            int startIndex = (mRows - 1) * mCols;
+            for (int i = startIndex; i < startIndex + mCols; i++)
             {
-                Text[i] = Text[i + 1];
+                Text[i].Char = (char)0;
+                Text[i].ForegroundColor = (uint)ForegroundColor.ToArgb();
+                Text[i].BackgroundColor = (uint)BackgroundColor.ToArgb();
             }
 
-            // Use the removed line instead of creating a new one.
-            Text[mRows - 1] = removedLine;
-            TerminalHistory.Add(removedLine);
-            TerminalHistoryIndex++;
-
-            // Clear the reused line.
-            for (int i = 0; i < mCols; i++)
-            {
-                Text[mRows - 1][i].Char = (char)0;
-            }
+            TerminalHistoryIndex = TerminalHistory.Count;
         }
 
         public void ScrollUp()
@@ -225,14 +219,12 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
             {
                 ScrollMode = true;
 
-                for (int i = mRows - 1; i > 0; i--)
-                {
-                    Text[i] = Text[i - 1];
-                }
-
                 TerminalHistoryIndex--;
 
-                Text[0] = TerminalHistory[TerminalHistoryIndex];
+                Array.Copy(Text, 0, Text, mCols, (mRows - 1) * mCols);
+
+                Cell[] lineFromHistory = TerminalHistory[TerminalHistoryIndex];
+                Array.Copy(lineFromHistory, 0, Text, 0, mCols);
             }
         }
 
@@ -274,7 +266,8 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
             }
             else
             {
-                Text[mY][mX] = new Cell() { Char = aChar, ForegroundColor = (uint)ForegroundColor.ToArgb(), BackgroundColor = (uint)BackgroundColor.ToArgb() };
+                int index = GetIndex(mY, mX);
+                Text[index] = new Cell() { Char = aChar, ForegroundColor = (uint)ForegroundColor.ToArgb(), BackgroundColor = (uint)BackgroundColor.ToArgb() };
 
                 mX++;
                 if (mX == mCols)
