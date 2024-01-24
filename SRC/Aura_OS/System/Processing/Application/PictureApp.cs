@@ -13,13 +13,13 @@ using static System.Net.Mime.MediaTypeNames;
 
 namespace Aura_OS.System.Processing.Application
 {
-    public class Picture : Graphics.UI.GUI.Application
+    public class PictureApp : Graphics.UI.GUI.Application
     {
         public static string ApplicationName = "Picture";
 
         public Bitmap Image;
 
-        public Picture(string name, Bitmap bitmap, int width, int height, int x = 0, int y = 0) : base(name, width, height, x, y)
+        public PictureApp(string name, Bitmap bitmap, int width, int height, int x = 0, int y = 0) : base(name, width, height, x, y)
         {
             ApplicationName = name;
             Image = bitmap;

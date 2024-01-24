@@ -26,6 +26,7 @@ using Aura_OS.System.Graphics;
 using Aura_OS.System.Processing.Application;
 using Aura_OS.System.Processing.Interpreter;
 using Aura_OS.System.Processing.Interpreter.Commands;
+using Aura_OS.System.Processing.Application.Terminal;
 
 namespace Aura_OS
 {
@@ -104,9 +105,6 @@ namespace Aura_OS
 
         public static string CommandOutput = "";
         public static bool Redirect = false;
-
-        public static TextWriter stdout, stderror;
-        public static TextReader stdin;
 
         public static void BeforeRun()
         {

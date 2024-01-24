@@ -39,6 +39,17 @@ namespace Aura_OS.System.Processing.Interpreter.Commands.Util
                 Console.WriteLine();
             }
 
+            for (int i = 0; i < Kernel.WindowManager.apps.Count; i++)
+            {
+                Console.Write(Kernel.WindowManager.apps[i].ID.ToString().PadRight(8, ' '));
+                Console.Write(((int)Kernel.WindowManager.apps[i].Type).ToString().PadRight(8, ' '));
+                Console.Write((Kernel.WindowManager.apps[i].Running ? 1 : 0).ToString().PadRight(9, ' '));
+                Console.Write(Kernel.WindowManager.apps[i].Name.ToString().PadRight(24, ' '));
+                Console.Write(Kernel.WindowManager.apps[i].Focused.ToString().PadRight(32, ' '));
+
+                Console.WriteLine();
+            }
+
             return new ReturnInfo(this, ReturnCode.OK);
         }
     }

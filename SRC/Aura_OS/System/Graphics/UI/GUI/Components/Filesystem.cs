@@ -326,7 +326,7 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
         {
             if (OpenNewWindow)
             {
-                Explorer app = new(CurrentPath + folderName + "\\", 500, 400, 40, 40);
+                ExplorerApp app = new(CurrentPath + folderName + "\\", 500, 400, 40, 40);
                 app.Initialize();
 
                 Kernel.WindowManager.apps.Add(app);

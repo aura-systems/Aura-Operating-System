@@ -44,10 +44,10 @@ namespace Aura_OS.System.Processing.Application
         public void LoadApplications()
         {
             RegisterApplication(typeof(Terminal), 40, 40, 700, 600);
-            RegisterApplication(typeof(Explorer), 40, 40, 500, 400);
-            RegisterApplication(typeof(MemoryInfo), 40, 40, 400, 300);
-            RegisterApplication(typeof(SystemInfo), 40, 40, 402, 360);
-            RegisterApplication(typeof(Cube), 40, 40, 200, 200);
+            RegisterApplication(typeof(ExplorerApp), 40, 40, 500, 400);
+            RegisterApplication(typeof(MemoryInfoApp), 40, 40, 400, 300);
+            RegisterApplication(typeof(SystemInfoApp), 40, 40, 402, 360);
+            RegisterApplication(typeof(CubeApp), 40, 40, 200, 200);
             RegisterApplication(typeof(GameBoyEmu), 40, 40, 160 + 4, 144 + 22);
         }
 
@@ -70,25 +70,25 @@ namespace Aura_OS.System.Processing.Application
             {
                 app = new Terminal(config.Weight, config.Height, config.X, config.Y);
             }
-            else if (config.Template == typeof(Cube))
+            else if (config.Template == typeof(CubeApp))
             {
-                app = new Cube(config.Weight, config.Height, config.X, config.Y);
+                app = new CubeApp(config.Weight, config.Height, config.X, config.Y);
             }
-            else if (config.Template == typeof(SystemInfo))
+            else if (config.Template == typeof(SystemInfoApp))
             {
-                app = new SystemInfo(config.Weight, config.Height, config.X, config.Y);
+                app = new SystemInfoApp(config.Weight, config.Height, config.X, config.Y);
             }
-            else if (config.Template == typeof(MemoryInfo))
+            else if (config.Template == typeof(MemoryInfoApp))
             {
-                app = new MemoryInfo(config.Weight, config.Height, config.X, config.Y);
+                app = new MemoryInfoApp(config.Weight, config.Height, config.X, config.Y);
             }
             else if (config.Template == typeof(GameBoyEmu))
             {
                 app = new GameBoyEmu(config.Weight, config.Height, config.X, config.Y);
             }
-            else if (config.Template == typeof(Explorer))
+            else if (config.Template == typeof(ExplorerApp))
             {
-                app = new Explorer(Kernel.CurrentVolume, config.Weight, config.Height, config.X, config.Y);
+                app = new ExplorerApp(Kernel.CurrentVolume, config.Weight, config.Height, config.X, config.Y);
             }
             else
             {
@@ -113,7 +113,7 @@ namespace Aura_OS.System.Processing.Application
                     width = (int)bitmap.Width + 1;
                 }
 
-                var app = new Picture(name, bitmap, width, (int)bitmap.Height + 20);
+                var app = new PictureApp(name, bitmap, width, (int)bitmap.Height + 20);
 
                 app.Initialize();
 

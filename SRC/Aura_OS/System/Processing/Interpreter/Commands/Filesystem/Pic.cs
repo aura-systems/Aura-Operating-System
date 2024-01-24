@@ -43,7 +43,7 @@ namespace Aura_OS.System.Processing.Interpreter.Commands.Filesystem
                     width = (int)bitmap.Width + 1;
                 }
 
-                var app = new Picture(name, bitmap, width, (int)bitmap.Height + 20);
+                var app = new PictureApp(name, bitmap, width, (int)bitmap.Height + 20);
 
                 app.Initialize();
 

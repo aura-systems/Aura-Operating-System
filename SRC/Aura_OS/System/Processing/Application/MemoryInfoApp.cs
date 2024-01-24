@@ -10,11 +10,11 @@ using Cosmos.Core.Memory;
 
 namespace Aura_OS.System.Processing.Application
 {
-    public class MemoryInfo : Graphics.UI.GUI.Application
+    public class MemoryInfoApp : Graphics.UI.GUI.Application
     {
         public static string ApplicationName = "MemoryInfo";
 
-        public MemoryInfo(int width, int height, int x = 0, int y = 0) : base(ApplicationName, width, height, x, y)
+        public MemoryInfoApp(int width, int height, int x = 0, int y = 0) : base(ApplicationName, width, height, x, y)
         {
 
         }

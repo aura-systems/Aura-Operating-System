@@ -10,8 +10,9 @@ using System;
 using System.Drawing;
 using System.Collections.Generic;
 using Aura_OS.System.Graphics;
+using System.IO;
 
-namespace Aura_OS.System.Processing.Application
+namespace Aura_OS.System.Processing.Application.Terminal
 {
     public struct Cell
     {
@@ -20,17 +21,17 @@ namespace Aura_OS.System.Processing.Application
         public Color BackgroundColor;
     }
 
-    public class Terminal : Graphics.UI.GUI.Application
+    public class TerminalApp : Graphics.UI.GUI.Application
     {
-        public static string ApplicationName = "Terminal";
+        private static string ApplicationName = "Terminal";
 
-        public System.Graphics.UI.GUI.Components.Console Console;
+        public Graphics.UI.GUI.Components.Console Console;
 
-        List<string> Commands = new List<string>();
+        private List<string> Commands = new List<string>();
         private int CommandIndex = 0;
-        public string Command = string.Empty;
+        private string Command = string.Empty;
 
-        public Terminal(int width, int height, int x = 0, int y = 0) : base(ApplicationName, width, height, x, y)
+        public TerminalApp(int width, int height, int x = 0, int y = 0) : base(ApplicationName, width, height, x, y)
         {
             Window.Icon = ResourceManager.GetImage("16-terminal.bmp");
 

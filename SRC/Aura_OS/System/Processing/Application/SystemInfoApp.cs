@@ -9,13 +9,13 @@ using Aura_OS.System.Graphics.UI.GUI;
 
 namespace Aura_OS.System.Processing.Application
 {
-    public class SystemInfo : Graphics.UI.GUI.Application
+    public class SystemInfoApp : Graphics.UI.GUI.Application
     {
         public static string ApplicationName = "SystemInfo";
 
         public Color GreenPen = Color.Green;
 
-        public SystemInfo(int width, int height, int x = 0, int y = 0) : base(ApplicationName, width, height, x, y)
+        public SystemInfoApp(int width, int height, int x = 0, int y = 0) : base(ApplicationName, width, height, x, y)
         {
         }
 
