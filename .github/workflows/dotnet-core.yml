@@ -12,9 +12,9 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-latest]
+        os: [ubuntu-20.04]
         include:
-          - os: ubuntu-latest
+          - os: ubuntu-20.04
             target: Linux
 
     steps:
@@ -51,7 +51,7 @@ jobs:
           msbuild Build.sln /t:Restore
           msbuild Build.sln /maxcpucount /verbosity:normal /t:Build
       - name: Build Cosmos
-        if: ${{ matrix.os == 'ubuntu-latest' }}
+        if: ${{ matrix.os == 'ubuntu-20.04' }}
         run: |
           sudo apt-get install yasm mkisofs make binutils git && \
             cd ~ && \
