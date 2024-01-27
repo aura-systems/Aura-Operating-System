@@ -67,7 +67,7 @@ namespace Aura_OS.System.Graphics.UI.GUI
                 button.Action = new Action(() =>
                 {
                     Kernel.ApplicationManager.StartApplication(applicationConfig);
-                    Kernel.Taskbar.ShowStartMenu = false;
+                    Kernel.ShowStartMenu = false;
                 });
                 buttons.Add(button);
                 buttonY += 32;
@@ -142,9 +142,9 @@ namespace Aura_OS.System.Graphics.UI.GUI
 
         private void HandleClick()
         {
-            if (Kernel.Taskbar.ShowStartMenu && !IsInside((int)MouseManager.X, (int)MouseManager.Y))
+            if (Kernel.ShowStartMenu && !IsInside((int)MouseManager.X, (int)MouseManager.Y))
             {
-                Kernel.Taskbar.ShowStartMenu = false;
+                Kernel.ShowStartMenu = false;
                 return;
             }
 

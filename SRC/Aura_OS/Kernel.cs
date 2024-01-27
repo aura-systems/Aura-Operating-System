@@ -79,7 +79,10 @@ namespace Aura_OS
         public static Color Pink = Color.FromArgb(0xff, 0xe7, 0x98, 0xde);
 
         public static Taskbar Taskbar;
+        public static StartMenu StartMenu;
         public static Desktop Desktop;
+
+        public static bool ShowStartMenu = false;
 
         // Managers
         public static ProcessManager ProcessManager;
@@ -170,6 +173,13 @@ namespace Aura_OS
             Taskbar.Initialize();
             Taskbar.UpdateApplicationButtons();
 
+            CustomConsole.WriteLineInfo("Starting start menu...");
+            int menuWidth = 168;
+            int menuHeight = 32 * 9;
+            int menuX = 0;
+            int menuY = (int)(Kernel.screenHeight - menuHeight - Taskbar.taskbarHeight);
+            StartMenu = new StartMenu(menuX, menuY, menuWidth, menuHeight);
+
             CustomConsole.WriteLineInfo("Starting mouse...");
 
             //START MOUSE
@@ -253,6 +263,11 @@ namespace Aura_OS
             catch (Exception ex)
             {
                 Crash.StopKernel("Fatal dotnet exception occured while drawing windows.", ex.Message, "0x00000000", "0");
+            }
+
+            if (ShowStartMenu)
+            {
+                StartMenu.Update();
             }
 
             MouseManager.Update();

@@ -22,7 +22,7 @@ namespace Aura_OS.System.Graphics.UI.GUI
 
         public Desktop(int x, int y, int width, int height) : base(x, y, width, height)
         {
-            MainPanel = new FilesystemPanel(Kernel.CurrentVolume, Color.White, Kernel.WhiteColor, x + 4, y + 16 + 4, width - 7 - 75, height - Kernel.Taskbar.taskbarHeight);
+            MainPanel = new FilesystemPanel(Kernel.CurrentVolume, Color.White, Kernel.WhiteColor, x + 4, y + 16 + 4, width - 7 - 75, height - Taskbar.taskbarHeight);
             MainPanel.OpenNewWindow = true;
             MainPanel.Borders = false;
             MainPanel.Background = false;

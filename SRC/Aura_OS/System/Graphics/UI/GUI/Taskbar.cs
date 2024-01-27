@@ -13,16 +13,15 @@ namespace Aura_OS.System.Graphics.UI.GUI
 {
     public class Taskbar : Process
     {
-        public int taskbarHeight = 33;
+        public static int taskbarHeight = 33;
         int startY;
 
         Button StartButton;
         Button HourButton;
         Button NetworkButton;
-        StartMenu StartMenu;
+        
 
         public bool Clicked = false;
-        public bool ShowStartMenu = false;
 
         public Dictionary<string, Button> Buttons;
 
@@ -51,12 +50,6 @@ namespace Aura_OS.System.Graphics.UI.GUI
             int networkButtonY = (int)Kernel.screenHeight - 25;
             NetworkButton = new Button(ResourceManager.GetImage("16-network-offline.bmp"), netoworkButtonX, networkButtonY, networkButtonWidth, networkButtonHeight);
             NetworkButton.NoBorder = true;
-
-            int menuWidth = 168;
-            int menuHeight = 32 * 9;
-            int menuX = 0;
-            int menuY = (int)(Kernel.screenHeight - menuHeight - taskbarHeight);
-            StartMenu = new StartMenu(menuX, menuY, menuWidth, menuHeight);
 
             Buttons = new Dictionary<string, Button>();
         }
@@ -106,7 +99,7 @@ namespace Aura_OS.System.Graphics.UI.GUI
         {
             if (StartButton.IsInside((int)MouseManager.X, (int)MouseManager.Y))
             {
-                ShowStartMenu = !ShowStartMenu;
+                Kernel.ShowStartMenu = !Kernel.ShowStartMenu;
             }
 
             foreach (var application in  Kernel.WindowManager.apps)
@@ -147,9 +140,6 @@ namespace Aura_OS.System.Graphics.UI.GUI
 
             // Applications
             DrawApplications();
-
-            // Start menu
-            DrawStartMenu();
         }
 
         private void DrawApplications()
@@ -169,14 +159,6 @@ namespace Aura_OS.System.Graphics.UI.GUI
                 }
 
                 Buttons[application.Name].Update();
-            }
-        }
-
-        private void DrawStartMenu()
-        {
-            if (ShowStartMenu)
-            {
-                StartMenu.Update();
             }
         }
 
