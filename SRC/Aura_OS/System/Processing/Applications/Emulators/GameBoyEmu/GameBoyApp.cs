@@ -56,8 +56,8 @@ namespace Aura_OS.System.Processing.Applications.Emulators.GameBoyEmu
         {
             base.Update();
 
-            _ppu.X = x;
-            _ppu.Y = y;
+            _ppu.X = X;
+            _ppu.Y = Y;
 
             if (Focused)
             {

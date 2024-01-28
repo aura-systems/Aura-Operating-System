@@ -16,21 +16,21 @@ namespace Aura_OS.System.Graphics.UI.GUI
 {
     public class Application : Process
     {
-        public static bool HasWindowMoving = false;
-        public readonly int width;
-        public readonly int height;
+        public readonly int Width;
+        public readonly int Height;
 
-        public int x;
-        public int y;
-        int px;
-        int py;
-        bool lck = false;
-        bool pressed;
-
+        public int X;
+        public int Y;
         public Window Window;
         public bool Focused = false;
         public bool Visible = false;
         public int zIndex = 0;
+
+        private int _px;
+        private int _py;
+        private bool _lck = false;
+        private bool _pressed;
+        private bool _hasWindowMoving = false;
 
         public Application(string name, int width, int height, int x = 0, int y = 0) : base(name, ProcessType.Program)
         {
@@ -72,10 +72,10 @@ namespace Aura_OS.System.Graphics.UI.GUI
             rightClickEntries.Add(entry2);
             Window.TopBar.RightClick.Entries = rightClickEntries;
 
-            this.x = x + 3;
-            this.y = y + Window.TopBar.Height + 3;
-            this.width = width - 4;
-            this.height = height - (Window.TopBar.Height + 4);
+            X = x + 3;
+            Y = y + Window.TopBar.Height + 3;
+            Width = width - 4;
+            Height = height - (Window.TopBar.Height + 4);
         }
 
         public virtual void HandleLeftClick()
@@ -109,50 +109,50 @@ namespace Aura_OS.System.Graphics.UI.GUI
 
                 if (Kernel.MouseManager.IsLeftButtonDown)
                 {
-                    if (!HasWindowMoving && Window.IsInside((int)MouseManager.X, (int)MouseManager.Y))
+                    if (!_hasWindowMoving && Window.IsInside((int)MouseManager.X, (int)MouseManager.Y))
                     {
                         BringToFront();
                     }
 
-                    if (!HasWindowMoving && Window.Close.IsInside((int)MouseManager.X, (int)MouseManager.Y))
+                    if (!_hasWindowMoving && Window.Close.IsInside((int)MouseManager.X, (int)MouseManager.Y))
                     {
                         Window.Close.Action();
 
                         return;
                     }
-                    else if (!HasWindowMoving && Window.Minimize.IsInside((int)MouseManager.X, (int)MouseManager.Y))
+                    else if (!_hasWindowMoving && Window.Minimize.IsInside((int)MouseManager.X, (int)MouseManager.Y))
                     {
                         Window.Minimize.Action();
 
                         return;
                     }
-                    else if (!HasWindowMoving && Window.TopBar.IsInside((int)MouseManager.X, (int)MouseManager.Y))
+                    else if (!_hasWindowMoving && Window.TopBar.IsInside((int)MouseManager.X, (int)MouseManager.Y))
                     {
-                        HasWindowMoving = true;
+                        _hasWindowMoving = true;
 
-                        pressed = true;
-                        if (!lck)
+                        _pressed = true;
+                        if (!_lck)
                         {
-                            px = (int)MouseManager.X - Window.X;
-                            py = (int)MouseManager.Y - Window.Y;
-                            lck = true;
+                            _px = (int)MouseManager.X - Window.X;
+                            _py = (int)MouseManager.Y - Window.Y;
+                            _lck = true;
                         }
                     }
                 }
                 else
                 {
-                    pressed = false;
-                    lck = false;
-                    HasWindowMoving = false;
+                    _pressed = false;
+                    _lck = false;
+                    _hasWindowMoving = false;
                 }
 
-                if (pressed)
+                if (_pressed)
                 {
-                    Window.X = (int)(MouseManager.X - px);
-                    Window.Y = (int)(MouseManager.Y - py);
+                    Window.X = (int)(MouseManager.X - _px);
+                    Window.Y = (int)(MouseManager.Y - _py);
 
-                    x = (int)(MouseManager.X - px + 3);
-                    y = (int)(MouseManager.Y - py + Window.TopBar.Height + 3);
+                    X = (int)(MouseManager.X - _px + 3);
+                    Y = (int)(MouseManager.Y - _py + Window.TopBar.Height + 3);
                 }
             }
         }

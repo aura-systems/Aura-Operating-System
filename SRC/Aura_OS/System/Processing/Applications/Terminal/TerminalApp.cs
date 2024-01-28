@@ -47,8 +47,8 @@ namespace Aura_OS.System.Processing.Applications.Terminal
         {
             base.Update();
 
-            Console.X = x;
-            Console.Y = y;
+            Console.X = X;
+            Console.Y = Y;
 
             if (Focused)
             {
