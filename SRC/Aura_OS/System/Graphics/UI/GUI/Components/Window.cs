@@ -4,11 +4,8 @@
 * PROGRAMMERS:      Valentin Charbonnier <valentinbreiz@gmail.com>
 */
 
-using Cosmos.System;
 using Cosmos.System.Graphics;
 using Cosmos.System.Graphics.Fonts;
-using System.Collections.Generic;
-using System;
 
 namespace Aura_OS.System.Graphics.UI.GUI.Components
 {
@@ -41,7 +38,7 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
             Borders = true;
         }
 
-        public override void Update()
+        public override void Draw()
         {
             Kernel.canvas.DrawFilledRectangle(Kernel.DarkGrayLight, X + 2, Y + 2, Width - 3, Height - 3);
 
@@ -58,14 +55,14 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
             {
                 TopBar.X = X + 3;
                 TopBar.Y = Y + 3;
-                TopBar.Update();
+                TopBar.Draw();
                 Kernel.canvas.DrawString(Name, PCScreenFont.Default, Kernel.WhiteColor, X + 5, Y + 4);
                 Close.X = X + Width - 20;
                 Close.Y = Y + 5;
-                Close.Update();
+                Close.Draw();
                 Minimize.X = X + Width - 38;
                 Minimize.Y = Y + 5;
-                Minimize.Update();
+                Minimize.Draw();
             }
         }
     }

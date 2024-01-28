@@ -4,9 +4,10 @@
 * PROGRAMMERS:      Valentin Charbonnier <valentinbreiz@gmail.com>
 */
 
-using Aura_OS.System.Processing.Application;
-using Aura_OS.System.Processing.Application.Emulators.GameBoyEmu;
-using Aura_OS.System.Processing.Application.Terminal;
+using Aura_OS.System.Processing.Applications;
+using Aura_OS.System.Processing.Applications.Emulators.GameBoyEmu;
+using Aura_OS.System.Processing.Applications.Terminal;
+using Aura_OS.System.Processing.Processes;
 using Cosmos.System.Graphics;
 using System;
 using System.Collections.Generic;
@@ -67,17 +68,17 @@ namespace Aura_OS.System.Processing
             Graphics.UI.GUI.Application app = Kernel.ApplicationManager.Instantiate(config);
             app.Initialize();
 
-            Kernel.WindowManager.apps.Add(app);
-            app.zIndex = Kernel.WindowManager.GetTopZIndex() + 1;
-            Kernel.WindowManager.MarkStackDirty();
+            Explorer.WindowManager.Applications.Add(app);
+            app.zIndex = Explorer.WindowManager.GetTopZIndex() + 1;
+            Explorer.WindowManager.MarkStackDirty();
 
             app.Visible = true;
             app.Focused = true;
 
             Kernel.ProcessManager.Start(app);
 
-            Kernel.Taskbar.UpdateApplicationButtons();
-            Kernel.WindowManager.UpdateFocusStatus();
+            Explorer.Taskbar.UpdateApplicationButtons();
+            Explorer.WindowManager.UpdateFocusStatus();
         }
 
         public void StartApplication(Type appType)
@@ -85,17 +86,17 @@ namespace Aura_OS.System.Processing
             Graphics.UI.GUI.Application app = Kernel.ApplicationManager.Instantiate(appType);
             app.Initialize();
 
-            Kernel.WindowManager.apps.Add(app);
-            app.zIndex = Kernel.WindowManager.GetTopZIndex() + 1;
-            Kernel.WindowManager.MarkStackDirty();
+            Explorer.WindowManager.Applications.Add(app);
+            app.zIndex = Explorer.WindowManager.GetTopZIndex() + 1;
+            Explorer.WindowManager.MarkStackDirty();
 
             app.Visible = true;
             app.Focused = true;
 
             Kernel.ProcessManager.Start(app);
 
-            Kernel.Taskbar.UpdateApplicationButtons();
-            Kernel.WindowManager.UpdateFocusStatus();
+            Explorer.Taskbar.UpdateApplicationButtons();
+            Explorer.WindowManager.UpdateFocusStatus();
         }
 
         public Graphics.UI.GUI.Application Instantiate(Type appType)
@@ -166,17 +167,17 @@ namespace Aura_OS.System.Processing
 
                 app.Initialize();
 
-                Kernel.WindowManager.apps.Add(app);
-                app.zIndex = Kernel.WindowManager.GetTopZIndex() + 1;
-                Kernel.WindowManager.MarkStackDirty();
+                Explorer.WindowManager.Applications.Add(app);
+                app.zIndex = Explorer.WindowManager.GetTopZIndex() + 1;
+                Explorer.WindowManager.MarkStackDirty();
 
                 app.Visible = true;
                 app.Focused = true;
 
                 Kernel.ProcessManager.Start(app);
 
-                Kernel.Taskbar.UpdateApplicationButtons();
-                Kernel.WindowManager.UpdateFocusStatus();
+                Explorer.Taskbar.UpdateApplicationButtons();
+                Explorer.WindowManager.UpdateFocusStatus();
             }
             else if (fileName.EndsWith(".gb"))
             {
@@ -188,17 +189,17 @@ namespace Aura_OS.System.Processing
 
                 app.Initialize();
 
-                Kernel.WindowManager.apps.Add(app);
-                app.zIndex = Kernel.WindowManager.GetTopZIndex() + 1;
-                Kernel.WindowManager.MarkStackDirty();
+                Explorer.WindowManager.Applications.Add(app);
+                app.zIndex = Explorer.WindowManager.GetTopZIndex() + 1;
+                Explorer.WindowManager.MarkStackDirty();
 
                 app.Visible = true;
                 app.Focused = true;
 
                 Kernel.ProcessManager.Start(app);
 
-                Kernel.Taskbar.UpdateApplicationButtons();
-                Kernel.WindowManager.UpdateFocusStatus();
+                Explorer.Taskbar.UpdateApplicationButtons();
+                Explorer.WindowManager.UpdateFocusStatus();
             }
         }
     }

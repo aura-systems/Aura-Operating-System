@@ -4,10 +4,6 @@
 * PROGRAMMERS:      Valentin Charbonnier <valentinbreiz@gmail.com>
 */
 
-using Cosmos.System;
-using Cosmos.System.Graphics;
-using Cosmos.System.Graphics.Fonts;
-using System;
 using System.Collections.Generic;
 
 namespace Aura_OS.System.Graphics.UI.GUI.Components
@@ -20,9 +16,9 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
         {
         }
 
-        public override void Update()
+        public override void Draw()
         {
-            base.Update();
+            base.Draw();
         }
     }
 
@@ -37,16 +33,16 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
             Entries = new List<RightClickEntry>();
         }
 
-        public override void Update()
+        public override void Draw()
         {
-            base.Update();
+            base.Draw();
 
             int currentY = Y;
             foreach (var entry in Entries)
             {
                 entry.X = X;
                 entry.Y = currentY;
-                entry.Update();
+                entry.Draw();
 
                 currentY += entry.Height;
             }

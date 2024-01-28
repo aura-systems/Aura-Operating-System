@@ -4,37 +4,35 @@
 * PROGRAMMERS:      Valentin Charbonnier <valentinbreiz@gmail.com>
 */
 
-using Aura_OS.System.Graphics.UI.GUI;
-using Cosmos.System;
-using System;
 using System.Collections.Generic;
-using System.Threading;
+using Aura_OS.System.Graphics.UI.GUI;
 
 namespace Aura_OS
 {
     public class WindowManager
     {
-        public List<Application> apps;
-        private bool isDirty = false;
+        public List<Application> Applications;
+
+        private bool _isDirty = false;
 
         public WindowManager()
         {
-            apps = new List<Application>();
+            Applications = new List<Application>();
         }
 
         public void MarkStackDirty()
         {
-            isDirty = true;
+            _isDirty = true;
         }
 
         public int GetTopZIndex()
         {
             int topZIndex = 0;
-            for (int i = 0; i < apps.Count; i++)
+            for (int i = 0; i < Applications.Count; i++)
             {
-                if (apps[i].zIndex > topZIndex)
+                if (Applications[i].zIndex > topZIndex)
                 {
-                    topZIndex = apps[i].zIndex;
+                    topZIndex = Applications[i].zIndex;
                 }
             }
             return topZIndex;
@@ -42,10 +40,10 @@ namespace Aura_OS
 
         public void UpdateWindowStack()
         {
-            if (isDirty)
+            if (_isDirty)
             {
-                InsertionSort(apps);
-                isDirty = false;
+                InsertionSort(Applications);
+                _isDirty = false;
             }
         }
 
@@ -69,19 +67,19 @@ namespace Aura_OS
 
         public void UpdateFocusStatus()
         {
-            for (int i = 0; i < apps.Count; i++)
+            for (int i = 0; i < Applications.Count; i++)
             {
-                apps[i].Focused = (i == apps.Count - 1);
+                Applications[i].Focused = (i == Applications.Count - 1);
             }
         }
 
         public void DrawWindows()
         {
-            foreach (Application app in apps)
+            foreach (Application app in Applications)
             {
-                if (app.Running)
+                if (app.Running && app.Visible)
                 {
-                    app.Update();
+                    app.Draw();
                 }
             }
         }

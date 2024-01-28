@@ -19,7 +19,7 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
             Text = text;
         }
 
-        public override void Update()
+        public override void Draw()
         {
             Kernel.canvas.DrawFilledRectangle(Kernel.WhiteColor, X + 2, Y + 2, Width - 3, Height - 3);
 

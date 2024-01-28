@@ -4,10 +4,8 @@
 * PROGRAMMER(S):    Valentin Charbonnier <valentinbreiz@gmail.com>
 */
 
-using Aura_OS.System.Processing.Interpreter;
 using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace Aura_OS.System.Processing.Interpreter.Commands.Util
 {
@@ -47,7 +45,8 @@ namespace Aura_OS.System.Processing.Interpreter.Commands.Util
         private ReturnInfo ExecuteHelp(bool showaliases)
         {
             int count = 0;
-            foreach (var command in Kernel.CommandManager.CMDs)
+
+            foreach (var command in CommandManager.Commands)
             {
                 Console.Write("- ");
                 if (showaliases)

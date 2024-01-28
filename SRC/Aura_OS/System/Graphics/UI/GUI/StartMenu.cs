@@ -10,19 +10,19 @@ using System.Collections.Generic;
 using System.Drawing;
 using Cosmos.System;
 using Aura_OS.System.Graphics.UI.GUI.Components;
-using Aura_OS.System.Processing.Application;
+using Aura_OS.System.Processing.Processes;
 
 namespace Aura_OS.System.Graphics.UI.GUI
 {
     public class StartMenu : Window
     {
-        List<Button> buttons;
-        public Button Shutdown;
-        public Button Reboot;
-        public Panel Ribbon;
-        public Bitmap Logo;
+        private List<Button> buttons;
+        private Button Shutdown;
+        private Button Reboot;
+        private Panel Ribbon;
+        private Bitmap Logo;
 
-        public bool Clicked = false;
+        private bool Clicked = false;
 
         public StartMenu(int x, int y, int width, int height) : base(x, y, width, height)
         {
@@ -67,7 +67,7 @@ namespace Aura_OS.System.Graphics.UI.GUI
                 button.Action = new Action(() =>
                 {
                     Kernel.ApplicationManager.StartApplication(applicationConfig);
-                    Kernel.ShowStartMenu = false;
+                    Explorer.ShowStartMenu = false;
                 });
                 buttons.Add(button);
                 buttonY += 32;
@@ -81,20 +81,6 @@ namespace Aura_OS.System.Graphics.UI.GUI
             Ribbon.X = X + 3;
             Ribbon.Y = Y + 3;
             Ribbon.Update();
-            Kernel.canvas.DrawImage(Logo, X + 5, Y + Height - 66);
-
-            if (MouseManager.MouseState == MouseState.Left)
-            {
-                if (!Clicked)
-                {
-                    Clicked = true;
-                }
-            }
-            else if (Clicked)
-            {
-                Clicked = false;
-                HandleClick();
-            }
 
             // Applications buttons
             foreach (var button in buttons)
@@ -111,6 +97,19 @@ namespace Aura_OS.System.Graphics.UI.GUI
                 }
 
                 button.Update();
+            }
+
+            if (MouseManager.MouseState == MouseState.Left)
+            {
+                if (!Clicked)
+                {
+                    Clicked = true;
+                }
+            }
+            else if (Clicked)
+            {
+                Clicked = false;
+                HandleClick();
             }
 
             // Shutdown + Reboot buttons
@@ -137,14 +136,30 @@ namespace Aura_OS.System.Graphics.UI.GUI
             {
                 Reboot.BackColor = Color.LightGray;
                 Reboot.TextColor = Color.Black;
-            }        
+            }
+        }
+
+        public override void Draw()
+        {
+            base.Draw();
+
+            Ribbon.Draw();
+            Kernel.canvas.DrawImage(Logo, X + 5, Y + Height - 66);
+
+            foreach (var button in buttons)
+            {
+                button.Draw();
+            }
+
+            Shutdown.Draw();
+            Reboot.Draw();
         }
 
         private void HandleClick()
         {
-            if (Kernel.ShowStartMenu && !IsInside((int)MouseManager.X, (int)MouseManager.Y))
+            if (Explorer.ShowStartMenu && !IsInside((int)MouseManager.X, (int)MouseManager.Y))
             {
-                Kernel.ShowStartMenu = false;
+                Explorer.ShowStartMenu = false;
                 return;
             }
 

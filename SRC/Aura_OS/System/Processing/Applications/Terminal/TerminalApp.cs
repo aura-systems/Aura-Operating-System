@@ -9,25 +9,33 @@ using Cosmos.System;
 using System;
 using System.Collections.Generic;
 using Aura_OS.System.Graphics;
+using Aura_OS.System.Graphics.UI.GUI;
+using Aura_OS.System.Processing.Interpreter.Commands;
 
-namespace Aura_OS.System.Processing.Application.Terminal
+namespace Aura_OS.System.Processing.Applications.Terminal
 {
-    public class TerminalApp : Graphics.UI.GUI.Application
+    public class TerminalApp : Application
     {
         private static string ApplicationName = "Terminal";
 
         public Graphics.UI.GUI.Components.Console Console;
 
-        private List<string> Commands = new List<string>();
-        private int CommandIndex = 0;
-        private string Command = string.Empty;
+        private CommandManager _commandManager;
+        private List<string> _commands;
+        private int _commandIndex;
+        private string _command;
 
-        private bool Redirect = false;
+        private bool _redirect = false;
         private TerminalTextWriter _writer;
 
         public TerminalApp(int width, int height, int x = 0, int y = 0) : base(ApplicationName, width, height, x, y)
         {
             Window.Icon = ResourceManager.GetImage("16-terminal.bmp");
+
+            _commandManager = new CommandManager();
+            _commandIndex = 0;
+            _commands = new List<string>();
+            _command = string.Empty;
 
             _writer = new TerminalTextWriter(this);
             Console = new(x, y, width - 4, height - Window.TopBar.Height - 4);
@@ -35,8 +43,10 @@ namespace Aura_OS.System.Processing.Application.Terminal
             BeforeCommand();
         }
 
-        public override void UpdateApp()
+        public override void Update()
         {
+            base.Update();
+
             Console.X = x;
             Console.Y = y;
 
@@ -55,22 +65,22 @@ namespace Aura_OS.System.Processing.Application.Terminal
                             {
                                 break;
                             }
-                            if (Command.Length > 0)
+                            if (_command.Length > 0)
                             {
-                                Console.mX -= Command.Length;
+                                Console.mX -= _command.Length;
 
                                 Console.ScrollMode = true;
 
-                                global::System.Console.WriteLine(Command);
+                                global::System.Console.WriteLine(_command);
 
-                                Kernel.CommandManager.Execute(Command);
+                                _commandManager.Execute(_command);
 
                                 Console.ScrollMode = false;
 
-                                Commands.Add(Command);
-                                CommandIndex = Commands.Count - 1;
+                                _commands.Add(_command);
+                                _commandIndex = _commands.Count - 1;
 
-                                Command = string.Empty;
+                                _command = string.Empty;
                             }
                             else
                             {
@@ -85,9 +95,9 @@ namespace Aura_OS.System.Processing.Application.Terminal
                             {
                                 break;
                             }
-                            if (Command.Length > 0)
+                            if (_command.Length > 0)
                             {
-                                Command = Command.Remove(Command.Length - 1);
+                                _command = _command.Remove(_command.Length - 1);
                                 Console.mX--;
                             }
                             break;
@@ -98,12 +108,12 @@ namespace Aura_OS.System.Processing.Application.Terminal
                             }
                             else
                             {
-                                if (CommandIndex >= 0)
+                                if (_commandIndex >= 0)
                                 {
-                                    Console.mX -= Command.Length;
-                                    Command = Commands[CommandIndex];
-                                    CommandIndex--;
-                                    Console.mX += Command.Length;
+                                    Console.mX -= _command.Length;
+                                    _command = _commands[_commandIndex];
+                                    _commandIndex--;
+                                    Console.mX += _command.Length;
                                 }
                             }
                             break;
@@ -114,12 +124,12 @@ namespace Aura_OS.System.Processing.Application.Terminal
                             }
                             else
                             {
-                                if (CommandIndex < Commands.Count - 1)
+                                if (_commandIndex < _commands.Count - 1)
                                 {
-                                    Console.mX -= Command.Length;
-                                    CommandIndex++;
-                                    Command = Commands[CommandIndex];
-                                    Console.mX += Command.Length;
+                                    Console.mX -= _command.Length;
+                                    _commandIndex++;
+                                    _command = _commands[_commandIndex];
+                                    Console.mX += _command.Length;
                                 }
                             }
                             break;
@@ -130,7 +140,7 @@ namespace Aura_OS.System.Processing.Application.Terminal
                             }
                             if (char.IsLetterOrDigit(keyEvent.KeyChar) || char.IsPunctuation(keyEvent.KeyChar) || char.IsSymbol(keyEvent.KeyChar) || keyEvent.KeyChar == ' ')
                             {
-                                Command += keyEvent.KeyChar;
+                                _command += keyEvent.KeyChar;
                                 Console.mX++;
                             }
                             break;
@@ -141,23 +151,23 @@ namespace Aura_OS.System.Processing.Application.Terminal
             {
                 DeactivateRedirection();
             }
-
-            DrawTerminal();
         }
 
-        public void DrawTerminal()
+        public override void Draw()
         {
+            base.Draw();
+
             Console.Draw();
 
             if (!Console.ScrollMode)
             {
-                if (Command.Length > 0)
+                if (_command.Length > 0)
                 {
-                    int baseX = Console.mX - Command.Length;
+                    int baseX = Console.mX - _command.Length;
 
-                    for (int i = 0; i < Command.Length; i++)
+                    for (int i = 0; i < _command.Length; i++)
                     {
-                        Console.WriteByte(Command[i], Console.X + (baseX + i) * Kernel.font.Width, Console.Y + Console.mY * Kernel.font.Height, (uint)Console.ForegroundColor.ToArgb());
+                        Console.WriteByte(_command[i], Console.X + (baseX + i) * Kernel.font.Width, Console.Y + Console.mY * Kernel.font.Height, (uint)Console.ForegroundColor.ToArgb());
                     }
                 }
 
@@ -167,21 +177,21 @@ namespace Aura_OS.System.Processing.Application.Terminal
 
         public void ActivateRedirection()
         {
-            if (Redirect == false)
+            if (_redirect == false)
             {
                 global::System.Console.SetOut(_writer);
                 _writer.Enable();
-                Redirect = true;
+                _redirect = true;
             }
         }
 
         public void DeactivateRedirection()
         {
-            if (Redirect == true)
+            if (_redirect == true)
             {
                 // global::System.Console.SetOut(global::System.Console.Out);
                 _writer.Disable();
-                Redirect = false;
+                _redirect = false;
             }
         }
 

@@ -25,6 +25,7 @@ using Aura_OS.System.Graphics.UI.GUI;
 using Aura_OS.System.Graphics;
 using Aura_OS.System.Processing.Interpreter;
 using Aura_OS.System.Processing.Interpreter.Commands;
+using Aura_OS.System.Processing.Processes;
 
 namespace Aura_OS
 {
@@ -78,19 +79,12 @@ namespace Aura_OS
         public static Color DarkBlue = Color.FromArgb(0xff, 0x00, 0x00, 0x80);
         public static Color Pink = Color.FromArgb(0xff, 0xe7, 0x98, 0xde);
 
-        public static Taskbar Taskbar;
-        public static StartMenu StartMenu;
-        public static Desktop Desktop;
-
-        public static bool ShowStartMenu = false;
-
         // Managers
         public static ProcessManager ProcessManager;
-        public static WindowManager WindowManager;
         public static System.Input.MouseManager MouseManager;
         public static ApplicationManager ApplicationManager;
-        public static CommandManager CommandManager;
         public static PackageManager PackageManager;
+        public static Explorer Explorer;
 
         // Textmode Console
         public static System.Graphics.UI.CUI.Console TextmodeConsole;
@@ -121,10 +115,6 @@ namespace Aura_OS
 
             CustomConsole.WriteLineInfo("Loading files...");
             Files.LoadFiles();
-
-            CustomConsole.WriteLineInfo("Starting command manager...");
-            CommandManager = new CommandManager();
-            CommandManager.Initialize();
 
             CustomConsole.WriteLineInfo("Checking for boot.bat script...");
             if (File.Exists(CurrentDirectory + "boot.bat"))
@@ -158,31 +148,15 @@ namespace Aura_OS
             CustomConsole.WriteLineInfo("Registering applications...");
             ApplicationManager.LoadApplications();
 
-            CustomConsole.WriteLineInfo("Starting window manager...");
-            WindowManager = new WindowManager();
-
             CustomConsole.WriteLineInfo("Starting mouse manager...");
             MouseManager = new System.Input.MouseManager();
 
-            CustomConsole.WriteLineInfo("Starting desktop...");
-
-            Desktop = new Desktop(0, 0, (int)screenWidth, (int)screenHeight);
-
-            CustomConsole.WriteLineInfo("Starting task bar...");
-            Taskbar = new Taskbar();
-            Taskbar.Initialize();
-            Taskbar.UpdateApplicationButtons();
-
-            CustomConsole.WriteLineInfo("Starting start menu...");
-            int menuWidth = 168;
-            int menuHeight = 32 * 9;
-            int menuX = 0;
-            int menuY = (int)(Kernel.screenHeight - menuHeight - Taskbar.taskbarHeight);
-            StartMenu = new StartMenu(menuX, menuY, menuWidth, menuHeight);
+            CustomConsole.WriteLineInfo("Starting Explorer...");
+            Explorer = new Explorer();
+            Explorer.Initialize();
+            ProcessManager.Start(Explorer);
 
             CustomConsole.WriteLineInfo("Starting mouse...");
-
-            //START MOUSE
             Cosmos.System.MouseManager.ScreenWidth = screenWidth;
             Cosmos.System.MouseManager.ScreenHeight = screenHeight;
 
@@ -221,7 +195,15 @@ namespace Aura_OS
 
                 FreeCount = Heap.Collect();
 
-                UpdateUI();
+                ProcessManager.Update();
+
+                MouseManager.Update();
+                MouseManager.DrawRightClick();
+
+                DrawCursor(Sys.MouseManager.X, Sys.MouseManager.Y);
+
+                canvas.DrawString("Aura Operating System [" + Version + "." + Revision + "]", font, WhiteColor, 2, 0);
+                canvas.DrawString("fps=" + _fps, font, WhiteColor, 2, font.Height);
 
                 canvas.Display();
             }
@@ -236,44 +218,6 @@ namespace Aura_OS
                     Crash.StopKernel("Fatal dotnet exception occured.", ex.Message, "0x00000000", "0");
                 }
             }
-        }
-
-        private static void UpdateUI()
-        {
-            Desktop.Update();
-            Desktop.Draw();
-
-            canvas.DrawString("Aura Operating System [" + Version + "." + Revision + "]", font, WhiteColor, 2, 0);
-            canvas.DrawString("fps=" + _fps, font, WhiteColor, 2, font.Height);
-
-            try
-            {
-                Taskbar.Update();
-            }
-            catch (Exception ex)
-            {
-                Crash.StopKernel("Fatal dotnet exception occured while drawing taskbar.", ex.Message, "0x00000000", "0");
-            }
-
-            try
-            {
-                WindowManager.UpdateWindowStack();
-                WindowManager.DrawWindows();
-            }
-            catch (Exception ex)
-            {
-                Crash.StopKernel("Fatal dotnet exception occured while drawing windows.", ex.Message, "0x00000000", "0");
-            }
-
-            if (ShowStartMenu)
-            {
-                StartMenu.Update();
-            }
-
-            MouseManager.Update();
-            MouseManager.DrawRightClick();
-
-            DrawCursor(Sys.MouseManager.X, Sys.MouseManager.Y);
         }
 
         public static void DrawCursor(uint x, uint y)

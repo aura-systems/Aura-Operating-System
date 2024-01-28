@@ -9,8 +9,8 @@ using Cosmos.System;
 using Aura_OS.Processing;
 using Aura_OS.System.Graphics.UI.GUI.Components;
 using System;
-using Aura_OS.System.Processing.Application;
 using System.Collections.Generic;
+using Aura_OS.System.Processing.Processes;
 
 namespace Aura_OS.System.Graphics.UI.GUI
 {
@@ -38,9 +38,9 @@ namespace Aura_OS.System.Graphics.UI.GUI
             Window.Close.Action = new Action(() =>
             {
                 Stop();
-                Kernel.WindowManager.apps.Remove(this);
+                Explorer.WindowManager.Applications.Remove(this);
                 Kernel.ProcessManager.Processes.Remove(this);
-                Kernel.Taskbar.UpdateApplicationButtons();
+                Explorer.Taskbar.UpdateApplicationButtons();
             });
             Window.Minimize.Action = new Action(() =>
             {
@@ -94,9 +94,6 @@ namespace Aura_OS.System.Graphics.UI.GUI
             }
         }
 
-
-        public virtual void UpdateApp() { }
-
         public override void Initialize()
         {
             base.Initialize();
@@ -108,6 +105,8 @@ namespace Aura_OS.System.Graphics.UI.GUI
         {
             if (Visible)
             {
+                Window.Update();
+
                 if (Kernel.MouseManager.IsLeftButtonDown)
                 {
                     if (!HasWindowMoving && Window.IsInside((int)MouseManager.X, (int)MouseManager.Y))
@@ -155,21 +154,21 @@ namespace Aura_OS.System.Graphics.UI.GUI
                     x = (int)(MouseManager.X - px + 3);
                     y = (int)(MouseManager.Y - py + Window.TopBar.Height + 3);
                 }
+            }
+        }
 
-                DrawWindow();
+        public virtual void Draw()
+        {
+            if (Visible)
+            {
+                Window.Draw();
             }
         }
 
         private void BringToFront()
         {
-            zIndex = Kernel.WindowManager.GetTopZIndex() + 1;
-            Kernel.WindowManager.MarkStackDirty();
-        }
-
-        public void DrawWindow()
-        {
-            Window.Update();
-            UpdateApp();
+            zIndex = Explorer.WindowManager.GetTopZIndex() + 1;
+            Explorer.WindowManager.MarkStackDirty();
         }
     }
 }

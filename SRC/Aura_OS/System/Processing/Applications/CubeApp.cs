@@ -9,19 +9,19 @@ using System;
 using System.Drawing;
 using Aura_OS.System.Graphics.UI.GUI;
 
-namespace Aura_OS.System.Processing.Application
+namespace Aura_OS.System.Processing.Applications
 {
-    public class CubeApp : Graphics.UI.GUI.Application
+    public class CubeApp : Application
     {
         public static string ApplicationName = "Cube";
 
-        public Vertex[] vertices;
-        public int[][] faces;
-        public int angle;
+        private Vertex[] _vertices;
+        private int[][] _faces;
+        private int _angle;
 
         public CubeApp(int width, int height, int x = 0, int y = 0) : base(ApplicationName, width, height, x, y)
         {
-            vertices = new Vertex[]
+            _vertices = new Vertex[]
             {
                 new Vertex(-1, 1, -1),
                 new Vertex(1, 1, -1),
@@ -33,7 +33,7 @@ namespace Aura_OS.System.Processing.Application
                 new Vertex(-1, -1, 1)
             };
 
-            faces = new int[][]
+            _faces = new int[][]
             {
                 new int[] {0, 1, 2, 3},
                 new int[] {1, 5, 6, 2},
@@ -42,7 +42,7 @@ namespace Aura_OS.System.Processing.Application
                 new int[] {0, 4, 5, 1},
                 new int[] {3, 2, 6, 7}
             };
-            figure = new Figure(vertices, faces);
+            figure = new Figure(_vertices, _faces);
         }
 
         int viewWidth = 100;
@@ -50,8 +50,10 @@ namespace Aura_OS.System.Processing.Application
         Color pen = Color.DeepSkyBlue;
         Figure figure;
 
-        public override void UpdateApp()
+        public override void Draw()
         {
+            base.Draw();
+
             // Draw x-axis
             Kernel.canvas.DrawLine(Color.White, x + 30 + 0, y + 30 + viewHeight / 2, x + 30 + viewWidth, y + 30 + viewHeight / 2);
 
@@ -63,7 +65,7 @@ namespace Aura_OS.System.Processing.Application
             {
                 var vertex = figure.Vertices[i];
 
-                var transformed = vertex.RotateX(angle).RotateY(angle).RotateZ(angle);
+                var transformed = vertex.RotateX(_angle).RotateY(_angle).RotateZ(_angle);
                 projected[i] = transformed.Project(viewWidth, viewHeight, 256, 6);
             }
 
@@ -94,7 +96,7 @@ namespace Aura_OS.System.Processing.Application
                     x + 30 + (int)projected[figure.Faces[j][0]].X,
                     y + 30 + (int)projected[figure.Faces[j][0]].Y);
             }
-            angle++;
+            _angle++;
         }
     }
 

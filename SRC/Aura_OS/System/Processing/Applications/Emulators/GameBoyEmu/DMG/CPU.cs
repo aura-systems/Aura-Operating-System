@@ -1,7 +1,7 @@
 ﻿using System;
-using static Aura_OS.System.Processing.Application.Emulators.GameBoyEmu.Utils.BitOps;
+using static Aura_OS.System.Processing.Applications.Emulators.GameBoyEmu.Utils.BitOps;
 
-namespace Aura_OS.System.Processing.Application.Emulators.GameBoyEmu.DMG
+namespace Aura_OS.System.Processing.Applications.Emulators.GameBoyEmu.DMG
 {
 
     class CPU

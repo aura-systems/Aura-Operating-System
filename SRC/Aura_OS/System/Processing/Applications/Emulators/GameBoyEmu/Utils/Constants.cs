@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Aura_OS.System.Processing.Application.Emulators.GameBoyEmu.Utils
+namespace Aura_OS.System.Processing.Applications.Emulators.GameBoyEmu.Utils
 {
     public static class Constants
     {

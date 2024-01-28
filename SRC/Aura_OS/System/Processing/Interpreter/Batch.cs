@@ -1,9 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
+﻿/*
+* PROJECT:          Aura Operating System Development
+* CONTENT:          Batch
+* PROGRAMMERS:      Valentin Charbonnier <valentinbreiz@gmail.com>
+*/
+
+using Aura_OS.System.Processing.Interpreter.Commands;
+using System;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Aura_OS.System.Processing.Interpreter
 {
@@ -26,20 +29,21 @@ namespace Aura_OS.System.Processing.Interpreter
 
                         if (!(line.StartsWith(";") || line.Equals("")))
                         {
-                            System.CustomConsole.WriteLineInfo(line);
-                            Kernel.CommandManager.Execute(line);
-                            System.CustomConsole.WriteLineOK(line);
+                            CustomConsole.WriteLineInfo(line);
+                            CommandManager commandManager = new();
+                            commandManager.Execute(line);
+                            CustomConsole.WriteLineOK(line);
                         }
                     }
                 }
                 else
                 {
-                    System.CustomConsole.WriteLineError("This file is not a valid script.");
+                    CustomConsole.WriteLineError("This file is not a valid script.");
                 }
             }
             catch (Exception ex)
             {
-                System.CustomConsole.WriteLineError(ex.Message);
+                CustomConsole.WriteLineError(ex.Message);
             }
         }
     }

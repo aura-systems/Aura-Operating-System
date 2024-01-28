@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Aura_OS.System.Processing.Application.Emulators.GameBoyEmu.DMG
+namespace Aura_OS.System.Processing.Applications.Emulators.GameBoyEmu.DMG
 {
     public class TIMER
     {

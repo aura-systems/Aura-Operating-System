@@ -4,11 +4,12 @@
 * PROGRAMMERS:      Valentin Charbonnier <valentinbreiz@gmail.com>
 */
 
+using Aura_OS.System.Processing.Processes;
 using System;
 using System.IO;
 using System.Text;
 
-namespace Aura_OS.System.Processing.Application.Terminal
+namespace Aura_OS.System.Processing.Applications.Terminal
 {
     public class TerminalTextWriter : TextWriter
     {
@@ -30,8 +31,8 @@ namespace Aura_OS.System.Processing.Application.Terminal
 
                 _terminal.Console.WriteLine(value);
 
-                Kernel.WindowManager.DrawWindows();
-                Kernel.Taskbar.Update();
+                Explorer.WindowManager.DrawWindows();
+                Explorer.Taskbar.Draw();
                 Kernel.canvas.Display();
             }
         }
@@ -45,8 +46,8 @@ namespace Aura_OS.System.Processing.Application.Terminal
 
                 _terminal.Console.Write(value);
 
-                Kernel.WindowManager.DrawWindows();
-                Kernel.Taskbar.Update();
+                Explorer.WindowManager.DrawWindows();
+                Explorer.Taskbar.Draw();
                 Kernel.canvas.Display();
             }
         }
@@ -60,8 +61,8 @@ namespace Aura_OS.System.Processing.Application.Terminal
 
                 _terminal.Console.Write(value.ToString());
 
-                Kernel.WindowManager.DrawWindows();
-                Kernel.Taskbar.Update();
+                Explorer.WindowManager.DrawWindows();
+                Explorer.Taskbar.Draw();
                 Kernel.canvas.Display();
             }
         }

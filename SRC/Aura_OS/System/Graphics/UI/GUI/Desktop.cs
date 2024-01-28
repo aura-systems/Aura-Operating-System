@@ -6,13 +6,12 @@
 
 using System;
 using Aura_OS.System.Graphics.UI.GUI.Components;
-using Aura_OS.System.Processing.Application;
 using System.Drawing;
 using Aura_OS.System.Filesystem;
 using System.Collections.Generic;
 using Cosmos.System;
-using Aura_OS.System.Processing.Application.Terminal;
-using Aura_OS.System.Processing;
+using Aura_OS.System.Processing.Applications.Terminal;
+using Aura_OS.System.Processing.Applications;
 
 namespace Aura_OS.System.Graphics.UI.GUI
 {
@@ -77,6 +76,11 @@ namespace Aura_OS.System.Graphics.UI.GUI
             MainPanel.UpdateCurrentFolder(x, y, height);
         }
 
+        public override void Update()
+        {
+            MainPanel.Draw(X, Y, Height);
+        }
+
         public override void Draw()
         {
             //canvas.Clear(0x000000);
@@ -84,7 +88,7 @@ namespace Aura_OS.System.Graphics.UI.GUI
 
             Kernel.canvas.DrawImage(Kernel.wallpaper, X, Y);
 
-            MainPanel.Update(X, Y, Height);
+            MainPanel.Draw(X, Y, Height);
         }
 
         public override void HandleLeftClick()

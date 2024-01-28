@@ -1,10 +1,10 @@
-﻿using Aura_OS.System.Processing.Application.Emulators.GameBoyEmu.DMG.GamePak;
+﻿using Aura_OS.System.Processing.Applications.Emulators.GameBoyEmu.DMG.GamePak;
 using System;
 using System.IO;
 using System.Runtime.CompilerServices;
-using static Aura_OS.System.Processing.Application.Emulators.GameBoyEmu.Utils.BitOps;
+using static Aura_OS.System.Processing.Applications.Emulators.GameBoyEmu.Utils.BitOps;
 
-namespace Aura_OS.System.Processing.Application.Emulators.GameBoyEmu.DMG
+namespace Aura_OS.System.Processing.Applications.Emulators.GameBoyEmu.DMG
 {
     public class MMU
     {

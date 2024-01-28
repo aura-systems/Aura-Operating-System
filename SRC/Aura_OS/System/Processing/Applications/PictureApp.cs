@@ -4,25 +4,28 @@
 * PROGRAMMERS:      Valentin Charbonnier <valentinbreiz@gmail.com>
 */
 
+using Aura_OS.System.Graphics.UI.GUI;
 using Cosmos.System.Graphics;
 
-namespace Aura_OS.System.Processing.Application
+namespace Aura_OS.System.Processing.Applications
 {
-    public class PictureApp : Graphics.UI.GUI.Application
+    public class PictureApp : Application
     {
         public static string ApplicationName = "Picture";
 
-        public Bitmap Image;
+        private Bitmap _image;
 
         public PictureApp(string name, Bitmap bitmap, int width, int height, int x = 0, int y = 0) : base(name, width, height, x, y)
         {
             ApplicationName = name;
-            Image = bitmap;
+            _image = bitmap;
         }
 
-        public override void UpdateApp()
+        public override void Draw()
         {
-            Kernel.canvas.DrawImageAlpha(Image, x + (int)(width / 2 - Image.Width / 2), y + (int)(height / 2 - Image.Height / 2));
+            base.Draw();
+
+            Kernel.canvas.DrawImageAlpha(_image, x + (int)(width / 2 - _image.Width / 2), y + (int)(height / 2 - _image.Height / 2));
         }
     }
 }

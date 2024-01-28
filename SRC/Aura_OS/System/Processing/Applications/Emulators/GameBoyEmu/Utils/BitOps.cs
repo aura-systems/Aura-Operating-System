@@ -1,6 +1,6 @@
 ﻿using System.Runtime.CompilerServices;
 
-namespace Aura_OS.System.Processing.Application.Emulators.GameBoyEmu.Utils
+namespace Aura_OS.System.Processing.Applications.Emulators.GameBoyEmu.Utils
 {
     public static class BitOps
     {

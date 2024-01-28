@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Aura_OS.System.Processing.Application.Emulators.GameBoyEmu.DMG.GamePak
+namespace Aura_OS.System.Processing.Applications.Emulators.GameBoyEmu.DMG.GamePak
 {
     class MBC2 : IGamePak
     {

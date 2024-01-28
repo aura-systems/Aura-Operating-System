@@ -50,14 +50,14 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
             Image = image;
         }
 
-        public override void Update()
+        public override void Draw()
         {
             if (!NoBorder && Light)
             {
                 if (!NoBackground)
                 {
                     Kernel.canvas.DrawFilledRectangle(BackColor, X + 2, Y + 2, Width - 3, Height - 3);
-                }     
+                }
 
                 Kernel.canvas.DrawLine(Kernel.DarkGray, X, Y, X + Width, Y);
                 Kernel.canvas.DrawLine(Kernel.DarkGray, X, Y, X, Y + Height);

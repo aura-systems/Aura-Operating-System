@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Aura_OS.System.Processing.Application.Emulators.GameBoyEmu.DMG
+namespace Aura_OS.System.Processing.Applications.Emulators.GameBoyEmu.DMG
 {
     public static class Cycles
     {

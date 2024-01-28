@@ -7,7 +7,6 @@
 
 using Aura_OS.System.Utils;
 using Cosmos.System.Network;
-using Aura_OS.Processing;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -22,83 +21,73 @@ using Aura_OS.System.Processing.Interpreter.Commands.Processing;
 
 namespace Aura_OS.System.Processing.Interpreter.Commands
 {
-    public class CommandManager : Process
+    public class CommandManager
     {
-        public List<ICommand> CMDs = new List<ICommand>();
-        
-        public CommandManager() : base("cmdManager", ProcessType.KernelComponent)
+        public static List<ICommand> Commands = new List<ICommand>();
+
+        public CommandManager()
         {
-
-        }
-
-        public override void Initialize()
-        {
-            base.Initialize();
-
             RegisterAllCommands();
-
-            Kernel.ProcessManager.Register(this);
-            Kernel.ProcessManager.Start(this);
         }
 
         public void RegisterAllCommands()
         {
-            CMDs.Add(new CommandReboot(new string[] { "reboot", "rb" }));
-            CMDs.Add(new CommandShutdown(new string[] { "shutdown", "sd" }));
+            Commands.Add(new CommandReboot(new string[] { "reboot", "rb" }));
+            Commands.Add(new CommandShutdown(new string[] { "shutdown", "sd" }));
 
-            CMDs.Add(new CommandClear(new string[] { "clear", "clr" }));
-            CMDs.Add(new CommandKeyboardMap(new string[] { "setkeyboardmap", "setkeyboard" }));
-            CMDs.Add(new CommandEnv(new string[] { "export", "set" }));
-            CMDs.Add(new CommandEcho(new string[] { "echo" }));
+            Commands.Add(new CommandClear(new string[] { "clear", "clr" }));
+            Commands.Add(new CommandKeyboardMap(new string[] { "setkeyboardmap", "setkeyboard" }));
+            Commands.Add(new CommandEnv(new string[] { "export", "set" }));
+            Commands.Add(new CommandEcho(new string[] { "echo" }));
 
-            CMDs.Add(new CommandIPConfig(new string[] { "ipconfig", "ifconfig", "netconf" }));
-            CMDs.Add(new CommandPing(new string[] { "ping" }));
-            CMDs.Add(new CommandUdp(new string[] { "udp" }));
-            CMDs.Add(new CommandDns(new string[] { "dns" }));
-            CMDs.Add(new CommandWget(new string[] { "wget" }));
-            CMDs.Add(new CommandFtp(new string[] { "ftp" }));
-            CMDs.Add(new CommandPackage(new string[] { "package", "pkg" }));
+            Commands.Add(new CommandIPConfig(new string[] { "ipconfig", "ifconfig", "netconf" }));
+            Commands.Add(new CommandPing(new string[] { "ping" }));
+            Commands.Add(new CommandUdp(new string[] { "udp" }));
+            Commands.Add(new CommandDns(new string[] { "dns" }));
+            Commands.Add(new CommandWget(new string[] { "wget" }));
+            Commands.Add(new CommandFtp(new string[] { "ftp" }));
+            Commands.Add(new CommandPackage(new string[] { "package", "pkg" }));
 
-            CMDs.Add(new CommandVersion(new string[] { "version", "ver", "about" }));
-            CMDs.Add(new CommandSystemInfo(new string[] { "systeminfo", "sysinfo" }));
-            CMDs.Add(new CommandTime(new string[] { "time", "date" }));
-            CMDs.Add(new CommandHelp(new string[] { "help" }));
+            Commands.Add(new CommandVersion(new string[] { "version", "ver", "about" }));
+            Commands.Add(new CommandSystemInfo(new string[] { "systeminfo", "sysinfo" }));
+            Commands.Add(new CommandTime(new string[] { "time", "date" }));
+            Commands.Add(new CommandHelp(new string[] { "help" }));
 
-            CMDs.Add(new CommandChangeRes(new string[] { "changeres", "cr" }));
-            CMDs.Add(new CommandLspci(new string[] { "lspci" }));
+            Commands.Add(new CommandChangeRes(new string[] { "changeres", "cr" }));
+            Commands.Add(new CommandLspci(new string[] { "lspci" }));
             //CMDs.Add(new CommandCrash(new string[] { "crash" }));
 
-            CMDs.Add(new CommandLsprocess(new string[] { "lsprocess" }));
+            Commands.Add(new CommandLsprocess(new string[] { "lsprocess" }));
 
-            CMDs.Add(new CommandVol(new string[] { "vol" }));
-            CMDs.Add(new CommandDir(new string[] { "dir", "ls", "l" }));
-            CMDs.Add(new CommandMkdir(new string[] { "mkdir", "md" }));
-            CMDs.Add(new CommandCat(new string[] { "cat" }));
-            CMDs.Add(new CommandCD(new string[] { "cd" }));
-            CMDs.Add(new CommandMkfil(new string[] { "touch", "mkfil", "mf" }));
-            CMDs.Add(new CommandRm(new string[] { "rm", "rmf", "rmd" }));
-            CMDs.Add(new CommandHex(new string[] { "hex" }));
-            CMDs.Add(new CommandTree(new string[] { "tree" }));
-            CMDs.Add(new CommandRun(new string[] { "run" }));
-            CMDs.Add(new CommandCopy(new string[] { "cp" }));
-            CMDs.Add(new CommandPicture(new string[] { "pic" }));
+            Commands.Add(new CommandVol(new string[] { "vol" }));
+            Commands.Add(new CommandDir(new string[] { "dir", "ls", "l" }));
+            Commands.Add(new CommandMkdir(new string[] { "mkdir", "md" }));
+            Commands.Add(new CommandCat(new string[] { "cat" }));
+            Commands.Add(new CommandCD(new string[] { "cd" }));
+            Commands.Add(new CommandMkfil(new string[] { "touch", "mkfil", "mf" }));
+            Commands.Add(new CommandRm(new string[] { "rm", "rmf", "rmd" }));
+            Commands.Add(new CommandHex(new string[] { "hex" }));
+            Commands.Add(new CommandTree(new string[] { "tree" }));
+            Commands.Add(new CommandRun(new string[] { "run" }));
+            Commands.Add(new CommandCopy(new string[] { "cp" }));
+            Commands.Add(new CommandPicture(new string[] { "pic" }));
 
-            CMDs.Add(new CommandZip(new string[] { "zip" }));
+            Commands.Add(new CommandZip(new string[] { "zip" }));
 
             /*
             CMDs.Add(new CommandPCName(new string[] { "pcn" }));
 
             CMDs.Add(new CommandMIV(new string[] { "miv", "edit" }));*/
 
-            CMDs.Add(new CommandAction(new string[] { "beep" }, () =>
+            Commands.Add(new CommandAction(new string[] { "beep" }, () =>
             {
                 Cosmos.System.PCSpeaker.Beep();
             }));
-            CMDs.Add(new CommandAction(new string[] { "crash" }, () =>
+            Commands.Add(new CommandAction(new string[] { "crash" }, () =>
             {
                 throw new Exception("Exception test");
             }));
-            CMDs.Add(new CommandAction(new string[] { "crashn" }, () =>
+            Commands.Add(new CommandAction(new string[] { "crashn" }, () =>
             {
                 string[] test =
                 {
@@ -146,7 +135,7 @@ namespace Aura_OS.System.Processing.Interpreter.Commands
 
             #endregion
 
-            foreach (var command in CMDs)
+            foreach (var command in Commands)
             {
                 if (command.ContainsCommand(firstarg))
                 {

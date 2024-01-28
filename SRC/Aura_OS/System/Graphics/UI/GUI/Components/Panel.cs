@@ -26,7 +26,7 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
             Color2 = color2;
         }
 
-        public override void Update()
+        public override void Draw()
         {
             if (Background)
             {

@@ -1,8 +1,8 @@
-﻿using Aura_OS.System.Processing.Application.Emulators.GameBoyEmu.Utils;
+﻿using Aura_OS.System.Processing.Applications.Emulators.GameBoyEmu.Utils;
 using System.Runtime.CompilerServices;
-using static Aura_OS.System.Processing.Application.Emulators.GameBoyEmu.Utils.BitOps;
+using static Aura_OS.System.Processing.Applications.Emulators.GameBoyEmu.Utils.BitOps;
 
-namespace Aura_OS.System.Processing.Application.Emulators.GameBoyEmu.DMG
+namespace Aura_OS.System.Processing.Applications.Emulators.GameBoyEmu.DMG
 {
     public class PPU
     {

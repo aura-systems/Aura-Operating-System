@@ -11,22 +11,23 @@ using System;
 using Cosmos.System;
 using System.Collections.Generic;
 using System.Drawing;
+using Aura_OS.System.Graphics.UI.GUI;
 
-namespace Aura_OS.System.Processing.Application
+namespace Aura_OS.System.Processing.Applications
 {
-    public class ExplorerApp : Graphics.UI.GUI.Application
+    public class ExplorerApp : Application
     {
         public static string ApplicationName = "Explorer";
 
-        public bool Clicked = false;
-        public bool RightClicked = false;
-        public Panel TopPanel;
-        public Panel LeftPanel;
-        public FilesystemPanel MainPanel;
-        Button SpaceButton;
-        TextBox PathTextBox;
-        Button Up;
-        List<Button> Disks;
+        private bool Clicked = false;
+        private bool RightClicked = false;
+        private Panel TopPanel;
+        private Panel LeftPanel;
+        private FilesystemPanel MainPanel;
+        private Button SpaceButton;
+        private TextBox PathTextBox;
+        private Button Up;
+        private List<Button> Disks;
 
         public ExplorerApp(string currentPath, int width, int height, int x = 0, int y = 0) : base(ApplicationName, width, height, x, y)
         {
@@ -91,8 +92,10 @@ namespace Aura_OS.System.Processing.Application
             }
         }
 
-        public override void UpdateApp()
+        public override void Update()
         {
+            base.Update();
+
             TopPanel.X = x + 1;
             TopPanel.Y = y + 1;
             TopPanel.Update();
@@ -101,7 +104,7 @@ namespace Aura_OS.System.Processing.Application
             LeftPanel.Update();
             MainPanel.X = x + 1 + 75;
             MainPanel.Y = y + TopPanel.Height;
-            MainPanel.Update(x + 78, y, height);
+            MainPanel.Update();
             PathTextBox.Text = MainPanel.CurrentPath;
             PathTextBox.X = x + 9 + 18;
             PathTextBox.Y = y + 3;
@@ -167,6 +170,23 @@ namespace Aura_OS.System.Processing.Application
             base.HandleRightClick();
 
             MainPanel.HandleRightClick();
+        }
+
+        public override void Draw()
+        {
+            base.Draw();
+
+            TopPanel.Draw();
+            LeftPanel.Draw();
+            MainPanel.Draw(x + 78, y, height);
+            PathTextBox.Draw();
+            Up.Draw();
+            SpaceButton.Draw();
+
+            foreach (var button in Disks)
+            {
+                button.Draw();
+            }
         }
     }
 }

@@ -5,7 +5,6 @@
 */
 
 using Cosmos.System;
-using System.Drawing;
 
 namespace Aura_OS.System.Graphics.UI.GUI.Components
 {
@@ -25,13 +24,14 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
             Height = height;
         }
 
-        public virtual void Draw()
-        {
-            
-        }
-
         public virtual void Update()
         {
+
+        }
+
+        public virtual void Draw()
+        {
+
         }
 
         public virtual void HandleLeftClick()

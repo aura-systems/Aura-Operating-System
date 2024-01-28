@@ -6,6 +6,7 @@
 
 using Aura_OS.System.Graphics.UI.GUI;
 using Aura_OS.System.Graphics.UI.GUI.Components;
+using Aura_OS.System.Processing.Processes;
 using Cosmos.System;
 using System;
 using System.Drawing;
@@ -219,7 +220,7 @@ namespace Aura_OS.System.Input
             Application topApplication = null;
             int topZIndex = -1;
 
-            foreach (var app in Kernel.WindowManager.apps)
+            foreach (var app in Explorer.WindowManager.Applications)
             {
                 if (app.Visible && app.Window.IsInside((int)Cosmos.System.MouseManager.X, (int)Cosmos.System.MouseManager.Y) && app.zIndex > topZIndex)
                 {
@@ -234,7 +235,7 @@ namespace Aura_OS.System.Input
             }
             else
             {
-                Kernel.Desktop.HandleLeftClick();
+                Explorer.Desktop.HandleLeftClick();
             }
         }
 
@@ -246,7 +247,7 @@ namespace Aura_OS.System.Input
             Application topApplication = null;
             int topZIndex = -1;
 
-            foreach (var app in Kernel.WindowManager.apps)
+            foreach (var app in Explorer.WindowManager.Applications)
             {
                 if (app.Visible && app.Window.IsInside((int)Cosmos.System.MouseManager.X, (int)Cosmos.System.MouseManager.Y) && app.zIndex > topZIndex)
                 {
@@ -261,7 +262,7 @@ namespace Aura_OS.System.Input
             }
             else
             {
-                Kernel.Desktop.HandleRightClick();
+                Explorer.Desktop.HandleRightClick();
             }
         }
 

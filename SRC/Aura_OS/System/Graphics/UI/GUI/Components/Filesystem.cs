@@ -5,8 +5,9 @@
 */
 
 using Aura_OS.System.Filesystem;
-using Aura_OS.System.Processing.Application;
-using Aura_OS.System.Processing.Application.Terminal;
+using Aura_OS.System.Processing.Applications;
+using Aura_OS.System.Processing.Applications.Terminal;
+using Aura_OS.System.Processing.Processes;
 using Cosmos.System;
 using Cosmos.System.Graphics;
 using System;
@@ -63,9 +64,9 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
             RightClick.Entries = rightClickEntries;
         }
 
-        public void Update(int x, int y, int height)
+        public void Draw(int x, int y, int height)
         {
-            base.Update();
+            base.Draw();
 
             int startX = 3;
             int startY = 24 + 3;
@@ -86,14 +87,9 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
                     currentX += iconSpacing;
                 }
 
-                button.Update();
+                button.Draw();
             }
 
-            Update();
-        }
-
-        public override void Update()
-        {
             if (RightClick.Opened)
             {
                 foreach (var entry in RightClick.Entries)
@@ -109,7 +105,7 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
                         entry.TextColor = Kernel.BlackColor;
                     }
                 }
-                RightClick.Update();
+                RightClick.Draw();
             }
 
             foreach (var button in Buttons)
@@ -129,7 +125,7 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
                             entry.TextColor = Kernel.BlackColor;
                         }
                     }
-                    button.RightClick.Update();
+                    button.RightClick.Draw();
 
                     return;
                 }
@@ -304,17 +300,17 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
                 ExplorerApp app = new(CurrentPath + folderName + "\\", 500, 400, 40, 40);
                 app.Initialize();
 
-                Kernel.WindowManager.apps.Add(app);
-                app.zIndex = Kernel.WindowManager.GetTopZIndex() + 1;
-                Kernel.WindowManager.MarkStackDirty();
+                Explorer.WindowManager.Applications.Add(app);
+                app.zIndex = Explorer.WindowManager.GetTopZIndex() + 1;
+                Explorer.WindowManager.MarkStackDirty();
 
                 app.Visible = true;
                 app.Focused = true;
 
                 Kernel.ProcessManager.Start(app);
 
-                Kernel.Taskbar.UpdateApplicationButtons();
-                Kernel.WindowManager.UpdateFocusStatus();
+                Explorer.Taskbar.UpdateApplicationButtons();
+                Explorer.WindowManager.UpdateFocusStatus();
             }
             else
             {
@@ -344,9 +340,9 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
             TextColor = textColor;
         }
 
-        public override void Update()
+        public override void Draw()
         {
-            base.Update();
+            base.Draw();
             Kernel.canvas.DrawString(FileName, Kernel.font, TextColor, base.X, base.Y + 35);
         }
     }

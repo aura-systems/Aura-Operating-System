@@ -8,9 +8,9 @@ using Aura_OS.System.Graphics.UI.GUI;
 using Cosmos.Core;
 using Cosmos.Core.Memory;
 
-namespace Aura_OS.System.Processing.Application
+namespace Aura_OS.System.Processing.Applications
 {
-    public class MemoryInfoApp : Graphics.UI.GUI.Application
+    public class MemoryInfoApp : Application
     {
         public static string ApplicationName = "MemoryInfo";
 
@@ -19,8 +19,10 @@ namespace Aura_OS.System.Processing.Application
 
         }
 
-        public override void UpdateApp()
+        public override void Draw()
         {
+            base.Draw();
+
             Kernel.canvas.DrawString("Available RAM                = " + GCImplementation.GetAvailableRAM() + "MB", Kernel.font, Kernel.BlackColor, (int)x, (int)y);
             Kernel.canvas.DrawString("Used RAM                     = " + GCImplementation.GetUsedRAM() + "B", Kernel.font, Kernel.BlackColor, (int)x, (int)(y + Kernel.font.Height));
             Kernel.canvas.DrawString("Small Allocated Object Count = " + HeapSmall.GetAllocatedObjectCount(), Kernel.font, Kernel.BlackColor, (int)x, (int)(y + 2 * Kernel.font.Height));
