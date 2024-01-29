@@ -20,31 +20,35 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
 
     public class Console : Component
     {
-        internal const char LineFeed = '\n';
-        internal const char CarriageReturn = '\r';
-        internal const char Tab = '\t';
-        internal const char Space = ' ';
+        private const char LineFeed = '\n';
+        private const char CarriageReturn = '\r';
+        private const char Tab = '\t';
+        private const char Space = ' ';
 
-        private static uint[] Pallete = new uint[16];
-
-        private Cell[] Text;
-
+        public bool DrawBackground = true;
+        public bool ScrollMode = false;
+        public bool CursorVisible;
         public int mX = 0;
         public int mY = 0;
 
         public int mCols;
         public int mRows;
 
+        private uint[] _pallete = new uint[16];
+        private Cell[] _text;
+        private List<Cell[]> _terminalHistory;
+        private int _terminalHistoryIndex = 0;
+        
         public Color ForegroundColor = Color.White;
-        public uint foreground = (byte)ConsoleColor.White;
+        private uint _foreground = (byte)ConsoleColor.White;
         public ConsoleColor Foreground
         {
-            get { return (ConsoleColor)foreground; }
+            get { return (ConsoleColor)_foreground; }
             set
             {
-                foreground = (uint)value;
+                _foreground = (uint)value;
 
-                uint color = Pallete[foreground];
+                uint color = _pallete[_foreground];
                 byte r = (byte)(color >> 16 & 0xFF); // Extract the red component
                 byte g = (byte)(color >> 8 & 0xFF); // Extract the green component
                 byte b = (byte)(color & 0xFF); // Extract the blue component
@@ -54,15 +58,15 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
         }
 
         public Color BackgroundColor = Color.Black;
-        public uint background = (byte)ConsoleColor.Black;
+        private uint _background = (byte)ConsoleColor.Black;
         public ConsoleColor Background
         {
-            get { return (ConsoleColor)background; }
+            get { return (ConsoleColor)_background; }
             set
             {
-                background = (uint)value;
+                _background = (uint)value;
 
-                uint color = Pallete[background];
+                uint color = _pallete[_background];
                 byte r = (byte)(color >> 16 & 0xFF); // Extract the red component
                 byte g = (byte)(color >> 8 & 0xFF); // Extract the green component
                 byte b = (byte)(color & 0xFF); // Extract the blue component
@@ -71,38 +75,34 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
             }
         }
 
-        public int CursorSize { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-        public bool CursorVisible;
-
-        public bool DrawBackground = true;
-
         public Console(int x, int y, int width, int height) : base(x, y, width, height)
         {
-            Pallete[0] = 0xFF000000; // Black
-            Pallete[1] = 0xFF0000AB; // Darkblue
-            Pallete[2] = 0xFF008000; // DarkGreen
-            Pallete[3] = 0xFF008080; // DarkCyan
-            Pallete[4] = 0xFF800000; // DarkRed
-            Pallete[5] = 0xFF800080; // DarkMagenta
-            Pallete[6] = 0xFF808000; // DarkYellow
-            Pallete[7] = 0xFFC0C0C0; // Gray
-            Pallete[8] = 0xFF808080; // DarkGray
-            Pallete[9] = 0xFF5353FF; // Blue
-            Pallete[10] = 0xFF55FF55; // Green
-            Pallete[11] = 0xFF00FFFF; // Cyan
-            Pallete[12] = 0xFFAA0000; // Red
-            Pallete[13] = 0xFFFF00FF; // Magenta
-            Pallete[14] = 0xFFFFFF55; // Yellow
-            Pallete[15] = 0xFFFFFFFF; //White
+            _pallete[0] = 0xFF000000; // Black
+            _pallete[1] = 0xFF0000AB; // Darkblue
+            _pallete[2] = 0xFF008000; // DarkGreen
+            _pallete[3] = 0xFF008080; // DarkCyan
+            _pallete[4] = 0xFF800000; // DarkRed
+            _pallete[5] = 0xFF800080; // DarkMagenta
+            _pallete[6] = 0xFF808000; // DarkYellow
+            _pallete[7] = 0xFFC0C0C0; // Gray
+            _pallete[8] = 0xFF808080; // DarkGray
+            _pallete[9] = 0xFF5353FF; // Blue
+            _pallete[10] = 0xFF55FF55; // Green
+            _pallete[11] = 0xFF00FFFF; // Cyan
+            _pallete[12] = 0xFFAA0000; // Red
+            _pallete[13] = 0xFFFF00FF; // Magenta
+            _pallete[14] = 0xFFFFFF55; // Yellow
+            _pallete[15] = 0xFFFFFFFF; //White
 
             mCols = width / Kernel.font.Width - 1;
             mRows = height / Kernel.font.Height - 2;
 
-            Text = new Cell[mCols * mRows];
+            _text = new Cell[mCols * mRows];
 
             ClearText();
 
             CursorVisible = true;
+            _terminalHistory = new List<Cell[]>();
 
             mX = 0;
             mY = 0;
@@ -125,10 +125,10 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
                 for (int j = 0; j < mCols; j++)
                 {
                     int index = GetIndex(i, j);
-                    if (Text[index].Char == 0 || Text[index].Char == '\n')
+                    if (_text[index].Char == 0 || _text[index].Char == '\n')
                         continue;
 
-                    WriteByte(Text[index].Char, X + j * Kernel.font.Width, Y + i * Kernel.font.Height, Text[index].ForegroundColor);
+                    WriteByte(_text[index].Char, X + j * Kernel.font.Width, Y + i * Kernel.font.Height, _text[index].ForegroundColor);
                 }
             }
         }
@@ -149,11 +149,11 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
 
         private void ClearText()
         {
-            for (int i = 0; i < Text.Length; i++)
+            for (int i = 0; i < _text.Length; i++)
             {
-                Text[i].Char = (char)0;
-                Text[i].ForegroundColor = (uint)ForegroundColor.ToArgb();
-                Text[i].BackgroundColor = (uint)BackgroundColor.ToArgb();
+                _text[i].Char = (char)0;
+                _text[i].ForegroundColor = (uint)ForegroundColor.ToArgb();
+                _text[i].BackgroundColor = (uint)BackgroundColor.ToArgb();
             }
         }
 
@@ -190,49 +190,45 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
             }
         }
 
-        List<Cell[]> TerminalHistory = new List<Cell[]>();
-        int TerminalHistoryIndex = 0;
-        public bool ScrollMode = false;
-
         private void Scroll()
         {
             Cell[] lineToHistory = new Cell[mCols];
-            Array.Copy(Text, 0, lineToHistory, 0, mCols);
-            TerminalHistory.Add(lineToHistory);
+            Array.Copy(_text, 0, lineToHistory, 0, mCols);
+            _terminalHistory.Add(lineToHistory);
 
-            Array.Copy(Text, mCols, Text, 0, (mRows - 1) * mCols);
+            Array.Copy(_text, mCols, _text, 0, (mRows - 1) * mCols);
 
             int startIndex = (mRows - 1) * mCols;
             for (int i = startIndex; i < startIndex + mCols; i++)
             {
-                Text[i].Char = (char)0;
-                Text[i].ForegroundColor = (uint)ForegroundColor.ToArgb();
-                Text[i].BackgroundColor = (uint)BackgroundColor.ToArgb();
+                _text[i].Char = (char)0;
+                _text[i].ForegroundColor = (uint)ForegroundColor.ToArgb();
+                _text[i].BackgroundColor = (uint)BackgroundColor.ToArgb();
             }
 
-            TerminalHistoryIndex = TerminalHistory.Count;
+            _terminalHistoryIndex = _terminalHistory.Count;
         }
 
         public void ScrollUp()
         {
-            if (TerminalHistoryIndex > 0)
+            if (_terminalHistoryIndex > 0)
             {
                 ScrollMode = true;
 
-                TerminalHistoryIndex--;
+                _terminalHistoryIndex--;
 
-                Array.Copy(Text, 0, Text, mCols, (mRows - 1) * mCols);
+                Array.Copy(_text, 0, _text, mCols, (mRows - 1) * mCols);
 
-                Cell[] lineFromHistory = TerminalHistory[TerminalHistoryIndex];
-                Array.Copy(lineFromHistory, 0, Text, 0, mCols);
+                Cell[] lineFromHistory = _terminalHistory[_terminalHistoryIndex];
+                Array.Copy(lineFromHistory, 0, _text, 0, mCols);
             }
         }
 
         public void ScrollDown()
         {
-            TerminalHistoryIndex = 0;
+            _terminalHistoryIndex = 0;
 
-            TerminalHistory.Clear();
+            _terminalHistory.Clear();
 
             ScrollMode = false;
 
@@ -267,7 +263,7 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
             else
             {
                 int index = GetIndex(mY, mX);
-                Text[index] = new Cell() { Char = aChar, ForegroundColor = (uint)ForegroundColor.ToArgb(), BackgroundColor = (uint)BackgroundColor.ToArgb() };
+                _text[index] = new Cell() { Char = aChar, ForegroundColor = (uint)ForegroundColor.ToArgb(), BackgroundColor = (uint)BackgroundColor.ToArgb() };
 
                 mX++;
                 if (mX == mCols)
