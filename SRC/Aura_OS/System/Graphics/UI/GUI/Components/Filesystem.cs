@@ -20,16 +20,17 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
     public class FilesystemPanel : Panel
     {
         public string CurrentPath;
-        public List<Button> Buttons;
-        private Color TextColor;
         public bool OpenNewWindow = false;
+
+        private List<Button> _buttons;
+        private Color _textColor;
 
         public FilesystemPanel(string path, Color textcolor, Color background, int x, int y, int width, int height) : base(background, x, y, width, height)
         {
             CurrentPath = path;
-            TextColor = textcolor;
+            _textColor = textcolor;
 
-            Buttons = new List<Button>();
+            _buttons = new List<Button>();
 
             RightClick = new RightClick((int)MouseManager.X, (int)MouseManager.Y, 200, 1 * RightClickEntry.ConstHeight);
             List<RightClickEntry> rightClickEntries = new List<RightClickEntry>();
@@ -75,7 +76,7 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
             int currentX = startX;
             int currentY = startY;
 
-            foreach (var button in Buttons)
+            foreach (var button in _buttons)
             {
                 button.X = x + startX + currentX;
                 button.Y = y + currentY;
@@ -108,7 +109,7 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
                 RightClick.Draw();
             }
 
-            foreach (var button in Buttons)
+            foreach (var button in _buttons)
             {
                 if (button.RightClick.Opened)
                 {
@@ -134,7 +135,7 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
 
         public override void HandleLeftClick()
         {
-            foreach (var button in Buttons)
+            foreach (var button in _buttons)
             {
                 if (button.RightClick.Opened)
                 {
@@ -165,7 +166,7 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
 
         public override void HandleRightClick()
         {
-            foreach (var button in Buttons)
+            foreach (var button in _buttons)
             {
                 if (button.IsInside((int)MouseManager.X, (int)MouseManager.Y))
                 {
@@ -196,11 +197,11 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
             string[] directories = Directory.GetDirectories(CurrentPath);
             string[] files = Directory.GetFiles(CurrentPath);
 
-            Buttons.Clear();
+            _buttons.Clear();
             foreach (string directory in directories)
             {
                 string folderName = Path.GetFileName(directory);
-                var button = new FileButton(folderName, TextColor, ResourceManager.GetImage("32-folder.bmp"), x + startX + currentX, y + currentY, 32, 32);
+                var button = new FileButton(folderName, _textColor, ResourceManager.GetImage("32-folder.bmp"), x + startX + currentX, y + currentY, 32, 32);
                 button.Action = new Action(() =>
                 {
                     OpenFolder(folderName);
@@ -235,7 +236,7 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
 
                 button.RightClick.Entries = rightClickEntries;
 
-                Buttons.Add(button);
+                _buttons.Add(button);
 
                 currentY += iconSpacing;
                 if (currentY + iconSpacing > height - 32)
@@ -248,7 +249,7 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
             foreach (string file in files)
             {
                 string fileName = Path.GetFileName(file);
-                var button = new FileButton(fileName, TextColor, ResourceManager.GetImage("32-file.bmp"), x + startX + currentX, y + currentY, 32, 32);
+                var button = new FileButton(fileName, _textColor, ResourceManager.GetImage("32-file.bmp"), x + startX + currentX, y + currentY, 32, 32);
                 button.Action = new Action(() =>
                 {
                     Kernel.ApplicationManager.StartFileApplication(fileName, CurrentPath);
@@ -282,7 +283,7 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
 
                 button.RightClick.Entries = rightClickEntries;
 
-                Buttons.Add(button);
+                _buttons.Add(button);
 
                 currentY += iconSpacing;
                 if (currentY + iconSpacing > height - 32)
