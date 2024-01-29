@@ -4,19 +4,67 @@
 * PROGRAMMERS:      Valentin Charbonnier <valentinbreiz@gmail.com>
 */
 
-using Cosmos.System.Graphics;
+using Cosmos.System;
 using System;
-using System.Drawing;
 
 namespace Aura_OS.System.Graphics.UI.GUI.Components
 {
     public class TextBox : Component
     {
         public string Text;
+        public Action Enter;
+
+        private bool _isSelected = false;
+        private bool _cursorVisible = true;
+        private DateTime _lastCursorBlink = DateTime.Now;
+        private const int _cursorBlinkInterval = 400;
 
         public TextBox(int x, int y, int width, int height, string text = "") : base(x, y, width, height)
         {
             Text = text;
+        }
+
+        public override void HandleLeftClick()
+        {
+            if (IsInside((int)MouseManager.X, (int)MouseManager.Y))
+            {
+                _isSelected = true;
+                Kernel.MouseManager.FocusedComponent = this;
+            }
+            else
+            {
+                _isSelected = false;
+            }
+        }
+
+        public override void Update()
+        {
+            if (_isSelected)
+            {
+                KeyEvent keyEvent = null;
+
+                while (KeyboardManager.TryReadKey(out keyEvent))
+                {
+                    switch (keyEvent.Key)
+                    {
+                        case ConsoleKeyEx.Backspace:
+                            if (Text.Length > 0)
+                            {
+                                Text = Text.Remove(Text.Length - 1);
+                            }
+                            break;
+                        case ConsoleKeyEx.Enter:
+                            Enter();
+                            break;
+                        default:
+                            if (char.IsLetterOrDigit(keyEvent.KeyChar) || char.IsPunctuation(keyEvent.KeyChar) || char.IsSymbol(keyEvent.KeyChar) || keyEvent.KeyChar == ' ')
+                            {
+                                Text += keyEvent.KeyChar.ToString();
+                            }
+                            break;
+                    }
+                }
+            }
         }
 
         public override void Draw()
@@ -33,6 +81,24 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
             Kernel.canvas.DrawLine(Kernel.WhiteColor, X + Width, Y, X + Width, Y + Height);
 
             Kernel.canvas.DrawString(Text, Kernel.font, Kernel.BlackColor, X + 4, Y + (Height / 2 - Kernel.font.Height / 2));
+
+            if ((DateTime.Now - _lastCursorBlink).TotalMilliseconds > _cursorBlinkInterval)
+            {
+                _cursorVisible = !_cursorVisible;
+                _lastCursorBlink = DateTime.Now;
+            }
+
+            if (_isSelected && _cursorVisible)
+            {
+                int textWidth = Text.Length * Kernel.font.Width;
+
+                int cursorX = X + 4 + textWidth;
+                int cursorY = Y + 4;
+                int cursorWidth = 2;
+                int cursorHeight = Height - 8;
+
+                Kernel.canvas.DrawFilledRectangle(Kernel.BlackColor, cursorX, cursorY, cursorWidth, cursorHeight);
+            }
         }
     }
 }

@@ -12,6 +12,7 @@ using Cosmos.System;
 using System.Collections.Generic;
 using System.Drawing;
 using Aura_OS.System.Graphics.UI.GUI;
+using System.IO;
 
 namespace Aura_OS.System.Processing.Applications
 {
@@ -19,8 +20,6 @@ namespace Aura_OS.System.Processing.Applications
     {
         public static string ApplicationName = "Explorer";
 
-        private bool Clicked = false;
-        private bool RightClicked = false;
         private Panel TopPanel;
         private Panel LeftPanel;
         private FilesystemPanel MainPanel;
@@ -28,6 +27,8 @@ namespace Aura_OS.System.Processing.Applications
         private TextBox PathTextBox;
         private Button Up;
         private List<Button> Disks;
+
+        private string _Path = "";
 
         public ExplorerApp(string currentPath, int width, int height, int x = 0, int y = 0) : base(ApplicationName, width, height, x, y)
         {
@@ -43,6 +44,14 @@ namespace Aura_OS.System.Processing.Applications
             LeftPanel = new Panel(Kernel.WhiteColor, x + 1, y + 1 + 22, 75, Window.Height - Window.TopBar.Height - TopPanel.Height - SpaceButton.Height - 8);
             LeftPanel.Borders = true;
             PathTextBox = new TextBox(x + 18 + 6, y + 3, width - 15 - 18, 18, MainPanel.CurrentPath);
+            PathTextBox.Enter = new Action(() =>
+            {
+                if (Directory.Exists(PathTextBox.Text))
+                {
+                    MainPanel.CurrentPath = PathTextBox.Text;
+                    MainPanel.UpdateCurrentFolder(x, y, height);
+                }
+            });
             Up = new Button(ResourceManager.GetImage("16-up.bmp"), x + 3, y + 3, 18, 18);
             Up.Action = new Action(() =>
             {
@@ -96,6 +105,12 @@ namespace Aura_OS.System.Processing.Applications
         {
             base.Update();
 
+            if (_Path != MainPanel.CurrentPath)
+            {
+                _Path = MainPanel.CurrentPath;
+                PathTextBox.Text = _Path;
+            }
+
             TopPanel.X = X + 1;
             TopPanel.Y = Y + 1;
             TopPanel.Update();
@@ -105,7 +120,6 @@ namespace Aura_OS.System.Processing.Applications
             MainPanel.X = X + 1 + 75;
             MainPanel.Y = Y + TopPanel.Height;
             MainPanel.Update();
-            PathTextBox.Text = MainPanel.CurrentPath;
             PathTextBox.X = X + 9 + 18;
             PathTextBox.Y = Y + 3;
             PathTextBox.Update();
@@ -163,6 +177,7 @@ namespace Aura_OS.System.Processing.Applications
             }
 
             MainPanel.HandleLeftClick();
+            PathTextBox.HandleLeftClick();
         }
 
         public override void HandleRightClick()
