@@ -5,19 +5,23 @@
 */
 
 using System.Collections.Generic;
+using System.Drawing;
 using Aura_OS.System.Graphics.UI.GUI;
+using Aura_OS.System.Processing.Processes;
 
 namespace Aura_OS
 {
     public class WindowManager
     {
         public List<Application> Applications;
+        public List<Rect> ClipRects;
 
         private bool _isDirty = false;
 
         public WindowManager()
         {
             Applications = new List<Application>();
+            ClipRects = new List<Rect>();
         }
 
         public void MarkStackDirty()
@@ -75,6 +79,16 @@ namespace Aura_OS
 
         public void DrawWindows()
         {
+            ClipRects.Clear();
+
+            foreach (var currentWindow in Applications)
+            {
+                Rect tempRect = new Rect(currentWindow.Y, currentWindow.X,
+                                         currentWindow.Y + currentWindow.Height - 1,
+                                         currentWindow.X + currentWindow.Width - 1);
+                Rect.AddClipRect(tempRect);
+            }
+
             foreach (Application app in Applications)
             {
                 if (app.Running && app.Visible)
@@ -82,6 +96,18 @@ namespace Aura_OS
                     app.Draw();
                 }
             }
+
+            foreach (var tempRect in Explorer.WindowManager.ClipRects)
+            {
+                DrawRect(tempRect.Left, tempRect.Top,
+                                       tempRect.Right - tempRect.Left + 1,
+                                       tempRect.Bottom - tempRect.Top + 1);
+            }
+        }
+
+        public void DrawRect(int x, int y, int width, int height)
+        {
+            Kernel.canvas.DrawRectangle(Color.Green, x, y, width, height);
         }
     }
 }
