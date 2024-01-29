@@ -1,6 +1,6 @@
 /*
 * PROJECT:          Aura Operating System Development
-* CONTENT:          Memory information application.
+* CONTENT:          File explorer application.
 * PROGRAMMERS:      Valentin Charbonnier <valentinbreiz@gmail.com>
 */
 

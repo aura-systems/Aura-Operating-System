@@ -50,6 +50,7 @@ namespace Aura_OS.System.Processing
             RegisterApplication(typeof(SystemInfoApp), 40, 40, 402, 360);
             RegisterApplication(typeof(CubeApp), 40, 40, 200, 200);
             RegisterApplication(typeof(GameBoyApp), 40, 40, 160 + 4, 144 + 22);
+            RegisterApplication(typeof(FileEditorApp), 40, 40, 700, 600);
         }
 
         public void RegisterApplication(ApplicationConfig config)
@@ -140,6 +141,10 @@ namespace Aura_OS.System.Processing
             {
                 app = new ExplorerApp(Kernel.CurrentVolume, config.Weight, config.Height, config.X, config.Y);
             }
+            else if (config.Template == typeof(FileEditorApp))
+            {
+                app = new FileEditorApp("", config.Weight, config.Height, config.X, config.Y);
+            }
             else
             {
                 throw new InvalidOperationException("Type d'application non reconnu.");
@@ -164,6 +169,25 @@ namespace Aura_OS.System.Processing
                 }
 
                 var app = new PictureApp(name, bitmap, width, (int)bitmap.Height + 20);
+
+                app.Initialize();
+
+                Explorer.WindowManager.Applications.Add(app);
+                app.zIndex = Explorer.WindowManager.GetTopZIndex() + 1;
+                Explorer.WindowManager.MarkStackDirty();
+
+                app.Visible = true;
+                app.Focused = true;
+
+                Kernel.ProcessManager.Start(app);
+
+                Explorer.Taskbar.UpdateApplicationButtons();
+                Explorer.WindowManager.UpdateFocusStatus();
+            }
+            if (fileName.EndsWith(".txt"))
+            {
+                string path = currentPath + fileName;
+                var app = new FileEditorApp(path, 700, 600);
 
                 app.Initialize();
 
