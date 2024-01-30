@@ -13,6 +13,12 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
 {
     public class Button : Component
     {
+        public enum TextAlign
+        {
+            Center,
+            Left
+        }
+
         public string Text;
         public Bitmap Image;
         public Action Click;
@@ -23,6 +29,7 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
         public bool NoBorder = false;
         public bool Light = false;
         public bool Focused = false;
+        public TextAlign TextAlignStyle { get; set; } = TextAlign.Center;
 
         public Button(string text, int x, int y, int width, int height) : base(x, y, width, height)
         {
@@ -131,10 +138,18 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
             }
             else if (Text != null)
             {
-                int textWidth = Text.Length * Kernel.font.Width;
+                int textX;
+                int textY = Y + (Height / 2 - Kernel.font.Height / 2);
 
-                int textX = X + (Width / 2) - (textWidth / 2);
-                int textY = Y + (Height / 2) - (Kernel.font.Height / 2);
+                if (TextAlignStyle == TextAlign.Center)
+                {
+                    int textWidth = Text.Length * Kernel.font.Width;
+                    textX = X + (Width / 2) - (textWidth / 2);
+                }
+                else
+                {
+                    textX = X + 4;
+                }
 
                 Kernel.canvas.DrawString(Text, Kernel.font, TextColor, textX, textY);
             }
