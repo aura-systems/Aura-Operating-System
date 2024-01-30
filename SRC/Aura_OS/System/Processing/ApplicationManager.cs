@@ -140,6 +140,10 @@ namespace Aura_OS.System.Processing
             {
                 app = new ExplorerApp(Kernel.CurrentVolume, config.Weight, config.Height, config.X, config.Y);
             }
+            else if (config.Template == typeof(EditorApp))
+            {
+                app = new EditorApp("", config.Weight, config.Height, config.X, config.Y);
+            }
             else
             {
                 throw new InvalidOperationException("Type d'application non reconnu.");
@@ -164,6 +168,25 @@ namespace Aura_OS.System.Processing
                 }
 
                 var app = new PictureApp(name, bitmap, width, (int)bitmap.Height + 20);
+
+                app.Initialize();
+
+                Explorer.WindowManager.Applications.Add(app);
+                app.zIndex = Explorer.WindowManager.GetTopZIndex() + 1;
+                Explorer.WindowManager.MarkStackDirty();
+
+                app.Visible = true;
+                app.Focused = true;
+
+                Kernel.ProcessManager.Start(app);
+
+                Explorer.Taskbar.UpdateApplicationButtons();
+                Explorer.WindowManager.UpdateFocusStatus();
+            }
+            if (fileName.EndsWith(".txt"))
+            {
+                string path = currentPath + fileName;
+                var app = new EditorApp(path, 700, 600, 40, 40);
 
                 app.Initialize();
 

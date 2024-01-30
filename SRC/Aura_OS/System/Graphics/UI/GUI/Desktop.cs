@@ -30,14 +30,14 @@ namespace Aura_OS.System.Graphics.UI.GUI
             List<RightClickEntry> rightClickEntries = new List<RightClickEntry>();
 
             RightClickEntry entry = new("Open in Explorer", 0, 0, MainPanel.RightClick.Width);
-            entry.Action = new Action(() =>
+            entry.Click = new Action(() =>
             {
                 Kernel.ApplicationManager.StartApplication(typeof(ExplorerApp));
             });
             rightClickEntries.Add(entry);
 
             RightClickEntry entry2 = new("Open in Terminal", 0, 0, MainPanel.RightClick.Width);
-            entry2.Action = new Action(() =>
+            entry2.Click = new Action(() =>
             {
                 Kernel.ApplicationManager.StartApplication(typeof(TerminalApp));
             });
@@ -45,14 +45,14 @@ namespace Aura_OS.System.Graphics.UI.GUI
             rightClickEntries.Add(entry2);
 
             RightClickEntry entryInfo = new("OS Information", 0, 0, MainPanel.RightClick.Width);
-            entryInfo.Action = new Action(() =>
+            entryInfo.Click = new Action(() =>
             {
                 Kernel.ApplicationManager.StartApplication(typeof(SystemInfoApp));
             });
             rightClickEntries.Add(entryInfo);
 
             RightClickEntry entryPaste = new("Paste", 0, 0, MainPanel.RightClick.Width);
-            entryPaste.Action = new Action(() =>
+            entryPaste.Click = new Action(() =>
             {
                 if (Kernel.Clipboard != null)
                 {
@@ -64,7 +64,7 @@ namespace Aura_OS.System.Graphics.UI.GUI
             rightClickEntries.Add(entryPaste);
 
             RightClickEntry entryRefresh = new("Refresh Desktop", 0, 0, MainPanel.RightClick.Width);
-            entryRefresh.Action = new Action(() =>
+            entryRefresh.Click = new Action(() =>
             {
                 MainPanel.CurrentPath = Kernel.CurrentVolume;
                 MainPanel.UpdateCurrentFolder(x, y, height);

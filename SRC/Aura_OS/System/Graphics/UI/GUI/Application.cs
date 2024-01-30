@@ -35,14 +35,14 @@ namespace Aura_OS.System.Graphics.UI.GUI
         public Application(string name, int width, int height, int x = 0, int y = 0) : base(name, ProcessType.Program)
         {
             Window = new Window(name, x, y, width + 1, height + 1);
-            Window.Close.Action = new Action(() =>
+            Window.Close.Click = new Action(() =>
             {
                 Stop();
                 Explorer.WindowManager.Applications.Remove(this);
                 Kernel.ProcessManager.Processes.Remove(this);
                 Explorer.Taskbar.UpdateApplicationButtons();
             });
-            Window.Minimize.Action = new Action(() =>
+            Window.Minimize.Click = new Action(() =>
             {
                 Visible = !Visible;
 
@@ -59,15 +59,15 @@ namespace Aura_OS.System.Graphics.UI.GUI
             Window.TopBar.RightClick = new RightClick((int)MouseManager.X, (int)MouseManager.Y, 200, 2 * RightClickEntry.ConstHeight);
             List<RightClickEntry> rightClickEntries = new List<RightClickEntry>();
             RightClickEntry entry = new("Close", 0, 0, Window.TopBar.RightClick.Width);
-            entry.Action = new Action(() =>
+            entry.Click = new Action(() =>
             {
-                Window.Close.Action();
+                Window.Close.Click();
             });
             rightClickEntries.Add(entry);
             RightClickEntry entry2 = new("Minimize", 0, 0, Window.TopBar.RightClick.Width);
-            entry2.Action = new Action(() =>
+            entry2.Click = new Action(() =>
             {
-                Window.Minimize.Action();
+                Window.Minimize.Click();
             });
             rightClickEntries.Add(entry2);
             Window.TopBar.RightClick.Entries = rightClickEntries;
@@ -116,13 +116,13 @@ namespace Aura_OS.System.Graphics.UI.GUI
 
                     if (!_hasWindowMoving && Window.Close.IsInside((int)MouseManager.X, (int)MouseManager.Y))
                     {
-                        Window.Close.Action();
+                        Window.Close.Click();
 
                         return;
                     }
                     else if (!_hasWindowMoving && Window.Minimize.IsInside((int)MouseManager.X, (int)MouseManager.Y))
                     {
-                        Window.Minimize.Action();
+                        Window.Minimize.Click();
 
                         return;
                     }

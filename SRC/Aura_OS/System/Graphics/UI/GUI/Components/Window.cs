@@ -18,24 +18,37 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
         public Panel TopBar;
 
         public bool Borders;
+        public bool HasCloseButton;
+        public bool HasMinimizeButton;
 
         public Window(int x, int y, int width, int height) : base(x, y, width, height)
         {
             Borders = false;
         }
 
-        public Window(string name, int x, int y, int width, int height) : base(x, y, width, height)
+        public Window(string name, int x, int y, int width, int height, bool hasCloseButton = true, bool hasMinimizeButton = true) : base(x, y, width, height)
         {
             Icon = ResourceManager.GetImage("16-program.bmp");
             Name = name;
-            Close = new Button(ResourceManager.GetImage("16-close.bmp"), X + Width - 20, Y + 5);
-            Close.NoBackground = true;
-            Close.NoBorder = true;
-            Minimize = new Button(ResourceManager.GetImage("16-minimize.bmp"), X + Width - 38, Y + 5);
-            Minimize.NoBackground = true;
-            Minimize.NoBorder = true;
-            TopBar = new Panel(Kernel.DarkBlue, Kernel.Pink, X + 3, Y + 3, Width - 5, 18);
+            HasCloseButton = hasCloseButton;
+            HasMinimizeButton = hasMinimizeButton;
             Borders = true;
+
+            if (HasCloseButton)
+            {
+                Close = new Button(ResourceManager.GetImage("16-close.bmp"), X + Width - 20, Y + 5);
+                Close.NoBackground = true;
+                Close.NoBorder = true;
+            }
+
+            if (HasMinimizeButton)
+            {
+                Minimize = new Button(ResourceManager.GetImage("16-minimize.bmp"), X + Width - 38, Y + 5);
+                Minimize.NoBackground = true;
+                Minimize.NoBorder = true;
+            }
+
+            TopBar = new Panel(Kernel.DarkBlue, Kernel.Pink, X + 3, Y + 3, Width - 5, 18);
         }
 
         public override void Draw()
@@ -57,12 +70,20 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
                 TopBar.Y = Y + 3;
                 TopBar.Draw();
                 Kernel.canvas.DrawString(Name, PCScreenFont.Default, Kernel.WhiteColor, X + 5, Y + 4);
-                Close.X = X + Width - 20;
-                Close.Y = Y + 5;
-                Close.Draw();
-                Minimize.X = X + Width - 38;
-                Minimize.Y = Y + 5;
-                Minimize.Draw();
+
+                if (HasCloseButton)
+                {
+                    Close.X = X + Width - 20;
+                    Close.Y = Y + 5;
+                    Close.Draw();
+                }
+
+                if (HasMinimizeButton)
+                {
+                    Minimize.X = X + Width - 38;
+                    Minimize.Y = Y + 5;
+                    Minimize.Draw();
+                }
             }
         }
     }
