@@ -53,7 +53,7 @@ namespace Aura_OS.System.Processing.Applications
                 }
             });
             _up = new Button(ResourceManager.GetImage("16-up.bmp"), x + 3, y + 3, 18, 18);
-            _up.Action = new Action(() =>
+            _up.Click = new Action(() =>
             {
                 _mainPanel.CurrentPath = Filesystem.Utils.GetParentPath(_mainPanel.CurrentPath);
                 _pathTextBox.Text = _mainPanel.CurrentPath;
@@ -88,7 +88,7 @@ namespace Aura_OS.System.Processing.Applications
                 button.Text = path;
                 button.NoBorder = true;
                 button.NoBackground = true;
-                button.Action = new Action(() =>
+                button.Click = new Action(() =>
                 {
                     _mainPanel.CurrentPath = path;
                     Kernel.CurrentVolume = path;
@@ -160,7 +160,7 @@ namespace Aura_OS.System.Processing.Applications
 
             if (_up.IsInside((int)MouseManager.X, (int)MouseManager.Y))
             {
-                _up.Action();
+                _up.Click();
                 return;
             }
 
@@ -168,9 +168,9 @@ namespace Aura_OS.System.Processing.Applications
             {
                 if (button.IsInside((int)MouseManager.X, (int)MouseManager.Y))
                 {
-                    if (button.Action != null)
+                    if (button.Click != null)
                     {
-                        button.Action();
+                        button.Click();
                         return;
                     }
                 }

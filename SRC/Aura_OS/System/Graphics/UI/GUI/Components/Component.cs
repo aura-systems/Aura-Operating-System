@@ -46,7 +46,7 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
                     {
                         if (entry.IsInside((int)MouseManager.X, (int)MouseManager.Y))
                         {
-                            entry.Action();
+                            entry.Click();
                             return;
                         }
                     }

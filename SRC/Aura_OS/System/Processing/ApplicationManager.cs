@@ -50,7 +50,6 @@ namespace Aura_OS.System.Processing
             RegisterApplication(typeof(SystemInfoApp), 40, 40, 402, 360);
             RegisterApplication(typeof(CubeApp), 40, 40, 200, 200);
             RegisterApplication(typeof(GameBoyApp), 40, 40, 160 + 4, 144 + 22);
-            RegisterApplication(typeof(FileEditorApp), 40, 40, 700, 600);
         }
 
         public void RegisterApplication(ApplicationConfig config)
@@ -141,9 +140,9 @@ namespace Aura_OS.System.Processing
             {
                 app = new ExplorerApp(Kernel.CurrentVolume, config.Weight, config.Height, config.X, config.Y);
             }
-            else if (config.Template == typeof(FileEditorApp))
+            else if (config.Template == typeof(EditorApp))
             {
-                app = new FileEditorApp("", config.Weight, config.Height, config.X, config.Y);
+                app = new EditorApp("", config.Weight, config.Height, config.X, config.Y);
             }
             else
             {
@@ -187,7 +186,7 @@ namespace Aura_OS.System.Processing
             if (fileName.EndsWith(".txt"))
             {
                 string path = currentPath + fileName;
-                var app = new FileEditorApp(path, 700, 600);
+                var app = new EditorApp(path, 700, 600, 40, 40);
 
                 app.Initialize();
 

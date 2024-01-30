@@ -8,10 +8,11 @@ using Aura_OS.System.Graphics.UI.GUI.Components;
 using System;
 using Aura_OS.System.Graphics.UI.GUI;
 using System.IO;
+using System.Collections.Generic;
 
 namespace Aura_OS.System.Processing.Applications
 {
-    public class FileEditorApp : Application
+    public class EditorApp : Application
     {
         public static string ApplicationName = "Editor";
 
@@ -23,8 +24,8 @@ namespace Aura_OS.System.Processing.Applications
         private Dialog _dialog;
         private bool _showDialog;
 
-        public FileEditorApp(string filePath, int width, int height, int x = 0, int y = 0)
-            : base(ApplicationName, width, height, x, y)
+        public EditorApp(string filePath, int width, int height, int x = 0, int y = 0)
+            : base(ApplicationName + " - " + filePath, width, height, x, y)
         {
             _topPanel = new Panel(Kernel.Gray, x + 1, y + 1, width - 6, 22);
             _topPanel.Borders = true;
@@ -32,7 +33,7 @@ namespace Aura_OS.System.Processing.Applications
             string text = "Save";
             int textWidth = (text.Length + 2) * (Kernel.font.Width);
             _save = new Button(text, x + 3, y + 3, textWidth, 18);
-            _save.Action = new Action(() =>
+            _save.Click = new Action(() =>
             {
                 SaveFile();
             });
@@ -59,7 +60,13 @@ namespace Aura_OS.System.Processing.Applications
         public override void Update()
         {
             base.Update();
+            _save.Update();
             _fileContentBox.Update();
+
+            if (_showDialog)
+            {
+                _dialog.Update();
+            }
         }
 
         public override void HandleLeftClick()
@@ -67,6 +74,11 @@ namespace Aura_OS.System.Processing.Applications
             base.HandleLeftClick();
             _fileContentBox.HandleLeftClick();
             _save.HandleLeftClick();
+
+            List<Button> buttons = _dialog.GetButtons();
+            if (buttons[0].IsInside((int)Cosmos.System.MouseManager.X, (int)Cosmos.System.MouseManager.Y)) {
+                buttons[0].Click();
+            }
         }
 
         public override void Draw()

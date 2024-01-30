@@ -89,6 +89,7 @@ namespace Aura_OS
             LoadImage(isoVol + "UI\\Images\\Icons\\24\\explorer.bmp", "24");
             LoadImage(isoVol + "UI\\Images\\Icons\\32\\file.bmp", "32");
             LoadImage(isoVol + "UI\\Images\\Icons\\32\\folder.bmp", "32");
+            LoadImage(isoVol + "UI\\Images\\Icons\\32\\dialog-information.bmp", "32");
             LoadImage(isoVol + "UI\\Images\\Icons\\cursor.bmp", "00");
             LoadImage(isoVol + "UI\\Images\\Icons\\start.bmp", "00");
         }

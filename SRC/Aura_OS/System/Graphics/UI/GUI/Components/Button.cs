@@ -4,6 +4,7 @@
 * PROGRAMMERS:      Valentin Charbonnier <valentinbreiz@gmail.com>
 */
 
+using Aura_OS.System.Input;
 using Cosmos.System.Graphics;
 using System;
 using System.Drawing;
@@ -14,7 +15,7 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
     {
         public string Text;
         public Bitmap Image;
-        public Action Action;
+        public Action Click;
 
         public Color BackColor = Color.LightGray;
         public Color TextColor = Color.Black;
@@ -48,6 +49,19 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
         {
             Text = text;
             Image = image;
+        }
+
+        public override void HandleLeftClick()
+        {
+            base.HandleLeftClick();
+
+            if (Click != null)
+            {
+                if (IsInside((int)Cosmos.System.MouseManager.X, (int)Cosmos.System.MouseManager.Y))
+                {
+                    Click();
+                }
+            }
         }
 
         public override void Draw()
@@ -117,7 +131,12 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
             }
             else if (Text != null)
             {
-                Kernel.canvas.DrawString(Text, Kernel.font, TextColor, X + 4, Y + (Height / 2 - Kernel.font.Height / 2));
+                int textWidth = Text.Length * Kernel.font.Width;
+
+                int textX = X + (Width / 2) - (textWidth / 2);
+                int textY = Y + (Height / 2) - (Kernel.font.Height / 2);
+
+                Kernel.canvas.DrawString(Text, Kernel.font, TextColor, textX, textY);
             }
             else if (Image != null)
             {

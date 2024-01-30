@@ -109,7 +109,7 @@ namespace Aura_OS.System.Graphics.UI.GUI
 
                 if (Buttons[application.Name].IsInside((int)MouseManager.X, (int)MouseManager.Y))
                 {
-                    application.Window.Minimize.Action();
+                    application.Window.Minimize.Click();
                 }
             }
         }
