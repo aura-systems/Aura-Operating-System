@@ -183,10 +183,13 @@ namespace Aura_OS.System.Processing
                 Explorer.Taskbar.UpdateApplicationButtons();
                 Explorer.WindowManager.UpdateFocusStatus();
             }
-            if (fileName.EndsWith(".txt"))
+            else if (fileName.EndsWith(".gb"))
             {
                 string path = currentPath + fileName;
-                var app = new EditorApp(path, 700, 600, 40, 40);
+                string name = fileName;
+                byte[] bytes = File.ReadAllBytes(path);
+
+                var app = new GameBoyApp(bytes, name, 160 + 4, 144 + 22, 40, 40);
 
                 app.Initialize();
 
@@ -202,13 +205,10 @@ namespace Aura_OS.System.Processing
                 Explorer.Taskbar.UpdateApplicationButtons();
                 Explorer.WindowManager.UpdateFocusStatus();
             }
-            else if (fileName.EndsWith(".gb"))
+            else
             {
                 string path = currentPath + fileName;
-                string name = fileName;
-                byte[] bytes = File.ReadAllBytes(path);
-
-                var app = new GameBoyApp(bytes, name, 160 + 4, 144 + 22, 40, 40);
+                var app = new EditorApp(path, 700, 600, 40, 40);
 
                 app.Initialize();
 
