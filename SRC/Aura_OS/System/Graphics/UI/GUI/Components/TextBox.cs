@@ -6,12 +6,29 @@
 
 using Cosmos.System;
 using System;
+using System.Drawing;
 
 namespace Aura_OS.System.Graphics.UI.GUI.Components
 {
     public class TextBox : Component
     {
-        public string Text;
+        public struct Cell
+        {
+            public char Char;
+            public uint ForegroundColor;
+        }
+
+        private string __text;
+        public string Text
+        {
+            get { return __text; }
+            set
+            {
+                __text = value;
+                InitializeText(__text);
+            }
+        }
+
         public Action Enter;
         public bool Multiline = false;
 
@@ -20,9 +37,26 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
         private DateTime _lastCursorBlink = DateTime.Now;
         private const int _cursorBlinkInterval = 400;
 
+        private Cell[] _text;
+        public int mCols;
+        public int mRows;
+
+        private int _cursorPositionX = 0;
+        private int _cursorPositionY = 0;
+
         public TextBox(int x, int y, int width, int height, string text = "") : base(x, y, width, height)
         {
             Text = text;
+            mCols = width / Kernel.font.Width - 1;
+            mRows = height / Kernel.font.Height - 2;
+
+            _text = new Cell[mCols * mRows];
+            for (int i = 0; i < _text.Length; i++)
+            {
+                _text[i] = new Cell { Char = ' ', ForegroundColor = (uint)Kernel.BlackColor.ToArgb() };
+            }
+
+            InitializeText(text);
         }
 
         public override void HandleLeftClick()
@@ -49,25 +83,15 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
                     switch (keyEvent.Key)
                     {
                         case ConsoleKeyEx.Backspace:
-                            if (Text.Length > 0)
-                            {
-                                Text = Text.Remove(Text.Length - 1);
-                            }
+                            RemoveCharacter();
                             break;
                         case ConsoleKeyEx.Enter:
-                            if (Multiline)
-                            {
-                                Text += "\n";
-                            }
-                            else
-                            {
-                                Enter();
-                            }
+                            InsertCharacter('\n');
                             break;
                         default:
                             if (char.IsLetterOrDigit(keyEvent.KeyChar) || char.IsPunctuation(keyEvent.KeyChar) || char.IsSymbol(keyEvent.KeyChar) || keyEvent.KeyChar == ' ')
                             {
-                                Text += keyEvent.KeyChar.ToString();
+                                InsertCharacter(keyEvent.KeyChar);
                             }
                             break;
                     }
@@ -88,37 +112,82 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
             Kernel.canvas.DrawLine(Kernel.DarkGray, X + Width - 1, Y + 1, X + Width - 1, Y + Height);
             Kernel.canvas.DrawLine(Kernel.WhiteColor, X + Width, Y, X + Width, Y + Height);
 
-            string[] lines = Text.Split('\n');
-            int offsetY = Y + 4;
-            int cursorX = X + 4;
-            int cursorY = offsetY;
-
-            for (int i = 0; i < lines.Length; i++)
+            for (int y = 0; y < mRows; y++)
             {
-                string line = lines[i];
-                Kernel.canvas.DrawString(line, Kernel.font, Kernel.BlackColor, cursorX, offsetY);
-
-                if (i == lines.Length - 1)
+                for (int x = 0; x < mCols; x++)
                 {
-                    cursorY = offsetY;
-                    cursorX += line.Length * Kernel.font.Width;
+                    Cell cell = _text[y * mCols + x];
+                    Kernel.canvas.DrawString(cell.Char.ToString(), Kernel.font, Color.FromArgb((int)cell.ForegroundColor), X + 4 + x * Kernel.font.Width, Y + 4 + y * Kernel.font.Height);
                 }
-
-                offsetY += Kernel.font.Height;
-            }
-
-            if (_isSelected && (DateTime.Now - _lastCursorBlink).TotalMilliseconds > _cursorBlinkInterval)
-            {
-                _cursorVisible = !_cursorVisible;
-                _lastCursorBlink = DateTime.Now;
             }
 
             if (_isSelected && _cursorVisible)
             {
-                int cursorWidth = 2;
-                int cursorHeight = Kernel.font.Height;
+                int cursorX = X + 4 + _cursorPositionX * Kernel.font.Width;
+                int cursorY = Y + 4 + _cursorPositionY * Kernel.font.Height;
+                Kernel.canvas.DrawFilledRectangle(Kernel.BlackColor, cursorX, cursorY, 2, Kernel.font.Height);
+            }
+        }
 
-                Kernel.canvas.DrawFilledRectangle(Kernel.BlackColor, cursorX, cursorY, cursorWidth, cursorHeight);
+        private void InitializeText(string text)
+        {
+            string[] lines = text.Split('\n');
+            int currentRow = 0;
+
+            foreach (var line in lines)
+            {
+                int currentCol = 0;
+                foreach (var ch in line)
+                {
+                    if (currentRow < mRows && currentCol < mCols)
+                    {
+                        _text[currentRow * mCols + currentCol] = new Cell { Char = ch, ForegroundColor = (uint)Kernel.BlackColor.ToArgb() };
+                    }
+                    currentCol++;
+                    if (currentCol >= mCols) break;
+                }
+                currentRow++;
+                if (currentRow >= mRows) break;
+            }
+        }
+
+        private void InsertCharacter(char character)
+        {
+            int cursorIndex = _cursorPositionY * mCols + _cursorPositionX;
+
+            for (int i = _text.Length - 2; i >= cursorIndex; i--)
+            {
+                _text[i + 1] = _text[i];
+            }
+
+            _text[cursorIndex] = new Cell { Char = character, ForegroundColor = (uint)Kernel.BlackColor.ToArgb() };
+
+            _cursorPositionX++;
+            if (_cursorPositionX >= mCols)
+            {
+                _cursorPositionX = 0;
+                _cursorPositionY++;
+            }
+        }
+
+        private void RemoveCharacter()
+        {
+            int cursorIndex = _cursorPositionY * mCols + _cursorPositionX;
+
+            if (cursorIndex == 0) return;
+
+            for (int i = cursorIndex; i < _text.Length - 1; i++)
+            {
+                _text[i - 1] = _text[i];
+            }
+
+            _text[_text.Length - 1] = new Cell { Char = ' ', ForegroundColor = (uint)Kernel.BlackColor.ToArgb() };
+
+            _cursorPositionX--;
+            if (_cursorPositionX < 0)
+            {
+                _cursorPositionX = mCols - 1;
+                _cursorPositionY--;
             }
         }
     }

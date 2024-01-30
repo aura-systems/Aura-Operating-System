@@ -11,15 +11,15 @@ using System.Drawing;
 
 namespace Aura_OS.System.Graphics.UI.GUI.Components
 {
-    public struct Cell
-    {
-        public char Char;
-        public uint ForegroundColor;
-        public uint BackgroundColor;
-    }
-
     public class Console : Component
     {
+        public struct Cell
+        {
+            public char Char;
+            public uint ForegroundColor;
+            public uint BackgroundColor;
+        }
+
         private const char LineFeed = '\n';
         private const char CarriageReturn = '\r';
         private const char Tab = '\t';
