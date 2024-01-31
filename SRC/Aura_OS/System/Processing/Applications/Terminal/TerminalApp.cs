@@ -155,23 +155,26 @@ namespace Aura_OS.System.Processing.Applications.Terminal
 
         public override void Draw()
         {
-            base.Draw();
-
-            Console.Draw();
-
-            if (!Console.ScrollMode)
+            if (Dirty)
             {
-                if (_command.Length > 0)
+                base.Draw();
+
+                Console.Draw();
+
+                if (!Console.ScrollMode)
                 {
-                    int baseX = Console.mX - _command.Length;
-
-                    for (int i = 0; i < _command.Length; i++)
+                    if (_command.Length > 0)
                     {
-                        Console.WriteByte(_command[i], Console.X + (baseX + i) * Kernel.font.Width, Console.Y + Console.mY * Kernel.font.Height, (uint)Console.ForegroundColor.ToArgb());
-                    }
-                }
+                        int baseX = Console.mX - _command.Length;
 
-                Console.DrawCursor();
+                        for (int i = 0; i < _command.Length; i++)
+                        {
+                            Console.WriteByte(_command[i], Console.X + (baseX + i) * Kernel.font.Width, Console.Y + Console.mY * Kernel.font.Height, (uint)Console.ForegroundColor.ToArgb());
+                        }
+                    }
+
+                    Console.DrawCursor();
+                }
             }
         }
 

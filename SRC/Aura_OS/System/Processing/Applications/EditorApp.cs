@@ -83,22 +83,25 @@ namespace Aura_OS.System.Processing.Applications
 
         public override void Draw()
         {
-            base.Draw();
-
-            _topPanel.X = X + 1;
-            _topPanel.Y = Y + 1;
-            _save.X = X + 3;
-            _save.Y = Y + 3;
-            _fileContentBox.X = X + 1;
-            _fileContentBox.Y = Y + _topPanel.Height + 3;
-
-            _fileContentBox.Draw();
-            _topPanel.Draw();
-            _save.Draw();
-
-            if (_showDialog)
+            if (Dirty)
             {
-                _dialog.Draw();
+                base.Draw();
+
+                _topPanel.X = X + 1;
+                _topPanel.Y = Y + 1;
+                _save.X = X + 3;
+                _save.Y = Y + 3;
+                _fileContentBox.X = X + 1;
+                _fileContentBox.Y = Y + _topPanel.Height + 3;
+
+                _fileContentBox.Draw();
+                _topPanel.Draw();
+                _save.Draw();
+
+                if (_showDialog)
+                {
+                    _dialog.Draw();
+                }
             }
         }
     }

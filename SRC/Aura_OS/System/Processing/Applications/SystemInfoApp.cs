@@ -27,20 +27,23 @@ namespace Aura_OS.System.Processing.Applications
 
         public override void Draw()
         {
-            base.Draw();
+            if (Dirty)
+            {
+                base.Draw();
 
-            var version = "[version " + Kernel.Version + "-" + Kernel.Revision + "]";
+                var version = "[version " + Kernel.Version + "-" + Kernel.Revision + "]";
 
-            Kernel.canvas.DrawString(_title, Cosmos.System.Graphics.Fonts.PCScreenFont.Default, Kernel.BlackColor, X + Width / 2 - _title.Length * Cosmos.System.Graphics.Fonts.PCScreenFont.Default.Width / 2, Y + 1 * Kernel.font.Height);
-            Kernel.canvas.DrawString(version, Kernel.font, Kernel.BlackColor, X + Width / 2 - version.Length * Kernel.font.Width / 2, Y + 3 * Kernel.font.Height);
+                Canvas.DrawString(_title, Cosmos.System.Graphics.Fonts.PCScreenFont.Default, Kernel.BlackColor, X + Width / 2 - _title.Length * Cosmos.System.Graphics.Fonts.PCScreenFont.Default.Width / 2, Y + 1 * Kernel.font.Height);
+                Canvas.DrawString(version, Kernel.font, Kernel.BlackColor, X + Width / 2 - version.Length * Kernel.font.Width / 2, Y + 3 * Kernel.font.Height);
 
-            Kernel.canvas.DrawString(_credit, Kernel.font, Kernel.BlackColor, X + Width / 2 - _credit.Length * Kernel.font.Width / 2, Y + 5 * Kernel.font.Height);
-            Kernel.canvas.DrawString(_website, Kernel.font, _greenPen, X + Width / 2 - _website.Length * Kernel.font.Width / 2, Y + 7 * Kernel.font.Height);
+                Canvas.DrawString(_credit, Kernel.font, Kernel.BlackColor, X + Width / 2 - _credit.Length * Kernel.font.Width / 2, Y + 5 * Kernel.font.Height);
+                Canvas.DrawString(_website, Kernel.font, _greenPen, X + Width / 2 - _website.Length * Kernel.font.Width / 2, Y + 7 * Kernel.font.Height);
 
-            Kernel.canvas.DrawImageAlpha(Kernel.AuraLogo, X + Width / 2 - (int)Kernel.AuraLogo.Width / 2, Y + 9 * Kernel.font.Height);
+                Canvas.DrawImageAlpha(Kernel.AuraLogo, X + Width / 2 - (int)Kernel.AuraLogo.Width / 2, Y + 9 * Kernel.font.Height);
 
-            Kernel.canvas.DrawString(_website2, Kernel.font, _greenPen, X + Width / 2 - _website2.Length * Kernel.font.Width / 2, Y + 19 * Kernel.font.Height);
-            Kernel.canvas.DrawImageAlpha(Kernel.CosmosLogo, X + Width / 2 - (int)Kernel.CosmosLogo.Width / 2, Y + 21 * Kernel.font.Height);
+                Canvas.DrawString(_website2, Kernel.font, _greenPen, X + Width / 2 - _website2.Length * Kernel.font.Width / 2, Y + 19 * Kernel.font.Height);
+                Canvas.DrawImageAlpha(Kernel.CosmosLogo, X + Width / 2 - (int)Kernel.CosmosLogo.Width / 2, Y + 21 * Kernel.font.Height);
+            }
         }
     }
 }

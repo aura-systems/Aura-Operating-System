@@ -299,7 +299,7 @@ namespace Aura_OS.System.Processing.Applications.Emulators.GameBoyEmu.DMG
 
         public void RenderFrame()
         {
-            Kernel.canvas.DrawImage(bmp.Bitmap, X, Y);
+            // Canvas.DrawImage(bmp.Bitmap, X, Y); TODO
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

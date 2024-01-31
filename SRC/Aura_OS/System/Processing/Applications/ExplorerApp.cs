@@ -189,18 +189,21 @@ namespace Aura_OS.System.Processing.Applications
 
         public override void Draw()
         {
-            base.Draw();
-
-            _topPanel.Draw();
-            _leftPanel.Draw();
-            _mainPanel.Draw(X + 78, Y, Height);
-            _pathTextBox.Draw();
-            _up.Draw();
-            _spaceButton.Draw();
-
-            foreach (var button in _disks)
+            if (Dirty)
             {
-                button.Draw();
+                base.Draw();
+
+                _topPanel.Draw();
+                _leftPanel.Draw();
+                _mainPanel.Draw(X + 78, Y, Height);
+                _pathTextBox.Draw();
+                _up.Draw();
+                _spaceButton.Draw();
+
+                foreach (var button in _disks)
+                {
+                    button.Draw();
+                }
             }
         }
     }
