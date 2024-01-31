@@ -92,8 +92,8 @@ namespace Aura_OS
         public static int FreeCount = 0;
 
         private static int _frames = 0;
-        public static int _fps = 0;
-        public static int _deltaT = 0;
+        private static int _fps = 0;
+        private static int _deltaT = 0;
 
         public static CosmosVFS VirtualFileSystem;
 

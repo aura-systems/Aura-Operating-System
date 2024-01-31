@@ -20,22 +20,23 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
     public class FilesystemPanel : Panel
     {
         public string CurrentPath;
-        public List<Button> Buttons;
-        private Color TextColor;
         public bool OpenNewWindow = false;
+
+        private List<Button> _buttons;
+        private Color _textColor;
 
         public FilesystemPanel(string path, Color textcolor, Color background, int x, int y, int width, int height) : base(background, x, y, width, height)
         {
             CurrentPath = path;
-            TextColor = textcolor;
+            _textColor = textcolor;
 
-            Buttons = new List<Button>();
+            _buttons = new List<Button>();
 
             RightClick = new RightClick((int)MouseManager.X, (int)MouseManager.Y, 200, 1 * RightClickEntry.ConstHeight);
             List<RightClickEntry> rightClickEntries = new List<RightClickEntry>();
 
             RightClickEntry entry2 = new("Open in Terminal", 0, 0, RightClick.Width);
-            entry2.Action = new Action(() =>
+            entry2.Click = new Action(() =>
             {
                 Kernel.CurrentDirectory = CurrentPath;
                 Kernel.ApplicationManager.StartApplication(typeof(TerminalApp));
@@ -43,7 +44,7 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
 
             rightClickEntries.Add(entry2);
             RightClickEntry entryPaste = new("Paste", 0, 0, RightClick.Width);
-            entryPaste.Action = new Action(() =>
+            entryPaste.Click = new Action(() =>
             {
                 if (Kernel.Clipboard != null)
                 {
@@ -55,7 +56,7 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
             rightClickEntries.Add(entryPaste);
 
             RightClickEntry entryRefresh = new("Refresh", 0, 0, RightClick.Width);
-            entryRefresh.Action = new Action(() =>
+            entryRefresh.Click = new Action(() =>
             {
                 UpdateCurrentFolder(x, y, height);
             });
@@ -75,7 +76,7 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
             int currentX = startX;
             int currentY = startY;
 
-            foreach (var button in Buttons)
+            foreach (var button in _buttons)
             {
                 button.X = x + startX + currentX;
                 button.Y = y + currentY;
@@ -108,7 +109,7 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
                 RightClick.Draw();
             }
 
-            foreach (var button in Buttons)
+            foreach (var button in _buttons)
             {
                 if (button.RightClick.Opened)
                 {
@@ -134,7 +135,7 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
 
         public override void HandleLeftClick()
         {
-            foreach (var button in Buttons)
+            foreach (var button in _buttons)
             {
                 if (button.RightClick.Opened)
                 {
@@ -144,7 +145,7 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
                     {
                         if (entry.IsInside((int)MouseManager.X, (int)MouseManager.Y))
                         {
-                            entry.Action();
+                            entry.Click();
                             return;
                         }
                     }
@@ -152,9 +153,9 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
 
                 if (button.IsInside((int)MouseManager.X, (int)MouseManager.Y))
                 {
-                    if (button.Action != null)
+                    if (button.Click != null)
                     {
-                        button.Action();
+                        button.Click();
                         return;
                     }
                 }
@@ -165,7 +166,7 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
 
         public override void HandleRightClick()
         {
-            foreach (var button in Buttons)
+            foreach (var button in _buttons)
             {
                 if (button.IsInside((int)MouseManager.X, (int)MouseManager.Y))
                 {
@@ -196,12 +197,12 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
             string[] directories = Directory.GetDirectories(CurrentPath);
             string[] files = Directory.GetFiles(CurrentPath);
 
-            Buttons.Clear();
+            _buttons.Clear();
             foreach (string directory in directories)
             {
                 string folderName = Path.GetFileName(directory);
-                var button = new FileButton(folderName, TextColor, ResourceManager.GetImage("32-folder.bmp"), x + startX + currentX, y + currentY, 32, 32);
-                button.Action = new Action(() =>
+                var button = new FileButton(folderName, _textColor, ResourceManager.GetImage("32-folder.bmp"), x + startX + currentX, y + currentY, 32, 32);
+                button.Click = new Action(() =>
                 {
                     OpenFolder(folderName);
                     UpdateCurrentFolder(x, y, height);
@@ -210,7 +211,7 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
                 button.RightClick = new RightClick((int)MouseManager.X, (int)MouseManager.Y, 200, 3 * RightClickEntry.ConstHeight);
                 List<RightClickEntry> rightClickEntries = new List<RightClickEntry>();
                 RightClickEntry entry = new("Open", 0, 0, button.RightClick.Width);
-                entry.Action = new Action(() =>
+                entry.Click = new Action(() =>
                 {
                     OpenFolder(folderName);
                     UpdateCurrentFolder(x, y, height);
@@ -218,7 +219,7 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
                 rightClickEntries.Add(entry);
 
                 RightClickEntry copyEntry = new("Copy", 0, 0, button.RightClick.Width);
-                copyEntry.Action = new Action(() =>
+                copyEntry.Click = new Action(() =>
                 {
                     string path = CurrentPath + folderName;
                     Kernel.Clipboard = path;
@@ -226,7 +227,7 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
                 rightClickEntries.Add(copyEntry);
 
                 RightClickEntry entry2 = new("Delete", 0, 0, button.RightClick.Width);
-                entry2.Action = new Action(() =>
+                entry2.Click = new Action(() =>
                 {
                     Entries.ForceRemove(CurrentPath + folderName);
                     UpdateCurrentFolder(x, y, height);
@@ -235,7 +236,7 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
 
                 button.RightClick.Entries = rightClickEntries;
 
-                Buttons.Add(button);
+                _buttons.Add(button);
 
                 currentY += iconSpacing;
                 if (currentY + iconSpacing > height - 32)
@@ -248,8 +249,8 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
             foreach (string file in files)
             {
                 string fileName = Path.GetFileName(file);
-                var button = new FileButton(fileName, TextColor, ResourceManager.GetImage("32-file.bmp"), x + startX + currentX, y + currentY, 32, 32);
-                button.Action = new Action(() =>
+                var button = new FileButton(fileName, _textColor, ResourceManager.GetImage("32-file.bmp"), x + startX + currentX, y + currentY, 32, 32);
+                button.Click = new Action(() =>
                 {
                     Kernel.ApplicationManager.StartFileApplication(fileName, CurrentPath);
                 });
@@ -258,14 +259,14 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
                 List<RightClickEntry> rightClickEntries = new List<RightClickEntry>();
 
                 RightClickEntry entry = new("Open", 0, 0, button.RightClick.Width);
-                entry.Action = new Action(() =>
+                entry.Click = new Action(() =>
                 {
                     Kernel.ApplicationManager.StartFileApplication(fileName, CurrentPath);
                 });
                 rightClickEntries.Add(entry);
 
                 RightClickEntry copyEntry = new("Copy", 0, 0, button.RightClick.Width);
-                copyEntry.Action = new Action(() =>
+                copyEntry.Click = new Action(() =>
                 {
                     string path = CurrentPath + fileName;
                     Kernel.Clipboard = path;
@@ -273,7 +274,7 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
                 rightClickEntries.Add(copyEntry);
 
                 RightClickEntry entry2 = new("Delete", 0, 0, button.RightClick.Width);
-                entry2.Action = new Action(() =>
+                entry2.Click = new Action(() =>
                 {
                     Entries.ForceRemove(CurrentPath + fileName);
                     UpdateCurrentFolder(x, y, height);
@@ -282,7 +283,7 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
 
                 button.RightClick.Entries = rightClickEntries;
 
-                Buttons.Add(button);
+                _buttons.Add(button);
 
                 currentY += iconSpacing;
                 if (currentY + iconSpacing > height - 32)

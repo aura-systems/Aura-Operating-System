@@ -140,6 +140,10 @@ namespace Aura_OS.System.Processing
             {
                 app = new ExplorerApp(Kernel.CurrentVolume, config.Weight, config.Height, config.X, config.Y);
             }
+            else if (config.Template == typeof(EditorApp))
+            {
+                app = new EditorApp("", config.Weight, config.Height, config.X, config.Y);
+            }
             else
             {
                 throw new InvalidOperationException("Type d'application non reconnu.");
@@ -186,6 +190,25 @@ namespace Aura_OS.System.Processing
                 byte[] bytes = File.ReadAllBytes(path);
 
                 var app = new GameBoyApp(bytes, name, 160 + 4, 144 + 22, 40, 40);
+
+                app.Initialize();
+
+                Explorer.WindowManager.Applications.Add(app);
+                app.zIndex = Explorer.WindowManager.GetTopZIndex() + 1;
+                Explorer.WindowManager.MarkStackDirty();
+
+                app.Visible = true;
+                app.Focused = true;
+
+                Kernel.ProcessManager.Start(app);
+
+                Explorer.Taskbar.UpdateApplicationButtons();
+                Explorer.WindowManager.UpdateFocusStatus();
+            }
+            else
+            {
+                string path = currentPath + fileName;
+                var app = new EditorApp(path, 700, 600, 40, 40);
 
                 app.Initialize();
 

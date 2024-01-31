@@ -56,6 +56,11 @@ namespace Aura_OS.System.Input
         public bool IsRightButtonDown;
 
         /// <summary>
+        /// Focused component (set by click)
+        /// </summary>
+        public Component FocusedComponent;
+
+        /// <summary>
         /// Initializes a new instance of the MouseManager class.
         /// </summary>
         public MouseManager()

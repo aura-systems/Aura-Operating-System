@@ -31,13 +31,13 @@ namespace Aura_OS.System.Graphics.UI.GUI
             buttons = new List<Button>();
             Shutdown = new Button(ResourceManager.GetImage("24-shutdown.bmp"), "Shut Down.", X + 1 + Ribbon.Width, Y + Height - 32 - 4, Width - Ribbon.Width - 3, 35);
             Shutdown.NoBorder = true;
-            Shutdown.Action = new Action(() =>
+            Shutdown.Click = new Action(() =>
             {
                 Power.Shutdown();
             });
             Reboot = new Button(ResourceManager.GetImage("24-reboot.bmp"), "Reboot.", X + 1 + Ribbon.Width, Y + Height - 64 - 4, Width - Ribbon.Width - 3, 35);
             Reboot.NoBorder = true;
-            Reboot.Action = new Action(() =>
+            Reboot.Click = new Action(() =>
             {
                 Power.Reboot();
             });
@@ -64,7 +64,7 @@ namespace Aura_OS.System.Graphics.UI.GUI
 
                 var button = new Button(icon, applicationConfig.Template.Name, X + 1 + Ribbon.Width, Y + buttonY + 1, Width - Ribbon.Width - 3, 35);
                 button.NoBorder = true;
-                button.Action = new Action(() =>
+                button.Click = new Action(() =>
                 {
                     Kernel.ApplicationManager.StartApplication(applicationConfig);
                     Explorer.ShowStartMenu = false;
@@ -165,19 +165,19 @@ namespace Aura_OS.System.Graphics.UI.GUI
 
             if (Shutdown.IsInside((int)MouseManager.X, (int)MouseManager.Y))
             {
-                Shutdown.Action();
+                Shutdown.Click();
             }
 
             if (Reboot.IsInside((int)MouseManager.X, (int)MouseManager.Y))
             {
-                Reboot.Action();
+                Reboot.Click();
             }
 
             foreach (var button in buttons)
             {
                 if (button.IsInside((int)MouseManager.X, (int)MouseManager.Y))
                 {
-                    button.Action();
+                    button.Click();
                 }
             }
         }

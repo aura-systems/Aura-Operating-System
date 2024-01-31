@@ -14,6 +14,7 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
 
         public RightClickEntry(string text, int x, int y, int width) : base(text, x, y, width, ConstHeight)
         {
+            TextAlignStyle = TextAlign.Left;
         }
 
         public override void Draw()

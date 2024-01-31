@@ -1,6 +1,6 @@
 /*
 * PROJECT:          Aura Operating System Development
-* CONTENT:          Memory information application.
+* CONTENT:          File explorer application.
 * PROGRAMMERS:      Valentin Charbonnier <valentinbreiz@gmail.com>
 */
 
@@ -12,6 +12,7 @@ using Cosmos.System;
 using System.Collections.Generic;
 using System.Drawing;
 using Aura_OS.System.Graphics.UI.GUI;
+using System.IO;
 
 namespace Aura_OS.System.Processing.Applications
 {
@@ -19,45 +20,53 @@ namespace Aura_OS.System.Processing.Applications
     {
         public static string ApplicationName = "Explorer";
 
-        private bool Clicked = false;
-        private bool RightClicked = false;
-        private Panel TopPanel;
-        private Panel LeftPanel;
-        private FilesystemPanel MainPanel;
-        private Button SpaceButton;
-        private TextBox PathTextBox;
-        private Button Up;
-        private List<Button> Disks;
+        private Panel _topPanel;
+        private Panel _leftPanel;
+        private FilesystemPanel _mainPanel;
+        private Button _spaceButton;
+        private TextBox _pathTextBox;
+        private Button _up;
+        private List<Button> _disks;
+
+        private string _path = "";
 
         public ExplorerApp(string currentPath, int width, int height, int x = 0, int y = 0) : base(ApplicationName, width, height, x, y)
         {
             Window.Icon = ResourceManager.GetImage("16-explorer.bmp");
 
-            TopPanel = new Panel(Kernel.Gray, x + 1, y + 1, width - 6, 23);
-            TopPanel.Borders = true;
-            SpaceButton = new Button("", x + 3, y + Window.Height - 19, Window.Width - 6, 20);
-            SpaceButton.Light = true;
-            MainPanel = new FilesystemPanel(currentPath, Color.Black, Kernel.WhiteColor, x + 1 + 75, y + 1 + 22, width - 7 - 75, Window.Height - Window.TopBar.Height - TopPanel.Height - SpaceButton.Height - 8);
-            MainPanel.Borders = true;
+            _topPanel = new Panel(Kernel.Gray, x + 1, y + 1, width - 6, 23);
+            _topPanel.Borders = true;
+            _spaceButton = new Button("", x + 3, y + Window.Height - 19, Window.Width - 6, 20);
+            _spaceButton.Light = true;
+            _mainPanel = new FilesystemPanel(currentPath, Color.Black, Kernel.WhiteColor, x + 1 + 75, y + 1 + 22, width - 7 - 75, Window.Height - Window.TopBar.Height - _topPanel.Height - _spaceButton.Height - 8);
+            _mainPanel.Borders = true;
 
-            LeftPanel = new Panel(Kernel.WhiteColor, x + 1, y + 1 + 22, 75, Window.Height - Window.TopBar.Height - TopPanel.Height - SpaceButton.Height - 8);
-            LeftPanel.Borders = true;
-            PathTextBox = new TextBox(x + 18 + 6, y + 3, width - 15 - 18, 18, MainPanel.CurrentPath);
-            Up = new Button(ResourceManager.GetImage("16-up.bmp"), x + 3, y + 3, 18, 18);
-            Up.Action = new Action(() =>
+            _leftPanel = new Panel(Kernel.WhiteColor, x + 1, y + 1 + 22, 75, Window.Height - Window.TopBar.Height - _topPanel.Height - _spaceButton.Height - 8);
+            _leftPanel.Borders = true;
+            _pathTextBox = new TextBox(x + 18 + 6, y + 3, width - 15 - 18, 18, _mainPanel.CurrentPath);
+            _pathTextBox.Enter = new Action(() =>
             {
-                MainPanel.CurrentPath = Filesystem.Utils.GetParentPath(MainPanel.CurrentPath);
-                PathTextBox.Text = MainPanel.CurrentPath;
-                MainPanel.UpdateCurrentFolder(x, y, height);
+                if (Directory.Exists(_pathTextBox.Text))
+                {
+                    _mainPanel.CurrentPath = _pathTextBox.Text;
+                    _mainPanel.UpdateCurrentFolder(x, y, height);
+                }
+            });
+            _up = new Button(ResourceManager.GetImage("16-up.bmp"), x + 3, y + 3, 18, 18);
+            _up.Click = new Action(() =>
+            {
+                _mainPanel.CurrentPath = Filesystem.Utils.GetParentPath(_mainPanel.CurrentPath);
+                _pathTextBox.Text = _mainPanel.CurrentPath;
+                _mainPanel.UpdateCurrentFolder(x, y, height);
             });
 
-            MainPanel.UpdateCurrentFolder(x, y, height);
+            _mainPanel.UpdateCurrentFolder(x, y, height);
             UpdateDisks();
         }
 
         public void UpdateDisks()
         {
-            Disks = new List<Button>();
+            _disks = new List<Button>();
             var vols = Kernel.VirtualFileSystem.GetVolumes();
 
             foreach (var vol in vols)
@@ -79,16 +88,16 @@ namespace Aura_OS.System.Processing.Applications
                 button.Text = path;
                 button.NoBorder = true;
                 button.NoBackground = true;
-                button.Action = new Action(() =>
+                button.Click = new Action(() =>
                 {
-                    MainPanel.CurrentPath = path;
+                    _mainPanel.CurrentPath = path;
                     Kernel.CurrentVolume = path;
                     Kernel.CurrentDirectory = path;
-                    PathTextBox.Text = path;
-                    MainPanel.UpdateCurrentFolder(X, Y, Height);
+                    _pathTextBox.Text = path;
+                    _mainPanel.UpdateCurrentFolder(X, Y, Height);
                 });
 
-                Disks.Add(button);
+                _disks.Add(button);
             }
         }
 
@@ -96,26 +105,31 @@ namespace Aura_OS.System.Processing.Applications
         {
             base.Update();
 
-            TopPanel.X = X + 1;
-            TopPanel.Y = Y + 1;
-            TopPanel.Update();
-            LeftPanel.X = X + 1;
-            LeftPanel.Y = Y + TopPanel.Height;
-            LeftPanel.Update();
-            MainPanel.X = X + 1 + 75;
-            MainPanel.Y = Y + TopPanel.Height;
-            MainPanel.Update();
-            PathTextBox.Text = MainPanel.CurrentPath;
-            PathTextBox.X = X + 9 + 18;
-            PathTextBox.Y = Y + 3;
-            PathTextBox.Update();
-            Up.X = X + 3;
-            Up.Y = Y + 3;
-            Up.Update();
-            SpaceButton.Text = "Free Space: " + Filesystem.Utils.GetFreeSpace() + ", Capacity: " + Filesystem.Utils.GetCapacity() + ", Filesystem: " + Kernel.VirtualFileSystem.GetFileSystemType(Kernel.CurrentVolume);
-            SpaceButton.X = X;
-            SpaceButton.Y = Y + Window.Height - Window.TopBar.Height - 26;
-            SpaceButton.Update();
+            if (_path != _mainPanel.CurrentPath)
+            {
+                _path = _mainPanel.CurrentPath;
+                _pathTextBox.Text = _path;
+            }
+
+            _topPanel.X = X + 1;
+            _topPanel.Y = Y + 1;
+            _topPanel.Update();
+            _leftPanel.X = X + 1;
+            _leftPanel.Y = Y + _topPanel.Height;
+            _leftPanel.Update();
+            _mainPanel.X = X + 1 + 75;
+            _mainPanel.Y = Y + _topPanel.Height;
+            _mainPanel.Update();
+            _pathTextBox.X = X + 9 + 18;
+            _pathTextBox.Y = Y + 3;
+            _pathTextBox.Update();
+            _up.X = X + 3;
+            _up.Y = Y + 3;
+            _up.Update();
+            _spaceButton.Text = "Free Space: " + Filesystem.Utils.GetFreeSpace() + ", Capacity: " + Filesystem.Utils.GetCapacity() + ", Filesystem: " + Kernel.VirtualFileSystem.GetFileSystemType(Kernel.CurrentVolume);
+            _spaceButton.X = X;
+            _spaceButton.Y = Y + Window.Height - Window.TopBar.Height - 26;
+            _spaceButton.Update();
 
             int startX = 3;
             int startY = 24 + 3;
@@ -124,7 +138,7 @@ namespace Aura_OS.System.Processing.Applications
             int currentX = startX;
             int currentY = startY;
 
-            foreach (var button in Disks)
+            foreach (var button in _disks)
             {
                 button.X = X + startX + currentX;
                 button.Y = Y + currentY;
@@ -144,46 +158,47 @@ namespace Aura_OS.System.Processing.Applications
         {
             base.HandleLeftClick();
 
-            if (Up.IsInside((int)MouseManager.X, (int)MouseManager.Y))
+            if (_up.IsInside((int)MouseManager.X, (int)MouseManager.Y))
             {
-                Up.Action();
+                _up.Click();
                 return;
             }
 
-            foreach (var button in Disks)
+            foreach (var button in _disks)
             {
                 if (button.IsInside((int)MouseManager.X, (int)MouseManager.Y))
                 {
-                    if (button.Action != null)
+                    if (button.Click != null)
                     {
-                        button.Action();
+                        button.Click();
                         return;
                     }
                 }
             }
 
-            MainPanel.HandleLeftClick();
+            _mainPanel.HandleLeftClick();
+            _pathTextBox.HandleLeftClick();
         }
 
         public override void HandleRightClick()
         {
             base.HandleRightClick();
 
-            MainPanel.HandleRightClick();
+            _mainPanel.HandleRightClick();
         }
 
         public override void Draw()
         {
             base.Draw();
 
-            TopPanel.Draw();
-            LeftPanel.Draw();
-            MainPanel.Draw(X + 78, Y, Height);
-            PathTextBox.Draw();
-            Up.Draw();
-            SpaceButton.Draw();
+            _topPanel.Draw();
+            _leftPanel.Draw();
+            _mainPanel.Draw(X + 78, Y, Height);
+            _pathTextBox.Draw();
+            _up.Draw();
+            _spaceButton.Draw();
 
-            foreach (var button in Disks)
+            foreach (var button in _disks)
             {
                 button.Draw();
             }
