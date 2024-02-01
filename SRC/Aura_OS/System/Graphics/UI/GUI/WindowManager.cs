@@ -79,7 +79,6 @@ namespace Aura_OS
 
         public void DrawWindows()
         {
-            /*
             ClipRects.Clear();
 
             foreach (var currentWindow in Applications)
@@ -89,25 +88,21 @@ namespace Aura_OS
                                          currentWindow.X + currentWindow.Width - 1);
                 Rect.AddClipRect(tempRect);
             }
-            */
 
             foreach (Application app in Applications)
             {
                 if (app.Running && app.Visible)
                 {
                     app.Draw();
-                    app.Display();
                 }
             }
 
-            /*
             foreach (var tempRect in Explorer.WindowManager.ClipRects)
             {
                 DrawRect(tempRect.Left, tempRect.Top,
                                        tempRect.Right - tempRect.Left + 1,
                                        tempRect.Bottom - tempRect.Top + 1);
             }
-            */
         }
 
         public void DrawRect(int x, int y, int width, int height)

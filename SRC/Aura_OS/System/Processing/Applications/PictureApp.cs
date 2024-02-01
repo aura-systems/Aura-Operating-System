@@ -23,12 +23,9 @@ namespace Aura_OS.System.Processing.Applications
 
         public override void Draw()
         {
-            if (Dirty)
-            {
-                base.Draw();
+            base.Draw();
 
-                Canvas.DrawImageAlpha(_image, X + (int)(Width / 2 - _image.Width / 2), Y + (int)(Height / 2 - _image.Height / 2));
-            }
+            Kernel.canvas.DrawImageAlpha(_image, X + (int)(Width / 2 - _image.Width / 2), Y + (int)(Height / 2 - _image.Height / 2));
         }
     }
 }

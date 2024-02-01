@@ -11,14 +11,11 @@ using Aura_OS.System.Graphics.UI.GUI.Components;
 using System;
 using System.Collections.Generic;
 using Aura_OS.System.Processing.Processes;
-using Cosmos.System.Graphics;
 
 namespace Aura_OS.System.Graphics.UI.GUI
 {
     public class Application : Process
     {
-        public VirtualCanvas Canvas;
-
         public readonly int Width;
         public readonly int Height;
 
@@ -27,7 +24,6 @@ namespace Aura_OS.System.Graphics.UI.GUI
         public Window Window;
         public bool Focused = false;
         public bool Visible = false;
-        public bool Dirty = true;
         public int zIndex = 0;
 
         private int _px;
@@ -38,8 +34,6 @@ namespace Aura_OS.System.Graphics.UI.GUI
 
         public Application(string name, int width, int height, int x = 0, int y = 0) : base(name, ProcessType.Program)
         {
-            Canvas = new VirtualCanvas(new Mode((uint)width, (uint)height, ColorDepth.ColorDepth32));
-
             Window = new Window(name, x, y, width + 1, height + 1);
             Window.Close.Click = new Action(() =>
             {
@@ -165,14 +159,9 @@ namespace Aura_OS.System.Graphics.UI.GUI
 
         public virtual void Draw()
         {
-            Window.Draw();
-        }
-
-        public void Display()
-        {
             if (Visible)
             {
-                Canvas.Display();
+                Window.Draw();
             }
         }
 

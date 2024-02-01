@@ -52,54 +52,51 @@ namespace Aura_OS.System.Processing.Applications
 
         public override void Draw()
         {
-            if (Dirty)
+            base.Draw();
+
+            // Draw x-axis
+            Kernel.canvas.DrawLine(Color.White, X + 30 + 0, Y + 30 + viewHeight / 2, X + 30 + viewWidth, Y + 30 + viewHeight / 2);
+
+            // Draw y-axis
+            Kernel.canvas.DrawLine(Color.White, X + 30 + viewWidth / 2, Y + 30 + 0, X + 30 + viewWidth / 2, Y + 30 + viewHeight);
+
+            var projected = new Vertex[figure.Vertices.Length];
+            for (var i = 0; i < figure.Vertices.Length; i++)
             {
-                base.Draw();
+                var vertex = figure.Vertices[i];
 
-                // Draw x-axis
-                Canvas.DrawLine(Color.White, X + 30 + 0, Y + 30 + viewHeight / 2, X + 30 + viewWidth, Y + 30 + viewHeight / 2);
-
-                // Draw y-axis
-                Canvas.DrawLine(Color.White, X + 30 + viewWidth / 2, Y + 30 + 0, X + 30 + viewWidth / 2, Y + 30 + viewHeight);
-
-                var projected = new Vertex[figure.Vertices.Length];
-                for (var i = 0; i < figure.Vertices.Length; i++)
-                {
-                    var vertex = figure.Vertices[i];
-
-                    var transformed = vertex.RotateX(_angle).RotateY(_angle).RotateZ(_angle);
-                    projected[i] = transformed.Project(viewWidth, viewHeight, 256, 6);
-                }
-
-
-                for (var j = 0; j < 6; j++) //This loop draws each of the six faces of the cube
-                {
-                    Canvas.DrawLine(pen,
-                        X + 30 + (int)projected[figure.Faces[j][0]].X,
-                        Y + 30 + (int)projected[figure.Faces[j][0]].Y,
-                        X + 30 + (int)projected[figure.Faces[j][1]].X,
-                        Y + 30 + (int)projected[figure.Faces[j][1]].Y);
-
-                    Canvas.DrawLine(pen,
-                        X + 30 + (int)projected[figure.Faces[j][1]].X,
-                        Y + 30 + (int)projected[figure.Faces[j][1]].Y,
-                        X + 30 + (int)projected[figure.Faces[j][2]].X,
-                        Y + 30 + (int)projected[figure.Faces[j][2]].Y);
-
-                    Canvas.DrawLine(pen,
-                        X + 30 + (int)projected[figure.Faces[j][2]].X,
-                        Y + 30 + (int)projected[figure.Faces[j][2]].Y,
-                        X + 30 + (int)projected[figure.Faces[j][3]].X,
-                        Y + 30 + (int)projected[figure.Faces[j][3]].Y);
-
-                    Canvas.DrawLine(pen,
-                        X + 30 + (int)projected[figure.Faces[j][3]].X,
-                        Y + 30 + (int)projected[figure.Faces[j][3]].Y,
-                        X + 30 + (int)projected[figure.Faces[j][0]].X,
-                        Y + 30 + (int)projected[figure.Faces[j][0]].Y);
-                }
-                _angle++;
+                var transformed = vertex.RotateX(_angle).RotateY(_angle).RotateZ(_angle);
+                projected[i] = transformed.Project(viewWidth, viewHeight, 256, 6);
             }
+
+
+            for (var j = 0; j < 6; j++) //This loop draws each of the six faces of the cube
+            {
+                Kernel.canvas.DrawLine(pen,
+                    X + 30 + (int)projected[figure.Faces[j][0]].X,
+                    Y + 30 + (int)projected[figure.Faces[j][0]].Y,
+                    X + 30 + (int)projected[figure.Faces[j][1]].X,
+                    Y + 30 + (int)projected[figure.Faces[j][1]].Y);
+
+                Kernel.canvas.DrawLine(pen,
+                    X + 30 + (int)projected[figure.Faces[j][1]].X,
+                    Y + 30 + (int)projected[figure.Faces[j][1]].Y,
+                    X + 30 + (int)projected[figure.Faces[j][2]].X,
+                    Y + 30 + (int)projected[figure.Faces[j][2]].Y);
+
+                Kernel.canvas.DrawLine(pen,
+                    X + 30 + (int)projected[figure.Faces[j][2]].X,
+                    Y + 30 + (int)projected[figure.Faces[j][2]].Y,
+                    X + 30 + (int)projected[figure.Faces[j][3]].X,
+                    Y + 30 + (int)projected[figure.Faces[j][3]].Y);
+
+                Kernel.canvas.DrawLine(pen,
+                    X + 30 + (int)projected[figure.Faces[j][3]].X,
+                    Y + 30 + (int)projected[figure.Faces[j][3]].Y,
+                    X + 30 + (int)projected[figure.Faces[j][0]].X,
+                    Y + 30 + (int)projected[figure.Faces[j][0]].Y);
+            }
+            _angle++;
         }
     }
 
