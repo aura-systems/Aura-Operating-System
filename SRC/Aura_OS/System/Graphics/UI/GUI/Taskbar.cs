@@ -149,7 +149,7 @@ namespace Aura_OS.System.Graphics.UI.GUI
                     application.Window.TopBar.Color1 = Kernel.DarkGray;
                 }
 
-                Buttons[application.Name].Update();
+                Buttons[application.Name].Draw();
             }
         }
 
@@ -171,7 +171,7 @@ namespace Aura_OS.System.Graphics.UI.GUI
                 }
             }
 
-            NetworkButton.Update();
+            NetworkButton.Draw();
         }
     }
 }
