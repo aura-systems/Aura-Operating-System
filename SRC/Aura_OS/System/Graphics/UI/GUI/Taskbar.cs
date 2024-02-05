@@ -24,7 +24,7 @@ namespace Aura_OS.System.Graphics.UI.GUI
 
         public Dictionary<string, Button> Buttons;
 
-        public Taskbar() : base(0, (int)Kernel.screenHeight - 28 - 3, 70, 28)
+        public Taskbar() : base(0, (int)Kernel.screenHeight - 28 - 3, (int)Kernel.screenWidth, 28)
         {
             startY = (int)(Kernel.screenHeight - taskbarHeight);
 
