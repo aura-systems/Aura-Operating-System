@@ -171,7 +171,7 @@ namespace Aura_OS.System.Processing.Applications.Terminal
 
                     for (int i = 0; i < _command.Length; i++)
                     {
-                        Console.WriteByte(_command[i], Console.X + (baseX + i) * Kernel.font.Width, Console.Y + Console.mY * Kernel.font.Height, (uint)Console.ForegroundColor.ToArgb());
+                        Console.WriteByte(_command[i],  (baseX + i) * Kernel.font.Width, Console.mY * Kernel.font.Height, (uint)Console.ForegroundColor.ToArgb());
                     }
                 }
 

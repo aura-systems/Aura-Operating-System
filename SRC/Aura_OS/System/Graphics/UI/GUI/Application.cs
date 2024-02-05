@@ -154,13 +154,15 @@ namespace Aura_OS.System.Graphics.UI.GUI
 
                     X = (int)(MouseManager.X - _px + 3);
                     Y = (int)(MouseManager.Y - _py + Window.TopBar.Height + 3);
+
+                    Explorer.Desktop.MarkDirty();
                 }
             }
         }
 
         public virtual void Draw()
         {
-            if (Window.Dirty)
+            if (Window.IsDirty())
             {
                 Window.Draw();
             }
@@ -168,12 +170,12 @@ namespace Aura_OS.System.Graphics.UI.GUI
 
         public void MarkDirty()
         {
-            Window.Dirty = true;
+            Window.MarkDirty();
         }
 
         public void MarkCleaned()
         {
-            Window.Dirty = false;
+            Window.MarkCleaned();
         }
 
         private void BringToFront()

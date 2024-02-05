@@ -12,8 +12,6 @@ using Cosmos.System.Graphics.Fonts;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Reflection;
-using UniLua;
 
 namespace Aura_OS.System.Graphics.UI.GUI.Components
 {
@@ -64,18 +62,19 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
             }
         }
 
-        public bool Dirty { get; set; }
+       
         public bool Visible { get; set; }
         public RightClick RightClick { get; set; }
 
         private Rectangle _rectangle;
         private DirectBitmap _buffer;
+        private bool _dirty;
 
         public Component(int x, int y, int width, int height)
         {
             _rectangle = new Rectangle(y, x, y + height, x + width);
             _buffer = new DirectBitmap(width, height);
-            Dirty = true;
+            _dirty = true;
             Visible = true;
 
             Components.Add(this);
@@ -141,6 +140,11 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
             _buffer.DrawImage(image, x, y);
         }
 
+        public void DrawImageAlpha(Bitmap image, int x, int y)
+        {
+            _buffer.DrawImage(image, x, y);
+        }
+
         public void DrawGradient(Color color1, Color color2, int x, int y, int width, int height)
         {
             for (int i = 0; i < width; i++)
@@ -196,6 +200,21 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
         public bool IsInside(int x, int y)
         {
             return x >= X && x <= X + Width && y >= Y && y <= Y + Height;
+        }
+
+        public virtual bool IsDirty()
+        {
+            return _dirty;
+        }
+
+        public virtual void MarkDirty()
+        {
+            _dirty = true;
+        }
+
+        public virtual void MarkCleaned()
+        {
+            _dirty = false;
         }
     }
 }

@@ -141,18 +141,23 @@ namespace Aura_OS.System.Graphics.UI.GUI
 
         public override void Draw()
         {
-            base.Draw();
-
-            Ribbon.Draw();
-            Kernel.canvas.DrawImage(Logo, X + 5, Y + Height - 66);
-
-            foreach (var button in buttons)
+            if (IsDirty())
             {
-                button.Draw();
-            }
+                base.Draw();
 
-            Shutdown.Draw();
-            Reboot.Draw();
+                Ribbon.Draw();
+                DrawImage(Logo, 0 + 5, 0 + Height - 66);
+
+                foreach (var button in buttons)
+                {
+                    button.Draw();
+                }
+
+                Shutdown.Draw();
+                Reboot.Draw();
+
+                MarkCleaned();
+            }
         }
 
         private void HandleClick()
@@ -180,6 +185,36 @@ namespace Aura_OS.System.Graphics.UI.GUI
                     button.Click();
                 }
             }
+        }
+
+        public override void MarkCleaned()
+        {
+            base.MarkCleaned();
+
+            Ribbon.MarkCleaned();
+
+            foreach (var button in buttons)
+            {
+                button.MarkCleaned();
+            }
+
+            Shutdown.MarkCleaned();
+            Reboot.MarkCleaned();
+        }
+
+        public override void MarkDirty()
+        {
+            base.MarkDirty();
+
+            Ribbon.MarkDirty();
+
+            foreach (var button in buttons)
+            {
+                button.MarkDirty();
+            }
+
+            Shutdown.MarkDirty();
+            Reboot.MarkDirty();
         }
     }
 }

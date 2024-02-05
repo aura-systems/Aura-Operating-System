@@ -52,9 +52,28 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
             TopBar = new Panel(Kernel.DarkBlue, Kernel.Pink, 3, 3, Width - 5, 18);
         }
 
+        public override void Update()
+        {
+            if (Borders)
+            {
+                TopBar.X = X + 3;
+                TopBar.Y = Y + 3;
+            }
+            if (HasCloseButton)
+            {
+                Close.X = X + Width - 20;
+                Close.Y = Y + 5;
+            }
+            if (HasMinimizeButton)
+            {
+                Minimize.X = X + Width - 38;
+                Minimize.Y = Y + 5;
+            }
+        }
+
         public override void Draw()
         {
-            if (Dirty)
+            if (IsDirty())
             {
                 Clear();
 
@@ -85,8 +104,16 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
                     }
                 }
 
-                Dirty = false;
+                MarkCleaned();
             }
+        }
+
+        public override void MarkDirty()
+        {
+            base.MarkDirty();
+            TopBar.MarkDirty();
+            Close.MarkDirty();
+            Minimize.MarkDirty();
         }
     }
 }

@@ -68,6 +68,7 @@ namespace Aura_OS.System.Graphics.UI.GUI
             {
                 MainPanel.CurrentPath = Kernel.CurrentVolume;
                 MainPanel.UpdateCurrentFolder(x, y, height);
+                MarkDirty();
             });
             rightClickEntries.Add(entryRefresh);
 
@@ -78,17 +79,22 @@ namespace Aura_OS.System.Graphics.UI.GUI
 
         public override void Update()
         {
-            MainPanel.Draw(X, Y, Height);
+
         }
 
         public override void Draw()
         {
-            //canvas.Clear(0x000000);
-            //canvas.DrawImage(bootBitmap, (int)(screenWidth / 2 - bootBitmap.Width / 2), (int)(screenHeight / 2 - bootBitmap.Height / 2));
+            if (IsDirty())
+            {
+                //canvas.Clear(0x000000);
+                //canvas.DrawImage(bootBitmap, (int)(screenWidth / 2 - bootBitmap.Width / 2), (int)(screenHeight / 2 - bootBitmap.Height / 2));
 
-            DrawImage(Kernel.wallpaper, X, Y);
+                DrawImage(Kernel.wallpaper, X, Y);
 
-            MainPanel.Draw(X, Y, Height);
+                //MainPanel.Draw(X, Y, Height);
+
+                MarkCleaned();
+            }
         }
 
         public override void HandleLeftClick()
@@ -99,6 +105,12 @@ namespace Aura_OS.System.Graphics.UI.GUI
         public override void HandleRightClick()
         {
             MainPanel.HandleRightClick();
+        }
+
+        public override void MarkDirty()
+        {
+            base.MarkDirty();
+            MainPanel.MarkDirty();
         }
     }
 }

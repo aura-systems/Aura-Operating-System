@@ -11,7 +11,7 @@ using Aura_OS.System.Processing.Processes;
 
 namespace Aura_OS.System.Graphics.UI.GUI
 {
-    public class Taskbar
+    public class Taskbar : Component
     {
         public static int taskbarHeight = 33;
         int startY;
@@ -19,13 +19,12 @@ namespace Aura_OS.System.Graphics.UI.GUI
         Button StartButton;
         Button HourButton;
         Button NetworkButton;
-        
 
         public bool Clicked = false;
 
         public Dictionary<string, Button> Buttons;
 
-        public Taskbar()
+        public Taskbar() : base(0, (int)Kernel.screenHeight - 28 - 3, 70, 28)
         {
             startY = (int)(Kernel.screenHeight - taskbarHeight);
 
@@ -70,7 +69,7 @@ namespace Aura_OS.System.Graphics.UI.GUI
             }
         }
 
-        public void Update()
+        public override void Update()
         {
             if (MouseManager.MouseState == MouseState.Left)
             {
@@ -114,23 +113,35 @@ namespace Aura_OS.System.Graphics.UI.GUI
             }
         }
 
-        public void Draw()
+        public override void Draw()
         {
-            // Taskbar
-            Kernel.canvas.DrawLine(Kernel.WhiteColor, 0, startY, (int)Kernel.screenWidth + 10, startY);
-            Kernel.canvas.DrawFilledRectangle(Kernel.Gray, 0, startY + 1, (int)Kernel.screenWidth, taskbarHeight - 1);
-            StartButton.Draw();
+            if (IsDirty())
+            {
+                // Taskbar
+                DrawLine(Kernel.WhiteColor, 0, startY, (int)Kernel.screenWidth + 10, startY);
+                DrawFilledRectangle(Kernel.Gray, 0, startY + 1, (int)Kernel.screenWidth, taskbarHeight - 1);
+                StartButton.Draw();
 
-            // Hour
-            string time = Time.TimeString(true, true, true);
-            HourButton.Text = time;
-            HourButton.Draw();
+                // Notifications
+                DrawNotifications();
 
-            // Notifications
-            DrawNotifications();
+                // Applications
+                DrawApplications();
 
-            // Applications
-            DrawApplications();
+                StartButton.MarkCleaned();
+
+                MarkCleaned();
+            }
+
+            HourButton.MarkDirty();
+
+            if (HourButton.IsDirty())
+            {
+                // Hour
+                string time = Time.TimeString(true, true, true);
+                HourButton.Text = time;
+                HourButton.Draw();
+            }
         }
 
         private void DrawApplications()
@@ -172,6 +183,20 @@ namespace Aura_OS.System.Graphics.UI.GUI
             }
 
             NetworkButton.Draw();
+        }
+
+        public override void MarkCleaned()
+        {
+            base.MarkCleaned();
+            StartButton.MarkCleaned();
+            HourButton.MarkCleaned();
+        }
+
+        public override void MarkDirty()
+        {
+            base.MarkDirty();
+            StartButton.MarkDirty();
+            HourButton.MarkDirty();
         }
     }
 }

@@ -215,6 +215,8 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
                 Cell[] lineFromHistory = _terminalHistory[_terminalHistoryIndex];
                 Array.Copy(lineFromHistory, 0, _text, 0, mCols);
             }
+
+            MarkDirty();
         }
 
         public void ScrollDown()
