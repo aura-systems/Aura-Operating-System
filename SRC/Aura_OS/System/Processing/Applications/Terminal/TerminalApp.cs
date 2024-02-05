@@ -41,6 +41,8 @@ namespace Aura_OS.System.Processing.Applications.Terminal
             Console = new(x, y, width - 4, height - Window.TopBar.Height - 4);
 
             BeforeCommand();
+
+            MarkDirty();
         }
 
         public override void Update()
@@ -58,6 +60,8 @@ namespace Aura_OS.System.Processing.Applications.Terminal
 
                 if (KeyboardManager.TryReadKey(out keyEvent))
                 {
+                    MarkDirty();
+
                     switch (keyEvent.Key)
                     {
                         case ConsoleKeyEx.Enter:

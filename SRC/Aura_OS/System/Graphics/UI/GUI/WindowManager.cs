@@ -5,6 +5,7 @@
 */
 
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Drawing;
 using Aura_OS.System.Graphics.UI.GUI;
 using Aura_OS.System.Processing.Processes;
@@ -14,14 +15,14 @@ namespace Aura_OS
     public class WindowManager
     {
         public List<Application> Applications;
-        public List<Rect> ClipRects;
+        public List<System.Graphics.UI.GUI.Rectangle> ClipRects;
 
         private bool _isDirty = false;
 
         public WindowManager()
         {
             Applications = new List<Application>();
-            ClipRects = new List<Rect>();
+            ClipRects = new List<System.Graphics.UI.GUI.Rectangle>();
         }
 
         public void MarkStackDirty()
@@ -81,12 +82,12 @@ namespace Aura_OS
         {
             ClipRects.Clear();
 
-            foreach (var currentWindow in Applications)
+            foreach (var component in System.Graphics.UI.GUI.Components.Component.Components)
             {
-                Rect tempRect = new Rect(currentWindow.Y, currentWindow.X,
-                                         currentWindow.Y + currentWindow.Height - 1,
-                                         currentWindow.X + currentWindow.Width - 1);
-                Rect.AddClipRect(tempRect);
+                if (component.Visible)
+                {
+                    System.Graphics.UI.GUI.Rectangle.AddClipRect(component.GetRectangle());
+                }
             }
 
             foreach (Application app in Applications)
@@ -94,14 +95,25 @@ namespace Aura_OS
                 if (app.Running && app.Visible)
                 {
                     app.Draw();
+                    app.MarkCleaned();
                 }
             }
+
+            DrawComponentsInClipRect();
 
             foreach (var tempRect in Explorer.WindowManager.ClipRects)
             {
                 DrawRect(tempRect.Left, tempRect.Top,
                                        tempRect.Right - tempRect.Left + 1,
                                        tempRect.Bottom - tempRect.Top + 1);
+            }
+        }
+
+        public void DrawComponentsInClipRect()
+        {
+            foreach (var component in System.Graphics.UI.GUI.Components.Component.Components)
+            {
+                Kernel.canvas.DrawImage(component.GetBuffer(), component.X, component.Y);
             }
         }
 

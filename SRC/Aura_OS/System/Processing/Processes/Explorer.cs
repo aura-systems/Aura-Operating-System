@@ -12,7 +12,19 @@ namespace Aura_OS.System.Processing.Processes
 {
     public class Explorer : Process
     {
-        public static bool ShowStartMenu = false;
+        private static bool _showStartMenu = false;
+        public static bool ShowStartMenu
+        {
+            get
+            {
+                return _showStartMenu;
+            }
+            set
+            {
+                _showStartMenu = value;
+                StartMenu.Visible = _showStartMenu;
+            }
+        }
 
         public static Taskbar Taskbar;
         public static StartMenu StartMenu;

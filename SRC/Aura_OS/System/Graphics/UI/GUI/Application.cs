@@ -24,6 +24,7 @@ namespace Aura_OS.System.Graphics.UI.GUI
         public Window Window;
         public bool Focused = false;
         public bool Visible = false;
+        public bool Dirty = true;
         public int zIndex = 0;
 
         private int _px;
@@ -159,16 +160,31 @@ namespace Aura_OS.System.Graphics.UI.GUI
 
         public virtual void Draw()
         {
-            if (Visible)
+            if (Window.Dirty)
             {
                 Window.Draw();
             }
+        }
+
+        public void MarkDirty()
+        {
+            Window.Dirty = true;
+        }
+
+        public void MarkCleaned()
+        {
+            Window.Dirty = false;
         }
 
         private void BringToFront()
         {
             zIndex = Explorer.WindowManager.GetTopZIndex() + 1;
             Explorer.WindowManager.MarkStackDirty();
+        }
+
+        public void DrawString(string str, int x, int y)
+        {
+            Window.DrawString(str, x + 4, y + Window.TopBar.Height + 3);
         }
     }
 }

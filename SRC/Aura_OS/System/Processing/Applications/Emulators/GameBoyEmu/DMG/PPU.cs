@@ -1,4 +1,4 @@
-﻿using Aura_OS.System.Processing.Applications.Emulators.GameBoyEmu.Utils;
+﻿using Aura_OS.System.Graphics.UI.GUI;
 using System.Runtime.CompilerServices;
 using static Aura_OS.System.Processing.Applications.Emulators.GameBoyEmu.Utils.BitOps;
 

@@ -4,24 +4,81 @@
 * PROGRAMMERS:      Valentin Charbonnier <valentinbreiz@gmail.com>
 */
 
+using Aura_OS.Core;
+using Cosmos.Core;
 using Cosmos.System;
+using Cosmos.System.Graphics;
+using Cosmos.System.Graphics.Fonts;
+using System;
+using System.Collections.Generic;
+using System.Drawing;
+using System.Reflection;
+using UniLua;
 
 namespace Aura_OS.System.Graphics.UI.GUI.Components
 {
     public class Component
     {
-        public int X;
-        public int Y;
-        public int Width;
-        public int Height;
-        public RightClick RightClick;
+        public static List<Component> Components = new List<Component>();
+
+        public int X {
+            get
+            {
+                return _rectangle.Left;
+            }
+            set
+            {
+                int width = Width;
+                _rectangle.Left = value;
+                _rectangle.Right = value + width;
+            }
+        }
+
+        public int Y
+        {
+            get
+            {
+                return _rectangle.Top;
+            }
+            set
+            {
+                int height = Height;
+                _rectangle.Top = value;
+                _rectangle.Bottom = value + height;
+            }
+        }
+
+        public int Width
+        {
+            get
+            {
+                return _rectangle.Right - _rectangle.Left;
+            }
+        }
+
+        public int Height
+        {
+            get
+            {
+                return _rectangle.Bottom - _rectangle.Top;
+            }
+        }
+
+        public bool Dirty { get; set; }
+        public bool Visible { get; set; }
+        public RightClick RightClick { get; set; }
+
+        private Rectangle _rectangle;
+        private DirectBitmap _buffer;
 
         public Component(int x, int y, int width, int height)
         {
-            X = x;
-            Y = y;
-            Width = width;
-            Height = height;
+            _rectangle = new Rectangle(y, x, y + height, x + width);
+            _buffer = new DirectBitmap(width, height);
+            Dirty = true;
+            Visible = true;
+
+            Components.Add(this);
         }
 
         public virtual void Update()
@@ -32,6 +89,77 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
         public virtual void Draw()
         {
 
+        }
+
+        public Rectangle GetRectangle()
+        {
+            return _rectangle;
+        }
+
+        public Bitmap GetBuffer()
+        {
+            return _buffer.Bitmap;
+        }
+
+        public void Clear()
+        {
+            _buffer.Clear(Color.LightGray.ToArgb());
+        }
+
+        public void DrawString(string str, Color color, int x, int y)
+        {
+            _buffer.DrawString(str, Kernel.font, color.ToArgb(), x, y);
+        }
+
+        public void DrawString(string str, Font font, Color color, int x, int y)
+        {
+            _buffer.DrawString(str, font, color.ToArgb(), x, y);
+        }
+
+        public void DrawChar(char c, Font font, int color, int x, int y)
+        {
+            _buffer.DrawChar(c, font, color, x, y);
+        }
+
+        public void DrawString(string str, int x, int y)
+        {
+            _buffer.DrawString(str, Kernel.font, Color.Black.ToArgb(), x, y);
+        }
+
+        public void DrawFilledRectangle(Color color, int xStart, int yStart, int width, int height)
+        {
+            _buffer.DrawFilledRectangle(color.ToArgb(), xStart, yStart, width, height);
+        }
+
+        public void DrawLine(Color color, int xStart, int yStart, int width, int height)
+        {
+            _buffer.DrawLine(color.ToArgb(), xStart, yStart, width, height);
+        }
+
+        public void DrawImage(Bitmap image, int x, int y)
+        {
+            _buffer.DrawImage(image, x, y);
+        }
+
+        public void DrawGradient(Color color1, Color color2, int x, int y, int width, int height)
+        {
+            for (int i = 0; i < width; i++)
+            {
+                // Calculate the ratio of the current position relative to the total width
+                float ratio = (float)i / width;
+
+                // Interpolate the RGB values based on the ratio
+                byte r = (byte)((color2.R - color1.R) * ratio + color1.R);
+                byte g = (byte)((color2.G - color1.G) * ratio + color1.G);
+                byte b = (byte)((color2.B - color1.B) * ratio + color1.B);
+
+                int interpolatedColor = Color.FromArgb(0xff, r, g, b).ToArgb();
+
+                for (int j = 0; j < height; j++)
+                {
+                    _buffer.SetPixel(interpolatedColor, x + i, y + j);
+                }
+            }
         }
 
         public virtual void HandleLeftClick()

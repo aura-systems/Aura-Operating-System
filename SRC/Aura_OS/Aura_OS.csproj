@@ -21,6 +21,7 @@
 }
        ]]>
 		</SomeThing>
+		<AllowUnsafeBlocks>True</AllowUnsafeBlocks>
 	</PropertyGroup>
 
 	<ItemGroup>

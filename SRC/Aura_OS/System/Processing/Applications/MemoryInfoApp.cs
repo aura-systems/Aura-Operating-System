@@ -21,18 +21,20 @@ namespace Aura_OS.System.Processing.Applications
 
         public override void Draw()
         {
+            MarkDirty();
+
             base.Draw();
 
-            Kernel.canvas.DrawString("Available RAM                = " + GCImplementation.GetAvailableRAM() + "MB", Kernel.font, Kernel.BlackColor, (int)X, (int)Y);
-            Kernel.canvas.DrawString("Used RAM                     = " + GCImplementation.GetUsedRAM() + "B", Kernel.font, Kernel.BlackColor, (int)X, (int)(Y + Kernel.font.Height));
-            Kernel.canvas.DrawString("Small Allocated Object Count = " + HeapSmall.GetAllocatedObjectCount(), Kernel.font, Kernel.BlackColor, (int)X, (int)(Y + 2 * Kernel.font.Height));
-            Kernel.canvas.DrawString("Small Page Count             = " + RAT.GetPageCount((byte)RAT.PageType.HeapSmall), Kernel.font, Kernel.BlackColor, (int)X, (int)(Y + 3 * Kernel.font.Height));
-            Kernel.canvas.DrawString("Medium Page Count            = " + RAT.GetPageCount((byte)RAT.PageType.HeapMedium), Kernel.font, Kernel.BlackColor, (int)X, (int)(Y + 4 * Kernel.font.Height));
-            Kernel.canvas.DrawString("Large Page Count             = " + RAT.GetPageCount((byte)RAT.PageType.HeapLarge), Kernel.font, Kernel.BlackColor, (int)X, (int)(Y + 5 * Kernel.font.Height));
-            Kernel.canvas.DrawString("RAT Page Count               = " + RAT.GetPageCount((byte)RAT.PageType.RAT), Kernel.font, Kernel.BlackColor, (int)X, (int)(Y + 6 * Kernel.font.Height));
-            Kernel.canvas.DrawString("SMT Page Count               = " + RAT.GetPageCount((byte)RAT.PageType.SMT), Kernel.font, Kernel.BlackColor, (int)X, (int)(Y + 7 * Kernel.font.Height));
-            Kernel.canvas.DrawString("GC Managed Page Count        = " + RAT.GetPageCount((byte)RAT.PageType.SMT), Kernel.font, Kernel.BlackColor, (int)X, (int)(Y + 8 * Kernel.font.Height));
-            Kernel.canvas.DrawString("Free Count                   = " + Kernel.FreeCount, Kernel.font, Kernel.BlackColor, (int)X, (int)(Y + 9 * Kernel.font.Height));
+            DrawString("Available RAM                = " + GCImplementation.GetAvailableRAM() + "MB", 0, 0);
+            DrawString("Used RAM                     = " + GCImplementation.GetUsedRAM() + "B", 0, (0 + Kernel.font.Height));
+            DrawString("Small Allocated Object Count = " + HeapSmall.GetAllocatedObjectCount(), 0, (0 + 2 * Kernel.font.Height));
+            DrawString("Small Page Count             = " + RAT.GetPageCount((byte)RAT.PageType.HeapSmall), 0, (0 + 3 * Kernel.font.Height));
+            DrawString("Medium Page Count            = " + RAT.GetPageCount((byte)RAT.PageType.HeapMedium), 0, (0 + 4 * Kernel.font.Height));
+            DrawString("Large Page Count             = " + RAT.GetPageCount((byte)RAT.PageType.HeapLarge), 0, (0 + 5 * Kernel.font.Height));
+            DrawString("RAT Page Count               = " + RAT.GetPageCount((byte)RAT.PageType.RAT), 0, (0 + 6 * Kernel.font.Height));
+            DrawString("SMT Page Count               = " + RAT.GetPageCount((byte)RAT.PageType.SMT), 0, (0 + 7 * Kernel.font.Height));
+            DrawString("GC Managed Page Count        = " + RAT.GetPageCount((byte)RAT.PageType.SMT), 0, (0 + 8 * Kernel.font.Height));
+            DrawString("Free Count                   = " + Kernel.FreeCount, 0, (0 + 9 * Kernel.font.Height));
         }
     }
 }

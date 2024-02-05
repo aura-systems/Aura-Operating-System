@@ -86,7 +86,7 @@ namespace Aura_OS.System.Graphics.UI.GUI
             //canvas.Clear(0x000000);
             //canvas.DrawImage(bootBitmap, (int)(screenWidth / 2 - bootBitmap.Width / 2), (int)(screenHeight / 2 - bootBitmap.Height / 2));
 
-            Kernel.canvas.DrawImage(Kernel.wallpaper, X, Y);
+            DrawImage(Kernel.wallpaper, X, Y);
 
             MainPanel.Draw(X, Y, Height);
         }

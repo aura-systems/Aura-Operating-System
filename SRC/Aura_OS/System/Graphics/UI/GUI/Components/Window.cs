@@ -6,6 +6,7 @@
 
 using Cosmos.System.Graphics;
 using Cosmos.System.Graphics.Fonts;
+using System.Drawing;
 
 namespace Aura_OS.System.Graphics.UI.GUI.Components
 {
@@ -36,54 +37,55 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
 
             if (HasCloseButton)
             {
-                Close = new Button(ResourceManager.GetImage("16-close.bmp"), X + Width - 20, Y + 5);
+                Close = new Button(ResourceManager.GetImage("16-close.bmp"), Width - 20, 5);
                 Close.NoBackground = true;
                 Close.NoBorder = true;
             }
 
             if (HasMinimizeButton)
             {
-                Minimize = new Button(ResourceManager.GetImage("16-minimize.bmp"), X + Width - 38, Y + 5);
+                Minimize = new Button(ResourceManager.GetImage("16-minimize.bmp"), Width - 38, 5);
                 Minimize.NoBackground = true;
                 Minimize.NoBorder = true;
             }
 
-            TopBar = new Panel(Kernel.DarkBlue, Kernel.Pink, X + 3, Y + 3, Width - 5, 18);
+            TopBar = new Panel(Kernel.DarkBlue, Kernel.Pink, 3, 3, Width - 5, 18);
         }
 
         public override void Draw()
         {
-            Kernel.canvas.DrawFilledRectangle(Kernel.DarkGrayLight, X + 2, Y + 2, Width - 3, Height - 3);
-
-            Kernel.canvas.DrawLine(Kernel.Gray, X, Y, X + Width, Y);
-            Kernel.canvas.DrawLine(Kernel.WhiteColor, X, Y + 1, X + Width, Y + 1);
-            Kernel.canvas.DrawLine(Kernel.Gray, X, Y, X, Y + Height);
-            Kernel.canvas.DrawLine(Kernel.WhiteColor, X + 1, Y + 1, X + 1, Y + Height);
-            Kernel.canvas.DrawLine(Kernel.DarkGray, X + 1, Y + Height - 1, X + Width, Y + Height - 1);
-            Kernel.canvas.DrawLine(Kernel.BlackColor, X, Y + Height, X + Width + 1, Y + Height);
-            Kernel.canvas.DrawLine(Kernel.DarkGray, X + Width - 1, Y + 1, X + Width - 1, Y + Height);
-            Kernel.canvas.DrawLine(Kernel.BlackColor, X + Width, Y, X + Width, Y + Height);
-
-            if (Borders)
+            if (Dirty)
             {
-                TopBar.X = X + 3;
-                TopBar.Y = Y + 3;
-                TopBar.Draw();
-                Kernel.canvas.DrawString(Name, PCScreenFont.Default, Kernel.WhiteColor, X + 5, Y + 4);
+                Clear();
 
-                if (HasCloseButton)
+                //DrawFilledRectangle(Kernel.DarkGrayLight, 2, 2, Width - 3, Height - 3);
+
+                DrawLine(Kernel.Gray, X, Y, Width, Y);
+                DrawLine(Kernel.WhiteColor, X, 1, Width, 1);
+                DrawLine(Kernel.Gray, X, Y, X, Height);
+                DrawLine(Kernel.WhiteColor, 1, 1, 1, Height);
+                DrawLine(Kernel.DarkGray, 1, Height - 1, Width, Height - 1);
+                DrawLine(Kernel.BlackColor, X, Height, Width + 1, Height);
+                DrawLine(Kernel.DarkGray, Width - 1, 1, Width - 1, Height);
+                DrawLine(Kernel.BlackColor, Width, Y, Width, Height);
+
+                if (Borders)
                 {
-                    Close.X = X + Width - 20;
-                    Close.Y = Y + 5;
-                    Close.Draw();
+                    TopBar.Draw();
+                    DrawString(Name, PCScreenFont.Default, Kernel.WhiteColor, 5, 4);
+
+                    if (HasCloseButton)
+                    {
+                        Close.Draw();
+                    }
+
+                    if (HasMinimizeButton)
+                    {
+                        Minimize.Draw();
+                    }
                 }
 
-                if (HasMinimizeButton)
-                {
-                    Minimize.X = X + Width - 38;
-                    Minimize.Y = Y + 5;
-                    Minimize.Draw();
-                }
+                Dirty = false;
             }
         }
     }
