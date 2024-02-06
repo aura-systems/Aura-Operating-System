@@ -7,6 +7,7 @@
 using Cosmos.System.Graphics;
 using Cosmos.System.Graphics.Fonts;
 using System.Drawing;
+using System.Runtime.InteropServices;
 
 namespace Aura_OS.System.Graphics.UI.GUI.Components
 {
@@ -40,6 +41,7 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
                 Close = new Button(ResourceManager.GetImage("16-close.bmp"), Width - 20, 5);
                 Close.NoBackground = true;
                 Close.NoBorder = true;
+                Close.HasTransparency = true;
                 Children.Add(Close);
             }
 
@@ -48,6 +50,7 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
                 Minimize = new Button(ResourceManager.GetImage("16-minimize.bmp"), Width - 38, 5);
                 Minimize.NoBackground = true;
                 Minimize.NoBorder = true;
+                Minimize.HasTransparency = true;
                 Children.Add(Minimize);
             }
 

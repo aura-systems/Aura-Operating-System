@@ -12,6 +12,7 @@ using System;
 using System.Collections.Generic;
 using Aura_OS.System.Processing.Processes;
 using System.Drawing;
+using Cosmos.System.Graphics.Fonts;
 
 namespace Aura_OS.System.Graphics.UI.GUI
 {
@@ -208,6 +209,21 @@ namespace Aura_OS.System.Graphics.UI.GUI
         public void DrawString(string str, int x, int y)
         {
             Window.DrawString(str, x + 4, y + Window.TopBar.Height + 3);
+        }
+
+        public void DrawString(string str, Cosmos.System.Graphics.Fonts.Font font, Color color, int x, int y)
+        {
+            Window.DrawString(str, font, color, x + 4, y + Window.TopBar.Height + 3);
+        }
+
+        public void DrawImageAlpha(Cosmos.System.Graphics.Bitmap image, int x, int y)
+        {
+            Window.DrawImageAlpha(image, x, y);
+        }
+
+        public void DrawImage(Cosmos.System.Graphics.Bitmap image, int x, int y)
+        {
+            Window.DrawImage(image, x, y);
         }
     }
 }

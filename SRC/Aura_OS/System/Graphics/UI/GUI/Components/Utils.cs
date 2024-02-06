@@ -26,7 +26,7 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
 
                 for (int j = 0; j < height; j++)
                 {
-                    Kernel.canvas.DrawPoint(interpolatedColor, x + i, y + j);
+                    Kernel.Canvas.DrawPoint(interpolatedColor, x + i, y + j);
                 }
             }
         }

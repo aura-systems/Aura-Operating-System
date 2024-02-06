@@ -30,7 +30,7 @@ namespace Aura_OS.System.Processing.Applications.Emulators.GameBoyEmu
 
             _mmu = new MMU();
             _cpu = new CPU(_mmu);
-            _ppu = new PPU(x, y);
+            _ppu = new PPU(x, y, this);
             _timer = new TIMER();
             _joypad = new JOYPAD();
 
@@ -43,7 +43,7 @@ namespace Aura_OS.System.Processing.Applications.Emulators.GameBoyEmu
 
             _mmu = new MMU();
             _cpu = new CPU(_mmu);
-            _ppu = new PPU(x, y);
+            _ppu = new PPU(x, y, this);
             _timer = new TIMER();
             _joypad = new JOYPAD();
 

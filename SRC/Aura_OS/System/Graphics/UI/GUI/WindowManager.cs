@@ -121,7 +121,14 @@ namespace Aura_OS
 
                 if (component.Visible)
                 {
-                    Kernel.canvas.DrawImage(component.GetBuffer(), component.X, component.Y);
+                    if (component.HasTransparency)
+                    {
+                        Kernel.Canvas.DrawImageAlpha(component.GetBuffer(), component.X, component.Y);
+                    }
+                    else
+                    {
+                        Kernel.Canvas.DrawImage(component.GetBuffer(), component.X, component.Y);
+                    }
                 }
             }
 
@@ -137,7 +144,7 @@ namespace Aura_OS
 
         public void DrawRect(int x, int y, int width, int height)
         {
-            Kernel.canvas.DrawRectangle(Color.Green, x, y, width, height);
+            Kernel.Canvas.DrawRectangle(Color.Green, x, y, width, height);
         }
     }
 }

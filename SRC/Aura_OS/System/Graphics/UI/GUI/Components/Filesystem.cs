@@ -344,7 +344,8 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
         public override void Draw()
         {
             base.Draw();
-            Kernel.canvas.DrawString(FileName, Kernel.font, TextColor, base.X, base.Y + 35);
+
+            DrawString(FileName, Kernel.font, TextColor, base.X, base.Y + 35);
         }
     }
 }

@@ -33,7 +33,7 @@ namespace Aura_OS.System.Processing.Applications.Terminal
 
                 Explorer.WindowManager.DrawWindows();
                 Explorer.Taskbar.Draw();
-                Kernel.canvas.Display();
+                Kernel.Canvas.Display();
             }
         }
 
@@ -48,7 +48,7 @@ namespace Aura_OS.System.Processing.Applications.Terminal
 
                 Explorer.WindowManager.DrawWindows();
                 Explorer.Taskbar.Draw();
-                Kernel.canvas.Display();
+                Kernel.Canvas.Display();
             }
         }
 
@@ -63,7 +63,7 @@ namespace Aura_OS.System.Processing.Applications.Terminal
 
                 Explorer.WindowManager.DrawWindows();
                 Explorer.Taskbar.Draw();
-                Kernel.canvas.Display();
+                Kernel.Canvas.Display();
             }
         }
 

@@ -37,8 +37,8 @@ namespace Aura_OS.System.Processing.Interpreter.Commands.SystemInfomation
             Console.WriteLine("Used memory:               " + Memory.GetUsedMemory() + "MB");
             Console.WriteLine("Free memory:               " + Memory.GetFreeMemory() + "MB");
             Console.WriteLine("Processor(s):              " + CPU.GetCPUBrandString());
-            Console.WriteLine("Graphic mode:              " + Kernel.canvas.Name());
-            Console.WriteLine("Screen size:               " + Kernel.canvas.Mode.ToString());
+            Console.WriteLine("Graphic mode:              " + Kernel.Canvas.Name());
+            Console.WriteLine("Screen size:               " + Kernel.Canvas.Mode.ToString());
 
             return new ReturnInfo(this, ReturnCode.OK);
         }

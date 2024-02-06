@@ -49,6 +49,7 @@ namespace Aura_OS.System.Graphics.UI.GUI
             int startButtonX = 2;
             int startButtonY = (int)Kernel.screenHeight - startButtonHeight - 3;
             StartButton = new Button(ResourceManager.GetImage("00-start.bmp"), "Start", startButtonX, startButtonY, startButtonWidth, startButtonHeight);
+            StartButton.HasTransparency = true;
             Children.Add(StartButton);
 
             // Hour button
@@ -67,6 +68,7 @@ namespace Aura_OS.System.Graphics.UI.GUI
             int networkButtonY = (int)Kernel.screenHeight - 25;
             NetworkButton = new Button(ResourceManager.GetImage("16-network-offline.bmp"), netoworkButtonX, networkButtonY, networkButtonWidth, networkButtonHeight);
             NetworkButton.NoBorder = true;
+            NetworkButton.HasTransparency = true;
             Children.Add(NetworkButton);
 
             Buttons = new Dictionary<string, Button>();

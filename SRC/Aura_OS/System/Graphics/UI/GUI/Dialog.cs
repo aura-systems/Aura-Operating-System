@@ -99,12 +99,12 @@ namespace Aura_OS.System.Graphics.UI.GUI
         {
             base.Draw();
 
-            int messageY = Y + TopBar.Height + 25;
-            Kernel.canvas.DrawString(_message, Kernel.font, Kernel.BlackColor, (int)(X + 10 + AlertIcon.Width + 10), messageY);
+            int messageY = 0 + TopBar.Height + 25;
+            DrawString(_message, Kernel.font, Kernel.BlackColor, (int)(0 + 10 + AlertIcon.Width + 10), messageY);
 
             if (AlertIcon != null)
             {
-                Kernel.canvas.DrawImageAlpha(AlertIcon, X + 10, messageY - 8);
+                DrawImageAlpha(AlertIcon, 0 + 10, messageY - 8);
             }
 
             int buttonX = X + 10; 

@@ -67,7 +67,8 @@ namespace Aura_OS
         public static uint screenWidth = 1920;
         public static uint screenHeight = 1080;
 
-        public static Canvas canvas;
+        public static Canvas Canvas;
+
         public static Color WhiteColor = Color.White;
         public static Color BlackColor = Color.Black;
         public static Color avgColPen = Color.PowderBlue;
@@ -127,9 +128,9 @@ namespace Aura_OS
             CustomConsole.WriteLineInfo("Starting Canvas...");
 
             //START GRAPHICS
-            canvas = FullScreenCanvas.GetFullScreenCanvas(new Mode(screenWidth, screenHeight, ColorDepth.ColorDepth32));
-            canvas.DrawImage(AuraLogoWhite, (int)((screenWidth / 2) - (AuraLogoWhite.Width / 2)), (int)((screenHeight / 2) - (AuraLogoWhite.Height / 2)));
-            canvas.Display();
+            Canvas = FullScreenCanvas.GetFullScreenCanvas(new Mode(screenWidth, screenHeight, ColorDepth.ColorDepth32));
+            Canvas.DrawImage(AuraLogoWhite, (int)((screenWidth / 2) - (AuraLogoWhite.Width / 2)), (int)((screenHeight / 2) - (AuraLogoWhite.Height / 2)));
+            Canvas.Display();
 
             CustomConsole.BootConsole = new(0, 0, (int)screenWidth, (int)screenHeight);
             CustomConsole.BootConsole.DrawBackground = false;
@@ -202,10 +203,10 @@ namespace Aura_OS
 
                 DrawCursor(Sys.MouseManager.X, Sys.MouseManager.Y);
 
-                canvas.DrawString("Aura Operating System [" + Version + "." + Revision + "]", font, WhiteColor, 2, 0);
-                canvas.DrawString("fps=" + _fps, font, WhiteColor, 2, font.Height);
+                Canvas.DrawString("Aura Operating System [" + Version + "." + Revision + "]", font, WhiteColor, 2, 0);
+                Canvas.DrawString("fps=" + _fps, font, WhiteColor, 2, font.Height);
 
-                canvas.Display();
+                Canvas.Display();
             }
             catch (Exception ex)
             {
@@ -222,7 +223,7 @@ namespace Aura_OS
 
         public static void DrawCursor(uint x, uint y)
         {
-            canvas.DrawImageAlpha(ResourceManager.GetImage("00-cursor.bmp"), (int)x, (int)y);
+            Canvas.DrawImageAlpha(ResourceManager.GetImage("00-cursor.bmp"), (int)x, (int)y);
         }
     }
 }

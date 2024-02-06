@@ -89,7 +89,7 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
                 {
                     if (!NoBackground)
                     {
-                        Utils.DrawGradient(Kernel.Gray, Kernel.Pink, 0 + 2, 0 + 2, Width - 3, Height - 3);
+                        DrawGradient(Kernel.Gray, Kernel.Pink, 0 + 2, 0 + 2, Width - 3, Height - 3);
                     }
 
                     DrawLine(Kernel.BlackColor, 0, 0, 0 + Width, 0);

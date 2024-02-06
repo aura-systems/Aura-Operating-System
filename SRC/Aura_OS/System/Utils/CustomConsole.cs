@@ -23,7 +23,7 @@ namespace Aura_OS.System
                 BootConsole.Foreground = ConsoleColor.White;
                 BootConsole.Write(text + "\n");
                 BootConsole.Draw();
-                Kernel.canvas.Display();
+                Kernel.Canvas.Display();
             }
             else
             {
@@ -43,7 +43,7 @@ namespace Aura_OS.System
                 BootConsole.Foreground = ConsoleColor.White;
                 BootConsole.Write(text + "\n");
                 BootConsole.Draw();
-                Kernel.canvas.Display();
+                Kernel.Canvas.Display();
             }
             else
             {
@@ -63,7 +63,7 @@ namespace Aura_OS.System
                 BootConsole.Foreground = ConsoleColor.White;
                 BootConsole.Write(text + "\n");
                 BootConsole.Draw();
-                Kernel.canvas.Display();
+                Kernel.Canvas.Display();
             }
             else
             {
@@ -83,7 +83,7 @@ namespace Aura_OS.System
                 BootConsole.Foreground = ConsoleColor.White;
                 BootConsole.Write(text + "\n");
                 BootConsole.Draw();
-                Kernel.canvas.Display();
+                Kernel.Canvas.Display();
             }
             else
             {

@@ -78,6 +78,7 @@ namespace Aura_OS.System.Graphics.UI.GUI
                     Kernel.ApplicationManager.StartApplication(applicationConfig);
                     Explorer.ShowStartMenu = false;
                 });
+                button.HasTransparency = true;
                 buttons.Add(button);
                 Children.Add(button);
                 buttonY += 32;

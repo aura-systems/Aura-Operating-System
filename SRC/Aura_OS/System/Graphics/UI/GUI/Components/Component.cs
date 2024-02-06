@@ -84,6 +84,7 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
         }
 
         public bool ForceDirty { get; set; }
+        public bool HasTransparency { get; set; }
         public RightClick RightClick { get; set; }
         public List<Component> Children { get; set; }
 
@@ -99,6 +100,7 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
             _dirty = true;
             Visible = true;
             ForceDirty = false;
+            HasTransparency = false;
             Children = new List<Component>();
             Components.Add(this);
         }

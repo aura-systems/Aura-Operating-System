@@ -23,12 +23,14 @@ namespace Aura_OS.System.Processing.Applications.Emulators.GameBoyEmu.DMG
 
         public DirectBitmap bmp;
         private int scanlineCounter;
+        private Application _app;
 
-        public PPU(int x, int y)
+        public PPU(int x, int y, Application app)
         {
             bmp = new DirectBitmap();
             X = x;
             Y = y;
+            _app = app;
         }
 
         public void update(int cycles, MMU mmu)
@@ -299,7 +301,7 @@ namespace Aura_OS.System.Processing.Applications.Emulators.GameBoyEmu.DMG
 
         public void RenderFrame()
         {
-            Kernel.canvas.DrawImage(bmp.Bitmap, X, Y);
+            _app.DrawImage(bmp.Bitmap, X, Y);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
