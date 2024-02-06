@@ -26,8 +26,6 @@ namespace Aura_OS.System.Processing.Applications.Emulators.GameBoyEmu
 
         public GameBoyApp(byte[] rom, string name, int width, int height, int x = 0, int y = 0) : base(name, width, height, x, y)
         {
-            ForceDirty = true;
-
             Rom = rom;
 
             _mmu = new MMU();
@@ -41,8 +39,6 @@ namespace Aura_OS.System.Processing.Applications.Emulators.GameBoyEmu
 
         public GameBoyApp(int width, int height, int x = 0, int y = 0) : base("GameBoyEmu", width, height, x, y)
         {
-            ForceDirty = true;
-
             Rom = Files.TetrisRom;
 
             _mmu = new MMU();
@@ -77,6 +73,8 @@ namespace Aura_OS.System.Processing.Applications.Emulators.GameBoyEmu
                 _ppu.update(_cpuCycles, _mmu);
                 _joypad.update(_mmu);
                 handleInterrupts();
+
+                MarkDirty();
             }
             _cyclesThisUpdate -= Constants.CYCLES_PER_UPDATE;
 
