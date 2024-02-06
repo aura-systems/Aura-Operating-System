@@ -1,53 +1,53 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-	<PropertyGroup>
-		<TargetFramework>net6.0</TargetFramework>
-		<SelfContained>True</SelfContained>
-		<Profile>VMware</Profile>
-		<BinFormat>ELF</BinFormat>
-		<StackCorruptionDetectionEnabled>False</StackCorruptionDetectionEnabled>
-		<StackCorruptionDetectionLevel>MethodFooters</StackCorruptionDetectionLevel>
-		<Deployment>ISO</Deployment>
-		<DebugEnabled>False</DebugEnabled>
-		<DebugMode>Source</DebugMode>
-		<IgnoreDebugStubAttribute>False</IgnoreDebugStubAttribute>
-		<ISOFile>bin\Debug\net6.0\Aura_Boot.iso</ISOFile>
-		<CompileVBEMultiboot>False</CompileVBEMultiboot>
-		<ExtractMapFile>False</ExtractMapFile>
-		<Launch>VMware</Launch>
-		<VisualStudioDebugPort>Pipe: Cosmos\Serial</VisualStudioDebugPort>
-		<CosmosDebugPort>Serial: COM1</CosmosDebugPort>
-		<VMwareEdition>Workstation</VMwareEdition>
-		<EnableGDB>False</EnableGDB>
-		<StartCosmosGDB>False</StartCosmosGDB>
-		<VBEResolution>1920x1080x32</VBEResolution>
-		<OptimizationLevel>3</OptimizationLevel>
-		<Timeout>0</Timeout>
-		<RemoveBootDebugOutput>True</RemoveBootDebugOutput>
-		<CompressionType>Gzip</CompressionType>
-	</PropertyGroup>
+    <PropertyGroup>
+        <TargetFramework>net6.0</TargetFramework>
+        <SelfContained>True</SelfContained>
+        <Profile>VMware</Profile>
+        <BinFormat>ELF</BinFormat>
+        <StackCorruptionDetectionEnabled>False</StackCorruptionDetectionEnabled>
+        <StackCorruptionDetectionLevel>MethodFooters</StackCorruptionDetectionLevel>
+        <Deployment>ISO</Deployment>
+        <DebugEnabled>False</DebugEnabled>
+        <DebugMode>Source</DebugMode>
+        <IgnoreDebugStubAttribute>False</IgnoreDebugStubAttribute>
+        <ISOFile>bin\Debug\net6.0\Aura_Boot.iso</ISOFile>
+        <CompileVBEMultiboot>False</CompileVBEMultiboot>
+        <ExtractMapFile>False</ExtractMapFile>
+        <Launch>VMware</Launch>
+        <VisualStudioDebugPort>Pipe: Cosmos\Serial</VisualStudioDebugPort>
+        <CosmosDebugPort>Serial: COM1</CosmosDebugPort>
+        <VMwareEdition>Workstation</VMwareEdition>
+        <EnableGDB>False</EnableGDB>
+        <StartCosmosGDB>False</StartCosmosGDB>
+        <VBEResolution>1920x1080x32</VBEResolution>
+        <OptimizationLevel>3</OptimizationLevel>
+        <Timeout>0</Timeout>
+        <RemoveBootDebugOutput>True</RemoveBootDebugOutput>
+        <CompressionType>Gzip</CompressionType>
+    </PropertyGroup>
 
-	<ItemGroup>
-		<None Remove="isoFiles\Tetris.gb" />
-	</ItemGroup>
+    <ItemGroup>
+      <None Remove="isoFiles\Tetris.gb" />
+    </ItemGroup>
 
-	<ItemGroup>
-		<EmbeddedResource Include="isoFiles\Tetris.gb" />
-	</ItemGroup>
+    <ItemGroup>
+      <EmbeddedResource Include="isoFiles\Tetris.gb" />
+    </ItemGroup>
 
-	<ItemGroup>
-		<PackageReference Include="Cosmos.Build" Version="0.1.0-localbuild*" NoWarn="NU1604" />
-		<PackageReference Include="Cosmos.Debug.Kernel" Version="0.1.0-localbuild*" NoWarn="NU1604" />
-		<PackageReference Include="Cosmos.System2" Version="0.1.0-localbuild*" NoWarn="NU1604" />
-		<PackageReference Include="Cosmos.Plugs" Version="0.1.0-localbuild*" NoWarn="NU1604" />
-	</ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="Cosmos.Build" Version="0.1.0-localbuild*" NoWarn="NU1604" />
+        <PackageReference Include="Cosmos.Debug.Kernel" Version="0.1.0-localbuild*" NoWarn="NU1604" />
+        <PackageReference Include="Cosmos.System2" Version="0.1.0-localbuild*" NoWarn="NU1604" />
+        <PackageReference Include="Cosmos.Plugs" Version="0.1.0-localbuild*" NoWarn="NU1604" />
+    </ItemGroup>
 
-	<ItemGroup>
-		<ProjectReference Include="..\Aura_OS\Aura_OS.csproj" />
-	</ItemGroup>
+    <ItemGroup>
+      <ProjectReference Include="..\Aura_OS\Aura_OS.csproj" />
+    </ItemGroup>
 
-	<ItemGroup>
-		<PlugsReference Include="$(MSBuildProjectDirectory)\..\Aura_Plugs\bin\Debug\net6.0\Aura_Plugs.dll" />
-	</ItemGroup>
+    <ItemGroup>
+      <PlugsReference Include="$(MSBuildProjectDirectory)\..\Aura_Plugs\bin\Debug\net6.0\Aura_Plugs.dll" />
+    </ItemGroup>
 
 </Project>
