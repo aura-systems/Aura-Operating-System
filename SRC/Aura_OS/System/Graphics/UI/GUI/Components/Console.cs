@@ -117,7 +117,7 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
         {
             if (DrawBackground)
             {
-                DrawFilledRectangle(Kernel.BlackColor, 0, 0, Width, Height);
+                Clear(Kernel.BlackColor);
             }
 
             for (int i = 0; i < mRows; i++)

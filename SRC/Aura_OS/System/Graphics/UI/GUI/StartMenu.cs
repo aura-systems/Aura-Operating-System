@@ -26,24 +26,33 @@ namespace Aura_OS.System.Graphics.UI.GUI
 
         public StartMenu(int x, int y, int width, int height) : base(x, y, width, height)
         {
-            Ribbon = new Panel(Kernel.DarkBlue, X + 1, Y + 1, 26, height - 5);
             Logo = Kernel.AuraLogo2;
             buttons = new List<Button>();
+
+            // Ribbon
+            Ribbon = new Panel(Kernel.DarkBlue, X + 1, Y + 1, 26, height - 5);
+            Children.Add(Ribbon);
+
+            // Shutdown
             Shutdown = new Button(ResourceManager.GetImage("24-shutdown.bmp"), "Shut Down.", X + 1 + Ribbon.Width, Y + Height - 32 - 4, Width - Ribbon.Width - 3, 35);
             Shutdown.NoBorder = true;
             Shutdown.Click = new Action(() =>
             {
                 Power.Shutdown();
             });
+            Children.Add(Shutdown);
+
+            // Reboot
             Reboot = new Button(ResourceManager.GetImage("24-reboot.bmp"), "Reboot.", X + 1 + Ribbon.Width, Y + Height - 64 - 4, Width - Ribbon.Width - 3, 35);
             Reboot.NoBorder = true;
             Reboot.Click = new Action(() =>
             {
                 Power.Reboot();
             });
+            Children.Add(Reboot);
 
+            // App buttons
             buttons.Clear();
-
             int buttonY = 0;
             foreach (var applicationConfig in Kernel.ApplicationManager.ApplicationTemplates)
             {
@@ -70,8 +79,11 @@ namespace Aura_OS.System.Graphics.UI.GUI
                     Explorer.ShowStartMenu = false;
                 });
                 buttons.Add(button);
+                Children.Add(button);
                 buttonY += 32;
             }
+
+            Visible = false;
         }
 
         public override void Update()
@@ -141,23 +153,18 @@ namespace Aura_OS.System.Graphics.UI.GUI
 
         public override void Draw()
         {
-            if (IsDirty())
+            base.Draw();
+
+            Ribbon.Draw();
+            DrawImage(Logo, 0 + 5, 0 + Height - 66);
+
+            foreach (var button in buttons)
             {
-                base.Draw();
-
-                Ribbon.Draw();
-                DrawImage(Logo, 0 + 5, 0 + Height - 66);
-
-                foreach (var button in buttons)
-                {
-                    button.Draw();
-                }
-
-                Shutdown.Draw();
-                Reboot.Draw();
-
-                MarkCleaned();
+                button.Draw();
             }
+
+            Shutdown.Draw();
+            Reboot.Draw();
         }
 
         private void HandleClick()
@@ -185,36 +192,6 @@ namespace Aura_OS.System.Graphics.UI.GUI
                     button.Click();
                 }
             }
-        }
-
-        public override void MarkCleaned()
-        {
-            base.MarkCleaned();
-
-            Ribbon.MarkCleaned();
-
-            foreach (var button in buttons)
-            {
-                button.MarkCleaned();
-            }
-
-            Shutdown.MarkCleaned();
-            Reboot.MarkCleaned();
-        }
-
-        public override void MarkDirty()
-        {
-            base.MarkDirty();
-
-            Ribbon.MarkDirty();
-
-            foreach (var button in buttons)
-            {
-                button.MarkDirty();
-            }
-
-            Shutdown.MarkDirty();
-            Reboot.MarkDirty();
         }
     }
 }

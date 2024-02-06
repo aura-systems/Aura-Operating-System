@@ -93,6 +93,8 @@ namespace Aura_OS.System.Processing.Applications.Terminal
                             }
 
                             BeforeCommand();
+
+                            MarkDirty();
                             break;
                         case ConsoleKeyEx.Backspace:
                             if (Console.ScrollMode)

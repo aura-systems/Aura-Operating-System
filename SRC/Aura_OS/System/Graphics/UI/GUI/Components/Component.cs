@@ -12,6 +12,7 @@ using Cosmos.System.Graphics.Fonts;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 
 namespace Aura_OS.System.Graphics.UI.GUI.Components
 {
@@ -19,7 +20,8 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
     {
         public static List<Component> Components = new List<Component>();
 
-        public int X {
+        public int X
+        {
             get
             {
                 return _rectangle.Left;
@@ -62,13 +64,33 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
             }
         }
 
-       
-        public bool Visible { get; set; }
+        public bool Visible
+        {
+            get
+            {
+                return _visible;
+            }
+            set
+            {
+                if (_visible != value)
+                {
+                    _visible = value;
+                    foreach (Component component in Children)
+                    {
+                        component.Visible = value;
+                    }
+                }
+            }
+        }
+
+        public bool ForceDirty { get; set; }
         public RightClick RightClick { get; set; }
+        public List<Component> Children { get; set; }
 
         private Rectangle _rectangle;
         private DirectBitmap _buffer;
         private bool _dirty;
+        private bool _visible = true;
 
         public Component(int x, int y, int width, int height)
         {
@@ -76,7 +98,8 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
             _buffer = new DirectBitmap(width, height);
             _dirty = true;
             Visible = true;
-
+            ForceDirty = false;
+            Children = new List<Component>();
             Components.Add(this);
         }
 
@@ -98,6 +121,11 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
         public Bitmap GetBuffer()
         {
             return _buffer.Bitmap;
+        }
+
+        public void Clear(Color color)
+        {
+            _buffer.Clear(color.ToArgb());
         }
 
         public void Clear()
@@ -161,7 +189,7 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
 
                 for (int j = 0; j < height; j++)
                 {
-                    _buffer.SetPixel(interpolatedColor, x + i, y + j);
+                    _buffer.SetPixel(x + i, y + j, interpolatedColor);
                 }
             }
         }
@@ -207,14 +235,24 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
             return _dirty;
         }
 
-        public virtual void MarkDirty()
+        public void MarkDirty()
         {
             _dirty = true;
+
+            foreach (Component component in Children)
+            {
+                component.MarkDirty();
+            }
         }
 
-        public virtual void MarkCleaned()
+        public void MarkCleaned()
         {
             _dirty = false;
+            
+            foreach (Component component in Children)
+            {
+                component.MarkCleaned();
+            }
         }
     }
 }

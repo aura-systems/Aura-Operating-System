@@ -21,14 +21,13 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
         public string Text;
         public Bitmap Image;
         public Action Click;
-
         public Color BackColor = Color.LightGray;
         public Color TextColor = Color.Black;
         public bool NoBackground = false;
         public bool NoBorder = false;
         public bool Light = false;
         public bool Focused = false;
-        public TextAlign TextAlignStyle { get; set; } = TextAlign.Center;
+        public TextAlign TextAlignStyle = TextAlign.Center;
 
         public Button(string text, int x, int y, int width, int height) : base(x, y, width, height)
         {
@@ -72,94 +71,92 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
 
         public override void Draw()
         {
-            if (IsDirty())
+            if (!NoBorder && Light)
             {
-                if (!NoBorder && Light)
+                if (!NoBackground)
+                {
+                    Clear(BackColor);
+                }
+
+                DrawLine(Kernel.DarkGray, 0, 0, 0 + Width, 0);
+                DrawLine(Kernel.DarkGray, 0, 0, 0, 0 + Height);
+                DrawLine(Kernel.WhiteColor, 0, 0 + Height, 0 + Width + 1, 0 + Height);
+                DrawLine(Kernel.WhiteColor, 0 + Width, 0, 0 + Width, 0 + Height);
+            }
+            else if (!NoBorder && !Light)
+            {
+                if (Focused)
                 {
                     if (!NoBackground)
                     {
-                        DrawFilledRectangle(BackColor, 0 + 2, 0 + 2, Width - 3, Height - 3);
+                        Utils.DrawGradient(Kernel.Gray, Kernel.Pink, 0 + 2, 0 + 2, Width - 3, Height - 3);
                     }
 
-                    DrawLine(Kernel.DarkGray, 0, 0, 0 + Width, 0);
-                    DrawLine(Kernel.DarkGray, 0, 0, 0, 0 + Height);
+                    DrawLine(Kernel.BlackColor, 0, 0, 0 + Width, 0);
+                    DrawLine(Kernel.Gray, 0, 0 + 1, 0 + Width, 0 + 1);
+                    DrawLine(Kernel.BlackColor, 0, 0, 0, 0 + Height);
+                    DrawLine(Kernel.Gray, 0 + 1, 0 + 1, 0 + 1, 0 + Height);
+                    DrawLine(Kernel.DarkGray, 0 + 1, 0 + Height - 1, 0 + Width, 0 + Height - 1);
                     DrawLine(Kernel.WhiteColor, 0, 0 + Height, 0 + Width + 1, 0 + Height);
+                    DrawLine(Kernel.DarkGray, 0 + Width - 1, 0 + 1, 0 + Width - 1, 0 + Height);
                     DrawLine(Kernel.WhiteColor, 0 + Width, 0, 0 + Width, 0 + Height);
-                }
-                else if (!NoBorder && !Light)
-                {
-                    if (Focused)
-                    {
-                        if (!NoBackground)
-                        {
-                            Utils.DrawGradient(Kernel.Gray, Kernel.Pink, 0 + 2, 0 + 2, Width - 3, Height - 3);
-                        }
-
-                        DrawLine(Kernel.BlackColor, 0, 0, 0 + Width, 0);
-                        DrawLine(Kernel.Gray, 0, 0 + 1, 0 + Width, 0 + 1);
-                        DrawLine(Kernel.BlackColor, 0, 0, 0, 0 + Height);
-                        DrawLine(Kernel.Gray, 0 + 1, 0 + 1, 0 + 1, 0 + Height);
-                        DrawLine(Kernel.DarkGray, 0 + 1, 0 + Height - 1, 0 + Width, 0 + Height - 1);
-                        DrawLine(Kernel.WhiteColor, 0, 0 + Height, 0 + Width + 1, 0 + Height);
-                        DrawLine(Kernel.DarkGray, 0 + Width - 1, 0 + 1, 0 + Width - 1, 0 + Height);
-                        DrawLine(Kernel.WhiteColor, 0 + Width, 0, 0 + Width, 0 + Height);
-                    }
-                    else
-                    {
-                        if (!NoBackground)
-                        {
-                            DrawFilledRectangle(BackColor, 0 + 2, 0 + 2, Width - 3, Height - 3);
-                        }
-
-                        DrawLine(Kernel.WhiteColor, 0, 0, 0 + Width, 0);
-                        DrawLine(Kernel.Gray, 0, 0 + 1, 0 + Width, 0 + 1);
-                        DrawLine(Kernel.WhiteColor, 0, 0, 0, 0 + Height);
-                        DrawLine(Kernel.Gray, 0 + 1, 0 + 1, 0 + 1, 0 + Height);
-                        DrawLine(Kernel.DarkGray, 0 + 1, 0 + Height - 1, 0 + Width, 0 + Height - 1);
-                        DrawLine(Kernel.BlackColor, 0, 0 + Height, 0 + Width + 1, 0 + Height);
-                        DrawLine(Kernel.DarkGray, 0 + Width - 1, 0 + 1, 0 + Width - 1, 0 + Height);
-                        DrawLine(Kernel.BlackColor, 0 + Width, 0, 0 + Width, 0 + Height);
-                    }
                 }
                 else
                 {
                     if (!NoBackground)
                     {
-                        Kernel.canvas.DrawFilledRectangle(BackColor, 0 + 2, 0 + 2, Width - 3, Height - 3);
-                    }
-                }
-
-                if (Text != null && Image != null)
-                {
-                    DrawString(Text, Kernel.font, TextColor, 0 + 4 + (int)Image.Width + 4, 0 + (Height / 2 - Kernel.font.Height / 2));
-
-                    int imageX = 0 + 4;
-                    int imageY = 0 + (Height / 2 - (int)Image.Height / 2);
-                    DrawImageAlpha(Image, imageX, imageY);
-                }
-                else if (Text != null)
-                {
-                    int textX;
-                    int textY = 0 + (Height / 2 - Kernel.font.Height / 2);
-
-                    if (TextAlignStyle == TextAlign.Center)
-                    {
-                        int textWidth = Text.Length * Kernel.font.Width;
-                        textX = 0 + (Width / 2) - (textWidth / 2);
-                    }
-                    else
-                    {
-                        textX = 0 + 4;
+                        Clear(BackColor);
+                        // DrawFilledRectangle(BackColor, 0 + 2, 0 + 2, Width - 3, Height - 3);
                     }
 
-                    Kernel.canvas.DrawString(Text, Kernel.font, TextColor, textX, textY);
+                    DrawLine(Kernel.WhiteColor, 0, 0, 0 + Width, 0);
+                    DrawLine(Kernel.Gray, 0, 0 + 1, 0 + Width, 0 + 1);
+                    DrawLine(Kernel.WhiteColor, 0, 0, 0, 0 + Height);
+                    DrawLine(Kernel.Gray, 0 + 1, 0 + 1, 0 + 1, 0 + Height);
+                    DrawLine(Kernel.DarkGray, 0 + 1, 0 + Height - 1, 0 + Width, 0 + Height - 1);
+                    DrawLine(Kernel.BlackColor, 0, 0 + Height, 0 + Width + 1, 0 + Height);
+                    DrawLine(Kernel.DarkGray, 0 + Width - 1, 0 + 1, 0 + Width - 1, 0 + Height);
+                    DrawLine(Kernel.BlackColor, 0 + Width, 0, 0 + Width, 0 + Height);
                 }
-                else if (Image != null)
+            }
+            else
+            {
+                if (!NoBackground)
                 {
-                    int imageX = 0 + (Width / 2 - (int)Image.Width / 2);
-                    int imageY = 0 + (Height / 2 - (int)Image.Height / 2);
-                    DrawImageAlpha(Image, imageX, imageY);
+                    Clear(BackColor);
                 }
+            }
+
+            if (Text != null && Image != null)
+            {
+                DrawString(Text, Kernel.font, TextColor, 0 + 4 + (int)Image.Width + 4, 0 + (Height / 2 - Kernel.font.Height / 2));
+
+                int imageX = 0 + 4;
+                int imageY = 0 + (Height / 2 - (int)Image.Height / 2);
+                DrawImageAlpha(Image, imageX, imageY);
+            }
+            else if (Text != null)
+            {
+                int textX;
+                int textY = 0 + (Height / 2 - Kernel.font.Height / 2);
+
+                if (TextAlignStyle == TextAlign.Center)
+                {
+                    int textWidth = Text.Length * Kernel.font.Width;
+                    textX = 0 + (Width / 2) - (textWidth / 2);
+                }
+                else
+                {
+                    textX = 0 + 4;
+                }
+
+                DrawString(Text, Kernel.font, TextColor, textX, textY);
+            }
+            else if (Image != null)
+            {
+                int imageX = 0 + (Width / 2 - (int)Image.Width / 2);
+                int imageY = 0 + (Height / 2 - (int)Image.Height / 2);
+                DrawImageAlpha(Image, imageX, imageY);
             }
         }
     }

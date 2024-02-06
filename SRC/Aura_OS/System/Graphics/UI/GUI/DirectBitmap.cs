@@ -274,7 +274,20 @@ namespace Aura_OS.System.Graphics.UI.GUI
 
         public void DrawImage(Bitmap image, int x, int y)
         {
-            Bitmap = image;
+            if (image.Width == Bitmap.Width && image.Height == Bitmap.Height)
+            {
+                Bitmap = image;
+            }
+            else
+            {
+                for (int xi = 0; xi < image.Width; xi++)
+                {
+                    for (int yi = 0; yi < image.Height; yi++)
+                    {
+                        SetPixel(x + xi, y + yi, image.RawData[xi + (yi * image.Width)]);
+                    }
+                }
+            }
         }
     }
 }

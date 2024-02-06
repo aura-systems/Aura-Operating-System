@@ -12,7 +12,6 @@ namespace Aura_OS.System.Processing.Processes
 {
     public class Explorer : Process
     {
-        private static bool _showStartMenu = false;
         public static bool ShowStartMenu
         {
             get
@@ -30,6 +29,8 @@ namespace Aura_OS.System.Processing.Processes
         public static StartMenu StartMenu;
         public static Desktop Desktop;
         public static WindowManager WindowManager;
+
+        private static bool _showStartMenu = false;
 
         public Explorer() : base("Explorer", ProcessType.KernelComponent)
         {
@@ -60,33 +61,14 @@ namespace Aura_OS.System.Processing.Processes
 
         public override void Update()
         {
-            Desktop.Update();
-            Desktop.Draw();
+            Taskbar.Update();
 
-            try
-            {
-                Taskbar.Update();
-                Taskbar.Draw();
-            }
-            catch (Exception ex)
-            {
-                Crash.StopKernel("Fatal dotnet exception occured while drawing taskbar.", ex.Message, "0x00000000", "0");
-            }
-
-            try
-            {
-                WindowManager.UpdateWindowStack();
-                WindowManager.DrawWindows();
-            }
-            catch (Exception ex)
-            {
-                Crash.StopKernel("Fatal dotnet exception occured while drawing windows.", ex.Message, "0x00000000", "0");
-            }
+            WindowManager.UpdateWindowStack();
+            WindowManager.DrawWindows();
 
             if (ShowStartMenu)
             {
                 StartMenu.Update();
-                StartMenu.Draw();
             }
         }
     }

@@ -32,7 +32,7 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
             {
                 if (Color2 == null)
                 {
-                    DrawFilledRectangle(Color1, 0, 0, Width, Height);
+                    Clear(Color1);
                 }
                 else
                 {

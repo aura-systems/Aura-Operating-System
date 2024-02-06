@@ -16,13 +16,11 @@ namespace Aura_OS.System.Processing.Applications
 
         public MemoryInfoApp(int width, int height, int x = 0, int y = 0) : base(ApplicationName, width, height, x, y)
         {
-
+            ForceDirty = true;
         }
 
         public override void Draw()
         {
-            MarkDirty();
-
             base.Draw();
 
             DrawString("Available RAM                = " + GCImplementation.GetAvailableRAM() + "MB", 0, 0);

@@ -18,13 +18,13 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
         public Button Minimize;
         public Panel TopBar;
 
-        public bool Borders;
+        public bool HasBorders;
         public bool HasCloseButton;
         public bool HasMinimizeButton;
 
         public Window(int x, int y, int width, int height) : base(x, y, width, height)
         {
-            Borders = false;
+            HasBorders = false;
         }
 
         public Window(string name, int x, int y, int width, int height, bool hasCloseButton = true, bool hasMinimizeButton = true) : base(x, y, width, height)
@@ -33,13 +33,14 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
             Name = name;
             HasCloseButton = hasCloseButton;
             HasMinimizeButton = hasMinimizeButton;
-            Borders = true;
+            HasBorders = true;
 
             if (HasCloseButton)
             {
                 Close = new Button(ResourceManager.GetImage("16-close.bmp"), Width - 20, 5);
                 Close.NoBackground = true;
                 Close.NoBorder = true;
+                Children.Add(Close);
             }
 
             if (HasMinimizeButton)
@@ -47,14 +48,19 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
                 Minimize = new Button(ResourceManager.GetImage("16-minimize.bmp"), Width - 38, 5);
                 Minimize.NoBackground = true;
                 Minimize.NoBorder = true;
+                Children.Add(Minimize);
             }
 
-            TopBar = new Panel(Kernel.DarkBlue, Kernel.Pink, 3, 3, Width - 5, 18);
+            if (HasBorders)
+            {
+                TopBar = new Panel(Kernel.DarkBlue, Kernel.Pink, 3, 3, Width - 5, 18);
+                Children.Add(TopBar);
+            }
         }
 
         public override void Update()
         {
-            if (Borders)
+            if (HasBorders)
             {
                 TopBar.X = X + 3;
                 TopBar.Y = Y + 3;
@@ -73,47 +79,34 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
 
         public override void Draw()
         {
-            if (IsDirty())
+            Clear();
+
+            //DrawFilledRectangle(Kernel.DarkGrayLight, 2, 2, Width - 3, Height - 3);
+
+            DrawLine(Kernel.Gray, X, Y, Width, Y);
+            DrawLine(Kernel.WhiteColor, X, 1, Width, 1);
+            DrawLine(Kernel.Gray, X, Y, X, Height);
+            DrawLine(Kernel.WhiteColor, 1, 1, 1, Height);
+            DrawLine(Kernel.DarkGray, 1, Height - 1, Width, Height - 1);
+            DrawLine(Kernel.BlackColor, X, Height, Width + 1, Height);
+            DrawLine(Kernel.DarkGray, Width - 1, 1, Width - 1, Height);
+            DrawLine(Kernel.BlackColor, Width, Y, Width, Height);
+
+            if (HasBorders)
             {
-                Clear();
+                TopBar.Draw();
+                DrawString(Name, PCScreenFont.Default, Kernel.WhiteColor, 5, 4);
 
-                //DrawFilledRectangle(Kernel.DarkGrayLight, 2, 2, Width - 3, Height - 3);
-
-                DrawLine(Kernel.Gray, X, Y, Width, Y);
-                DrawLine(Kernel.WhiteColor, X, 1, Width, 1);
-                DrawLine(Kernel.Gray, X, Y, X, Height);
-                DrawLine(Kernel.WhiteColor, 1, 1, 1, Height);
-                DrawLine(Kernel.DarkGray, 1, Height - 1, Width, Height - 1);
-                DrawLine(Kernel.BlackColor, X, Height, Width + 1, Height);
-                DrawLine(Kernel.DarkGray, Width - 1, 1, Width - 1, Height);
-                DrawLine(Kernel.BlackColor, Width, Y, Width, Height);
-
-                if (Borders)
+                if (HasCloseButton)
                 {
-                    TopBar.Draw();
-                    DrawString(Name, PCScreenFont.Default, Kernel.WhiteColor, 5, 4);
-
-                    if (HasCloseButton)
-                    {
-                        Close.Draw();
-                    }
-
-                    if (HasMinimizeButton)
-                    {
-                        Minimize.Draw();
-                    }
+                    Close.Draw();
                 }
 
-                MarkCleaned();
+                if (HasMinimizeButton)
+                {
+                    Minimize.Draw();
+                }
             }
-        }
-
-        public override void MarkDirty()
-        {
-            base.MarkDirty();
-            TopBar.MarkDirty();
-            Close.MarkDirty();
-            Minimize.MarkDirty();
         }
     }
 }

@@ -21,10 +21,12 @@ namespace Aura_OS.System.Graphics.UI.GUI
 
         public Desktop(int x, int y, int width, int height) : base(x, y, width, height)
         {
+            /*
             MainPanel = new FilesystemPanel(Kernel.CurrentVolume, Color.White, Kernel.WhiteColor, x + 4, y + 16 + 4, width - 7 - 75, height - Taskbar.taskbarHeight);
             MainPanel.OpenNewWindow = true;
             MainPanel.Borders = false;
             MainPanel.Background = false;
+            
 
             MainPanel.RightClick = new RightClick((int)MouseManager.X, (int)MouseManager.Y, 200, 5 * RightClickEntry.ConstHeight);
             List<RightClickEntry> rightClickEntries = new List<RightClickEntry>();
@@ -75,42 +77,27 @@ namespace Aura_OS.System.Graphics.UI.GUI
             MainPanel.RightClick.Entries = rightClickEntries;
 
             MainPanel.UpdateCurrentFolder(x, y, height);
-        }
-
-        public override void Update()
-        {
-
+            */
         }
 
         public override void Draw()
         {
-            if (IsDirty())
-            {
-                //canvas.Clear(0x000000);
-                //canvas.DrawImage(bootBitmap, (int)(screenWidth / 2 - bootBitmap.Width / 2), (int)(screenHeight / 2 - bootBitmap.Height / 2));
+            //canvas.Clear(0x000000);
+            //canvas.DrawImage(bootBitmap, (int)(screenWidth / 2 - bootBitmap.Width / 2), (int)(screenHeight / 2 - bootBitmap.Height / 2));
 
-                DrawImage(Kernel.wallpaper, X, Y);
+            DrawImage(Kernel.wallpaper, X, Y);
 
-                //MainPanel.Draw(X, Y, Height);
-
-                MarkCleaned();
-            }
+            //MainPanel.Draw(X, Y, Height);
         }
 
         public override void HandleLeftClick()
         {
-            MainPanel.HandleLeftClick();
+            // MainPanel.HandleLeftClick();
         }
 
         public override void HandleRightClick()
         {
-            MainPanel.HandleRightClick();
-        }
-
-        public override void MarkDirty()
-        {
-            base.MarkDirty();
-            MainPanel.MarkDirty();
+            // MainPanel.HandleRightClick();
         }
     }
 }

@@ -19,19 +19,30 @@ namespace Aura_OS.System.Graphics.UI.GUI
         public readonly int Width;
         public readonly int Height;
 
+        public bool ForceDirty
+        {
+            get => _forceDirty;
+            set
+            {
+                _forceDirty = value;
+                Window.ForceDirty = true;
+            }
+        }
+
         public int X;
         public int Y;
         public Window Window;
         public bool Focused = false;
         public bool Visible = false;
-        public bool Dirty = true;
         public int zIndex = 0;
 
+        private bool _forceDirty = false;
         private int _px;
         private int _py;
         private bool _lck = false;
         private bool _pressed;
         private bool _hasWindowMoving = false;
+        private bool _isDirty = true;
 
         public Application(string name, int width, int height, int x = 0, int y = 0) : base(name, ProcessType.Program)
         {
@@ -162,19 +173,23 @@ namespace Aura_OS.System.Graphics.UI.GUI
 
         public virtual void Draw()
         {
-            if (Window.IsDirty())
-            {
-                Window.Draw();
-            }
+            Window.Draw();
+        }
+
+        public bool IsDirty()
+        {
+            return _isDirty;
         }
 
         public void MarkDirty()
         {
+            _isDirty = true;
             Window.MarkDirty();
         }
 
         public void MarkCleaned()
         {
+            _isDirty = false;
             Window.MarkCleaned();
         }
 
