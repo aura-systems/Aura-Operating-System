@@ -11,6 +11,7 @@ using Aura_OS.System.Graphics.UI.GUI.Components;
 using System;
 using System.Collections.Generic;
 using Aura_OS.System.Processing.Processes;
+using System.Drawing;
 
 namespace Aura_OS.System.Graphics.UI.GUI
 {
@@ -197,6 +198,11 @@ namespace Aura_OS.System.Graphics.UI.GUI
         {
             zIndex = Explorer.WindowManager.GetTopZIndex() + 1;
             Explorer.WindowManager.MarkStackDirty();
+        }
+
+        public void DrawLine(Color color, int xStart, int yStart, int width, int height)
+        {
+            Window.DrawLine(color, xStart, yStart, width, height);
         }
 
         public void DrawString(string str, int x, int y)

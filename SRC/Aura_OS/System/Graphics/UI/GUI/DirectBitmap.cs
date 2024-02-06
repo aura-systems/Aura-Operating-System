@@ -148,7 +148,7 @@ namespace Aura_OS.System.Graphics.UI.GUI
                     }
 
                     num7 += num3;
-                    SetPixel(color, num7, num8);
+                    SetPixel(num7, num8, color);
                 }
 
                 return;
@@ -164,7 +164,7 @@ namespace Aura_OS.System.Graphics.UI.GUI
                 }
 
                 num8 += num4;
-                SetPixel(color, num7, num8);
+                SetPixel(num7, num8, color);
             }
         }
 
@@ -172,7 +172,7 @@ namespace Aura_OS.System.Graphics.UI.GUI
         {
             for (int i = 0; i < dy; i++)
             {
-                SetPixel(color, x1, y1 + i);
+                SetPixel(x1, y1 + i, color);
             }
         }
 
@@ -180,7 +180,7 @@ namespace Aura_OS.System.Graphics.UI.GUI
         {
             for (int i = 0; i < dx; i++)
             {
-                SetPixel(color, x1 + i, y1);
+                SetPixel(x1 + i, y1, color);
             }
         }
 
