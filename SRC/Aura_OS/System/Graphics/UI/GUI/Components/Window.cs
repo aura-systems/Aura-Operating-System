@@ -84,16 +84,17 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
         {
             Clear();
 
-            //DrawFilledRectangle(Kernel.DarkGrayLight, 2, 2, Width - 3, Height - 3);
+            DrawLine(Kernel.Gray, 0, 0, Width - 1, 0); // Top
+            DrawLine(Kernel.WhiteColor, 0, 0 + 1, Width - 1, 0 + 1);
 
-            DrawLine(Kernel.Gray, X, Y, Width, Y);
-            DrawLine(Kernel.WhiteColor, X, 1, Width, 1);
-            DrawLine(Kernel.Gray, X, Y, X, Height);
-            DrawLine(Kernel.WhiteColor, 1, 1, 1, Height);
-            DrawLine(Kernel.DarkGray, 1, Height - 1, Width, Height - 1);
-            DrawLine(Kernel.BlackColor, X, Height, Width + 1, Height);
-            DrawLine(Kernel.DarkGray, Width - 1, 1, Width - 1, Height);
-            DrawLine(Kernel.BlackColor, Width, Y, Width, Height);
+            DrawLine(Kernel.Gray, 0, 0, 0, Height - 1); // Left
+            DrawLine(Kernel.WhiteColor, 0 + 1, 0, 0 + 1, Height - 1);
+
+            DrawLine(Kernel.DarkGray, 0, Height - 1, Width - 1, Height - 1); // Bottom
+            DrawLine(Kernel.BlackColor, 0, Height, Width, Height);
+
+            DrawLine(Kernel.DarkGray, Width - 1, 0, Width - 1, Height - 1); // Right
+            DrawLine(Kernel.BlackColor, Width, 0, Width, Height);
 
             if (HasBorders)
             {

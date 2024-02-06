@@ -35,7 +35,7 @@ namespace Aura_OS.System.Graphics.UI.GUI
         public void AddButton(string buttonText, Action onClickAction)
         {
             int buttonY = 150 - 30 - 10;
-            int buttonX = X;
+            int buttonX = 0;
 
             foreach (var button in _buttons)
             {
