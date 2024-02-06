@@ -21,6 +21,8 @@ namespace Aura_OS.System.Processing.Applications
 
         public CubeApp(int width, int height, int x = 0, int y = 0) : base(ApplicationName, width, height, x, y)
         {
+            ForceDirty = true;
+
             _vertices = new Vertex[]
             {
                 new Vertex(-1, 1, -1),
