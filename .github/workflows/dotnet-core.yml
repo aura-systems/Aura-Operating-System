@@ -12,10 +12,10 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-20.04]
+        os: [windows-latest]
         include:
-          - os: ubuntu-20.04
-            target: Linux
+          - os: windows-latest
+            target: Windows
 
     steps:
       - uses: actions/checkout@v3
@@ -113,6 +113,20 @@ jobs:
           cd "SRC"
           dotnet restore
       - name: Build Aura Operating System
+        if: ${{ matrix.os == 'windows-latest' }}
+        run: |
+            copy "Cosmos\IL2CPU\source\IL2CPU\bin\Debug\net6.0\*" "C:\Users\runneradmin\AppData\Roaming\Cosmos User Kit\Build\IL2CPU\"
+            Copy-Item -Path "Cosmos\Cosmos\source\Cosmos.Common\bin\Debug\net6.0\*" -Destination "C:\Users\runneradmin\AppData\Roaming\Cosmos User Kit\Kernel\" -Force
+            Copy-Item -Path "Cosmos\Cosmos\source\Cosmos.Core_Asm\bin\Debug\net6.0\*" -Destination "C:\Users\runneradmin\AppData\Roaming\Cosmos User Kit\Kernel\" -Force
+            Copy-Item -Path "Cosmos\Cosmos\source\Cosmos.Core_Plugs\bin\Debug\net6.0\*" -Destination "C:\Users\runneradmin\AppData\Roaming\Cosmos User Kit\Kernel\" -Force
+            Copy-Item -Path "Cosmos\Cosmos\source\Cosmos.Core\bin\Debug\net6.0\*" -Destination "C:\Users\runneradmin\AppData\Roaming\Cosmos User Kit\Kernel\" -Force
+            Copy-Item -Path "Cosmos\Cosmos\source\Cosmos.System2\bin\Debug\net6.0\*" -Destination "C:\Users\runneradmin\AppData\Roaming\Cosmos User Kit\Kernel\" -Force
+            Copy-Item -Path "Cosmos\Cosmos\source\Cosmos.HAL2\bin\Debug\net6.0\*" -Destination "C:\Users\runneradmin\AppData\Roaming\Cosmos User Kit\Kernel\" -Force
+            Copy-Item -Path "Cosmos\Cosmos\source\Cosmos.System2_Plugs\bin\Debug\net6.0\*" -Destination "C:\Users\runneradmin\AppData\Roaming\Cosmos User Kit\Kernel\" -Force
+            Copy-Item -Path "Cosmos\Cosmos\source\Cosmos.Debug.Kernel\bin\Debug\netstandard2.0\*" -Destination "C:\Users\runneradmin\AppData\Roaming\Cosmos User Kit\Kernel\" -Force
+            Copy-Item -Path "Cosmos\Cosmos\source\Cosmos.Debug.Kernel.Plugs.Asm\bin\Debug\netstandard2.0\*" -Destination "C:\Users\runneradmin\AppData\Roaming\Cosmos User Kit\Kernel\" -Force
+      - name: Build Aura Operating System
+        if: ${{ matrix.os == 'ubuntu-20.04' }}
         run: |
           cd "SRC"
-          sudo dotnet build --no-restore
+          dotnet build
