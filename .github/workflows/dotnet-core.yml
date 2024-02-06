@@ -78,6 +78,7 @@ jobs:
           dotnet pack Cosmos.Core_Asm/Cosmos.Core_Asm.csproj --output c:\packages
           dotnet pack Cosmos.HAL2/Cosmos.HAL2.csproj --output c:\packages
           dotnet pack Cosmos.System2/Cosmos.System2.csproj --output c:\packages
+          dotnet pack Cosmos.Plugs/Cosmos.Plugs.csproj --output c:\packages
           dotnet pack Cosmos.System2_Plugs/Cosmos.System2_Plugs.csproj --output c:\packages
           dotnet pack Cosmos.Debug.Kernel/Cosmos.Debug.Kernel.csproj --output c:\packages
           dotnet pack Cosmos.Debug.Kernel.Plugs.Asm/Cosmos.Debug.Kernel.Plugs.Asm.csproj --output c:\packages
@@ -106,6 +107,7 @@ jobs:
           Copy-Item -Path "Cosmos\Cosmos\source\Cosmos.System2\bin\Debug\net6.0\*" -Destination "C:\Users\runneradmin\AppData\Roaming\Cosmos User Kit\Kernel\" -Force
           Copy-Item -Path "Cosmos\Cosmos\source\Cosmos.HAL2\bin\Debug\net6.0\*" -Destination "C:\Users\runneradmin\AppData\Roaming\Cosmos User Kit\Kernel\" -Force
           Copy-Item -Path "Cosmos\Cosmos\source\Cosmos.System2_Plugs\bin\Debug\net6.0\*" -Destination "C:\Users\runneradmin\AppData\Roaming\Cosmos User Kit\Kernel\" -Force
+          Copy-Item -Path "Cosmos\Cosmos\source\Cosmos.Plugs\bin\Debug\net6.0\*" -Destination "C:\Users\runneradmin\AppData\Roaming\Cosmos User Kit\Kernel\" -Force
           Copy-Item -Path "Cosmos\Cosmos\source\Cosmos.Debug.Kernel\bin\Debug\netstandard2.0\*" -Destination "C:\Users\runneradmin\AppData\Roaming\Cosmos User Kit\Kernel\" -Force
           Copy-Item -Path "Cosmos\Cosmos\source\Cosmos.Debug.Kernel.Plugs.Asm\bin\Debug\netstandard2.0\*" -Destination "C:\Users\runneradmin\AppData\Roaming\Cosmos User Kit\Kernel\" -Force
       - name: Restore dependancies
@@ -123,6 +125,7 @@ jobs:
             Copy-Item -Path "Cosmos\Cosmos\source\Cosmos.System2\bin\Debug\net6.0\*" -Destination "C:\Users\runneradmin\AppData\Roaming\Cosmos User Kit\Kernel\" -Force
             Copy-Item -Path "Cosmos\Cosmos\source\Cosmos.HAL2\bin\Debug\net6.0\*" -Destination "C:\Users\runneradmin\AppData\Roaming\Cosmos User Kit\Kernel\" -Force
             Copy-Item -Path "Cosmos\Cosmos\source\Cosmos.System2_Plugs\bin\Debug\net6.0\*" -Destination "C:\Users\runneradmin\AppData\Roaming\Cosmos User Kit\Kernel\" -Force
+            Copy-Item -Path "Cosmos\Cosmos\source\Cosmos.Plugs\bin\Debug\net6.0\*" -Destination "C:\Users\runneradmin\AppData\Roaming\Cosmos User Kit\Kernel\" -Force
             Copy-Item -Path "Cosmos\Cosmos\source\Cosmos.Debug.Kernel\bin\Debug\netstandard2.0\*" -Destination "C:\Users\runneradmin\AppData\Roaming\Cosmos User Kit\Kernel\" -Force
             Copy-Item -Path "Cosmos\Cosmos\source\Cosmos.Debug.Kernel.Plugs.Asm\bin\Debug\netstandard2.0\*" -Destination "C:\Users\runneradmin\AppData\Roaming\Cosmos User Kit\Kernel\" -Force
       - name: Build Aura Operating System
