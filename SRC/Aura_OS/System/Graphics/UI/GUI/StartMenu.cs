@@ -11,6 +11,7 @@ using System.Drawing;
 using Cosmos.System;
 using Aura_OS.System.Graphics.UI.GUI.Components;
 using Aura_OS.System.Processing.Processes;
+using JZero.Model;
 
 namespace Aura_OS.System.Graphics.UI.GUI
 {
@@ -40,6 +41,7 @@ namespace Aura_OS.System.Graphics.UI.GUI
             {
                 Power.Shutdown();
             });
+            Shutdown.HasTransparency = true;
             Children.Add(Shutdown);
 
             // Reboot
@@ -49,6 +51,7 @@ namespace Aura_OS.System.Graphics.UI.GUI
             {
                 Power.Reboot();
             });
+            Reboot.HasTransparency = true;
             Children.Add(Reboot);
 
             // App buttons

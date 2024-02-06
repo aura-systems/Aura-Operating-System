@@ -96,7 +96,7 @@ namespace Aura_OS.System.Processing.Applications
                     _pathTextBox.Text = path;
                     _mainPanel.UpdateCurrentFolder(X, Y, Height);
                 });
-
+                button.HasTransparency = true;
                 _disks.Add(button);
             }
         }
