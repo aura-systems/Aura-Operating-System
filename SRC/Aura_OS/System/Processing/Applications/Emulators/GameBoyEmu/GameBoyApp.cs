@@ -26,11 +26,13 @@ namespace Aura_OS.System.Processing.Applications.Emulators.GameBoyEmu
 
         public GameBoyApp(byte[] rom, string name, int width, int height, int x = 0, int y = 0) : base(name, width, height, x, y)
         {
+            ForceDirty = true;
+
             Rom = rom;
 
             _mmu = new MMU();
             _cpu = new CPU(_mmu);
-            _ppu = new PPU(x, y, this);
+            _ppu = new PPU(this);
             _timer = new TIMER();
             _joypad = new JOYPAD();
 
@@ -39,11 +41,13 @@ namespace Aura_OS.System.Processing.Applications.Emulators.GameBoyEmu
 
         public GameBoyApp(int width, int height, int x = 0, int y = 0) : base("GameBoyEmu", width, height, x, y)
         {
+            ForceDirty = true;
+
             Rom = Files.TetrisRom;
 
             _mmu = new MMU();
             _cpu = new CPU(_mmu);
-            _ppu = new PPU(x, y, this);
+            _ppu = new PPU(this);
             _timer = new TIMER();
             _joypad = new JOYPAD();
 
@@ -55,9 +59,6 @@ namespace Aura_OS.System.Processing.Applications.Emulators.GameBoyEmu
         public override void Update()
         {
             base.Update();
-
-            _ppu.X = X;
-            _ppu.Y = Y;
 
             if (Focused)
             {
