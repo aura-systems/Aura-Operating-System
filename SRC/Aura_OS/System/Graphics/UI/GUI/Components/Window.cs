@@ -39,6 +39,7 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
             if (HasBorders)
             {
                 TopBar = new Panel(Kernel.DarkBlue, Kernel.Pink, 3, 3, Width - 5, 18);
+                TopBar.Text = name;
                 AddChild(TopBar);
             }
 
@@ -99,7 +100,6 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
             if (HasBorders)
             {
                 TopBar.Draw();
-                DrawString(Name, PCScreenFont.Default, Kernel.WhiteColor, 5, 4);
 
                 if (HasCloseButton)
                 {

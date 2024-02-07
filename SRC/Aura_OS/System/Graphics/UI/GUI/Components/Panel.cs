@@ -4,7 +4,10 @@
 * PROGRAMMERS:      Valentin Charbonnier <valentinbreiz@gmail.com>
 */
 
+using Cosmos.System.Graphics.Fonts;
 using System.Drawing;
+using System.Xml.Linq;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace Aura_OS.System.Graphics.UI.GUI.Components
 {
@@ -14,6 +17,7 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
         public Color? Color2;
         public bool Borders = false;
         public bool Background = true;
+        public string Text = "";
 
         public Panel(Color color, int x, int y, int width, int height) : base(0, y, width, height)
         {
@@ -46,6 +50,11 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
                 DrawLine(Kernel.DarkGray, 0, 0, 0, 0 + Height);
                 DrawLine(Kernel.WhiteColor, 0, 0 + Height, 0 + Width + 1, 0 + Height);
                 DrawLine(Kernel.WhiteColor, 0 + Width, 0, 0 + Width, 0 + Height);
+            }
+
+            if (Text != "")
+            {
+                DrawString(Text, PCScreenFont.Default, Kernel.WhiteColor, 5, 4);
             }
         }
     }

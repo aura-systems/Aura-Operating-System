@@ -255,21 +255,11 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
         public void MarkDirty()
         {
             _dirty = true;
-
-            foreach (Component component in Children)
-            {
-                component.MarkDirty();
-            }
         }
 
         public void MarkCleaned()
         {
             _dirty = false;
-            
-            foreach (Component component in Children)
-            {
-                component.MarkCleaned();
-            }
         }
     }
 }
