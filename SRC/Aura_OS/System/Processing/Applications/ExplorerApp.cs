@@ -36,13 +36,20 @@ namespace Aura_OS.System.Processing.Applications
 
             _topPanel = new Panel(Kernel.Gray, x + 1, y + 1, width - 6, 23);
             _topPanel.Borders = true;
+            AddChild(_topPanel);
+
             _spaceButton = new Button("", x + 3, y + Window.Height - 19, Window.Width - 6, 20);
             _spaceButton.Light = true;
+            AddChild(_spaceButton);
+
             _mainPanel = new FilesystemPanel(currentPath, Color.Black, Kernel.WhiteColor, x + 1 + 75, y + 1 + 22, width - 7 - 75, Window.Height - Window.TopBar.Height - _topPanel.Height - _spaceButton.Height - 8);
             _mainPanel.Borders = true;
+            AddChild(_mainPanel);
 
             _leftPanel = new Panel(Kernel.WhiteColor, x + 1, y + 1 + 22, 75, Window.Height - Window.TopBar.Height - _topPanel.Height - _spaceButton.Height - 8);
             _leftPanel.Borders = true;
+            AddChild(_leftPanel);
+
             _pathTextBox = new TextBox(x + 18 + 6, y + 3, width - 15 - 18, 18, _mainPanel.CurrentPath);
             _pathTextBox.Enter = new Action(() =>
             {
@@ -52,6 +59,8 @@ namespace Aura_OS.System.Processing.Applications
                     _mainPanel.UpdateCurrentFolder(x, y, height);
                 }
             });
+            AddChild(_pathTextBox);
+
             _up = new Button(ResourceManager.GetImage("16-up.bmp"), x + 3, y + 3, 18, 18);
             _up.Click = new Action(() =>
             {
@@ -59,6 +68,7 @@ namespace Aura_OS.System.Processing.Applications
                 _pathTextBox.Text = _mainPanel.CurrentPath;
                 _mainPanel.UpdateCurrentFolder(x, y, height);
             });
+            AddChild(_up);
 
             _mainPanel.UpdateCurrentFolder(x, y, height);
             UpdateDisks();
@@ -98,6 +108,7 @@ namespace Aura_OS.System.Processing.Applications
                 });
                 button.HasTransparency = true;
                 _disks.Add(button);
+                AddChild(button);
             }
         }
 

@@ -79,9 +79,45 @@ namespace Aura_OS
             }
         }
 
+        public void AddComponent(System.Graphics.UI.GUI.Components.Component component)
+        {
+            component.zIndex = ++highestZIndex;
+            System.Graphics.UI.GUI.Components.Component.Components.Add(component);
+            InsertionSortByZIndex(System.Graphics.UI.GUI.Components.Component.Components);
+        }
+
+        public void BringToFront(System.Graphics.UI.GUI.Components.Component component)
+        {
+            if (component.zIndex < highestZIndex)
+            {
+                component.zIndex = ++highestZIndex;
+                InsertionSortByZIndex(System.Graphics.UI.GUI.Components.Component.Components);
+            }
+        }
+
+        private int highestZIndex = 0;
+
+        private void InsertionSortByZIndex(List<System.Graphics.UI.GUI.Components.Component> components)
+        {
+            for (int i = 1; i < components.Count; i++)
+            {
+                System.Graphics.UI.GUI.Components.Component key = components[i];
+                int j = i - 1;
+
+                while (j >= 0 && components[j].zIndex > key.zIndex)
+                {
+                    components[j + 1] = components[j];
+                    j = j - 1;
+                }
+                components[j + 1] = key;
+            }
+        }
+
         public void DrawWindows()
         {
             ClipRects.Clear();
+
+            InsertionSortByZIndex(System.Graphics.UI.GUI.Components.Component.Components);
 
             for (int i = 0; i < System.Graphics.UI.GUI.Components.Component.Components.Count; i++)
             {
@@ -119,16 +155,9 @@ namespace Aura_OS
             {
                 var component = System.Graphics.UI.GUI.Components.Component.Components[i];
 
-                if (component.Visible)
+                if (component.IsRoot)
                 {
-                    if (component.HasTransparency)
-                    {
-                        Kernel.Canvas.DrawImageAlpha(component.GetBuffer(), component.X, component.Y);
-                    }
-                    else
-                    {
-                        Kernel.Canvas.DrawImage(component.GetBuffer(), component.X, component.Y);
-                    }
+                    DrawComponentAndChildren(component);
                 }
             }
 
@@ -140,6 +169,27 @@ namespace Aura_OS
                          tempRect.Bottom - tempRect.Top + 1);
             }
 
+        }
+
+        public void DrawComponentAndChildren(System.Graphics.UI.GUI.Components.Component component)
+        {
+            if (!component.Visible) return;
+
+            // Dessiner le composant actuel
+            if (component.HasTransparency)
+            {
+                Kernel.Canvas.DrawImageAlpha(component.GetBuffer(), component.X, component.Y);
+            }
+            else
+            {
+                Kernel.Canvas.DrawImage(component.GetBuffer(), component.X, component.Y);
+            }
+
+            // Dessiner récursivement tous les enfants
+            foreach (var child in component.Children)
+            {
+                DrawComponentAndChildren(child);
+            }
         }
 
         public void DrawRect(int x, int y, int width, int height)

@@ -50,7 +50,7 @@ namespace Aura_OS.System.Graphics.UI.GUI
             int startButtonY = (int)Kernel.screenHeight - startButtonHeight - 3;
             StartButton = new Button(ResourceManager.GetImage("00-start.bmp"), "Start", startButtonX, startButtonY, startButtonWidth, startButtonHeight);
             StartButton.HasTransparency = true;
-            Children.Add(StartButton);
+            AddChild(StartButton);
 
             // Hour button
             string time = Time.TimeString(true, true, true);
@@ -59,7 +59,7 @@ namespace Aura_OS.System.Graphics.UI.GUI
             int hourButtonX = (int)(Kernel.screenWidth - time.Length * (Kernel.font.Width + 1) - 2);
             int hourButtonY = (int)Kernel.screenHeight - 28 - 3;
             HourButton = new HourButton(time, hourButtonX, hourButtonY, hourButtonWidth, hourButtonHeight);
-            Children.Add(HourButton);
+            AddChild(HourButton);
 
             // Network icon
             int networkButtonWidth = 16;
@@ -69,7 +69,7 @@ namespace Aura_OS.System.Graphics.UI.GUI
             NetworkButton = new Button(ResourceManager.GetImage("16-network-offline.bmp"), netoworkButtonX, networkButtonY, networkButtonWidth, networkButtonHeight);
             NetworkButton.NoBorder = true;
             NetworkButton.HasTransparency = true;
-            Children.Add(NetworkButton);
+            AddChild(NetworkButton);
 
             Buttons = new Dictionary<string, Button>();
         }
@@ -92,6 +92,8 @@ namespace Aura_OS.System.Graphics.UI.GUI
 
         private void HandleClick()
         {
+            MarkDirty();
+
             if (StartButton.IsInside((int)MouseManager.X, (int)MouseManager.Y))
             {
                 Explorer.ShowStartMenu = !Explorer.ShowStartMenu;
@@ -113,6 +115,7 @@ namespace Aura_OS.System.Graphics.UI.GUI
 
                 if (Buttons[application.Name].IsInside((int)MouseManager.X, (int)MouseManager.Y))
                 {
+                    application.Window.Visible = !application.Window.Visible;
                     application.Window.Minimize.Click();
                 }
             }

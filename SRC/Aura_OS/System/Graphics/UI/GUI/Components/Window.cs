@@ -36,13 +36,19 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
             HasMinimizeButton = hasMinimizeButton;
             HasBorders = true;
 
+            if (HasBorders)
+            {
+                TopBar = new Panel(Kernel.DarkBlue, Kernel.Pink, 3, 3, Width - 5, 18);
+                AddChild(TopBar);
+            }
+
             if (HasCloseButton)
             {
                 Close = new Button(ResourceManager.GetImage("16-close.bmp"), Width - 20, 5);
                 Close.NoBackground = true;
                 Close.NoBorder = true;
                 Close.HasTransparency = true;
-                Children.Add(Close);
+                AddChild(Close);
             }
 
             if (HasMinimizeButton)
@@ -51,13 +57,7 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
                 Minimize.NoBackground = true;
                 Minimize.NoBorder = true;
                 Minimize.HasTransparency = true;
-                Children.Add(Minimize);
-            }
-
-            if (HasBorders)
-            {
-                TopBar = new Panel(Kernel.DarkBlue, Kernel.Pink, 3, 3, Width - 5, 18);
-                Children.Add(TopBar);
+                AddChild(Minimize);
             }
         }
 

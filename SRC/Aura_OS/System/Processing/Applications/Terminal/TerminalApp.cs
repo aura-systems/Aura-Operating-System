@@ -36,9 +36,10 @@ namespace Aura_OS.System.Processing.Applications.Terminal
             _commandIndex = 0;
             _commands = new List<string>();
             _command = string.Empty;
-
             _writer = new TerminalTextWriter(this);
+
             Console = new(x, y, width - 4, height - Window.TopBar.Height - 4);
+            AddChild(Console);
 
             BeforeCommand();
 

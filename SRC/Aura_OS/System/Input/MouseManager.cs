@@ -194,7 +194,7 @@ namespace Aura_OS.System.Input
             }
             else
             {
-                DetermineTopComponentForRightClick();
+                // DetermineTopComponentForRightClick();
             }
         }
 

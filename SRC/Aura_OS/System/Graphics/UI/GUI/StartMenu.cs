@@ -32,7 +32,7 @@ namespace Aura_OS.System.Graphics.UI.GUI
 
             // Ribbon
             Ribbon = new Panel(Kernel.DarkBlue, X + 1, Y + 1, 26, height - 5);
-            Children.Add(Ribbon);
+            AddChild(Ribbon);
 
             // Shutdown
             Shutdown = new Button(ResourceManager.GetImage("24-shutdown.bmp"), "Shut Down.", X + 1 + Ribbon.Width, Y + Height - 32 - 4, Width - Ribbon.Width - 3, 35);
@@ -42,7 +42,7 @@ namespace Aura_OS.System.Graphics.UI.GUI
                 Power.Shutdown();
             });
             Shutdown.HasTransparency = true;
-            Children.Add(Shutdown);
+            AddChild(Shutdown);
 
             // Reboot
             Reboot = new Button(ResourceManager.GetImage("24-reboot.bmp"), "Reboot.", X + 1 + Ribbon.Width, Y + Height - 64 - 4, Width - Ribbon.Width - 3, 35);
@@ -52,7 +52,7 @@ namespace Aura_OS.System.Graphics.UI.GUI
                 Power.Reboot();
             });
             Reboot.HasTransparency = true;
-            Children.Add(Reboot);
+            AddChild(Reboot);
 
             // App buttons
             buttons.Clear();
@@ -83,7 +83,7 @@ namespace Aura_OS.System.Graphics.UI.GUI
                 });
                 button.HasTransparency = true;
                 buttons.Add(button);
-                Children.Add(button);
+                AddChild(button);
                 buttonY += 32;
             }
 

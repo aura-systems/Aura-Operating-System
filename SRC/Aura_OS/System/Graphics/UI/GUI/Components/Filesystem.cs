@@ -87,7 +87,7 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
                     currentY = startY;
                     currentX += iconSpacing;
                 }
-
+                AddChild(button);
                 button.Draw();
             }
 

@@ -5,10 +5,12 @@
 */
 
 using Aura_OS.Core;
+using Aura_OS.System.Processing.Processes;
 using Cosmos.Core;
 using Cosmos.System;
 using Cosmos.System.Graphics;
 using Cosmos.System.Graphics.Fonts;
+using JZero.Model;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -87,6 +89,8 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
         public bool HasTransparency { get; set; }
         public RightClick RightClick { get; set; }
         public List<Component> Children { get; set; }
+        public int zIndex { get; set; }
+        public bool IsRoot { get; set; }
 
         private Rectangle _rectangle;
         private DirectBitmap _buffer;
@@ -101,8 +105,10 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
             Visible = true;
             ForceDirty = false;
             HasTransparency = false;
+            IsRoot = true;
             Children = new List<Component>();
-            Components.Add(this);
+            zIndex = 0;
+            Explorer.WindowManager.AddComponent(this);
         }
 
         public virtual void Update()
@@ -113,6 +119,13 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
         public virtual void Draw()
         {
 
+        }
+
+        public void AddChild(Component child)
+        {
+            child.zIndex = zIndex + 1 + Children.Count;
+            child.IsRoot = false;
+            Children.Add(child);
         }
 
         public Rectangle GetRectangle()
@@ -218,6 +231,8 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
 
         public virtual void HandleRightClick()
         {
+            return;
+
             if (RightClick != null && IsInside((int)MouseManager.X, (int)MouseManager.Y))
             {
                 RightClick.X = (int)MouseManager.X;

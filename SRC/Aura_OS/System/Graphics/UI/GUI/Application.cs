@@ -51,6 +51,7 @@ namespace Aura_OS.System.Graphics.UI.GUI
             Window = new Window(name, x, y, width + 1, height + 1);
             Window.Close.Click = new Action(() =>
             {
+                Window.Visible = false;
                 Stop();
                 Explorer.WindowManager.Applications.Remove(this);
                 Kernel.ProcessManager.Processes.Remove(this);
@@ -58,6 +59,7 @@ namespace Aura_OS.System.Graphics.UI.GUI
             });
             Window.Minimize.Click = new Action(() =>
             {
+                Window.Visible = false;
                 Visible = !Visible;
 
                 if (Visible)
@@ -77,14 +79,17 @@ namespace Aura_OS.System.Graphics.UI.GUI
             {
                 Window.Close.Click();
             });
+            entry.Visible = false;
             rightClickEntries.Add(entry);
             RightClickEntry entry2 = new("Minimize", 0, 0, Window.TopBar.RightClick.Width);
             entry2.Click = new Action(() =>
             {
                 Window.Minimize.Click();
             });
+            entry2.Visible = false;
             rightClickEntries.Add(entry2);
             Window.TopBar.RightClick.Entries = rightClickEntries;
+            Window.TopBar.RightClick.Visible = false;
 
             X = x + 3;
             Y = y + Window.TopBar.Height + 3;
@@ -102,6 +107,8 @@ namespace Aura_OS.System.Graphics.UI.GUI
 
         public virtual void HandleRightClick()
         {
+            return;
+
             if (Window.TopBar.IsInside((int)MouseManager.X, (int)MouseManager.Y))
             {
                 Window.TopBar.HandleRightClick();
@@ -195,10 +202,16 @@ namespace Aura_OS.System.Graphics.UI.GUI
             Window.MarkCleaned();
         }
 
+        public void AddChild(Component component)
+        {
+            Window.AddChild(component);
+        }
+
         private void BringToFront()
         {
-            zIndex = Explorer.WindowManager.GetTopZIndex() + 1;
-            Explorer.WindowManager.MarkStackDirty();
+            Explorer.WindowManager.BringToFront(Window);
+            //zIndex = Explorer.WindowManager.GetTopZIndex() + 1;
+            //Explorer.WindowManager.MarkStackDirty();
         }
 
         public void DrawLine(Color color, int xStart, int yStart, int width, int height)
