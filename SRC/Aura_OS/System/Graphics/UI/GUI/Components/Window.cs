@@ -4,6 +4,7 @@
 * PROGRAMMERS:      Valentin Charbonnier <valentinbreiz@gmail.com>
 */
 
+using Aura_OS.System.Graphics.UI.GUI.Skin;
 using Cosmos.System.Graphics;
 using Cosmos.System.Graphics.Fonts;
 using System.Drawing;
@@ -30,6 +31,8 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
 
         public Window(string name, int x, int y, int width, int height, bool hasCloseButton = true, bool hasMinimizeButton = true) : base(x, y, width, height)
         {
+            Frame = Kernel.SkinParser.GetFrame("window");
+
             Icon = ResourceManager.GetImage("16-program.bmp");
             Name = name;
             HasCloseButton = hasCloseButton;
@@ -83,6 +86,9 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
 
         public override void Draw()
         {
+            base.Draw();
+
+            /*
             Clear();
 
             DrawLine(Kernel.Gray, 0, 0, Width - 1, 0); // Top
@@ -111,6 +117,7 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
                     Minimize.Draw();
                 }
             }
+            */
         }
     }
 }

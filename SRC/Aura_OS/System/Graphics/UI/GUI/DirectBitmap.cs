@@ -272,6 +272,29 @@ namespace Aura_OS.System.Graphics.UI.GUI
             return (x * Stride) + (y * Pitch);
         }
 
+        public void DrawImageRect(Bitmap image, Rectangle rect, int destX, int destY)
+        {
+            float scaleX = (float)rect.Width / image.Width;
+            float scaleY = (float)rect.Height / image.Height;
+
+            for (int xi = 0; xi < rect.Width; xi++)
+            {
+                for (int yi = 0; yi < rect.Height; yi++)
+                {
+                    int srcX = (int)(xi / scaleX);
+                    int srcY = (int)(yi / scaleY);
+
+                    if (srcX >= 0 && srcY >= 0 && srcX < image.Width && srcY < image.Height)
+                    {
+                        int color = image.RawData[srcX + srcY * image.Width];
+
+                        SetPixel(destX + xi, destY + yi, color);
+                    }
+                }
+            }
+        }
+
+
         public void DrawImage(Bitmap image, int x, int y)
         {
             if (image.Width == Bitmap.Width && image.Height == Bitmap.Height)

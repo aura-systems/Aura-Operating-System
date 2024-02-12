@@ -21,11 +21,11 @@ using System.Drawing;
 using Aura_OS.System;
 using System.IO;
 using Aura_OS.System.Processing;
-using Aura_OS.System.Graphics.UI.GUI;
 using Aura_OS.System.Graphics;
 using Aura_OS.System.Processing.Interpreter;
 using Aura_OS.System.Processing.Interpreter.Commands;
 using Aura_OS.System.Processing.Processes;
+using Aura_OS.System.Graphics.UI.GUI.Skin;
 
 namespace Aura_OS
 {
@@ -87,6 +87,8 @@ namespace Aura_OS
         public static PackageManager PackageManager;
         public static Explorer Explorer;
 
+        public static SkinParsing SkinParser;
+
         // Textmode Console
         public static System.Graphics.UI.CUI.Console TextmodeConsole;
 
@@ -139,6 +141,11 @@ namespace Aura_OS
 
             CustomConsole.WriteLineInfo("Loading icons...");
             Files.LoadImages();
+
+            SkinParser = new SkinParsing();
+            SkinParser.loadSkin(File.ReadAllText("1:\\UI\\Themes\\Suave.skin.xml"));
+
+            global::System.Console.ReadKey();
 
             CustomConsole.WriteLineInfo("Starting package manager...");
             PackageManager = new PackageManager();

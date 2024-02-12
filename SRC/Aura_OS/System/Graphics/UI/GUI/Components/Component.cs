@@ -5,6 +5,7 @@
 */
 
 using Aura_OS.Core;
+using Aura_OS.System.Graphics.UI.GUI.Skin;
 using Aura_OS.System.Processing.Processes;
 using Cosmos.Core;
 using Cosmos.System;
@@ -91,6 +92,7 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
         public List<Component> Children { get; set; }
         public int zIndex { get; set; }
         public bool IsRoot { get; set; }
+        public Frame Frame { get; set; }
 
         private Rectangle _rectangle;
         private DirectBitmap _buffer;
@@ -118,7 +120,52 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
 
         public virtual void Draw()
         {
+            if (Frame != null)
+            {
+                foreach (Frame.Region region in Frame.Regions)
+                {
+                    Rectangle destRect = CalculateDestinationRect(region, Width, Height);
 
+                    _buffer.DrawImageRect(region.Texture, region.SourceRegion, destRect.Left, destRect.Top);
+                }
+            }
+        }
+
+        private Rectangle CalculateDestinationRect(Frame.Region region, int frameWidth, int frameHeight)
+        {
+            int x = 0, y = 0, width = region.SourceRegion.Width, height = region.SourceRegion.Height;
+
+            switch (region.HorizontalPlacement)
+            {
+                case "left":
+                    x = 0;
+                    break;
+                case "right":
+                    x = frameWidth - width;
+                    break;
+                case "center":
+                case "stretch":
+                    x = (frameWidth - width) / 2;
+                    width = frameWidth;
+                    break;
+            }
+
+            switch (region.VerticalPlacement)
+            {
+                case "top":
+                    y = 0;
+                    break;
+                case "bottom":
+                    y = frameHeight - height;
+                    break;
+                case "center":
+                case "stretch":
+                    y = (frameHeight - height) / 2;
+                    height = frameHeight;
+                    break;
+            }
+
+            return new Rectangle(x, y, width, height);
         }
 
         public void AddChild(Component child)

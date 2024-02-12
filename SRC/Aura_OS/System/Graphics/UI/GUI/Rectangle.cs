@@ -14,12 +14,23 @@ namespace Aura_OS.System.Graphics.UI.GUI
         public int Bottom;
         public int Right;
 
+        public int Width => Right - Left;
+        public int Height => Bottom - Top;
+
         public Rectangle(int top, int left, int bottom, int right)
         {
             Top = top;
             Left = left;
             Bottom = bottom;
             Right = right;
+        }
+
+        public Rectangle()
+        {
+            Top = 0;
+            Left = 0;
+            Bottom = 0;
+            Right = 0;
         }
 
         public static List<Rectangle> RectSplit(Rectangle subjectRect, Rectangle cuttingRect)
