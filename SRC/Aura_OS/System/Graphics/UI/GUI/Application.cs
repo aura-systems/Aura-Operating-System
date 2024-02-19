@@ -44,7 +44,16 @@ namespace Aura_OS.System.Graphics.UI.GUI
         private bool _lck = false;
         private bool _pressed;
         private bool _hasWindowMoving = false;
+
+        /// <summary>
+        /// Does window needs an update.
+        /// </summary>
         private bool _isDirty = true;
+
+        /// <summary>
+        /// Is base window buffer cached (only true after first draw or window size update).
+        /// </summary>
+        private bool _isCached = false;
 
         public Application(string name, int width, int height, int x = 0, int y = 0) : base(name, ProcessType.Program)
         {
@@ -182,7 +191,16 @@ namespace Aura_OS.System.Graphics.UI.GUI
 
         public virtual void Draw()
         {
-            Window.Draw();
+            if (_isCached)
+            {
+                Window.DrawCacheBuffer();
+            }
+            else
+            {
+                Window.Draw();
+                Window.SaveCacheBuffer();
+                _isCached = true;
+            }
         }
 
         public bool IsDirty()

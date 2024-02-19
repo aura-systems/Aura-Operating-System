@@ -96,6 +96,7 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
 
         private Rectangle _rectangle;
         private DirectBitmap _buffer;
+        private DirectBitmap _cacheBuffer;
         private bool _dirty;
         private bool _visible = true;
 
@@ -103,6 +104,7 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
         {
             _rectangle = new Rectangle(y, x, y + height, x + width);
             _buffer = new DirectBitmap(width, height);
+            _cacheBuffer = new DirectBitmap(width, height);
             _dirty = true;
             Visible = true;
             ForceDirty = false;
@@ -202,6 +204,16 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
         public Rectangle GetRectangle()
         {
             return _rectangle;
+        }
+
+        public void SaveCacheBuffer()
+        {
+            _cacheBuffer.DrawImage(_buffer.Bitmap, 0, 0);
+        }
+
+        public void DrawCacheBuffer()
+        {
+            _buffer.DrawImage(_cacheBuffer.Bitmap, 0, 0);
         }
 
         public Bitmap GetBuffer()
