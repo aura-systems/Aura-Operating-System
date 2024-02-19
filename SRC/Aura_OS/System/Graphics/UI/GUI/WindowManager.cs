@@ -115,7 +115,7 @@ namespace Aura_OS
 
         public void DrawWindows()
         {
-            ClipRects.Clear();
+            //ClipRects.Clear();
 
             InsertionSortByZIndex(System.Graphics.UI.GUI.Components.Component.Components);
 
@@ -150,6 +150,7 @@ namespace Aura_OS
                 }
             }
 
+            /*
             for (int i = 0; i < Explorer.WindowManager.ClipRects.Count; i++)
             {
                 var tempRect = Explorer.WindowManager.ClipRects[i];
@@ -157,7 +158,7 @@ namespace Aura_OS
                          tempRect.Right - tempRect.Left + 1,
                          tempRect.Bottom - tempRect.Top + 1);
             }
-
+            */
         }
 
         public void DrawComponentAndChildren(System.Graphics.UI.GUI.Components.Component component)

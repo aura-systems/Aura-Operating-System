@@ -88,18 +88,30 @@ that uses the theme, please give due credit to the original artist!
 			<text font="title" hplacement="left" vplacement="top" xoffset="8" yoffset="18" color="#ffffff" />
 		</frame>
 		
-		<frame name="window.minimize">
-			<region source="controls" hplacement="stretch" vplacement="stretch" x="45" y="1" w="15" h="14" />
+		<frame name="window.minimize.normal">
+			<region source="controls" hplacement="stretch" vplacement="stretch" x="44" y="1" w="15" h="14" />
 		</frame>
 
-		<frame name="window.maximize">
-			<region source="controls" hplacement="stretch" vplacement="stretch" x="61" y="1" w="15" h="14" />
+		<frame name="window.maximize.normal">
+			<region source="controls" hplacement="stretch" vplacement="stretch" x="60" y="1" w="15" h="14" />
 		</frame>
 
-		<frame name="window.close">
-			<region source="controls" hplacement="stretch" vplacement="stretch" x="77" y="1" w="15" h="14" />
+		<frame name="window.close.normal">
+			<region source="controls" hplacement="stretch" vplacement="stretch" x="76" y="1" w="15" h="14" />
 		</frame>
 
+		<frame name="window.minimize.highlighted">
+			<region source="controls" hplacement="stretch" vplacement="stretch" x="44" y="16" w="15" h="14" />
+		</frame>
+
+		<frame name="window.maximize.highlighted">
+			<region source="controls" hplacement="stretch" vplacement="stretch" x="60" y="16" w="15" h="14" />
+		</frame>
+
+		<frame name="window.close.highlighted">
+			<region source="controls" hplacement="stretch" vplacement="stretch" x="76" y="16" w="15" h="14" />
+		</frame>
+		
 		<!--
       Frame used for a label
     -->

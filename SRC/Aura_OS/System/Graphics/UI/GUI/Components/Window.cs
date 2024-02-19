@@ -5,6 +5,7 @@
 */
 
 using Aura_OS.System.Graphics.UI.GUI.Skin;
+using Cosmos.System;
 using Cosmos.System.Graphics;
 using Cosmos.System.Graphics.Fonts;
 using System.Drawing;
@@ -52,7 +53,7 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
             if (HasCloseButton)
             {
                 Close = new Button(ResourceManager.GetImage("16-close.bmp"), Width - 20, 5);
-                Close.Frame = Kernel.SkinParser.GetFrame("window.close");
+                Close.Frame = Kernel.SkinParser.GetFrame("window.close.normal");
                 Close.NoBackground = true;
                 Close.NoBorder = true;
                 Close.HasTransparency = true;
@@ -62,7 +63,7 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
             if (HasMinimizeButton)
             {
                 Minimize = new Button(ResourceManager.GetImage("16-minimize.bmp"), Width - 38, 5);
-                Minimize.Frame = Kernel.SkinParser.GetFrame("window.minimize");
+                Minimize.Frame = Kernel.SkinParser.GetFrame("window.minimize.normal");
                 Minimize.NoBackground = true;
                 Minimize.NoBorder = true;
                 Minimize.HasTransparency = true;
@@ -81,11 +82,33 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
             {
                 Close.X = X + Width - 20;
                 Close.Y = Y + 5;
+
+                /*
+                if (Close.IsInside((int)MouseManager.X, (int)MouseManager.Y))
+                {
+                    Close.Frame = Kernel.SkinParser.GetFrame("window.close.highlighted");
+                }
+                else
+                {
+                    Close.Frame = Kernel.SkinParser.GetFrame("window.close.normal");
+                }
+                */
             }
             if (HasMinimizeButton)
             {
                 Minimize.X = X + Width - 38;
                 Minimize.Y = Y + 5;
+
+                /*
+                if (Minimize.IsInside((int)MouseManager.X, (int)MouseManager.Y))
+                {
+                    Minimize.Frame = Kernel.SkinParser.GetFrame("window.minimize.highlighted");
+                }
+                else
+                {
+                    Minimize.Frame = Kernel.SkinParser.GetFrame("window.minimize.normal");
+                }
+                */
             }
         }
 

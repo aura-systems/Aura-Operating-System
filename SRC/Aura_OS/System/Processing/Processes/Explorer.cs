@@ -63,7 +63,7 @@ namespace Aura_OS.System.Processing.Processes
         {
             Taskbar.Update();
 
-            WindowManager.UpdateWindowStack();
+            //WindowManager.UpdateWindowStack();
             WindowManager.DrawWindows();
 
             if (ShowStartMenu)
