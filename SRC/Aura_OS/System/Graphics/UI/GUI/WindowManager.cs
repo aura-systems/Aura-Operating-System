@@ -88,7 +88,7 @@ namespace Aura_OS
 
         public void DrawWindows()
         {
-            //ClipRects.Clear();
+            ClipRects.Clear();
 
             InsertionSortByZIndex(System.Graphics.UI.GUI.Components.Component.Components);
 
@@ -100,7 +100,7 @@ namespace Aura_OS
                 {
                     component.Draw();
                     component.MarkCleaned();
-                    //System.Graphics.UI.GUI.Rectangle.AddClipRect(component.GetRectangle());
+                    System.Graphics.UI.GUI.Rectangle.AddClipRect(component.GetRectangle());
                 }
             }
 
@@ -123,7 +123,7 @@ namespace Aura_OS
                 }
             }
 
-            /*
+            
             for (int i = 0; i < Explorer.WindowManager.ClipRects.Count; i++)
             {
                 var tempRect = Explorer.WindowManager.ClipRects[i];
@@ -131,7 +131,7 @@ namespace Aura_OS
                          tempRect.Right - tempRect.Left + 1,
                          tempRect.Bottom - tempRect.Top + 1);
             }
-            */
+            
         }
 
         public void DrawComponentAndChildren(System.Graphics.UI.GUI.Components.Component component)
@@ -153,6 +153,7 @@ namespace Aura_OS
                 if (child.ForceDirty || child.IsDirty())
                 {
                     child.Draw(child.Parent);
+                    System.Graphics.UI.GUI.Rectangle.AddClipRect(child.GetRectangle());
                 }
             }
         }
