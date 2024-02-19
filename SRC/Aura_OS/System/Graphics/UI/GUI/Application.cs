@@ -247,11 +247,6 @@ namespace Aura_OS.System.Graphics.UI.GUI
             Window.DrawString(str, font, color, x + 5, y + Window.TopBar.Height + 5);
         }
 
-        public void DrawImageAlpha(Cosmos.System.Graphics.Bitmap image, int x, int y)
-        {
-            Window.DrawImageAlpha(image, x + 5, y + Window.TopBar.Height + 5);
-        }
-
         public void DrawImage(Cosmos.System.Graphics.Bitmap image, int x, int y)
         {
             Window.DrawImage(image, x + 5, y + Window.TopBar.Height + 5);

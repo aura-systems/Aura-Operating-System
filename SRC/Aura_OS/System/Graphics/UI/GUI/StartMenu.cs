@@ -42,8 +42,6 @@ namespace Aura_OS.System.Graphics.UI.GUI
             {
                 Power.Shutdown();
             });
-            Shutdown.HasTransparency = true;
-            Shutdown.NoBackground = true;
             AddChild(Shutdown);
 
             // Reboot
@@ -53,8 +51,6 @@ namespace Aura_OS.System.Graphics.UI.GUI
             {
                 Power.Reboot();
             });
-            Reboot.HasTransparency = true;
-            Reboot.NoBackground = true;
             AddChild(Reboot);
 
             // App buttons
@@ -84,8 +80,6 @@ namespace Aura_OS.System.Graphics.UI.GUI
                     Kernel.ApplicationManager.StartApplication(applicationConfig);
                     Explorer.ShowStartMenu = false;
                 });
-                button.HasTransparency = true;
-                button.NoBackground = true;
                 buttons.Add(button);
                 AddChild(button);
                 buttonY += 32;

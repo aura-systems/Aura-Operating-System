@@ -52,6 +52,10 @@ namespace Aura_OS.System.Graphics.UI.GUI
                     Bitmap.RawData[index] = colour;
                     return;
                 }
+                else if ((colour >> 24) == 0x00)
+                {
+                    return;
+                }
 
                 int bgColour = Bitmap.RawData[index];
                 int alpha = (colour >> 24) & 0xff;
@@ -63,7 +67,6 @@ namespace Aura_OS.System.Graphics.UI.GUI
                 Bitmap.RawData[index] = (0xFF << 24) | (newRed << 16) | (newGreen << 8) | newBlue;
             }
         }
-
 
         public int GetPixel(int x, int y)
         {

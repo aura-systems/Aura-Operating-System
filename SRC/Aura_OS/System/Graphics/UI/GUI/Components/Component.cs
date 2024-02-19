@@ -269,11 +269,6 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
             _buffer.DrawImage(image, x, y);
         }
 
-        public void DrawImageAlpha(Bitmap image, int x, int y)
-        {
-            _buffer.DrawImage(image, x, y);
-        }
-
         public void DrawGradient(Color color1, Color color2, int x, int y, int width, int height)
         {
             for (int i = 0; i < width; i++)
