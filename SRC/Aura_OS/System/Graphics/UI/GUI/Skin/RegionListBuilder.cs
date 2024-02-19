@@ -105,11 +105,14 @@ public class RegionListBuilder
                     Texture = bitmaps[source],
                     HorizontalPlacement = hplacement,
                     VerticalPlacement = vplacement,
+                    SourceRegion = new Rectangle()
                 };
                 region.SourceRegion.Left = int.Parse(x);
                 region.SourceRegion.Top = int.Parse(y);
                 region.SourceRegion.Right = int.Parse(x) + int.Parse(w);
                 region.SourceRegion.Bottom = int.Parse(y) + int.Parse(h);
+
+                regions.Add(region);
 
                 CustomConsole.WriteLineInfo("Left=" + region.SourceRegion.Left + " Top=" + region.SourceRegion.Top + " Right=" + region.SourceRegion.Right + " Bottom=" + region.SourceRegion.Bottom);
             }

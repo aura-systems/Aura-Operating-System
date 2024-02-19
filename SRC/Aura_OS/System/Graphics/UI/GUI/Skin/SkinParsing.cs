@@ -74,14 +74,14 @@ namespace Aura_OS.System.Graphics.UI.GUI.Skin
                 {
                     string name = node.GetAttribute("name").Value;
 
-                    if (name == "window")
+                    if (name.StartsWith("window"))
                     {
                         Frame.Region[] regions = RegionListBuilder.Build(node, bitmaps);
                         Frame.Text[] texts = null;
 
                         frames.Add(name, new Frame(regions, texts));
 
-                        CustomConsole.WriteLineOK("window added successfully!");
+                        CustomConsole.WriteLineOK(name + " added successfully!");
                     }
                 }
             }

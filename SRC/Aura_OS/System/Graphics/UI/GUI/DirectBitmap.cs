@@ -294,7 +294,6 @@ namespace Aura_OS.System.Graphics.UI.GUI
             }
         }
 
-
         public void DrawImage(Bitmap image, int x, int y)
         {
             if (image.Width == Bitmap.Width && image.Height == Bitmap.Height)
@@ -309,6 +308,27 @@ namespace Aura_OS.System.Graphics.UI.GUI
                     {
                         SetPixel(x + xi, y + yi, image.RawData[xi + (yi * image.Width)]);
                     }
+                }
+            }
+        }
+
+        public void DrawImageStretch(Bitmap image, Rectangle sourceRect, Rectangle destRect)
+        {
+            float scaleX = (float)sourceRect.Width / destRect.Width;
+            float scaleY = (float)sourceRect.Height / destRect.Height;
+
+            for (int xi = 0; xi < destRect.Width; xi++)
+            {
+                for (int yi = 0; yi < destRect.Height; yi++)
+                {
+                    int srcX = (int)(xi * scaleX) + sourceRect.Left;
+                    int srcY = (int)(yi * scaleY) + sourceRect.Top;
+
+                    srcX = Math.Min(srcX, sourceRect.Right - 1);
+                    srcY = Math.Min(srcY, sourceRect.Bottom - 1);
+
+                    int color = image.RawData[srcX + srcY * image.Width];
+                    SetPixel(destRect.Left + xi, destRect.Top + yi, color);
                 }
             }
         }

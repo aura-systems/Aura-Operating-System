@@ -71,6 +71,12 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
 
         public override void Draw()
         {
+            if (Frame != null)
+            {
+                base.Draw();
+                return;
+            }
+
             if (!NoBorder && Light)
             {
                 if (!NoBackground)

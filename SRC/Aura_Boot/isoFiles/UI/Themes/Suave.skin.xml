@@ -87,6 +87,18 @@ that uses the theme, please give due credit to the original artist!
 			<region source="controls" hplacement="right" vplacement="bottom" x="38" y="43" w="5" h="4" id="border-se" />
 			<text font="title" hplacement="left" vplacement="top" xoffset="8" yoffset="18" color="#ffffff" />
 		</frame>
+		
+		<frame name="window.minimize">
+			<region source="controls" hplacement="stretch" vplacement="stretch" x="45" y="1" w="15" h="14" />
+		</frame>
+
+		<frame name="window.maximize">
+			<region source="controls" hplacement="stretch" vplacement="stretch" x="61" y="1" w="15" h="14" />
+		</frame>
+
+		<frame name="window.close">
+			<region source="controls" hplacement="stretch" vplacement="stretch" x="77" y="1" w="15" h="14" />
+		</frame>
 
 		<!--
       Frame used for a label

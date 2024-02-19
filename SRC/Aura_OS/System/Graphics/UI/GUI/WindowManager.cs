@@ -131,17 +131,6 @@ namespace Aura_OS
                 }
             }
 
-            /*
-            foreach (Application app in Applications)
-            {
-                if (app.IsDirty())
-                {
-                    app.Draw();
-                    app.MarkCleaned();
-                }
-            }
-            */
-
             foreach (Application app in Applications)
             {
                 if ((app.Running && app.Visible) && (app.IsDirty() || app.ForceDirty))

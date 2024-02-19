@@ -41,7 +41,10 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
 
             if (HasBorders)
             {
-                TopBar = new Panel(Kernel.DarkBlue, Kernel.Pink, 3, 3, Width - 5, 18);
+                TopBar = new Panel(Color.Transparent, 3, 3, Width - 5, 18);
+                TopBar.Background = false;
+                TopBar.Borders = false;
+                TopBar.HasTransparency = true;
                 TopBar.Text = name;
                 AddChild(TopBar);
             }
@@ -49,6 +52,7 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
             if (HasCloseButton)
             {
                 Close = new Button(ResourceManager.GetImage("16-close.bmp"), Width - 20, 5);
+                Close.Frame = Kernel.SkinParser.GetFrame("window.close");
                 Close.NoBackground = true;
                 Close.NoBorder = true;
                 Close.HasTransparency = true;
@@ -58,6 +62,7 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
             if (HasMinimizeButton)
             {
                 Minimize = new Button(ResourceManager.GetImage("16-minimize.bmp"), Width - 38, 5);
+                Minimize.Frame = Kernel.SkinParser.GetFrame("window.minimize");
                 Minimize.NoBackground = true;
                 Minimize.NoBorder = true;
                 Minimize.HasTransparency = true;
@@ -86,9 +91,12 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
 
         public override void Draw()
         {
-            base.Draw();
+            if (Frame != null)
+            {
+                base.Draw();
+                return;
+            }
 
-            /*
             Clear();
 
             DrawLine(Kernel.Gray, 0, 0, Width - 1, 0); // Top
@@ -117,7 +125,6 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
                     Minimize.Draw();
                 }
             }
-            */
         }
     }
 }

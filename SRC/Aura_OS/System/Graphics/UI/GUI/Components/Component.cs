@@ -120,13 +120,33 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
 
         public virtual void Draw()
         {
-            if (Frame != null)
+            if (Frame != null && Frame.Regions.Length > 0)
             {
                 foreach (Frame.Region region in Frame.Regions)
                 {
-                    Rectangle destRect = CalculateDestinationRect(region, Width, Height);
+                    if (region.HorizontalPlacement == "stretch" && region.VerticalPlacement == "stretch")
+                    {
+                        Rectangle destRect = CalculateDestinationRect(region, Width, Height);
+                        _buffer.DrawImageStretch(region.Texture, region.SourceRegion, destRect);
+                    }
+                }
 
-                    _buffer.DrawImageRect(region.Texture, region.SourceRegion, destRect.Left, destRect.Top);
+                foreach (Frame.Region region in Frame.Regions)
+                {
+                    if (region.HorizontalPlacement == "stretch" ^ region.VerticalPlacement == "stretch")
+                    {
+                        Rectangle destRect = CalculateDestinationRect(region, Width, Height);
+                        _buffer.DrawImageStretch(region.Texture, region.SourceRegion, destRect);
+                    }
+                }
+
+                foreach (Frame.Region region in Frame.Regions)
+                {
+                    if (region.HorizontalPlacement != "stretch" && region.VerticalPlacement != "stretch")
+                    {
+                        Rectangle destRect = CalculateDestinationRect(region, Width, Height);
+                        _buffer.DrawImageStretch(region.Texture, region.SourceRegion, destRect);
+                    }
                 }
             }
         }
@@ -144,8 +164,10 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
                     x = frameWidth - width;
                     break;
                 case "center":
-                case "stretch":
                     x = (frameWidth - width) / 2;
+                    break;
+                case "stretch":
+                    x = 0;
                     width = frameWidth;
                     break;
             }
@@ -159,13 +181,15 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
                     y = frameHeight - height;
                     break;
                 case "center":
-                case "stretch":
                     y = (frameHeight - height) / 2;
+                    break;
+                case "stretch":
+                    y = 0;
                     height = frameHeight;
                     break;
             }
 
-            return new Rectangle(x, y, width, height);
+            return new Rectangle(y, x, y + height, x + width);
         }
 
         public void AddChild(Component child)
