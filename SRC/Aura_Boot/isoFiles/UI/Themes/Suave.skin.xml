@@ -94,29 +94,42 @@ that uses the theme, please give due credit to the original artist!
 			<region source="controls" hplacement="right" vplacement="bottom" x="38" y="43" w="5" h="4" id="border-se" />
 			<text font="title" hplacement="left" vplacement="top" xoffset="8" yoffset="18" color="#ffffff" />
 		</frame>
+
+		<frame name="window.borderless">
+			<region source="controls" hplacement="left" vplacement="top" x="92" y="74" w="4" h="4" />
+			<region source="controls" hplacement="stretch" vplacement="top" x="96" y="74" w="32" h="4" />
+			<region source="controls" hplacement="right" vplacement="top" x="129" y="74" w="4" h="4" />
+			<region source="controls" hplacement="left" vplacement="stretch" x="92" y="78" w="4" h="18" id="border-w" />
+			<region source="controls" hplacement="stretch" vplacement="stretch" x="96" y="78" w="32" h="18" id="client" />
+			<region source="controls" hplacement="right" vplacement="stretch" x="130" y="78" w="4" h="18" id="border-e" />
+			<region source="controls" hplacement="left" vplacement="bottom" x="92" y="96" w="4" h="4" id="border-sw" />
+			<region source="controls" hplacement="stretch" vplacement="bottom" x="96" y="96" w="32" h="4" id="border-s" />
+			<region source="controls" hplacement="right" vplacement="bottom" x="130" y="96" w="4" h="4" id="border-se" />
+			<text font="title" hplacement="left" vplacement="top" xoffset="8" yoffset="18" color="#ffffff" />
+		</frame>
 		
 		<frame name="window.minimize.normal">
-			<region source="controls" hplacement="stretch" vplacement="stretch" x="44" y="1" w="15" h="14" />
+			<region source="controls" hplacement="stretch" vplacement="stretch" x="44" y="1" w="14" h="14" />
 		</frame>
 
 		<frame name="window.maximize.normal">
-			<region source="controls" hplacement="stretch" vplacement="stretch" x="60" y="1" w="15" h="14" />
+			<region source="controls" hplacement="stretch" vplacement="stretch" x="60" y="1" w="14" h="14" />
 		</frame>
 
 		<frame name="window.close.normal">
-			<region source="controls" hplacement="stretch" vplacement="stretch" x="76" y="1" w="15" h="14" />
+			<region source="controls" hplacement="stretch" vplacement="stretch" x="76" y="1" w="14" h="14" />
 		</frame>
 
 		<frame name="window.minimize.highlighted">
-			<region source="controls" hplacement="stretch" vplacement="stretch" x="44" y="16" w="15" h="14" />
+			<region source="controls" hplacement="stretch" vplacement="stretch" x="44" y="16" w="14" h="14" />
 		</frame>
 
 		<frame name="window.maximize.highlighted">
-			<region source="controls" hplacement="stretch" vplacement="stretch" x="60" y="16" w="15" h="14" />
+			<region source="controls" hplacement="stretch" vplacement="stretch" x="60" y="16" w="14" h="14" />
 		</frame>
 
 		<frame name="window.close.highlighted">
-			<region source="controls" hplacement="stretch" vplacement="stretch" x="76" y="16" w="15" h="14" />
+			<region source="controls" hplacement="stretch" vplacement="stretch" x="76" y="16" w="14" h="14" />
 		</frame>
 		
 		<!--

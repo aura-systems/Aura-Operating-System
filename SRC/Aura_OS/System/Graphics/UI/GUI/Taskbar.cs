@@ -51,7 +51,7 @@ namespace Aura_OS.System.Graphics.UI.GUI
             int startButtonY = (int)Kernel.screenHeight - startButtonHeight - 3;
             StartButton = new Button(ResourceManager.GetImage("00-start.bmp"), "Start", startButtonX, startButtonY, startButtonWidth, startButtonHeight);
             StartButton.HasTransparency = true;
-            StartButton.Frame = Kernel.SkinParser.GetFrame("button.normal");
+            StartButton.Frame = Kernel.SkinParser.GetFrame("button.disabled");
             AddChild(StartButton);
 
             // Hour button
@@ -61,6 +61,7 @@ namespace Aura_OS.System.Graphics.UI.GUI
             int hourButtonX = (int)(Kernel.screenWidth - time.Length * (Kernel.font.Width + 1) - 2);
             int hourButtonY = (int)Kernel.screenHeight - 28 - 3;
             HourButton = new HourButton(time, hourButtonX, hourButtonY, hourButtonWidth, hourButtonHeight);
+            HourButton.Frame = Kernel.SkinParser.GetFrame("button.disabled");
             AddChild(HourButton);
 
             // Network icon
@@ -132,7 +133,7 @@ namespace Aura_OS.System.Graphics.UI.GUI
             {
                 var spacing = app.Name.Length * 9 + (int)app.Window.Icon.Width;
                 var button = new Button(app.Window.Icon, app.Name, buttonX, (int)Kernel.screenHeight - 28 - 3, spacing, 28);
-                button.Frame = Kernel.SkinParser.GetFrame("button.normal");
+                button.Frame = Kernel.SkinParser.GetFrame("button.disabled");
 
                 Buttons.Add(app.Name, button);
 

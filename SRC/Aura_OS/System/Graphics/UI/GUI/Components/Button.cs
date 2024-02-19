@@ -100,12 +100,6 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
 
                     DrawString(Text, Kernel.font, TextColor, textX, textY);
                 }
-                else if (Image != null)
-                {
-                    int imageX =(Width / 2 - (int)Image.Width / 2);
-                    int imageY =(Height / 2 - (int)Image.Height / 2);
-                    DrawImageAlpha(Image, imageX, imageY);
-                }
 
                 return;
             }

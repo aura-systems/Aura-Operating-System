@@ -27,6 +27,8 @@ namespace Aura_OS.System.Graphics.UI.GUI
 
         public StartMenu(int x, int y, int width, int height) : base(x, y, width, height)
         {
+            Frame = Kernel.SkinParser.GetFrame("window.borderless");
+
             Logo = Kernel.AuraLogo2;
             buttons = new List<Button>();
 
