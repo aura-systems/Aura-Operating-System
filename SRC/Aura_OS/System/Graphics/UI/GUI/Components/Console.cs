@@ -185,6 +185,8 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
 
         private void Scroll()
         {
+            Clear(Color.Black);
+
             Cell[] lineToHistory = new Cell[mCols];
             Array.Copy(_text, 0, lineToHistory, 0, mCols);
             _terminalHistory.Add(lineToHistory);

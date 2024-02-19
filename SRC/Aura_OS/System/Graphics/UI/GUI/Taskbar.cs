@@ -71,7 +71,6 @@ namespace Aura_OS.System.Graphics.UI.GUI
             int networkButtonY = (int)Kernel.screenHeight - 25;
             NetworkButton = new Button(ResourceManager.GetImage("16-network-offline.bmp"), netoworkButtonX, networkButtonY, networkButtonWidth, networkButtonHeight);
             NetworkButton.NoBorder = true;
-            NetworkButton.HasTransparency = true;
             AddChild(NetworkButton);
 
             Buttons = new Dictionary<string, Button>();
