@@ -44,33 +44,6 @@ namespace Aura_OS
             return topZIndex;
         }
 
-        public void UpdateWindowStack()
-        {
-            if (_isDirty)
-            {
-                InsertionSort(Applications);
-                _isDirty = false;
-            }
-        }
-
-        private void InsertionSort(List<Application> apps)
-        {
-            for (int i = 1; i < apps.Count; i++)
-            {
-                Application currentApp = apps[i];
-                int j = i - 1;
-
-                while (j >= 0 && apps[j].zIndex > currentApp.zIndex)
-                {
-                    apps[j + 1] = apps[j];
-                    j = j - 1;
-                }
-                apps[j + 1] = currentApp;
-            }
-
-            UpdateFocusStatus();
-        }
-
         public void UpdateFocusStatus()
         {
             for (int i = 0; i < Applications.Count; i++)
@@ -165,7 +138,6 @@ namespace Aura_OS
         {
             if (!component.Visible) return;
 
-            // Dessiner le composant actuel
             if (component.HasTransparency)
             {
                 Kernel.Canvas.DrawImageAlpha(component.GetBuffer(), component.X, component.Y);
@@ -175,10 +147,9 @@ namespace Aura_OS
                 Kernel.Canvas.DrawImage(component.GetBuffer(), component.X, component.Y);
             }
 
-            // Dessiner récursivement tous les enfants
             foreach (var child in component.Children)
             {
-                DrawComponentAndChildren(child);
+                // DrawComponentAndChildren(child);
             }
         }
 

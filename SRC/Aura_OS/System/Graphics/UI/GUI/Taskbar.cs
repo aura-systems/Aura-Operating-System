@@ -134,6 +134,7 @@ namespace Aura_OS.System.Graphics.UI.GUI
                 var button = new Button(app.Window.Icon, app.Name, buttonX, (int)Kernel.screenHeight - 28 - 3, spacing, 28);
                 button.Frame = Kernel.SkinParser.GetFrame("button.disabled");
 
+                Children.Add(button);
                 Buttons.Add(app.Name, button);
 
                 buttonX += spacing + 4;
