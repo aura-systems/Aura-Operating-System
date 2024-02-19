@@ -4,18 +4,13 @@
 * PROGRAMMERS:      Valentin Charbonnier <valentinbreiz@gmail.com>
 */
 
-using Aura_OS.Core;
 using Aura_OS.System.Graphics.UI.GUI.Skin;
 using Aura_OS.System.Processing.Processes;
-using Cosmos.Core;
 using Cosmos.System;
 using Cosmos.System.Graphics;
 using Cosmos.System.Graphics.Fonts;
-using JZero.Model;
-using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
 
 namespace Aura_OS.System.Graphics.UI.GUI.Components
 {
@@ -89,6 +84,7 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
         public bool ForceDirty { get; set; }
         public bool HasTransparency { get; set; }
         public RightClick RightClick { get; set; }
+        public Component Parent { get; set; }
         public List<Component> Children { get; set; }
         public int zIndex { get; set; }
         public bool IsRoot { get; set; }
@@ -153,6 +149,12 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
             }
         }
 
+        public virtual void Draw(Component component)
+        {
+            Draw();
+            component._buffer.DrawImage(GetBuffer(), X, Y);
+        }
+
         private Rectangle CalculateDestinationRect(Frame.Region region, int frameWidth, int frameHeight)
         {
             int x = 0, y = 0, width = region.SourceRegion.Width, height = region.SourceRegion.Height;
@@ -196,6 +198,7 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
 
         public void AddChild(Component child)
         {
+            child.Parent = this;
             child.zIndex = zIndex + 1 + Children.Count;
             child.IsRoot = false;
             Children.Add(child);
@@ -327,7 +330,14 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
 
         public bool IsInside(int x, int y)
         {
-            return x >= X && x <= X + Width && y >= Y && y <= Y + Height;
+            if (IsRoot)
+            {
+                return x >= X && x <= X + Width && y >= Y && y <= Y + Height;
+            }
+            else
+            {  
+                return x >= Parent.X + X && x <= Parent.X + X + Width && y >= Parent.Y + Y && y <= Parent.Y + Y + Height;
+            }
         }
 
         public virtual bool IsDirty()

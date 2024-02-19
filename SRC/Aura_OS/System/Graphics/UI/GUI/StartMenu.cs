@@ -11,7 +11,6 @@ using System.Drawing;
 using Cosmos.System;
 using Aura_OS.System.Graphics.UI.GUI.Components;
 using Aura_OS.System.Processing.Processes;
-using JZero.Model;
 
 namespace Aura_OS.System.Graphics.UI.GUI
 {
@@ -33,11 +32,11 @@ namespace Aura_OS.System.Graphics.UI.GUI
             buttons = new List<Button>();
 
             // Ribbon
-            Ribbon = new Panel(Kernel.DarkBlue, X + 1, Y + 1, 26, height - 5);
+            Ribbon = new Panel(Kernel.DarkBlue, 3, 3, 23, height - 3);
             AddChild(Ribbon);
 
             // Shutdown
-            Shutdown = new Button(ResourceManager.GetImage("24-shutdown.bmp"), "Shut Down.", X + 1 + Ribbon.Width, Y + Height - 32 - 4, Width - Ribbon.Width - 3, 35);
+            Shutdown = new Button(ResourceManager.GetImage("24-shutdown.bmp"), "Shut Down.", 3 + Ribbon.Width, Height - 32 - 4, Width - Ribbon.Width - 3, 35);
             Shutdown.NoBorder = true;
             Shutdown.Click = new Action(() =>
             {
@@ -48,7 +47,7 @@ namespace Aura_OS.System.Graphics.UI.GUI
             AddChild(Shutdown);
 
             // Reboot
-            Reboot = new Button(ResourceManager.GetImage("24-reboot.bmp"), "Reboot.", X + 1 + Ribbon.Width, Y + Height - 64 - 4, Width - Ribbon.Width - 3, 35);
+            Reboot = new Button(ResourceManager.GetImage("24-reboot.bmp"), "Reboot.", 3 + Ribbon.Width, Height - 64 - 4, Width - Ribbon.Width - 3, 35);
             Reboot.NoBorder = true;
             Reboot.Click = new Action(() =>
             {
@@ -78,7 +77,7 @@ namespace Aura_OS.System.Graphics.UI.GUI
                     icon = ResourceManager.GetImage("24-program.bmp");
                 }
 
-                var button = new Button(icon, applicationConfig.Template.Name, X + 1 + Ribbon.Width, Y + buttonY + 1, Width - Ribbon.Width - 3, 35);
+                var button = new Button(icon, applicationConfig.Template.Name, 3 + Ribbon.Width, 3 +  buttonY + 1, Width - Ribbon.Width - 3, 35);
                 button.NoBorder = true;
                 button.Click = new Action(() =>
                 {
@@ -98,10 +97,6 @@ namespace Aura_OS.System.Graphics.UI.GUI
         public override void Update()
         {
             base.Update();
-
-            Ribbon.X = X + 3;
-            Ribbon.Y = Y + 3;
-            Ribbon.Update();
 
             // Applications buttons
             foreach (var button in buttons)
@@ -164,16 +159,17 @@ namespace Aura_OS.System.Graphics.UI.GUI
         {
             base.Draw();
 
-            Ribbon.Draw();
-            DrawImage(Logo, 0 + 5, 0 + Height - 66);
+            Ribbon.Draw(this);
+
+            DrawImage(Logo, 5, Ribbon.Height - 66);
 
             foreach (var button in buttons)
             {
-                button.Draw();
+                button.Draw(this);
             }
 
-            Shutdown.Draw();
-            Reboot.Draw();
+            Shutdown.Draw(this);
+            Reboot.Draw(this);
         }
 
         private void HandleClick()

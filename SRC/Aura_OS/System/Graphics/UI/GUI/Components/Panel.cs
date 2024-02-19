@@ -6,8 +6,6 @@
 
 using Cosmos.System.Graphics.Fonts;
 using System.Drawing;
-using System.Xml.Linq;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace Aura_OS.System.Graphics.UI.GUI.Components
 {
@@ -19,12 +17,12 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
         public bool Background = true;
         public string Text = "";
 
-        public Panel(Color color, int x, int y, int width, int height) : base(0, y, width, height)
+        public Panel(Color color, int x, int y, int width, int height) : base(x, y, width, height)
         {
             Color1 = color;
         }
 
-        public Panel(Color color1, Color color2, int x, int y, int width, int height) : base(0, y, width, height)
+        public Panel(Color color1, Color color2, int x, int y, int width, int height) : base(x, y, width, height)
         {
             Color1 = color1;
             Color2 = color2;

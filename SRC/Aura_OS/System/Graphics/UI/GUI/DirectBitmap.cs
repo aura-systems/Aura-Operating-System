@@ -281,11 +281,6 @@ namespace Aura_OS.System.Graphics.UI.GUI
             y2 = (int)num4;
         }
 
-        public int GetPointOffset(int x, int y)
-        {
-            return (x * Stride) + (y * Pitch);
-        }
-
         public void DrawImage(Bitmap image, int x, int y)
         {
             if (image.Width == Bitmap.Width && image.Height == Bitmap.Height)

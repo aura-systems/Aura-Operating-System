@@ -208,7 +208,7 @@ namespace Aura_OS.System.Graphics.UI.GUI
             return _isDirty;
         }
 
-        public void MarkDirty()
+        public virtual void MarkDirty()
         {
             _isDirty = true;
             Window.MarkDirty();

@@ -75,6 +75,7 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
 
         public override void Update()
         {
+            /*
             if (HasBorders)
             {
                 TopBar.X = X + 3;
@@ -94,7 +95,7 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
                 {
                     Close.Frame = Kernel.SkinParser.GetFrame("window.close.normal");
                 }
-                */
+                
             }
             if (HasMinimizeButton)
             {
@@ -110,44 +111,27 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
                 {
                     Minimize.Frame = Kernel.SkinParser.GetFrame("window.minimize.normal");
                 }
-                */
+                
             }
+            */
         }
 
         public override void Draw()
         {
-            if (Frame != null)
-            {
-                base.Draw();
-                return;
-            }
-
-            Clear();
-
-            DrawLine(Kernel.Gray, 0, 0, Width - 1, 0); // Top
-            DrawLine(Kernel.WhiteColor, 0, 0 + 1, Width - 1, 0 + 1);
-
-            DrawLine(Kernel.Gray, 0, 0, 0, Height - 1); // Left
-            DrawLine(Kernel.WhiteColor, 0 + 1, 0, 0 + 1, Height - 1);
-
-            DrawLine(Kernel.DarkGray, 0, Height - 1, Width - 1, Height - 1); // Bottom
-            DrawLine(Kernel.BlackColor, 0, Height, Width, Height);
-
-            DrawLine(Kernel.DarkGray, Width - 1, 0, Width - 1, Height - 1); // Right
-            DrawLine(Kernel.BlackColor, Width, 0, Width, Height);
+            base.Draw();
 
             if (HasBorders)
             {
-                TopBar.Draw();
+                TopBar.Draw(this);
 
                 if (HasCloseButton)
                 {
-                    Close.Draw();
+                    Close.Draw(this);
                 }
 
                 if (HasMinimizeButton)
                 {
-                    Minimize.Draw();
+                    Minimize.Draw(this);
                 }
             }
         }

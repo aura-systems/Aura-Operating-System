@@ -48,7 +48,7 @@ namespace Aura_OS.System.Graphics.UI.GUI
             int startButtonWidth = 70;
             int startButtonHeight = 28;
             int startButtonX = 2;
-            int startButtonY = (int)Kernel.screenHeight - startButtonHeight - 3;
+            int startButtonY = 2;
             StartButton = new Button(ResourceManager.GetImage("00-start.bmp"), "Start", startButtonX, startButtonY, startButtonWidth, startButtonHeight);
             StartButton.HasTransparency = true;
             StartButton.Frame = Kernel.SkinParser.GetFrame("button.disabled");
@@ -148,7 +148,7 @@ namespace Aura_OS.System.Graphics.UI.GUI
             // Taskbar
             //DrawLine(Kernel.WhiteColor, 0, 0, (int)Kernel.screenWidth + 10, 1); TODO
             //DrawFilledRectangle(Kernel.Gray, 0, startY + 1, (int)Kernel.screenWidth, taskbarHeight - 1);
-            StartButton.Draw();
+            StartButton.Draw(this);
 
             // Notifications
             DrawNotifications();

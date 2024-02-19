@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using Aura_OS.System.Graphics;
 using Aura_OS.System.Graphics.UI.GUI;
 using Aura_OS.System.Processing.Interpreter.Commands;
+using Aura_OS.System.Graphics.UI.GUI.Components;
 
 namespace Aura_OS.System.Processing.Applications.Terminal
 {
@@ -38,7 +39,7 @@ namespace Aura_OS.System.Processing.Applications.Terminal
             _command = string.Empty;
             _writer = new TerminalTextWriter(this);
 
-            Console = new(x, y, width - 7, height - Window.TopBar.Height - 9);
+            Console = new(4, Window.TopBar.Height + 6, width - 7, height - Window.TopBar.Height - 9);
             AddChild(Console);
 
             BeforeCommand();
@@ -49,9 +50,6 @@ namespace Aura_OS.System.Processing.Applications.Terminal
         public override void Update()
         {
             base.Update();
-
-            Console.X = X + 1;
-            Console.Y = Y + 3;
 
             if (Focused)
             {
@@ -164,7 +162,7 @@ namespace Aura_OS.System.Processing.Applications.Terminal
         {
             base.Draw();
 
-            Console.Draw();
+            Console.Draw(Window);
 
             if (!Console.ScrollMode)
             {
