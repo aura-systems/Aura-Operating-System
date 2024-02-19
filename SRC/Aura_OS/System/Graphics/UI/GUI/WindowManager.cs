@@ -127,7 +127,7 @@ namespace Aura_OS
                 {
                     component.Draw();
                     component.MarkCleaned();
-                    System.Graphics.UI.GUI.Rectangle.AddClipRect(component.GetRectangle());
+                    //System.Graphics.UI.GUI.Rectangle.AddClipRect(component.GetRectangle());
                 }
             }
 
