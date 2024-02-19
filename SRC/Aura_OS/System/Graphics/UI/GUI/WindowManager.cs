@@ -147,12 +147,14 @@ namespace Aura_OS
                 Kernel.Canvas.DrawImage(component.GetBuffer(), component.X, component.Y);
             }
 
-            /*
+            
             foreach (var child in component.Children)
             {
-                //DrawComponentAndChildren(child);
+                if (child.ForceDirty || child.IsDirty())
+                {
+                    child.Draw(child.Parent);
+                }
             }
-            */
         }
 
         public void DrawRect(int x, int y, int width, int height)

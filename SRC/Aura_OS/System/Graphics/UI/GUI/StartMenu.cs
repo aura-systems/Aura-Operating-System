@@ -32,7 +32,7 @@ namespace Aura_OS.System.Graphics.UI.GUI
             buttons = new List<Button>();
 
             // Ribbon
-            Ribbon = new Panel(Kernel.DarkBlue, 3, 3, 23, height - 3);
+            Ribbon = new Panel(Kernel.DarkBlue, 3, 3, 23, height - 6);
             AddChild(Ribbon);
 
             // Shutdown

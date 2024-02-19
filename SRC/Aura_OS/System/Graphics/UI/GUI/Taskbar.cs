@@ -59,7 +59,7 @@ namespace Aura_OS.System.Graphics.UI.GUI
             int hourButtonWidth = time.Length * (Kernel.font.Width + 1);
             int hourButtonHeight = 28;
             int hourButtonX = (int)(Kernel.screenWidth - time.Length * (Kernel.font.Width + 1) - 2);
-            int hourButtonY = (int)Kernel.screenHeight - 28 - 3;
+            int hourButtonY = 2;
             HourButton = new HourButton(time, hourButtonX, hourButtonY, hourButtonWidth, hourButtonHeight);
             HourButton.Frame = Kernel.SkinParser.GetFrame("button.disabled");
             AddChild(HourButton);
@@ -68,7 +68,7 @@ namespace Aura_OS.System.Graphics.UI.GUI
             int networkButtonWidth = 16;
             int networkButtonHeight = 16;
             int netoworkButtonX = (int)(Kernel.screenWidth - time.Length * (Kernel.font.Width + 1) - 2) - 20;
-            int networkButtonY = (int)Kernel.screenHeight - 25;
+            int networkButtonY = (taskbarHeight / 2) - (networkButtonHeight / 2);
             NetworkButton = new Button(ResourceManager.GetImage("16-network-offline.bmp"), netoworkButtonX, networkButtonY, networkButtonWidth, networkButtonHeight);
             NetworkButton.NoBorder = true;
             AddChild(NetworkButton);
@@ -173,7 +173,7 @@ namespace Aura_OS.System.Graphics.UI.GUI
                     application.Window.TopBar.Color1 = Kernel.DarkGray;
                 }
 
-                Buttons[application.Name].Draw();
+                Buttons[application.Name].Draw(this);
             }
         }
 
@@ -195,7 +195,7 @@ namespace Aura_OS.System.Graphics.UI.GUI
                 }
             }
 
-            NetworkButton.Draw();
+            NetworkButton.Draw(this);
         }
     }
 }
