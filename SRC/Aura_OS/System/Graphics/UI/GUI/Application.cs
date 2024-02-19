@@ -216,27 +216,27 @@ namespace Aura_OS.System.Graphics.UI.GUI
 
         public void DrawLine(Color color, int xStart, int yStart, int width, int height)
         {
-            Window.DrawLine(color, xStart, yStart, width, height);
+            Window.DrawLine(color, xStart + 5, yStart + Window.TopBar.Height + 5, width, height);
         }
 
         public void DrawString(string str, int x, int y)
         {
-            Window.DrawString(str, x + 4, y + Window.TopBar.Height + 3);
+            Window.DrawString(str, x + 5, y + Window.TopBar.Height + 5);
         }
 
         public void DrawString(string str, Cosmos.System.Graphics.Fonts.Font font, Color color, int x, int y)
         {
-            Window.DrawString(str, font, color, x + 4, y + Window.TopBar.Height + 3);
+            Window.DrawString(str, font, color, x + 5, y + Window.TopBar.Height + 5);
         }
 
         public void DrawImageAlpha(Cosmos.System.Graphics.Bitmap image, int x, int y)
         {
-            Window.DrawImageAlpha(image, x, y);
+            Window.DrawImageAlpha(image, x + 5, y + Window.TopBar.Height + 5);
         }
 
         public void DrawImage(Cosmos.System.Graphics.Bitmap image, int x, int y)
         {
-            Window.DrawImage(image, x, y);
+            Window.DrawImage(image, x + 5, y + Window.TopBar.Height + 5);
         }
     }
 }

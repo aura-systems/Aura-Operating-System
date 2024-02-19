@@ -73,6 +73,13 @@ that uses the theme, please give due credit to the original artist!
 	<frames>
 
 		<!--
+      Frame used to draw the mouse cursor
+    -->
+		<frame name="cursor">
+			<region source="controls" hplacement="stretch" vplacement="stretch" x="1" y="168" w="12" h="18" />
+		</frame>
+		
+		<!--
       Frame used to draw a normal window
     -->
 		<frame name="window">

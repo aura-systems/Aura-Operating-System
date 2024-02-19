@@ -38,7 +38,7 @@ namespace Aura_OS.System.Processing.Applications.Terminal
             _command = string.Empty;
             _writer = new TerminalTextWriter(this);
 
-            Console = new(x, y, width - 4, height - Window.TopBar.Height - 4);
+            Console = new(x, y, width - 2, height - Window.TopBar.Height - 2);
             AddChild(Console);
 
             BeforeCommand();
@@ -50,8 +50,8 @@ namespace Aura_OS.System.Processing.Applications.Terminal
         {
             base.Update();
 
-            Console.X = X;
-            Console.Y = Y;
+            Console.X = X + 1;
+            Console.Y = Y + 1;
 
             if (Focused)
             {
