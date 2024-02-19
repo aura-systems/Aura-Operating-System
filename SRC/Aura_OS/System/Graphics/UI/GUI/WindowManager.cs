@@ -110,6 +110,7 @@ namespace Aura_OS
                 {
                     app.Draw();
                     app.MarkCleaned();
+                    System.Graphics.UI.GUI.Rectangle.AddClipRect(app.Window.GetRectangle());
                 }
             }
 
