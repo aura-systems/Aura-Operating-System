@@ -211,13 +211,11 @@ namespace Aura_OS.System.Graphics.UI.GUI
         public virtual void MarkDirty()
         {
             _isDirty = true;
-            Window.MarkDirty();
         }
 
         public void MarkCleaned()
         {
             _isDirty = false;
-            Window.MarkCleaned();
         }
 
         public void AddChild(Component component)
