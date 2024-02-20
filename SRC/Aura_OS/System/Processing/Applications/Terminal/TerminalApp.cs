@@ -12,6 +12,7 @@ using Aura_OS.System.Graphics;
 using Aura_OS.System.Graphics.UI.GUI;
 using Aura_OS.System.Processing.Interpreter.Commands;
 using Aura_OS.System.Graphics.UI.GUI.Components;
+using Aura_OS.System.Processing.Processes;
 
 namespace Aura_OS.System.Processing.Applications.Terminal
 {
@@ -94,6 +95,7 @@ namespace Aura_OS.System.Processing.Applications.Terminal
                             BeforeCommand();
 
                             MarkDirty();
+
                             break;
                         case ConsoleKeyEx.Backspace:
                             if (Console.ScrollMode)
@@ -162,7 +164,7 @@ namespace Aura_OS.System.Processing.Applications.Terminal
         {
             base.Draw();
 
-            Console.Draw(Window);
+            Console.Draw();
 
             if (!Console.ScrollMode)
             {
@@ -178,6 +180,14 @@ namespace Aura_OS.System.Processing.Applications.Terminal
 
                 Console.DrawCursor();
             }
+
+            Console.DrawInParent();
+        }
+
+        public override void MarkDirty()
+        {
+            base.MarkDirty();
+            Console.MarkDirty();
         }
 
         public void ActivateRedirection()

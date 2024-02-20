@@ -10,20 +10,22 @@ using System.Drawing;
 using Aura_OS.System.Graphics.UI.GUI;
 using Aura_OS.System.Graphics.UI.GUI.Components;
 using Aura_OS.System.Processing.Processes;
+using Rectangle = Aura_OS.System.Graphics.UI.GUI.Rectangle;
+using Component = Aura_OS.System.Graphics.UI.GUI.Components.Component;
 
 namespace Aura_OS
 {
     public class WindowManager
     {
         public List<Application> Applications;
-        public List<System.Graphics.UI.GUI.Rectangle> ClipRects;
+        public List<Rectangle> ClipRects;
 
         private bool _isDirty = false;
 
         public WindowManager()
         {
             Applications = new List<Application>();
-            ClipRects = new List<System.Graphics.UI.GUI.Rectangle>();
+            ClipRects = new List<Rectangle>();
         }
 
         public void MarkStackDirty()
@@ -48,33 +50,33 @@ namespace Aura_OS
         {
             for (int i = 0; i < Applications.Count; i++)
             {
-                Applications[i].Focused = (i == Applications.Count - 1);
+                Applications[i].Focused = (i == Applications.Count -  1);
             }
         }
 
-        public void AddComponent(System.Graphics.UI.GUI.Components.Component component)
+        public void AddComponent(Component component)
         {
             component.zIndex = ++highestZIndex;
-            System.Graphics.UI.GUI.Components.Component.Components.Add(component);
-            InsertionSortByZIndex(System.Graphics.UI.GUI.Components.Component.Components);
+            Component.Components.Add(component);
+            InsertionSortByZIndex(Component.Components);
         }
 
-        public void BringToFront(System.Graphics.UI.GUI.Components.Component component)
+        public void BringToFront(Component component)
         {
             if (component.zIndex < highestZIndex)
             {
                 component.zIndex = ++highestZIndex;
-                InsertionSortByZIndex(System.Graphics.UI.GUI.Components.Component.Components);
+                InsertionSortByZIndex(Component.Components);
             }
         }
 
         private int highestZIndex = 0;
 
-        private void InsertionSortByZIndex(List<System.Graphics.UI.GUI.Components.Component> components)
+        private void InsertionSortByZIndex(List<Component> components)
         {
             for (int i = 1; i < components.Count; i++)
             {
-                System.Graphics.UI.GUI.Components.Component key = components[i];
+                Component key = components[i];
                 int j = i - 1;
 
                 while (j >= 0 && components[j].zIndex > key.zIndex)
@@ -90,17 +92,33 @@ namespace Aura_OS
         {
             ClipRects.Clear();
 
-            InsertionSortByZIndex(System.Graphics.UI.GUI.Components.Component.Components);
+            InsertionSortByZIndex(Component.Components);
 
-            for (int i = 0; i < System.Graphics.UI.GUI.Components.Component.Components.Count; i++)
+            for (int i = 0; i < Component.Components.Count; i++)
             {
-                var component = System.Graphics.UI.GUI.Components.Component.Components[i];
+                var component = Component.Components[i];
 
-                if (component.Visible && (component.IsDirty() || component.ForceDirty))
+                if (component.IsRoot && component.Visible && (component.IsDirty() || component.ForceDirty))
                 {
                     component.Draw();
                     component.MarkCleaned();
-                    System.Graphics.UI.GUI.Rectangle.AddClipRect(component.GetRectangle());
+                    Rectangle.AddClipRect(component.GetRectangle());
+                }
+
+                foreach (var child in component.Children)
+                {
+                    if (child.Visible && (child.IsDirty() || child.ForceDirty))
+                    {
+                        child.Draw(child.Parent);
+                        child.MarkCleaned();
+
+                        var childRect = child.GetRectangle();
+                        var parentRect = child.Parent.GetRectangle();
+                        var top = parentRect.Top + childRect.Top;
+                        var left = parentRect.Left + childRect.Left;
+                        var realRect = new Rectangle(top, left, childRect.Height + top, childRect.Width + left);
+                        Rectangle.AddClipRect(realRect);
+                    }
                 }
             }
 
@@ -110,13 +128,13 @@ namespace Aura_OS
                 {
                     app.Draw();
                     app.MarkCleaned();
-                    System.Graphics.UI.GUI.Rectangle.AddClipRect(app.Window.GetRectangle());
+                    Rectangle.AddClipRect(app.Window.GetRectangle());
                 }
             }
 
-            for (int i = 0; i < System.Graphics.UI.GUI.Components.Component.Components.Count; i++)
+            for (int i = 0; i < Component.Components.Count; i++)
             {
-                var component = System.Graphics.UI.GUI.Components.Component.Components[i];
+                var component = Component.Components[i];
 
                 if (component.IsRoot)
                 {
@@ -124,7 +142,6 @@ namespace Aura_OS
                 }
             }
 
-            
             for (int i = 0; i < Explorer.WindowManager.ClipRects.Count; i++)
             {
                 var tempRect = Explorer.WindowManager.ClipRects[i];
@@ -132,10 +149,9 @@ namespace Aura_OS
                          tempRect.Right - tempRect.Left + 1,
                          tempRect.Bottom - tempRect.Top + 1);
             }
-            
         }
 
-        public void DrawComponentAndChildren(System.Graphics.UI.GUI.Components.Component component)
+        public void DrawComponentAndChildren(Component component)
         {
             if (!component.Visible) return;
 
@@ -146,16 +162,6 @@ namespace Aura_OS
             else
             {
                 Kernel.Canvas.DrawImage(component.GetBuffer(), component.X, component.Y);
-            }
-
-            
-            foreach (var child in component.Children)
-            {
-                if (child.ForceDirty || child.IsDirty())
-                {
-                    child.Draw(child.Parent);
-                    System.Graphics.UI.GUI.Rectangle.AddClipRect(child.GetRectangle());
-                }
             }
         }
 

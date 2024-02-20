@@ -155,6 +155,14 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
             component._buffer.DrawImage(GetBuffer(), X, Y);
         }
 
+        public void DrawInParent()
+        {
+            if (!IsRoot)
+            {
+                Parent._buffer.DrawImage(GetBuffer(), X, Y);
+            }
+        }
+
         private Rectangle CalculateDestinationRect(Frame.Region region, int frameWidth, int frameHeight)
         {
             int x = 0, y = 0, width = region.SourceRegion.Width, height = region.SourceRegion.Height;
