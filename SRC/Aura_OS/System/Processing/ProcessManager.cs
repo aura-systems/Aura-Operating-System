@@ -4,8 +4,11 @@
 * PROGRAMMER(S):    Valentin Charbonnier <valentinbreiz@gmail.com>
 */
 
+using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using Aura_OS.System;
+using Aura_OS.System.Graphics.UI.GUI;
 
 namespace Aura_OS.Processing
 {
@@ -85,6 +88,15 @@ namespace Aura_OS.Processing
             {
                 Processes[i].Update();
             }
+        }
+
+        internal Process GetProcessByPid(uint pid)
+        {
+            for (int i = 0; i < Processes.Count; i++)
+            {
+                if (Processes[i].ID == pid) { return Processes[i]; }
+            }
+            return null;
         }
 
         /// <summary>

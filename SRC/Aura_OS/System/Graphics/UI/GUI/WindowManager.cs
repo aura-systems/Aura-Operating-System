@@ -5,23 +5,21 @@
 */
 
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Drawing;
+using Aura_OS.System;
 using Aura_OS.System.Graphics.UI.GUI;
-using Aura_OS.System.Graphics.UI.GUI.Components;
 using Aura_OS.System.Processing.Processes;
 using Rectangle = Aura_OS.System.Graphics.UI.GUI.Rectangle;
 using Component = Aura_OS.System.Graphics.UI.GUI.Components.Component;
-using Aura_OS.System;
 
 namespace Aura_OS
 {
     public class WindowManager : IManager
     {
+        public Application FocusedApp { get; set; }
+
         public List<Application> Applications;
         public List<Rectangle> ClipRects;
-
-        private bool _isDirty = false;
 
         public void Initialize()
         {
@@ -29,32 +27,6 @@ namespace Aura_OS
 
             Applications = new List<Application>();
             ClipRects = new List<Rectangle>();
-        }
-
-        public void MarkStackDirty()
-        {
-            _isDirty = true;
-        }
-
-        public int GetTopZIndex()
-        {
-            int topZIndex = 0;
-            for (int i = 0; i < Applications.Count; i++)
-            {
-                if (Applications[i].zIndex > topZIndex)
-                {
-                    topZIndex = Applications[i].zIndex;
-                }
-            }
-            return topZIndex;
-        }
-
-        public void UpdateFocusStatus()
-        {
-            for (int i = 0; i < Applications.Count; i++)
-            {
-                Applications[i].Focused = (i == Applications.Count -  1);
-            }
         }
 
         public void AddComponent(Component component)

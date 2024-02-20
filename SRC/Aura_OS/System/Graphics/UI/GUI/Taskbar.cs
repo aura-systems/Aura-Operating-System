@@ -102,18 +102,6 @@ namespace Aura_OS.System.Graphics.UI.GUI
 
             foreach (var application in  Explorer.WindowManager.Applications)
             {
-                if (application.Focused)
-                {
-                    Buttons[application.ID].Focused = true;
-                    application.Window.TopBar.Color1 = Kernel.DarkBlue;
-                    application.Window.TopBar.Color2 = Kernel.Pink;
-                }
-                else
-                {
-                    Buttons[application.ID].Focused = false;
-                    application.Window.TopBar.Color1 = Kernel.DarkGray;
-                }
-
                 if (Buttons[application.ID].IsInside((int)MouseManager.X, (int)MouseManager.Y))
                 {
                     if (application.Visible)
@@ -174,27 +162,21 @@ namespace Aura_OS.System.Graphics.UI.GUI
         {
             foreach (var button in Buttons)
             {
-                button.Value.Draw(this);
-            }
+                uint pid = button.Key;
+                Button btn = button.Value;
+                Application application = Kernel.ApplicationManager.GetApplicationByPid(pid);
 
-            /*
-            foreach (var application in Explorer.WindowManager.Applications)
-            {
                 if (application.Focused)
                 {
-                    Buttons[application.Name].Focused = true;
-                    application.Window.TopBar.Color1 = Kernel.DarkBlue;
-                    application.Window.TopBar.Color2 = Kernel.Pink;
+                    btn.Frame = Kernel.ThemeManager.GetFrame("button.normal");
                 }
                 else
                 {
-                    Buttons[application.Name].Focused = false;
-                    application.Window.TopBar.Color1 = Kernel.DarkGray;
+                    btn.Frame = Kernel.ThemeManager.GetFrame("button.disabled");
                 }
 
-                Buttons[application.Name].Draw(this);
+                button.Value.Draw(this);
             }
-            */
         }
 
         public void DrawNotifications()
@@ -216,6 +198,16 @@ namespace Aura_OS.System.Graphics.UI.GUI
             }
 
             NetworkButton.Draw(this);
+        }
+
+        public override void MarkDirty()
+        {
+            base.MarkDirty();
+
+            foreach (var button in Buttons)
+            {
+                button.Value.MarkDirty();
+            }
         }
     }
 }

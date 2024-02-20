@@ -5,14 +5,13 @@
                     Valentin Charbonnier <valentinbreiz@gmail.com>
 */
 
+using System;
+using System.Drawing;
+using System.Collections.Generic;
 using Cosmos.System;
 using Aura_OS.Processing;
 using Aura_OS.System.Graphics.UI.GUI.Components;
-using System;
-using System.Collections.Generic;
 using Aura_OS.System.Processing.Processes;
-using System.Drawing;
-using Cosmos.System.Graphics.Fonts;
 
 namespace Aura_OS.System.Graphics.UI.GUI
 {
@@ -31,10 +30,15 @@ namespace Aura_OS.System.Graphics.UI.GUI
             }
         }
 
+        public bool Focused
+        {
+            get => Explorer.WindowManager.FocusedApp == this;
+        }
+
         public int X;
         public int Y;
         public Window Window;
-        public bool Focused = false;
+        
         public bool Visible = false;
         public int zIndex = 0;
 
@@ -189,8 +193,6 @@ namespace Aura_OS.System.Graphics.UI.GUI
 
                     X = (int)(MouseManager.X - _px + 3);
                     Y = (int)(MouseManager.Y - _py + Window.TopBar.Height + 3);
-
-                    Explorer.Desktop.MarkDirty();
                 }
             }
         }
@@ -224,6 +226,11 @@ namespace Aura_OS.System.Graphics.UI.GUI
             _isDirty = false;
         }
 
+        public void MarkFocused()
+        {
+            Explorer.WindowManager.FocusedApp = this;
+        }
+
         public void AddChild(Component component)
         {
             Window.AddChild(component);
@@ -231,9 +238,9 @@ namespace Aura_OS.System.Graphics.UI.GUI
 
         private void BringToFront()
         {
+            MarkFocused();
+            Explorer.Taskbar.MarkDirty();
             Explorer.WindowManager.BringToFront(Window);
-            //zIndex = Explorer.WindowManager.GetTopZIndex() + 1;
-            //Explorer.WindowManager.MarkStackDirty();
         }
 
         public void DrawLine(Color color, int xStart, int yStart, int width, int height)

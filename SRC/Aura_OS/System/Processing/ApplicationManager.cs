@@ -4,6 +4,7 @@
 * PROGRAMMERS:      Valentin Charbonnier <valentinbreiz@gmail.com>
 */
 
+using Aura_OS.System.Graphics.UI.GUI;
 using Aura_OS.System.Processing.Applications;
 using Aura_OS.System.Processing.Applications.Emulators.GameBoyEmu;
 using Aura_OS.System.Processing.Applications.Terminal;
@@ -70,41 +71,37 @@ namespace Aura_OS.System.Processing
 
         public void StartApplication(ApplicationConfig config)
         {
-            Graphics.UI.GUI.Application app = Kernel.ApplicationManager.Instantiate(config);
+            Application app = Kernel.ApplicationManager.Instantiate(config);
             app.Initialize();
+            app.MarkFocused();
 
             Explorer.WindowManager.Applications.Add(app);
             app.zIndex = Explorer.WindowManager.GetTopZIndex() + 1;
-            Explorer.WindowManager.MarkStackDirty();
 
             app.Visible = true;
-            app.Focused = true;
 
             Kernel.ProcessManager.Start(app);
 
             Explorer.Taskbar.UpdateApplicationButtons();
-            Explorer.WindowManager.UpdateFocusStatus();
         }
 
         public void StartApplication(Type appType)
         {
-            Graphics.UI.GUI.Application app = Kernel.ApplicationManager.Instantiate(appType);
+            Application app = Kernel.ApplicationManager.Instantiate(appType);
             app.Initialize();
+            app.MarkFocused();
 
             Explorer.WindowManager.Applications.Add(app);
             app.zIndex = Explorer.WindowManager.GetTopZIndex() + 1;
-            Explorer.WindowManager.MarkStackDirty();
 
             app.Visible = true;
-            app.Focused = true;
 
             Kernel.ProcessManager.Start(app);
 
             Explorer.Taskbar.UpdateApplicationButtons();
-            Explorer.WindowManager.UpdateFocusStatus();
         }
 
-        public Graphics.UI.GUI.Application Instantiate(Type appType)
+        public Application Instantiate(Type appType)
         {
             foreach (var config in ApplicationTemplates)
             {
@@ -117,9 +114,9 @@ namespace Aura_OS.System.Processing
             throw new InvalidOperationException("Unknown app type.");
         }
 
-        public Graphics.UI.GUI.Application Instantiate(ApplicationConfig config)
+        public Application Instantiate(ApplicationConfig config)
         {
-            Graphics.UI.GUI.Application app = null;
+            Application app = null;
 
             if (config.Template == typeof(TerminalApp))
             {
@@ -175,18 +172,16 @@ namespace Aura_OS.System.Processing
                 var app = new PictureApp(name, bitmap, width, (int)bitmap.Height + 20);
 
                 app.Initialize();
+                app.MarkFocused();
 
                 Explorer.WindowManager.Applications.Add(app);
                 app.zIndex = Explorer.WindowManager.GetTopZIndex() + 1;
-                Explorer.WindowManager.MarkStackDirty();
 
                 app.Visible = true;
-                app.Focused = true;
 
                 Kernel.ProcessManager.Start(app);
 
                 Explorer.Taskbar.UpdateApplicationButtons();
-                Explorer.WindowManager.UpdateFocusStatus();
             }
             else if (fileName.EndsWith(".gb"))
             {
@@ -195,40 +190,40 @@ namespace Aura_OS.System.Processing
                 byte[] bytes = File.ReadAllBytes(path);
 
                 var app = new GameBoyApp(bytes, name, 160 + 4, 144 + 22, 40, 40);
-
                 app.Initialize();
+                app.MarkFocused();
 
                 Explorer.WindowManager.Applications.Add(app);
                 app.zIndex = Explorer.WindowManager.GetTopZIndex() + 1;
-                Explorer.WindowManager.MarkStackDirty();
 
                 app.Visible = true;
-                app.Focused = true;
 
                 Kernel.ProcessManager.Start(app);
 
                 Explorer.Taskbar.UpdateApplicationButtons();
-                Explorer.WindowManager.UpdateFocusStatus();
             }
             else
             {
                 string path = currentPath + fileName;
-                var app = new EditorApp(path, 700, 600, 40, 40);
 
+                var app = new EditorApp(path, 700, 600, 40, 40);
                 app.Initialize();
+                app.MarkFocused();
 
                 Explorer.WindowManager.Applications.Add(app);
                 app.zIndex = Explorer.WindowManager.GetTopZIndex() + 1;
-                Explorer.WindowManager.MarkStackDirty();
 
                 app.Visible = true;
-                app.Focused = true;
 
                 Kernel.ProcessManager.Start(app);
 
                 Explorer.Taskbar.UpdateApplicationButtons();
-                Explorer.WindowManager.UpdateFocusStatus();
             }
+        }
+
+        public Application GetApplicationByPid(uint pid)
+        {
+            return Kernel.ProcessManager.GetProcessByPid(pid) as Application;
         }
 
         /// <summary>

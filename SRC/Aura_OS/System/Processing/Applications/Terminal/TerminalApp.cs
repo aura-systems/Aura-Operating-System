@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using Aura_OS.System.Graphics.UI.GUI;
 using Aura_OS.System.Processing.Interpreter.Commands;
 using Aura_OS.System.Graphics.UI.GUI.Components;
+using Aura_OS.System.Processing.Processes;
 
 namespace Aura_OS.System.Processing.Applications.Terminal
 {

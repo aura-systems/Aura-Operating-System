@@ -348,12 +348,12 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
             return _dirty;
         }
 
-        public void MarkDirty()
+        public virtual void MarkDirty()
         {
             _dirty = true;
         }
 
-        public void MarkCleaned()
+        public virtual void MarkCleaned()
         {
             _dirty = false;
         }
