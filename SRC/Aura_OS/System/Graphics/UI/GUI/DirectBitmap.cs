@@ -292,11 +292,15 @@ namespace Aura_OS.System.Graphics.UI.GUI
             }
             else
             {
-                for (int xi = 0; xi < image.Width; xi++)
+                int[] imageData = image.RawData;
+
+                for (int yi = 0; yi < image.Height; yi++)
                 {
-                    for (int yi = 0; yi < image.Height; yi++)
+                    int imageRowOffset = yi * (int)image.Width;
+
+                    for (int xi = 0; xi < image.Width; xi++)
                     {
-                        SetPixel(x + xi, y + yi, image.RawData[xi + (yi * image.Width)]);
+                        SetPixel(x + xi, y + yi, imageData[imageRowOffset + xi]);
                     }
                 }
             }
