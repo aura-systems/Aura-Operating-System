@@ -1,5 +1,4 @@
-﻿using Aura_OS.System.Graphics;
-using Aura_OS.System;
+﻿using Aura_OS.System;
 using Cosmos.System.Graphics.Fonts;
 using Cosmos.System.Graphics;
 using IL2CPU.API.Attribs;
@@ -98,7 +97,7 @@ namespace Aura_OS
         {
             string fileName = Path.GetFileName(path);
             Bitmap bitmap = new(File.ReadAllBytes(path));
-            ResourceManager.Icons.Add(type + "-" + fileName, bitmap);
+            Kernel.ResourceManager.AddIcon(type + "-" + fileName, bitmap);
             CustomConsole.WriteLineOK(fileName + " icon loaded.");
         }
     }

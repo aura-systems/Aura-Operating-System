@@ -85,9 +85,9 @@ namespace Aura_OS
         public static System.Input.MouseManager MouseManager;
         public static ApplicationManager ApplicationManager;
         public static PackageManager PackageManager;
+        public static ResourceManager ResourceManager;
+        public static ThemeManager ThemeManager;
         public static Explorer Explorer;
-
-        public static SkinParsing SkinParser;
 
         // Textmode Console
         public static System.Graphics.UI.CUI.Console TextmodeConsole;
@@ -111,8 +111,6 @@ namespace Aura_OS
             //Start Filesystem
             VFSManager.RegisterVFS(VirtualFileSystem);
 
-            //START PROCESSES
-            CustomConsole.WriteLineInfo("Starting process manager...");
             ProcessManager = new ProcessManager();
             ProcessManager.Initialize();
 
@@ -139,34 +137,24 @@ namespace Aura_OS
 
             TextmodeConsole = null;
 
-            CustomConsole.WriteLineInfo("Loading icons...");
-            Files.LoadImages();
+            ResourceManager = new ResourceManager();
+            ResourceManager.Initialize();
 
-            SkinParser = new SkinParsing();
-            SkinParser.loadSkin(File.ReadAllText("1:\\UI\\Themes\\Suave.skin.xml"));
+            ThemeManager = new ThemeManager();
+            ThemeManager.Initialize();
 
-            global::System.Console.ReadKey();
-
-            CustomConsole.WriteLineInfo("Starting package manager...");
             PackageManager = new PackageManager();
             PackageManager.Initialize();
 
-            CustomConsole.WriteLineInfo("Starting application manager...");
             ApplicationManager = new ApplicationManager();
-            CustomConsole.WriteLineInfo("Registering applications...");
-            ApplicationManager.LoadApplications();
+            ApplicationManager.Initialize();
 
-            CustomConsole.WriteLineInfo("Starting mouse manager...");
             MouseManager = new System.Input.MouseManager();
+            MouseManager.Initialize();
 
-            CustomConsole.WriteLineInfo("Starting Explorer...");
             Explorer = new Explorer();
             Explorer.Initialize();
             ProcessManager.Start(Explorer);
-
-            CustomConsole.WriteLineInfo("Starting mouse...");
-            Cosmos.System.MouseManager.ScreenWidth = screenWidth;
-            Cosmos.System.MouseManager.ScreenHeight = screenHeight;
 
             //Load Localization
             CustomConsole.WriteLineInfo("Initializing localization...");
@@ -230,7 +218,7 @@ namespace Aura_OS
 
         public static void DrawCursor(uint x, uint y)
         {
-            Canvas.DrawImageAlpha(ResourceManager.GetImage("00-cursor.bmp"), (int)x, (int)y);
+            Canvas.DrawImageAlpha(Kernel.ResourceManager.GetIcon("00-cursor.bmp"), (int)x, (int)y);
         }
     }
 }

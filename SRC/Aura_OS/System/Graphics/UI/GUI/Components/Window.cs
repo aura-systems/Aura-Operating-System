@@ -27,16 +27,16 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
 
         public Window(int x, int y, int width, int height) : base(x, y, width, height)
         {
-            Frame = Kernel.SkinParser.GetFrame("window");
+            Frame = Kernel.ThemeManager.GetFrame("window");
 
             HasBorders = false;
         }
 
         public Window(string name, int x, int y, int width, int height, bool hasCloseButton = true, bool hasMinimizeButton = true) : base(x, y, width, height)
         {
-            Frame = Kernel.SkinParser.GetFrame("window");
+            Frame = Kernel.ThemeManager.GetFrame("window");
 
-            Icon = ResourceManager.GetImage("16-program.bmp");
+            Icon = Kernel.ResourceManager.GetIcon("16-program.bmp");
             Name = name;
             HasCloseButton = hasCloseButton;
             HasMinimizeButton = hasMinimizeButton;
@@ -54,8 +54,8 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
 
             if (HasCloseButton)
             {
-                Close = new Button(ResourceManager.GetImage("16-close.bmp"), Width - 20, 5);
-                Close.Frame = Kernel.SkinParser.GetFrame("window.close.normal");
+                Close = new Button(Kernel.ResourceManager.GetIcon("16-close.bmp"), Width - 20, 5);
+                Close.Frame = Kernel.ThemeManager.GetFrame("window.close.normal");
                 Close.NoBackground = true;
                 Close.NoBorder = true;
                 Close.HasTransparency = true;
@@ -64,8 +64,8 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
 
             if (HasMinimizeButton)
             {
-                Minimize = new Button(ResourceManager.GetImage("16-minimize.bmp"), Width - 38, 5);
-                Minimize.Frame = Kernel.SkinParser.GetFrame("window.minimize.normal");
+                Minimize = new Button(Kernel.ResourceManager.GetIcon("16-minimize.bmp"), Width - 38, 5);
+                Minimize.Frame = Kernel.ThemeManager.GetFrame("window.minimize.normal");
                 Minimize.NoBackground = true;
                 Minimize.NoBorder = true;
                 Minimize.HasTransparency = true;

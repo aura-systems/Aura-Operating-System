@@ -49,9 +49,9 @@ namespace Aura_OS.System.Graphics.UI.GUI
             int startButtonHeight = 28;
             int startButtonX = 2;
             int startButtonY = 2;
-            StartButton = new Button(ResourceManager.GetImage("00-start.bmp"), "Start", startButtonX, startButtonY, startButtonWidth, startButtonHeight);
+            StartButton = new Button(Kernel.ResourceManager.GetIcon("00-start.bmp"), "Start", startButtonX, startButtonY, startButtonWidth, startButtonHeight);
             StartButton.HasTransparency = true;
-            StartButton.Frame = Kernel.SkinParser.GetFrame("button.disabled");
+            StartButton.Frame = Kernel.ThemeManager.GetFrame("button.disabled");
             AddChild(StartButton);
 
             // Hour button
@@ -61,7 +61,7 @@ namespace Aura_OS.System.Graphics.UI.GUI
             int hourButtonX = (int)(Kernel.screenWidth - time.Length * (Kernel.font.Width + 1) - 2);
             int hourButtonY = 2;
             HourButton = new HourButton(time, hourButtonX, hourButtonY, hourButtonWidth, hourButtonHeight);
-            HourButton.Frame = Kernel.SkinParser.GetFrame("button.disabled");
+            HourButton.Frame = Kernel.ThemeManager.GetFrame("button.disabled");
             AddChild(HourButton);
 
             // Network icon
@@ -69,7 +69,7 @@ namespace Aura_OS.System.Graphics.UI.GUI
             int networkButtonHeight = 16;
             int netoworkButtonX = (int)(Kernel.screenWidth - time.Length * (Kernel.font.Width + 1) - 2) - 20;
             int networkButtonY = (taskbarHeight / 2) - (networkButtonHeight / 2);
-            NetworkButton = new Button(ResourceManager.GetImage("16-network-offline.bmp"), netoworkButtonX, networkButtonY, networkButtonWidth, networkButtonHeight);
+            NetworkButton = new Button(Kernel.ResourceManager.GetIcon("16-network-offline.bmp"), netoworkButtonX, networkButtonY, networkButtonWidth, networkButtonHeight);
             NetworkButton.NoBorder = true;
             AddChild(NetworkButton);
 
@@ -132,7 +132,7 @@ namespace Aura_OS.System.Graphics.UI.GUI
             {
                 var spacing = app.Name.Length * 9 + (int)app.Window.Icon.Width;
                 var button = new Button(app.Window.Icon, app.Name, buttonX, (int)Kernel.screenHeight - 28 - 3, spacing, 28);
-                button.Frame = Kernel.SkinParser.GetFrame("button.disabled");
+                button.Frame = Kernel.ThemeManager.GetFrame("button.disabled");
 
                 Children.Add(button);
                 Buttons.Add(app.Name, button);
@@ -187,11 +187,11 @@ namespace Aura_OS.System.Graphics.UI.GUI
             {
                 if (Kernel.NetworkConnected)
                 {
-                    NetworkButton.Image = ResourceManager.GetImage("16-network-idle.bmp");
+                    NetworkButton.Image = Kernel.ResourceManager.GetIcon("16-network-idle.bmp");
                 }
                 else
                 {
-                    NetworkButton.Image = ResourceManager.GetImage("16-network-offline.bmp");
+                    NetworkButton.Image = Kernel.ResourceManager.GetIcon("16-network-offline.bmp");
                 }
             }
 

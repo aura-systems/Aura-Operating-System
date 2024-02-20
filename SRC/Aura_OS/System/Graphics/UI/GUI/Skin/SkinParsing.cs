@@ -3,15 +3,14 @@ using Cosmos.System.Graphics;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Runtime.Versioning;
 
 namespace Aura_OS.System.Graphics.UI.GUI.Skin
 {
     public class SkinParsing
     {
-        private Dictionary<string, Bitmap> bitmaps = new Dictionary<string, Bitmap>();
-        private Dictionary<string, Frame> frames = new Dictionary<string, Frame>();
+        private Dictionary<string, Bitmap> _bitmaps = new Dictionary<string, Bitmap>();
+        private Dictionary<string, Frame> _frames = new Dictionary<string, Frame>();
+        private string _skinName;
 
         public void loadSkin(string skinXmlContent)
         {
@@ -48,14 +47,15 @@ namespace Aura_OS.System.Graphics.UI.GUI.Skin
                 if (node.Name.Equals("bitmap"))
                 {
                     string bitmapName = node.GetAttribute("name").Value;
-                    string contentPath = "1:\\UI\\Themes\\" + node.GetAttribute("contentPath").Value + ".bmp";
+                    _skinName = node.GetAttribute("contentPath").Value;
+                    string contentPath = "1:\\UI\\Themes\\" + _skinName + ".bmp";
 
                     CustomConsole.WriteLineInfo("Loading bitmap: " + contentPath);
 
                     try
                     {
                         Bitmap bitmap = new Bitmap(File.ReadAllBytes(contentPath));
-                        bitmaps.Add(bitmapName, bitmap);
+                        _bitmaps.Add(bitmapName, bitmap);
                         CustomConsole.WriteLineOK("Bitmap '" + bitmapName + "' added successfully!");
                     }
                     catch (Exception e)
@@ -76,10 +76,10 @@ namespace Aura_OS.System.Graphics.UI.GUI.Skin
 
                     if (name.StartsWith("window") || name.StartsWith("button") || name.StartsWith("cursor"))
                     {
-                        Frame.Region[] regions = RegionListBuilder.Build(node, bitmaps);
+                        Frame.Region[] regions = RegionListBuilder.Build(node, _bitmaps);
                         Frame.Text[] texts = null;
 
-                        frames.Add(name, new Frame(regions, texts));
+                        _frames.Add(name, new Frame(regions, texts));
 
                         CustomConsole.WriteLineOK(name + " added successfully!");
                     }
@@ -89,7 +89,12 @@ namespace Aura_OS.System.Graphics.UI.GUI.Skin
 
         public Frame GetFrame(string name)
         {
-            return frames[name];
+            return _frames[name];
+        }
+
+        public string GetSkinName()
+        {
+            return _skinName;
         }
     }
 }

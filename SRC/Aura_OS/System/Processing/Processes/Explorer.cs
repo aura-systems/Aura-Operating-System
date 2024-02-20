@@ -37,8 +37,8 @@ namespace Aura_OS.System.Processing.Processes
             CustomConsole.WriteLineInfo("Starting desktop...");
             Desktop = new Desktop(0, 0, (int)Kernel.screenWidth, (int)Kernel.screenHeight);
 
-            CustomConsole.WriteLineInfo("Starting window manager...");
             WindowManager = new WindowManager();
+            WindowManager.Initialize();
 
             CustomConsole.WriteLineInfo("Starting task bar...");
             Taskbar = new Taskbar();
@@ -54,6 +54,8 @@ namespace Aura_OS.System.Processing.Processes
 
         public override void Initialize()
         {
+            CustomConsole.WriteLineInfo("Starting Explorer process...");
+
             base.Initialize();
 
             Kernel.ProcessManager.Register(this);

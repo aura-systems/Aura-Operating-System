@@ -26,7 +26,7 @@ namespace Aura_OS.System.Graphics.UI.GUI
 
         public StartMenu(int x, int y, int width, int height) : base(x, y, width, height)
         {
-            Frame = Kernel.SkinParser.GetFrame("window.borderless");
+            Frame = Kernel.ThemeManager.GetFrame("window.borderless");
 
             Logo = Kernel.AuraLogo2;
             buttons = new List<Button>();
@@ -36,7 +36,7 @@ namespace Aura_OS.System.Graphics.UI.GUI
             AddChild(Ribbon);
 
             // Shutdown
-            Shutdown = new Button(ResourceManager.GetImage("24-shutdown.bmp"), "Shut Down.", 3 + Ribbon.Width, Height - 32 - 4, Width - Ribbon.Width - 3, 35);
+            Shutdown = new Button(Kernel.ResourceManager.GetIcon("24-shutdown.bmp"), "Shut Down.", 3 + Ribbon.Width, Height - 32 - 4, Width - Ribbon.Width - 3, 35);
             Shutdown.NoBorder = true;
             Shutdown.Click = new Action(() =>
             {
@@ -45,7 +45,7 @@ namespace Aura_OS.System.Graphics.UI.GUI
             AddChild(Shutdown);
 
             // Reboot
-            Reboot = new Button(ResourceManager.GetImage("24-reboot.bmp"), "Reboot.", 3 + Ribbon.Width, Height - 64 - 4, Width - Ribbon.Width - 3, 35);
+            Reboot = new Button(Kernel.ResourceManager.GetIcon("24-reboot.bmp"), "Reboot.", 3 + Ribbon.Width, Height - 64 - 4, Width - Ribbon.Width - 3, 35);
             Reboot.NoBorder = true;
             Reboot.Click = new Action(() =>
             {
@@ -62,15 +62,15 @@ namespace Aura_OS.System.Graphics.UI.GUI
 
                 if (applicationConfig.Template.Name.StartsWith("Terminal"))
                 {
-                    icon = ResourceManager.GetImage("24-terminal.bmp");
+                    icon = Kernel.ResourceManager.GetIcon("24-terminal.bmp");
                 }
                 else if (applicationConfig.Template.Name.StartsWith("Explorer"))
                 {
-                    icon = ResourceManager.GetImage("24-explorer.bmp");
+                    icon = Kernel.ResourceManager.GetIcon("24-explorer.bmp");
                 }
                 else
                 {
-                    icon = ResourceManager.GetImage("24-program.bmp");
+                    icon = Kernel.ResourceManager.GetIcon("24-program.bmp");
                 }
 
                 var button = new Button(icon, applicationConfig.Template.Name, 3 + Ribbon.Width, 3 +  buttonY + 1, Width - Ribbon.Width - 3, 35);

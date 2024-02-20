@@ -46,7 +46,7 @@ namespace Aura_OS.System.Processing.Interpreter.Commands.Util
         {
             int count = 0;
 
-            foreach (var command in CommandManager.Commands)
+            foreach (var command in CommandManager.GetCommands())
             {
                 Console.Write("- ");
                 if (showaliases)

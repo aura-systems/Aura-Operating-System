@@ -31,6 +31,7 @@ namespace Aura_OS.System.Processing.Interpreter
                         {
                             CustomConsole.WriteLineInfo(line);
                             CommandManager commandManager = new();
+                            commandManager.Initialize();
                             commandManager.Execute(line);
                             CustomConsole.WriteLineOK(line);
                         }

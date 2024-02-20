@@ -39,7 +39,7 @@ namespace Aura_OS.System.Processing.Interpreter.Commands.SystemInfomation
             Console.WriteLine(" .:JGB&P&7@?BYG7G&G?P#5!PB&@&&@&57J     Processor(s):                 " + CPU.GetCPUBrandString());
             Console.WriteLine("  ?@GB#GGBGJ?J7#@&#5^JGPJ?7!7JPB#P!     Graphic mode:                 " + Kernel.Canvas.Name());
             Console.WriteLine(" ^#&5BP&BGPJG!YB7.^5@&GP555PB@@G7:      Screen size:                  " + Kernel.Canvas.Mode.ToString());
-            Console.WriteLine(" ..~P#BB#B?~@#P7 !BP?!~^^^^^:!7");
+            Console.WriteLine(" ..~P#BB#B?~@#P7 !BP?!~^^^^^:!7         Theme name:                   " + Kernel.ThemeManager.GetThemeName());
             Console.WriteLine("   J@@BPB#B7J@@@!P5^");
             Console.WriteLine("   7&P55BBBB?~?GYJ&@&G~");
             Console.WriteLine("   .. P@&#PGG7.:#PJJ5#@P^");

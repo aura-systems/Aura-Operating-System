@@ -8,11 +8,9 @@ using Aura_OS.System.Users;
 using Cosmos.System;
 using System;
 using System.Collections.Generic;
-using Aura_OS.System.Graphics;
 using Aura_OS.System.Graphics.UI.GUI;
 using Aura_OS.System.Processing.Interpreter.Commands;
 using Aura_OS.System.Graphics.UI.GUI.Components;
-using Aura_OS.System.Processing.Processes;
 
 namespace Aura_OS.System.Processing.Applications.Terminal
 {
@@ -32,9 +30,10 @@ namespace Aura_OS.System.Processing.Applications.Terminal
 
         public TerminalApp(int width, int height, int x = 0, int y = 0) : base(ApplicationName, width, height, x, y)
         {
-            Window.Icon = ResourceManager.GetImage("16-terminal.bmp");
+            Window.Icon = Kernel.ResourceManager.GetIcon("16-terminal.bmp");
 
             _commandManager = new CommandManager();
+            _commandManager.Initialize();
             _commandIndex = 0;
             _commands = new List<string>();
             _command = string.Empty;

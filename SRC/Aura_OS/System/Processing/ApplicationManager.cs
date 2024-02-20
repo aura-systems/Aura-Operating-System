@@ -33,13 +33,18 @@ namespace Aura_OS.System.Processing
         }
     }
 
-    public class ApplicationManager
+    public class ApplicationManager : IManager
     {
         public List<ApplicationConfig> ApplicationTemplates;
 
-        public ApplicationManager()
+        public void Initialize()
         {
+            CustomConsole.WriteLineInfo("Starting application manager...");
+
             ApplicationTemplates = new List<ApplicationConfig>();
+
+            CustomConsole.WriteLineInfo("Registering applications...");
+            LoadApplications();
         }
 
         public void LoadApplications()
@@ -224,6 +229,15 @@ namespace Aura_OS.System.Processing
                 Explorer.Taskbar.UpdateApplicationButtons();
                 Explorer.WindowManager.UpdateFocusStatus();
             }
+        }
+
+        /// <summary>
+        /// Returns the name of the manager.
+        /// </summary>
+        /// <returns>The name of the manager.</returns>
+        public string GetName()
+        {
+            return "Application Manager";
         }
     }
 }

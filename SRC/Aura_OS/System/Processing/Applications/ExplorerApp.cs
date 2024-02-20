@@ -32,7 +32,7 @@ namespace Aura_OS.System.Processing.Applications
 
         public ExplorerApp(string currentPath, int width, int height, int x = 0, int y = 0) : base(ApplicationName, width, height, x, y)
         {
-            Window.Icon = ResourceManager.GetImage("16-explorer.bmp");
+            Window.Icon = Kernel.ResourceManager.GetIcon("16-explorer.bmp");
 
             _topPanel = new Panel(Kernel.Gray, x + 1, y + 1, width - 6, 23);
             _topPanel.Borders = true;
@@ -61,7 +61,7 @@ namespace Aura_OS.System.Processing.Applications
             });
             AddChild(_pathTextBox);
 
-            _up = new Button(ResourceManager.GetImage("16-up.bmp"), x + 3, y + 3, 18, 18);
+            _up = new Button(Kernel.ResourceManager.GetIcon("16-up.bmp"), x + 3, y + 3, 18, 18);
             _up.Click = new Action(() =>
             {
                 _mainPanel.CurrentPath = Filesystem.Utils.GetParentPath(_mainPanel.CurrentPath);
@@ -86,11 +86,11 @@ namespace Aura_OS.System.Processing.Applications
 
                 if (Kernel.VirtualFileSystem.GetFileSystemType(vol.mName).Equals("ISO9660"))
                 {
-                    icon = ResourceManager.GetImage("16-drive-readonly.bmp");
+                    icon = Kernel.ResourceManager.GetIcon("16-drive-readonly.bmp");
                 }
                 else
                 {
-                    icon = ResourceManager.GetImage("16-drive.bmp");
+                    icon = Kernel.ResourceManager.GetIcon("16-drive.bmp");
                 }
 
                 var button = new Button(icon, path, X, Y + Y, 16 + path.Length * 8, 16);

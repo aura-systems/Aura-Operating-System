@@ -5,18 +5,37 @@
 */
 
 using System.Collections.Generic;
+using Aura_OS.System;
 
 namespace Aura_OS.Processing
 {
-    public class ProcessManager
+    /// <summary>
+    /// Manages processes within AuraOS, allowing for registration,
+    /// starting, and stopping of processes. While the system is styled as monotask,
+    /// this manager is used to handle Update methods for processes.
+    /// </summary>
+    public class ProcessManager : IManager
     {
+        /// <summary>
+        /// A list of all registered processes.
+        /// </summary>
         public List<Process> Processes;
 
+        /// <summary>
+        /// Initializes the process manager, preparing it to manage processes.
+        /// </summary>
         public void Initialize()
         {
+            CustomConsole.WriteLineInfo("Starting process manager...");
+
             Processes = new List<Process>();
         }
 
+        /// <summary>
+        /// Registers a new process with the process manager.
+        /// </summary>
+        /// <param name="process">The process to register.</param>
+        /// <returns>True if the process was successfully registered; false if the process is already registered.</returns>
         public bool Register(Process process)
         {
             for (int i = 0; i < Processes.Count; i++)
@@ -29,6 +48,11 @@ namespace Aura_OS.Processing
             return true;
         }
 
+        /// <summary>
+        /// Starts a registered process.
+        /// </summary>
+        /// <param name="process">The process to start.</param>
+        /// <returns>True if the process was found and started; false otherwise.</returns>
         public bool Start(Process process)
         {
             for (int i = 0; i < Processes.Count; i++)
@@ -38,6 +62,11 @@ namespace Aura_OS.Processing
             return false;
         }
 
+        /// <summary>
+        /// Stops a registered process.
+        /// </summary>
+        /// <param name="process">The process to stop.</param>
+        /// <returns>True if the process was found and stopped; false otherwise.</returns>
         public bool Stop(Process process)
         {
             for (int i = 0; i < Processes.Count; i++)
@@ -47,12 +76,24 @@ namespace Aura_OS.Processing
             return false;
         }
 
+        /// <summary>
+        /// Updates all registered processes. This method is typically called in the OS's main loop.
+        /// </summary>
         public void Update()
         {
             for (int i = 0; i < Processes.Count; i++)
             {
                 Processes[i].Update();
             }
+        }
+
+        /// <summary>
+        /// Returns the name of the manager.
+        /// </summary>
+        /// <returns>The name of the manager.</returns>
+        public string GetName()
+        {
+            return "Process Manager";
         }
     }
 }

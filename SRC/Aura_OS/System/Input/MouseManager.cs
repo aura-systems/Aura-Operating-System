@@ -13,7 +13,10 @@ using System.Drawing;
 
 namespace Aura_OS.System.Input
 {
-    public class MouseManager
+    /// <summary>
+    /// Manages mouse and cursor position for AuraOS. 
+    /// </summary>
+    public class MouseManager : IManager
     {
         /// <summary>
         /// The maximum time interval in milliseconds to detect a double click.
@@ -61,16 +64,22 @@ namespace Aura_OS.System.Input
         public Component FocusedComponent;
 
         /// <summary>
-        /// Initializes a new instance of the MouseManager class.
+        /// Initializes the mouse manager and prepares buttons states.
         /// </summary>
-        public MouseManager()
+        public void Initialize()
         {
+            CustomConsole.WriteLineInfo("Starting mouse manager...");
+
             _lastLeftClickTime = DateTime.MinValue;
             _lastRightClickTime = DateTime.MinValue;
             _leftButtonPressed = false;
             _rightButtonPressed = false;
             IsLeftButtonDown = false;
             IsRightButtonDown = false;
+
+            CustomConsole.WriteLineInfo("Starting mouse...");
+            Cosmos.System.MouseManager.ScreenWidth = Kernel.screenWidth;
+            Cosmos.System.MouseManager.ScreenHeight = Kernel.screenHeight;
         }
 
         /// <summary>
@@ -296,6 +305,15 @@ namespace Aura_OS.System.Input
                     TopComponent.RightClick.Update();
                 }
             }
+        }
+
+        /// <summary>
+        /// Returns the name of the manager.
+        /// </summary>
+        /// <returns>The name of the manager.</returns>
+        public string GetName()
+        {
+            return "Mouse Manager";
         }
     }
 }

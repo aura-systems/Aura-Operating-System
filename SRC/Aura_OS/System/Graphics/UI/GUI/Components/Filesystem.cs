@@ -201,7 +201,7 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
             foreach (string directory in directories)
             {
                 string folderName = Path.GetFileName(directory);
-                var button = new FileButton(folderName, _textColor, ResourceManager.GetImage("32-folder.bmp"), x + startX + currentX, y + currentY, 32, 32);
+                var button = new FileButton(folderName, _textColor, Kernel.ResourceManager.GetIcon("32-folder.bmp"), x + startX + currentX, y + currentY, 32, 32);
                 button.Click = new Action(() =>
                 {
                     OpenFolder(folderName);
@@ -249,7 +249,7 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
             foreach (string file in files)
             {
                 string fileName = Path.GetFileName(file);
-                var button = new FileButton(fileName, _textColor, ResourceManager.GetImage("32-file.bmp"), x + startX + currentX, y + currentY, 32, 32);
+                var button = new FileButton(fileName, _textColor, Kernel.ResourceManager.GetIcon("32-file.bmp"), x + startX + currentX, y + currentY, 32, 32);
                 button.Click = new Action(() =>
                 {
                     Kernel.ApplicationManager.StartFileApplication(fileName, CurrentPath);

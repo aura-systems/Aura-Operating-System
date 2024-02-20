@@ -24,7 +24,7 @@ namespace Aura_OS.System.Graphics.UI.GUI
             _title = title;
             _message = message;
             _buttons = new List<Button>();
-            AlertIcon = ResourceManager.GetImage("32-dialog-information.bmp");
+            AlertIcon = Kernel.ResourceManager.GetIcon("32-dialog-information.bmp");
         }
 
         public List<Button> GetButtons()

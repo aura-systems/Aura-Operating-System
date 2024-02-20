@@ -12,18 +12,21 @@ using Aura_OS.System.Graphics.UI.GUI.Components;
 using Aura_OS.System.Processing.Processes;
 using Rectangle = Aura_OS.System.Graphics.UI.GUI.Rectangle;
 using Component = Aura_OS.System.Graphics.UI.GUI.Components.Component;
+using Aura_OS.System;
 
 namespace Aura_OS
 {
-    public class WindowManager
+    public class WindowManager : IManager
     {
         public List<Application> Applications;
         public List<Rectangle> ClipRects;
 
         private bool _isDirty = false;
 
-        public WindowManager()
+        public void Initialize()
         {
+            CustomConsole.WriteLineInfo("Starting window manager...");
+
             Applications = new List<Application>();
             ClipRects = new List<Rectangle>();
         }
@@ -168,6 +171,15 @@ namespace Aura_OS
         public void DrawRect(int x, int y, int width, int height)
         {
             Kernel.Canvas.DrawRectangle(Color.Green, x, y, width, height);
+        }
+
+        /// <summary>
+        /// Returns the name of the manager.
+        /// </summary>
+        /// <returns>The name of the manager.</returns>
+        public string GetName()
+        {
+            return "Window Manager";
         }
     }
 }
