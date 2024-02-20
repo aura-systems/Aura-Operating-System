@@ -47,12 +47,9 @@ namespace Aura_OS.System.Processing.Interpreter.Commands.Filesystem
                 var app = new PictureApp(name, bitmap, width, (int)bitmap.Height + 20);
                 app.MarkFocused();
                 app.Initialize();
-
-                Explorer.WindowManager.Applications.Add(app);
-                app.zIndex = Explorer.WindowManager.GetTopZIndex() + 1;
-
                 app.Visible = true;
 
+                Explorer.WindowManager.Applications.Add(app);
                 Kernel.ProcessManager.Start(app);
 
                 Explorer.Taskbar.UpdateApplicationButtons();

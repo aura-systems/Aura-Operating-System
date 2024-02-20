@@ -74,12 +74,9 @@ namespace Aura_OS.System.Processing
             Application app = Kernel.ApplicationManager.Instantiate(config);
             app.Initialize();
             app.MarkFocused();
-
-            Explorer.WindowManager.Applications.Add(app);
-            app.zIndex = Explorer.WindowManager.GetTopZIndex() + 1;
-
             app.Visible = true;
 
+            Explorer.WindowManager.Applications.Add(app);
             Kernel.ProcessManager.Start(app);
 
             Explorer.Taskbar.UpdateApplicationButtons();
@@ -90,12 +87,9 @@ namespace Aura_OS.System.Processing
             Application app = Kernel.ApplicationManager.Instantiate(appType);
             app.Initialize();
             app.MarkFocused();
-
-            Explorer.WindowManager.Applications.Add(app);
-            app.zIndex = Explorer.WindowManager.GetTopZIndex() + 1;
-
             app.Visible = true;
 
+            Explorer.WindowManager.Applications.Add(app);
             Kernel.ProcessManager.Start(app);
 
             Explorer.Taskbar.UpdateApplicationButtons();
@@ -170,15 +164,11 @@ namespace Aura_OS.System.Processing
                 }
 
                 var app = new PictureApp(name, bitmap, width, (int)bitmap.Height + 20);
-
                 app.Initialize();
                 app.MarkFocused();
-
-                Explorer.WindowManager.Applications.Add(app);
-                app.zIndex = Explorer.WindowManager.GetTopZIndex() + 1;
-
                 app.Visible = true;
 
+                Explorer.WindowManager.Applications.Add(app);
                 Kernel.ProcessManager.Start(app);
 
                 Explorer.Taskbar.UpdateApplicationButtons();
@@ -192,12 +182,9 @@ namespace Aura_OS.System.Processing
                 var app = new GameBoyApp(bytes, name, 160 + 4, 144 + 22, 40, 40);
                 app.Initialize();
                 app.MarkFocused();
-
-                Explorer.WindowManager.Applications.Add(app);
-                app.zIndex = Explorer.WindowManager.GetTopZIndex() + 1;
-
                 app.Visible = true;
 
+                Explorer.WindowManager.Applications.Add(app);
                 Kernel.ProcessManager.Start(app);
 
                 Explorer.Taskbar.UpdateApplicationButtons();
@@ -209,12 +196,9 @@ namespace Aura_OS.System.Processing
                 var app = new EditorApp(path, 700, 600, 40, 40);
                 app.Initialize();
                 app.MarkFocused();
-
-                Explorer.WindowManager.Applications.Add(app);
-                app.zIndex = Explorer.WindowManager.GetTopZIndex() + 1;
-
                 app.Visible = true;
 
+                Explorer.WindowManager.Applications.Add(app);
                 Kernel.ProcessManager.Start(app);
 
                 Explorer.Taskbar.UpdateApplicationButtons();

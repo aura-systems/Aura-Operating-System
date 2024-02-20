@@ -301,12 +301,9 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
                 ExplorerApp app = new(CurrentPath + folderName + "\\", 500, 400, 40, 40);
                 app.Initialize();
                 app.MarkFocused();
-
-                Explorer.WindowManager.Applications.Add(app);
-                app.zIndex = Explorer.WindowManager.GetTopZIndex() + 1;
-
                 app.Visible = true;
 
+                Explorer.WindowManager.Applications.Add(app);
                 Kernel.ProcessManager.Start(app);
 
                 Explorer.Taskbar.UpdateApplicationButtons();
