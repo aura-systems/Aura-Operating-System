@@ -16,6 +16,7 @@ namespace Aura_OS
 {
     public class WindowManager : IManager
     {
+        public static bool WindowMoving = false;
         public Application FocusedApp { get; set; }
 
         public List<Application> Applications;

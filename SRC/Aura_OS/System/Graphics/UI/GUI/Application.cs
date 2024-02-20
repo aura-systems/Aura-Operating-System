@@ -47,7 +47,6 @@ namespace Aura_OS.System.Graphics.UI.GUI
         private int _py;
         private bool _lck = false;
         private bool _pressed;
-        private bool _hasWindowMoving = false;
 
         /// <summary>
         /// Does window needs an update.
@@ -149,26 +148,26 @@ namespace Aura_OS.System.Graphics.UI.GUI
 
                 if (Kernel.MouseManager.IsLeftButtonDown)
                 {
-                    if (!_hasWindowMoving && Window.IsInside((int)MouseManager.X, (int)MouseManager.Y))
+                    if (!WindowManager.WindowMoving && Window.IsInside((int)MouseManager.X, (int)MouseManager.Y))
                     {
                         BringToFront();
                     }
 
-                    if (!_hasWindowMoving && Window.Close.IsInside((int)MouseManager.X, (int)MouseManager.Y))
+                    if (!WindowManager.WindowMoving && Window.Close.IsInside((int)MouseManager.X, (int)MouseManager.Y))
                     {
                         Window.Close.Click();
 
                         return;
                     }
-                    else if (!_hasWindowMoving && Window.Minimize.IsInside((int)MouseManager.X, (int)MouseManager.Y))
+                    else if (!WindowManager.WindowMoving && Window.Minimize.IsInside((int)MouseManager.X, (int)MouseManager.Y))
                     {
                         Window.Minimize.Click();
 
                         return;
                     }
-                    else if (!_hasWindowMoving && Window.TopBar.IsInside((int)MouseManager.X, (int)MouseManager.Y))
+                    else if (!WindowManager.WindowMoving && Window.TopBar.IsInside((int)MouseManager.X, (int)MouseManager.Y))
                     {
-                        _hasWindowMoving = true;
+                        WindowManager.WindowMoving = true;
 
                         _pressed = true;
                         if (!_lck)
@@ -181,13 +180,16 @@ namespace Aura_OS.System.Graphics.UI.GUI
                 }
                 else
                 {
+                    WindowManager.WindowMoving = false;
+
                     _pressed = false;
                     _lck = false;
-                    _hasWindowMoving = false;
                 }
 
                 if (_pressed)
                 {
+                    WindowManager.WindowMoving = true;
+
                     Window.X = (int)(MouseManager.X - _px);
                     Window.Y = (int)(MouseManager.Y - _py);
 

@@ -154,7 +154,6 @@ namespace Aura_OS
 
             Explorer = new Explorer();
             Explorer.Initialize();
-            ProcessManager.Start(Explorer);
 
             //Load Localization
             CustomConsole.WriteLineInfo("Initializing localization...");

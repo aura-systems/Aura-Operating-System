@@ -65,6 +65,7 @@ namespace Aura_OS.System.Processing.Processes
             base.Initialize();
 
             Kernel.ProcessManager.Register(this);
+            Kernel.ProcessManager.Start(this);
         }
 
         public override void Update()
