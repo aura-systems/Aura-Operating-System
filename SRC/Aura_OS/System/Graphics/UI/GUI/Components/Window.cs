@@ -19,11 +19,13 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
         public string Name;
         public Button Close;
         public Button Minimize;
+        public Button Maximize;
         public Panel TopBar;
 
         public bool HasBorders;
         public bool HasCloseButton;
         public bool HasMinimizeButton;
+        public bool HasMaximizeButton;
 
         public Window(int x, int y, int width, int height) : base(x, y, width, height)
         {
@@ -70,6 +72,19 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
                 Minimize.NoBorder = true;
                 Minimize.HasTransparency = true;
                 AddChild(Minimize);
+            }
+
+            // Force maximize for taskbar actions
+            HasMaximizeButton = true;
+
+            if (HasMaximizeButton)
+            {
+                Maximize = new Button(Kernel.ResourceManager.GetIcon("16-minimize.bmp"), Width - 60, 5);
+                Maximize.Frame = Kernel.ThemeManager.GetFrame("window.minimize.normal");
+                Maximize.NoBackground = true;
+                Maximize.NoBorder = true;
+                Maximize.HasTransparency = true;
+                AddChild(Maximize);
             }
         }
 

@@ -4,11 +4,10 @@
 * PROGRAMMER(S):    Valentin Charbonnier <valentinbreiz@gmail.com>
 */
 
-using Cosmos.System;
 using System.Collections.Generic;
+using Cosmos.System;
 using Aura_OS.System.Graphics.UI.GUI.Components;
 using Aura_OS.System.Processing.Processes;
-using Aura_OS.System.Graphics.UI.GUI.Skin;
 
 namespace Aura_OS.System.Graphics.UI.GUI
 {
@@ -40,7 +39,7 @@ namespace Aura_OS.System.Graphics.UI.GUI
 
         public bool Clicked = false;
 
-        public Dictionary<string, Button> Buttons;
+        public Dictionary<uint, Button> Buttons;
 
         public Taskbar() : base(Kernel.Gray, 0, (int)Kernel.screenHeight - taskbarHeight, (int)Kernel.screenWidth, taskbarHeight)
         {
@@ -73,7 +72,7 @@ namespace Aura_OS.System.Graphics.UI.GUI
             NetworkButton.NoBorder = true;
             AddChild(NetworkButton);
 
-            Buttons = new Dictionary<string, Button>();
+            Buttons = new Dictionary<uint, Button>();
         }
 
         public override void Update()
@@ -105,40 +104,54 @@ namespace Aura_OS.System.Graphics.UI.GUI
             {
                 if (application.Focused)
                 {
-                    Buttons[application.Name].Focused = true;
+                    Buttons[application.ID].Focused = true;
                     application.Window.TopBar.Color1 = Kernel.DarkBlue;
                     application.Window.TopBar.Color2 = Kernel.Pink;
                 }
                 else
                 {
-                    Buttons[application.Name].Focused = false;
+                    Buttons[application.ID].Focused = false;
                     application.Window.TopBar.Color1 = Kernel.DarkGray;
                 }
 
-                if (Buttons[application.Name].IsInside((int)MouseManager.X, (int)MouseManager.Y))
+                if (Buttons[application.ID].IsInside((int)MouseManager.X, (int)MouseManager.Y))
                 {
-                    application.Window.Visible = !application.Window.Visible;
-                    application.Window.Minimize.Click();
+                    if (application.Visible)
+                    {
+                        application.Window.Minimize.Click();
+                    }
+                    else
+                    {
+                        application.Window.Maximize.Click();
+                    }
                 }
             }
         }
 
         public void UpdateApplicationButtons()
         {
+            foreach (var button in Buttons.Values)
+            {
+                Children.Remove(button);
+            }
             Buttons.Clear();
 
             int buttonX = 74;
+
             foreach (var app in Explorer.WindowManager.Applications)
             {
-                var spacing = app.Name.Length * 9 + (int)app.Window.Icon.Width;
-                var button = new Button(app.Window.Icon, app.Name, buttonX, (int)Kernel.screenHeight - 28 - 3, spacing, 28);
+                string appName = app.Name + " (" + app.ID.ToString() + ")";
+                var spacing = appName.Length * 9 + (int)app.Window.Icon.Width;
+                var button = new Button(app.Window.Icon, appName, buttonX, 2, spacing, 28);
                 button.Frame = Kernel.ThemeManager.GetFrame("button.disabled");
 
-                Children.Add(button);
-                Buttons.Add(app.Name, button);
+                AddChild(button);
+                Buttons.Add(app.ID, button);
 
                 buttonX += spacing + 4;
             }
+
+            MarkDirty();
         }
 
         public override void Draw()
@@ -159,6 +172,12 @@ namespace Aura_OS.System.Graphics.UI.GUI
 
         private void DrawApplications()
         {
+            foreach (var button in Buttons)
+            {
+                button.Value.Draw(this);
+            }
+
+            /*
             foreach (var application in Explorer.WindowManager.Applications)
             {
                 if (application.Focused)
@@ -175,6 +194,7 @@ namespace Aura_OS.System.Graphics.UI.GUI
 
                 Buttons[application.Name].Draw(this);
             }
+            */
         }
 
         public void DrawNotifications()

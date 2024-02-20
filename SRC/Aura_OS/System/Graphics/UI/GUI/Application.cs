@@ -68,16 +68,22 @@ namespace Aura_OS.System.Graphics.UI.GUI
             });
             Window.Minimize.Click = new Action(() =>
             {
-                Window.Visible = false;
-                Visible = !Visible;
-
                 if (Visible)
                 {
-                    Kernel.ProcessManager.Start(this);
-                }
-                else
-                {
+                    Visible = false;
+                    Window.Visible = false;
+
                     Stop();
+                }
+            });
+            Window.Maximize.Click = new Action(() =>
+            {
+                if (!Visible)
+                {
+                    Visible = true;
+                    Window.Visible = true;
+
+                    Start();
                 }
             });
 
