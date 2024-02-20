@@ -32,6 +32,7 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
 
             _buttons = new List<Button>();
 
+            /*
             RightClick = new RightClick((int)MouseManager.X, (int)MouseManager.Y, 200, 1 * RightClickEntry.ConstHeight);
             List<RightClickEntry> rightClickEntries = new List<RightClickEntry>();
 
@@ -63,6 +64,9 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
             rightClickEntries.Add(entryRefresh);
 
             RightClick.Entries = rightClickEntries;
+            /*
+
+            */
         }
 
         public void Draw(int x, int y, int height)
@@ -91,7 +95,7 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
                 button.Draw();
             }
 
-            if (RightClick.Opened)
+            if (RightClick != null && RightClick.Opened)
             {
                 foreach (var entry in RightClick.Entries)
                 {
@@ -111,7 +115,7 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
 
             foreach (var button in _buttons)
             {
-                if (button.RightClick.Opened)
+                if (button.RightClick != null && button.RightClick.Opened)
                 {
                     foreach (var entry in button.RightClick.Entries)
                     {
@@ -298,6 +302,7 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
         {
             if (OpenNewWindow)
             {
+                /*
                 ExplorerApp app = new(CurrentPath + folderName + "\\", 500, 400, 40, 40);
                 app.Initialize();
                 app.MarkFocused();
@@ -307,6 +312,7 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
                 Kernel.ProcessManager.Start(app);
 
                 Explorer.Taskbar.UpdateApplicationButtons();
+                */
             }
             else
             {
