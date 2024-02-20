@@ -83,6 +83,8 @@ namespace Aura_OS.System.Graphics.UI.GUI
             {
                 if (!Visible)
                 {
+                    MarkFocused();
+
                     Visible = true;
                     Window.Visible = true;
 
