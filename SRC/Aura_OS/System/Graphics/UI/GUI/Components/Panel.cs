@@ -4,6 +4,7 @@
 * PROGRAMMERS:      Valentin Charbonnier <valentinbreiz@gmail.com>
 */
 
+using Cosmos.System.Graphics.Fonts;
 using System.Drawing;
 
 namespace Aura_OS.System.Graphics.UI.GUI.Components
@@ -14,6 +15,7 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
         public Color? Color2;
         public bool Borders = false;
         public bool Background = true;
+        public string Text = "";
 
         public Panel(Color color, int x, int y, int width, int height) : base(x, y, width, height)
         {
@@ -32,20 +34,25 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
             {
                 if (Color2 == null)
                 {
-                    Kernel.canvas.DrawFilledRectangle(Color1, X, Y, Width, Height);
+                    Clear(Color1);
                 }
                 else
                 {
-                    Utils.DrawGradient(Color1, Color2.Value, X, Y, Width, Height);
+                    DrawGradient(Color1, Color2.Value, 0, 0, Width, Height);
                 }
             }
 
             if (Borders)
             {
-                Kernel.canvas.DrawLine(Kernel.DarkGray, X, Y, X + Width, Y);
-                Kernel.canvas.DrawLine(Kernel.DarkGray, X, Y, X, Y + Height);
-                Kernel.canvas.DrawLine(Kernel.WhiteColor, X, Y + Height, X + Width + 1, Y + Height);
-                Kernel.canvas.DrawLine(Kernel.WhiteColor, X + Width, Y, X + Width, Y + Height);
+                DrawLine(Kernel.DarkGray, 0, 0, 0 + Width, 0);
+                DrawLine(Kernel.DarkGray, 0, 0, 0, 0 + Height);
+                DrawLine(Kernel.WhiteColor, 0, 0 + Height, 0 + Width + 1, 0 + Height);
+                DrawLine(Kernel.WhiteColor, 0 + Width, 0, 0 + Width, 0 + Height);
+            }
+
+            if (Text != "")
+            {
+                DrawString(Text, PCScreenFont.Default, Kernel.WhiteColor, 5, 4);
             }
         }
     }

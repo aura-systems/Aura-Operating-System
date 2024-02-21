@@ -7,6 +7,8 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Drawing;
+using System.IO;
 using Sys = Cosmos.System;
 using Cosmos.Core.Memory;
 using Cosmos.HAL;
@@ -16,16 +18,13 @@ using Cosmos.System.FileSystem;
 using Cosmos.System.FileSystem.VFS;
 using Cosmos.System.Graphics;
 using Cosmos.System.Graphics.Fonts;
-using Aura_OS.Processing;
-using System.Drawing;
 using Aura_OS.System;
-using System.IO;
+using Aura_OS.Processing;
 using Aura_OS.System.Processing;
-using Aura_OS.System.Graphics.UI.GUI;
 using Aura_OS.System.Graphics;
 using Aura_OS.System.Processing.Interpreter;
-using Aura_OS.System.Processing.Interpreter.Commands;
 using Aura_OS.System.Processing.Processes;
+using Aura_OS.System.Graphics.UI.GUI.Skin;
 
 namespace Aura_OS
 {
@@ -36,7 +35,7 @@ namespace Aura_OS
         public static string userLogged = "root";
         public static string userLevelLogged = "admin";
         public static bool Running = false;
-        public static string Version = "0.7.0";
+        public static string Version = "0.7.1";
         public static string Revision = VersionInfo.revision;
         public static string langSelected = "en_US";
         public static string BootTime = "01/01/1970";
@@ -64,10 +63,11 @@ namespace Aura_OS
         public static PCScreenFont fontTerminal;
 
         //GRAPHICS
-        public static uint screenWidth = 1920;
-        public static uint screenHeight = 1080;
+        public static uint ScreenWidth = 1920;
+        public static uint ScreenHeight = 1080;
 
-        public static Canvas canvas;
+        public static Canvas Canvas;
+
         public static Color WhiteColor = Color.White;
         public static Color BlackColor = Color.Black;
         public static Color avgColPen = Color.PowderBlue;
@@ -84,6 +84,8 @@ namespace Aura_OS
         public static System.Input.MouseManager MouseManager;
         public static ApplicationManager ApplicationManager;
         public static PackageManager PackageManager;
+        public static ResourceManager ResourceManager;
+        public static ThemeManager ThemeManager;
         public static Explorer Explorer;
 
         // Textmode Console
@@ -108,8 +110,6 @@ namespace Aura_OS
             //Start Filesystem
             VFSManager.RegisterVFS(VirtualFileSystem);
 
-            //START PROCESSES
-            CustomConsole.WriteLineInfo("Starting process manager...");
             ProcessManager = new ProcessManager();
             ProcessManager.Initialize();
 
@@ -127,38 +127,32 @@ namespace Aura_OS
             CustomConsole.WriteLineInfo("Starting Canvas...");
 
             //START GRAPHICS
-            canvas = FullScreenCanvas.GetFullScreenCanvas(new Mode(screenWidth, screenHeight, ColorDepth.ColorDepth32));
-            canvas.DrawImage(AuraLogoWhite, (int)((screenWidth / 2) - (AuraLogoWhite.Width / 2)), (int)((screenHeight / 2) - (AuraLogoWhite.Height / 2)));
-            canvas.Display();
+            Canvas = FullScreenCanvas.GetFullScreenCanvas(new Mode(ScreenWidth, ScreenHeight, ColorDepth.ColorDepth32));
+            Canvas.DrawImage(AuraLogoWhite, (int)((ScreenWidth / 2) - (AuraLogoWhite.Width / 2)), (int)((ScreenHeight / 2) - (AuraLogoWhite.Height / 2)));
+            Canvas.Display();
 
-            CustomConsole.BootConsole = new(0, 0, (int)screenWidth, (int)screenHeight);
+            CustomConsole.BootConsole = new(0, 0, (int)ScreenWidth, (int)ScreenHeight);
             CustomConsole.BootConsole.DrawBackground = false;
 
             TextmodeConsole = null;
 
-            CustomConsole.WriteLineInfo("Loading icons...");
-            Files.LoadImages();
+            ResourceManager = new ResourceManager();
+            ResourceManager.Initialize();
 
-            CustomConsole.WriteLineInfo("Starting package manager...");
+            ThemeManager = new ThemeManager();
+            ThemeManager.Initialize();
+
             PackageManager = new PackageManager();
             PackageManager.Initialize();
 
-            CustomConsole.WriteLineInfo("Starting application manager...");
             ApplicationManager = new ApplicationManager();
-            CustomConsole.WriteLineInfo("Registering applications...");
-            ApplicationManager.LoadApplications();
+            ApplicationManager.Initialize();
 
-            CustomConsole.WriteLineInfo("Starting mouse manager...");
             MouseManager = new System.Input.MouseManager();
+            MouseManager.Initialize();
 
-            CustomConsole.WriteLineInfo("Starting Explorer...");
             Explorer = new Explorer();
             Explorer.Initialize();
-            ProcessManager.Start(Explorer);
-
-            CustomConsole.WriteLineInfo("Starting mouse...");
-            Cosmos.System.MouseManager.ScreenWidth = screenWidth;
-            Cosmos.System.MouseManager.ScreenHeight = screenHeight;
 
             //Load Localization
             CustomConsole.WriteLineInfo("Initializing localization...");
@@ -180,6 +174,8 @@ namespace Aura_OS
             Running = true;
         }
 
+        public static string Debug = "";
+
         public static void Run()
         {
             try
@@ -196,16 +192,15 @@ namespace Aura_OS
                 FreeCount = Heap.Collect();
 
                 ProcessManager.Update();
-
                 MouseManager.Update();
-                MouseManager.DrawRightClick();
 
                 DrawCursor(Sys.MouseManager.X, Sys.MouseManager.Y);
 
-                canvas.DrawString("Aura Operating System [" + Version + "." + Revision + "]", font, WhiteColor, 2, 0);
-                canvas.DrawString("fps=" + _fps, font, WhiteColor, 2, font.Height);
+                Canvas.DrawString("Aura Operating System [" + Version + "." + Revision + "]", font, WhiteColor, 2, 0);
+                Canvas.DrawString("fps=" + _fps, font, WhiteColor, 2, font.Height);
+                Canvas.DrawString(Debug, font, WhiteColor, 2, font.Height * 2);
 
-                canvas.Display();
+                Canvas.Display();
             }
             catch (Exception ex)
             {
@@ -222,7 +217,7 @@ namespace Aura_OS
 
         public static void DrawCursor(uint x, uint y)
         {
-            canvas.DrawImageAlpha(ResourceManager.GetImage("00-cursor.bmp"), (int)x, (int)y);
+            Canvas.DrawImageAlpha(Kernel.ResourceManager.GetIcon("00-cursor.bmp"), (int)x, (int)y);
         }
     }
 }

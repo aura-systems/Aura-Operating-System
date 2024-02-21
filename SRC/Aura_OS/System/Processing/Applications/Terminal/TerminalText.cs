@@ -31,9 +31,9 @@ namespace Aura_OS.System.Processing.Applications.Terminal
 
                 _terminal.Console.WriteLine(value);
 
+                _terminal.Console.MarkDirty();
                 Explorer.WindowManager.DrawWindows();
-                Explorer.Taskbar.Draw();
-                Kernel.canvas.Display();
+                Kernel.Canvas.Display();
             }
         }
 
@@ -46,9 +46,9 @@ namespace Aura_OS.System.Processing.Applications.Terminal
 
                 _terminal.Console.Write(value);
 
+                _terminal.Console.MarkDirty();
                 Explorer.WindowManager.DrawWindows();
-                Explorer.Taskbar.Draw();
-                Kernel.canvas.Display();
+                Kernel.Canvas.Display();
             }
         }
 
@@ -61,9 +61,9 @@ namespace Aura_OS.System.Processing.Applications.Terminal
 
                 _terminal.Console.Write(value.ToString());
 
+                _terminal.Console.MarkDirty();
                 Explorer.WindowManager.DrawWindows();
-                Explorer.Taskbar.Draw();
-                Kernel.canvas.Display();
+                Kernel.Canvas.Display();
             }
         }
 

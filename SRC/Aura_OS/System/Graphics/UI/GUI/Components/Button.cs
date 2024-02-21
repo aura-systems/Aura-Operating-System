@@ -4,7 +4,6 @@
 * PROGRAMMERS:      Valentin Charbonnier <valentinbreiz@gmail.com>
 */
 
-using Aura_OS.System.Input;
 using Cosmos.System.Graphics;
 using System;
 using System.Drawing;
@@ -22,14 +21,13 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
         public string Text;
         public Bitmap Image;
         public Action Click;
-
         public Color BackColor = Color.LightGray;
         public Color TextColor = Color.Black;
         public bool NoBackground = false;
         public bool NoBorder = false;
         public bool Light = false;
         public bool Focused = false;
-        public TextAlign TextAlignStyle { get; set; } = TextAlign.Center;
+        public TextAlign TextAlignStyle = TextAlign.Center;
 
         public Button(string text, int x, int y, int width, int height) : base(x, y, width, height)
         {
@@ -73,91 +71,46 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
 
         public override void Draw()
         {
-            if (!NoBorder && Light)
-            {
-                if (!NoBackground)
-                {
-                    Kernel.canvas.DrawFilledRectangle(BackColor, X + 2, Y + 2, Width - 3, Height - 3);
-                }
-
-                Kernel.canvas.DrawLine(Kernel.DarkGray, X, Y, X + Width, Y);
-                Kernel.canvas.DrawLine(Kernel.DarkGray, X, Y, X, Y + Height);
-                Kernel.canvas.DrawLine(Kernel.WhiteColor, X, Y + Height, X + Width + 1, Y + Height);
-                Kernel.canvas.DrawLine(Kernel.WhiteColor, X + Width, Y, X + Width, Y + Height);
-            }
-            else if (!NoBorder && !Light)
-            {
-                if (Focused)
-                {
-                    if (!NoBackground)
-                    {
-                        Utils.DrawGradient(Kernel.Gray, Kernel.Pink, X + 2, Y + 2, Width - 3, Height - 3);
-                    }
-
-                    Kernel.canvas.DrawLine(Kernel.BlackColor, X, Y, X + Width, Y);
-                    Kernel.canvas.DrawLine(Kernel.Gray, X, Y + 1, X + Width, Y + 1);
-                    Kernel.canvas.DrawLine(Kernel.BlackColor, X, Y, X, Y + Height);
-                    Kernel.canvas.DrawLine(Kernel.Gray, X + 1, Y + 1, X + 1, Y + Height);
-                    Kernel.canvas.DrawLine(Kernel.DarkGray, X + 1, Y + Height - 1, X + Width, Y + Height - 1);
-                    Kernel.canvas.DrawLine(Kernel.WhiteColor, X, Y + Height, X + Width + 1, Y + Height);
-                    Kernel.canvas.DrawLine(Kernel.DarkGray, X + Width - 1, Y + 1, X + Width - 1, Y + Height);
-                    Kernel.canvas.DrawLine(Kernel.WhiteColor, X + Width, Y, X + Width, Y + Height);
-                }
-                else
-                {
-                    if (!NoBackground)
-                    {
-                        Kernel.canvas.DrawFilledRectangle(BackColor, X + 2, Y + 2, Width - 3, Height - 3);
-                    }
-
-                    Kernel.canvas.DrawLine(Kernel.WhiteColor, X, Y, X + Width, Y);
-                    Kernel.canvas.DrawLine(Kernel.Gray, X, Y + 1, X + Width, Y + 1);
-                    Kernel.canvas.DrawLine(Kernel.WhiteColor, X, Y, X, Y + Height);
-                    Kernel.canvas.DrawLine(Kernel.Gray, X + 1, Y + 1, X + 1, Y + Height);
-                    Kernel.canvas.DrawLine(Kernel.DarkGray, X + 1, Y + Height - 1, X + Width, Y + Height - 1);
-                    Kernel.canvas.DrawLine(Kernel.BlackColor, X, Y + Height, X + Width + 1, Y + Height);
-                    Kernel.canvas.DrawLine(Kernel.DarkGray, X + Width - 1, Y + 1, X + Width - 1, Y + Height);
-                    Kernel.canvas.DrawLine(Kernel.BlackColor, X + Width, Y, X + Width, Y + Height);
-                }
-            }
-            else
-            {
-                if (!NoBackground)
-                {
-                    Kernel.canvas.DrawFilledRectangle(BackColor, X + 2, Y + 2, Width - 3, Height - 3);
-                }
-            }
-
             if (Text != null && Image != null)
             {
-                Kernel.canvas.DrawString(Text, Kernel.font, TextColor, X + 4 + (int)Image.Width + 4, Y + (Height / 2 - Kernel.font.Height / 2));
+                if (!NoBackground)
+                {
+                    base.Draw();
+                }
 
-                int imageX = X + 4;
-                int imageY = Y + (Height / 2 - (int)Image.Height / 2);
-                Kernel.canvas.DrawImageAlpha(Image, imageX, imageY);
+                DrawString(Text, Kernel.font, TextColor, 4 + (int)Image.Width + 4, (Height / 2 - Kernel.font.Height / 2));
+
+                int imageX = 4;
+                int imageY = Height / 2 - (int)Image.Height / 2;
+                DrawImageAlpha(Image, imageX, imageY);
             }
             else if (Text != null)
             {
+                if (!NoBackground)
+                {
+                    base.Draw();
+                }
+
                 int textX;
-                int textY = Y + (Height / 2 - Kernel.font.Height / 2);
+                int textY = (Height / 2 - Kernel.font.Height / 2);
 
                 if (TextAlignStyle == TextAlign.Center)
                 {
                     int textWidth = Text.Length * Kernel.font.Width;
-                    textX = X + (Width / 2) - (textWidth / 2);
+                    textX = (Width / 2) - (textWidth / 2);
                 }
                 else
                 {
-                    textX = X + 4;
+                    textX = 4;
                 }
 
-                Kernel.canvas.DrawString(Text, Kernel.font, TextColor, textX, textY);
+                DrawString(Text, Kernel.font, TextColor, textX, textY);
             }
             else if (Image != null)
             {
-                int imageX = X + (Width / 2 - (int)Image.Width / 2);
-                int imageY = Y + (Height / 2 - (int)Image.Height / 2);
-                Kernel.canvas.DrawImageAlpha(Image, imageX, imageY);
+                int imageX = 0 + (Width / 2 - (int)Image.Width / 2);
+                int imageY = 0 + (Height / 2 - (int)Image.Height / 2);
+                DrawImageAlpha(Image, imageX, imageY);
             }
         }
     }

@@ -7,7 +7,9 @@
 using Aura_OS.System.Graphics.UI.GUI;
 using Aura_OS.System.Processing.Applications.Emulators.GameBoyEmu.DMG;
 using Aura_OS.System.Processing.Applications.Emulators.GameBoyEmu.Utils;
+using Cosmos.Core;
 using Cosmos.System;
+using CPU = Aura_OS.System.Processing.Applications.Emulators.GameBoyEmu.DMG.CPU;
 
 namespace Aura_OS.System.Processing.Applications.Emulators.GameBoyEmu
 {
@@ -30,7 +32,7 @@ namespace Aura_OS.System.Processing.Applications.Emulators.GameBoyEmu
 
             _mmu = new MMU();
             _cpu = new CPU(_mmu);
-            _ppu = new PPU(x, y);
+            _ppu = new PPU(this);
             _timer = new TIMER();
             _joypad = new JOYPAD();
 
@@ -43,7 +45,7 @@ namespace Aura_OS.System.Processing.Applications.Emulators.GameBoyEmu
 
             _mmu = new MMU();
             _cpu = new CPU(_mmu);
-            _ppu = new PPU(x, y);
+            _ppu = new PPU(this);
             _timer = new TIMER();
             _joypad = new JOYPAD();
 
@@ -55,9 +57,6 @@ namespace Aura_OS.System.Processing.Applications.Emulators.GameBoyEmu
         public override void Update()
         {
             base.Update();
-
-            _ppu.X = X;
-            _ppu.Y = Y;
 
             if (Focused)
             {
@@ -76,6 +75,8 @@ namespace Aura_OS.System.Processing.Applications.Emulators.GameBoyEmu
                 _ppu.update(_cpuCycles, _mmu);
                 _joypad.update(_mmu);
                 handleInterrupts();
+
+                MarkDirty();
             }
             _cyclesThisUpdate -= Constants.CYCLES_PER_UPDATE;
 
@@ -85,6 +86,13 @@ namespace Aura_OS.System.Processing.Applications.Emulators.GameBoyEmu
 
                 keyEvent = null;
             }
+        }
+
+        public override void Draw()
+        {
+            base.Draw();
+
+            DrawImage(_ppu.bmp.Bitmap, 0, 0);
         }
 
         private void handleInterrupts()

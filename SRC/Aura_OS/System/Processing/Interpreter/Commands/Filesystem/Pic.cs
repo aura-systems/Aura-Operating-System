@@ -45,20 +45,14 @@ namespace Aura_OS.System.Processing.Interpreter.Commands.Filesystem
                 }
 
                 var app = new PictureApp(name, bitmap, width, (int)bitmap.Height + 20);
-
+                app.MarkFocused();
                 app.Initialize();
+                app.Visible = true;
 
                 Explorer.WindowManager.Applications.Add(app);
-                app.zIndex = Explorer.WindowManager.GetTopZIndex() + 1;
-                Explorer.WindowManager.MarkStackDirty();
-
-                app.Visible = true;
-                app.Focused = true;
-
                 Kernel.ProcessManager.Start(app);
 
                 Explorer.Taskbar.UpdateApplicationButtons();
-                Explorer.WindowManager.UpdateFocusStatus();
 
                 return new ReturnInfo(this, ReturnCode.OK);
             }

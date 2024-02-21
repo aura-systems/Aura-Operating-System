@@ -4,8 +4,12 @@
 * PROGRAMMERS:      Valentin Charbonnier <valentinbreiz@gmail.com>
 */
 
+using Aura_OS.System.Graphics.UI.GUI.Skin;
+using Cosmos.System;
 using Cosmos.System.Graphics;
 using Cosmos.System.Graphics.Fonts;
+using System.Drawing;
+using System.Runtime.InteropServices;
 
 namespace Aura_OS.System.Graphics.UI.GUI.Components
 {
@@ -15,74 +19,134 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
         public string Name;
         public Button Close;
         public Button Minimize;
+        public Button Maximize;
         public Panel TopBar;
 
-        public bool Borders;
+        public bool HasBorders;
         public bool HasCloseButton;
         public bool HasMinimizeButton;
+        public bool HasMaximizeButton;
 
         public Window(int x, int y, int width, int height) : base(x, y, width, height)
         {
-            Borders = false;
+            Frame = Kernel.ThemeManager.GetFrame("window");
+
+            HasBorders = false;
         }
 
         public Window(string name, int x, int y, int width, int height, bool hasCloseButton = true, bool hasMinimizeButton = true) : base(x, y, width, height)
         {
-            Icon = ResourceManager.GetImage("16-program.bmp");
+            Frame = Kernel.ThemeManager.GetFrame("window");
+
+            Icon = Kernel.ResourceManager.GetIcon("16-program.bmp");
             Name = name;
             HasCloseButton = hasCloseButton;
             HasMinimizeButton = hasMinimizeButton;
-            Borders = true;
+            HasBorders = true;
+
+            if (HasBorders)
+            {
+                TopBar = new Panel(Color.Transparent, 3, 3, Width - 5, 18);
+                TopBar.Background = false;
+                TopBar.Borders = false;
+                TopBar.HasTransparency = true;
+                TopBar.Text = name;
+                AddChild(TopBar);
+            }
 
             if (HasCloseButton)
             {
-                Close = new Button(ResourceManager.GetImage("16-close.bmp"), X + Width - 20, Y + 5);
+                Close = new Button(Kernel.ResourceManager.GetIcon("16-close.bmp"), Width - 20, 5);
+                Close.Frame = Kernel.ThemeManager.GetFrame("window.close.normal");
                 Close.NoBackground = true;
                 Close.NoBorder = true;
+                Close.HasTransparency = true;
+                AddChild(Close);
             }
 
             if (HasMinimizeButton)
             {
-                Minimize = new Button(ResourceManager.GetImage("16-minimize.bmp"), X + Width - 38, Y + 5);
+                Minimize = new Button(Kernel.ResourceManager.GetIcon("16-minimize.bmp"), Width - 38, 5);
+                Minimize.Frame = Kernel.ThemeManager.GetFrame("window.minimize.normal");
                 Minimize.NoBackground = true;
                 Minimize.NoBorder = true;
+                Minimize.HasTransparency = true;
+                AddChild(Minimize);
             }
 
-            TopBar = new Panel(Kernel.DarkBlue, Kernel.Pink, X + 3, Y + 3, Width - 5, 18);
+            // Force maximize for taskbar actions
+            HasMaximizeButton = true;
+
+            if (HasMaximizeButton)
+            {
+                Maximize = new Button(Kernel.ResourceManager.GetIcon("16-minimize.bmp"), Width - 60, 5);
+                Maximize.Frame = Kernel.ThemeManager.GetFrame("window.minimize.normal");
+                Maximize.NoBackground = true;
+                Maximize.NoBorder = true;
+                Maximize.HasTransparency = true;
+                AddChild(Maximize);
+            }
+        }
+
+        public override void Update()
+        {
+            /*
+            if (HasBorders)
+            {
+                TopBar.X = X + 3;
+                TopBar.Y = Y + 3;
+            }
+            if (HasCloseButton)
+            {
+                Close.X = X + Width - 20;
+                Close.Y = Y + 5;
+
+                /*
+                if (Close.IsInside((int)MouseManager.X, (int)MouseManager.Y))
+                {
+                    Close.Frame = Kernel.SkinParser.GetFrame("window.close.highlighted");
+                }
+                else
+                {
+                    Close.Frame = Kernel.SkinParser.GetFrame("window.close.normal");
+                }
+                
+            }
+            if (HasMinimizeButton)
+            {
+                Minimize.X = X + Width - 38;
+                Minimize.Y = Y + 5;
+
+                /*
+                if (Minimize.IsInside((int)MouseManager.X, (int)MouseManager.Y))
+                {
+                    Minimize.Frame = Kernel.SkinParser.GetFrame("window.minimize.highlighted");
+                }
+                else
+                {
+                    Minimize.Frame = Kernel.SkinParser.GetFrame("window.minimize.normal");
+                }
+                
+            }
+            */
         }
 
         public override void Draw()
         {
-            Kernel.canvas.DrawFilledRectangle(Kernel.DarkGrayLight, X + 2, Y + 2, Width - 3, Height - 3);
+            base.Draw();
 
-            Kernel.canvas.DrawLine(Kernel.Gray, X, Y, X + Width, Y);
-            Kernel.canvas.DrawLine(Kernel.WhiteColor, X, Y + 1, X + Width, Y + 1);
-            Kernel.canvas.DrawLine(Kernel.Gray, X, Y, X, Y + Height);
-            Kernel.canvas.DrawLine(Kernel.WhiteColor, X + 1, Y + 1, X + 1, Y + Height);
-            Kernel.canvas.DrawLine(Kernel.DarkGray, X + 1, Y + Height - 1, X + Width, Y + Height - 1);
-            Kernel.canvas.DrawLine(Kernel.BlackColor, X, Y + Height, X + Width + 1, Y + Height);
-            Kernel.canvas.DrawLine(Kernel.DarkGray, X + Width - 1, Y + 1, X + Width - 1, Y + Height);
-            Kernel.canvas.DrawLine(Kernel.BlackColor, X + Width, Y, X + Width, Y + Height);
-
-            if (Borders)
+            if (HasBorders)
             {
-                TopBar.X = X + 3;
-                TopBar.Y = Y + 3;
-                TopBar.Draw();
-                Kernel.canvas.DrawString(Name, PCScreenFont.Default, Kernel.WhiteColor, X + 5, Y + 4);
+                TopBar.Draw(this);
 
                 if (HasCloseButton)
                 {
-                    Close.X = X + Width - 20;
-                    Close.Y = Y + 5;
-                    Close.Draw();
+                    Close.Draw(this);
                 }
 
                 if (HasMinimizeButton)
                 {
-                    Minimize.X = X + Width - 38;
-                    Minimize.Y = Y + 5;
-                    Minimize.Draw();
+                    Minimize.Draw(this);
                 }
             }
         }

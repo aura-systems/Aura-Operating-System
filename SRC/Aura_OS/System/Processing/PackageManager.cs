@@ -11,7 +11,7 @@ using System.Collections.Generic;
 
 namespace Aura_OS.System.Processing
 {
-    public class PackageManager
+    public class PackageManager : IManager
     {
         public string RepositoryUrl = "http://aura.valentin.bzh/repository.json";
         public List<Package> Repository;
@@ -19,6 +19,8 @@ namespace Aura_OS.System.Processing
 
         public void Initialize()
         {
+            CustomConsole.WriteLineInfo("Starting package manager...");
+
             Repository = new List<Package>();
             Packages = new List<Package>();
         }
@@ -135,6 +137,15 @@ namespace Aura_OS.System.Processing
             }
 
             Console.WriteLine(packageName + " not found.");
+        }
+
+        /// <summary>
+        /// Returns the name of the manager.
+        /// </summary>
+        /// <returns>The name of the manager.</returns>
+        public string GetName()
+        {
+            return "Package Manager";
         }
     }
 }

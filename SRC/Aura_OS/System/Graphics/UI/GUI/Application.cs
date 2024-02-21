@@ -5,11 +5,11 @@
                     Valentin Charbonnier <valentinbreiz@gmail.com>
 */
 
+using System;
+using System.Drawing;
 using Cosmos.System;
 using Aura_OS.Processing;
 using Aura_OS.System.Graphics.UI.GUI.Components;
-using System;
-using System.Collections.Generic;
 using Aura_OS.System.Processing.Processes;
 
 namespace Aura_OS.System.Graphics.UI.GUI
@@ -19,24 +19,50 @@ namespace Aura_OS.System.Graphics.UI.GUI
         public readonly int Width;
         public readonly int Height;
 
+        public bool ForceDirty
+        {
+            get => _forceDirty;
+            set
+            {
+                _forceDirty = value;
+                Window.ForceDirty = true;
+            }
+        }
+
+        public bool Focused
+        {
+            get => Explorer.WindowManager.FocusedApp == this;
+        }
+
         public int X;
         public int Y;
         public Window Window;
-        public bool Focused = false;
+        
         public bool Visible = false;
         public int zIndex = 0;
 
+        private bool _forceDirty = false;
         private int _px;
         private int _py;
         private bool _lck = false;
         private bool _pressed;
-        private bool _hasWindowMoving = false;
+
+        /// <summary>
+        /// Does window needs an update.
+        /// </summary>
+        private bool _isDirty = true;
+
+        /// <summary>
+        /// Is base window buffer cached (only true after first draw or window size update).
+        /// </summary>
+        private bool _isCached = false;
 
         public Application(string name, int width, int height, int x = 0, int y = 0) : base(name, ProcessType.Program)
         {
             Window = new Window(name, x, y, width + 1, height + 1);
             Window.Close.Click = new Action(() =>
             {
+                Window.Visible = false;
                 Stop();
                 Explorer.WindowManager.Applications.Remove(this);
                 Kernel.ProcessManager.Processes.Remove(this);
@@ -44,33 +70,45 @@ namespace Aura_OS.System.Graphics.UI.GUI
             });
             Window.Minimize.Click = new Action(() =>
             {
-                Visible = !Visible;
-
                 if (Visible)
                 {
-                    Kernel.ProcessManager.Start(this);
-                }
-                else
-                {
+                    MarkUnFocused();
+
+                    Visible = false;
+                    Window.Visible = false;
+
                     Stop();
+                }
+            });
+            Window.Maximize.Click = new Action(() =>
+            {
+                if (!Visible)
+                {
+                    MarkFocused();
+
+                    Visible = true;
+                    Window.Visible = true;
+
+                    Start();
                 }
             });
 
             Window.TopBar.RightClick = new RightClick((int)MouseManager.X, (int)MouseManager.Y, 200, 2 * RightClickEntry.ConstHeight);
-            List<RightClickEntry> rightClickEntries = new List<RightClickEntry>();
-            RightClickEntry entry = new("Close", 0, 0, Window.TopBar.RightClick.Width);
+
+            RightClickEntry entry = new("Close", Window.TopBar.RightClick.Width);
             entry.Click = new Action(() =>
             {
                 Window.Close.Click();
             });
-            rightClickEntries.Add(entry);
-            RightClickEntry entry2 = new("Minimize", 0, 0, Window.TopBar.RightClick.Width);
+
+            RightClickEntry entry2 = new("Minimize", Window.TopBar.RightClick.Width);
             entry2.Click = new Action(() =>
             {
                 Window.Minimize.Click();
             });
-            rightClickEntries.Add(entry2);
-            Window.TopBar.RightClick.Entries = rightClickEntries;
+
+            Window.TopBar.RightClick.AddEntry(entry);
+            Window.TopBar.RightClick.AddEntry(entry2);
 
             X = x + 3;
             Y = y + Window.TopBar.Height + 3;
@@ -109,26 +147,26 @@ namespace Aura_OS.System.Graphics.UI.GUI
 
                 if (Kernel.MouseManager.IsLeftButtonDown)
                 {
-                    if (!_hasWindowMoving && Window.IsInside((int)MouseManager.X, (int)MouseManager.Y))
+                    if (!WindowManager.WindowMoving && Window.IsInside((int)MouseManager.X, (int)MouseManager.Y))
                     {
                         BringToFront();
                     }
 
-                    if (!_hasWindowMoving && Window.Close.IsInside((int)MouseManager.X, (int)MouseManager.Y))
+                    if (!WindowManager.WindowMoving && Window.Close.IsInside((int)MouseManager.X, (int)MouseManager.Y))
                     {
                         Window.Close.Click();
 
                         return;
                     }
-                    else if (!_hasWindowMoving && Window.Minimize.IsInside((int)MouseManager.X, (int)MouseManager.Y))
+                    else if (!WindowManager.WindowMoving && Window.Minimize.IsInside((int)MouseManager.X, (int)MouseManager.Y))
                     {
                         Window.Minimize.Click();
 
                         return;
                     }
-                    else if (!_hasWindowMoving && Window.TopBar.IsInside((int)MouseManager.X, (int)MouseManager.Y))
+                    else if (!WindowManager.WindowMoving && Window.TopBar.IsInside((int)MouseManager.X, (int)MouseManager.Y))
                     {
-                        _hasWindowMoving = true;
+                        WindowManager.WindowMoving = true;
 
                         _pressed = true;
                         if (!_lck)
@@ -141,13 +179,16 @@ namespace Aura_OS.System.Graphics.UI.GUI
                 }
                 else
                 {
+                    WindowManager.WindowMoving = false;
+
                     _pressed = false;
                     _lck = false;
-                    _hasWindowMoving = false;
                 }
 
                 if (_pressed)
                 {
+                    WindowManager.WindowMoving = true;
+
                     Window.X = (int)(MouseManager.X - _px);
                     Window.Y = (int)(MouseManager.Y - _py);
 
@@ -159,16 +200,82 @@ namespace Aura_OS.System.Graphics.UI.GUI
 
         public virtual void Draw()
         {
-            if (Visible)
+            if (_isCached)
+            {
+                Window.DrawCacheBuffer();
+            }
+            else
             {
                 Window.Draw();
+                Window.SaveCacheBuffer();
+                _isCached = true;
             }
+        }
+
+        public bool IsDirty()
+        {
+            return _isDirty;
+        }
+
+        public virtual void MarkDirty()
+        {
+            _isDirty = true;
+        }
+
+        public void MarkCleaned()
+        {
+            _isDirty = false;
+        }
+
+        public void MarkUnFocused()
+        {
+            Explorer.WindowManager.FocusedApp = null;
+        }
+
+        public void MarkFocused()
+        {
+            Explorer.WindowManager.FocusedApp = this;
+        }
+
+        public void AddChild(Component component)
+        {
+            Window.AddChild(component);
         }
 
         private void BringToFront()
         {
-            zIndex = Explorer.WindowManager.GetTopZIndex() + 1;
-            Explorer.WindowManager.MarkStackDirty();
+            MarkFocused();
+            Explorer.Taskbar.MarkDirty();
+            Explorer.WindowManager.BringToFront(Window);
         }
+
+        #region Drawing
+
+        public void DrawLine(Color color, int xStart, int yStart, int width, int height)
+        {
+            Window.DrawLine(color, xStart + 4, yStart + Window.TopBar.Height + 6, width, height);
+        }
+
+        public void DrawString(string str, int x, int y)
+        {
+            Window.DrawString(str, x + 4, y + Window.TopBar.Height + 6);
+        }
+
+        public void DrawString(string str, Cosmos.System.Graphics.Fonts.Font font, Color color, int x, int y)
+        {
+            Window.DrawString(str, font, color, x + 4, y + Window.TopBar.Height + 6);
+        }
+
+        public void DrawImage(Cosmos.System.Graphics.Bitmap image, int x, int y)
+        {
+            Window.DrawImage(image, x + 4, y + Window.TopBar.Height + 6);
+        }
+
+        public void DrawImageAlpha(Cosmos.System.Graphics.Bitmap image, int x, int y)
+        {
+            Window.DrawImageAlpha(image, x + 4, y + Window.TopBar.Height + 6);
+        }
+
+        #endregion
     }
 }

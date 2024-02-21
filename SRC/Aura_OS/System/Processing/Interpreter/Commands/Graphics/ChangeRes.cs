@@ -32,7 +32,7 @@ namespace Aura_OS.System.Processing.Interpreter.Commands.Graphics
         {
             Console.WriteLine("Available modes:");
 
-            foreach (var mode in Kernel.canvas.AvailableModes)
+            foreach (var mode in Kernel.Canvas.AvailableModes)
             {
                 Console.WriteLine("- " + mode.ToString());
             }
@@ -58,7 +58,7 @@ namespace Aura_OS.System.Processing.Interpreter.Commands.Graphics
 
                 bool modeExists = false;
 
-                foreach (var mode in Kernel.canvas.AvailableModes)
+                foreach (var mode in Kernel.Canvas.AvailableModes)
                 {
                     if (mode.Width == width && mode.Height == height)
                     {
@@ -68,13 +68,13 @@ namespace Aura_OS.System.Processing.Interpreter.Commands.Graphics
 
                 if (modeExists)
                 {
-                    Kernel.screenWidth = width;
-                    Kernel.screenHeight = height;
+                    Kernel.ScreenWidth = width;
+                    Kernel.ScreenHeight = height;
 
                     Cosmos.System.MouseManager.ScreenWidth = width;
                     Cosmos.System.MouseManager.ScreenHeight = height;
 
-                    Kernel.canvas = FullScreenCanvas.GetFullScreenCanvas(new Mode(width, height, ColorDepth.ColorDepth32));
+                    Kernel.Canvas = FullScreenCanvas.GetFullScreenCanvas(new Mode(width, height, ColorDepth.ColorDepth32));
 
                     return new ReturnInfo(this, ReturnCode.OK);
                 }

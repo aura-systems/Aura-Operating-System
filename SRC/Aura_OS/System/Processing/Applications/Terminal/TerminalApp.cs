@@ -8,9 +8,10 @@ using Aura_OS.System.Users;
 using Cosmos.System;
 using System;
 using System.Collections.Generic;
-using Aura_OS.System.Graphics;
 using Aura_OS.System.Graphics.UI.GUI;
 using Aura_OS.System.Processing.Interpreter.Commands;
+using Aura_OS.System.Graphics.UI.GUI.Components;
+using Aura_OS.System.Processing.Processes;
 
 namespace Aura_OS.System.Processing.Applications.Terminal
 {
@@ -30,25 +31,26 @@ namespace Aura_OS.System.Processing.Applications.Terminal
 
         public TerminalApp(int width, int height, int x = 0, int y = 0) : base(ApplicationName, width, height, x, y)
         {
-            Window.Icon = ResourceManager.GetImage("16-terminal.bmp");
+            Window.Icon = Kernel.ResourceManager.GetIcon("16-terminal.bmp");
 
             _commandManager = new CommandManager();
+            _commandManager.Initialize();
             _commandIndex = 0;
             _commands = new List<string>();
             _command = string.Empty;
-
             _writer = new TerminalTextWriter(this);
-            Console = new(x, y, width - 4, height - Window.TopBar.Height - 4);
+
+            Console = new(4, Window.TopBar.Height + 6, width - 7, height - Window.TopBar.Height - 9);
+            AddChild(Console);
 
             BeforeCommand();
+
+            MarkDirty();
         }
 
         public override void Update()
         {
             base.Update();
-
-            Console.X = X;
-            Console.Y = Y;
 
             if (Focused)
             {
@@ -58,6 +60,8 @@ namespace Aura_OS.System.Processing.Applications.Terminal
 
                 if (KeyboardManager.TryReadKey(out keyEvent))
                 {
+                    MarkDirty();
+
                     switch (keyEvent.Key)
                     {
                         case ConsoleKeyEx.Enter:
@@ -89,6 +93,9 @@ namespace Aura_OS.System.Processing.Applications.Terminal
                             }
 
                             BeforeCommand();
+
+                            MarkDirty();
+
                             break;
                         case ConsoleKeyEx.Backspace:
                             if (Console.ScrollMode)
@@ -167,12 +174,20 @@ namespace Aura_OS.System.Processing.Applications.Terminal
 
                     for (int i = 0; i < _command.Length; i++)
                     {
-                        Console.WriteByte(_command[i], Console.X + (baseX + i) * Kernel.font.Width, Console.Y + Console.mY * Kernel.font.Height, (uint)Console.ForegroundColor.ToArgb());
+                        Console.WriteByte(_command[i],  (baseX + i) * Kernel.font.Width, Console.mY * Kernel.font.Height, (uint)Console.ForegroundColor.ToArgb());
                     }
                 }
 
                 Console.DrawCursor();
             }
+
+            Console.DrawInParent();
+        }
+
+        public override void MarkDirty()
+        {
+            base.MarkDirty();
+            Console.MarkDirty();
         }
 
         public void ActivateRedirection()

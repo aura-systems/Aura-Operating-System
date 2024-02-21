@@ -117,7 +117,7 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
         {
             if (DrawBackground)
             {
-                Kernel.canvas.DrawFilledRectangle(Kernel.BlackColor, X, Y, Width, Height);
+                Clear(Kernel.BlackColor);
             }
 
             for (int i = 0; i < mRows; i++)
@@ -128,22 +128,22 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
                     if (_text[index].Char == 0 || _text[index].Char == '\n')
                         continue;
 
-                    WriteByte(_text[index].Char, X + j * Kernel.font.Width, Y + i * Kernel.font.Height, _text[index].ForegroundColor);
+                    WriteByte(_text[index].Char, 0 + j * Kernel.font.Width, 0 + i * Kernel.font.Height, _text[index].ForegroundColor);
                 }
             }
         }
 
         public void WriteByte(char ch, int mX, int mY, uint color)
         {
-            Kernel.canvas.DrawChar(ch, Kernel.font, Color.FromArgb((int)color), mX, mY);
+            DrawChar(ch, Kernel.font, (int)color, mX, mY);
         }
 
         public void SetCursorPos(int mX, int mY)
         {
             if (CursorVisible)
             {
-                Kernel.canvas.DrawFilledRectangle(ForegroundColor, X + mX * Kernel.font.Width,
-                    Y + mY * Kernel.font.Height + Kernel.font.Height, 8, 4);
+                DrawFilledRectangle(ForegroundColor, 0 + mX * Kernel.font.Width,
+                    0 + mY * Kernel.font.Height + Kernel.font.Height, 8, 4);
             }
         }
 
@@ -155,13 +155,6 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
                 _text[i].ForegroundColor = (uint)ForegroundColor.ToArgb();
                 _text[i].BackgroundColor = (uint)BackgroundColor.ToArgb();
             }
-        }
-
-        public void Clear()
-        {
-            ClearText();
-            mX = 0;
-            mY = -1;
         }
 
         public void DrawCursor()
@@ -192,6 +185,8 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
 
         private void Scroll()
         {
+            Clear(Color.Black);
+
             Cell[] lineToHistory = new Cell[mCols];
             Array.Copy(_text, 0, lineToHistory, 0, mCols);
             _terminalHistory.Add(lineToHistory);
@@ -222,6 +217,8 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
                 Cell[] lineFromHistory = _terminalHistory[_terminalHistoryIndex];
                 Array.Copy(lineFromHistory, 0, _text, 0, mCols);
             }
+
+            MarkDirty();
         }
 
         public void ScrollDown()

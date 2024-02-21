@@ -46,6 +46,8 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
 
                 while (KeyboardManager.TryReadKey(out keyEvent))
                 {
+                    MarkDirty();
+
                     switch (keyEvent.Key)
                     {
                         case ConsoleKeyEx.Backspace:
@@ -71,6 +73,8 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
                             }
                             break;
                     }
+
+                    MarkDirty();
                 }
             }
         }
@@ -78,25 +82,25 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
         public override void Draw()
         {
             // Dessin du cadre de la TextBox
-            Kernel.canvas.DrawFilledRectangle(Kernel.WhiteColor, X + 2, Y + 2, Width - 3, Height - 3);
-            Kernel.canvas.DrawLine(Kernel.BlackColor, X, Y, X + Width, Y);
-            Kernel.canvas.DrawLine(Kernel.Gray, X, Y + 1, X + Width, Y + 1);
-            Kernel.canvas.DrawLine(Kernel.BlackColor, X, Y, X, Y + Height);
-            Kernel.canvas.DrawLine(Kernel.Gray, X + 1, Y + 1, X + 1, Y + Height);
-            Kernel.canvas.DrawLine(Kernel.DarkGray, X + 1, Y + Height - 1, X + Width, Y + Height - 1);
-            Kernel.canvas.DrawLine(Kernel.WhiteColor, X, Y + Height, X + Width + 1, Y + Height);
-            Kernel.canvas.DrawLine(Kernel.DarkGray, X + Width - 1, Y + 1, X + Width - 1, Y + Height);
-            Kernel.canvas.DrawLine(Kernel.WhiteColor, X + Width, Y, X + Width, Y + Height);
+            Clear(Kernel.WhiteColor);
+            DrawLine(Kernel.BlackColor, 0, 0, 0 + Width, 0);
+            DrawLine(Kernel.Gray, 0, 0 + 1, 0 + Width, 0 + 1);
+            DrawLine(Kernel.BlackColor, 0, 0, 0, 0 + Height);
+            DrawLine(Kernel.Gray, 0 + 1, 0 + 1, 0 + 1, 0 + Height);
+            DrawLine(Kernel.DarkGray, 0 + 1, 0 + Height - 1, 0 + Width, 0 + Height - 1);
+            DrawLine(Kernel.WhiteColor, 0, 0 + Height, 0 + Width + 1, 0 + Height);
+            DrawLine(Kernel.DarkGray, 0 + Width - 1, 0 + 1, 0 + Width - 1, 0 + Height);
+            DrawLine(Kernel.WhiteColor, 0 + Width, 0, 0 + Width, 0 + Height);
 
             string[] lines = Text.Split('\n');
-            int offsetY = Y + 4;
-            int cursorX = X + 4;
+            int offsetY = 0 + 4;
+            int cursorX = 0 + 4;
             int cursorY = offsetY;
 
             for (int i = 0; i < lines.Length; i++)
             {
                 string line = lines[i];
-                Kernel.canvas.DrawString(line, Kernel.font, Kernel.BlackColor, cursorX, offsetY);
+                DrawString(line, Kernel.font, Kernel.BlackColor, cursorX, offsetY);
 
                 if (i == lines.Length - 1)
                 {
@@ -118,7 +122,7 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
                 int cursorWidth = 2;
                 int cursorHeight = Kernel.font.Height;
 
-                Kernel.canvas.DrawFilledRectangle(Kernel.BlackColor, cursorX, cursorY, cursorWidth, cursorHeight);
+                DrawFilledRectangle(Kernel.BlackColor, cursorX, cursorY, cursorWidth, cursorHeight);
             }
         }
     }

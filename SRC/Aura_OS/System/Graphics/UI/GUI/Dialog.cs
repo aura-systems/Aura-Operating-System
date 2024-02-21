@@ -19,12 +19,12 @@ namespace Aura_OS.System.Graphics.UI.GUI
         private bool _pressed;
         private bool _hasWindowMoving = false;
 
-        public Dialog(string title, string message) : base(title, (int)Kernel.screenWidth / 2 - 302 / 2, (int)Kernel.screenHeight / 2 - 119 / 2, 302, 119, true, false)
+        public Dialog(string title, string message) : base(title, (int)Kernel.ScreenWidth / 2 - 302 / 2, (int)Kernel.ScreenHeight / 2 - 119 / 2, 302, 119, true, false)
         {
             _title = title;
             _message = message;
             _buttons = new List<Button>();
-            AlertIcon = ResourceManager.GetImage("32-dialog-information.bmp");
+            AlertIcon = Kernel.ResourceManager.GetIcon("32-dialog-information.bmp");
         }
 
         public List<Button> GetButtons()
@@ -35,7 +35,7 @@ namespace Aura_OS.System.Graphics.UI.GUI
         public void AddButton(string buttonText, Action onClickAction)
         {
             int buttonY = 150 - 30 - 10;
-            int buttonX = X;
+            int buttonX = 0;
 
             foreach (var button in _buttons)
             {
@@ -99,12 +99,12 @@ namespace Aura_OS.System.Graphics.UI.GUI
         {
             base.Draw();
 
-            int messageY = Y + TopBar.Height + 25;
-            Kernel.canvas.DrawString(_message, Kernel.font, Kernel.BlackColor, (int)(X + 10 + AlertIcon.Width + 10), messageY);
+            int messageY = 0 + TopBar.Height + 25;
+            DrawString(_message, Kernel.font, Kernel.BlackColor, (int)(0 + 10 + AlertIcon.Width + 10), messageY);
 
             if (AlertIcon != null)
             {
-                Kernel.canvas.DrawImageAlpha(AlertIcon, X + 10, messageY - 8);
+                DrawImage(AlertIcon, 0 + 10, messageY - 8);
             }
 
             int buttonX = X + 10; 

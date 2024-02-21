@@ -5,8 +5,6 @@
 */
 
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Aura_OS.System
 {
@@ -23,7 +21,8 @@ namespace Aura_OS.System
                 BootConsole.Foreground = ConsoleColor.White;
                 BootConsole.Write(text + "\n");
                 BootConsole.Draw();
-                Kernel.canvas.Display();
+                Kernel.Canvas.DrawImage(BootConsole.GetBuffer(), 0, 0);
+                Kernel.Canvas.Display();
             }
             else
             {
@@ -43,7 +42,8 @@ namespace Aura_OS.System
                 BootConsole.Foreground = ConsoleColor.White;
                 BootConsole.Write(text + "\n");
                 BootConsole.Draw();
-                Kernel.canvas.Display();
+                Kernel.Canvas.DrawImage(BootConsole.GetBuffer(), 0, 0);
+                Kernel.Canvas.Display();
             }
             else
             {
@@ -63,7 +63,8 @@ namespace Aura_OS.System
                 BootConsole.Foreground = ConsoleColor.White;
                 BootConsole.Write(text + "\n");
                 BootConsole.Draw();
-                Kernel.canvas.Display();
+                Kernel.Canvas.DrawImage(BootConsole.GetBuffer(), 0, 0);
+                Kernel.Canvas.Display();
             }
             else
             {
@@ -83,7 +84,8 @@ namespace Aura_OS.System
                 BootConsole.Foreground = ConsoleColor.White;
                 BootConsole.Write(text + "\n");
                 BootConsole.Draw();
-                Kernel.canvas.Display();
+                Kernel.Canvas.DrawImage(BootConsole.GetBuffer(), 0, 0);
+                Kernel.Canvas.Display();
             }
             else
             {

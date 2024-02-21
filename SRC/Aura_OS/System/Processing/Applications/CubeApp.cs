@@ -21,6 +21,8 @@ namespace Aura_OS.System.Processing.Applications
 
         public CubeApp(int width, int height, int x = 0, int y = 0) : base(ApplicationName, width, height, x, y)
         {
+            ForceDirty = true;
+
             _vertices = new Vertex[]
             {
                 new Vertex(-1, 1, -1),
@@ -55,10 +57,10 @@ namespace Aura_OS.System.Processing.Applications
             base.Draw();
 
             // Draw x-axis
-            Kernel.canvas.DrawLine(Color.White, X + 30 + 0, Y + 30 + viewHeight / 2, X + 30 + viewWidth, Y + 30 + viewHeight / 2);
+            DrawLine(Color.White, 0 + 30 + 0, 0 + 30 + viewHeight / 2, 0 + 30 + viewWidth, 0 + 30 + viewHeight / 2);
 
             // Draw y-axis
-            Kernel.canvas.DrawLine(Color.White, X + 30 + viewWidth / 2, Y + 30 + 0, X + 30 + viewWidth / 2, Y + 30 + viewHeight);
+            DrawLine(Color.White, 0 + 30 + viewWidth / 2, 0 + 30 + 0, 0 + 30 + viewWidth / 2, 0 + 30 + viewHeight);
 
             var projected = new Vertex[figure.Vertices.Length];
             for (var i = 0; i < figure.Vertices.Length; i++)
@@ -69,32 +71,31 @@ namespace Aura_OS.System.Processing.Applications
                 projected[i] = transformed.Project(viewWidth, viewHeight, 256, 6);
             }
 
-
             for (var j = 0; j < 6; j++) //This loop draws each of the six faces of the cube
             {
-                Kernel.canvas.DrawLine(pen,
-                    X + 30 + (int)projected[figure.Faces[j][0]].X,
-                    Y + 30 + (int)projected[figure.Faces[j][0]].Y,
-                    X + 30 + (int)projected[figure.Faces[j][1]].X,
-                    Y + 30 + (int)projected[figure.Faces[j][1]].Y);
+                DrawLine(pen,
+                    0 + 30 + (int)projected[figure.Faces[j][0]].X,
+                    0 + 30 + (int)projected[figure.Faces[j][0]].Y,
+                    0 + 30 + (int)projected[figure.Faces[j][1]].X,
+                    0 + 30 + (int)projected[figure.Faces[j][1]].Y);
 
-                Kernel.canvas.DrawLine(pen,
-                    X + 30 + (int)projected[figure.Faces[j][1]].X,
-                    Y + 30 + (int)projected[figure.Faces[j][1]].Y,
-                    X + 30 + (int)projected[figure.Faces[j][2]].X,
-                    Y + 30 + (int)projected[figure.Faces[j][2]].Y);
+                DrawLine(pen,
+                    0 + 30 + (int)projected[figure.Faces[j][1]].X,
+                    0 + 30 + (int)projected[figure.Faces[j][1]].Y,
+                    0 + 30 + (int)projected[figure.Faces[j][2]].X,
+                    0 + 30 + (int)projected[figure.Faces[j][2]].Y);
 
-                Kernel.canvas.DrawLine(pen,
-                    X + 30 + (int)projected[figure.Faces[j][2]].X,
-                    Y + 30 + (int)projected[figure.Faces[j][2]].Y,
-                    X + 30 + (int)projected[figure.Faces[j][3]].X,
-                    Y + 30 + (int)projected[figure.Faces[j][3]].Y);
+                DrawLine(pen,
+                    0 + 30 + (int)projected[figure.Faces[j][2]].X,
+                    0 + 30 + (int)projected[figure.Faces[j][2]].Y,
+                    0 + 30 + (int)projected[figure.Faces[j][3]].X,
+                    0 + 30 + (int)projected[figure.Faces[j][3]].Y);
 
-                Kernel.canvas.DrawLine(pen,
-                    X + 30 + (int)projected[figure.Faces[j][3]].X,
-                    Y + 30 + (int)projected[figure.Faces[j][3]].Y,
-                    X + 30 + (int)projected[figure.Faces[j][0]].X,
-                    Y + 30 + (int)projected[figure.Faces[j][0]].Y);
+                DrawLine(pen,
+                    0 + 30 + (int)projected[figure.Faces[j][3]].X,
+                    0 + 30 + (int)projected[figure.Faces[j][3]].Y,
+                    0 + 30 + (int)projected[figure.Faces[j][0]].X,
+                    0 + 30 + (int)projected[figure.Faces[j][0]].Y);
             }
             _angle++;
         }

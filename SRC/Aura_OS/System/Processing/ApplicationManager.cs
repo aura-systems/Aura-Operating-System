@@ -4,6 +4,7 @@
 * PROGRAMMERS:      Valentin Charbonnier <valentinbreiz@gmail.com>
 */
 
+using Aura_OS.System.Graphics.UI.GUI;
 using Aura_OS.System.Processing.Applications;
 using Aura_OS.System.Processing.Applications.Emulators.GameBoyEmu;
 using Aura_OS.System.Processing.Applications.Terminal;
@@ -33,23 +34,28 @@ namespace Aura_OS.System.Processing
         }
     }
 
-    public class ApplicationManager
+    public class ApplicationManager : IManager
     {
         public List<ApplicationConfig> ApplicationTemplates;
 
-        public ApplicationManager()
+        public void Initialize()
         {
+            CustomConsole.WriteLineInfo("Starting application manager...");
+
             ApplicationTemplates = new List<ApplicationConfig>();
+
+            CustomConsole.WriteLineInfo("Registering applications...");
+            LoadApplications();
         }
 
         public void LoadApplications()
         {
             RegisterApplication(typeof(TerminalApp), 40, 40, 700, 600);
-            RegisterApplication(typeof(ExplorerApp), 40, 40, 500, 400);
+            //RegisterApplication(typeof(ExplorerApp), 40, 40, 500, 400);
             RegisterApplication(typeof(MemoryInfoApp), 40, 40, 400, 300);
             RegisterApplication(typeof(SystemInfoApp), 40, 40, 402, 360);
             RegisterApplication(typeof(CubeApp), 40, 40, 200, 200);
-            RegisterApplication(typeof(GameBoyApp), 40, 40, 160 + 4, 144 + 22);
+            RegisterApplication(typeof(GameBoyApp), 40, 40, 160 + 6, 144 + 26);
         }
 
         public void RegisterApplication(ApplicationConfig config)
@@ -65,41 +71,31 @@ namespace Aura_OS.System.Processing
 
         public void StartApplication(ApplicationConfig config)
         {
-            Graphics.UI.GUI.Application app = Kernel.ApplicationManager.Instantiate(config);
+            Application app = Kernel.ApplicationManager.Instantiate(config);
             app.Initialize();
+            app.MarkFocused();
+            app.Visible = true;
 
             Explorer.WindowManager.Applications.Add(app);
-            app.zIndex = Explorer.WindowManager.GetTopZIndex() + 1;
-            Explorer.WindowManager.MarkStackDirty();
-
-            app.Visible = true;
-            app.Focused = true;
-
             Kernel.ProcessManager.Start(app);
 
             Explorer.Taskbar.UpdateApplicationButtons();
-            Explorer.WindowManager.UpdateFocusStatus();
         }
 
         public void StartApplication(Type appType)
         {
-            Graphics.UI.GUI.Application app = Kernel.ApplicationManager.Instantiate(appType);
+            Application app = Kernel.ApplicationManager.Instantiate(appType);
             app.Initialize();
+            app.MarkFocused();
+            app.Visible = true;
 
             Explorer.WindowManager.Applications.Add(app);
-            app.zIndex = Explorer.WindowManager.GetTopZIndex() + 1;
-            Explorer.WindowManager.MarkStackDirty();
-
-            app.Visible = true;
-            app.Focused = true;
-
             Kernel.ProcessManager.Start(app);
 
             Explorer.Taskbar.UpdateApplicationButtons();
-            Explorer.WindowManager.UpdateFocusStatus();
         }
 
-        public Graphics.UI.GUI.Application Instantiate(Type appType)
+        public Application Instantiate(Type appType)
         {
             foreach (var config in ApplicationTemplates)
             {
@@ -112,9 +108,9 @@ namespace Aura_OS.System.Processing
             throw new InvalidOperationException("Unknown app type.");
         }
 
-        public Graphics.UI.GUI.Application Instantiate(ApplicationConfig config)
+        public Application Instantiate(ApplicationConfig config)
         {
-            Graphics.UI.GUI.Application app = null;
+            Application app = null;
 
             if (config.Template == typeof(TerminalApp))
             {
@@ -136,10 +132,10 @@ namespace Aura_OS.System.Processing
             {
                 app = new GameBoyApp(config.Weight, config.Height, config.X, config.Y);
             }
-            else if (config.Template == typeof(ExplorerApp))
+            /*else if (config.Template == typeof(ExplorerApp))
             {
                 app = new ExplorerApp(Kernel.CurrentVolume, config.Weight, config.Height, config.X, config.Y);
-            }
+            }*/
             else if (config.Template == typeof(EditorApp))
             {
                 app = new EditorApp("", config.Weight, config.Height, config.X, config.Y);
@@ -168,20 +164,14 @@ namespace Aura_OS.System.Processing
                 }
 
                 var app = new PictureApp(name, bitmap, width, (int)bitmap.Height + 20);
-
                 app.Initialize();
+                app.MarkFocused();
+                app.Visible = true;
 
                 Explorer.WindowManager.Applications.Add(app);
-                app.zIndex = Explorer.WindowManager.GetTopZIndex() + 1;
-                Explorer.WindowManager.MarkStackDirty();
-
-                app.Visible = true;
-                app.Focused = true;
-
                 Kernel.ProcessManager.Start(app);
 
                 Explorer.Taskbar.UpdateApplicationButtons();
-                Explorer.WindowManager.UpdateFocusStatus();
             }
             else if (fileName.EndsWith(".gb"))
             {
@@ -189,41 +179,44 @@ namespace Aura_OS.System.Processing
                 string name = fileName;
                 byte[] bytes = File.ReadAllBytes(path);
 
-                var app = new GameBoyApp(bytes, name, 160 + 4, 144 + 22, 40, 40);
-
+                var app = new GameBoyApp(bytes, name, 160 + 6, 144 + 26, 40, 40);
                 app.Initialize();
+                app.MarkFocused();
+                app.Visible = true;
 
                 Explorer.WindowManager.Applications.Add(app);
-                app.zIndex = Explorer.WindowManager.GetTopZIndex() + 1;
-                Explorer.WindowManager.MarkStackDirty();
-
-                app.Visible = true;
-                app.Focused = true;
-
                 Kernel.ProcessManager.Start(app);
 
                 Explorer.Taskbar.UpdateApplicationButtons();
-                Explorer.WindowManager.UpdateFocusStatus();
             }
             else
             {
                 string path = currentPath + fileName;
-                var app = new EditorApp(path, 700, 600, 40, 40);
 
+                var app = new EditorApp(path, 700, 600, 40, 40);
                 app.Initialize();
+                app.MarkFocused();
+                app.Visible = true;
 
                 Explorer.WindowManager.Applications.Add(app);
-                app.zIndex = Explorer.WindowManager.GetTopZIndex() + 1;
-                Explorer.WindowManager.MarkStackDirty();
-
-                app.Visible = true;
-                app.Focused = true;
-
                 Kernel.ProcessManager.Start(app);
 
                 Explorer.Taskbar.UpdateApplicationButtons();
-                Explorer.WindowManager.UpdateFocusStatus();
             }
+        }
+
+        public Application GetApplicationByPid(uint pid)
+        {
+            return Kernel.ProcessManager.GetProcessByPid(pid) as Application;
+        }
+
+        /// <summary>
+        /// Returns the name of the manager.
+        /// </summary>
+        /// <returns>The name of the manager.</returns>
+        public string GetName()
+        {
+            return "Application Manager";
         }
     }
 }

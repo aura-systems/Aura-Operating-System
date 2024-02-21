@@ -1,4 +1,5 @@
-﻿using Aura_OS.System.Processing.Applications.Emulators.GameBoyEmu.Utils;
+﻿using Aura_OS.System.Graphics.UI.GUI;
+using Aura_OS.System.Processing.Applications.Emulators.GameBoyEmu.Utils;
 using System.Runtime.CompilerServices;
 using static Aura_OS.System.Processing.Applications.Emulators.GameBoyEmu.Utils.BitOps;
 
@@ -6,8 +7,6 @@ namespace Aura_OS.System.Processing.Applications.Emulators.GameBoyEmu.DMG
 {
     public class PPU
     {
-        public int X;
-        public int Y;
         private const int SCREEN_WIDTH = 160;
         private const int SCREEN_HEIGHT = 144;
         private const int SCREEN_VBLANK_HEIGHT = 153;
@@ -23,12 +22,12 @@ namespace Aura_OS.System.Processing.Applications.Emulators.GameBoyEmu.DMG
 
         public DirectBitmap bmp;
         private int scanlineCounter;
+        private Application _app;
 
-        public PPU(int x, int y)
+        public PPU(Application app)
         {
             bmp = new DirectBitmap();
-            X = x;
-            Y = y;
+            _app = app;
         }
 
         public void update(int cycles, MMU mmu)
@@ -299,7 +298,7 @@ namespace Aura_OS.System.Processing.Applications.Emulators.GameBoyEmu.DMG
 
         public void RenderFrame()
         {
-            Kernel.canvas.DrawImage(bmp.Bitmap, X, Y);
+            //Kernel.Canvas.DrawImage(bmp.Bitmap, 50, 50);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
