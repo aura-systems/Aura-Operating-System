@@ -7,12 +7,11 @@
 using System.Collections.Generic;
 using System.Drawing;
 using Aura_OS.System;
-using Aura_OS.System.Graphics.UI.GUI;
 using Aura_OS.System.Processing.Processes;
+using Aura_OS.System.Graphics.UI.GUI;
+using Aura_OS.System.Graphics.UI.GUI.Components;
 using Rectangle = Aura_OS.System.Graphics.UI.GUI.Rectangle;
 using Component = Aura_OS.System.Graphics.UI.GUI.Components.Component;
-using Aura_OS.System.Graphics.UI.GUI.Components;
-using System.ComponentModel;
 
 namespace Aura_OS
 {
@@ -26,6 +25,8 @@ namespace Aura_OS
         public List<Application> Applications;
         public List<Rectangle> ClipRects;
 
+        private int _highestZIndex = -1;
+
         public void Initialize()
         {
             CustomConsole.WriteLineInfo("Starting window manager...");
@@ -36,16 +37,16 @@ namespace Aura_OS
 
         public void AddComponent(Component component)
         {
-            component.zIndex = ++highestZIndex;
+            component.zIndex = ++_highestZIndex;
             Component.Components.Add(component);
             InsertionSortByZIndex(Component.Components);
         }
 
         public void BringToFront(Component component)
         {
-            if (component.zIndex < highestZIndex)
+            if (component.zIndex < _highestZIndex)
             {
-                component.zIndex = ++highestZIndex;
+                component.zIndex = ++_highestZIndex;
                 InsertionSortByZIndex(Component.Components);
             }
 
@@ -54,8 +55,6 @@ namespace Aura_OS
                 BringToFront(child);
             }
         }
-
-        private int highestZIndex = 0;
 
         private void InsertionSortByZIndex(List<Component> components)
         {

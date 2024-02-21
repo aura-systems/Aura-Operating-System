@@ -88,54 +88,6 @@ namespace Aura_OS.System.Graphics.UI.GUI
             Visible = false;
         }
 
-        public override void Update()
-        {
-            base.Update();
-
-            // Applications buttons
-            foreach (var button in buttons)
-            {
-                if (button.IsInside((int)MouseManager.X, (int)MouseManager.Y))
-                {
-                    button.BackColor = Color.DarkBlue;
-                    button.TextColor = Color.White;
-                }
-                else
-                {
-                    button.BackColor = Color.LightGray;
-                    button.TextColor = Color.Black;
-                }
-
-                button.Update();
-            }
-
-            // Shutdown + Reboot buttons
-            Shutdown.Update();
-            Reboot.Update();
-
-            if (Shutdown.IsInside((int)MouseManager.X, (int)MouseManager.Y))
-            {
-                Shutdown.BackColor = Color.DarkBlue;
-                Shutdown.TextColor = Color.White;
-            }
-            else
-            {
-                Shutdown.BackColor = Color.LightGray;
-                Shutdown.TextColor = Color.Black;
-            }
-
-            if (Reboot.IsInside((int)MouseManager.X, (int)MouseManager.Y))
-            {
-                Reboot.BackColor = Color.DarkBlue;
-                Reboot.TextColor = Color.White;
-            }
-            else
-            {
-                Reboot.BackColor = Color.LightGray;
-                Reboot.TextColor = Color.Black;
-            }
-        }
-
         public override void Draw()
         {
             base.Draw();

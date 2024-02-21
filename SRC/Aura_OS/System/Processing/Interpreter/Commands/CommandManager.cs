@@ -98,6 +98,16 @@ namespace Aura_OS.System.Processing.Interpreter.Commands
                 };
                 test[2] = "test3"; //Should make a Null reference exception
             }));
+            _commands.Add(new CommandAction(new string[] { "components" }, () =>
+            {
+                for (int i = 0; i < System.Graphics.UI.GUI.Components.Component.Components.Count; i++)
+                {
+                    var component = System.Graphics.UI.GUI.Components.Component.Components[i];
+
+                    string text = $"{component.GetType().ToString()} X:{component.X} Y:{component.Y} W:{component.Width} H:{component.Height} Z:{component.zIndex} Visible:{component.Visible}";
+                    Console.WriteLine(text);
+                }
+            }));
         }
 
         /// <summary>

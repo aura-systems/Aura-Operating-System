@@ -32,17 +32,16 @@ namespace Aura_OS.System.Processing.Processes
         public static Taskbar Taskbar;
         public static StartMenu StartMenu;
         public static Desktop Desktop;
-        public static WindowManager WindowManager;
+        public static WindowManager WindowManager = new WindowManager();
 
         private static bool _showStartMenu = false;
 
         public Explorer() : base("Explorer", ProcessType.KernelComponent)
         {
+            WindowManager.Initialize();
+
             CustomConsole.WriteLineInfo("Starting desktop...");
             Desktop = new Desktop(0, 0, (int)Kernel.screenWidth, (int)Kernel.screenHeight);
-
-            WindowManager = new WindowManager();
-            WindowManager.Initialize();
 
             CustomConsole.WriteLineInfo("Starting task bar...");
             Taskbar = new Taskbar();
@@ -68,15 +67,7 @@ namespace Aura_OS.System.Processing.Processes
 
         public override void Update()
         {
-            Taskbar.Update();
-
-            //WindowManager.UpdateWindowStack();
             WindowManager.DrawWindows();
-
-            if (ShowStartMenu)
-            {
-                StartMenu.Update();
-            }
         }
     }
 }
