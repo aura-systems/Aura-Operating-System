@@ -43,7 +43,7 @@ namespace Aura_OS.System.Graphics.UI.GUI
 
         public Dictionary<uint, Button> Buttons;
 
-        public Taskbar() : base(Kernel.Gray, 0, (int)Kernel.screenHeight - taskbarHeight, (int)Kernel.screenWidth, taskbarHeight)
+        public Taskbar() : base(Kernel.Gray, 0, (int)Kernel.ScreenHeight - taskbarHeight, (int)Kernel.ScreenWidth, taskbarHeight)
         {
             // Start button
             int startButtonWidth = 70;
@@ -63,7 +63,7 @@ namespace Aura_OS.System.Graphics.UI.GUI
             string time = Time.TimeString(true, true, true);
             int hourButtonWidth = time.Length * (Kernel.font.Width + 1);
             int hourButtonHeight = 28;
-            int hourButtonX = (int)(Kernel.screenWidth - time.Length * (Kernel.font.Width + 1) - 2);
+            int hourButtonX = (int)(Kernel.ScreenWidth - time.Length * (Kernel.font.Width + 1) - 2);
             int hourButtonY = 2;
             HourButton = new HourButton(time, hourButtonX, hourButtonY, hourButtonWidth, hourButtonHeight);
             HourButton.Frame = Kernel.ThemeManager.GetFrame("button.disabled");
@@ -72,7 +72,7 @@ namespace Aura_OS.System.Graphics.UI.GUI
             // Network icon
             int networkButtonWidth = 16;
             int networkButtonHeight = 16;
-            int netoworkButtonX = (int)(Kernel.screenWidth - time.Length * (Kernel.font.Width + 1) - 2) - 20;
+            int netoworkButtonX = (int)(Kernel.ScreenWidth - time.Length * (Kernel.font.Width + 1) - 2) - 20;
             int networkButtonY = (taskbarHeight / 2) - (networkButtonHeight / 2);
             NetworkButton = new Button(Kernel.ResourceManager.GetIcon("16-network-offline.bmp"), netoworkButtonX, networkButtonY, networkButtonWidth, networkButtonHeight);
             NetworkButton.NoBorder = true;

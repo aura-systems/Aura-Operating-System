@@ -75,8 +75,8 @@ namespace Aura_OS.System.Input
             IsRightButtonDown = false;
 
             CustomConsole.WriteLineInfo("Starting mouse...");
-            Cosmos.System.MouseManager.ScreenWidth = Kernel.screenWidth;
-            Cosmos.System.MouseManager.ScreenHeight = Kernel.screenHeight;
+            Cosmos.System.MouseManager.ScreenWidth = Kernel.ScreenWidth;
+            Cosmos.System.MouseManager.ScreenHeight = Kernel.ScreenHeight;
         }
 
         /// <summary>

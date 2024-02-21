@@ -7,6 +7,8 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Drawing;
+using System.IO;
 using Sys = Cosmos.System;
 using Cosmos.Core.Memory;
 using Cosmos.HAL;
@@ -16,14 +18,11 @@ using Cosmos.System.FileSystem;
 using Cosmos.System.FileSystem.VFS;
 using Cosmos.System.Graphics;
 using Cosmos.System.Graphics.Fonts;
-using Aura_OS.Processing;
-using System.Drawing;
 using Aura_OS.System;
-using System.IO;
+using Aura_OS.Processing;
 using Aura_OS.System.Processing;
 using Aura_OS.System.Graphics;
 using Aura_OS.System.Processing.Interpreter;
-using Aura_OS.System.Processing.Interpreter.Commands;
 using Aura_OS.System.Processing.Processes;
 using Aura_OS.System.Graphics.UI.GUI.Skin;
 
@@ -64,8 +63,8 @@ namespace Aura_OS
         public static PCScreenFont fontTerminal;
 
         //GRAPHICS
-        public static uint screenWidth = 1920;
-        public static uint screenHeight = 1080;
+        public static uint ScreenWidth = 1920;
+        public static uint ScreenHeight = 1080;
 
         public static Canvas Canvas;
 
@@ -128,11 +127,11 @@ namespace Aura_OS
             CustomConsole.WriteLineInfo("Starting Canvas...");
 
             //START GRAPHICS
-            Canvas = FullScreenCanvas.GetFullScreenCanvas(new Mode(screenWidth, screenHeight, ColorDepth.ColorDepth32));
-            Canvas.DrawImage(AuraLogoWhite, (int)((screenWidth / 2) - (AuraLogoWhite.Width / 2)), (int)((screenHeight / 2) - (AuraLogoWhite.Height / 2)));
+            Canvas = FullScreenCanvas.GetFullScreenCanvas(new Mode(ScreenWidth, ScreenHeight, ColorDepth.ColorDepth32));
+            Canvas.DrawImage(AuraLogoWhite, (int)((ScreenWidth / 2) - (AuraLogoWhite.Width / 2)), (int)((ScreenHeight / 2) - (AuraLogoWhite.Height / 2)));
             Canvas.Display();
 
-            CustomConsole.BootConsole = new(0, 0, (int)screenWidth, (int)screenHeight);
+            CustomConsole.BootConsole = new(0, 0, (int)ScreenWidth, (int)ScreenHeight);
             CustomConsole.BootConsole.DrawBackground = false;
 
             TextmodeConsole = null;

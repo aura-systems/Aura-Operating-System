@@ -41,7 +41,7 @@ namespace Aura_OS.System.Processing.Processes
             WindowManager.Initialize();
 
             CustomConsole.WriteLineInfo("Starting desktop...");
-            Desktop = new Desktop(0, 0, (int)Kernel.screenWidth, (int)Kernel.screenHeight);
+            Desktop = new Desktop(0, 0, (int)Kernel.ScreenWidth, (int)Kernel.ScreenHeight);
 
             CustomConsole.WriteLineInfo("Starting task bar...");
             Taskbar = new Taskbar();
@@ -51,7 +51,7 @@ namespace Aura_OS.System.Processing.Processes
             int menuWidth = 168;
             int menuHeight = 32 * 9;
             int menuX = 0;
-            int menuY = (int)(Kernel.screenHeight - menuHeight - Taskbar.taskbarHeight);
+            int menuY = (int)(Kernel.ScreenHeight - menuHeight - Taskbar.taskbarHeight);
             StartMenu = new StartMenu(menuX, menuY, menuWidth, menuHeight);
         }
 

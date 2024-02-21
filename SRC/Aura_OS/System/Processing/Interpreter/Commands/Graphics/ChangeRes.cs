@@ -68,8 +68,8 @@ namespace Aura_OS.System.Processing.Interpreter.Commands.Graphics
 
                 if (modeExists)
                 {
-                    Kernel.screenWidth = width;
-                    Kernel.screenHeight = height;
+                    Kernel.ScreenWidth = width;
+                    Kernel.ScreenHeight = height;
 
                     Cosmos.System.MouseManager.ScreenWidth = width;
                     Cosmos.System.MouseManager.ScreenHeight = height;
