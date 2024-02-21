@@ -32,15 +32,15 @@ namespace Aura_OS.System.Processing.Applications
             var version = "[version " + Kernel.Version + "-" + Kernel.Revision + "]";
 
             DrawString(_title, Cosmos.System.Graphics.Fonts.PCScreenFont.Default, Kernel.BlackColor, 0 + Width / 2 - _title.Length * Cosmos.System.Graphics.Fonts.PCScreenFont.Default.Width / 2, 0 + 1 * Kernel.font.Height);
-            DrawString(version, Kernel.font, Kernel.BlackColor, 0 + Width / 2 - version.Length * Kernel.font.Width / 2, 0 + 3 * Kernel.font.Height);
+            DrawString(version, Kernel.font, Kernel.BlackColor, 0 + Width / 2 - version.Length * Kernel.font.Width / 2, 0 + 2 * Kernel.font.Height);
 
             DrawString(_credit, Kernel.font, Kernel.BlackColor, 0 + Width / 2 - _credit.Length * Kernel.font.Width / 2, 0 + 5 * Kernel.font.Height);
-            DrawString(_website, Kernel.font, _greenPen, 0 + Width / 2 - _website.Length * Kernel.font.Width / 2, 0 + 7 * Kernel.font.Height);
+            DrawString(_website, Kernel.font, _greenPen, 0 + Width / 2 - _website.Length * Kernel.font.Width / 2, 0 + 6 * Kernel.font.Height);
 
-            DrawImageAlpha(Kernel.AuraLogo, 0 + Width / 2 - (int)Kernel.AuraLogo.Width / 2, 0 + 9 * Kernel.font.Height);
+            DrawImageAlpha(Kernel.AuraLogo, 0 + Width / 2 - (int)Kernel.AuraLogo.Width / 2, 0 + 8 * Kernel.font.Height);
 
-            DrawString(_website2, Kernel.font, _greenPen, 0 + Width / 2 - _website2.Length * Kernel.font.Width / 2, 0 + 19 * Kernel.font.Height);
-            DrawImageAlpha(Kernel.CosmosLogo, 0 + Width / 2 - (int)Kernel.CosmosLogo.Width / 2, 0 + 21 * Kernel.font.Height);
+            DrawString(_website2, Kernel.font, _greenPen, 0 + Width / 2 - _website2.Length * Kernel.font.Width / 2, 0 + 18 * Kernel.font.Height);
+            DrawImageAlpha(Kernel.CosmosLogo, 0 + Width / 2 - (int)Kernel.CosmosLogo.Width / 2, 0 + 20 * Kernel.font.Height);
         }
     }
 }
