@@ -55,7 +55,7 @@ namespace Aura_OS.System.Processing
             RegisterApplication(typeof(MemoryInfoApp), 40, 40, 400, 300);
             RegisterApplication(typeof(SystemInfoApp), 40, 40, 402, 360);
             RegisterApplication(typeof(CubeApp), 40, 40, 200, 200);
-            RegisterApplication(typeof(GameBoyApp), 40, 40, 160 + 4, 144 + 22);
+            RegisterApplication(typeof(GameBoyApp), 40, 40, 160 + 6, 144 + 26);
         }
 
         public void RegisterApplication(ApplicationConfig config)
@@ -179,7 +179,7 @@ namespace Aura_OS.System.Processing
                 string name = fileName;
                 byte[] bytes = File.ReadAllBytes(path);
 
-                var app = new GameBoyApp(bytes, name, 160 + 4, 144 + 22, 40, 40);
+                var app = new GameBoyApp(bytes, name, 160 + 6, 144 + 26, 40, 40);
                 app.Initialize();
                 app.MarkFocused();
                 app.Visible = true;

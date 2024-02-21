@@ -41,7 +41,15 @@ namespace Aura_OS.System.Graphics.UI.GUI
             Pitch = (int)Width * Stride;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void SetPixel(int x, int y, int colour)
+        {
+            int index = x + y * Width;
+            Bitmap.RawData[index] = colour;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public void SetPixelAlpha(int x, int y, int colour)
         {
             int index = x + y * Width;
 
@@ -68,6 +76,7 @@ namespace Aura_OS.System.Graphics.UI.GUI
             }
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public int GetPixel(int x, int y)
         {
             int index = x + y * Width;
@@ -105,7 +114,7 @@ namespace Aura_OS.System.Graphics.UI.GUI
                 {
                     if (font.ConvertByteToBitAddress(data[num + i], b + 1))
                     {
-                        SetPixel((ushort)(x + b), (ushort)(y + i), color);
+                        SetPixelAlpha((ushort)(x + b), (ushort)(y + i), color);
                     }
                 }
             }
@@ -165,7 +174,7 @@ namespace Aura_OS.System.Graphics.UI.GUI
                     }
 
                     num7 += num3;
-                    SetPixel(num7, num8, color);
+                    SetPixelAlpha(num7, num8, color);
                 }
 
                 return;
@@ -181,7 +190,7 @@ namespace Aura_OS.System.Graphics.UI.GUI
                 }
 
                 num8 += num4;
-                SetPixel(num7, num8, color);
+                SetPixelAlpha(num7, num8, color);
             }
         }
 
@@ -189,7 +198,7 @@ namespace Aura_OS.System.Graphics.UI.GUI
         {
             for (int i = 0; i < dy; i++)
             {
-                SetPixel(x1, y1 + i, color);
+                SetPixelAlpha(x1, y1 + i, color);
             }
         }
 
@@ -197,7 +206,7 @@ namespace Aura_OS.System.Graphics.UI.GUI
         {
             for (int i = 0; i < dx; i++)
             {
-                SetPixel(x1 + i, y1, color);
+                SetPixelAlpha(x1 + i, y1, color);
             }
         }
 
@@ -306,7 +315,29 @@ namespace Aura_OS.System.Graphics.UI.GUI
             }
         }
 
-        public void DrawImageStretch(Bitmap image, Rectangle sourceRect, Rectangle destRect)
+        public void DrawImageAlpha(Bitmap image, int x, int y)
+        {
+            if (image.Width == Bitmap.Width && image.Height == Bitmap.Height)
+            {
+                Bitmap = image;
+            }
+            else
+            {
+                int[] imageData = image.RawData;
+
+                for (int yi = 0; yi < image.Height; yi++)
+                {
+                    int imageRowOffset = yi * (int)image.Width;
+
+                    for (int xi = 0; xi < image.Width; xi++)
+                    {
+                        SetPixelAlpha(x + xi, y + yi, imageData[imageRowOffset + xi]);
+                    }
+                }
+            }
+        }
+
+        public void DrawImageStretchAlpha(Bitmap image, Rectangle sourceRect, Rectangle destRect)
         {
             float scaleX = (float)sourceRect.Width / destRect.Width;
             float scaleY = (float)sourceRect.Height / destRect.Height;
@@ -322,7 +353,7 @@ namespace Aura_OS.System.Graphics.UI.GUI
                     srcY = Math.Min(srcY, sourceRect.Bottom - 1);
 
                     int color = image.RawData[srcX + srcY * image.Width];
-                    SetPixel(destRect.Left + xi, destRect.Top + yi, color);
+                    SetPixelAlpha(destRect.Left + xi, destRect.Top + yi, color);
                 }
             }
         }

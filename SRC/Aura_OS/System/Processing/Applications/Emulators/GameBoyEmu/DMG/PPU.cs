@@ -1,4 +1,5 @@
 ﻿using Aura_OS.System.Graphics.UI.GUI;
+using Aura_OS.System.Processing.Applications.Emulators.GameBoyEmu.Utils;
 using System.Runtime.CompilerServices;
 using static Aura_OS.System.Processing.Applications.Emulators.GameBoyEmu.Utils.BitOps;
 
@@ -297,7 +298,7 @@ namespace Aura_OS.System.Processing.Applications.Emulators.GameBoyEmu.DMG
 
         public void RenderFrame()
         {
-            _app.DrawImage(bmp.Bitmap, 0, 0);
+            //Kernel.Canvas.DrawImage(bmp.Bitmap, 50, 50);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

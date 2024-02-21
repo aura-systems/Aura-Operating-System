@@ -37,10 +37,10 @@ namespace Aura_OS.System.Processing.Applications
             DrawString(_credit, Kernel.font, Kernel.BlackColor, 0 + Width / 2 - _credit.Length * Kernel.font.Width / 2, 0 + 5 * Kernel.font.Height);
             DrawString(_website, Kernel.font, _greenPen, 0 + Width / 2 - _website.Length * Kernel.font.Width / 2, 0 + 7 * Kernel.font.Height);
 
-            DrawImage(Kernel.AuraLogo, 0 + Width / 2 - (int)Kernel.AuraLogo.Width / 2, 0 + 9 * Kernel.font.Height);
+            DrawImageAlpha(Kernel.AuraLogo, 0 + Width / 2 - (int)Kernel.AuraLogo.Width / 2, 0 + 9 * Kernel.font.Height);
 
             DrawString(_website2, Kernel.font, _greenPen, 0 + Width / 2 - _website2.Length * Kernel.font.Width / 2, 0 + 19 * Kernel.font.Height);
-            DrawImage(Kernel.CosmosLogo, 0 + Width / 2 - (int)Kernel.CosmosLogo.Width / 2, 0 + 21 * Kernel.font.Height);
+            DrawImageAlpha(Kernel.CosmosLogo, 0 + Width / 2 - (int)Kernel.CosmosLogo.Width / 2, 0 + 21 * Kernel.font.Height);
         }
     }
 }

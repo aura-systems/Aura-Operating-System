@@ -7,7 +7,9 @@
 using Aura_OS.System.Graphics.UI.GUI;
 using Aura_OS.System.Processing.Applications.Emulators.GameBoyEmu.DMG;
 using Aura_OS.System.Processing.Applications.Emulators.GameBoyEmu.Utils;
+using Cosmos.Core;
 using Cosmos.System;
+using CPU = Aura_OS.System.Processing.Applications.Emulators.GameBoyEmu.DMG.CPU;
 
 namespace Aura_OS.System.Processing.Applications.Emulators.GameBoyEmu
 {
@@ -84,6 +86,13 @@ namespace Aura_OS.System.Processing.Applications.Emulators.GameBoyEmu
 
                 keyEvent = null;
             }
+        }
+
+        public override void Draw()
+        {
+            base.Draw();
+
+            DrawImage(_ppu.bmp.Bitmap, 0, 0);
         }
 
         private void handleInterrupts()

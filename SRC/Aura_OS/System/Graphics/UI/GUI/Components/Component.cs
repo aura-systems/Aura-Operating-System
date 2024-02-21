@@ -125,7 +125,7 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
                     if (region.HorizontalPlacement == "stretch" && region.VerticalPlacement == "stretch")
                     {
                         Rectangle destRect = CalculateDestinationRect(region, Width, Height);
-                        _buffer.DrawImageStretch(region.Texture, region.SourceRegion, destRect);
+                        _buffer.DrawImageStretchAlpha(region.Texture, region.SourceRegion, destRect);
                     }
                 }
 
@@ -134,7 +134,7 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
                     if (region.HorizontalPlacement == "stretch" ^ region.VerticalPlacement == "stretch")
                     {
                         Rectangle destRect = CalculateDestinationRect(region, Width, Height);
-                        _buffer.DrawImageStretch(region.Texture, region.SourceRegion, destRect);
+                        _buffer.DrawImageStretchAlpha(region.Texture, region.SourceRegion, destRect);
                     }
                 }
 
@@ -143,7 +143,7 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
                     if (region.HorizontalPlacement != "stretch" && region.VerticalPlacement != "stretch")
                     {
                         Rectangle destRect = CalculateDestinationRect(region, Width, Height);
-                        _buffer.DrawImageStretch(region.Texture, region.SourceRegion, destRect);
+                        _buffer.DrawImageStretchAlpha(region.Texture, region.SourceRegion, destRect);
                     }
                 }
             }
@@ -152,7 +152,7 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
         public virtual void Draw(Component component)
         {
             Draw();
-            component._buffer.DrawImage(GetBuffer(), X, Y);
+            component._buffer.DrawImageAlpha(GetBuffer(), X, Y);
         }
 
         public void DrawInParent()
@@ -277,6 +277,11 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
             _buffer.DrawImage(image, x, y);
         }
 
+        public void DrawImageAlpha(Bitmap image, int x, int y)
+        {
+            _buffer.DrawImageAlpha(image, x, y);
+        }
+
         public void DrawGradient(Color color1, Color color2, int x, int y, int width, int height)
         {
             for (int i = 0; i < width; i++)
@@ -293,7 +298,7 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
 
                 for (int j = 0; j < height; j++)
                 {
-                    _buffer.SetPixel(x + i, y + j, interpolatedColor);
+                    _buffer.SetPixelAlpha(x + i, y + j, interpolatedColor);
                 }
             }
         }
