@@ -7,7 +7,6 @@
 
 using System;
 using System.Drawing;
-using System.Collections.Generic;
 using Cosmos.System;
 using Aura_OS.Processing;
 using Aura_OS.System.Graphics.UI.GUI.Components;
@@ -73,6 +72,8 @@ namespace Aura_OS.System.Graphics.UI.GUI
             {
                 if (Visible)
                 {
+                    MarkUnFocused();
+
                     Visible = false;
                     Window.Visible = false;
 
@@ -93,23 +94,21 @@ namespace Aura_OS.System.Graphics.UI.GUI
             });
 
             Window.TopBar.RightClick = new RightClick((int)MouseManager.X, (int)MouseManager.Y, 200, 2 * RightClickEntry.ConstHeight);
-            List<RightClickEntry> rightClickEntries = new List<RightClickEntry>();
-            RightClickEntry entry = new("Close", 0, 0, Window.TopBar.RightClick.Width);
+
+            RightClickEntry entry = new("Close", Window.TopBar.RightClick.Width);
             entry.Click = new Action(() =>
             {
                 Window.Close.Click();
             });
-            entry.Visible = false;
-            rightClickEntries.Add(entry);
-            RightClickEntry entry2 = new("Minimize", 0, 0, Window.TopBar.RightClick.Width);
+
+            RightClickEntry entry2 = new("Minimize", Window.TopBar.RightClick.Width);
             entry2.Click = new Action(() =>
             {
                 Window.Minimize.Click();
             });
-            entry2.Visible = false;
-            rightClickEntries.Add(entry2);
-            Window.TopBar.RightClick.Entries = rightClickEntries;
-            Window.TopBar.RightClick.Visible = false;
+
+            Window.TopBar.RightClick.AddEntry(entry);
+            Window.TopBar.RightClick.AddEntry(entry2);
 
             X = x + 3;
             Y = y + Window.TopBar.Height + 3;
@@ -127,8 +126,6 @@ namespace Aura_OS.System.Graphics.UI.GUI
 
         public virtual void HandleRightClick()
         {
-            return;
-
             if (Window.TopBar.IsInside((int)MouseManager.X, (int)MouseManager.Y))
             {
                 Window.TopBar.HandleRightClick();
@@ -230,6 +227,11 @@ namespace Aura_OS.System.Graphics.UI.GUI
             _isDirty = false;
         }
 
+        public void MarkUnFocused()
+        {
+            Explorer.WindowManager.FocusedApp = null;
+        }
+
         public void MarkFocused()
         {
             Explorer.WindowManager.FocusedApp = this;
@@ -246,6 +248,8 @@ namespace Aura_OS.System.Graphics.UI.GUI
             Explorer.Taskbar.MarkDirty();
             Explorer.WindowManager.BringToFront(Window);
         }
+
+        #region Drawing
 
         public void DrawLine(Color color, int xStart, int yStart, int width, int height)
         {
@@ -271,5 +275,7 @@ namespace Aura_OS.System.Graphics.UI.GUI
         {
             Window.DrawImageAlpha(image, x + 4, y + Window.TopBar.Height + 6);
         }
+
+        #endregion
     }
 }

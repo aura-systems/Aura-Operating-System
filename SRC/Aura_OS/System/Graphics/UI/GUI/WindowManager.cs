@@ -11,13 +11,17 @@ using Aura_OS.System.Graphics.UI.GUI;
 using Aura_OS.System.Processing.Processes;
 using Rectangle = Aura_OS.System.Graphics.UI.GUI.Rectangle;
 using Component = Aura_OS.System.Graphics.UI.GUI.Components.Component;
+using Aura_OS.System.Graphics.UI.GUI.Components;
+using System.ComponentModel;
 
 namespace Aura_OS
 {
     public class WindowManager : IManager
     {
         public static bool WindowMoving = false;
+
         public Application FocusedApp { get; set; }
+        public RightClick ContextMenu { get; set; }
 
         public List<Application> Applications;
         public List<Rectangle> ClipRects;
@@ -44,6 +48,11 @@ namespace Aura_OS
                 component.zIndex = ++highestZIndex;
                 InsertionSortByZIndex(Component.Components);
             }
+
+            foreach (Component child in component.Children)
+            {
+                BringToFront(child);
+            }
         }
 
         private int highestZIndex = 0;
@@ -68,8 +77,10 @@ namespace Aura_OS
         {
             ClipRects.Clear();
 
+            // Sort x index
             InsertionSortByZIndex(Component.Components);
 
+            // Draw components
             for (int i = 0; i < Component.Components.Count; i++)
             {
                 var component = Component.Components[i];
@@ -98,6 +109,7 @@ namespace Aura_OS
                 }
             }
 
+            // Draw apps
             foreach (Application app in Applications)
             {
                 if ((app.Running && app.Visible) && (app.IsDirty() || app.ForceDirty))
@@ -108,6 +120,7 @@ namespace Aura_OS
                 }
             }
 
+            // Display on screen
             for (int i = 0; i < Component.Components.Count; i++)
             {
                 var component = Component.Components[i];
@@ -118,6 +131,15 @@ namespace Aura_OS
                 }
             }
 
+            // Draw context menu
+            RightClick contextMenu = Explorer.WindowManager.ContextMenu;
+            if (contextMenu != null && contextMenu.Opened)
+            {
+                Explorer.WindowManager.ContextMenu.Draw();
+                Kernel.Canvas.DrawImage(contextMenu.GetBuffer(), contextMenu.X, contextMenu.Y);
+            }
+
+            // Draw clip rects
             for (int i = 0; i < Explorer.WindowManager.ClipRects.Count; i++)
             {
                 var tempRect = Explorer.WindowManager.ClipRects[i];

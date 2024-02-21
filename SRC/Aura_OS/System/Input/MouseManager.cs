@@ -165,27 +165,20 @@ namespace Aura_OS.System.Input
         /// </summary>
         private void HandleLeftSingleClick()
         {
-            if (TopComponent != null)
+            Component topComponent = DetermineTopComponent();
+
+            if (topComponent != null)
             {
-                if (TopComponent.RightClick != null && TopComponent.RightClick.Opened)
-                {
-                    DetermineTopComponentForLeftClick();
-                    TopComponent.RightClick.Opened = false;
-                }
-                TopComponent = null;
-            }
-            else
-            {
-                DetermineTopComponentForLeftClick();
+                topComponent.HandleLeftClick();
             }
         }
 
         /// <summary>
-        /// Handles the action for a double left click. Implement the desired double click behavior in this method.
+        /// Handles the action for a double left click.
         /// </summary>
         private void HandleLeftDoubleClick()
         {
-
+            
         }
 
         /// <summary>
@@ -193,22 +186,16 @@ namespace Aura_OS.System.Input
         /// </summary>
         private void HandleRightSingleClick()
         {
-            if (TopComponent != null)
+            Component topComponent = DetermineTopComponent();
+
+            if (topComponent != null)
             {
-                if (TopComponent.RightClick != null && TopComponent.RightClick.Opened)
-                {
-                    TopComponent.RightClick.Opened = false;
-                }
-                TopComponent = null;
-            }
-            else
-            {
-                // DetermineTopComponentForRightClick();
+                topComponent.HandleRightClick();
             }
         }
 
         /// <summary>
-        /// Handles the action for a double right click. Implement the desired double click behavior in this method.
+        /// Handles the action for a double right click.
         /// </summary>
         private void HandleRightDoubleClick()
         {
@@ -227,85 +214,38 @@ namespace Aura_OS.System.Input
         }
 
         /// <summary>
-        /// Determines the top-level component for a left click. This method checks all applications and finds the one with the highest Z index under the mouse cursor.
+        /// Determines the top-level component. This method checks all applications and finds the one with the highest Z index under the mouse cursor.
         /// </summary>
-        private void DetermineTopComponentForLeftClick()
+        private Component DetermineTopComponent()
         {
-            Application topApplication = null;
+            Component topComponent = null;
             int topZIndex = -1;
 
-            foreach (var app in Explorer.WindowManager.Applications)
+            void CheckComponent(Component component)
             {
-                if (app.Visible && app.Window.IsInside((int)Cosmos.System.MouseManager.X, (int)Cosmos.System.MouseManager.Y) && app.zIndex > topZIndex)
+                if (component.Visible && component.IsInside((int)Cosmos.System.MouseManager.X, (int)Cosmos.System.MouseManager.Y))
                 {
-                    topApplication = app;
-                    topZIndex = app.zIndex;
-                }
-            }
-
-            if (topApplication != null)
-            {
-                topApplication.HandleLeftClick();
-            }
-            else
-            {
-                Explorer.Desktop.HandleLeftClick();
-            }
-        }
-
-        /// <summary>
-        /// Determines the top-level component for a right click. This method checks all applications and finds the one with the highest Z index under the mouse cursor.
-        /// </summary>
-        private void DetermineTopComponentForRightClick()
-        {
-            Application topApplication = null;
-            int topZIndex = -1;
-
-            foreach (var app in Explorer.WindowManager.Applications)
-            {
-                if (app.Visible && app.Window.IsInside((int)Cosmos.System.MouseManager.X, (int)Cosmos.System.MouseManager.Y) && app.zIndex > topZIndex)
-                {
-                    topApplication = app;
-                    topZIndex = app.zIndex;
-                }
-            }
-
-            if (topApplication != null)
-            {
-                topApplication.HandleRightClick();
-            }
-            else
-            {
-                Explorer.Desktop.HandleRightClick();
-            }
-        }
-
-        /// <summary>
-        /// Draws the context menu based on the position and state of the mouse.
-        /// </summary>
-        public void DrawRightClick()
-        {
-            if (TopComponent != null)
-            {
-                if (TopComponent.RightClick != null && TopComponent.RightClick.Opened)
-                {
-                    foreach (var entry in TopComponent.RightClick.Entries)
+                    if (component.zIndex > topZIndex)
                     {
-                        if (entry.IsInside((int)Cosmos.System.MouseManager.X, (int)Cosmos.System.MouseManager.Y))
-                        {
-                            entry.BackColor = Kernel.DarkBlue;
-                            entry.TextColor = Kernel.WhiteColor;
-                        }
-                        else
-                        {
-                            entry.BackColor = Color.LightGray;
-                            entry.TextColor = Kernel.BlackColor;
-                        }
+                        topComponent = component;
+                        topZIndex = component.zIndex;
                     }
-                    TopComponent.RightClick.Update();
+                }
+
+                foreach (var child in component.Children)
+                {
+                    CheckComponent(child);
                 }
             }
+
+            foreach (var component in Component.Components)
+            {
+                CheckComponent(component);
+            }
+
+            return topComponent;
         }
+
 
         /// <summary>
         /// Returns the name of the manager.

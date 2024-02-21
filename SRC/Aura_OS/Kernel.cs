@@ -175,6 +175,8 @@ namespace Aura_OS
             Running = true;
         }
 
+        public static string Debug = "";
+
         public static void Run()
         {
             try
@@ -191,14 +193,13 @@ namespace Aura_OS
                 FreeCount = Heap.Collect();
 
                 ProcessManager.Update();
-
                 MouseManager.Update();
-                MouseManager.DrawRightClick();
 
                 DrawCursor(Sys.MouseManager.X, Sys.MouseManager.Y);
 
                 Canvas.DrawString("Aura Operating System [" + Version + "." + Revision + "]", font, WhiteColor, 2, 0);
                 Canvas.DrawString("fps=" + _fps, font, WhiteColor, 2, font.Height);
+                Canvas.DrawString(Debug, font, WhiteColor, 2, font.Height * 2);
 
                 Canvas.Display();
             }

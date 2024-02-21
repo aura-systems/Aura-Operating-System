@@ -214,7 +214,7 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
 
                 button.RightClick = new RightClick((int)MouseManager.X, (int)MouseManager.Y, 200, 3 * RightClickEntry.ConstHeight);
                 List<RightClickEntry> rightClickEntries = new List<RightClickEntry>();
-                RightClickEntry entry = new("Open", 0, 0, button.RightClick.Width);
+                RightClickEntry entry = new("Open", button.RightClick.Width);
                 entry.Click = new Action(() =>
                 {
                     OpenFolder(folderName);
@@ -222,7 +222,7 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
                 });
                 rightClickEntries.Add(entry);
 
-                RightClickEntry copyEntry = new("Copy", 0, 0, button.RightClick.Width);
+                RightClickEntry copyEntry = new("Copy", button.RightClick.Width);
                 copyEntry.Click = new Action(() =>
                 {
                     string path = CurrentPath + folderName;
@@ -230,7 +230,7 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
                 });
                 rightClickEntries.Add(copyEntry);
 
-                RightClickEntry entry2 = new("Delete", 0, 0, button.RightClick.Width);
+                RightClickEntry entry2 = new("Delete", button.RightClick.Width);
                 entry2.Click = new Action(() =>
                 {
                     Entries.ForceRemove(CurrentPath + folderName);
@@ -262,14 +262,14 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
                 button.RightClick = new RightClick((int)MouseManager.X, (int)MouseManager.Y, 200, 1 * RightClickEntry.ConstHeight);
                 List<RightClickEntry> rightClickEntries = new List<RightClickEntry>();
 
-                RightClickEntry entry = new("Open", 0, 0, button.RightClick.Width);
+                RightClickEntry entry = new("Open", button.RightClick.Width);
                 entry.Click = new Action(() =>
                 {
                     Kernel.ApplicationManager.StartFileApplication(fileName, CurrentPath);
                 });
                 rightClickEntries.Add(entry);
 
-                RightClickEntry copyEntry = new("Copy", 0, 0, button.RightClick.Width);
+                RightClickEntry copyEntry = new("Copy", button.RightClick.Width);
                 copyEntry.Click = new Action(() =>
                 {
                     string path = CurrentPath + fileName;
@@ -277,7 +277,7 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
                 });
                 rightClickEntries.Add(copyEntry);
 
-                RightClickEntry entry2 = new("Delete", 0, 0, button.RightClick.Width);
+                RightClickEntry entry2 = new("Delete", button.RightClick.Width);
                 entry2.Click = new Action(() =>
                 {
                     Entries.ForceRemove(CurrentPath + fileName);

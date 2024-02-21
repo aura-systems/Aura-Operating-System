@@ -1,6 +1,6 @@
 /*
 * PROJECT:          Aura Operating System Development
-* CONTENT:          Window class
+* CONTENT:          Right click class
 * PROGRAMMERS:      Valentin Charbonnier <valentinbreiz@gmail.com>
 */
 
@@ -12,14 +12,10 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
     {
         public const int ConstHeight = 16 + 4;
 
-        public RightClickEntry(string text, int x, int y, int width) : base(text, x, y, width, ConstHeight)
+        public RightClickEntry(string text, int width) : base(text, 0, 0, width, ConstHeight)
         {
             TextAlignStyle = TextAlign.Left;
-        }
-
-        public override void Draw()
-        {
-            base.Draw();
+            Frame = Kernel.ThemeManager.GetFrame("button.disabled");
         }
     }
 
@@ -30,22 +26,30 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
 
         public RightClick(int x, int y, int width, int height) : base(x, y, width, height)
         {
+            Frame = Kernel.ThemeManager.GetFrame("window.borderless");
+
+            Visible = false;
             HasBorders = false;
             Entries = new List<RightClickEntry>();
+        }
+
+        public void AddEntry(RightClickEntry entry)
+        {
+            AddChild(entry);
+            Entries.Add(entry);
         }
 
         public override void Draw()
         {
             base.Draw();
 
-            int currentY = Y;
+            int currentY = 0;
             foreach (var entry in Entries)
             {
-                entry.X = X;
                 entry.Y = currentY;
-                entry.Draw();
-
                 currentY += entry.Height;
+
+                entry.Draw(this);
             }
         }
     }

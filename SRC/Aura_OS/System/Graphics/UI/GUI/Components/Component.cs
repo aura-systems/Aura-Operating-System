@@ -159,7 +159,7 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
         {
             if (!IsRoot)
             {
-                Parent._buffer.DrawImage(GetBuffer(), X, Y);
+                Parent._buffer.DrawImageAlpha(GetBuffer(), X, Y);
             }
         }
 
@@ -232,6 +232,75 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
             return _buffer.Bitmap;
         }
 
+        public virtual void HandleLeftClick()
+        {
+            RightClick contextMenu = Explorer.WindowManager.ContextMenu;
+
+            if (contextMenu != null && contextMenu.Opened)
+            {
+                Explorer.WindowManager.ContextMenu = null;
+                contextMenu.Opened = false;
+
+                foreach (var entry in contextMenu.Entries)
+                {
+                    if (entry.IsInside((int)MouseManager.X, (int)MouseManager.Y))
+                    {
+                        entry.Click();
+                        return;
+                    }
+                }
+            }
+        }
+
+        public virtual void HandleRightClick()
+        {
+            RightClick contextMenu = Explorer.WindowManager.ContextMenu;
+
+            if (contextMenu != null && contextMenu.Opened)
+            {
+                Explorer.WindowManager.ContextMenu = null;
+                contextMenu.Opened = false;
+            }
+
+            if (RightClick != null)
+            {
+                RightClick.X = (int)MouseManager.X;
+                RightClick.Y = (int)MouseManager.Y;
+                RightClick.Opened = true;
+                Explorer.WindowManager.ContextMenu = RightClick;
+                Explorer.WindowManager.BringToFront(RightClick);
+            }
+        }
+
+        public bool IsInside(int x, int y)
+        {
+            if (IsRoot)
+            {
+                return x >= X && x <= X + Width && y >= Y && y <= Y + Height;
+            }
+            else
+            {
+                return x >= Parent.X + X && x <= Parent.X + X + Width && y >= Parent.Y + Y && y <= Parent.Y + Y + Height;
+            }
+        }
+
+        public virtual bool IsDirty()
+        {
+            return _dirty;
+        }
+
+        public virtual void MarkDirty()
+        {
+            _dirty = true;
+        }
+
+        public virtual void MarkCleaned()
+        {
+            _dirty = false;
+        }
+
+        #region Draw
+
         public void Clear(Color color)
         {
             _buffer.Clear(color.ToArgb());
@@ -303,64 +372,6 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
             }
         }
 
-        public virtual void HandleLeftClick()
-        {
-            if (RightClick != null)
-            {
-                if (RightClick.Opened)
-                {
-                    RightClick.Opened = false;
-
-                    foreach (var entry in RightClick.Entries)
-                    {
-                        if (entry.IsInside((int)MouseManager.X, (int)MouseManager.Y))
-                        {
-                            entry.Click();
-                            return;
-                        }
-                    }
-                }
-            }
-        }
-
-        public virtual void HandleRightClick()
-        {
-            return;
-
-            if (RightClick != null && IsInside((int)MouseManager.X, (int)MouseManager.Y))
-            {
-                RightClick.X = (int)MouseManager.X;
-                RightClick.Y = (int)MouseManager.Y;
-                RightClick.Opened = true;
-                Kernel.MouseManager.TopComponent = this;
-            }
-        }
-
-        public bool IsInside(int x, int y)
-        {
-            if (IsRoot)
-            {
-                return x >= X && x <= X + Width && y >= Y && y <= Y + Height;
-            }
-            else
-            {  
-                return x >= Parent.X + X && x <= Parent.X + X + Width && y >= Parent.Y + Y && y <= Parent.Y + Y + Height;
-            }
-        }
-
-        public virtual bool IsDirty()
-        {
-            return _dirty;
-        }
-
-        public virtual void MarkDirty()
-        {
-            _dirty = true;
-        }
-
-        public virtual void MarkCleaned()
-        {
-            _dirty = false;
-        }
+        #endregion
     }
 }
