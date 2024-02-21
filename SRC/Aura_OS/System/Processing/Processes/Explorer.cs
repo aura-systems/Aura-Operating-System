@@ -6,8 +6,6 @@
 
 using Aura_OS.Processing;
 using Aura_OS.System.Graphics.UI.GUI;
-using Aura_OS.System.Graphics.UI.GUI.Components;
-using System;
 
 namespace Aura_OS.System.Processing.Processes
 {

@@ -9,6 +9,7 @@ using Cosmos.System;
 using Aura_OS.System.Graphics.UI.GUI.Components;
 using Aura_OS.System.Processing.Processes;
 using System;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace Aura_OS.System.Graphics.UI.GUI
 {
@@ -52,6 +53,10 @@ namespace Aura_OS.System.Graphics.UI.GUI
             StartButton = new Button(Kernel.ResourceManager.GetIcon("00-start.bmp"), "Start", startButtonX, startButtonY, startButtonWidth, startButtonHeight);
             StartButton.HasTransparency = true;
             StartButton.Frame = Kernel.ThemeManager.GetFrame("button.disabled");
+            StartButton.Click = new Action(() =>
+            {
+                Explorer.ShowStartMenu = !Explorer.ShowStartMenu;
+            });
             AddChild(StartButton);
 
             // Hour button
@@ -76,47 +81,6 @@ namespace Aura_OS.System.Graphics.UI.GUI
             Buttons = new Dictionary<uint, Button>();
         }
 
-        public override void Update()
-        {
-            if (MouseManager.MouseState == MouseState.Left)
-            {
-                if (!Clicked)
-                {
-                    Clicked = true;
-                }
-            }
-            else if (Clicked)
-            {
-                Clicked = false;
-                HandleClick();
-            }
-        }
-
-        private void HandleClick()
-        {
-            MarkDirty();
-
-            if (StartButton.IsInside((int)MouseManager.X, (int)MouseManager.Y))
-            {
-                Explorer.ShowStartMenu = !Explorer.ShowStartMenu;
-            }
-
-            foreach (var application in  Explorer.WindowManager.Applications)
-            {
-                if (Buttons[application.ID].IsInside((int)MouseManager.X, (int)MouseManager.Y))
-                {
-                    if (application.Visible)
-                    {
-                        application.Window.Minimize.Click();
-                    }
-                    else
-                    {
-                        application.Window.Maximize.Click();
-                    }
-                }
-            }
-        }
-
         public void UpdateApplicationButtons()
         {
             foreach (var button in Buttons.Values)
@@ -133,7 +97,17 @@ namespace Aura_OS.System.Graphics.UI.GUI
                 var spacing = appName.Length * 9 + (int)app.Window.Icon.Width;
                 var button = new Button(app.Window.Icon, appName, buttonX, 2, spacing, 28);
                 button.Frame = Kernel.ThemeManager.GetFrame("button.disabled");
-
+                button.Click = new Action(() =>
+                {
+                    if (app.Visible)
+                    {
+                        app.Window.Minimize.Click();
+                    }
+                    else
+                    {
+                        app.Window.Maximize.Click();
+                    }
+                });
                 button.RightClick = new RightClick((int)MouseManager.X, (int)MouseManager.Y - (1 * RightClickEntry.ConstHeight), 200, 1 * RightClickEntry.ConstHeight);
 
                 RightClickEntry entry = new("Close", button.RightClick.Width);

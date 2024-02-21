@@ -4,12 +4,9 @@
 * PROGRAMMERS:      Valentin Charbonnier <valentinbreiz@gmail.com>
 */
 
-using Aura_OS.System.Graphics.UI.GUI;
 using Aura_OS.System.Graphics.UI.GUI.Components;
-using Aura_OS.System.Processing.Processes;
 using Cosmos.System;
 using System;
-using System.Drawing;
 
 namespace Aura_OS.System.Input
 {
@@ -18,6 +15,26 @@ namespace Aura_OS.System.Input
     /// </summary>
     public class MouseManager : IManager
     {
+        /// <summary>
+        /// Represents the top component currently under the mouse cursor.
+        /// </summary>
+        public Component TopComponent;
+
+        /// <summary>
+        /// Indicates whether the left mouse button is currently being held down.
+        /// </summary>
+        public bool IsLeftButtonDown;
+
+        /// <summary>
+        /// Indicates whether the right mouse button is currently being held down.
+        /// </summary>
+        public bool IsRightButtonDown;
+
+        /// <summary>
+        /// Focused component (set by click)
+        /// </summary>
+        public Component FocusedComponent;
+
         /// <summary>
         /// The maximum time interval in milliseconds to detect a double click.
         /// </summary>
@@ -42,26 +59,6 @@ namespace Aura_OS.System.Input
         /// Flag to indicate whether the right mouse button is currently pressed.
         /// </summary>
         private bool _rightButtonPressed;
-
-        /// <summary>
-        /// Represents the top component currently under the mouse cursor.
-        /// </summary>
-        public Component TopComponent;
-
-        /// <summary>
-        /// Indicates whether the left mouse button is currently being held down.
-        /// </summary>
-        public bool IsLeftButtonDown;
-
-        /// <summary>
-        /// Indicates whether the right mouse button is currently being held down.
-        /// </summary>
-        public bool IsRightButtonDown;
-
-        /// <summary>
-        /// Focused component (set by click)
-        /// </summary>
-        public Component FocusedComponent;
 
         /// <summary>
         /// Initializes the mouse manager and prepares buttons states.

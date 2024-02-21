@@ -109,19 +109,6 @@ namespace Aura_OS.System.Graphics.UI.GUI
                 button.Update();
             }
 
-            if (MouseManager.MouseState == MouseState.Left)
-            {
-                if (!Clicked)
-                {
-                    Clicked = true;
-                }
-            }
-            else if (Clicked)
-            {
-                Clicked = false;
-                HandleClick();
-            }
-
             // Shutdown + Reboot buttons
             Shutdown.Update();
             Reboot.Update();
@@ -164,33 +151,6 @@ namespace Aura_OS.System.Graphics.UI.GUI
 
             Shutdown.Draw(this);
             Reboot.Draw(this);
-        }
-
-        private void HandleClick()
-        {
-            if (Explorer.ShowStartMenu && !IsInside((int)MouseManager.X, (int)MouseManager.Y))
-            {
-                Explorer.ShowStartMenu = false;
-                return;
-            }
-
-            if (Shutdown.IsInside((int)MouseManager.X, (int)MouseManager.Y))
-            {
-                Shutdown.Click();
-            }
-
-            if (Reboot.IsInside((int)MouseManager.X, (int)MouseManager.Y))
-            {
-                Reboot.Click();
-            }
-
-            foreach (var button in buttons)
-            {
-                if (button.IsInside((int)MouseManager.X, (int)MouseManager.Y))
-                {
-                    button.Click();
-                }
-            }
         }
     }
 }
