@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using Cosmos.System;
 using Aura_OS.System.Graphics.UI.GUI.Components;
 using Aura_OS.System.Processing.Processes;
+using System;
 
 namespace Aura_OS.System.Graphics.UI.GUI
 {
@@ -132,6 +133,16 @@ namespace Aura_OS.System.Graphics.UI.GUI
                 var spacing = appName.Length * 9 + (int)app.Window.Icon.Width;
                 var button = new Button(app.Window.Icon, appName, buttonX, 2, spacing, 28);
                 button.Frame = Kernel.ThemeManager.GetFrame("button.disabled");
+
+                button.RightClick = new RightClick((int)MouseManager.X, (int)MouseManager.Y - (1 * RightClickEntry.ConstHeight), 200, 1 * RightClickEntry.ConstHeight);
+
+                RightClickEntry entry = new("Close", button.RightClick.Width);
+                entry.Click = new Action(() =>
+                {
+                    app.Window.Close.Click();
+                });
+
+                button.RightClick.AddEntry(entry);
 
                 AddChild(button);
                 Buttons.Add(app.ID, button);
