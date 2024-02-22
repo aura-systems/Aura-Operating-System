@@ -36,7 +36,7 @@ namespace Aura_OS.System.Graphics.UI.GUI
             AddChild(Ribbon);
 
             // Shutdown
-            Shutdown = new Button(Kernel.ResourceManager.GetIcon("24-shutdown.bmp"), "Shut Down.", 3 + Ribbon.Width, Height - 32 - 4, Width - Ribbon.Width - 3, 35);
+            Shutdown = new Button(Kernel.ResourceManager.GetIcon("24-shutdown.bmp"), "Shut Down.", 3 + Ribbon.Width, Height - 32 - 6, Width - Ribbon.Width - 6, 35);
             Shutdown.NoBorder = true;
             Shutdown.Click = new Action(() =>
             {
@@ -45,7 +45,7 @@ namespace Aura_OS.System.Graphics.UI.GUI
             AddChild(Shutdown);
 
             // Reboot
-            Reboot = new Button(Kernel.ResourceManager.GetIcon("24-reboot.bmp"), "Reboot.", 3 + Ribbon.Width, Height - 64 - 4, Width - Ribbon.Width - 3, 35);
+            Reboot = new Button(Kernel.ResourceManager.GetIcon("24-reboot.bmp"), "Reboot.", 3 + Ribbon.Width, Height - 64 - 6, Width - Ribbon.Width - 6, 35);
             Reboot.NoBorder = true;
             Reboot.Click = new Action(() =>
             {
@@ -73,7 +73,7 @@ namespace Aura_OS.System.Graphics.UI.GUI
                     icon = Kernel.ResourceManager.GetIcon("24-program.bmp");
                 }
 
-                var button = new Button(icon, applicationConfig.Template.Name, 3 + Ribbon.Width, 3 +  buttonY + 1, Width - Ribbon.Width - 3, 35);
+                var button = new Button(icon, applicationConfig.Template.Name, 3 + Ribbon.Width, 3 +  buttonY + 1, Width - Ribbon.Width - 6, 35);
                 button.NoBorder = true;
                 button.Click = new Action(() =>
                 {

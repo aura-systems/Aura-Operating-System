@@ -74,7 +74,7 @@ namespace Aura_OS.System.Graphics.UI.GUI.Skin
                 {
                     string name = node.GetAttribute("name").Value;
 
-                    if (name.StartsWith("window") || name.StartsWith("button") || name.StartsWith("cursor"))
+                    if (name.StartsWith("window") || name.StartsWith("button") || name.StartsWith("cursor") || name.StartsWith("input"))
                     {
                         Frame.Region[] regions = RegionListBuilder.Build(node, _bitmaps);
                         Frame.Text[] texts = null;

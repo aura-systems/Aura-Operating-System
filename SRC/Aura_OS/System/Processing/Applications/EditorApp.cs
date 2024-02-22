@@ -27,28 +27,33 @@ namespace Aura_OS.System.Processing.Applications
         public EditorApp(string filePath, int width, int height, int x = 0, int y = 0)
             : base(ApplicationName + " - " + filePath, width, height, x, y)
         {
-            _topPanel = new Panel(Kernel.Gray, x + 1, y + 1, width - 6, 22);
+            _topPanel = new Panel(Kernel.Gray, 3, Window.TopBar.Height + 3, width - 6, 22);
             _topPanel.Borders = true;
+            AddChild(_topPanel);
 
             string text = "Save";
             int textWidth = (text.Length + 2) * (Kernel.font.Width);
-            _save = new Button(text, x + 3, y + 3, textWidth, 18);
+            _save = new Button(text, 5, Window.TopBar.Height + 5, textWidth, 18);
             _save.Click = new Action(() =>
             {
                 SaveFile();
             });
+            AddChild(_save);
 
             _filePath = filePath;
 
-            _fileContentBox = new TextBox(x, y + _topPanel.Height, width - 5, height - _topPanel.Height - Window.TopBar.Height - 7, "");
+            _fileContentBox = new TextBox(3, _topPanel.Height + Window.TopBar.Height + 3, width - 5, height - _topPanel.Height - Window.TopBar.Height - 6, "");
             _fileContentBox.Multiline = true;
             _fileContentBox.Text = File.ReadAllText(filePath);
+            AddChild(_fileContentBox);
 
             _dialog = new("Save", "Your file has been saved!");
+            _dialog.Visible = false;
             _dialog.AddButton("OK", new Action(() =>
             {
                 _showDialog = false;
             }));
+            AddChild(_dialog);
         }
 
         private void SaveFile()
@@ -85,20 +90,17 @@ namespace Aura_OS.System.Processing.Applications
         {
             base.Draw();
 
-            _topPanel.X = X + 1;
-            _topPanel.Y = Y + 1;
-            _save.X = X + 3;
-            _save.Y = Y + 3;
-            _fileContentBox.X = X + 1;
-            _fileContentBox.Y = Y + _topPanel.Height + 3;
-
             _fileContentBox.Draw();
+            _fileContentBox.DrawInParent();
             _topPanel.Draw();
+            _topPanel.DrawInParent();
             _save.Draw();
+            _save.DrawInParent();
 
             if (_showDialog)
             {
                 _dialog.Draw();
+                _dialog.DrawInParent();
             }
         }
     }

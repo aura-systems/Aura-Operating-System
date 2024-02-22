@@ -31,27 +31,32 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
 
         public Button(string text, int x, int y, int width, int height) : base(x, y, width, height)
         {
+            Frame = Kernel.ThemeManager.GetFrame("button.disabled");
             Text = text;
         }
 
         public Button(Bitmap image, int x, int y, int width, int height) : base(x, y, width, height)
         {
+            Frame = Kernel.ThemeManager.GetFrame("button.disabled");
             Image = image;
         }
 
         public Button(Bitmap image, int x, int y) : base(x, y, (int)image.Width, (int)image.Height)
         {
+            Frame = Kernel.ThemeManager.GetFrame("button.disabled");
             Image = image;
         }
 
         public Button(Bitmap image, string text, int x, int y, int width, int height) : base(x, y, width, height)
         {
+            Frame = Kernel.ThemeManager.GetFrame("button.disabled");
             Text = text;
             Image = image;
         }
 
         public Button(Bitmap image, string text, int x, int y) : base(x, y, (int)image.Width, (int)image.Height)
         {
+            Frame = Kernel.ThemeManager.GetFrame("button.disabled");
             Text = text;
             Image = image;
         }

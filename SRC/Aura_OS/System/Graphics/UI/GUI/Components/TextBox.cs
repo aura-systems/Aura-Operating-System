@@ -22,6 +22,7 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
 
         public TextBox(int x, int y, int width, int height, string text = "") : base(x, y, width, height)
         {
+            Frame = Kernel.ThemeManager.GetFrame("input.normal");
             Text = text;
         }
 
@@ -81,6 +82,9 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
 
         public override void Draw()
         {
+            base.Draw();
+
+            /*
             // Dessin du cadre de la TextBox
             Clear(Kernel.WhiteColor);
             DrawLine(Kernel.BlackColor, 0, 0, 0 + Width, 0);
@@ -91,6 +95,7 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
             DrawLine(Kernel.WhiteColor, 0, 0 + Height, 0 + Width + 1, 0 + Height);
             DrawLine(Kernel.DarkGray, 0 + Width - 1, 0 + 1, 0 + Width - 1, 0 + Height);
             DrawLine(Kernel.WhiteColor, 0 + Width, 0, 0 + Width, 0 + Height);
+            */
 
             string[] lines = Text.Split('\n');
             int offsetY = 0 + 4;

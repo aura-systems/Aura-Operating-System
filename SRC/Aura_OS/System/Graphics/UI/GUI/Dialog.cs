@@ -45,6 +45,7 @@ namespace Aura_OS.System.Graphics.UI.GUI
             Button newButton = new Button(buttonText, buttonX, buttonY, 78, 23);
             newButton.Click = onClickAction;
             _buttons.Add(newButton);
+            AddChild(newButton);
         }
 
         public override void Update()
