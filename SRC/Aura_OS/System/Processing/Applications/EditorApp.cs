@@ -47,7 +47,7 @@ namespace Aura_OS.System.Processing.Applications
             _fileContentBox.Text = File.ReadAllText(filePath);
             AddChild(_fileContentBox);
 
-            _dialog = new("Save", "Your file has been saved!");
+            _dialog = new("Save", "Your file has been saved!", (int)Width / 2 - 302 / 2, Height / 2 - 119 / 2);
             _dialog.Visible = false;
             _dialog.AddButton("OK", new Action(() =>
             {
@@ -60,28 +60,35 @@ namespace Aura_OS.System.Processing.Applications
         {
             File.WriteAllText(_filePath, _fileContentBox.Text);
             _showDialog = true;
+            _dialog.Visible = true;
         }
 
         public override void Update()
         {
-            base.Update();
-            _save.Update();
-            _fileContentBox.Update();
-
             if (_showDialog)
             {
                 _dialog.Update();
+            }
+            else
+            {
+                base.Update();
+                _save.Update();
+                _fileContentBox.Update();
             }
         }
 
         public override void HandleLeftClick()
         {
-            base.HandleLeftClick();
-            _fileContentBox.HandleLeftClick();
-            _save.HandleLeftClick();
+            if (!_showDialog)
+            {
+                base.HandleLeftClick();
+                _fileContentBox.HandleLeftClick();
+                _save.HandleLeftClick();
+            }
 
             List<Button> buttons = _dialog.GetButtons();
-            if (buttons[0].IsInside((int)Cosmos.System.MouseManager.X, (int)Cosmos.System.MouseManager.Y)) {
+            if (buttons[0].IsInside((int)Cosmos.System.MouseManager.X, (int)Cosmos.System.MouseManager.Y))
+            {
                 buttons[0].Click();
             }
         }
