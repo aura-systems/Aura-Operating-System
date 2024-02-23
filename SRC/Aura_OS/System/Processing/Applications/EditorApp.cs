@@ -52,6 +52,7 @@ namespace Aura_OS.System.Processing.Applications
             _dialog.AddButton("OK", new Action(() =>
             {
                 _showDialog = false;
+                _dialog.Visible = false;
             }));
             AddChild(_dialog);
         }
@@ -61,17 +62,24 @@ namespace Aura_OS.System.Processing.Applications
             File.WriteAllText(_filePath, _fileContentBox.Text);
             _showDialog = true;
             _dialog.Visible = true;
+
+            foreach (var child in Window.Children)
+            {
+                child.MarkDirty();
+            }
+            MarkDirty();
         }
 
         public override void Update()
         {
+            base.Update();
+
             if (_showDialog)
             {
                 _dialog.Update();
             }
             else
             {
-                base.Update();
                 _save.Update();
                 _fileContentBox.Update();
             }
@@ -83,6 +91,9 @@ namespace Aura_OS.System.Processing.Applications
             {
                 base.HandleLeftClick();
                 _fileContentBox.HandleLeftClick();
+            }
+            else
+            {
                 _save.HandleLeftClick();
             }
 

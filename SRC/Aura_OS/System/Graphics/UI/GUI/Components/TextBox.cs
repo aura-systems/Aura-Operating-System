@@ -77,6 +77,14 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
 
                     MarkDirty();
                 }
+
+                if (_isSelected && (DateTime.Now - _lastCursorBlink).TotalMilliseconds > _cursorBlinkInterval)
+                {
+                    _cursorVisible = !_cursorVisible;
+                    _lastCursorBlink = DateTime.Now;
+
+                    MarkDirty();
+                }
             }
         }
 
@@ -114,12 +122,6 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
                 }
 
                 offsetY += Kernel.font.Height;
-            }
-
-            if (_isSelected && (DateTime.Now - _lastCursorBlink).TotalMilliseconds > _cursorBlinkInterval)
-            {
-                _cursorVisible = !_cursorVisible;
-                _lastCursorBlink = DateTime.Now;
             }
 
             if (_isSelected && _cursorVisible)
