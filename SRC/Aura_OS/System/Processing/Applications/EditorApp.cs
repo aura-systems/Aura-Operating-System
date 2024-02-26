@@ -4,11 +4,12 @@
 * PROGRAMMERS:      Valentin Charbonnier <valentinbreiz@gmail.com>
 */
 
-using Aura_OS.System.Graphics.UI.GUI.Components;
 using System;
-using Aura_OS.System.Graphics.UI.GUI;
 using System.IO;
 using System.Collections.Generic;
+using Aura_OS.System.Processing.Processes;
+using Aura_OS.System.Graphics.UI.GUI;
+using Aura_OS.System.Graphics.UI.GUI.Components;
 
 namespace Aura_OS.System.Processing.Applications
 {
@@ -53,7 +54,24 @@ namespace Aura_OS.System.Processing.Applications
             {
                 _showDialog = false;
                 _dialog.Visible = false;
+
+                foreach (var child in Window.Children)
+                {
+                    child.MarkDirty();
+                }
+                MarkDirty();
             }));
+            _dialog.Close.Click = new Action(() =>
+            {
+                _showDialog = false;
+                _dialog.Visible = false;
+
+                foreach (var child in Window.Children)
+                {
+                    child.MarkDirty();
+                }
+                MarkDirty();
+            });
             AddChild(_dialog);
         }
 
@@ -62,6 +80,7 @@ namespace Aura_OS.System.Processing.Applications
             File.WriteAllText(_filePath, _fileContentBox.Text);
             _showDialog = true;
             _dialog.Visible = true;
+            Explorer.WindowManager.BringToFront(_dialog);
 
             foreach (var child in Window.Children)
             {

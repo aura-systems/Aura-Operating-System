@@ -166,6 +166,8 @@ namespace Aura_OS.System.Input
 
             if (topComponent != null)
             {
+                Kernel.Debug = "topComponent=" + topComponent.ToString();
+
                 topComponent.HandleLeftClick();
             }
         }

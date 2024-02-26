@@ -274,14 +274,21 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
 
         public bool IsInside(int x, int y)
         {
-            if (IsRoot)
+            int absoluteX = 0;
+            int absoluteY = 0;
+            Component currentComponent = this;
+
+            while (currentComponent != null)
             {
-                return x >= X && x <= X + Width && y >= Y && y <= Y + Height;
+                absoluteX += currentComponent.X;
+                absoluteY += currentComponent.Y;
+
+                if (currentComponent.IsRoot) break;
+
+                currentComponent = currentComponent.Parent;
             }
-            else
-            {
-                return x >= Parent.X + X && x <= Parent.X + X + Width && y >= Parent.Y + Y && y <= Parent.Y + Y + Height;
-            }
+
+            return x >= absoluteX && x <= absoluteX + Width && y >= absoluteY && y <= absoluteY + Height;
         }
 
         public virtual bool IsDirty()

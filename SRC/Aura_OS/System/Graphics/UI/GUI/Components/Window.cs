@@ -81,6 +81,7 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
             {
                 Maximize = new Button(Kernel.ResourceManager.GetIcon("16-minimize.bmp"), Width - 60, 5);
                 Maximize.Frame = Kernel.ThemeManager.GetFrame("window.minimize.normal");
+                Maximize.Visible = false;
                 Maximize.NoBackground = true;
                 Maximize.NoBorder = true;
                 Maximize.HasTransparency = true;

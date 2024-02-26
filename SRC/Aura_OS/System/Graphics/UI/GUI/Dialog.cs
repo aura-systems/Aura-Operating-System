@@ -1,6 +1,13 @@
-﻿using System;
+﻿/*
+* PROJECT:          Aura Operating System Development
+* CONTENT:          Dialog class
+* PROGRAMMERS:      Valentin Charbonnier <valentinbreiz@gmail.com>
+*/
+
+using System;
 using System.Collections.Generic;
-using Aura_OS.System.Graphics.UI.GUI.Components; // Assurez-vous d'avoir une référence aux composants de l'UI
+using System.Runtime.InteropServices;
+using Aura_OS.System.Graphics.UI.GUI.Components;
 using Cosmos.System;
 using Cosmos.System.Graphics;
 
@@ -57,12 +64,6 @@ namespace Aura_OS.System.Graphics.UI.GUI
                 if (!_hasWindowMoving && Close.IsInside((int)MouseManager.X, (int)MouseManager.Y))
                 {
                     Close.Click();
-
-                    return;
-                }
-                else if (!_hasWindowMoving && Minimize.IsInside((int)MouseManager.X, (int)MouseManager.Y))
-                {
-                    Minimize.Click();
 
                     return;
                 }

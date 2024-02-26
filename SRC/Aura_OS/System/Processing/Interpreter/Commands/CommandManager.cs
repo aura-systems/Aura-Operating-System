@@ -105,9 +105,20 @@ namespace Aura_OS.System.Processing.Interpreter.Commands
                     var component = System.Graphics.UI.GUI.Components.Component.Components[i];
 
                     string text = $"{component.GetType().ToString()} X:{component.X} Y:{component.Y} W:{component.Width} H:{component.Height} Z:{component.zIndex} Visible:{component.Visible}";
+
+                    if (component is System.Graphics.UI.GUI.Components.Button button)
+                    {
+                        text += $" Text:{button.Text}";
+                    }
+                    else if (component is System.Graphics.UI.GUI.Components.Window window)
+                    {
+                        text += $" Name:{window.Name}";
+                    }
+
                     Console.WriteLine(text);
                 }
             }));
+
         }
 
         /// <summary>
