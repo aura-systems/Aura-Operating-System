@@ -4,11 +4,10 @@
 * PROGRAMMERS:      Valentin Charbonnier <valentinbreiz@gmail.com>
 */
 
-using Cosmos.System.Graphics;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using Cosmos.System;
+using Cosmos.System.Graphics;
 using Aura_OS.System.Graphics.UI.GUI.Components;
 using Aura_OS.System.Processing.Processes;
 
@@ -19,24 +18,15 @@ namespace Aura_OS.System.Graphics.UI.GUI
         private List<Button> buttons;
         private Button Shutdown;
         private Button Reboot;
-        private Panel Ribbon;
-        private Bitmap Logo;
-
-        private bool Clicked = false;
 
         public StartMenu(int x, int y, int width, int height) : base(x, y, width, height)
         {
             Frame = Kernel.ThemeManager.GetFrame("window.borderless");
 
-            Logo = Kernel.AuraLogo2;
             buttons = new List<Button>();
 
-            // Ribbon
-            Ribbon = new Panel(Kernel.DarkBlue, 3, 3, 23, height - 6);
-            AddChild(Ribbon);
-
             // Shutdown
-            Shutdown = new Button(Kernel.ResourceManager.GetIcon("24-shutdown.bmp"), "Shut Down.", 3 + Ribbon.Width, Height - 32 - 6, Width - Ribbon.Width - 6, 35);
+            Shutdown = new Button(Kernel.ResourceManager.GetIcon("24-shutdown.bmp"), "Shut Down.", 3, Height - 32 - 6, Width - 6, 35);
             Shutdown.NoBorder = true;
             Shutdown.Click = new Action(() =>
             {
@@ -45,7 +35,7 @@ namespace Aura_OS.System.Graphics.UI.GUI
             AddChild(Shutdown);
 
             // Reboot
-            Reboot = new Button(Kernel.ResourceManager.GetIcon("24-reboot.bmp"), "Reboot.", 3 + Ribbon.Width, Height - 64 - 6, Width - Ribbon.Width - 6, 35);
+            Reboot = new Button(Kernel.ResourceManager.GetIcon("24-reboot.bmp"), "Reboot.", 3, Height - 64 - 6, Width - 6, 35);
             Reboot.NoBorder = true;
             Reboot.Click = new Action(() =>
             {
@@ -73,7 +63,7 @@ namespace Aura_OS.System.Graphics.UI.GUI
                     icon = Kernel.ResourceManager.GetIcon("24-program.bmp");
                 }
 
-                var button = new Button(icon, applicationConfig.Template.Name, 3 + Ribbon.Width, 3 +  buttonY + 1, Width - Ribbon.Width - 6, 35);
+                var button = new Button(icon, applicationConfig.Template.Name, 3, 3 +  buttonY + 1, Width - 6, 35);
                 button.NoBorder = true;
                 button.Click = new Action(() =>
                 {
@@ -91,10 +81,6 @@ namespace Aura_OS.System.Graphics.UI.GUI
         public override void Draw()
         {
             base.Draw();
-
-            Ribbon.Draw(this);
-
-            DrawImage(Logo, 5, Ribbon.Height - 66);
 
             foreach (var button in buttons)
             {
