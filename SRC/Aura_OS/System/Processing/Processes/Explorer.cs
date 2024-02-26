@@ -6,6 +6,8 @@
 
 using Aura_OS.Processing;
 using Aura_OS.System.Graphics.UI.GUI;
+using Aura_OS.System.Graphics.UI.GUI.Components;
+using Cosmos.System;
 
 namespace Aura_OS.System.Processing.Processes
 {
@@ -68,6 +70,14 @@ namespace Aura_OS.System.Processing.Processes
         public override void Update()
         {
             WindowManager.DrawWindows();
+
+            if (Kernel.MouseManager.IsLeftButtonDown)
+            {
+                if (!StartMenu.IsInside((int)MouseManager.X, (int)MouseManager.Y) && !Taskbar.StartButton.IsInside((int)MouseManager.X, (int)MouseManager.Y))
+                {
+                    ShowStartMenu = false;
+                }
+            }
         }
     }
 }

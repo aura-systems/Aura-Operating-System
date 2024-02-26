@@ -35,9 +35,9 @@ namespace Aura_OS.System.Graphics.UI.GUI
     {
         public static int taskbarHeight = 33;
 
-        Button StartButton;
-        Button HourButton;
-        Button NetworkButton;
+        public Button StartButton;
+        public Button HourButton;
+        public Button NetworkButton;
 
         public bool Clicked = false;
 
