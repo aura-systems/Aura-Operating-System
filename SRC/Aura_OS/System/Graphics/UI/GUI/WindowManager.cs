@@ -24,6 +24,7 @@ namespace Aura_OS
 
         public List<Application> Applications;
         public List<Rectangle> ClipRects;
+        public bool GuiDebug = false;
 
         private int _highestZIndex = -1;
 
@@ -98,7 +99,10 @@ namespace Aura_OS
 
         public void DrawWindows()
         {
-            ClipRects.Clear();
+            if (GuiDebug)
+            {
+                ClipRects.Clear();
+            }
 
             // Sort x index
             InsertionSortByZIndex(Component.Components);
@@ -112,7 +116,11 @@ namespace Aura_OS
                 {
                     component.Draw();
                     component.MarkCleaned();
-                    Rectangle.AddClipRect(component.GetRectangle());
+
+                    if (GuiDebug)
+                    {
+                        Rectangle.AddClipRect(component.GetRectangle());
+                    }
                 }
 
                 foreach (var child in component.Children)
@@ -122,12 +130,15 @@ namespace Aura_OS
                         child.Draw(child.Parent);
                         child.MarkCleaned();
 
-                        var childRect = child.GetRectangle();
-                        var parentRect = child.Parent.GetRectangle();
-                        var top = parentRect.Top + childRect.Top;
-                        var left = parentRect.Left + childRect.Left;
-                        var realRect = new Rectangle(top, left, childRect.Height + top, childRect.Width + left);
-                        Rectangle.AddClipRect(realRect);
+                        if (GuiDebug)
+                        {
+                            var childRect = child.GetRectangle();
+                            var parentRect = child.Parent.GetRectangle();
+                            var top = parentRect.Top + childRect.Top;
+                            var left = parentRect.Left + childRect.Left;
+                            var realRect = new Rectangle(top, left, childRect.Height + top, childRect.Width + left);
+                            Rectangle.AddClipRect(realRect);
+                        }
                     }
                 }
             }
@@ -139,7 +150,11 @@ namespace Aura_OS
                 {
                     app.Draw();
                     app.MarkCleaned();
-                    Rectangle.AddClipRect(app.Window.GetRectangle());
+
+                    if (GuiDebug)
+                    {
+                        Rectangle.AddClipRect(app.Window.GetRectangle());
+                    }
                 }
             }
 
@@ -162,14 +177,17 @@ namespace Aura_OS
                 Kernel.Canvas.DrawImage(contextMenu.GetBuffer(), contextMenu.X, contextMenu.Y);
             }
 
-            // Draw clip rects
-            for (int i = 0; i < Explorer.WindowManager.ClipRects.Count; i++)
+            if (GuiDebug)
             {
-                var tempRect = Explorer.WindowManager.ClipRects[i];
-                DrawRect(tempRect.Left, tempRect.Top,
-                         tempRect.Right - tempRect.Left + 1,
-                         tempRect.Bottom - tempRect.Top + 1);
-            }
+                // Draw clip rects
+                for (int i = 0; i < Explorer.WindowManager.ClipRects.Count; i++)
+                {
+                    var tempRect = Explorer.WindowManager.ClipRects[i];
+                    DrawRect(tempRect.Left, tempRect.Top,
+                             tempRect.Right - tempRect.Left + 1,
+                             tempRect.Bottom - tempRect.Top + 1);
+                }
+            }  
         }
 
         public void DrawComponentAndChildren(Component component)
