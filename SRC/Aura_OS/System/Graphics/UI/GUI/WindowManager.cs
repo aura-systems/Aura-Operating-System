@@ -98,7 +98,7 @@ namespace Aura_OS
 
         public void DrawWindows()
         {
-            if (GuiDebug)
+            if (Kernel.GuiDebug)
             {
                 ClipRects.Clear();
             }
