@@ -295,23 +295,13 @@ namespace Aura_OS.System.Graphics.UI.GUI
 
         public void DrawImage(Bitmap image, int x, int y)
         {
-            if (image.Width == Bitmap.Width && image.Height == Bitmap.Height)
+            for (int yi = 0; yi < image.Height; yi++)
             {
-                Bitmap = image;
-            }
-            else
-            {
-                int[] imageData = image.RawData;
+                int destOffset = ((y + yi) * (int)Bitmap.Width + x);
+                int srcOffset = yi * (int)image.Width;
+                int count = (int)image.Width;
 
-                for (int yi = 0; yi < image.Height; yi++)
-                {
-                    int imageRowOffset = yi * (int)image.Width;
-
-                    for (int xi = 0; xi < image.Width; xi++)
-                    {
-                        SetPixel(x + xi, y + yi, imageData[imageRowOffset + xi]);
-                    }
-                }
+                MemoryOperations.Copy(Bitmap.RawData, destOffset, image.RawData, srcOffset, count);
             }
         }
 

@@ -19,16 +19,6 @@ namespace Aura_OS.System.Graphics.UI.GUI
         public readonly int Width;
         public readonly int Height;
 
-        public bool ForceDirty
-        {
-            get => _forceDirty;
-            set
-            {
-                _forceDirty = value;
-                Window.ForceDirty = true;
-            }
-        }
-
         public bool Focused
         {
             get => Explorer.WindowManager.FocusedApp == this;
@@ -37,11 +27,10 @@ namespace Aura_OS.System.Graphics.UI.GUI
         public int X;
         public int Y;
         public Window Window;
-        
+        public bool ForceDirty = false;
         public bool Visible = false;
         public int zIndex = 0;
 
-        private bool _forceDirty = false;
         private int _px;
         private int _py;
         private bool _lck = false;
