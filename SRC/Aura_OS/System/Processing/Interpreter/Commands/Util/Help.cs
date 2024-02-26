@@ -6,6 +6,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Text;
 
 namespace Aura_OS.System.Processing.Interpreter.Commands.Util
 {
@@ -45,29 +46,33 @@ namespace Aura_OS.System.Processing.Interpreter.Commands.Util
         private ReturnInfo ExecuteHelp(bool showaliases)
         {
             int count = 0;
+            StringBuilder sb = new();
+            List<ICommand> commands = CommandManager.GetCommands();
 
-            foreach (var command in CommandManager.GetCommands())
+            for (int i = 0; i < commands.Count; i++)
             {
-                Console.Write("- ");
+                ICommand command = commands[i];
+
+                sb.Append("- ");
                 if (showaliases)
                 {
-                    for (int i = 0; i < command.CommandValues.Length; i++)
+                    for (int j = 0; j < command.CommandValues.Length; j++)
                     {
-                        if (i != command.CommandValues.Length - 1)
+                        if (j != command.CommandValues.Length - 1)
                         {
-                            Console.Write(command.CommandValues[i] + ", ");
+                            sb.Append(command.CommandValues[j] + ", ");
                         }
                         else
                         {
-                            Console.Write(command.CommandValues[i]);
+                            sb.Append(command.CommandValues[j]);
                         }
                     }
                 }
                 else
                 {
-                    Console.Write(command.CommandValues[0]);
+                    sb.Append(command.CommandValues[0]);
                 }
-                Console.WriteLine(" (" + command.Description + ")");
+                sb.AppendLine(" (" + command.Description + ")");
 
                 /*
                 count++;
@@ -78,6 +83,7 @@ namespace Aura_OS.System.Processing.Interpreter.Commands.Util
                 }
                 */
             }
+            Console.WriteLine(sb.ToString());
             Console.WriteLine();
             Console.WriteLine("You can see more information about a specific command by typing: {command} /help");
             return new ReturnInfo(this, ReturnCode.OK);
