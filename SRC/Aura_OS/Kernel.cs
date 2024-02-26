@@ -48,6 +48,8 @@ namespace Aura_OS
         public static bool NetworkConnected = false;
         public static bool NetworkTransmitting = false;
 
+        public static bool GuiDebug = false;
+
         //FILES
         public static Bitmap programLogo;
         public static Bitmap errorLogo;
@@ -198,7 +200,11 @@ namespace Aura_OS
 
                 Canvas.DrawString("Aura Operating System [" + Version + "." + Revision + "]", font, WhiteColor, 2, 0);
                 Canvas.DrawString("fps=" + _fps, font, WhiteColor, 2, font.Height);
-                Canvas.DrawString(Debug, font, WhiteColor, 2, font.Height * 2);
+
+                if (GuiDebug)
+                {
+                    Canvas.DrawString(Debug, font, WhiteColor, 2, font.Height * 2);
+                }  
 
                 Canvas.Display();
             }

@@ -24,7 +24,6 @@ namespace Aura_OS
 
         public List<Application> Applications;
         public List<Rectangle> ClipRects;
-        public bool GuiDebug = false;
 
         private int _highestZIndex = -1;
 
@@ -117,7 +116,7 @@ namespace Aura_OS
                     component.Draw();
                     component.MarkCleaned();
 
-                    if (GuiDebug)
+                    if (Kernel.GuiDebug)
                     {
                         Rectangle.AddClipRect(component.GetRectangle());
                     }
@@ -130,7 +129,7 @@ namespace Aura_OS
                         child.Draw(child.Parent);
                         child.MarkCleaned();
 
-                        if (GuiDebug)
+                        if (Kernel.GuiDebug)
                         {
                             var childRect = child.GetRectangle();
                             var parentRect = child.Parent.GetRectangle();
@@ -151,7 +150,7 @@ namespace Aura_OS
                     app.Draw();
                     app.MarkCleaned();
 
-                    if (GuiDebug)
+                    if (Kernel.GuiDebug)
                     {
                         Rectangle.AddClipRect(app.Window.GetRectangle());
                     }
@@ -177,7 +176,7 @@ namespace Aura_OS
                 Kernel.Canvas.DrawImage(contextMenu.GetBuffer(), contextMenu.X, contextMenu.Y);
             }
 
-            if (GuiDebug)
+            if (Kernel.GuiDebug)
             {
                 // Draw clip rects
                 for (int i = 0; i < Explorer.WindowManager.ClipRects.Count; i++)
