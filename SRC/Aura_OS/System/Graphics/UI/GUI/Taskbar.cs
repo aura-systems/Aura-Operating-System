@@ -51,7 +51,6 @@ namespace Aura_OS.System.Graphics.UI.GUI
             int startButtonX = 2;
             int startButtonY = 2;
             StartButton = new Button(Kernel.ResourceManager.GetIcon("00-start.bmp"), "Start", startButtonX, startButtonY, startButtonWidth, startButtonHeight);
-            StartButton.HasTransparency = true;
             StartButton.Frame = Kernel.ThemeManager.GetFrame("button.disabled");
             StartButton.Click = new Action(() =>
             {

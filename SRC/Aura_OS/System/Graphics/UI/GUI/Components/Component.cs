@@ -4,13 +4,13 @@
 * PROGRAMMERS:      Valentin Charbonnier <valentinbreiz@gmail.com>
 */
 
-using Aura_OS.System.Graphics.UI.GUI.Skin;
-using Aura_OS.System.Processing.Processes;
+using System.Collections.Generic;
+using System.Drawing;
 using Cosmos.System;
 using Cosmos.System.Graphics;
 using Cosmos.System.Graphics.Fonts;
-using System.Collections.Generic;
-using System.Drawing;
+using Aura_OS.System.Graphics.UI.GUI.Skin;
+using Aura_OS.System.Processing.Processes;
 
 namespace Aura_OS.System.Graphics.UI.GUI.Components
 {
@@ -82,7 +82,6 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
         }
 
         public bool ForceDirty { get; set; }
-        public bool HasTransparency { get; set; }
         public RightClick RightClick { get; set; }
         public Component Parent { get; set; }
         public List<Component> Children { get; set; }
@@ -98,13 +97,17 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
 
         public Component(int x, int y, int width, int height)
         {
+            if (width % 2 != 0)
+            {
+                width++;
+            }
+
             _rectangle = new Rectangle(y, x, y + height, x + width);
             _buffer = new DirectBitmap(width, height);
             _cacheBuffer = new DirectBitmap(width, height);
             _dirty = true;
             Visible = true;
             ForceDirty = false;
-            HasTransparency = false;
             IsRoot = true;
             Children = new List<Component>();
             zIndex = 0;
@@ -152,14 +155,14 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
         public virtual void Draw(Component component)
         {
             Draw();
-            component._buffer.DrawImage(GetBuffer(), X, Y);
+            component._buffer.DrawImageAlpha(GetBuffer(), X, Y);
         }
 
         public void DrawInParent()
         {
             if (!IsRoot)
             {
-                Parent._buffer.DrawImage(GetBuffer(), X, Y);
+                Parent._buffer.DrawImageAlpha(GetBuffer(), X, Y);
             }
         }
 

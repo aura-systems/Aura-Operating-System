@@ -50,7 +50,6 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
                 TopBar.Background = false;
                 TopBar.Borders = false;
                 TopBar.Text = name;
-                TopBar.Visible = false;
                 AddChild(TopBar);
             }
 
@@ -60,7 +59,6 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
                 Close.Frame = Kernel.ThemeManager.GetFrame("window.close.normal");
                 Close.NoBackground = true;
                 Close.NoBorder = true;
-                Close.HasTransparency = true;
                 AddChild(Close);
             }
 
@@ -70,7 +68,6 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
                 Minimize.Frame = Kernel.ThemeManager.GetFrame("window.minimize.normal");
                 Minimize.NoBackground = true;
                 Minimize.NoBorder = true;
-                Minimize.HasTransparency = true;
                 AddChild(Minimize);
             }
 
@@ -84,7 +81,6 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
                 Maximize.Visible = false;
                 Maximize.NoBackground = true;
                 Maximize.NoBorder = true;
-                Maximize.HasTransparency = true;
                 AddChild(Maximize);
             }
         }

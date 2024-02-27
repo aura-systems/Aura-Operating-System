@@ -29,7 +29,6 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
         {
             Background = false;
             Borders = false;
-            HasTransparency = true;
 
             CurrentPath = path;
             _textColor = textcolor;
