@@ -13,6 +13,8 @@ namespace Aura_OS.System.Processing.Processes
 {
     public class Explorer : Process
     {
+        DirectBitmap Screen;
+
         public static bool ShowStartMenu
         {
             get
@@ -40,7 +42,9 @@ namespace Aura_OS.System.Processing.Processes
 
         public Explorer() : base("Explorer", ProcessType.KernelComponent)
         {
+            Screen = new((int)Kernel.ScreenWidth, (int)Kernel.ScreenHeight);
             WindowManager.Initialize();
+            WindowManager.SetScreen(Screen);
 
             CustomConsole.WriteLineInfo("Starting desktop...");
             Desktop = new Desktop(0, 0, (int)Kernel.ScreenWidth, (int)Kernel.ScreenHeight);
@@ -70,6 +74,8 @@ namespace Aura_OS.System.Processing.Processes
         public override void Update()
         {
             WindowManager.DrawWindows();
+
+            Kernel.Canvas.DrawImage(Screen.Bitmap, 0, 0);
 
             if (Kernel.MouseManager.IsLeftButtonDown)
             {

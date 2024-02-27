@@ -26,6 +26,7 @@ namespace Aura_OS
         public List<Rectangle> ClipRects;
 
         private int _highestZIndex = -1;
+        private DirectBitmap _screen;
 
         public void Initialize()
         {
@@ -193,19 +194,17 @@ namespace Aura_OS
         {
             if (!component.Visible) return;
 
-            if (component.HasTransparency)
-            {
-                Kernel.Canvas.DrawImageAlpha(component.GetBuffer(), component.X, component.Y);
-            }
-            else
-            {
-                Kernel.Canvas.DrawImage(component.GetBuffer(), component.X, component.Y);
-            }
+            _screen.DrawImageAlpha(component.GetBuffer(), component.X, component.Y);
         }
 
         public void DrawRect(int x, int y, int width, int height)
         {
             Kernel.Canvas.DrawRectangle(Color.Green, x, y, width, height);
+        }
+
+        public void SetScreen(DirectBitmap Screen)
+        {
+            _screen = Screen;
         }
 
         /// <summary>

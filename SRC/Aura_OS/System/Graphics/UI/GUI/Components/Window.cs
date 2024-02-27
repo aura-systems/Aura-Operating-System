@@ -49,8 +49,8 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
                 TopBar = new Panel(Color.Transparent, 3, 3, Width - 5, 18);
                 TopBar.Background = false;
                 TopBar.Borders = false;
-                TopBar.HasTransparency = true;
                 TopBar.Text = name;
+                TopBar.Visible = false;
                 AddChild(TopBar);
             }
 

@@ -152,14 +152,14 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
         public virtual void Draw(Component component)
         {
             Draw();
-            component._buffer.DrawImageAlpha(GetBuffer(), X, Y);
+            component._buffer.DrawImage(GetBuffer(), X, Y);
         }
 
         public void DrawInParent()
         {
             if (!IsRoot)
             {
-                Parent._buffer.DrawImageAlpha(GetBuffer(), X, Y);
+                Parent._buffer.DrawImage(GetBuffer(), X, Y);
             }
         }
 
