@@ -13,7 +13,7 @@ namespace Aura_OS.System.Processing.Processes
 {
     public class Explorer : Process
     {
-        DirectBitmap Screen;
+        
 
         public static bool ShowStartMenu
         {
@@ -37,6 +37,7 @@ namespace Aura_OS.System.Processing.Processes
         public static StartMenu StartMenu;
         public static Desktop Desktop;
         public static WindowManager WindowManager = new WindowManager();
+        public static DirectBitmap Screen;
 
         private static bool _showStartMenu = false;
 

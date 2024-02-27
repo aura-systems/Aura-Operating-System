@@ -31,8 +31,10 @@ namespace Aura_OS.System.Processing.Applications.Terminal
 
                 _terminal.Console.WriteLine(value);
 
-                _terminal.Console.MarkDirty();
-                Explorer.WindowManager.DrawWindows();
+                _terminal.Console.Draw();
+                _terminal.Draw();
+                Explorer.Screen.DrawImage(_terminal.Window.GetBuffer(), _terminal.Window.X, _terminal.Window.Y);
+                Kernel.Canvas.DrawImage(Explorer.Screen.Bitmap, 0, 0);
                 Kernel.Canvas.Display();
             }
         }
@@ -46,8 +48,10 @@ namespace Aura_OS.System.Processing.Applications.Terminal
 
                 _terminal.Console.Write(value);
 
-                _terminal.Console.MarkDirty();
-                Explorer.WindowManager.DrawWindows();
+                _terminal.Console.Draw();
+                _terminal.Draw();
+                Explorer.Screen.DrawImage(_terminal.Window.GetBuffer(), _terminal.Window.X, _terminal.Window.Y);
+                Kernel.Canvas.DrawImage(Explorer.Screen.Bitmap, 0, 0);
                 Kernel.Canvas.Display();
             }
         }
@@ -61,8 +65,10 @@ namespace Aura_OS.System.Processing.Applications.Terminal
 
                 _terminal.Console.Write(value.ToString());
 
-                _terminal.Console.MarkDirty();
-                Explorer.WindowManager.DrawWindows();
+                _terminal.Console.Draw();
+                _terminal.Draw();
+                Explorer.Screen.DrawImage(_terminal.Window.GetBuffer(), _terminal.Window.X, _terminal.Window.Y);
+                Kernel.Canvas.DrawImage(Explorer.Screen.Bitmap, 0, 0);
                 Kernel.Canvas.Display();
             }
         }

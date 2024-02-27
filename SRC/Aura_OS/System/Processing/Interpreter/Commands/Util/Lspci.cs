@@ -6,6 +6,7 @@
 
 using Aura_OS.Utils;
 using System;
+using System.Text;
 using static Cosmos.HAL.PCIDevice;
 
 namespace Aura_OS.System.Processing.Interpreter.Commands.Util
@@ -26,12 +27,13 @@ namespace Aura_OS.System.Processing.Interpreter.Commands.Util
         public override ReturnInfo Execute()
         {
             int count = 0;
+            StringBuilder sb = new();
 
             foreach (Cosmos.HAL.PCIDevice device in Cosmos.HAL.PCI.Devices)
             {
                 string line = Conversion.D2(device.bus) + ":" + Conversion.D2(device.slot) + ":" + Conversion.D2(device.function) + " - " + "0x" + Conversion.D4(Conversion.DecToHex(device.VendorID)) + ":0x" + Conversion.D4(Conversion.DecToHex(device.DeviceID)) + " : " + DeviceClass.GetTypeString(device) + ": " + DeviceClass.GetDeviceString(device);
-                
-                Console.WriteLine(line);
+
+                sb.AppendLine(line);
                 count++;
 
                 /*
@@ -42,6 +44,8 @@ namespace Aura_OS.System.Processing.Interpreter.Commands.Util
                 }
                 */
             }
+
+            Console.Write(sb.ToString());
 
             return new ReturnInfo(this, ReturnCode.OK);
         }

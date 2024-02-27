@@ -174,7 +174,7 @@ namespace Aura_OS
             if (contextMenu != null && contextMenu.Opened)
             {
                 Explorer.WindowManager.ContextMenu.Draw();
-                Kernel.Canvas.DrawImage(contextMenu.GetBuffer(), contextMenu.X, contextMenu.Y);
+                _screen.DrawImageAlpha(contextMenu.GetBuffer(), contextMenu.X, contextMenu.Y);
             }
 
             if (Kernel.GuiDebug)

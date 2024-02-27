@@ -341,6 +341,11 @@ namespace Aura_OS.System.Graphics.UI.GUI
 
         public void DrawImageAlpha(Bitmap image, int x, int y)
         {
+            if (image.RawData.Length > Bitmap.RawData.Length)
+            {
+                return;
+            }
+
             DirectBitmap tmp = ExtractImage(x, y, (int)image.Width, (int)image.Height);
 
             int w = tmp.Width;
