@@ -2,6 +2,7 @@
 
     <PropertyGroup>
         <TargetFramework>net6.0</TargetFramework>
+        <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
     </PropertyGroup>
 
     <ItemGroup>
@@ -9,7 +10,13 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Aura_OS\Aura_OS.csproj" NoWarn="NU1604;NU1605"/>
+      <ProjectReference Include="..\Aura_OS\Aura_OS.csproj" NoWarn="NU1604;NU1605" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Reference Include="XSharp">
+        <HintPath>XSharp.dll</HintPath>
+      </Reference>
     </ItemGroup>
 
 </Project>

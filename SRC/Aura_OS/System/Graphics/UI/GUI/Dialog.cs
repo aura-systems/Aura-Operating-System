@@ -106,7 +106,7 @@ namespace Aura_OS.System.Graphics.UI.GUI
 
             if (AlertIcon != null)
             {
-                DrawImageAlpha(AlertIcon, 0 + 10, messageY - 8);
+                DrawImage(AlertIcon, 0 + 10, messageY - 8);
             }
 
             foreach (var button in _buttons)

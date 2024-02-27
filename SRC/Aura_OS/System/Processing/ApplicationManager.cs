@@ -56,6 +56,7 @@ namespace Aura_OS.System.Processing
             RegisterApplication(typeof(SystemInfoApp), 40, 40, 402, 360);
             RegisterApplication(typeof(CubeApp), 40, 40, 200, 200);
             RegisterApplication(typeof(GameBoyApp), 40, 40, 160 + 6, 144 + 26);
+            RegisterApplication(typeof(SampleApp), 40, 40, 500, 500);
         }
 
         public void RegisterApplication(ApplicationConfig config)
@@ -131,6 +132,10 @@ namespace Aura_OS.System.Processing
             else if (config.Template == typeof(GameBoyApp))
             {
                 app = new GameBoyApp(config.Weight, config.Height, config.X, config.Y);
+            }
+            else if (config.Template == typeof(SampleApp))
+            {
+                app = new SampleApp(config.Weight, config.Height, config.X, config.Y);
             }
             /*else if (config.Template == typeof(ExplorerApp))
             {

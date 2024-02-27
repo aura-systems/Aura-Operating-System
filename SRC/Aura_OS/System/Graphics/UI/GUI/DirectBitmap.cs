@@ -6,6 +6,7 @@ using Cosmos.Core;
 using Cosmos.System.Graphics;
 using Cosmos.System.Graphics.Fonts;
 using UniLua;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace Aura_OS.System.Graphics.UI.GUI
 {
@@ -305,25 +306,48 @@ namespace Aura_OS.System.Graphics.UI.GUI
             }
         }
 
+        public DirectBitmap ExtractImage(int srcX, int srcY, int width, int height)
+        {
+            DirectBitmap bmp = new(width, height);
+
+            for (int yi = 0; yi < height; yi++)
+            {
+                int destOffset = yi * width;
+                int srcOffset = ((srcY + yi) * (int)Bitmap.Width + srcX);
+                int count = width;
+
+                MemoryOperations.Copy(bmp.Bitmap.RawData, destOffset, Bitmap.RawData, srcOffset, count);
+            }
+
+            return bmp;
+        }
+
+
+        public static void AlphaBltSSE(byte* dst, byte* src, int w, int h, int wmul4)
+        {
+            // PLUGGED
+        }
+
         public void DrawImageAlpha(Bitmap image, int x, int y)
         {
-            if (image.Width == Bitmap.Width && image.Height == Bitmap.Height)
-            {
-                Bitmap = image;
-            }
-            else
-            {
-                int[] imageData = image.RawData;
+            DirectBitmap tmp = ExtractImage(x, y, (int)image.Width, (int)image.Height);
 
-                for (int yi = 0; yi < image.Height; yi++)
+            if (image.Width == tmp.Bitmap.Width && image.Height == tmp.Bitmap.Height)
+            {
+                int w = tmp.Width;
+                int wmul4 = w << 2;
+                if (w == 0) return;
+                w >>= 1;
+
+                fixed (int* bgBitmap = tmp.Bitmap.RawData)
                 {
-                    int imageRowOffset = yi * (int)image.Width;
-
-                    for (int xi = 0; xi < image.Width; xi++)
+                    fixed (int* fgBitmap = image.RawData)
                     {
-                        SetPixelAlpha(x + xi, y + yi, imageData[imageRowOffset + xi]);
+                        AlphaBltSSE((byte*)bgBitmap, (byte*)fgBitmap, w, (int)image.Height, wmul4);
                     }
                 }
+
+                DrawImage(tmp.Bitmap, x, y);
             }
         }
 

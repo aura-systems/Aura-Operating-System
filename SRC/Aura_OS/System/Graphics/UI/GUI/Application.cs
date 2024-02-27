@@ -260,11 +260,6 @@ namespace Aura_OS.System.Graphics.UI.GUI
             Window.DrawImage(image, x + 4, y + Window.TopBar.Height + 6);
         }
 
-        public void DrawImageAlpha(Cosmos.System.Graphics.Bitmap image, int x, int y)
-        {
-            Window.DrawImageAlpha(image, x + 4, y + Window.TopBar.Height + 6);
-        }
-
         #endregion
     }
 }

@@ -20,6 +20,8 @@ namespace Aura_OS.System.Graphics.UI.GUI
             MainPanel.Borders = false;
             MainPanel.Background = false;
 
+            MainPanel.Visible = false;
+
             MainPanel.UpdateCurrentFolder();
 
             AddChild(MainPanel);
@@ -33,7 +35,8 @@ namespace Aura_OS.System.Graphics.UI.GUI
 
             MainPanel.UpdateCurrentFolder();
 
-            MainPanel.Draw(this);
+
+            //MainPanel.Draw(this);
         }
     }
 }

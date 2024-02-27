@@ -232,6 +232,11 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
             return _buffer.Bitmap;
         }
 
+        public DirectBitmap GetDbBuffer()
+        {
+            return _buffer;
+        }
+
         public virtual void HandleLeftClick()
         {
             RightClick contextMenu = Explorer.WindowManager.ContextMenu;
@@ -349,11 +354,6 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
         }
 
         public void DrawImage(Bitmap image, int x, int y)
-        {
-            _buffer.DrawImage(image, x, y);
-        }
-
-        public void DrawImageAlpha(Bitmap image, int x, int y)
         {
             _buffer.DrawImageAlpha(image, x, y);
         }
