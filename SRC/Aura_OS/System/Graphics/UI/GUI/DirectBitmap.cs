@@ -329,19 +329,7 @@ namespace Aura_OS.System.Graphics.UI.GUI
             // PLUGGED
         }
 
-        public static void Brightness(int[] image, int len, int v)
-        {
-            for (int i = 0; i < len; i++)
-            {
-                // Extract ARGB components
-                int pixel = image[i];
-
-                // Reassemble pixel with alpha set to 0xFF
-                image[i] = (0xFF << 24) | (((pixel >> 16) & 0xFF) << 16) | (((pixel >> 8) & 0xFF) << 8) | (pixel & 0xFF);
-            }
-        }
-
-        public void DrawImageAlpha(Bitmap image, int x, int y)
+        public void DrawImageAlpha(Bitmap image, int x, int y, bool clearAlpha = false)
         {
             if (image.RawData.Length > Bitmap.RawData.Length)
             {
@@ -360,7 +348,11 @@ namespace Aura_OS.System.Graphics.UI.GUI
                 fixed (int* fgBitmap = image.RawData)
                 {
                     AlphaBltSSE((byte*)bgBitmap, (byte*)fgBitmap, w, (int)image.Height, wmul4);
-                    
+
+                    if (clearAlpha)
+                    {
+                        BrightnessSSE((byte*)bgBitmap, image.RawData.Length);
+                    }
                 }
             }
 

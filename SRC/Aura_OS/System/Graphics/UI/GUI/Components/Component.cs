@@ -356,9 +356,9 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
             _buffer.DrawLine(color.ToArgb(), xStart, yStart, width, height);
         }
 
-        public void DrawImage(Bitmap image, int x, int y)
+        public void DrawImage(Bitmap image, int x, int y, bool clearAlpha = false)
         {
-            _buffer.DrawImageAlpha(image, x, y);
+            _buffer.DrawImageAlpha(image, x, y, clearAlpha);
         }
 
         public void DrawGradient(Color color1, Color color2, int x, int y, int width, int height)

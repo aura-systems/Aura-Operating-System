@@ -194,7 +194,14 @@ namespace Aura_OS
         {
             if (!component.Visible) return;
 
-            _screen.DrawImageAlpha(component.GetBuffer(), component.X, component.Y);
+            if (component is Window)
+            {
+                _screen.DrawImageAlpha(component.GetBuffer(), component.X, component.Y);
+            }
+            else
+            {
+                _screen.DrawImage(component.GetBuffer(), component.X, component.Y);
+            }
         }
 
         public void DrawRect(int x, int y, int width, int height)
