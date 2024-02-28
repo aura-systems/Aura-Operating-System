@@ -61,17 +61,6 @@ namespace Aura_OS.System.Processing.Applications
                 }
                 MarkDirty();
             }));
-            _dialog.Close.Click = new Action(() =>
-            {
-                _showDialog = false;
-                _dialog.Visible = false;
-
-                foreach (var child in Window.Children)
-                {
-                    child.MarkDirty();
-                }
-                MarkDirty();
-            });
             AddChild(_dialog);
         }
 

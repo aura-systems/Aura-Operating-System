@@ -6,10 +6,8 @@
 
 using System;
 using System.Collections.Generic;
-using System.Runtime.InteropServices;
-using Aura_OS.System.Graphics.UI.GUI.Components;
-using Cosmos.System;
 using Cosmos.System.Graphics;
+using Aura_OS.System.Graphics.UI.GUI.Components;
 
 namespace Aura_OS.System.Graphics.UI.GUI
 {
@@ -19,12 +17,6 @@ namespace Aura_OS.System.Graphics.UI.GUI
         private string _message;
         private List<Button> _buttons;
         private Bitmap AlertIcon;
-
-        private int _px;
-        private int _py;
-        private bool _lck = false;
-        private bool _pressed;
-        private bool _hasWindowMoving = false;
 
         public Dialog(string title, string message, int x, int y) : base(title, x, y, 302, 119, false, false)
         {
@@ -53,48 +45,6 @@ namespace Aura_OS.System.Graphics.UI.GUI
             newButton.Click = onClickAction;
             _buttons.Add(newButton);
             AddChild(newButton);
-        }
-
-        public override void Update()
-        {
-            base.Update();
-
-            if (Kernel.MouseManager.IsLeftButtonDown)
-            {
-                if (!_hasWindowMoving && Close.IsInside((int)MouseManager.X, (int)MouseManager.Y))
-                {
-                    Close.Click();
-
-                    return;
-                }
-                else if (!_hasWindowMoving && TopBar.IsInside((int)MouseManager.X, (int)MouseManager.Y))
-                {
-                    _hasWindowMoving = true;
-
-                    _pressed = true;
-                    if (!_lck)
-                    {
-                        _px = (int)MouseManager.X - X;
-                        _py = (int)MouseManager.Y - Y;
-                        _lck = true;
-                    }
-                }
-            }
-            else
-            {
-                _pressed = false;
-                _lck = false;
-                _hasWindowMoving = false;
-            }
-
-            if (_pressed)
-            {
-                X = (int)(MouseManager.X - _px);
-                Y = (int)(MouseManager.Y - _py);
-
-                X = (int)(MouseManager.X - _px + 3);
-                Y = (int)(MouseManager.Y - _py + TopBar.Height + 3);
-            }
         }
 
         public override void Draw()
