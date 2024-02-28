@@ -26,7 +26,7 @@ namespace Aura_OS.System.Graphics.UI.GUI.Skin
             CustomConsole.WriteLineInfo("Starting theme manager...");
 
             _skinParser = new SkinParsing();
-            _skinParser.loadSkin(File.ReadAllText("1:\\UI\\Themes\\Suave.skin.xml"));
+            _skinParser.loadSkin(File.ReadAllText(Files.IsoVolume + "UI\\Themes\\Suave.skin.xml"));
         }
 
         /// <summary>
