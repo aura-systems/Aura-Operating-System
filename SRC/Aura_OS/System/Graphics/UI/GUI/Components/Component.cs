@@ -242,7 +242,22 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
 
         public virtual void HandleLeftClick()
         {
+            RightClick contextMenu = Explorer.WindowManager.ContextMenu;
 
+            if (contextMenu != null && contextMenu.Opened)
+            {
+                Explorer.WindowManager.ContextMenu = null;
+                contextMenu.Opened = false;
+
+                foreach (var entry in contextMenu.Entries)
+                {
+                    if (entry.IsInside((int)MouseManager.X, (int)MouseManager.Y))
+                    {
+                        entry.Click();
+                        return;
+                    }
+                }
+            }
         }
 
         public virtual void HandleRightClick()

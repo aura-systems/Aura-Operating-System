@@ -11,11 +11,20 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
     public class RightClickEntry : Button
     {
         public const int ConstHeight = 16 + 4;
+        RightClick _rightclick;
 
-        public RightClickEntry(string text, int width) : base(text, 0, 0, width, ConstHeight)
+        public RightClickEntry(string text, int width, RightClick rightclick) : base(text, 0, 0, width, ConstHeight)
         {
             TextAlignStyle = TextAlign.Left;
             Frame = Kernel.ThemeManager.GetFrame("button.disabled");
+            _rightclick = rightclick;
+        }
+
+        public override void HandleLeftClick()
+        {
+            base.HandleLeftClick();
+
+            _rightclick.Opened = false;
         }
     }
 

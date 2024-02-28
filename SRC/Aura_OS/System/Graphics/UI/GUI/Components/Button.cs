@@ -62,8 +62,6 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
 
         public override void HandleLeftClick()
         {
-            base.HandleLeftClick();
-
             if (Click != null)
             {
                 if (IsInside((int)Cosmos.System.MouseManager.X, (int)Cosmos.System.MouseManager.Y))

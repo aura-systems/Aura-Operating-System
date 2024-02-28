@@ -36,16 +36,14 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
 
             RightClick = new RightClick((int)MouseManager.X, (int)MouseManager.Y, 200, 3 * RightClickEntry.ConstHeight);
 
-            RightClickEntry entry = new("Open in Terminal", RightClick.Width);
+            RightClickEntry entry = new("Open in Terminal", RightClick.Width, RightClick);
             entry.Click = new Action(() =>
             {
-                Explorer.WindowManager.ContextMenu = null;
-
                 Kernel.CurrentDirectory = CurrentPath;
                 Kernel.ApplicationManager.StartApplication(typeof(TerminalApp));
             });
 
-            RightClickEntry entry2 = new("Paste", RightClick.Width);
+            RightClickEntry entry2 = new("Paste", RightClick.Width, RightClick);
             entry2.Click = new Action(() =>
             {
                 if (Kernel.Clipboard != null)
@@ -57,7 +55,7 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
                 }
             });
 
-            RightClickEntry entry3 = new("Refresh", RightClick.Width);
+            RightClickEntry entry3 = new("Refresh", RightClick.Width, RightClick);
             entry3.Click = new Action(() =>
             {
                 UpdateCurrentFolder();

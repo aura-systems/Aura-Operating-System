@@ -108,7 +108,7 @@ namespace Aura_OS.System.Graphics.UI.GUI
                 });
                 button.RightClick = new RightClick((int)MouseManager.X, (int)MouseManager.Y - (1 * RightClickEntry.ConstHeight), 200, 1 * RightClickEntry.ConstHeight);
 
-                RightClickEntry entry = new("Close", button.RightClick.Width);
+                RightClickEntry entry = new("Close", button.RightClick.Width, button.RightClick);
                 entry.Click = new Action(() =>
                 {
                     app.Window.Close.Click();

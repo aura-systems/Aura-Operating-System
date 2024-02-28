@@ -84,13 +84,13 @@ namespace Aura_OS.System.Graphics.UI.GUI
 
             Window.TopBar.RightClick = new RightClick((int)MouseManager.X, (int)MouseManager.Y, 200, 2 * RightClickEntry.ConstHeight);
 
-            RightClickEntry entry = new("Close", Window.TopBar.RightClick.Width);
+            RightClickEntry entry = new("Close", Window.TopBar.RightClick.Width, Window.TopBar.RightClick);
             entry.Click = new Action(() =>
             {
                 Window.Close.Click();
             });
 
-            RightClickEntry entry2 = new("Minimize", Window.TopBar.RightClick.Width);
+            RightClickEntry entry2 = new("Minimize", Window.TopBar.RightClick.Width, Window.TopBar.RightClick);
             entry2.Click = new Action(() =>
             {
                 Window.Minimize.Click();
