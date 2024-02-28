@@ -94,7 +94,6 @@ namespace Aura_OS.System.Processing.Interpreter.Commands.Network
                     xClient.Close();
                     Console.WriteLine("Configuration applied! Your local IPv4 Address is " + NetworkConfiguration.CurrentAddress + ".");
                     Kernel.NetworkConnected = true;
-                    Explorer.Taskbar.MarkDirty();
                 }
                 else
                 {
@@ -153,14 +152,12 @@ namespace Aura_OS.System.Processing.Interpreter.Commands.Network
                         IPConfig.Enable(nic, ip, subnet, gw);
                         Console.WriteLine("Config OK!");
                         Kernel.NetworkConnected = true;
-                        Explorer.Taskbar.MarkDirty();
                     }
                     else if (ip != null && subnet != null)
                     {
                         IPConfig.Enable(nic, ip, subnet, ip);
                         Console.WriteLine("Config OK!");
                         Kernel.NetworkConnected = true;
-                        Explorer.Taskbar.MarkDirty();
                     }
                     else
                     {

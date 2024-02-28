@@ -27,15 +27,19 @@ namespace Aura_OS.System.Processing.Interpreter.Commands
         public static List<ICommand> _commands;
         private Application _terminal;
 
+        public CommandManager()
+        {
+            _commands = new List<ICommand>();
+        }
+
         public CommandManager(Application terminal)
         {
+            _commands = new List<ICommand>();
             _terminal = terminal;
         }
 
         public void Initialize()
         {
-            _commands = new List<ICommand>();
-
             RegisterAllCommands();
         }
 

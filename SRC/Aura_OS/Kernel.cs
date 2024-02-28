@@ -45,7 +45,28 @@ namespace Aura_OS
         public static string CurrentVolume = @"0:\";
         public static string CurrentDirectory = @"0:\";
 
-        public static bool NetworkConnected = false;
+        private static bool _networkConnected = false;
+        public static bool NetworkConnected
+        {
+            get
+            {
+                if (Explorer.Taskbar != null)
+                {
+                    Explorer.Taskbar.MarkDirty();
+                }
+
+                return _networkConnected;
+            }
+            set
+            {
+                _networkConnected = value;
+
+                if (Explorer.Taskbar != null)
+                {
+                    Explorer.Taskbar.MarkDirty();
+                }
+            }
+        }
         public static bool NetworkTransmitting = false;
 
         public static bool GuiDebug = false;

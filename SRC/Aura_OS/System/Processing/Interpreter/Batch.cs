@@ -30,7 +30,7 @@ namespace Aura_OS.System.Processing.Interpreter
                         if (!(line.StartsWith(";") || line.Equals("")))
                         {
                             CustomConsole.WriteLineInfo(line);
-                            CommandManager commandManager = new(null);
+                            CommandManager commandManager = new();
                             commandManager.Initialize();
                             commandManager.Execute(line);
                             CustomConsole.WriteLineOK(line);
