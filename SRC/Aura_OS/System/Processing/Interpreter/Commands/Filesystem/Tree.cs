@@ -7,6 +7,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
 
 namespace Aura_OS.System.Processing.Interpreter.Commands.Filesystem
 {
@@ -27,7 +28,9 @@ namespace Aura_OS.System.Processing.Interpreter.Commands.Filesystem
         {
             try
             {
-                DoTree(Kernel.CurrentDirectory, 0);
+                string result = DoTree(Kernel.CurrentDirectory, 0);
+                Console.WriteLine(result);
+
                 return new ReturnInfo(this, ReturnCode.OK);
             }
             catch (Exception ex)
@@ -52,31 +55,31 @@ namespace Aura_OS.System.Processing.Interpreter.Commands.Filesystem
             }
         }
 
-        private void DoTree(string directory, int depth)
+        private string DoTree(string directory, int depth)
         {
+            StringBuilder sb = new StringBuilder();
             var directories = Directory.GetDirectories(directory);
 
-            Console.ForegroundColor = ConsoleColor.Blue;
             foreach (string file in Directory.GetFiles(directory))
             {
                 for (int i = 0; i < depth; i++)
                 {
-                    Console.Write(" ");
+                    sb.Append(" ");
                 }
-                Console.WriteLine(file);
+                sb.AppendLine(file);
             }
-            Console.ForegroundColor = ConsoleColor.White;
 
             for (int j = 0; j < directories.Length; j++)
             {
-                Console.ForegroundColor = ConsoleColor.Yellow;
                 for (int i = 0; i < depth; i++)
                 {
-                    Console.Write(" ");
+                    sb.Append(" ");
                 }
-                Console.WriteLine(directories[j]);
-                DoTree(directory + "/" + directories[j], depth + 4);
+                sb.AppendLine(directories[j]);
+                sb.Append(DoTree(directory + "/" + directories[j], depth + 4));
             }
+
+            return sb.ToString();
         }
     }
 }
