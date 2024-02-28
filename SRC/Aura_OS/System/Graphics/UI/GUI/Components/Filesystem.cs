@@ -39,6 +39,8 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
             RightClickEntry entry = new("Open in Terminal", RightClick.Width);
             entry.Click = new Action(() =>
             {
+                Explorer.WindowManager.ContextMenu = null;
+
                 Kernel.CurrentDirectory = CurrentPath;
                 Kernel.ApplicationManager.StartApplication(typeof(TerminalApp));
             });
