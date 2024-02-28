@@ -112,7 +112,7 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
             }
             else if (Image != null)
             {
-                Clear(Color.LightGray);
+                Clear(Kernel.Gray);
 
                 int imageX = 0 + (Width / 2 - (int)Image.Width / 2);
                 int imageY = 0 + (Height / 2 - (int)Image.Height / 2);
