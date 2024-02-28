@@ -73,30 +73,6 @@ namespace Aura_OS
             }
         }
 
-        public void DrawComponents()
-        {
-            void DrawComponent(Component component)
-            {
-                if (component.IsRoot && component.Visible && (component.IsDirty() || component.ForceDirty))
-                {
-                    component.Draw();
-                    component.MarkCleaned();
-                    Rectangle.AddClipRect(component.GetRectangle());
-                }
-
-                foreach (var child in component.Children)
-                {
-                    DrawComponent(child);
-                }
-            }
-
-            foreach (var component in Component.Components)
-            {
-                DrawComponent(component);
-            }
-
-        }
-
         public void DrawWindows()
         {
             if (Kernel.GuiDebug)

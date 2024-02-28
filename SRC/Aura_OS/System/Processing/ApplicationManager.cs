@@ -198,7 +198,7 @@ namespace Aura_OS.System.Processing
             {
                 string path = currentPath + fileName;
 
-                var app = new EditorApp(path, 700, 600, 40, 40);
+                var app = new EditorApp(path, 701, 600, 40, 40);
                 app.Initialize();
                 app.MarkFocused();
                 app.Visible = true;

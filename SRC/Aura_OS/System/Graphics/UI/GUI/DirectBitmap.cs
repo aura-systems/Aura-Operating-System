@@ -336,6 +336,11 @@ namespace Aura_OS.System.Graphics.UI.GUI
                 return;
             }
 
+            if (y + image.Height > Bitmap.Height || y < 0)
+            {
+                return;
+            }
+
             DirectBitmap tmp = ExtractImage(x, y, (int)image.Width, (int)image.Height);
 
             int w = tmp.Width;
