@@ -27,7 +27,6 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
 
         public FilesystemPanel(string path, Color textcolor, int x, int y, int width, int height) : base(Color.Transparent, x, y, width, height)
         {
-            Background = false;
             Borders = false;
 
             CurrentPath = path;

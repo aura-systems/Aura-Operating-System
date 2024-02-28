@@ -2,6 +2,7 @@
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Runtime.CompilerServices;
+using Aura_OS.System.Graphics.UI.GUI.Components;
 using Cosmos.Core;
 using Cosmos.System.Graphics;
 using Cosmos.System.Graphics.Fonts;
@@ -359,7 +360,7 @@ namespace Aura_OS.System.Graphics.UI.GUI
                 fixed (int* fgBitmap = image.RawData)
                 {
                     AlphaBltSSE((byte*)bgBitmap, (byte*)fgBitmap, w, (int)image.Height, wmul4);
-                    BrightnessSSE((byte*)bgBitmap, image.RawData.Length);
+                    
                 }
             }
 
