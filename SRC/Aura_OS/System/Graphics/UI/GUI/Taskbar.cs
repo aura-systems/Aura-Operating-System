@@ -74,7 +74,6 @@ namespace Aura_OS.System.Graphics.UI.GUI
             int netoworkButtonX = (int)(Kernel.ScreenWidth - time.Length * (Kernel.font.Width + 1) - 2) - 20;
             int networkButtonY = (taskbarHeight / 2) - (networkButtonHeight / 2);
             NetworkButton = new Button(Kernel.ResourceManager.GetIcon("16-network-offline.bmp"), netoworkButtonX, networkButtonY, networkButtonWidth, networkButtonHeight);
-            NetworkButton.NoBorder = true;
             AddChild(NetworkButton);
 
             Buttons = new Dictionary<uint, Button>();
@@ -181,7 +180,8 @@ namespace Aura_OS.System.Graphics.UI.GUI
                 }
             }
 
-            NetworkButton.Draw(this);
+            NetworkButton.Draw();
+            NetworkButton.DrawInParent();
         }
 
         public override void MarkDirty()

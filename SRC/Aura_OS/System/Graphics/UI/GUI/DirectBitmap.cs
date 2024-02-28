@@ -318,25 +318,26 @@ namespace Aura_OS.System.Graphics.UI.GUI
             return bmp;
         }
 
-        public DirectBitmap ExtractImage(int srcX, int srcY, int width, int height, Bitmap src)
-        {
-            DirectBitmap bmp = new(width, height);
-
-            for (int yi = 0; yi < height; yi++)
-            {
-                int destOffset = yi * width;
-                int srcOffset = ((srcY + yi) * (int)src.Width + srcX);
-                int count = width;
-
-                MemoryOperations.Copy(bmp.Bitmap.RawData, destOffset, src.RawData, srcOffset, count);
-            }
-
-            return bmp;
-        }
-
         public static void AlphaBltSSE(byte* dst, byte* src, int w, int h, int wmul4)
         {
             // PLUGGED
+        }
+
+        public static void BrightnessSSE(byte* image, int len)
+        {
+            // PLUGGED
+        }
+
+        public static void Brightness(int[] image, int len, int v)
+        {
+            for (int i = 0; i < len; i++)
+            {
+                // Extract ARGB components
+                int pixel = image[i];
+
+                // Reassemble pixel with alpha set to 0xFF
+                image[i] = (0xFF << 24) | (((pixel >> 16) & 0xFF) << 16) | (((pixel >> 8) & 0xFF) << 8) | (pixel & 0xFF);
+            }
         }
 
         public void DrawImageAlpha(Bitmap image, int x, int y)
@@ -358,6 +359,7 @@ namespace Aura_OS.System.Graphics.UI.GUI
                 fixed (int* fgBitmap = image.RawData)
                 {
                     AlphaBltSSE((byte*)bgBitmap, (byte*)fgBitmap, w, (int)image.Height, wmul4);
+                    BrightnessSSE((byte*)bgBitmap, image.RawData.Length);
                 }
             }
 

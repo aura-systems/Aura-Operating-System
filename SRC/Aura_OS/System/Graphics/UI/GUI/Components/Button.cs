@@ -24,7 +24,6 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
         public Color BackColor = Color.LightGray;
         public Color TextColor = Color.Black;
         public bool NoBackground = false;
-        public bool NoBorder = false;
         public bool Light = false;
         public bool Focused = false;
         public TextAlign TextAlignStyle = TextAlign.Center;
@@ -113,6 +112,8 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
             }
             else if (Image != null)
             {
+                Clear(Color.LightGray);
+
                 int imageX = 0 + (Width / 2 - (int)Image.Width / 2);
                 int imageY = 0 + (Height / 2 - (int)Image.Height / 2);
                 DrawImage(Image, imageX, imageY);

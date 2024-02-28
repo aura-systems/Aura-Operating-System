@@ -58,7 +58,6 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
                 Close = new Button(Kernel.ResourceManager.GetIcon("16-close.bmp"), Width - 20, 5);
                 Close.Frame = Kernel.ThemeManager.GetFrame("window.close.normal");
                 Close.NoBackground = true;
-                Close.NoBorder = true;
                 AddChild(Close);
             }
 
@@ -67,7 +66,6 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
                 Minimize = new Button(Kernel.ResourceManager.GetIcon("16-minimize.bmp"), Width - 38, 5);
                 Minimize.Frame = Kernel.ThemeManager.GetFrame("window.minimize.normal");
                 Minimize.NoBackground = true;
-                Minimize.NoBorder = true;
                 AddChild(Minimize);
             }
 
@@ -80,7 +78,6 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
                 Maximize.Frame = Kernel.ThemeManager.GetFrame("window.minimize.normal");
                 Maximize.Visible = false;
                 Maximize.NoBackground = true;
-                Maximize.NoBorder = true;
                 AddChild(Maximize);
             }
         }

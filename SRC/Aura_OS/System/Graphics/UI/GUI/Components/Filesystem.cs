@@ -242,7 +242,6 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
         public FileButton(string filePath, Color textColor, Bitmap icon, int x, int y, int width, int height)
             : base(icon, x, y, width, height)
         {
-            NoBorder = true;
             NoBackground = true;
             FileName = filePath;
             Icon = icon;

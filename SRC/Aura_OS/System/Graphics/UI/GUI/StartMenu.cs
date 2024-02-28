@@ -27,7 +27,6 @@ namespace Aura_OS.System.Graphics.UI.GUI
 
             // Shutdown
             Shutdown = new Button(Kernel.ResourceManager.GetIcon("24-shutdown.bmp"), "Shut Down.", 3, Height - 32 - 6, Width - 6, 35);
-            Shutdown.NoBorder = true;
             Shutdown.Click = new Action(() =>
             {
                 Power.Shutdown();
@@ -36,7 +35,6 @@ namespace Aura_OS.System.Graphics.UI.GUI
 
             // Reboot
             Reboot = new Button(Kernel.ResourceManager.GetIcon("24-reboot.bmp"), "Reboot.", 3, Height - 64 - 6, Width - 6, 35);
-            Reboot.NoBorder = true;
             Reboot.Click = new Action(() =>
             {
                 Power.Reboot();
@@ -64,7 +62,6 @@ namespace Aura_OS.System.Graphics.UI.GUI
                 }
 
                 var button = new Button(icon, applicationConfig.Template.Name, 3, 3 +  buttonY + 1, Width - 6, 35);
-                button.NoBorder = true;
                 button.Click = new Action(() =>
                 {
                     Kernel.ApplicationManager.StartApplication(applicationConfig);

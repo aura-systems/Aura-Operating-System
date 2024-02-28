@@ -44,8 +44,6 @@ namespace Aura_OS.System.Processing.Applications
 
             component.DrawImage(_image2.Bitmap, 25, 25);
             component.DrawInParent();
-
-
         }
     }
 }
