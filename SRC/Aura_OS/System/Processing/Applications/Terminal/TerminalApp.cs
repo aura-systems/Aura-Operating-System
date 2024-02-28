@@ -33,15 +33,15 @@ namespace Aura_OS.System.Processing.Applications.Terminal
         {
             Window.Icon = Kernel.ResourceManager.GetIcon("16-terminal.bmp");
 
-            _commandManager = new CommandManager();
+            Console = new(4, Window.TopBar.Height + 6, width - 7, height - Window.TopBar.Height - 9);
+            AddChild(Console);
+
+            _commandManager = new CommandManager(this);
             _commandManager.Initialize();
             _commandIndex = 0;
             _commands = new List<string>();
             _command = string.Empty;
             _writer = new TerminalTextWriter(this);
-
-            Console = new(4, Window.TopBar.Height + 6, width - 7, height - Window.TopBar.Height - 9);
-            AddChild(Console);
 
             BeforeCommand();
 

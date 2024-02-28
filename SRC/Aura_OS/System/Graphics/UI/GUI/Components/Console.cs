@@ -147,14 +147,20 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
             }
         }
 
-        private void ClearText()
+        public void ClearText()
         {
+            Clear(Color.Black);
+            mX = 0;
+            mY = 0;
+
             for (int i = 0; i < _text.Length; i++)
             {
                 _text[i].Char = (char)0;
                 _text[i].ForegroundColor = (uint)ForegroundColor.ToArgb();
                 _text[i].BackgroundColor = (uint)BackgroundColor.ToArgb();
             }
+
+            MarkDirty();
         }
 
         public void DrawCursor()
