@@ -26,7 +26,7 @@ namespace Aura_OS.System.Graphics.UI.GUI
         private bool _pressed;
         private bool _hasWindowMoving = false;
 
-        public Dialog(string title, string message, int x, int y) : base(title, x, y, 302, 119, true, false)
+        public Dialog(string title, string message, int x, int y) : base(title, x, y, 302, 119, false, false)
         {
             _title = title;
             _message = message;
