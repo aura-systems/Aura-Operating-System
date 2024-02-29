@@ -130,10 +130,10 @@ namespace Aura_OS.System.Graphics.UI.GUI
 
         public override void Update()
         {
+            Window.Update();
+
             if (Visible)
             {
-                Window.Update();
-
                 if (Kernel.MouseManager.IsLeftButtonDown)
                 {
                     if (!WindowManager.WindowMoving && Window.IsInside((int)MouseManager.X, (int)MouseManager.Y))
@@ -192,6 +192,8 @@ namespace Aura_OS.System.Graphics.UI.GUI
             if (_isCached)
             {
                 Window.DrawCacheBuffer();
+                Window.Close.DrawInParent();
+                Window.Minimize.DrawInParent();
             }
             else
             {
