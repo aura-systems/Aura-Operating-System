@@ -26,7 +26,7 @@ namespace Aura_OS.System.Graphics.UI.GUI
             buttons = new List<Button>();
 
             // Shutdown
-            Shutdown = new Button(Kernel.ResourceManager.GetIcon("24-shutdown.bmp"), "Shut Down.", 3, Height - 32 - 6, Width - 6, 35);
+            Shutdown = new Button(Kernel.ResourceManager.GetIcon("24-shutdown.bmp"), "Shut Down.", 3, Height - 35 - 3, Width - 6, 35);
             Shutdown.Click = new Action(() =>
             {
                 Power.Shutdown();
@@ -34,7 +34,7 @@ namespace Aura_OS.System.Graphics.UI.GUI
             AddChild(Shutdown);
 
             // Reboot
-            Reboot = new Button(Kernel.ResourceManager.GetIcon("24-reboot.bmp"), "Reboot.", 3, Height - 64 - 6, Width - 6, 35);
+            Reboot = new Button(Kernel.ResourceManager.GetIcon("24-reboot.bmp"), "Reboot.", 3, Height - 70 - 3, Width - 6, 35);
             Reboot.Click = new Action(() =>
             {
                 Power.Reboot();
@@ -69,10 +69,21 @@ namespace Aura_OS.System.Graphics.UI.GUI
                 });
                 buttons.Add(button);
                 AddChild(button);
-                buttonY += 32;
+                buttonY += 35;
             }
 
             Visible = false;
+        }
+
+        public override void Update()
+        {
+            foreach (var button in buttons)
+            {
+                button.Update();
+            }
+
+            Shutdown.Update();
+            Reboot.Update();
         }
 
         public override void Draw()

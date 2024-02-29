@@ -82,49 +82,6 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
             }
         }
 
-        public override void Update()
-        {
-            /*
-            if (HasBorders)
-            {
-                TopBar.X = X + 3;
-                TopBar.Y = Y + 3;
-            }
-            if (HasCloseButton)
-            {
-                Close.X = X + Width - 20;
-                Close.Y = Y + 5;
-
-                /*
-                if (Close.IsInside((int)MouseManager.X, (int)MouseManager.Y))
-                {
-                    Close.Frame = Kernel.SkinParser.GetFrame("window.close.highlighted");
-                }
-                else
-                {
-                    Close.Frame = Kernel.SkinParser.GetFrame("window.close.normal");
-                }
-                
-            }
-            if (HasMinimizeButton)
-            {
-                Minimize.X = X + Width - 38;
-                Minimize.Y = Y + 5;
-
-                /*
-                if (Minimize.IsInside((int)MouseManager.X, (int)MouseManager.Y))
-                {
-                    Minimize.Frame = Kernel.SkinParser.GetFrame("window.minimize.highlighted");
-                }
-                else
-                {
-                    Minimize.Frame = Kernel.SkinParser.GetFrame("window.minimize.normal");
-                }
-                
-            }
-            */
-        }
-
         public override void Draw()
         {
             base.Draw();

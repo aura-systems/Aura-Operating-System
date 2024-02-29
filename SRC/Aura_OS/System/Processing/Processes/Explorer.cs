@@ -56,7 +56,7 @@ namespace Aura_OS.System.Processing.Processes
 
             CustomConsole.WriteLineInfo("Starting start menu...");
             int menuWidth = 168;
-            int menuHeight = 32 * 9;
+            int menuHeight = 35 * 9;
             int menuX = 0;
             int menuY = (int)(Kernel.ScreenHeight - menuHeight - Taskbar.taskbarHeight);
             StartMenu = new StartMenu(menuX, menuY, menuWidth, menuHeight);
@@ -74,6 +74,9 @@ namespace Aura_OS.System.Processing.Processes
 
         public override void Update()
         {
+            StartMenu.Update();
+            Taskbar.Update();
+
             WindowManager.DrawWindows();
 
             Kernel.Canvas.DrawImage(Screen.Bitmap, 0, 0);

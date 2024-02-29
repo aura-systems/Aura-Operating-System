@@ -16,7 +16,6 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
         public RightClickEntry(string text, int width, RightClick rightclick) : base(text, 0, 0, width, ConstHeight)
         {
             TextAlignStyle = TextAlign.Left;
-            Frame = Kernel.ThemeManager.GetFrame("button.disabled");
             _rightclick = rightclick;
         }
 

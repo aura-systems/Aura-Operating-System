@@ -50,7 +50,6 @@ namespace Aura_OS.System.Graphics.UI.GUI
             int startButtonX = 2;
             int startButtonY = 2;
             StartButton = new Button(Kernel.ResourceManager.GetIcon("00-start.bmp"), "Start", startButtonX, startButtonY, startButtonWidth, startButtonHeight);
-            StartButton.Frame = Kernel.ThemeManager.GetFrame("button.disabled");
             StartButton.Click = new Action(() =>
             {
                 Explorer.ShowStartMenu = !Explorer.ShowStartMenu;
@@ -64,7 +63,6 @@ namespace Aura_OS.System.Graphics.UI.GUI
             int hourButtonX = (int)(Kernel.ScreenWidth - time.Length * (Kernel.font.Width + 1) - 2);
             int hourButtonY = 2;
             HourButton = new HourButton(time, hourButtonX, hourButtonY, hourButtonWidth, hourButtonHeight);
-            HourButton.Frame = Kernel.ThemeManager.GetFrame("button.disabled");
             AddChild(HourButton);
 
             // Network icon
@@ -94,7 +92,6 @@ namespace Aura_OS.System.Graphics.UI.GUI
                 string appName = app.Name + " (" + app.ID.ToString() + ")";
                 var spacing = appName.Length * 9 + (int)app.Window.Icon.Width;
                 var button = new Button(app.Window.Icon, appName, buttonX, 2, spacing, 28);
-                button.Frame = Kernel.ThemeManager.GetFrame("button.disabled");
                 button.Click = new Action(() =>
                 {
                     if (app.Visible)
@@ -125,6 +122,27 @@ namespace Aura_OS.System.Graphics.UI.GUI
             MarkDirty();
         }
 
+        public override void Update()
+        {
+            foreach (var button in Buttons)
+            {
+                uint pid = button.Key;
+                Button btn = button.Value;
+                Application application = Kernel.ApplicationManager.GetApplicationByPid(pid);
+
+                if (application.Focused)
+                {
+                    btn.State = State.Highlighted;
+                    btn.UpdateFrame();
+                    btn.MarkDirty();
+                }
+                else
+                {
+                    btn.Update();
+                }
+            }
+        }
+
         public override void Draw()
         {
             base.Draw();
@@ -151,11 +169,11 @@ namespace Aura_OS.System.Graphics.UI.GUI
 
                 if (application.Focused)
                 {
-                    btn.Frame = Kernel.ThemeManager.GetFrame("button.normal");
+                    btn.Frame = Kernel.ThemeManager.GetFrame("button.highlighted");
                 }
                 else
                 {
-                    btn.Frame = Kernel.ThemeManager.GetFrame("button.disabled");
+                    btn.Frame = Kernel.ThemeManager.GetFrame("button.normal");
                 }
 
                 button.Value.Draw(this);

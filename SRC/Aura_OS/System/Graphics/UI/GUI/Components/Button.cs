@@ -30,32 +30,42 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
 
         public Button(string text, int x, int y, int width, int height) : base(x, y, width, height)
         {
-            Frame = Kernel.ThemeManager.GetFrame("button.disabled");
+            SetNormalFrame(Kernel.ThemeManager.GetFrame("button.normal"));
+            SetHighlightedFrame(Kernel.ThemeManager.GetFrame("button.highlighted"));
+            SetPressedFrame(Kernel.ThemeManager.GetFrame("button.pressed"));
             Text = text;
         }
 
         public Button(Bitmap image, int x, int y, int width, int height) : base(x, y, width, height)
         {
-            Frame = Kernel.ThemeManager.GetFrame("button.disabled");
+            SetNormalFrame(Kernel.ThemeManager.GetFrame("button.normal"));
+            SetHighlightedFrame(Kernel.ThemeManager.GetFrame("button.highlighted"));
+            SetPressedFrame(Kernel.ThemeManager.GetFrame("button.pressed"));
             Image = image;
         }
 
         public Button(Bitmap image, int x, int y) : base(x, y, (int)image.Width, (int)image.Height)
         {
-            Frame = Kernel.ThemeManager.GetFrame("button.disabled");
+            SetNormalFrame(Kernel.ThemeManager.GetFrame("button.normal"));
+            SetHighlightedFrame(Kernel.ThemeManager.GetFrame("button.highlighted"));
+            SetPressedFrame(Kernel.ThemeManager.GetFrame("button.pressed"));
             Image = image;
         }
 
         public Button(Bitmap image, string text, int x, int y, int width, int height) : base(x, y, width, height)
         {
-            Frame = Kernel.ThemeManager.GetFrame("button.disabled");
+            SetNormalFrame(Kernel.ThemeManager.GetFrame("button.normal"));
+            SetHighlightedFrame(Kernel.ThemeManager.GetFrame("button.highlighted"));
+            SetPressedFrame(Kernel.ThemeManager.GetFrame("button.pressed"));
             Text = text;
             Image = image;
         }
 
         public Button(Bitmap image, string text, int x, int y) : base(x, y, (int)image.Width, (int)image.Height)
         {
-            Frame = Kernel.ThemeManager.GetFrame("button.disabled");
+            SetNormalFrame(Kernel.ThemeManager.GetFrame("button.normal"));
+            SetHighlightedFrame(Kernel.ThemeManager.GetFrame("button.highlighted"));
+            SetPressedFrame(Kernel.ThemeManager.GetFrame("button.pressed"));
             Text = text;
             Image = image;
         }

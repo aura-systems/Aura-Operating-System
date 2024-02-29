@@ -14,6 +14,13 @@ using Aura_OS.System.Processing.Processes;
 
 namespace Aura_OS.System.Graphics.UI.GUI.Components
 {
+    public enum State
+    {
+        Normal,
+        Highlighted,
+        Pressed,
+    }
+
     public class Component
     {
         public static List<Component> Components = new List<Component>();
@@ -88,12 +95,17 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
         public int zIndex { get; set; }
         public bool IsRoot { get; set; }
         public Frame Frame { get; set; }
+        public State State { get; set; }
 
         private Rectangle _rectangle;
         private DirectBitmap _buffer;
         private DirectBitmap _cacheBuffer;
         private bool _dirty;
         private bool _visible = true;
+
+        private Frame _normalFrame;
+        private Frame _highlightedFrame;
+        private Frame _pressedFrame;
 
         public Component(int x, int y, int width, int height)
         {
@@ -116,7 +128,40 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
 
         public virtual void Update()
         {
+            bool isInside = IsInside((int)MouseManager.X, (int)MouseManager.Y);
+            State prevState = State;
 
+            if (isInside && State != State.Highlighted)
+            {
+                State = State.Highlighted;
+                MarkDirty();
+            }
+            else if (!isInside && State != State.Normal)
+            {
+                State = State.Normal;
+                MarkDirty();
+            }
+
+            if (prevState != State) 
+            {
+                UpdateFrame();
+            }
+        }
+
+        public void UpdateFrame()
+        {
+            switch (State)
+            {
+                case State.Normal:
+                    Frame = _normalFrame;
+                    break;
+                case State.Highlighted:
+                    Frame = _highlightedFrame;
+                    break;
+                case State.Pressed:
+                    Frame = _pressedFrame;
+                    break;
+            }
         }
 
         public virtual void Draw()
@@ -312,6 +357,22 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
         public virtual void MarkCleaned()
         {
             _dirty = false;
+        }
+
+        public void SetNormalFrame(Frame frame)
+        {
+            Frame = frame;
+            _normalFrame = frame;
+        }
+
+        public void SetHighlightedFrame(Frame frame)
+        {
+            _highlightedFrame = frame;
+        }
+
+        public void SetPressedFrame(Frame frame)
+        {
+            _pressedFrame = frame;
         }
 
         #region Draw

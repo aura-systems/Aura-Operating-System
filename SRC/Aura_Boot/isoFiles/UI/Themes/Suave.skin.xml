@@ -170,9 +170,9 @@ that uses the theme, please give due credit to the original artist!
 		</frame>
 
 		<!--
-      Frame used for a disabled pushbutton
+      Frame used for a pushbutton in its normal state
     -->
-		<frame name="button.disabled">
+		<frame name="button.normal">
 			<region source="controls" hplacement="left" vplacement="top" x="1" y="48" w="4" h="4" />
 			<region source="controls" hplacement="stretch" vplacement="top" x="5" y="48" w="11" h="4" />
 			<region source="controls" hplacement="right" vplacement="top" x="16" y="48" w="3" h="4" />
@@ -186,9 +186,9 @@ that uses the theme, please give due credit to the original artist!
 		</frame>
 
 		<!--
-      Frame used for a pushbutton in its normal state
+      Frame used for a pushbutton when it is highlighted
     -->
-		<frame name="button.normal">
+		<frame name="button.highlighted">
 			<region source="controls" hplacement="left" vplacement="top" x="1" y="62" w="4" h="4" />
 			<region source="controls" hplacement="stretch" vplacement="top" x="5" y="62" w="11" h="4" />
 			<region source="controls" hplacement="right" vplacement="top" x="16" y="62" w="3" h="4" />
@@ -202,25 +202,9 @@ that uses the theme, please give due credit to the original artist!
 		</frame>
 
 		<!--
-      Frame used for a pushbutton when it is highlighted
-    -->
-		<frame name="button.highlighted">
-			<region source="controls" hplacement="left" vplacement="top" x="1" y="90" w="4" h="4" />
-			<region source="controls" hplacement="stretch" vplacement="top" x="5" y="90" w="11" h="4" />
-			<region source="controls" hplacement="right" vplacement="top" x="16" y="90" w="3" h="4" />
-			<region source="controls" hplacement="left" vplacement="stretch" x="1" y="94" w="4" h="6" />
-			<region source="controls" hplacement="stretch" vplacement="stretch" x="5" y="94" w="11" h="6" />
-			<region source="controls" hplacement="right" vplacement="stretch" x="16" y="94" w="3" h="6" />
-			<region source="controls" hplacement="left" vplacement="bottom" x="1" y="100" w="4" h="3" />
-			<region source="controls" hplacement="stretch" vplacement="bottom" x="5" y="100" w="11" h="3" />
-			<region source="controls" hplacement="right" vplacement="bottom" x="16" y="100" w="3" h="3" />
-			<text font="default" hplacement="center" vplacement="center" yoffset="15" color="#3F3F3F" />
-		</frame>
-
-		<!--
       Frame used for a pushbutton when it is depressed
     -->
-		<frame name="button.depressed">
+		<frame name="button.pressed">
 			<region source="controls" hplacement="left" vplacement="top" x="1" y="76" w="4" h="4" />
 			<region source="controls" hplacement="stretch" vplacement="top" x="5" y="76" w="11" h="4" />
 			<region source="controls" hplacement="right" vplacement="top" x="16" y="76" w="3" h="4" />
