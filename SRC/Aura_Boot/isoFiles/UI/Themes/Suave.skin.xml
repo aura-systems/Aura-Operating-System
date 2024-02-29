@@ -109,27 +109,27 @@ that uses the theme, please give due credit to the original artist!
 		</frame>
 		
 		<frame name="window.minimize.normal">
-			<region source="controls" hplacement="stretch" vplacement="stretch" x="44" y="1" w="14" h="14" />
+			<region source="controls" hplacement="stretch" vplacement="stretch" x="44" y="1" w="16" h="14" />
 		</frame>
 
 		<frame name="window.maximize.normal">
-			<region source="controls" hplacement="stretch" vplacement="stretch" x="60" y="1" w="14" h="14" />
+			<region source="controls" hplacement="stretch" vplacement="stretch" x="60" y="1" w="16" h="14" />
 		</frame>
 
 		<frame name="window.close.normal">
-			<region source="controls" hplacement="stretch" vplacement="stretch" x="76" y="1" w="14" h="14" />
+			<region source="controls" hplacement="stretch" vplacement="stretch" x="76" y="1" w="16" h="14" />
 		</frame>
 
 		<frame name="window.minimize.highlighted">
-			<region source="controls" hplacement="stretch" vplacement="stretch" x="44" y="16" w="14" h="14" />
+			<region source="controls" hplacement="stretch" vplacement="stretch" x="44" y="16" w="16" h="14" />
 		</frame>
 
 		<frame name="window.maximize.highlighted">
-			<region source="controls" hplacement="stretch" vplacement="stretch" x="60" y="16" w="14" h="14" />
+			<region source="controls" hplacement="stretch" vplacement="stretch" x="60" y="16" w="16" h="14" />
 		</frame>
 
 		<frame name="window.close.highlighted">
-			<region source="controls" hplacement="stretch" vplacement="stretch" x="76" y="16" w="14" h="14" />
+			<region source="controls" hplacement="stretch" vplacement="stretch" x="76" y="16" w="16" h="14" />
 		</frame>
 		
 		<!--

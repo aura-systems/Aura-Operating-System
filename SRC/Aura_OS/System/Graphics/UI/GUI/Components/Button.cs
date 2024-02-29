@@ -28,6 +28,13 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
         public bool Focused = false;
         public TextAlign TextAlignStyle = TextAlign.Center;
 
+        public Button(int x, int y, int width, int height) : base(x, y, width, height)
+        {
+            SetNormalFrame(Kernel.ThemeManager.GetFrame("button.normal"));
+            SetHighlightedFrame(Kernel.ThemeManager.GetFrame("button.highlighted"));
+            SetPressedFrame(Kernel.ThemeManager.GetFrame("button.pressed"));
+        }
+
         public Button(string text, int x, int y, int width, int height) : base(x, y, width, height)
         {
             SetNormalFrame(Kernel.ThemeManager.GetFrame("button.normal"));

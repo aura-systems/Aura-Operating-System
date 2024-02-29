@@ -55,17 +55,23 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
 
             if (HasCloseButton)
             {
-                Close = new Button(Kernel.ResourceManager.GetIcon("16-close.bmp"), Width - 20, 5);
-                Close.Frame = Kernel.ThemeManager.GetFrame("window.close.normal");
-                Close.NoBackground = true;
+                Frame frame = Kernel.ThemeManager.GetFrame("window.close.normal");
+                Frame frame2 = Kernel.ThemeManager.GetFrame("window.close.highlighted");
+                Frame.Region region = frame.Regions[0];
+                Close = new Button(Width - 20, 5, region.SourceRegion.Width, region.SourceRegion.Height);
+                Close.SetNormalFrame(frame);
+                Close.SetHighlightedFrame(frame2);
                 AddChild(Close);
             }
 
             if (HasMinimizeButton)
             {
-                Minimize = new Button(Kernel.ResourceManager.GetIcon("16-minimize.bmp"), Width - 38, 5);
-                Minimize.Frame = Kernel.ThemeManager.GetFrame("window.minimize.normal");
-                Minimize.NoBackground = true;
+                Frame frame = Kernel.ThemeManager.GetFrame("window.minimize.normal");
+                Frame frame2 = Kernel.ThemeManager.GetFrame("window.minimize.highlighted");
+                Frame.Region region = frame.Regions[0];
+                Minimize = new Button(Width - 38, 5, region.SourceRegion.Width, region.SourceRegion.Height);
+                Minimize.SetNormalFrame(frame);
+                Minimize.SetHighlightedFrame(frame2);
                 AddChild(Minimize);
             }
 
@@ -74,11 +80,24 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
 
             if (HasMaximizeButton)
             {
-                Maximize = new Button(Kernel.ResourceManager.GetIcon("16-minimize.bmp"), Width - 60, 5);
+                Maximize = new Button(Width - 60, 5, 0, 0);
                 Maximize.Frame = Kernel.ThemeManager.GetFrame("window.minimize.normal");
                 Maximize.Visible = false;
                 Maximize.NoBackground = true;
                 AddChild(Maximize);
+            }
+        }
+
+        public override void Update()
+        {
+            if (HasCloseButton)
+            {
+                Close.Update();
+            }
+
+            if (HasMinimizeButton)
+            {
+                Minimize.Update();
             }
         }
 
