@@ -124,6 +124,8 @@ namespace Aura_OS.System.Graphics.UI.GUI
 
         public override void Update()
         {
+            StartButton.Update();
+
             foreach (var button in Buttons)
             {
                 uint pid = button.Key;

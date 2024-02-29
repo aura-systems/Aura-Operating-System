@@ -132,8 +132,6 @@ namespace Aura_OS.System.Graphics.UI.GUI
         {
             if (Visible)
             {
-                Window.Update();
-
                 if (Kernel.MouseManager.IsLeftButtonDown)
                 {
                     if (!WindowManager.WindowMoving && Window.IsInside((int)MouseManager.X, (int)MouseManager.Y))
