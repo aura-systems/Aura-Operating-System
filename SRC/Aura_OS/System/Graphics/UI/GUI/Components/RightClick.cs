@@ -47,6 +47,14 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
             Entries.Add(entry);
         }
 
+        public override void Update()
+        {
+            foreach (var entry in Entries)
+            {
+                entry.Update();
+            }
+        }
+
         public override void Draw()
         {
             base.Draw();

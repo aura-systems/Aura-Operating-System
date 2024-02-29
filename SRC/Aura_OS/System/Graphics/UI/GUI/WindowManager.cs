@@ -149,8 +149,9 @@ namespace Aura_OS
             RightClick contextMenu = Explorer.WindowManager.ContextMenu;
             if (contextMenu != null && contextMenu.Opened)
             {
+                Explorer.WindowManager.ContextMenu.Update();
                 Explorer.WindowManager.ContextMenu.Draw();
-                _screen.DrawImageAlpha(contextMenu.GetBuffer(), contextMenu.X, contextMenu.Y);
+                _screen.DrawImage(contextMenu.GetBuffer(), contextMenu.X, contextMenu.Y);
             }
 
             if (Kernel.GuiDebug)
