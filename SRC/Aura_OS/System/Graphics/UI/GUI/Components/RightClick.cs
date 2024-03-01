@@ -30,7 +30,20 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
     public class RightClick : Window
     {
         public List<RightClickEntry> Entries;
-        public bool Opened = false;
+
+        private bool _opened = false;
+        public bool Opened
+        {
+            get
+            {
+                return _opened;
+            }
+            set
+            {
+                Visible = value;
+                _opened = value;
+            }
+        }
 
         public RightClick(int x, int y, int width, int height) : base(x, y, width, height)
         {
