@@ -49,8 +49,7 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
                 if (Kernel.Clipboard != null)
                 {
                     Entries.ForceCopy(Kernel.Clipboard, CurrentPath);
-                    UpdateCurrentFolder();
-                    MarkDirty();
+                    RefreshFilesystem();
                     Kernel.Clipboard = null;
                 }
             });
@@ -58,8 +57,7 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
             RightClickEntry entry3 = new("Refresh", RightClick.Width, RightClick);
             entry3.Click = new Action(() =>
             {
-                UpdateCurrentFolder();
-                MarkDirty();
+                RefreshFilesystem();
             });
 
             RightClick.AddEntry(entry);
@@ -106,46 +104,42 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
             string[] files = Directory.GetFiles(CurrentPath);
 
             _buttons.Clear();
+            Children.Clear();
             foreach (string directory in directories)
             {
                 string folderName = Path.GetFileName(directory);
-                var button = new FileButton(folderName, _textColor, Kernel.ResourceManager.GetIcon("32-folder.bmp"), 0 + startX + currentX, 0 + currentY, 70, 32 + 10 + 16);
+                var button = new FileButton(folderName, _textColor, Kernel.ResourceManager.GetIcon("32-folder.bmp"), 0 + startX + currentX, 0 + currentY, 70, 70);
                 button.Click = new Action(() =>
                 {
                     OpenFolder(folderName);
                     UpdateCurrentFolder();
                 });
 
-                /*
                 button.RightClick = new RightClick((int)MouseManager.X, (int)MouseManager.Y, 200, 3 * RightClickEntry.ConstHeight);
-                List<RightClickEntry> rightClickEntries = new List<RightClickEntry>();
-                RightClickEntry entry = new("Open", button.RightClick.Width);
+
+                RightClickEntry entry = new("Open", button.RightClick.Width, button.RightClick);
                 entry.Click = new Action(() =>
                 {
                     OpenFolder(folderName);
-                    UpdateCurrentFolder();
                 });
-                rightClickEntries.Add(entry);
 
-                RightClickEntry copyEntry = new("Copy", button.RightClick.Width);
-                copyEntry.Click = new Action(() =>
+                RightClickEntry entry2 = new("Copy", button.RightClick.Width, button.RightClick);
+                entry2.Click = new Action(() =>
                 {
                     string path = CurrentPath + folderName;
                     Kernel.Clipboard = path;
                 });
-                rightClickEntries.Add(copyEntry);
 
-                RightClickEntry entry2 = new("Delete", button.RightClick.Width);
-                entry2.Click = new Action(() =>
+                RightClickEntry entry3 = new("Delete", button.RightClick.Width, button.RightClick);
+                entry3.Click = new Action(() =>
                 {
                     Entries.ForceRemove(CurrentPath + folderName);
-                    UpdateCurrentFolder();
+                    RefreshFilesystem();
                 });
-                rightClickEntries.Add(entry2);
 
-                button.RightClick.Entries = rightClickEntries;
-
-                */
+                button.RightClick.AddEntry(entry);
+                button.RightClick.AddEntry(entry2);
+                button.RightClick.AddEntry(entry3);
 
                 _buttons.Add(button);
                 AddChild(button);
@@ -161,41 +155,37 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
             foreach (string file in files)
             {
                 string fileName = Path.GetFileName(file);
-                var button = new FileButton(fileName, _textColor, Kernel.ResourceManager.GetIcon("32-file.bmp"), 0 + startX + currentX, 0 + currentY, 70, 32 + 10 + 16);
+                var button = new FileButton(fileName, _textColor, Kernel.ResourceManager.GetIcon("32-file.bmp"), 0 + startX + currentX, 0 + currentY, 70, 70);
                 button.Click = new Action(() =>
                 {
                     Kernel.ApplicationManager.StartFileApplication(fileName, CurrentPath);
                 });
 
-                /*
-                button.RightClick = new RightClick((int)MouseManager.X, (int)MouseManager.Y, 200, 1 * RightClickEntry.ConstHeight);
-                List<RightClickEntry> rightClickEntries = new List<RightClickEntry>();
+                button.RightClick = new RightClick((int)MouseManager.X, (int)MouseManager.Y, 200, 3 * RightClickEntry.ConstHeight);
 
-                RightClickEntry entry = new("Open", button.RightClick.Width);
+                RightClickEntry entry = new("Open", button.RightClick.Width, button.RightClick);
                 entry.Click = new Action(() =>
                 {
                     Kernel.ApplicationManager.StartFileApplication(fileName, CurrentPath);
                 });
-                rightClickEntries.Add(entry);
 
-                RightClickEntry copyEntry = new("Copy", button.RightClick.Width);
-                copyEntry.Click = new Action(() =>
+                RightClickEntry entry2 = new("Copy", button.RightClick.Width, button.RightClick);
+                entry2.Click = new Action(() =>
                 {
                     string path = CurrentPath + fileName;
                     Kernel.Clipboard = path;
                 });
-                rightClickEntries.Add(copyEntry);
 
-                RightClickEntry entry2 = new("Delete", button.RightClick.Width);
-                entry2.Click = new Action(() =>
+                RightClickEntry entry3 = new("Delete", button.RightClick.Width, button.RightClick);
+                entry3.Click = new Action(() =>
                 {
                     Entries.ForceRemove(CurrentPath + fileName);
-                    UpdateCurrentFolder();
+                    RefreshFilesystem();
                 });
-                rightClickEntries.Add(entry2);
 
-                button.RightClick.Entries = rightClickEntries;
-                */
+                button.RightClick.AddEntry(entry);
+                button.RightClick.AddEntry(entry2);
+                button.RightClick.AddEntry(entry3);
 
                 _buttons.Add(button);
                 AddChild(button);
@@ -230,6 +220,15 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
                 CurrentPath = CurrentPath + folderName + "\\";
             }
         }
+
+        public void RefreshFilesystem()
+        {
+            UpdateCurrentFolder();
+            Clear(Color.Transparent);
+            Draw();
+            Parent.Draw();
+            DrawInParent();
+        }
     }
 
     public class FileButton : Button
@@ -239,7 +238,7 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
         public Bitmap Icon { get; private set; }
 
         public FileButton(string filePath, Color textColor, Bitmap icon, int x, int y, int width, int height)
-            : base(icon, x, y, width, height)
+            : base(x, y, width, height)
         {
             NoBackground = true;
             FileName = filePath;
@@ -251,10 +250,30 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
         {
             base.Draw();
 
-            int textX = 0;
-            int textY = 45;
+            int imageY = 4;
+            DrawImage(Icon, (Width / 2) - ((int)Icon.Width / 2), imageY);
 
-            DrawString(FileName, Kernel.font, TextColor, textX, textY);
+            int textX = 0;
+            int textY = 37;
+            int maxWidth = Width;
+            int charWidth = Kernel.font.Width;
+            int maxCharsPerLine = maxWidth / charWidth;
+
+            if (FileName.Length * charWidth > maxWidth)
+            {
+                for (int startIdx = 0; startIdx < FileName.Length; startIdx += maxCharsPerLine)
+                {
+                    string segment = FileName.Substring(startIdx, Math.Min(maxCharsPerLine, FileName.Length - startIdx));
+
+                    DrawString(segment, Kernel.font, TextColor, textX, textY);
+
+                    textY += Kernel.font.Height;
+                }
+            }
+            else
+            {
+                DrawString(FileName, Kernel.font, TextColor, textX, textY);
+            }
         }
     }
 }
