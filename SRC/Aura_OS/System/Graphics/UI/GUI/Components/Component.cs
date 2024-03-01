@@ -338,7 +338,6 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
                 if (child is Button)
                 {
                     child.X += width - Width;
-                    child.Y += height - Height;
                 }
             }
 
