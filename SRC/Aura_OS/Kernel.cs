@@ -69,7 +69,7 @@ namespace Aura_OS
         }
         public static bool NetworkTransmitting = false;
 
-        public static bool GuiDebug = false;
+        public static bool GuiDebug = true;
 
         //FILES
         public static Bitmap programLogo;
@@ -217,8 +217,6 @@ namespace Aura_OS
                 ProcessManager.Update();
                 MouseManager.Update();
 
-                DrawCursor(Sys.MouseManager.X, Sys.MouseManager.Y);
-
                 Canvas.DrawString("Aura Operating System [" + Version + "." + Revision + "]", font, WhiteColor, 2, 0);
                 Canvas.DrawString("fps=" + _fps, font, WhiteColor, 2, font.Height);
 
@@ -240,11 +238,6 @@ namespace Aura_OS
                     Crash.StopKernel("Fatal dotnet exception occured.", ex.Message, "0x00000000", "0");
                 }
             }
-        }
-
-        public static void DrawCursor(uint x, uint y)
-        {
-            Canvas.DrawImageAlpha(Kernel.ResourceManager.GetIcon("00-cursor.bmp"), (int)x, (int)y);
         }
     }
 }

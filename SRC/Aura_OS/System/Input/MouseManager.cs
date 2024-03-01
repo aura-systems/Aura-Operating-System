@@ -6,10 +6,19 @@
 
 using Aura_OS.System.Graphics.UI.GUI.Components;
 using Cosmos.System;
+using Cosmos.System.Graphics;
 using System;
 
 namespace Aura_OS.System.Input
 {
+    public enum CursorState
+    {
+        Normal,
+        ResizeHorizontal,
+        ResizeVertical,
+        Grab
+    }
+
     /// <summary>
     /// Manages mouse and cursor position for AuraOS. 
     /// </summary>
@@ -34,6 +43,8 @@ namespace Aura_OS.System.Input
         /// Focused component (set by click)
         /// </summary>
         public Component FocusedComponent;
+
+        public static CursorState CursorState = CursorState.Normal;
 
         /// <summary>
         /// The maximum time interval in milliseconds to detect a double click.
@@ -60,6 +71,11 @@ namespace Aura_OS.System.Input
         /// </summary>
         private bool _rightButtonPressed;
 
+        private Bitmap _cursorNormal;
+        private Bitmap _cursorResizeHorizontal;
+        private Bitmap _cursorResizeVertical;
+        private Bitmap _cursorGrap;
+
         /// <summary>
         /// Initializes the mouse manager and prepares buttons states.
         /// </summary>
@@ -77,6 +93,13 @@ namespace Aura_OS.System.Input
             CustomConsole.WriteLineInfo("Starting mouse...");
             Cosmos.System.MouseManager.ScreenWidth = Kernel.ScreenWidth;
             Cosmos.System.MouseManager.ScreenHeight = Kernel.ScreenHeight;
+
+            CursorState = CursorState.Normal;
+
+            _cursorNormal = Kernel.ResourceManager.GetIcon("00-cursor.bmp");
+            _cursorResizeHorizontal = Kernel.ResourceManager.GetIcon("00-resize-horizontal.bmp");
+            _cursorResizeVertical = Kernel.ResourceManager.GetIcon("00-resize-vertical.bmp");
+            _cursorGrap = Kernel.ResourceManager.GetIcon("00-grab.bmp");
         }
 
         /// <summary>
@@ -121,6 +144,8 @@ namespace Aura_OS.System.Input
             }
 
             HandleScroll();
+
+            DrawCursor(Cosmos.System.MouseManager.X, Cosmos.System.MouseManager.Y);
         }
 
         /// <summary>
@@ -166,8 +191,6 @@ namespace Aura_OS.System.Input
 
             if (topComponent != null)
             {
-                Kernel.Debug = "topComponent=" + topComponent.ToString();
-
                 topComponent.HandleLeftClick();
             }
         }
@@ -245,6 +268,25 @@ namespace Aura_OS.System.Input
             return topComponent;
         }
 
+        public void DrawCursor(uint x, uint y)
+        {
+            if (CursorState == CursorState.Normal)
+            {
+                Kernel.Canvas.DrawImageAlpha(_cursorNormal, (int)x, (int)y);
+            }
+            else if (CursorState == CursorState.ResizeHorizontal)
+            {
+                Kernel.Canvas.DrawImageAlpha(_cursorResizeHorizontal, (int)x - 23 / 2, (int)y);
+            }
+            else if (CursorState == CursorState.ResizeVertical)
+            {
+                Kernel.Canvas.DrawImageAlpha(_cursorResizeVertical, (int)x, (int)y - 23 / 2);
+            }
+            else if (CursorState == CursorState.Grab)
+            {
+                Kernel.Canvas.DrawImageAlpha(_cursorGrap, (int)x, (int)y);
+            }
+        }
 
         /// <summary>
         /// Returns the name of the manager.

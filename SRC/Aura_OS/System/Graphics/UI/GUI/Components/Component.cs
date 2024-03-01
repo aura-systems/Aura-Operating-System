@@ -252,19 +252,6 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
             return new Rectangle(y, x, y + height, x + width);
         }
 
-        public void AddChild(Component child)
-        {
-            child.Parent = this;
-            child.zIndex = zIndex + 1 + Children.Count;
-            child.IsRoot = false;
-            Children.Add(child);
-        }
-
-        public Rectangle GetRectangle()
-        {
-            return _rectangle;
-        }
-
         public void SaveCacheBuffer()
         {
             _cacheBuffer.DrawImage(_buffer.Bitmap, 0, 0);
@@ -273,16 +260,6 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
         public void DrawCacheBuffer()
         {
             _buffer.DrawImage(_cacheBuffer.Bitmap, 0, 0);
-        }
-
-        public Bitmap GetBuffer()
-        {
-            return _buffer.Bitmap;
-        }
-
-        public DirectBitmap GetDbBuffer()
-        {
-            return _buffer;
         }
 
         public virtual void HandleLeftClick()
@@ -344,6 +321,42 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
             return x >= absoluteX && x <= absoluteX + Width && y >= absoluteY && y <= absoluteY + Height;
         }
 
+        public void Resize(int width, int height)
+        {
+            if (width <= 0 || width >= 1000 || height <= 0 || height >= 1000)
+            {
+                return;
+            }
+
+            if (width % 2 != 0)
+            {
+                width++;
+            }
+
+            foreach (Component child in Children)
+            {
+                if (child is Button)
+                {
+                    child.X += width - Width;
+                    child.Y += height - Height;
+                }
+            }
+
+            _rectangle = new Rectangle(Y, X, Y + height, X + width);
+            _buffer = new DirectBitmap(width, height);
+            _cacheBuffer = new DirectBitmap(width, height);
+
+            Draw();
+            foreach (Component child in Children)
+            {
+                if (child is Button)
+                {
+                    child.DrawInParent();
+                }
+            }
+            SaveCacheBuffer();
+        }
+
         public virtual bool IsDirty()
         {
             return _dirty;
@@ -374,6 +387,30 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
         {
             _pressedFrame = frame;
         }
+
+        public void AddChild(Component child)
+        {
+            child.Parent = this;
+            child.zIndex = zIndex + 1 + Children.Count;
+            child.IsRoot = false;
+            Children.Add(child);
+        }
+
+        public Rectangle GetRectangle()
+        {
+            return _rectangle;
+        }
+
+        public Bitmap GetBuffer()
+        {
+            return _buffer.Bitmap;
+        }
+
+        public DirectBitmap GetDbBuffer()
+        {
+            return _buffer;
+        }
+
 
         #region Draw
 

@@ -16,16 +16,14 @@ namespace Aura_OS.System.Graphics.UI.GUI
 {
     public class Application : Process
     {
-        public readonly int Width;
-        public readonly int Height;
+        public int Width;
+        public int Height;
 
         public bool Focused
         {
             get => Explorer.WindowManager.FocusedApp == this;
         }
 
-        public int X;
-        public int Y;
         public Window Window;
         public bool ForceDirty = false;
         public bool Visible = false;
@@ -35,6 +33,13 @@ namespace Aura_OS.System.Graphics.UI.GUI
         private int _py;
         private bool _lck = false;
         private bool _pressed;
+        private bool _resizePressed;
+        private bool _resizeWidthPressed = false;
+        private bool _resizeHeightPressed = false;
+
+        private bool _lckResize = false;
+        private int _newX;
+        private int _newY;
 
         /// <summary>
         /// Does window needs an update.
@@ -46,9 +51,25 @@ namespace Aura_OS.System.Graphics.UI.GUI
         /// </summary>
         private bool _isCached = false;
 
+        // Resize regions
+        private Rectangle _rectangleRight;
+        private Rectangle _rectangleLeft;
+        private Rectangle _rectangleTop;
+        private Rectangle _rectangleBottom;
+
         public Application(string name, int width, int height, int x = 0, int y = 0) : base(name, ProcessType.Program)
         {
+            InitWindow(name, width, height, x, y);
+        }
+
+        private void InitWindow(string name, int width, int height, int x = 0, int y = 0)
+        {
             Window = new Window(name, x, y, width + 1, height + 1);
+            _rectangleTop = new Rectangle(0, 0, 3, Window.Width + 1);
+            _rectangleLeft = new Rectangle(0, 0, Window.Height + 1, 3);
+            _rectangleBottom = new Rectangle(Window.Height + 1 - 3, 0, Window.Height + 1, Window.Width + 1);
+            _rectangleRight = new Rectangle(0, Window.Width + 1 - 3, Window.Height + 1, Window.Width + 1);
+
             Window.Close.Click = new Action(() =>
             {
                 Window.Visible = false;
@@ -99,8 +120,6 @@ namespace Aura_OS.System.Graphics.UI.GUI
             Window.TopBar.RightClick.AddEntry(entry);
             Window.TopBar.RightClick.AddEntry(entry2);
 
-            X = x + 3;
-            Y = y + Window.TopBar.Height + 3;
             Width = width - 4;
             Height = height - (Window.TopBar.Height + 4);
         }
@@ -128,47 +147,126 @@ namespace Aura_OS.System.Graphics.UI.GUI
             Kernel.ProcessManager.Register(this);
         }
 
+        private int _firstX;
+        private int _firstY;
+
         public override void Update()
         {
             Window.Update();
 
             if (Visible)
             {
+                int clickX = (int)MouseManager.X - Window.X;
+                int clickY = (int)MouseManager.Y - Window.Y;
+
                 if (Kernel.MouseManager.IsLeftButtonDown)
                 {
-                    if (!WindowManager.WindowMoving && Window.IsInside((int)MouseManager.X, (int)MouseManager.Y))
+                    if (!_pressed)
                     {
-                        BringToFront();
-                    }
-
-                    if (!WindowManager.WindowMoving && Window.Close.IsInside((int)MouseManager.X, (int)MouseManager.Y))
-                    {
-                        Window.Close.Click();
-
-                        return;
-                    }
-                    else if (!WindowManager.WindowMoving && Window.Minimize.IsInside((int)MouseManager.X, (int)MouseManager.Y))
-                    {
-                        Window.Minimize.Click();
-
-                        return;
-                    }
-                    else if (!WindowManager.WindowMoving && Window.TopBar.IsInside((int)MouseManager.X, (int)MouseManager.Y))
-                    {
-                        WindowManager.WindowMoving = true;
-
-                        _pressed = true;
-                        if (!_lck)
+                        if (_rectangleLeft.IsInside(clickX, clickY))
                         {
-                            _px = (int)MouseManager.X - Window.X;
-                            _py = (int)MouseManager.Y - Window.Y;
-                            _lck = true;
+                            if (!_lckResize)
+                            {
+                                _firstX = (int)MouseManager.X;
+                                _firstY = (int)MouseManager.Y;
+                                _lckResize = true;
+                            }
+                            _resizeWidthPressed = true;
+                            _resizePressed = true;
                         }
+                        else if (_rectangleTop.IsInside(clickX, clickY))
+                        {
+                            if (!_lckResize)
+                            {
+                                _firstX = (int)MouseManager.X;
+                                _firstY = (int)MouseManager.Y;
+                                _lckResize = true;
+                            }
+                            _resizeHeightPressed = true;
+                            _resizePressed = true;
+                        }
+
                     }
+
+                    if (!_resizePressed)
+                    {
+                        if (!WindowManager.WindowMoving && Window.IsInside((int)MouseManager.X, (int)MouseManager.Y))
+                        {
+                            BringToFront();
+                        }
+
+                        if (!WindowManager.WindowMoving && Window.Close.IsInside((int)MouseManager.X, (int)MouseManager.Y))
+                        {
+                            Window.Close.Click();
+
+                            return;
+                        }
+                        else if (!WindowManager.WindowMoving && Window.Minimize.IsInside((int)MouseManager.X, (int)MouseManager.Y))
+                        {
+                            Window.Minimize.Click();
+
+                            return;
+                        }
+                        else if (!WindowManager.WindowMoving && Window.TopBar.IsInside((int)MouseManager.X, (int)MouseManager.Y))
+                        {
+                            WindowManager.WindowMoving = true;
+
+                            _pressed = true;
+                            if (!_lck)
+                            {
+                                _px = (int)MouseManager.X - Window.X;
+                                _py = (int)MouseManager.Y - Window.Y;
+                                _lck = true;
+                            }
+                        }
+                    } 
                 }
                 else
                 {
+                    if (_rectangleLeft.IsInside(clickX, clickY) || _resizePressed)
+                    {
+                        Input.MouseManager.CursorState = Input.CursorState.ResizeHorizontal;
+                    }
+                    else if (_rectangleTop.IsInside(clickX, clickY) || _resizePressed)
+                    {
+                        Input.MouseManager.CursorState = Input.CursorState.ResizeVertical;
+                    }
+                    else
+                    {
+                        Input.MouseManager.CursorState = Input.CursorState.Normal;
+                    }
+
                     WindowManager.WindowMoving = false;
+
+                    if (_resizePressed)
+                    {
+                        int currentX = (int)MouseManager.X;
+                        int currentY = (int)MouseManager.Y;
+
+                        if (_resizeWidthPressed)
+                        {
+                            _newX = _firstX - currentX;
+                            int newWidth = Window.Width + _newX;
+                            Window.Resize(newWidth, Window.Height);
+                            Window.X = currentX;
+                        }
+
+                        if (_resizeHeightPressed)
+                        {
+                            _newY = _firstY - currentY;
+                            int newHeight = Window.Height + _newY;
+                            Window.Resize(Window.Width, newHeight);
+                            Window.Y = currentY;
+                        }
+
+                        Kernel.Debug = "_firstX=" + _firstX + ", _firstY=" + _firstY + ", _newX=" + _newX + ", _newY=" + _newY + ", newWidth=" + Window.Width + ", newHeight=" + Window.Height;
+                        _resizePressed = false;
+                        _lckResize = false;
+                        _resizeWidthPressed = false;
+                        _resizeHeightPressed = false;
+
+                        MarkDirty();
+                    }
 
                     _pressed = false;
                     _lck = false;
@@ -178,11 +276,10 @@ namespace Aura_OS.System.Graphics.UI.GUI
                 {
                     WindowManager.WindowMoving = true;
 
+                    Input.MouseManager.CursorState = Input.CursorState.Grab;
+
                     Window.X = (int)(MouseManager.X - _px);
                     Window.Y = (int)(MouseManager.Y - _py);
-
-                    X = (int)(MouseManager.X - _px + 3);
-                    Y = (int)(MouseManager.Y - _py + Window.TopBar.Height + 3);
                 }
             }
         }

@@ -90,6 +90,9 @@ namespace Aura_OS
             LoadImage(IsoVolume + "UI\\Images\\Icons\\32\\folder.bmp", "32");
             LoadImage(IsoVolume + "UI\\Images\\Icons\\32\\dialog-information.bmp", "32");
             LoadImage(IsoVolume + "UI\\Images\\Icons\\cursor.bmp", "00");
+            LoadImage(IsoVolume + "UI\\Images\\Icons\\grab.bmp", "00");
+            LoadImage(IsoVolume + "UI\\Images\\Icons\\resize-horizontal.bmp", "00");
+            LoadImage(IsoVolume + "UI\\Images\\Icons\\resize-vertical.bmp", "00");
             LoadImage(IsoVolume + "UI\\Images\\Icons\\start.bmp", "00");
         }
 
