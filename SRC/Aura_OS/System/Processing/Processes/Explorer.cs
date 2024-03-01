@@ -13,8 +13,6 @@ namespace Aura_OS.System.Processing.Processes
 {
     public class Explorer : Process
     {
-        
-
         public static bool ShowStartMenu
         {
             get

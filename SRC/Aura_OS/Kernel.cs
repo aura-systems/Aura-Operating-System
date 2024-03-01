@@ -69,7 +69,7 @@ namespace Aura_OS
         }
         public static bool NetworkTransmitting = false;
 
-        public static bool GuiDebug = true;
+        public static bool GuiDebug = false;
 
         //FILES
         public static Bitmap programLogo;
