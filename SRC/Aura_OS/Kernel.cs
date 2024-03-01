@@ -105,6 +105,7 @@ namespace Aura_OS
         // Managers
         public static ProcessManager ProcessManager;
         public static System.Input.MouseManager MouseManager;
+        public static System.Input.KeyboardManager KeyboardManager;
         public static ApplicationManager ApplicationManager;
         public static PackageManager PackageManager;
         public static ResourceManager ResourceManager;
@@ -174,13 +175,15 @@ namespace Aura_OS
             MouseManager = new System.Input.MouseManager();
             MouseManager.Initialize();
 
+            KeyboardManager = new System.Input.KeyboardManager();
+            KeyboardManager.Initialize();
+
             Explorer = new Explorer();
             Explorer.Initialize();
 
             //Load Localization
             CustomConsole.WriteLineInfo("Initializing localization...");
             Encoding.RegisterProvider(CosmosEncodingProvider.Instance);
-            KeyboardManager.SetKeyLayout(new Sys.ScanMaps.USStandardLayout());
 
             CustomConsole.WriteLineInfo("Initializing ASCII encoding...");
             global::System.Console.InputEncoding = Encoding.ASCII;
@@ -216,6 +219,7 @@ namespace Aura_OS
 
                 ProcessManager.Update();
                 MouseManager.Update();
+                KeyboardManager.Update();
 
                 Canvas.DrawString("Aura Operating System [" + Version + "." + Revision + "]", font, WhiteColor, 2, 0);
                 Canvas.DrawString("fps=" + _fps, font, WhiteColor, 2, font.Height);
