@@ -247,7 +247,7 @@ namespace Aura_OS.System.Graphics.UI.GUI
                         {
                             _newX = _firstX - currentX;
                             int newWidth = Window.Width + _newX;
-                            Window.Resize(newWidth, Window.Height);
+                            ResizeWindow(newWidth, Window.Height);
                             Window.X = currentX;
                         }
 
@@ -255,6 +255,7 @@ namespace Aura_OS.System.Graphics.UI.GUI
                         {
                             _newY = _firstY - currentY;
                             int newHeight = Window.Height + _newY;
+                            ResizeWindow(Window.Width, newHeight);
                             Window.Resize(Window.Width, newHeight);
                             Window.Y = currentY;
                         }
@@ -298,6 +299,11 @@ namespace Aura_OS.System.Graphics.UI.GUI
                 Window.SaveCacheBuffer();
                 _isCached = true;
             }
+        }
+
+        public virtual void ResizeWindow(int width, int height)
+        {
+            Window.Resize(width, height);
         }
 
         public bool IsDirty()

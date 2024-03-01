@@ -184,6 +184,18 @@ namespace Aura_OS.System.Processing.Applications.Terminal
             Console.DrawInParent();
         }
 
+        public override void ResizeWindow(int width, int height)
+        {
+            base.ResizeWindow(width, height);
+
+            int newWidth = width - 7;
+            int newHeight = height - Window.TopBar.Height - 9;
+
+            Console.Resize(newWidth, newHeight);
+            Console.InitConsole(newWidth, newHeight);
+            BeforeCommand();
+        }
+
         public override void MarkDirty()
         {
             base.MarkDirty();

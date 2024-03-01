@@ -94,6 +94,11 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
             _pallete[14] = 0xFFFFFF55; // Yellow
             _pallete[15] = 0xFFFFFFFF; //White
 
+            InitConsole(width, height);
+        }
+
+        public void InitConsole(int width, int height)
+        {
             mCols = width / Kernel.font.Width - 1;
             mRows = height / Kernel.font.Height - 2;
 
