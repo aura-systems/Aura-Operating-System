@@ -70,11 +70,6 @@ namespace Aura_OS.System.Graphics.UI.GUI
 
         public void Hide()
         {
-            foreach (Application app in Explorer.WindowManager.Applications)
-            {
-                app.Visible = true;
-            }
-
             Kernel.MouseManager.FocusedComponent = _username;
 
             Visible = false;
@@ -88,7 +83,7 @@ namespace Aura_OS.System.Graphics.UI.GUI
         {
             foreach (Application app in Explorer.WindowManager.Applications)
             {
-                app.Visible = false;
+                app.Window.Minimize.Click();
             }
 
             Visible = true;
