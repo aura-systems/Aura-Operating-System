@@ -9,6 +9,7 @@ using Aura_OS.System.Processing.Processes;
 using Cosmos.System;
 using Cosmos.System.Graphics;
 using System;
+using System.Collections.Generic;
 
 namespace Aura_OS.System.Input
 {
@@ -17,6 +18,8 @@ namespace Aura_OS.System.Input
     /// </summary>
     public class KeyboardManager : IManager
     {
+        private static Queue<KeyEvent> keyEvents = new Queue<KeyEvent>();
+
         /// <summary>
         /// Initializes the keyboard manager.
         /// </summary>
@@ -33,27 +36,42 @@ namespace Aura_OS.System.Input
         /// </summary>
         public void Update()
         {
-            KeyEvent k;
-            bool IsKeyPressed = Cosmos.System.KeyboardManager.TryReadKey(out k);
-
-            if (!IsKeyPressed) //if the user did not press a key return 
-                return;
-
-            if (Cosmos.System.KeyboardManager.ControlPressed && Cosmos.System.KeyboardManager.AltPressed && k.Key == ConsoleKeyEx.Delete)
+            KeyEvent keyEvent;
+            while (Cosmos.System.KeyboardManager.TryReadKey(out keyEvent))
             {
-                Power.Reboot();
-            }
-            if (Cosmos.System.KeyboardManager.AltPressed && k.Key == ConsoleKeyEx.F4)
-            {
-                if (Explorer.WindowManager.FocusedApp != null)
+                if (Cosmos.System.KeyboardManager.ControlPressed && Cosmos.System.KeyboardManager.AltPressed && keyEvent.Key == ConsoleKeyEx.Delete)
                 {
-                    Explorer.WindowManager.FocusedApp.Window.Close.Click();
+                    Power.Reboot();
+                    continue;
                 }
+                if (Cosmos.System.KeyboardManager.AltPressed && keyEvent.Key == ConsoleKeyEx.F4)
+                {
+                    if (Explorer.WindowManager.FocusedApp != null)
+                    {
+                        Explorer.WindowManager.FocusedApp.Window.Close.Click();
+                    }
+                    continue;
+                }
+                else if (keyEvent.Key == ConsoleKeyEx.LWin)
+                {
+                    Explorer.ShowStartMenu = !Explorer.ShowStartMenu;
+                    continue;
+                }
+
+                keyEvents.Enqueue(keyEvent);
             }
-            else if (k.Key == ConsoleKeyEx.LWin)
+        }
+
+        public static bool TryGetKey(out KeyEvent keyEvent)
+        {
+            if (keyEvents.Count > 0)
             {
-                Explorer.ShowStartMenu = !Explorer.ShowStartMenu;
+                keyEvent = keyEvents.Dequeue();
+                return true;
             }
+
+            keyEvent = default;
+            return false;
         }
 
         /// <summary>

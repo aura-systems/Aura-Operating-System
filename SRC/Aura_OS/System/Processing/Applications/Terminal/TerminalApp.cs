@@ -58,7 +58,7 @@ namespace Aura_OS.System.Processing.Applications.Terminal
 
                 KeyEvent keyEvent = null;
 
-                if (KeyboardManager.TryReadKey(out keyEvent))
+                if (Input.KeyboardManager.TryGetKey(out keyEvent))
                 {
                     MarkDirty();
 

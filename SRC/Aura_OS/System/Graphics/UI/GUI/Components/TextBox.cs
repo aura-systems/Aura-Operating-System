@@ -56,7 +56,7 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
             {
                 KeyEvent keyEvent = null;
 
-                while (KeyboardManager.TryReadKey(out keyEvent))
+                while (Input.KeyboardManager.TryGetKey(out keyEvent))
                 {
                     MarkDirty();
 
@@ -75,7 +75,10 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
                             }
                             else
                             {
-                                Enter();
+                                if (Enter != null)
+                                {
+                                    Enter();
+                                }
                             }
                             break;
                         default:

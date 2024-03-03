@@ -224,11 +224,7 @@ namespace Aura_OS
 
                 ProcessManager.Update();
                 MouseManager.Update();
-
-                if (LoggedIn)
-                {
-                    KeyboardManager.Update();
-                }
+                KeyboardManager.Update();
 
                 Canvas.DrawString("Aura Operating System [" + Version + "." + Revision + "]", font, WhiteColor, 2, 0);
                 Canvas.DrawString("fps=" + _fps, font, WhiteColor, 2, font.Height);

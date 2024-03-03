@@ -116,6 +116,7 @@ namespace Aura_OS.System.Graphics.UI.GUI
                     dirUsername = dirUsername.Substring(0, 11);
                 }
 
+                Kernel.LoggedIn = true;
                 Kernel.userLogged = username; 
                 Kernel.UserDirectory = @"0:\Users\" + dirUsername + @"\";
                 Kernel.CurrentDirectory = Kernel.UserDirectory;

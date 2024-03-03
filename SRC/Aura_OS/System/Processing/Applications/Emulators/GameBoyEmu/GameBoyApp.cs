@@ -60,7 +60,7 @@ namespace Aura_OS.System.Processing.Applications.Emulators.GameBoyEmu
 
             if (Focused)
             {
-                if (KeyboardManager.TryReadKey(out keyEvent))
+                while (Input.KeyboardManager.TryGetKey(out keyEvent))
                 {
                     _joypad.handleKeyDown(keyEvent.Key);
                 }
