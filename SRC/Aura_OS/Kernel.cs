@@ -139,6 +139,9 @@ namespace Aura_OS
             ProcessManager = new ProcessManager();
             ProcessManager.Initialize();
 
+            PackageManager = new PackageManager();
+            PackageManager.Initialize();
+
             CustomConsole.WriteLineInfo("Loading files...");
             Files.LoadFiles();
 
@@ -167,9 +170,6 @@ namespace Aura_OS
 
             ThemeManager = new ThemeManager();
             ThemeManager.Initialize();
-
-            PackageManager = new PackageManager();
-            PackageManager.Initialize();
 
             ApplicationManager = new ApplicationManager();
             ApplicationManager.Initialize();
