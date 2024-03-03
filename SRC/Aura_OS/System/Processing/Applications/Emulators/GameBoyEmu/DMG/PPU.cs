@@ -18,16 +18,16 @@ namespace Aura_OS.System.Processing.Applications.Emulators.GameBoyEmu.DMG
         private const int VBLANK_INTERRUPT = 0;
         private const int LCD_INTERRUPT = 1;
 
-        private uint[] color = new uint[] { 0xFFFFFFFF, 0xFF808080, 0xFF404040, 0xFF000000 };
+        private int[] color = new int[] { 0xFFFFFF, 0x808080, 0x404040, 0 };
 
         public DirectBitmap bmp;
         private int scanlineCounter;
         private Application _app;
 
-        public PPU(Application app)
+        public PPU(Application application)
         {
             bmp = new DirectBitmap();
-            _app = app;
+            _app = application;
         }
 
         public void update(int cycles, MMU mmu)
@@ -194,7 +194,7 @@ namespace Aura_OS.System.Processing.Applications.Emulators.GameBoyEmu.DMG
                 int colorId = GetColorIdBits(colorBit, lo, hi);
                 int colorIdThroughtPalette = GetColorIdThroughtPalette(BGP, colorId);
 
-                bmp.SetPixel(p, LY, (int)color[colorIdThroughtPalette]);
+                bmp.SetPixel(p, LY, color[colorIdThroughtPalette]);
             }
 
         }
@@ -272,7 +272,7 @@ namespace Aura_OS.System.Processing.Applications.Emulators.GameBoyEmu.DMG
                         {
                             if (!isTransparent(colorId) && (isAboveBG(attr) || isBGWhite(mmu.BGP, x + p, LY)))
                             {
-                                bmp.SetPixel(x + p, LY, (int)color[colorIdThroughtPalette]);
+                                bmp.SetPixel(x + p, LY, color[colorIdThroughtPalette]);
                             }
 
                         }
@@ -298,7 +298,8 @@ namespace Aura_OS.System.Processing.Applications.Emulators.GameBoyEmu.DMG
 
         public void RenderFrame()
         {
-            //Kernel.Canvas.DrawImage(bmp.Bitmap, 50, 50);
+
+            _app.DrawImage(bmp.Bitmap, 0, 0);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

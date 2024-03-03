@@ -75,24 +75,18 @@ namespace Aura_OS.System.Processing.Applications.Emulators.GameBoyEmu
                 _ppu.update(_cpuCycles, _mmu);
                 _joypad.update(_mmu);
                 handleInterrupts();
-
-                MarkDirty();
             }
             _cyclesThisUpdate -= Constants.CYCLES_PER_UPDATE;
 
-            if (keyEvent != null)
+            if (Focused)
             {
-                _joypad.handleKeyUp(keyEvent.Key);
+                if (keyEvent != null)
+                {
+                    _joypad.handleKeyUp(keyEvent.Key);
 
-                keyEvent = null;
+                    keyEvent = null;
+                }
             }
-        }
-
-        public override void Draw()
-        {
-            base.Draw();
-
-            DrawImage(_ppu.bmp.Bitmap, 0, 0);
         }
 
         private void handleInterrupts()
