@@ -98,6 +98,7 @@ namespace Aura_OS
             LoadImage(IsoVolume + "UI\\Images\\Icons\\16\\drive-readonly.bmp", "16");
             LoadImage(IsoVolume + "UI\\Images\\Icons\\24\\program.bmp", "24");
             LoadImage(IsoVolume + "UI\\Images\\Icons\\24\\reboot.bmp", "24");
+            LoadImage(IsoVolume + "UI\\Images\\Icons\\24\\logout.bmp", "24");
             LoadImage(IsoVolume + "UI\\Images\\Icons\\24\\shutdown.bmp", "24");
             LoadImage(IsoVolume + "UI\\Images\\Icons\\24\\terminal.bmp", "24");
             LoadImage(IsoVolume + "UI\\Images\\Icons\\24\\explorer.bmp", "24");

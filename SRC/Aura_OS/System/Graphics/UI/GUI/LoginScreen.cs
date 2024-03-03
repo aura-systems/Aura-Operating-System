@@ -8,6 +8,7 @@ using System;
 using System.Drawing;
 using System.IO;
 using Aura_OS.System.Graphics.UI.GUI.Components;
+using Aura_OS.System.Input;
 using Aura_OS.System.Processing.Processes;
 using Aura_OS.System.Security;
 using Aura_OS.System.Users;
@@ -69,11 +70,36 @@ namespace Aura_OS.System.Graphics.UI.GUI
 
         public void Hide()
         {
+            foreach (Application app in Explorer.WindowManager.Applications)
+            {
+                app.Visible = true;
+            }
+
+            Kernel.MouseManager.FocusedComponent = _username;
+
             Visible = false;
             _username.Visible = false;
             _password.Visible = false;
             _button.Visible = false;
             Explorer.Taskbar.Visible = true;
+        }
+
+        public void Show()
+        {
+            foreach (Application app in Explorer.WindowManager.Applications)
+            {
+                app.Visible = false;
+            }
+
+            Visible = true;
+            _username.Text = "";
+            _username.Visible = true;
+            _password.Text = "";
+            _password.Visible = true;
+            _button.Visible = true;
+            _error = null;
+            Explorer.Taskbar.Visible = false;
+            Explorer.StartMenu.Visible = false;
         }
 
         public bool Login(string username, string password)
