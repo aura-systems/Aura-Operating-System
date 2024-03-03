@@ -30,7 +30,7 @@ namespace Aura_OS.System
         /// <returns>"false", if there is not a FS</returns>
         public static string InstallExists()
         {
-            if (File.Exists(@"0:\System\settings.ini"))
+            if (Kernel.Installed)
             {
                 return "true";
             }

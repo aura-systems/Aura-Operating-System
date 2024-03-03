@@ -36,6 +36,7 @@ namespace Aura_OS
         public static string userLevelLogged = "admin";
         public static bool Running = false;
         public static bool LoggedIn = true;
+        public static bool Installed = false;
         public static string Version = "0.7.3";
         public static string Revision = VersionInfo.revision;
         public static string langSelected = "en_US";
@@ -138,6 +139,11 @@ namespace Aura_OS
 
             //Start Filesystem
             VFSManager.RegisterVFS(VirtualFileSystem);
+
+            if (File.Exists(@"0:\System\settings.ini"))
+            {
+                Installed = true;
+            }
 
             ProcessManager = new ProcessManager();
             ProcessManager.Initialize();

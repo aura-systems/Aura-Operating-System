@@ -30,7 +30,7 @@ namespace Aura_OS.System.Graphics.UI.GUI.Skin
 
             string xmlPath = "";
 
-            if (File.Exists(@"0:\System\settings.ini"))
+            if (Kernel.Installed)
             {
                 Settings config = new Settings(@"0:\System\settings.ini");
                 xmlPath = config.GetValue("themeXmlPath");

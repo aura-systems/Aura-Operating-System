@@ -42,17 +42,20 @@ namespace Aura_OS.System.Graphics.UI.GUI
             });
             AddChild(Reboot);
 
-            // Logout
-            Logout = new Button(Kernel.ResourceManager.GetIcon("24-logout.bmp"), "Log Out.", 3, Height - 105 - 3, Width - 6, 35);
-            Logout.Click = new Action(() =>
+            if (Kernel.Installed)
             {
-                if (Kernel.LoggedIn)
+                // Logout
+                Logout = new Button(Kernel.ResourceManager.GetIcon("24-logout.bmp"), "Log Out.", 3, Height - 105 - 3, Width - 6, 35);
+                Logout.Click = new Action(() =>
                 {
-                    Kernel.LoggedIn = false;
-                    Explorer.Login.Show();
-                }
-            });
-            AddChild(Logout);
+                    if (Kernel.LoggedIn)
+                    {
+                        Kernel.LoggedIn = false;
+                        Explorer.Login.Show();
+                    }
+                });
+                AddChild(Logout);
+            }
 
             // App buttons
             buttons.Clear();
@@ -97,7 +100,10 @@ namespace Aura_OS.System.Graphics.UI.GUI
 
             Shutdown.Update();
             Reboot.Update();
-            Logout.Update();
+            if (Kernel.Installed)
+            {
+                Logout.Update();
+            } 
         }
 
         public override void Draw()
@@ -111,7 +117,10 @@ namespace Aura_OS.System.Graphics.UI.GUI
 
             Shutdown.Draw(this);
             Reboot.Draw(this);
-            Reboot.Draw(Logout);
+            if (Kernel.Installed)
+            {
+                Logout.Draw(this);
+            }
         }
     }
 }

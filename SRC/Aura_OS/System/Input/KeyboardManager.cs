@@ -4,12 +4,9 @@
 * PROGRAMMERS:      Valentin Charbonnier <valentinbreiz@gmail.com>
 */
 
-using Aura_OS.System.Graphics.UI.GUI.Components;
-using Aura_OS.System.Processing.Processes;
-using Cosmos.System;
-using Cosmos.System.Graphics;
-using System;
 using System.Collections.Generic;
+using Cosmos.System;
+using Aura_OS.System.Processing.Processes;
 
 namespace Aura_OS.System.Input
 {
