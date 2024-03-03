@@ -288,14 +288,23 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
 
             if (contextMenu != null && contextMenu.Opened)
             {
-                Explorer.WindowManager.ContextMenu = null;
                 contextMenu.Opened = false;
+                Explorer.WindowManager.ContextMenu = null;
             }
 
             if (RightClick != null)
             {
                 RightClick.X = (int)MouseManager.X;
-                RightClick.Y = (int)MouseManager.Y;
+
+                if ((int)MouseManager.Y + RightClick.Height >= Kernel.ScreenHeight)
+                {
+                    RightClick.Y = (int)MouseManager.Y - RightClick.Height;
+                }
+                else
+                {
+                    RightClick.Y = (int)MouseManager.Y;
+                }
+                
                 RightClick.Opened = true;
                 Explorer.WindowManager.ContextMenu = RightClick;
                 Explorer.WindowManager.BringToFront(RightClick);
