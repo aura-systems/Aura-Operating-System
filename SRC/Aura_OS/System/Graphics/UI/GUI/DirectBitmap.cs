@@ -47,7 +47,7 @@ namespace Aura_OS.System.Graphics.UI.GUI
         public void SetPixel(int x, int y, int colour)
         {
             int index = x + y * Width;
-            Bitmap.RawData[index] = colour;
+            Bitmap.RawData[index] = colour | (0xFF << 24);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

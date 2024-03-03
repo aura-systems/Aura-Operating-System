@@ -286,7 +286,7 @@ namespace Aura_OS.System.Processing.Applications.Emulators.GameBoyEmu.DMG
         private bool isBGWhite(byte BGP, int x, int y)
         {
             int id = BGP & 0x3;
-            return bmp.GetPixel(x, y) == color[id];
+            return bmp.GetPixel(x, y) == (color[id] | (0xFF << 24));
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
