@@ -73,6 +73,13 @@ namespace Aura_OS.System.Processing
                         }
                     }
 
+                    string installedPath = "0:\\System\\Programs\\" + package.Name + ".cexe";
+
+                    if (File.Exists(installedPath))
+                    {
+                        package.Installed = true;
+                    }
+
                     Kernel.PackageManager.Repository.Add(package);
 
                 }

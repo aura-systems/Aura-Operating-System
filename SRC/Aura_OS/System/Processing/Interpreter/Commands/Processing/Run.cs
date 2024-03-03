@@ -45,6 +45,13 @@ namespace Aura_OS.System.Processing.Interpreter.Commands.Processing
                         }
                     }
 
+                    string installedPath = "0:\\System\\Programs\\" + arguments[0] + ".cexe";
+
+                    if (File.Exists(installedPath))
+                    {
+                        return RunCexe(new Executable(File.ReadAllBytes(installedPath)), args);
+                    }
+
                     return new ReturnInfo(this, ReturnCode.ERROR, "This package does not exist.");
                 }
                 else
