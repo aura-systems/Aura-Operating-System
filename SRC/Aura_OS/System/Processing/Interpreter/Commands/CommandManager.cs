@@ -86,6 +86,7 @@ namespace Aura_OS.System.Processing.Interpreter.Commands
             _commands.Add(new CommandPicture(new string[] { "pic" }));
             _commands.Add(new CommandEdit(new string[] { "edit" }));
             _commands.Add(new CommandZip(new string[] { "zip" }));
+            _commands.Add(new CommandSetup(new string[] { "setup" }));
 
             /*
             CMDs.Add(new CommandPCName(new string[] { "pcn" }));
