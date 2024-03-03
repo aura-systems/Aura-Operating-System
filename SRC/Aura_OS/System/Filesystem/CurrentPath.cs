@@ -23,6 +23,19 @@ namespace Aura_OS.System.Filesystem
                     Kernel.CurrentDirectory = root.mParent.mFullPath;
                 }
             }
+            if (dir == "~")
+            {
+                if (Directory.Exists("0:\\Users\\" + Kernel.UserDirectory))
+                {
+                    Directory.SetCurrentDirectory(Kernel.CurrentDirectory);
+                    Kernel.CurrentDirectory = "0:\\Users\\" + Kernel.UserDirectory + @"\";
+                }
+                else
+                {
+                    error = "No user directory found.";
+                    return false;
+                }
+            }
             else if (dir == Kernel.CurrentVolume)
             {
                 Kernel.CurrentDirectory = Kernel.CurrentVolume;

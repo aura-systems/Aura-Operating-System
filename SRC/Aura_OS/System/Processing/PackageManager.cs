@@ -8,6 +8,7 @@ using Aura_OS.System.Network;
 using JZero;
 using System;
 using System.Collections.Generic;
+using System.IO;
 
 namespace Aura_OS.System.Processing
 {
@@ -112,7 +113,15 @@ namespace Aura_OS.System.Processing
                     Packages.Add(package);
                     package.Download();
 
-                    Console.WriteLine(packageName + " added.");
+                    if (Directory.Exists("0:\\System\\Programs"))
+                    {
+                        File.WriteAllBytes("0:\\System\\Programs\\" + package.Name + ".cexe", package.Executable.RawData);
+                        Console.WriteLine(packageName + " installed.");
+                    }
+                    else
+                    {
+                        Console.WriteLine(packageName + " added.");
+                    }
 
                     return;
                 }

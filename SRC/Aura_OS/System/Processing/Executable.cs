@@ -19,12 +19,14 @@ namespace Aura_OS.System.Processing
         private const int ArchiveSizeLength = 4;
 
         public string Signature { get; private set; }
+        public byte[] RawData { get; private set; }
         public int ArchiveSize { get; private set; }
         public Dictionary<string, byte[]> LuaSources { get; set; }
         private byte[] ZipContent { get; set; }
 
         public Executable(byte[] executableBytes)
         {
+            RawData = executableBytes;
             LuaSources = new Dictionary<string, byte[]>();
             ParseExecutable(executableBytes);
         }
