@@ -39,8 +39,6 @@ namespace Aura_OS.System.Processing.Interpreter.Commands.Filesystem
                 {
                     return new ReturnInfo(this, ReturnCode.ERROR, error);
                 }
-
-                return new ReturnInfo(this, ReturnCode.OK);
             }
             catch (Exception ex)
             {

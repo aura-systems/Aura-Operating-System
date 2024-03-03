@@ -244,7 +244,7 @@ namespace Aura_OS.System
             Kernel.ComputerName = FinalHostname;
 
             Console.WriteLine("Changing current directory to user directory...");
-            Kernel.UserDirectory = @"0:\Users\" + dirUsername;
+            Kernel.UserDirectory = @"0:\Users\" + dirUsername + @"\";
             Kernel.CurrentDirectory = Kernel.UserDirectory;
 
             Console.WriteLine("AuraOS v" + Kernel.Version + "-" + Kernel.Revision + " is now installed on 0:\\ :)");

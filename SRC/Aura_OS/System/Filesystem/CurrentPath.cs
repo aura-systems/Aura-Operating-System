@@ -25,10 +25,10 @@ namespace Aura_OS.System.Filesystem
             }
             if (dir == "~")
             {
-                if (Directory.Exists("0:\\Users\\" + Kernel.UserDirectory))
+                if (Directory.Exists(Kernel.UserDirectory))
                 {
                     Directory.SetCurrentDirectory(Kernel.CurrentDirectory);
-                    Kernel.CurrentDirectory = "0:\\Users\\" + Kernel.UserDirectory + @"\";
+                    Kernel.CurrentDirectory = Kernel.UserDirectory;
                 }
                 else
                 {
