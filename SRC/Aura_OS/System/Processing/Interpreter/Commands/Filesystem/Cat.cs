@@ -4,10 +4,10 @@
 * PROGRAMMER(S):    Valentin Charbonnier <valentinbreiz@gmail.com>
 */
 
-using Aura_OS.System.Processing.Interpreter;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
 
 namespace Aura_OS.System.Processing.Interpreter.Commands.Filesystem
 {
@@ -32,10 +32,14 @@ namespace Aura_OS.System.Processing.Interpreter.Commands.Filesystem
 
                 if (File.Exists(Kernel.CurrentDirectory + file))
                 {
+                    StringBuilder sb = new();
+
                     foreach (string line in File.ReadAllLines(Kernel.CurrentDirectory + file))
                     {
-                        Console.WriteLine(line);
+                        sb.AppendLine(line);
                     }
+
+                    Console.WriteLine(sb.ToString());
                 }
                 else
                 {

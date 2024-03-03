@@ -1,4 +1,5 @@
 ﻿using Aura_OS.System.Parser;
+using Aura_OS.System.Utils;
 using Cosmos.System.Graphics;
 using System;
 using System.Collections.Generic;
@@ -48,13 +49,29 @@ namespace Aura_OS.System.Graphics.UI.GUI.Skin
                 {
                     string bitmapName = node.GetAttribute("name").Value;
                     _skinName = node.GetAttribute("contentPath").Value;
-                    string contentPath = Files.IsoVolume + "UI\\Themes\\" + _skinName + ".bmp";
 
-                    CustomConsole.WriteLineInfo("Loading bitmap: " + contentPath);
+                    string bmpPath = "";
+
+                    if (File.Exists(@"0:\System\settings.ini"))
+                    {
+                        Settings config = new Settings(@"0:\System\settings.ini");
+                        bmpPath = config.GetValue("themeBmpPath");
+
+                        if (!File.Exists(bmpPath))
+                        {
+                            bmpPath = Files.IsoVolume + "UI\\Themes\\" + _skinName + ".bmp";
+                        }
+                    }
+                    else
+                    {
+                        bmpPath = Files.IsoVolume + "UI\\Themes\\" + _skinName + ".bmp";
+                    }
+
+                    CustomConsole.WriteLineInfo("Loading bitmap: " + bmpPath);
 
                     try
                     {
-                        Bitmap bitmap = new Bitmap(File.ReadAllBytes(contentPath));
+                        Bitmap bitmap = new Bitmap(File.ReadAllBytes(bmpPath));
                         _bitmaps.Add(bitmapName, bitmap);
                         CustomConsole.WriteLineOK("Bitmap '" + bitmapName + "' added successfully!");
                     }

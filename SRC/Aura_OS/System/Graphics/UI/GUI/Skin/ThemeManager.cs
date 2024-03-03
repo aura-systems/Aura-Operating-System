@@ -4,6 +4,7 @@
 * PROGRAMMER(S):    Valentin Charbonnier <valentinbreiz@gmail.com>
 */
 
+using Aura_OS.System.Utils;
 using System.IO;
 
 namespace Aura_OS.System.Graphics.UI.GUI.Skin
@@ -26,7 +27,25 @@ namespace Aura_OS.System.Graphics.UI.GUI.Skin
             CustomConsole.WriteLineInfo("Starting theme manager...");
 
             _skinParser = new SkinParsing();
-            _skinParser.loadSkin(File.ReadAllText(Files.IsoVolume + "UI\\Themes\\Suave.skin.xml"));
+
+            string xmlPath = "";
+
+            if (File.Exists(@"0:\System\settings.ini"))
+            {
+                Settings config = new Settings(@"0:\System\settings.ini");
+                xmlPath = config.GetValue("themeXmlPath");
+
+                if (!File.Exists(xmlPath))
+                {
+                    xmlPath = Files.IsoVolume + "UI\\Themes\\Suave.skin.xml";
+                }
+            }
+            else
+            {
+                xmlPath = Files.IsoVolume + "UI\\Themes\\Suave.skin.xml";
+            }
+
+            _skinParser.loadSkin(File.ReadAllText(xmlPath));
         }
 
         /// <summary>

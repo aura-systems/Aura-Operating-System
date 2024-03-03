@@ -134,6 +134,7 @@ namespace Aura_OS.System
                 {
                     @"0:\System\",
                     @"0:\System\Programs",
+                    @"0:\System\Themes",
                     @"0:\Users\"
                 };
 
@@ -193,6 +194,11 @@ namespace Aura_OS.System
             string[] Users = { "root", dirUsername };
             CreateUserDirectories(Users);
 
+            Console.WriteLine("Copying files...");
+
+            Filesystem.Entries.CopyFile(@"1:\UI\Themes\SuaveSheet.bmp", @"0:\System\Themes\Suave.bmp");
+            Filesystem.Entries.CopyFile(@"1:\UI\Themes\Suave.skin.xml", @"0:\System\Themes\Suave.xml");
+
             Settings config = new Settings(@"0:\System\settings.ini");
 
             if ((FinalLang.Equals("en_US")) || FinalLang.Equals("en-US"))
@@ -220,6 +226,9 @@ namespace Aura_OS.System
             config.PutValue("setuptime", Time.MonthString() + "/" + Time.DayString() + "/" + Time.YearString() + ", " + Time.TimeString(true, true, true));
 
             config.PutValue("consolemode", "null");
+
+            config.PutValue("themeBmpPath", @"0:\System\Themes\Suave.bmp");
+            config.PutValue("themeXmlPath", @"0:\System\Themes\Suave.xml");
 
             config.PutValue("debugger", "off");
 
