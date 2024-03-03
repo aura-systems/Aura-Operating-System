@@ -23,7 +23,7 @@ namespace Aura_OS.System.Filesystem
                     Kernel.CurrentDirectory = root.mParent.mFullPath;
                 }
             }
-            if (dir == "~")
+            else if (dir == "~")
             {
                 if (Directory.Exists(Kernel.UserDirectory))
                 {
