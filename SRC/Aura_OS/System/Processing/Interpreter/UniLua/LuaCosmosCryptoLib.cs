@@ -41,9 +41,8 @@ namespace UniLua
         private static int CRYPTO_sha256(ILuaState lua)
         {
             string input = lua.L_CheckString(1);
-            var hashAlgorithm = new SHA256();
-            var hashBytes = hashAlgorithm.ComputeHash(Encoding.UTF8.GetBytes(input));
-            lua.PushString(ToHexString(hashBytes));
+            var hashBytes = Aura_OS.System.Security.Sha256.hash(Encoding.UTF8.GetBytes(input));
+            lua.PushString(hashBytes);
             return 1;
         }
 
@@ -71,12 +70,9 @@ namespace UniLua
         private static int FILE_CRYPTO_sha256(ILuaState lua)
         {
             string filePath = Path.Combine(Kernel.CurrentDirectory, lua.L_CheckString(1));
-            var hashAlgorithm = new SHA256();
-            using (var stream = File.OpenRead(filePath))
-            {
-                var hashBytes = hashAlgorithm.ComputeHash(stream);
-                lua.PushString(ToHexString(hashBytes));
-            }
+            byte[] file = File.ReadAllBytes(filePath);
+            var hashBytes = Aura_OS.System.Security.Sha256.hash(file);
+            lua.PushString(hashBytes);
             return 1;
         }
 

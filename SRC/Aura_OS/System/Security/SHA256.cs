@@ -25,6 +25,11 @@ namespace Aura_OS.System.Security
             0x748F82EE, 0x78A5636F, 0x84C87814, 0x8CC70208, 0x90BEFFFA, 0xA4506CEB, 0xBEF9A3F7, 0xC67178F2
         };
 
+        public static string hash(byte[] tohash)
+        {
+            return Sha256.ComputeHash(tohash).ToUpperInvariant();
+        }
+
         public static string hash(string tohash)
         {
             return Sha256.ComputeHash(Encoding.ASCII.GetBytes(tohash)).ToUpperInvariant();
