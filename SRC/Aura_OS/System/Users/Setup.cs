@@ -225,7 +225,7 @@ namespace Aura_OS.System
 
             foreach (NetworkConfig networkConfig in NetworkConfiguration.NetworkConfigs)
             {
-                File.Create(@"0:\System\" + networkConfig.Device.Name + ".ini");
+                File.Create(@"0:\System\" + networkConfig.Device.NameID + ".ini");
                 Settings settings = new Settings(@"0:\System\" + networkConfig.Device.Name + ".ini");
                 settings.Add("ipaddress", "0.0.0.0");
                 settings.Add("subnet", "0.0.0.0");
