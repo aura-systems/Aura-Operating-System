@@ -20,6 +20,13 @@ namespace Aura_OS
         [ManifestResourceStream(ResourceName = "Aura_OS.Resources.wallpaper1920.bmp")]
         public static byte[] Wallpaper;
 
+        //1920x1024
+        [ManifestResourceStream(ResourceName = "Aura_OS.Resources.wallpaper-2.bmp")]
+        public static byte[] Wallpaper2;
+
+        [ManifestResourceStream(ResourceName = "Aura_OS.Resources.auralogo_white.bmp")]
+        public static byte[] auralogo_white;
+
         public static string IsoVolume;
 
         public static void LoadFiles()
@@ -46,6 +53,14 @@ namespace Aura_OS
             // Wallpapers
             Kernel.wallpaper = new Bitmap(Files.Wallpaper);
             CustomConsole.WriteLineOK("wallpaper-1.bmp wallpaper loaded.");
+
+            // Wallpapers
+            Kernel.wallpaper2 = new Bitmap(Files.Wallpaper2);
+            CustomConsole.WriteLineOK("wallpaper-2.bmp wallpaper loaded.");
+
+            // Logo
+            Kernel.auralogo_white = new Bitmap(Files.auralogo_white);
+            CustomConsole.WriteLineOK("auralogo_white.bmp wallpaper loaded.");
 
             // Images
             Kernel.AuraLogo = new Bitmap(File.ReadAllBytes(IsoVolume + "UI\\Images\\AuraLogo.bmp"));

@@ -8,6 +8,8 @@ using Aura_OS.Processing;
 using Aura_OS.System.Graphics.UI.GUI;
 using Aura_OS.System.Graphics.UI.GUI.Components;
 using Cosmos.System;
+using System.ComponentModel;
+using System.IO;
 
 namespace Aura_OS.System.Processing.Processes
 {
@@ -34,6 +36,7 @@ namespace Aura_OS.System.Processing.Processes
         public static Taskbar Taskbar;
         public static StartMenu StartMenu;
         public static Desktop Desktop;
+        public static LoginScreen Login;
         public static WindowManager WindowManager = new WindowManager();
         public static DirectBitmap Screen;
 
@@ -48,9 +51,13 @@ namespace Aura_OS.System.Processing.Processes
             CustomConsole.WriteLineInfo("Starting desktop...");
             Desktop = new Desktop(0, 0, (int)Kernel.ScreenWidth, (int)Kernel.ScreenHeight);
 
+            CustomConsole.WriteLineInfo("Starting setup...");
+            Login = new LoginScreen(0, 0, (int)Kernel.ScreenWidth, (int)Kernel.ScreenHeight);
+
             CustomConsole.WriteLineInfo("Starting task bar...");
             Taskbar = new Taskbar();
             Taskbar.UpdateApplicationButtons();
+            Taskbar.Visible = false;
 
             CustomConsole.WriteLineInfo("Starting start menu...");
             int menuWidth = 168;
@@ -58,6 +65,11 @@ namespace Aura_OS.System.Processing.Processes
             int menuX = 0;
             int menuY = (int)(Kernel.ScreenHeight - menuHeight - Taskbar.taskbarHeight);
             StartMenu = new StartMenu(menuX, menuY, menuWidth, menuHeight);
+
+            if (!File.Exists(@"0:\System\settings.ini"))
+            {
+                Kernel.LoggedIn = true;
+            }
         }
 
         public override void Initialize()
@@ -72,19 +84,30 @@ namespace Aura_OS.System.Processing.Processes
 
         public override void Update()
         {
-            StartMenu.Update();
-            Taskbar.Update();
-
-            WindowManager.DrawWindows();
-
-            Kernel.Canvas.DrawImage(Screen.Bitmap, 0, 0);
-
-            if (Kernel.MouseManager.IsLeftButtonDown)
+            if (Kernel.LoggedIn)
             {
-                if (!StartMenu.IsInside((int)MouseManager.X, (int)MouseManager.Y) && !Taskbar.StartButton.IsInside((int)MouseManager.X, (int)MouseManager.Y))
+                StartMenu.Update();
+                Taskbar.Update();
+
+                WindowManager.DrawWindows();
+
+                Kernel.Canvas.DrawImage(Screen.Bitmap, 0, 0);
+
+                if (Kernel.MouseManager.IsLeftButtonDown)
                 {
-                    ShowStartMenu = false;
+                    if (!StartMenu.IsInside((int)MouseManager.X, (int)MouseManager.Y) && !Taskbar.StartButton.IsInside((int)MouseManager.X, (int)MouseManager.Y))
+                    {
+                        ShowStartMenu = false;
+                    }
                 }
+            }
+            else
+            {
+                Login.Update();
+
+                WindowManager.DrawWindows();
+
+                Kernel.Canvas.DrawImage(Screen.Bitmap, 0, 0);
             }
         }
     }

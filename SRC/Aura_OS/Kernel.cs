@@ -35,6 +35,7 @@ namespace Aura_OS
         public static string userLogged = "root";
         public static string userLevelLogged = "admin";
         public static bool Running = false;
+        public static bool LoggedIn = false;
         public static string Version = "0.7.3";
         public static string Revision = VersionInfo.revision;
         public static string langSelected = "en_US";
@@ -83,6 +84,8 @@ namespace Aura_OS
         public static Bitmap CosmosLogo;
 
         public static Bitmap wallpaper;
+        public static Bitmap wallpaper2;
+        public static Bitmap auralogo_white;
 
         public static PCScreenFont font;
         public static PCScreenFont fontTerminal;

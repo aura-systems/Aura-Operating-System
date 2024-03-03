@@ -22,7 +22,8 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
 
         public TextBox(int x, int y, int width, int height, string text = "") : base(x, y, width, height)
         {
-            Frame = Kernel.ThemeManager.GetFrame("input.normal");
+            SetNormalFrame(Kernel.ThemeManager.GetFrame("input.normal"));
+            SetHighlightedFrame(Kernel.ThemeManager.GetFrame("input.highlighted"));
             Text = text;
         }
 
@@ -30,7 +31,17 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
         {
             if (IsInside((int)MouseManager.X, (int)MouseManager.Y))
             {
+                TextBox focusedComponent = Kernel.MouseManager.FocusedComponent as TextBox;
+
+                if (Kernel.MouseManager.FocusedComponent is TextBox)
+                {
+                    focusedComponent._isSelected = false;
+                    focusedComponent._cursorVisible = false;
+                    focusedComponent.MarkDirty();
+                }
+
                 _isSelected = true;
+                
                 Kernel.MouseManager.FocusedComponent = this;
             }
             else
