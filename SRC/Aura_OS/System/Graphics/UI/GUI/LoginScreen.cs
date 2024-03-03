@@ -11,6 +11,7 @@ using Aura_OS.System.Graphics.UI.GUI.Components;
 using Aura_OS.System.Processing.Processes;
 using Aura_OS.System.Security;
 using Aura_OS.System.Users;
+using Aura_OS.System.Utils;
 
 namespace Aura_OS.System.Graphics.UI.GUI
 {
@@ -94,9 +95,15 @@ namespace Aura_OS.System.Graphics.UI.GUI
                     dirUsername = dirUsername.Substring(0, 11);
                 }
 
-                Kernel.userLogged = username;
+                Kernel.userLogged = username; 
                 Kernel.UserDirectory = @"0:\Users\" + dirUsername + @"\";
                 Kernel.CurrentDirectory = Kernel.UserDirectory;
+
+                Explorer.Desktop.MainPanel.CurrentPath = Kernel.CurrentDirectory;
+                Explorer.Desktop.MainPanel.RefreshFilesystem();
+
+                Settings config = new Settings(@"0:\System\settings.ini");
+                Kernel.ComputerName = config.GetValue("hostname");
 
                 return true;
             }
