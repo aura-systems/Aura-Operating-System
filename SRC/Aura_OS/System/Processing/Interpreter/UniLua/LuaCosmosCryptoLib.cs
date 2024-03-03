@@ -32,9 +32,8 @@ namespace UniLua
         private static int CRYPTO_md5(ILuaState lua)
         {
             string input = lua.L_CheckString(1);
-            var hashAlgorithm = new MD5();
-            var hashBytes = hashAlgorithm.ComputeHash(Encoding.UTF8.GetBytes(input));
-            lua.PushString(ToHexString(hashBytes));
+            var hashBytes = Aura_OS.System.Security.MD5.hash(input);
+            lua.PushString(hashBytes);
             return 1;
         }
 
