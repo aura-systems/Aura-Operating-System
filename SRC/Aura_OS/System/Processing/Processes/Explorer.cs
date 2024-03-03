@@ -66,9 +66,14 @@ namespace Aura_OS.System.Processing.Processes
             int menuY = (int)(Kernel.ScreenHeight - menuHeight - Taskbar.taskbarHeight);
             StartMenu = new StartMenu(menuX, menuY, menuWidth, menuHeight);
 
-            if (!File.Exists(@"0:\System\settings.ini"))
+            if (File.Exists(@"0:\System\settings.ini"))
             {
-                Kernel.LoggedIn = true;
+                Kernel.LoggedIn = false;
+            }
+            else
+            {
+                Taskbar.Visible = true;
+                Login.Hide();
             }
         }
 

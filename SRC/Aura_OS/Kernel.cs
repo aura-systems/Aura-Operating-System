@@ -35,7 +35,7 @@ namespace Aura_OS
         public static string userLogged = "root";
         public static string userLevelLogged = "admin";
         public static bool Running = false;
-        public static bool LoggedIn = false;
+        public static bool LoggedIn = true;
         public static string Version = "0.7.3";
         public static string Revision = VersionInfo.revision;
         public static string langSelected = "en_US";

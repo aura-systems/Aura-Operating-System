@@ -66,6 +66,15 @@ namespace Aura_OS.System.Graphics.UI.GUI
             }
         }
 
+        public void Hide()
+        {
+            Visible = false;
+            _username.Visible = false;
+            _password.Visible = false;
+            _button.Visible = false;
+            Explorer.Taskbar.Visible = true;
+        }
+
         public bool Login(string username, string password)
         {
             string Sha256psw = Sha256.hash(password);
@@ -76,11 +85,8 @@ namespace Aura_OS.System.Graphics.UI.GUI
             if (Users.Users.GetUser("user:" + username).Contains(Sha256psw))
             {
                 Kernel.LoggedIn = true;
-                Visible = false;
-                _username.Visible = false;
-                _password.Visible = false;
-                _button.Visible = false;
-                Explorer.Taskbar.Visible = true;
+
+                Hide();
 
                 string dirUsername = username;
                 if (dirUsername.Length > 11)
