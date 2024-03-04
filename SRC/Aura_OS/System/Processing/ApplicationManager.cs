@@ -21,15 +21,15 @@ namespace Aura_OS.System.Processing
         public Type Template;
         public int X;
         public int Y;
-        public int Weight;
+        public int Width;
         public int Height;
 
-        public ApplicationConfig(Type template, int x, int y, int weight, int height)
+        public ApplicationConfig(Type template, int x, int y, int width, int height)
         {
             Template = template;
             X = x;
             Y = y;
-            Weight = weight;
+            Width = width;
             Height = height;
         }
     }
@@ -57,7 +57,7 @@ namespace Aura_OS.System.Processing
             RegisterApplication(typeof(CubeApp), 40, 40, 200, 200);
             RegisterApplication(typeof(GameBoyApp), 40, 40, 160 + 6, 144 + 26);
             RegisterApplication(typeof(SampleApp), 40, 40, 500, 500);
-            RegisterApplication(typeof(SettingsApp), 40, 40, 450, 350);
+            RegisterApplication(typeof(SettingsApp), 40, 40, 340, 350);
         }
 
         public void RegisterApplication(ApplicationConfig config)
@@ -65,9 +65,9 @@ namespace Aura_OS.System.Processing
             ApplicationTemplates.Add(config);
         }
 
-        public void RegisterApplication(Type template, int x, int y, int weight, int height)
+        public void RegisterApplication(Type template, int x, int y, int width, int height)
         {
-            ApplicationConfig config = new(template, x, y, weight, height);
+            ApplicationConfig config = new(template, x, y, width, height);
             ApplicationTemplates.Add(config);
         }
 
@@ -116,31 +116,31 @@ namespace Aura_OS.System.Processing
 
             if (config.Template == typeof(TerminalApp))
             {
-                app = new TerminalApp(config.Weight, config.Height, config.X, config.Y);
+                app = new TerminalApp(config.Width, config.Height, config.X, config.Y);
             }
             else if (config.Template == typeof(CubeApp))
             {
-                app = new CubeApp(config.Weight, config.Height, config.X, config.Y);
+                app = new CubeApp(config.Width, config.Height, config.X, config.Y);
             }
             else if (config.Template == typeof(SystemInfoApp))
             {
-                app = new SystemInfoApp(config.Weight, config.Height, config.X, config.Y);
+                app = new SystemInfoApp(config.Width, config.Height, config.X, config.Y);
             }
             else if (config.Template == typeof(MemoryInfoApp))
             {
-                app = new MemoryInfoApp(config.Weight, config.Height, config.X, config.Y);
+                app = new MemoryInfoApp(config.Width, config.Height, config.X, config.Y);
             }
             else if (config.Template == typeof(GameBoyApp))
             {
-                app = new GameBoyApp(config.Weight, config.Height, config.X, config.Y);
+                app = new GameBoyApp(config.Width, config.Height, config.X, config.Y);
             }
             else if (config.Template == typeof(SampleApp))
             {
-                app = new SampleApp(config.Weight, config.Height, config.X, config.Y);
+                app = new SampleApp(config.Width, config.Height, config.X, config.Y);
             }
             else if (config.Template == typeof(SettingsApp))
             {
-                app = new SettingsApp(config.Weight, config.Height, config.X, config.Y);
+                app = new SettingsApp(config.Width, config.Height, config.X, config.Y);
             }
             /*else if (config.Template == typeof(ExplorerApp))
             {
@@ -148,7 +148,7 @@ namespace Aura_OS.System.Processing
             }*/
             else if (config.Template == typeof(EditorApp))
             {
-                app = new EditorApp("", config.Weight, config.Height, config.X, config.Y);
+                app = new EditorApp("", config.Width, config.Height, config.X, config.Y);
             }
             else
             {

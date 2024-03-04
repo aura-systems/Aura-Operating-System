@@ -29,10 +29,12 @@ namespace Aura_OS.System.Processing.Applications
         Label _themeBmpPathLabel;
         Label _themeXmlPathLabel;
         Label _windowsAlphaLabel;
+        Label _taskbarAlphaLabel;
 
         Checkbox _autoLogin;
 
         Slider _windowsAlpha;
+        Slider _taskbarAlpha;
 
         Button _save;
 
@@ -52,7 +54,8 @@ namespace Aura_OS.System.Processing.Applications
             _computerNameLabel = new Label("Computer Name: ", Color.Black, labelX, baseY + (23 + spacing) * 2);
             _themeBmpPathLabel = new Label("Theme BMP Path: ", Color.Black, labelX, baseY + (23 + spacing) * 3);
             _themeXmlPathLabel = new Label("Theme XML Path: ", Color.Black, labelX, baseY + (23 + spacing) * 4);
-            _windowsAlphaLabel = new Label("Windows Alpha: ", Color.Black, labelX, baseY + (23 + spacing) * 6);
+            _windowsAlphaLabel = new Label("Windows Alpha: ", Color.Black, labelX, baseY + (23 + spacing) * 5);
+            _taskbarAlphaLabel = new Label("Taskbar Alpha: ", Color.Black, labelX, baseY + (23 + spacing) * 6);
 
             int textBoxXOffset = 6 + (_themeXmlPathLabel.Text.Length * Kernel.font.Width);
 
@@ -61,25 +64,34 @@ namespace Aura_OS.System.Processing.Applications
             _computerName = new TextBox(textBoxXOffset, baseY + (23 + spacing) * 2, 200, 23, "");
             _themeBmpPath = new TextBox(textBoxXOffset, baseY + (23 + spacing) * 3, 200, 23, "");
             _themeXmlPath = new TextBox(textBoxXOffset, baseY + (23 + spacing) * 4, 200, 23, "");
-
-            _windowsAlpha = new Slider(textBoxXOffset, baseY + (23 + spacing) * 6, 200, 23);
+            _windowsAlpha = new Slider(textBoxXOffset, baseY + (23 + spacing) * 5, 200, 23);
+            _taskbarAlpha = new Slider(textBoxXOffset, baseY + (23 + spacing) * 6, 200, 23);
 
             if (Kernel.Installed)
             {
                 Settings config = new Settings(@"0:\System\settings.ini");
                 string autologin = config.GetValue("autologin");
+                byte windowsTransparency = byte.Parse(config.GetValue("windowsTransparency"));
+                _windowsAlpha.Value = windowsTransparency;
+                byte taskbarTransparency = byte.Parse(config.GetValue("taskbarTransparency"));
+                _taskbarAlpha.Value = taskbarTransparency;
 
                 if (autologin == "true")
                 {
-                    _autoLogin = new Checkbox("Auto LogIn: ", Color.Black, labelX, baseY + (23 + spacing) * 5, true);
+                    _autoLogin = new Checkbox("Auto LogIn: ", Color.Black, labelX, baseY + (23 + spacing) * 7, true);
                 }
                 else
                 {
-                    _autoLogin = new Checkbox("Auto LogIn: ", Color.Black, labelX, baseY + (23 + spacing) * 5);
+                    _autoLogin = new Checkbox("Auto LogIn: ", Color.Black, labelX, baseY + (23 + spacing) * 7);
                 }
-            }
 
-            _save = new Button("Save Settings", Width / 2 - 100 / 2, baseY + (23 + spacing) * 7, 100, 23);
+                _save = new Button("Save Settings", Width / 2 - 100 / 2, baseY + (23 + spacing) * 8, 100, 23);
+            }
+            else
+            {
+                _save = new Button("Save Settings", Width / 2 - 100 / 2, baseY + (23 + spacing) * 7, 100, 23);
+            }
+            
             _save.Click = new Action(() =>
             {
                 _showDialog = true;
@@ -91,6 +103,7 @@ namespace Aura_OS.System.Processing.Applications
                 Kernel.ThemeManager.BmpPath = _themeBmpPath.Text;
                 Kernel.ThemeManager.XmlPath = _themeXmlPath.Text;
                 Explorer.WindowManager.WindowsTransparency = (byte)_windowsAlpha.Value;
+                Explorer.WindowManager.TaskbarTransparency = (byte)_taskbarAlpha.Value;
 
                 if (Kernel.Installed)
                 {
@@ -98,6 +111,8 @@ namespace Aura_OS.System.Processing.Applications
                     config.EditValue("hostname", Kernel.ComputerName);
                     config.EditValue("themeBmpPath", Kernel.ThemeManager.BmpPath);
                     config.EditValue("themeXmlPath", Kernel.ThemeManager.XmlPath);
+                    config.EditValue("windowsTransparency", Explorer.WindowManager.WindowsTransparency.ToString());
+                    config.EditValue("taskbarTransparency", Explorer.WindowManager.TaskbarTransparency.ToString());
                     if (_autoLogin.Checked)
                     {
                         config.EditValue("autologin", "true");
@@ -130,6 +145,7 @@ namespace Aura_OS.System.Processing.Applications
             AddChild(_themeBmpPath);
             AddChild(_themeXmlPath);
             AddChild(_windowsAlpha);
+            AddChild(_taskbarAlpha);
 
             AddChild(_usernameLabel);
             AddChild(_passwordLabel);
@@ -137,6 +153,7 @@ namespace Aura_OS.System.Processing.Applications
             AddChild(_themeBmpPathLabel);
             AddChild(_themeXmlPathLabel);
             AddChild(_windowsAlphaLabel);
+            AddChild(_taskbarAlphaLabel);
 
             AddChild(_dialog);
 
@@ -164,6 +181,7 @@ namespace Aura_OS.System.Processing.Applications
                 _themeBmpPath.Update();
                 _themeXmlPath.Update();
                 _windowsAlpha.Update();
+                _taskbarAlpha.Update();
 
                 if (Kernel.Installed)
                 {
@@ -196,6 +214,8 @@ namespace Aura_OS.System.Processing.Applications
             _themeXmlPath.DrawInParent();
             _windowsAlpha.Update();
             _windowsAlpha.DrawInParent();
+            _taskbarAlpha.Update();
+            _taskbarAlpha.DrawInParent();
 
             _usernameLabel.Draw();
             _usernameLabel.DrawInParent();
@@ -209,6 +229,8 @@ namespace Aura_OS.System.Processing.Applications
             _themeXmlPathLabel.DrawInParent();
             _windowsAlphaLabel.Update();
             _windowsAlphaLabel.DrawInParent();
+            _taskbarAlphaLabel.Update();
+            _taskbarAlphaLabel.DrawInParent();
 
             if (Kernel.Installed)
             {

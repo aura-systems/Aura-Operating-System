@@ -5,16 +5,38 @@
 */
 
 using Cosmos.System;
+using UniLua;
 
 namespace Aura_OS.System.Graphics.UI.GUI.Components
 {
     public class Slider : Component
     {
-        public int Value = 0;
+        public int Value
+        {
+            get { return _value; }
+            set
+            {
+                _value = value; 
+                int newPositionX = (_value * (Width - _slide.Width)) / 255;
+                if (newPositionX < 0)
+                {
+                    newPositionX = 0;
+                }
+                else if (newPositionX > Width - _slide.Width)
+                {
+                    newPositionX = Width - _slide.Width;
+                }
+
+                _slide.X = newPositionX;
+                _slide.MarkDirty();
+                MarkDirty();
+            }
+        }
 
         private Button _slide;
         private bool _sliderPressed = false;
         private int _firstX;
+        private int _value = 0;
 
         public Slider(int x, int y, int width, int height) : base(x, y, width, height)
         {

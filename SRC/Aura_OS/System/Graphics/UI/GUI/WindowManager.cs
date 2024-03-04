@@ -12,6 +12,7 @@ using Aura_OS.System.Graphics.UI.GUI;
 using Aura_OS.System.Graphics.UI.GUI.Components;
 using Rectangle = Aura_OS.System.Graphics.UI.GUI.Rectangle;
 using Component = Aura_OS.System.Graphics.UI.GUI.Components.Component;
+using Aura_OS.System.Utils;
 
 namespace Aura_OS
 {
@@ -22,6 +23,7 @@ namespace Aura_OS
         public Application FocusedApp { get; set; }
         public RightClick ContextMenu { get; set; }
         public byte WindowsTransparency { get; set; }
+        public byte TaskbarTransparency { get; set; }
 
         public List<Application> Applications;
         public List<Rectangle> ClipRects;
@@ -35,7 +37,20 @@ namespace Aura_OS
 
             Applications = new List<Application>();
             ClipRects = new List<Rectangle>();
-            WindowsTransparency = 0xFF;
+
+            if (Kernel.Installed)
+            {
+                Settings config = new Settings(@"0:\System\settings.ini");
+                byte windowsTransparency = byte.Parse(config.GetValue("windowsTransparency"));
+                byte taskbarTransparency = byte.Parse(config.GetValue("taskbarTransparency"));
+                WindowsTransparency = windowsTransparency;
+                TaskbarTransparency = taskbarTransparency;
+            }
+            else
+            {
+                WindowsTransparency = 0xFF;
+                TaskbarTransparency = 0xFF;
+            }
         }
 
         public void AddComponent(Component component)
@@ -176,6 +191,10 @@ namespace Aura_OS
             if (component is Window)
             {
                 _screen.DrawImageAlpha(component.GetBuffer(), component.X, component.Y, WindowsTransparency);
+            }
+            else if (component is Taskbar)
+            {
+                _screen.DrawImageAlpha(component.GetBuffer(), component.X, component.Y, TaskbarTransparency);
             }
             else
             {
