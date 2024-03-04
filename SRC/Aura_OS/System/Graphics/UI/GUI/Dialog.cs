@@ -33,6 +33,11 @@ namespace Aura_OS.System.Graphics.UI.GUI
             foreach (var button in _buttons)
             {
                 button.Update();
+
+                if (button.IsDirty())
+                {
+                    MarkDirty();
+                }
             }
         }
 

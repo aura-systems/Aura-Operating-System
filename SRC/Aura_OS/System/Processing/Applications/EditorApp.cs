@@ -84,8 +84,7 @@ namespace Aura_OS.System.Processing.Applications
 
             if (_showDialog)
             {
-                List<Button> buttons = _dialog.GetButtons();
-                buttons[0].Update();
+                _dialog.Update();
             }
             else
             {

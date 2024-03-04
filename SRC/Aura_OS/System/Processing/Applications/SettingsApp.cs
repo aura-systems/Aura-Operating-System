@@ -6,9 +6,11 @@
 
 using Aura_OS.System.Graphics.UI.GUI;
 using Aura_OS.System.Graphics.UI.GUI.Components;
+using Aura_OS.System.Processing.Processes;
 using Aura_OS.System.Utils;
 using Cosmos.System.Graphics;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using Component = Aura_OS.System.Graphics.UI.GUI.Components.Component;
@@ -34,6 +36,9 @@ namespace Aura_OS.System.Processing.Applications
         Checkbox _autoLogin;
 
         Button _save;
+
+        private Dialog _dialog;
+        private bool _showDialog;
 
         public SettingsApp(int width, int height, int x = 0, int y = 0) : base(ApplicationName, width, height, x, y)
         {
@@ -72,6 +77,10 @@ namespace Aura_OS.System.Processing.Applications
             _save = new Button("Save Settings", labelX, baseY + (23 + spacing) * 6, 100, 23);
             _save.Click = new Action(() =>
             {
+                _showDialog = true;
+                _dialog.Visible = true;
+                Explorer.WindowManager.BringToFront(_dialog);
+
                 Kernel.userLogged = _username.Text;
                 Kernel.ComputerName = _computerName.Text;
                 Kernel.ThemeManager.BmpPath = _themeBmpPath.Text;
@@ -95,6 +104,21 @@ namespace Aura_OS.System.Processing.Applications
                 }
             });
 
+            _dialog = new("Save", "Settings updated.", (int)Width / 2 - 302 / 2, Height / 2 - 119 / 2);
+            _dialog.Visible = false;
+            _showDialog = false;
+            _dialog.AddButton("OK", new Action(() =>
+            {
+                _showDialog = false;
+                _dialog.Visible = false;
+
+                foreach (var child in Window.Children)
+                {
+                    child.MarkDirty();
+                }
+                MarkDirty();
+            }));
+
             AddChild(_username);
             AddChild(_password);
             AddChild(_computerName);
@@ -109,19 +133,37 @@ namespace Aura_OS.System.Processing.Applications
 
             AddChild(_autoLogin);
             AddChild(_save);
+
+            AddChild(_dialog);
         }
 
         public override void Update()
         {
             base.Update();
 
-            _username.Update();
-            _password.Update();
-            _computerName.Update();
-            _themeBmpPath.Update();
-            _themeXmlPath.Update();
-            _autoLogin.Update();
-            _save.Update();
+            if (_showDialog)
+            {
+                _dialog.Update();
+            }
+            else
+            {
+                _username.Update();
+                _password.Update();
+                _computerName.Update();
+                _themeBmpPath.Update();
+                _themeXmlPath.Update();
+                _autoLogin.Update();
+                _save.Update();
+            }
+        }
+
+        public override void HandleLeftClick()
+        {
+            List<Button> buttons = _dialog.GetButtons();
+            if (buttons[0].IsInside((int)Cosmos.System.MouseManager.X, (int)Cosmos.System.MouseManager.Y))
+            {
+                buttons[0].Click();
+            }
         }
 
         public override void Draw()
@@ -161,6 +203,12 @@ namespace Aura_OS.System.Processing.Applications
 
             _save.Draw();
             _save.DrawInParent();
+
+            if (_showDialog)
+            {
+                _dialog.Draw();
+                _dialog.DrawInParent();
+            }
         }
     }
 }

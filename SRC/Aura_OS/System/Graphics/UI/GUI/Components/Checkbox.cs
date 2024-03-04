@@ -59,6 +59,11 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
         public override void Update()
         {
             _check.Update();
+
+            if (_check.IsDirty())
+            {
+                MarkDirty();
+            }
         }
 
         public override void Draw()
