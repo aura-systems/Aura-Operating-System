@@ -21,6 +21,7 @@ namespace Aura_OS
 
         public Application FocusedApp { get; set; }
         public RightClick ContextMenu { get; set; }
+        public byte WindowsTransparency { get; set; }
 
         public List<Application> Applications;
         public List<Rectangle> ClipRects;
@@ -34,6 +35,7 @@ namespace Aura_OS
 
             Applications = new List<Application>();
             ClipRects = new List<Rectangle>();
+            WindowsTransparency = 0xFF;
         }
 
         public void AddComponent(Component component)
@@ -173,7 +175,7 @@ namespace Aura_OS
 
             if (component is Window)
             {
-                _screen.DrawImageAlpha(component.GetBuffer(), component.X, component.Y);
+                _screen.DrawImageAlpha(component.GetBuffer(), component.X, component.Y, WindowsTransparency);
             }
             else
             {

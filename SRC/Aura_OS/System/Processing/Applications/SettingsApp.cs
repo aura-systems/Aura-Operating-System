@@ -90,7 +90,7 @@ namespace Aura_OS.System.Processing.Applications
                 Kernel.ComputerName = _computerName.Text;
                 Kernel.ThemeManager.BmpPath = _themeBmpPath.Text;
                 Kernel.ThemeManager.XmlPath = _themeXmlPath.Text;
-                Explorer.WindowManager.WindowTransparency = (byte)_windowsAlpha.Value;
+                Explorer.WindowManager.WindowsTransparency = (byte)_windowsAlpha.Value;
 
                 if (Kernel.Installed)
                 {

@@ -3,6 +3,7 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.Runtime.CompilerServices;
 using Aura_OS.System.Graphics.UI.GUI.Components;
+using Aura_OS.System.Processing.Processes;
 using Cosmos.Core;
 using Cosmos.System.Graphics;
 using Cosmos.System.Graphics.Fonts;
@@ -324,12 +325,12 @@ namespace Aura_OS.System.Graphics.UI.GUI
             // PLUGGED
         }
 
-        public static void BrightnessSSE(byte* image, int len)
+        public static void BrightnessSSE(byte* image, int len, byte alpha)
         {
             // PLUGGED
         }
 
-        public void DrawImageAlpha(Bitmap image, int x, int y, bool clearAlpha = false)
+        public void DrawImageAlpha(Bitmap image, int x, int y, byte alpha = 0xFF)
         {
             if (image.RawData.Length > Bitmap.RawData.Length)
             {
@@ -352,12 +353,12 @@ namespace Aura_OS.System.Graphics.UI.GUI
             {
                 fixed (int* fgBitmap = image.RawData)
                 {
-                    AlphaBltSSE((byte*)bgBitmap, (byte*)fgBitmap, w, (int)image.Height, wmul4);
-
-                    if (clearAlpha)
+                    if (alpha < 0xFF)
                     {
-                        BrightnessSSE((byte*)bgBitmap, image.RawData.Length);
+                        BrightnessSSE((byte*)fgBitmap, image.RawData.Length, alpha);
                     }
+
+                    AlphaBltSSE((byte*)bgBitmap, (byte*)fgBitmap, w, (int)image.Height, wmul4);
                 }
             }
 

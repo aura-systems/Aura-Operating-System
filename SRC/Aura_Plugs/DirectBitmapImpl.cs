@@ -21,36 +21,38 @@ namespace Cosmos.System_Plugs.System.Drawing
         public static void AlphaBltSSE(byte* dst, byte* src, int w, int h, int wmul4) => throw new NotImplementedException();
 
         [PlugMethod(Assembler = typeof(BrightnessASM))]
-        public static void BrightnessSSE(byte* image, int len) => throw new NotImplementedException();
+        public static void BrightnessSSE(byte* image, int len, byte alpha) => throw new NotImplementedException();
     }
 
     public class BrightnessASM : AssemblerMethod
     {
-        private const int ImgDisplacement = 12;
-        private const int LenDisplacement = 8;
+        private const int AlphaDisplacement = 8; // Déplacement pour l'argument alpha
+        private const int LenDisplacement = 12;
+        private const int ImgDisplacement = 16;
 
-        //public static void BrightnessSSE(byte* image, int len)
+        //public static void BrightnessSSE(byte* image, int len, byte alpha)
         public override void AssembleNew(Assembler aAssembler, object aMethodInfo)
         {
-            // Copy Src to ESI
-            XS.Set(ECX, EBP, sourceIsIndirect: true, sourceDisplacement: LenDisplacement);
-            // Copy Dst to EDI
-            XS.Set(EDI, EBP, sourceIsIndirect: true, sourceDisplacement: ImgDisplacement);
+            XS.Set(ECX, EBP, sourceIsIndirect: true, sourceDisplacement: LenDisplacement); // Charge la longueur dans ECX
+            XS.Set(EDI, EBP, sourceIsIndirect: true, sourceDisplacement: ImgDisplacement); // Charge le pointeur d'image dans EDI
+            XS.Set(EAX, EBP, sourceIsIndirect: true, sourceDisplacement: AlphaDisplacement); // Charge la valeur alpha dans EAX
 
             XS.Label("start_loop");
 
-            XS.LiteralCode("test ecx, ecx");
-            XS.LiteralCode("jz end_loop");
-            XS.LiteralCode("mov al, [edi + 3]");
-            XS.LiteralCode("cmp al, 0xFF");
-            XS.LiteralCode("je skip_alpha_adjust");
-            XS.LiteralCode("mov byte [edi + 3], 0xFF");
+            XS.LiteralCode("test ecx, ecx"); // Teste si on a fini de traiter tous les pixels
+            XS.LiteralCode("jz end_loop"); // Si oui, saute à la fin
 
-            XS.Label("skip_alpha_adjust");
+            XS.LiteralCode("movzx ebx, byte [edi + 3]"); // Charge la valeur alpha actuelle du pixel dans EBX
+            XS.LiteralCode("test ebx, ebx"); // Teste si l'alpha actuel est 0x00
+            XS.LiteralCode("jz skip_alpha_update"); // Si c'est le cas, saute la mise à jour de cet alpha
+            XS.LiteralCode("mov dl, al"); // Sinon, charge la valeur alpha dynamique de EAX (AL) dans DL
+            XS.LiteralCode("mov [edi + 3], dl"); // Et écrit cette valeur alpha dans le canal alpha du pixel
 
-            XS.Add(EDI, 4);
-            XS.Decrement(ECX);
-            XS.Jump("start_loop");
+            XS.Label("skip_alpha_update");
+
+            XS.Add(EDI, 4); // Passe au pixel suivant
+            XS.Decrement(ECX); // Décrémente le compteur
+            XS.Jump("start_loop"); // Boucle
 
             XS.Label("end_loop");
         }
@@ -58,6 +60,7 @@ namespace Cosmos.System_Plugs.System.Drawing
 
     public class AlphaBltSSEASM : AssemblerMethod
     {
+        // public static void AlphaBltSSE(byte* dst, byte* src, int w, int h, int wmul4)
         public override void AssembleNew(Assembler aAssembler, object aMethodInfo)
         {
             XS.LiteralCode("        mov         edi, [ebp + 24]"); // Move the address of index 0 of dst (unsigned char*(Because this is a pointer, it's an int, being compiled as x86, so 32 bits, or 4 bytes)) into EDI destination index register, for string operations
