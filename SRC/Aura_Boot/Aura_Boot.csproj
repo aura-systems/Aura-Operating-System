@@ -13,7 +13,7 @@
 		<IgnoreDebugStubAttribute>False</IgnoreDebugStubAttribute>
 		<ISOFile>bin\Debug\net6.0\Aura_Boot.iso</ISOFile>
 		<CompileVBEMultiboot>False</CompileVBEMultiboot>
-		<ExtractMapFile>False</ExtractMapFile>
+		<ExtractMapFile>True</ExtractMapFile>
 		<Launch>VMware</Launch>
 		<VisualStudioDebugPort>Pipe: Cosmos\Serial</VisualStudioDebugPort>
 		<CosmosDebugPort>Serial: COM1</CosmosDebugPort>

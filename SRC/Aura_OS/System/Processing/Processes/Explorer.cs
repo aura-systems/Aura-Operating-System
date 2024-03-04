@@ -7,6 +7,7 @@
 using Aura_OS.Processing;
 using Aura_OS.System.Graphics.UI.GUI;
 using Aura_OS.System.Graphics.UI.GUI.Components;
+using Aura_OS.System.Utils;
 using Cosmos.System;
 using System.ComponentModel;
 using System.IO;
@@ -79,7 +80,18 @@ namespace Aura_OS.System.Processing.Processes
 
             if (Kernel.Installed)
             {
-                Kernel.LoggedIn = false;
+                Settings config = new Settings(@"0:\System\settings.ini");
+                string value = config.GetValue("autologin");
+
+                if (value == "true")
+                {
+                    Taskbar.Visible = true;
+                    Login.Hide();
+                }
+                else
+                {
+                    Kernel.LoggedIn = false;
+                }
             }
             else
             {

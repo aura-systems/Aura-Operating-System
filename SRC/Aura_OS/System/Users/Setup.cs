@@ -225,7 +225,7 @@ namespace Aura_OS.System
 
             config.PutValue("setuptime", Time.MonthString() + "/" + Time.DayString() + "/" + Time.YearString() + ", " + Time.TimeString(true, true, true));
 
-            config.PutValue("consolemode", "null");
+            config.PutValue("autologin", "false");
 
             config.PutValue("themeBmpPath", @"0:\System\Themes\Suave.bmp");
             config.PutValue("themeXmlPath", @"0:\System\Themes\Suave.xml");

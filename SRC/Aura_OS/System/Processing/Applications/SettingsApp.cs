@@ -71,6 +71,14 @@ namespace Aura_OS.System.Processing.Applications
                     config.EditValue("hostname", Kernel.ComputerName);
                     config.EditValue("themeBmpPath", Kernel.ThemeManager.BmpPath);
                     config.EditValue("themeXmlPath", Kernel.ThemeManager.XmlPath);
+                    if (_autoLogin.Checked)
+                    {
+                        config.EditValue("autologin", "true");
+                    }
+                    else
+                    {
+                        config.EditValue("autologin", "false");
+                    }
                     config.Push();
                 }
             });

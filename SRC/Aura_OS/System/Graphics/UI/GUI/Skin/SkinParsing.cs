@@ -50,26 +50,29 @@ namespace Aura_OS.System.Graphics.UI.GUI.Skin
                     string bitmapName = node.GetAttribute("name").Value;
                     _skinName = node.GetAttribute("contentPath").Value;
 
+                    string bmpPath;
+
                     if (Kernel.Installed)
                     {
                         Settings config = new Settings(@"0:\System\settings.ini");
-                        Kernel.ThemeManager.BmpPath = config.GetValue("themeBmpPath");
+                        bmpPath = config.GetValue("themeBmpPath");
 
-                        if (!File.Exists(Kernel.ThemeManager.BmpPath))
+                        if (!File.Exists(bmpPath))
                         {
-                            Kernel.ThemeManager.BmpPath = Files.IsoVolume + "UI\\Themes\\" + _skinName + ".bmp";
+                            bmpPath = Files.IsoVolume + "UI\\Themes\\" + _skinName + ".bmp";
                         }
                     }
                     else
                     {
-                        Kernel.ThemeManager.BmpPath = Files.IsoVolume + "UI\\Themes\\" + _skinName + ".bmp";
+                        bmpPath = Files.IsoVolume + "UI\\Themes\\" + _skinName + ".bmp";
                     }
 
-                    CustomConsole.WriteLineInfo("Loading bitmap: " + Kernel.ThemeManager.BmpPath);
+                    CustomConsole.WriteLineInfo("Loading bitmap: " + bmpPath);
 
                     try
                     {
-                        Bitmap bitmap = new Bitmap(File.ReadAllBytes(Kernel.ThemeManager.BmpPath));
+                        Bitmap bitmap = new Bitmap(File.ReadAllBytes(bmpPath));
+                        Kernel.ThemeManager.BmpPath = bmpPath;
                         _bitmaps.Add(bitmapName, bitmap);
                         CustomConsole.WriteLineOK("Bitmap '" + bitmapName + "' added successfully!");
                     }
@@ -89,7 +92,7 @@ namespace Aura_OS.System.Graphics.UI.GUI.Skin
                 {
                     string name = node.GetAttribute("name").Value;
 
-                    if (name.StartsWith("window") || name.StartsWith("button") || name.StartsWith("check") || name.StartsWith("input"))
+                    if (name.StartsWith("window") || name.StartsWith("button") || name.StartsWith("cursor")  || name.StartsWith("check") || name.StartsWith("input"))
                     {
                         Frame.Region[] regions = RegionListBuilder.Build(node, _bitmaps);
                         Frame.Text[] texts = null;

@@ -52,7 +52,7 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
 
             if (Text != "")
             {
-                DrawString(Text, PCScreenFont.Default, Kernel.WhiteColor, 5, 4);
+                DrawString(Text, PCScreenFont.Default, Kernel.WhiteColor, 5, 0);
             }
         }
     }
