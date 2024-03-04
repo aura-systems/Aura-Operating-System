@@ -52,6 +52,8 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
 
         public override void Update()
         {
+            base.Update();
+
             if (_isSelected)
             {
                 KeyEvent keyEvent = null;
