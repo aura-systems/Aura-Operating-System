@@ -5,6 +5,7 @@
 */
 
 
+using Aura_OS.System.Network;
 using Aura_OS.System.Processing.Processes;
 using Cosmos.HAL;
 using Cosmos.System.Network;
@@ -77,30 +78,17 @@ namespace Aura_OS.System.Processing.Interpreter.Commands.Network
         {
             if (arguments[0] == "/release")
             {
-                var xClient = new DHCPClient();
-                xClient.SendReleasePacket();
-                xClient.Close();
-
-                NetworkConfiguration.ClearConfigs();
-
-                Kernel.NetworkConnected = false;
-                Explorer.Taskbar.MarkDirty();
+                Dhcp.Release();
             }
             else if (arguments[0] == "/ask")
             {
-                var xClient = new DHCPClient();
-                if (xClient.SendDiscoverPacket() != -1)
+                if (Dhcp.Ask())
                 {
-                    xClient.Close();
-                    Console.WriteLine("Configuration applied! Your local IPv4 Address is " + NetworkConfiguration.CurrentAddress + ".");
-                    Kernel.NetworkConnected = true;
+                    return new ReturnInfo(this, ReturnCode.OK);
                 }
                 else
                 {
-                    NetworkConfiguration.ClearConfigs();
-
-                    xClient.Close();
-                    return new ReturnInfo(this, ReturnCode.ERROR, "DHCP Discover failed. Can't apply dynamic IPv4 address.");
+                    new ReturnInfo(this, ReturnCode.ERROR, "DHCP Discover failed. Can't apply dynamic IPv4 address.");
                 }
             }
             else if (arguments[0] == "/listnic")

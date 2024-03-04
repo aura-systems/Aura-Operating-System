@@ -1,7 +1,8 @@
 ﻿/*
 * PROJECT:          Aura Operating System Development
-* CONTENT:          Command Interpreter - Clear
+* CONTENT:          Command Interpreter - Exit
 * PROGRAMMER(S):    John Welsh <djlw78@gmail.com>
+*                   Valentin Charbonnier <valentinbreiz@gmail.com>
 */
 
 using Aura_OS.System.Graphics.UI.GUI;
@@ -9,16 +10,16 @@ using Aura_OS.System.Processing.Applications.Terminal;
 
 namespace Aura_OS.System.Processing.Interpreter.Commands.c_Console
 {
-    class CommandClear : ICommand
+    class CommandExit : ICommand
     {
         private TerminalApp _terminal;
 
         /// <summary>
         /// Empty constructor.
         /// </summary>
-        public CommandClear(string[] commandvalues, Application terminal) : base(commandvalues)
+        public CommandExit(string[] commandvalues, Application terminal) : base(commandvalues)
         {
-            Description = "to clear the console";
+            Description = "to exit the console";
             _terminal = terminal as TerminalApp;
         }
 
@@ -29,11 +30,7 @@ namespace Aura_OS.System.Processing.Interpreter.Commands.c_Console
         {
             if (_terminal != null)
             {
-                _terminal.Console.ClearText();
-            }
-            else
-            {
-                Cosmos.System.Power.Shutdown();
+                _terminal.Window.Close.Click();
             }
 
             return new ReturnInfo(this, ReturnCode.OK);

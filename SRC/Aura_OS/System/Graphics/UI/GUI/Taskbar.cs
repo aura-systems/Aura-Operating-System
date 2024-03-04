@@ -9,6 +9,7 @@ using Cosmos.System;
 using Aura_OS.System.Graphics.UI.GUI.Components;
 using Aura_OS.System.Processing.Processes;
 using System;
+using Aura_OS.System.Network;
 
 namespace Aura_OS.System.Graphics.UI.GUI
 {
@@ -72,6 +73,23 @@ namespace Aura_OS.System.Graphics.UI.GUI
             int networkButtonY = (taskbarHeight / 2) - (networkButtonHeight / 2);
             NetworkButton = new Button(Kernel.ResourceManager.GetIcon("16-network-offline.bmp"), netoworkButtonX, networkButtonY, networkButtonWidth, networkButtonHeight);
             NetworkButton.NoBackground = true;
+            NetworkButton.RightClick = new RightClick((int)MouseManager.X, (int)MouseManager.Y - (1 * RightClickEntry.ConstHeight), 200, 2 * RightClickEntry.ConstHeight);
+
+            RightClickEntry entry = new("ipconfig /ask", NetworkButton.RightClick.Width, NetworkButton.RightClick);
+            entry.Click = new Action(() =>
+            {
+                Dhcp.Ask();
+            });
+
+            RightClickEntry entry2 = new("ipconfig /release", NetworkButton.RightClick.Width, NetworkButton.RightClick);
+            entry2.Click = new Action(() =>
+            {
+                Dhcp.Release();
+            });
+
+            NetworkButton.RightClick.AddEntry(entry);
+            NetworkButton.RightClick.AddEntry(entry2);
+
             AddChild(NetworkButton);
 
             Buttons = new Dictionary<uint, Button>();

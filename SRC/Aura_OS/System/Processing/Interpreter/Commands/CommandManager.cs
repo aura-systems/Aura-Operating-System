@@ -49,6 +49,7 @@ namespace Aura_OS.System.Processing.Interpreter.Commands
             _commands.Add(new CommandShutdown(new string[] { "shutdown", "sd" }));
 
             _commands.Add(new CommandClear(new string[] { "clear", "clr" }, _terminal));
+            _commands.Add(new CommandExit(new string[] { "exit" }, _terminal));
             _commands.Add(new CommandKeyboardMap(new string[] { "setkeyboardmap", "setkeyboard" }));
             _commands.Add(new CommandEnv(new string[] { "export", "set" }));
             _commands.Add(new CommandEcho(new string[] { "echo" }));
