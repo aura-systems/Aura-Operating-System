@@ -60,14 +60,13 @@ namespace Aura_OS.System.Processing.Applications
             Settings config = new Settings(@"0:\System\settings.ini");
             string autologin = config.GetValue("autologin");
 
-            _autoLogin = new Checkbox("Auto LogIn: ", Color.Black, labelX, baseY + (23 + spacing) * 5);
             if (autologin == "true")
             {
-                _autoLogin.Checked = true;
+                _autoLogin = new Checkbox("Auto LogIn: ", Color.Black, labelX, baseY + (23 + spacing) * 5, true);
             }
             else
             {
-                _autoLogin.Checked = false;
+                _autoLogin = new Checkbox("Auto LogIn: ", Color.Black, labelX, baseY + (23 + spacing) * 5);
             }
 
             _save = new Button("Save Settings", labelX, baseY + (23 + spacing) * 6, 100, 23);
