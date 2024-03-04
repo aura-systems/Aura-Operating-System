@@ -44,14 +44,14 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
             {
                 _check.SetNormalFrame(Kernel.ThemeManager.GetFrame("check.on.normal"));
                 _check.SetHighlightedFrame(Kernel.ThemeManager.GetFrame("check.on.highlighted"));
-                _check.Draw(this);
+                _check.MarkDirty();
                 MarkDirty();
             }
             else
             {
                 _check.SetNormalFrame(Kernel.ThemeManager.GetFrame("check.off.normal"));
                 _check.SetHighlightedFrame(Kernel.ThemeManager.GetFrame("check.off.highlighted"));
-                _check.Draw(this);
+                _check.MarkDirty();
                 MarkDirty();
             }
         }

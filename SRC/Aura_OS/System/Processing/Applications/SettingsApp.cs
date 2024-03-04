@@ -4,16 +4,12 @@
 * PROGRAMMERS:      Valentin Charbonnier <valentinbreiz@gmail.com>
 */
 
+using System;
+using System.Drawing;
 using Aura_OS.System.Graphics.UI.GUI;
 using Aura_OS.System.Graphics.UI.GUI.Components;
 using Aura_OS.System.Processing.Processes;
 using Aura_OS.System.Utils;
-using Cosmos.System.Graphics;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Drawing;
-using Component = Aura_OS.System.Graphics.UI.GUI.Components.Component;
 
 namespace Aura_OS.System.Processing.Applications
 {
@@ -38,7 +34,7 @@ namespace Aura_OS.System.Processing.Applications
         Button _save;
 
         private Dialog _dialog;
-        private bool _showDialog;
+        private bool _showDialog = false;
 
         public SettingsApp(int width, int height, int x = 0, int y = 0) : base(ApplicationName, width, height, x, y)
         {
@@ -62,16 +58,19 @@ namespace Aura_OS.System.Processing.Applications
             _themeBmpPath = new TextBox(textBoxXOffset, baseY + (23 + spacing) * 3, 200, 23, "");
             _themeXmlPath = new TextBox(textBoxXOffset, baseY + (23 + spacing) * 4, 200, 23, "");
 
-            Settings config = new Settings(@"0:\System\settings.ini");
-            string autologin = config.GetValue("autologin");
+            if (Kernel.Installed)
+            {
+                Settings config = new Settings(@"0:\System\settings.ini");
+                string autologin = config.GetValue("autologin");
 
-            if (autologin == "true")
-            {
-                _autoLogin = new Checkbox("Auto LogIn: ", Color.Black, labelX, baseY + (23 + spacing) * 5, true);
-            }
-            else
-            {
-                _autoLogin = new Checkbox("Auto LogIn: ", Color.Black, labelX, baseY + (23 + spacing) * 5);
+                if (autologin == "true")
+                {
+                    _autoLogin = new Checkbox("Auto LogIn: ", Color.Black, labelX, baseY + (23 + spacing) * 5, true);
+                }
+                else
+                {
+                    _autoLogin = new Checkbox("Auto LogIn: ", Color.Black, labelX, baseY + (23 + spacing) * 5);
+                }
             }
 
             _save = new Button("Save Settings", labelX, baseY + (23 + spacing) * 6, 100, 23);
@@ -106,7 +105,6 @@ namespace Aura_OS.System.Processing.Applications
 
             _dialog = new("Save", "Settings updated.", (int)Width / 2 - 302 / 2, Height / 2 - 119 / 2);
             _dialog.Visible = false;
-            _showDialog = false;
             _dialog.AddButton("OK", new Action(() =>
             {
                 _showDialog = false;
@@ -131,10 +129,14 @@ namespace Aura_OS.System.Processing.Applications
             AddChild(_themeBmpPathLabel);
             AddChild(_themeXmlPathLabel);
 
-            AddChild(_autoLogin);
-            AddChild(_save);
-
             AddChild(_dialog);
+
+            if (Kernel.Installed)
+            {
+                AddChild(_autoLogin);
+            }
+
+            AddChild(_save);
         }
 
         public override void Update()
@@ -152,17 +154,13 @@ namespace Aura_OS.System.Processing.Applications
                 _computerName.Update();
                 _themeBmpPath.Update();
                 _themeXmlPath.Update();
-                _autoLogin.Update();
-                _save.Update();
-            }
-        }
 
-        public override void HandleLeftClick()
-        {
-            List<Button> buttons = _dialog.GetButtons();
-            if (buttons[0].IsInside((int)Cosmos.System.MouseManager.X, (int)Cosmos.System.MouseManager.Y))
-            {
-                buttons[0].Click();
+                if (Kernel.Installed)
+                {
+                    _autoLogin.Update();
+                }
+
+                _save.Update();
             }
         }
 
@@ -198,8 +196,11 @@ namespace Aura_OS.System.Processing.Applications
             _themeXmlPathLabel.Draw();
             _themeXmlPathLabel.DrawInParent();
 
-            _autoLogin.Draw();
-            _autoLogin.DrawInParent();
+            if (Kernel.Installed)
+            {
+                _autoLogin.Draw();
+                _autoLogin.DrawInParent();
+            }
 
             _save.Draw();
             _save.DrawInParent();
