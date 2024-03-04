@@ -4,16 +4,10 @@
 * PROGRAMMER(S):    Valentin Charbonnier <valentinbreiz@gmail.com>
 */
 
-using Cosmos.System.Network.Config;
-using Cosmos.System.Network.IPv4.UDP.DNS;
-using Cosmos.System.Network.IPv4;
-using CosmosHttp.Client;
-using System.Net;
-using System.Text;
-using Aura_OS.System.Processing.Processes;
-using Cosmos.System.Network.IPv4.UDP.DHCP;
-using Aura_OS.System.Processing.Interpreter.Commands;
 using System;
+using Cosmos.System.Network.Config;
+using Cosmos.System.Network.IPv4.UDP.DHCP;
+using Aura_OS.System.Processing.Processes;
 
 namespace Aura_OS.System.Network
 {
