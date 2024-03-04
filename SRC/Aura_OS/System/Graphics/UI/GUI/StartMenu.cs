@@ -72,6 +72,10 @@ namespace Aura_OS.System.Graphics.UI.GUI
                 {
                     icon = Kernel.ResourceManager.GetIcon("24-explorer.bmp");
                 }
+                else if (applicationConfig.Template.Name.StartsWith("Settings"))
+                {
+                    icon = Kernel.ResourceManager.GetIcon("24-settings.bmp");
+                }
                 else
                 {
                     icon = Kernel.ResourceManager.GetIcon("24-program.bmp");

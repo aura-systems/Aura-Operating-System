@@ -64,7 +64,7 @@ namespace Aura_OS.System.Processing.Processes
             if (Kernel.Installed)
             {
                 int menuWidth = 168;
-                int menuHeight = 35 * 10;
+                int menuHeight = 35 * 11;
                 int menuX = 0;
                 int menuY = (int)(Kernel.ScreenHeight - menuHeight - Taskbar.taskbarHeight);
                 StartMenu = new StartMenu(menuX, menuY, menuWidth, menuHeight);
@@ -72,7 +72,7 @@ namespace Aura_OS.System.Processing.Processes
             else
             {
                 int menuWidth = 168;
-                int menuHeight = 35 * 9;
+                int menuHeight = 35 * 10;
                 int menuX = 0;
                 int menuY = (int)(Kernel.ScreenHeight - menuHeight - Taskbar.taskbarHeight);
                 StartMenu = new StartMenu(menuX, menuY, menuWidth, menuHeight);

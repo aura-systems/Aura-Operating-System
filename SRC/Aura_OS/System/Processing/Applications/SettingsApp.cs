@@ -37,6 +37,8 @@ namespace Aura_OS.System.Processing.Applications
 
         public SettingsApp(int width, int height, int x = 0, int y = 0) : base(ApplicationName, width, height, x, y)
         {
+            Window.Icon = Kernel.ResourceManager.GetIcon("16-settings.bmp");
+
             int spacing = 10;
             int baseY = 3 + Window.TopBar.Height + 6;
             int labelX = 6;
@@ -55,7 +57,18 @@ namespace Aura_OS.System.Processing.Applications
             _themeBmpPath = new TextBox(textBoxXOffset, baseY + (23 + spacing) * 3, 200, 23, "");
             _themeXmlPath = new TextBox(textBoxXOffset, baseY + (23 + spacing) * 4, 200, 23, "");
 
+            Settings config = new Settings(@"0:\System\settings.ini");
+            string autologin = config.GetValue("autologin");
+
             _autoLogin = new Checkbox("Auto LogIn: ", Color.Black, labelX, baseY + (23 + spacing) * 5);
+            if (autologin == "true")
+            {
+                _autoLogin.Checked = true;
+            }
+            else
+            {
+                _autoLogin.Checked = false;
+            }
 
             _save = new Button("Save Settings", labelX, baseY + (23 + spacing) * 6, 100, 23);
             _save.Click = new Action(() =>
