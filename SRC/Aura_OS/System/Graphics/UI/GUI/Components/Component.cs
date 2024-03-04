@@ -124,6 +124,7 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
             Children = new List<Component>();
             zIndex = 0;
             Explorer.WindowManager.AddComponent(this);
+            State = State.Normal;
         }
 
         public virtual void Update()

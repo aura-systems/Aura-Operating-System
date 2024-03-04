@@ -25,7 +25,7 @@ namespace Aura_OS.System.Processing.Applications
         {
             base.Draw();
 
-            DrawImage(_image, 0 + (int)(Width / 2 - _image.Width / 2), 0 + (int)(Height / 2 - _image.Height / 2));
+            DrawImage(_image, 0, 0);
         }
     }
 }

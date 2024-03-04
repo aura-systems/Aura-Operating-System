@@ -11,7 +11,7 @@ using Aura_OS.System.Graphics.UI.GUI.Components;
 
 namespace Aura_OS.System.Graphics.UI.GUI
 {
-    internal class Dialog : Window
+    public class Dialog : Window
     {
         private string _title;
         private string _message;
@@ -24,6 +24,16 @@ namespace Aura_OS.System.Graphics.UI.GUI
             _message = message;
             _buttons = new List<Button>();
             AlertIcon = Kernel.ResourceManager.GetIcon("32-dialog-information.bmp");
+        }
+
+        public override void Update()
+        {
+            base.Update();
+
+            foreach (var button in _buttons)
+            {
+                button.Update();
+            }
         }
 
         public List<Button> GetButtons()

@@ -19,6 +19,9 @@ namespace Aura_OS.System.Graphics.UI.GUI.Skin
         /// </summary>
         private SkinParsing _skinParser;
 
+        public string XmlPath;
+        public string BmpPath;
+
         /// <summary>
         /// Loads the default theme and initializes the theme management system.
         /// </summary>
@@ -28,24 +31,22 @@ namespace Aura_OS.System.Graphics.UI.GUI.Skin
 
             _skinParser = new SkinParsing();
 
-            string xmlPath = "";
-
             if (Kernel.Installed)
             {
                 Settings config = new Settings(@"0:\System\settings.ini");
-                xmlPath = config.GetValue("themeXmlPath");
+                XmlPath = config.GetValue("themeXmlPath");
 
-                if (!File.Exists(xmlPath))
+                if (!File.Exists(XmlPath))
                 {
-                    xmlPath = Files.IsoVolume + "UI\\Themes\\Suave.skin.xml";
+                    XmlPath = Files.IsoVolume + "UI\\Themes\\Suave.skin.xml";
                 }
             }
             else
             {
-                xmlPath = Files.IsoVolume + "UI\\Themes\\Suave.skin.xml";
+                XmlPath = Files.IsoVolume + "UI\\Themes\\Suave.skin.xml";
             }
 
-            _skinParser.loadSkin(File.ReadAllText(xmlPath));
+            _skinParser.loadSkin(File.ReadAllText(XmlPath));
         }
 
         /// <summary>
