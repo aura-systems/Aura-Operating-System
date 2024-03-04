@@ -28,8 +28,11 @@ namespace Aura_OS.System.Processing.Applications
         Label _computerNameLabel;
         Label _themeBmpPathLabel;
         Label _themeXmlPathLabel;
+        Label _windowsAlphaLabel;
 
         Checkbox _autoLogin;
+
+        Slider _windowsAlpha;
 
         Button _save;
 
@@ -49,6 +52,7 @@ namespace Aura_OS.System.Processing.Applications
             _computerNameLabel = new Label("Computer Name: ", Color.Black, labelX, baseY + (23 + spacing) * 2);
             _themeBmpPathLabel = new Label("Theme BMP Path: ", Color.Black, labelX, baseY + (23 + spacing) * 3);
             _themeXmlPathLabel = new Label("Theme XML Path: ", Color.Black, labelX, baseY + (23 + spacing) * 4);
+            _windowsAlphaLabel = new Label("Windows Alpha: ", Color.Black, labelX, baseY + (23 + spacing) * 6);
 
             int textBoxXOffset = 6 + (_themeXmlPathLabel.Text.Length * Kernel.font.Width);
 
@@ -57,6 +61,8 @@ namespace Aura_OS.System.Processing.Applications
             _computerName = new TextBox(textBoxXOffset, baseY + (23 + spacing) * 2, 200, 23, "");
             _themeBmpPath = new TextBox(textBoxXOffset, baseY + (23 + spacing) * 3, 200, 23, "");
             _themeXmlPath = new TextBox(textBoxXOffset, baseY + (23 + spacing) * 4, 200, 23, "");
+
+            _windowsAlpha = new Slider(textBoxXOffset, baseY + (23 + spacing) * 6, 200, 23);
 
             if (Kernel.Installed)
             {
@@ -73,7 +79,7 @@ namespace Aura_OS.System.Processing.Applications
                 }
             }
 
-            _save = new Button("Save Settings", labelX, baseY + (23 + spacing) * 6, 100, 23);
+            _save = new Button("Save Settings", Width / 2 - 100 / 2, baseY + (23 + spacing) * 7, 100, 23);
             _save.Click = new Action(() =>
             {
                 _showDialog = true;
@@ -84,6 +90,7 @@ namespace Aura_OS.System.Processing.Applications
                 Kernel.ComputerName = _computerName.Text;
                 Kernel.ThemeManager.BmpPath = _themeBmpPath.Text;
                 Kernel.ThemeManager.XmlPath = _themeXmlPath.Text;
+                Explorer.WindowManager.WindowTransparency = (byte)_windowsAlpha.Value;
 
                 if (Kernel.Installed)
                 {
@@ -122,12 +129,14 @@ namespace Aura_OS.System.Processing.Applications
             AddChild(_computerName);
             AddChild(_themeBmpPath);
             AddChild(_themeXmlPath);
+            AddChild(_windowsAlpha);
 
             AddChild(_usernameLabel);
             AddChild(_passwordLabel);
             AddChild(_computerNameLabel);
             AddChild(_themeBmpPathLabel);
             AddChild(_themeXmlPathLabel);
+            AddChild(_windowsAlphaLabel);
 
             AddChild(_dialog);
 
@@ -154,6 +163,7 @@ namespace Aura_OS.System.Processing.Applications
                 _computerName.Update();
                 _themeBmpPath.Update();
                 _themeXmlPath.Update();
+                _windowsAlpha.Update();
 
                 if (Kernel.Installed)
                 {
@@ -184,6 +194,8 @@ namespace Aura_OS.System.Processing.Applications
             _themeBmpPath.DrawInParent();
             _themeXmlPath.Draw();
             _themeXmlPath.DrawInParent();
+            _windowsAlpha.Update();
+            _windowsAlpha.DrawInParent();
 
             _usernameLabel.Draw();
             _usernameLabel.DrawInParent();
@@ -195,6 +207,8 @@ namespace Aura_OS.System.Processing.Applications
             _themeBmpPathLabel.DrawInParent();
             _themeXmlPathLabel.Draw();
             _themeXmlPathLabel.DrawInParent();
+            _windowsAlphaLabel.Update();
+            _windowsAlphaLabel.DrawInParent();
 
             if (Kernel.Installed)
             {
