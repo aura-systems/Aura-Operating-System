@@ -187,9 +187,13 @@ namespace Aura_OS
 
         public void DrawComponentAndChildren(Component component)
         {
-            if (component is Window || component is Taskbar)
+            if (component is Window)
             {
                 _screen.DrawImageAlpha(component.GetBuffer(), component.X, component.Y, WindowsTransparency);
+            }
+            else if (component is Taskbar)
+            {
+                _screen.DrawImageAlpha(component.GetBuffer(), component.X, component.Y, TaskbarTransparency);
             }
             else
             {

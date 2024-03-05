@@ -82,6 +82,8 @@ namespace Aura_OS.System.Processing.Processes
             {
                 Settings config = new Settings(@"0:\System\settings.ini");
                 string value = config.GetValue("autologin");
+                string computerName = config.GetValue("hostname");
+                Kernel.ComputerName = computerName;
 
                 if (value == "true")
                 {
