@@ -109,11 +109,6 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
 
         public Component(int x, int y, int width, int height)
         {
-            if (width % 2 != 0)
-            {
-                width++;
-            }
-
             _rectangle = new Rectangle(y, x, y + height, x + width);
             _buffer = new DirectBitmap(width, height);
             _cacheBuffer = new DirectBitmap(width, height);
