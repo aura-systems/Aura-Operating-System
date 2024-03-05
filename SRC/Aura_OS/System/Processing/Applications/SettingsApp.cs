@@ -40,7 +40,6 @@ namespace Aura_OS.System.Processing.Applications
         Button _save;
 
         private Dialog _dialog;
-        private bool _showDialog = false;
 
         public SettingsApp(int width, int height, int x = 0, int y = 0) : base(ApplicationName, width, height, x, y)
         {
@@ -97,10 +96,6 @@ namespace Aura_OS.System.Processing.Applications
             
             _save.Click = new Action(() =>
             {
-                _showDialog = true;
-                _dialog.Visible = true;
-                Explorer.WindowManager.BringToFront(_dialog);
-
                 Kernel.userLogged = _username.Text;
                 Kernel.ComputerName = _computerName.Text;
                 Kernel.ThemeManager.BmpPath = _themeBmpPath.Text;
@@ -127,13 +122,16 @@ namespace Aura_OS.System.Processing.Applications
                     }
                     config.Push();
                 }
+
+                _dialog.Visible = true;
+
+                MarkDirty();
             });
 
             _dialog = new("Save", "Settings updated.", (int)Width / 2 - 302 / 2, Height / 2 - 119 / 2);
             _dialog.Visible = false;
             _dialog.AddButton("OK", new Action(() =>
             {
-                _showDialog = false;
                 _dialog.Visible = false;
 
                 foreach (var child in Window.Children)
@@ -175,7 +173,7 @@ namespace Aura_OS.System.Processing.Applications
         {
             base.Update();
 
-            if (_showDialog)
+            if (_dialog.Visible)
             {
                 _dialog.Update();
             }
@@ -252,7 +250,7 @@ namespace Aura_OS.System.Processing.Applications
             _save.Draw();
             _save.DrawInParent();
 
-            if (_showDialog)
+            if (_dialog.Visible)
             {
                 _dialog.Draw();
                 _dialog.DrawInParent();

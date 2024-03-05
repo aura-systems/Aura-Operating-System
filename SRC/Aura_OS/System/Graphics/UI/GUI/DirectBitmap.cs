@@ -372,6 +372,10 @@ namespace Aura_OS.System.Graphics.UI.GUI
             // PLUGGED
         }
 
+        public static void AlphaBltSSE2(byte* dst, byte* src, int w, int h, int wmul4)
+        {
+        }
+
         public static void OpacitySSE(uint* pixelPtr, int w, int h, int bpl, uint a)
         {
             // PLUGGED
@@ -390,18 +394,18 @@ namespace Aura_OS.System.Graphics.UI.GUI
             }
 
             DirectBitmap tmp = ExtractImage(x, y, (int)image.Width, (int)image.Height);
+            if (tmp.Width == 0) return;
 
             fixed (int* bgBitmap = tmp.Bitmap.RawData)
+            fixed (int* fgBitmap = image.RawData)
             {
-                fixed (int* fgBitmap = image.RawData)
+                if (alpha < 0xFF)
                 {
-                    if (alpha < 0xFF)
-                    {
-                        OpacitySSE((uint*)fgBitmap, (int)image.Width, (int)image.Height, (int)image.Width * 4, alpha);
-                    }
-
-                    AlphaBlendSSE((uint*)bgBitmap, (int)image.Width * 4, (uint*)fgBitmap, (int)image.Width * 4, (int)image.Width, (int)image.Height);
+                    OpacitySSE((uint*)fgBitmap, (int)image.Width, (int)image.Height, (int)image.Width * 4, alpha);
                 }
+
+                // AlphaBltSSE2((byte*)bgBitmap, (byte*)fgBitmap, w, (int)image.Height, wmul4);
+                AlphaBlendSSE((uint*)bgBitmap, (int)image.Width * 4, (uint*)fgBitmap, (int)image.Width * 4, (int)image.Width, (int)image.Height);
             }
 
             DrawImage(tmp.Bitmap, x, y);

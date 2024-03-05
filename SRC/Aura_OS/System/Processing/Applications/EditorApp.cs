@@ -23,7 +23,6 @@ namespace Aura_OS.System.Processing.Applications
         private string _filePath;
 
         private Dialog _dialog;
-        private bool _showDialog;
 
         public EditorApp(string filePath, int width, int height, int x = 0, int y = 0)
             : base(ApplicationName + " - " + filePath, width, height, x, y)
@@ -52,13 +51,7 @@ namespace Aura_OS.System.Processing.Applications
             _dialog.Visible = false;
             _dialog.AddButton("OK", new Action(() =>
             {
-                _showDialog = false;
                 _dialog.Visible = false;
-
-                foreach (var child in Window.Children)
-                {
-                    child.MarkDirty();
-                }
                 MarkDirty();
             }));
             AddChild(_dialog);
@@ -67,14 +60,7 @@ namespace Aura_OS.System.Processing.Applications
         private void SaveFile()
         {
             File.WriteAllText(_filePath, _fileContentBox.Text);
-            _showDialog = true;
             _dialog.Visible = true;
-            Explorer.WindowManager.BringToFront(_dialog);
-
-            foreach (var child in Window.Children)
-            {
-                child.MarkDirty();
-            }
             MarkDirty();
         }
 
@@ -82,7 +68,7 @@ namespace Aura_OS.System.Processing.Applications
         {
             base.Update();
 
-            if (_showDialog)
+            if (_dialog.Visible)
             {
                 _dialog.Update();
             }
@@ -95,7 +81,7 @@ namespace Aura_OS.System.Processing.Applications
 
         public override void HandleLeftClick()
         {
-            if (!_showDialog)
+            if (!_dialog.Visible)
             {
                 base.HandleLeftClick();
                 _fileContentBox.HandleLeftClick();
@@ -123,7 +109,7 @@ namespace Aura_OS.System.Processing.Applications
             _save.Draw();
             _save.DrawInParent();
 
-            if (_showDialog)
+            if (_dialog.Visible)
             {
                 _dialog.Draw();
                 _dialog.DrawInParent();
