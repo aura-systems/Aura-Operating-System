@@ -5,6 +5,7 @@
 */
 
 using System;
+using System.Drawing;
 using System.Runtime.CompilerServices;
 using Cosmos.Core;
 using Cosmos.System.Graphics;
@@ -117,6 +118,52 @@ namespace Aura_OS.System.Graphics.UI.GUI
                     }
                 }
             }
+        }
+
+        /// <summary>
+        /// Draws a rectangle.
+        /// </summary>
+        /// <param name="color">The color to draw with.</param>
+        /// <param name="x">The X coordinate.</param>
+        /// <param name="y">The Y coordinate.</param>
+        /// <param name="width">The width of the rectangle.</param>
+        /// <param name="height">The height of the rectangle.</param>
+        public virtual void DrawRectangle(int color, int x, int y, int width, int height)
+        {
+            /*
+             * we must draw four lines connecting any vertex of our rectangle to do this we first obtain the position of these
+             * vertex (we call these vertexes A, B, C, D as for geometric convention)
+             */
+
+            /* The check of the validity of x and y are done in DrawLine() */
+
+            /* The vertex A is where x,y are */
+            int xa = x;
+            int ya = y;
+
+            /* The vertex B has the same y coordinate of A but x is moved of width pixels */
+            int xb = x + width;
+            int yb = y;
+
+            /* The vertex C has the same x coordiate of A but this time is y that is moved of height pixels */
+            int xc = x;
+            int yc = y + height;
+
+            /* The Vertex D has x moved of width pixels and y moved of height pixels */
+            int xd = x + width;
+            int yd = y + height;
+
+            /* Draw a line betwen A and B */
+            DrawLine(color, xa, ya, xb, yb);
+
+            /* Draw a line between A and C */
+            DrawLine(color, xa, ya, xc, yc);
+
+            /* Draw a line between B and D */
+            DrawLine(color, xb, yb, xd, yd);
+
+            /* Draw a line between C and D */
+            DrawLine(color, xc, yc, xd, yd);
         }
 
         public void DrawFilledRectangle(int color, int xStart, int yStart, int width, int height)

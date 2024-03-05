@@ -60,26 +60,27 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
 
                 while (Input.KeyboardManager.TryGetKey(out keyEvent))
                 {
-                    MarkDirty();
-
                     switch (keyEvent.Key)
                     {
                         case ConsoleKeyEx.Backspace:
                             if (Text.Length > 0)
                             {
                                 Text = Text.Remove(Text.Length - 1);
+                                MarkDirty();
                             }
                             break;
                         case ConsoleKeyEx.Enter:
                             if (Multiline)
                             {
                                 Text += "\n";
+                                MarkDirty();
                             }
                             else
                             {
                                 if (Enter != null)
                                 {
                                     Enter();
+                                    MarkDirty();
                                 }
                             }
                             break;
@@ -87,11 +88,10 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
                             if (char.IsLetterOrDigit(keyEvent.KeyChar) || char.IsPunctuation(keyEvent.KeyChar) || char.IsSymbol(keyEvent.KeyChar) || keyEvent.KeyChar == ' ')
                             {
                                 Text += keyEvent.KeyChar.ToString();
+                                MarkDirty();
                             }
                             break;
                     }
-
-                    MarkDirty();
                 }
 
                 if ((DateTime.Now - _lastCursorBlink).Seconds > _cursorBlinkInterval)

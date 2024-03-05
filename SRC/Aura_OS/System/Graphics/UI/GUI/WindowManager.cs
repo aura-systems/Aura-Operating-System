@@ -100,45 +100,11 @@ namespace Aura_OS
             // Sort x index
             InsertionSortByZIndex(Component.Components);
 
-            // Draw components
-            for (int i = 0; i < Component.Components.Count; i++)
-            {
-                var component = Component.Components[i];
-
-                if (component.IsRoot && component.Visible && (component.IsDirty() || component.ForceDirty))
-                {
-                    component.Draw();
-                    component.MarkCleaned();
-
-                    if (Kernel.GuiDebug)
-                    {
-                        Rectangle.AddClipRect(component.GetRectangle());
-                    }
-                }
-
-                foreach (var child in component.Children)
-                {
-                    if (child.Visible && (child.IsDirty() || child.ForceDirty))
-                    {
-                        child.Draw(child.Parent);
-                        child.MarkCleaned();
-
-                        if (Kernel.GuiDebug)
-                        {
-                            var childRect = child.GetRectangle();
-                            var parentRect = child.Parent.GetRectangle();
-                            var top = parentRect.Top + childRect.Top;
-                            var left = parentRect.Left + childRect.Left;
-                            var realRect = new Rectangle(top, left, childRect.Height + top, childRect.Width + left);
-                            Rectangle.AddClipRect(realRect);
-                        }
-                    }
-                }
-            }
-
             // Draw apps
-            foreach (Application app in Applications)
+            for (int i = 0; i < Applications.Count; i++)
             {
+                Application app = Applications[i];
+
                 if ((app.Running && app.Visible) && (app.IsDirty() || app.ForceDirty))
                 {
                     app.Draw();
@@ -151,13 +117,45 @@ namespace Aura_OS
                 }
             }
 
-            // Display on screen
+            // Draw components
             for (int i = 0; i < Component.Components.Count; i++)
             {
-                var component = Component.Components[i];
+                Component component = Component.Components[i];
 
-                if (component.IsRoot)
+                for (int j = 0; j < component.Children.Count; j++)
                 {
+                    Component child = component.Children[j];
+
+                    if (child.Visible && (child.IsDirty() || child.ForceDirty))
+                    {
+                        child.Draw(child.Parent);
+                        child.MarkCleaned();
+
+                        if (Kernel.GuiDebug)
+                        {
+                            Rectangle childRect = child.GetRectangle();
+                            Rectangle parentRect = child.Parent.GetRectangle();
+                            int top = parentRect.Top + childRect.Top;
+                            int left = parentRect.Left + childRect.Left;
+                            Rectangle realRect = new Rectangle(top, left, childRect.Height + top, childRect.Width + left);
+                            Rectangle.AddClipRect(realRect);
+                        }
+                    }
+                }
+
+                if (component.IsRoot && component.Visible)
+                {
+                    if (component.IsDirty() || component.ForceDirty)
+                    {
+                        component.Draw();
+                        component.MarkCleaned();
+
+                        if (Kernel.GuiDebug)
+                        {
+                            Rectangle.AddClipRect(component.GetRectangle());
+                        }
+                    }
+
                     DrawComponentAndChildren(component);
                 }
             }
@@ -186,8 +184,6 @@ namespace Aura_OS
 
         public void DrawComponentAndChildren(Component component)
         {
-            if (!component.Visible) return;
-
             if (component is Window)
             {
                 _screen.DrawImageAlpha(component.GetBuffer(), component.X, component.Y, WindowsTransparency);
@@ -202,9 +198,11 @@ namespace Aura_OS
             }
         }
 
+        private int green = Color.Green.ToArgb();
+
         public void DrawRect(int x, int y, int width, int height)
         {
-            Kernel.Canvas.DrawRectangle(Color.Green, x, y, width, height);
+            _screen.DrawRectangle(green, x, y, width, height);
         }
 
         public void SetScreen(DirectBitmap Screen)
