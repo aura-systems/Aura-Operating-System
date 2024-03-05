@@ -166,6 +166,8 @@ namespace Aura_OS.System.Processing.Applications
                 AddChild(_autoLogin);
             }
 
+            AddChild(_guiDebug);
+
             AddChild(_save);
         }
 

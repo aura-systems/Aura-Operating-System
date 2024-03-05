@@ -122,6 +122,22 @@ namespace Aura_OS
             {
                 Component component = Component.Components[i];
 
+                if (component.IsRoot && component.Visible)
+                {
+                    if (component.IsDirty() || component.ForceDirty)
+                    {
+                        component.Draw();
+                        component.MarkCleaned();
+
+                        if (Kernel.GuiDebug)
+                        {
+                            Rectangle.AddClipRect(component.GetRectangle());
+                        }
+                    }
+
+                    DrawComponentAndChildren(component);
+                }
+
                 for (int j = 0; j < component.Children.Count; j++)
                 {
                     Component child = component.Children[j];
@@ -141,22 +157,6 @@ namespace Aura_OS
                             Rectangle.AddClipRect(realRect);
                         }
                     }
-                }
-
-                if (component.IsRoot && component.Visible)
-                {
-                    if (component.IsDirty() || component.ForceDirty)
-                    {
-                        component.Draw();
-                        component.MarkCleaned();
-
-                        if (Kernel.GuiDebug)
-                        {
-                            Rectangle.AddClipRect(component.GetRectangle());
-                        }
-                    }
-
-                    DrawComponentAndChildren(component);
                 }
             }
 
