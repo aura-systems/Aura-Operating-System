@@ -134,8 +134,6 @@ namespace Aura_OS
                             Rectangle.AddClipRect(component.GetRectangle());
                         }
                     }
-
-                    DrawComponentAndChildren(component);
                 }
 
                 for (int j = 0; j < component.Children.Count; j++)
@@ -157,6 +155,11 @@ namespace Aura_OS
                             Rectangle.AddClipRect(realRect);
                         }
                     }
+                }
+
+                if (component.IsRoot && component.Visible)
+                {
+                    DrawComponentAndChildren(component);
                 }
             }
 
@@ -184,13 +187,9 @@ namespace Aura_OS
 
         public void DrawComponentAndChildren(Component component)
         {
-            if (component is Window)
+            if (component is Window || component is Taskbar)
             {
                 _screen.DrawImageAlpha(component.GetBuffer(), component.X, component.Y, WindowsTransparency);
-            }
-            else if (component is Taskbar)
-            {
-                _screen.DrawImageAlpha(component.GetBuffer(), component.X, component.Y, TaskbarTransparency);
             }
             else
             {

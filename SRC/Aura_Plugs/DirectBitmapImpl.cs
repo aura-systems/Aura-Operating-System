@@ -299,7 +299,10 @@ namespace Cosmos.System_Plugs.System.Drawing
             XS.LiteralCode("    mov ecx,dword [ebp+20]"); // w
             XS.LiteralCode("	align 16");
             XS.LiteralCode("ifa32lop2:");
-            XS.LiteralCode("	mov byte [edi+3],al");
+            XS.LiteralCode("	cmp byte [edi+3], 0x00");
+            XS.LiteralCode("	je skip_alpha_adjustment");
+            XS.LiteralCode("	mov byte [edi+3], al");
+            XS.LiteralCode("skip_alpha_adjustment:");
             XS.LiteralCode("	add edi,4");
             XS.LiteralCode("	dec ecx");
             XS.LiteralCode("	jnz ifa32lop2");
