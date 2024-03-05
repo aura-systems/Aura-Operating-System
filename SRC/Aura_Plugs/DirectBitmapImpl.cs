@@ -1,16 +1,14 @@
-﻿using Cosmos.HAL.BlockDevice;
-using IL2CPU.API.Attribs;
-using System.Reflection;
+﻿/*
+* PROJECT:          Aura Operating System Development
+* CONTENT:          Direct bitmap plugs (used for compositing)
+* PROGRAMMERS:      Valentin Charbonnier <valentinbreiz@gmail.com>
+*/
+
 using System;
 using XSharp.Assembler;
-using static XSharp.XSRegisters;
 using XSharp;
+using IL2CPU.API.Attribs;
 using Aura_OS.System.Graphics.UI.GUI;
-using Cosmos.System.Graphics;
-using XSharp.Assembler.x86;
-using System.Security.Cryptography;
-using XSharp.Assembler.x86.SSE;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace Cosmos.System_Plugs.System.Drawing
 {
@@ -18,9 +16,9 @@ namespace Cosmos.System_Plugs.System.Drawing
     public unsafe static class DrawImageAlphaImpl
     {
         [PlugMethod(Assembler = typeof(AlphaBltSSE2ASM))]
-        public static void AlphaBltSSE2(uint* dest, int dbpl, uint* src, int sbpl, int width, int height) => throw new NotImplementedException();
+        public static void AlphaBlendSSE(uint* dest, int dbpl, uint* src, int sbpl, int width, int height) => throw new NotImplementedException();
         [PlugMethod(Assembler = typeof(BrightnessASM))]
-        public static void BrightnessSSE(byte* image, int len, byte alpha) => throw new NotImplementedException();
+        public static void OpacitySSE(uint* pixelPtr, int w, int h, int bpl, uint a) => throw new NotImplementedException();
     }
 
     public class AlphaBltSSE2ASM : AssemblerMethod
@@ -265,31 +263,33 @@ namespace Cosmos.System_Plugs.System.Drawing
         private const int LenDisplacement = 12;
         private const int ImgDisplacement = 16;
 
-        //public static void BrightnessSSE(byte* image, int len, byte alpha)
+        //public static void OpacitySSE(uint* pixelPtr, int w, int h, int bpl, uint a)
         public override void AssembleNew(Assembler aAssembler, object aMethodInfo)
         {
-            XS.Set(ECX, EBP, sourceIsIndirect: true, sourceDisplacement: LenDisplacement); // Charge la longueur dans ECX
-            XS.Set(EDI, EBP, sourceIsIndirect: true, sourceDisplacement: ImgDisplacement); // Charge le pointeur d'image dans EDI
-            XS.Set(EAX, EBP, sourceIsIndirect: true, sourceDisplacement: AlphaDisplacement); // Charge la valeur alpha dans EAX
+            XS.LiteralCode("    push edi");
+            XS.LiteralCode("    push eax");
+            XS.LiteralCode("    mov eax,dword [ebp+20]"); // w
+            XS.LiteralCode("    shl eax,2");
+            XS.LiteralCode("    sub dword [ebp+12],eax"); // bpl
 
-            XS.Label("start_loop");
+            XS.LiteralCode("    mov edi,dword [ebp+24]"); // pixelPtr
+            XS.LiteralCode("    mov edx,dword [ebp+16]"); // h
+            XS.LiteralCode("    mov al,byte [ebp+8]"); // a
+            XS.LiteralCode("    align 16");
 
-            XS.LiteralCode("test ecx, ecx"); // Teste si on a fini de traiter tous les pixels
-            XS.LiteralCode("jz end_loop"); // Si oui, saute à la fin
-
-            XS.LiteralCode("movzx ebx, byte [edi + 3]"); // Charge la valeur alpha actuelle du pixel dans EBX
-            XS.LiteralCode("test ebx, ebx"); // Teste si l'alpha actuel est 0x00
-            XS.LiteralCode("jz skip_alpha_update"); // Si c'est le cas, saute la mise à jour de cet alpha
-            XS.LiteralCode("mov dl, al"); // Sinon, charge la valeur alpha dynamique de EAX (AL) dans DL
-            XS.LiteralCode("mov [edi + 3], dl"); // Et écrit cette valeur alpha dans le canal alpha du pixel
-
-            XS.Label("skip_alpha_update");
-
-            XS.Add(EDI, 4); // Passe au pixel suivant
-            XS.Decrement(ECX); // Décrémente le compteur
-            XS.Jump("start_loop"); // Boucle
-
-            XS.Label("end_loop");
+            XS.LiteralCode("ifa32lop:");
+            XS.LiteralCode("    mov ecx,dword [ebp+20]"); // w
+            XS.LiteralCode("	align 16");
+            XS.LiteralCode("ifa32lop2:");
+            XS.LiteralCode("	mov byte [edi+3],al");
+            XS.LiteralCode("	add edi,4");
+            XS.LiteralCode("	dec ecx");
+            XS.LiteralCode("	jnz ifa32lop2");
+            XS.LiteralCode("    add edi,dword [ebp+12]"); // bpl
+            XS.LiteralCode("	dec edx");
+            XS.LiteralCode("	jnz ifa32lop");
+            XS.LiteralCode("    pop eax");
+            XS.LiteralCode("	pop edi");
         }
     }
 }

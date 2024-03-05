@@ -1,14 +1,14 @@
-﻿using System;
-using System.Drawing;
-using System.Drawing.Imaging;
+﻿/*
+* PROJECT:          Aura Operating System Development
+* CONTENT:          Direct bitmap (used for compositing)
+* PROGRAMMERS:      Valentin Charbonnier <valentinbreiz@gmail.com>
+*/
+
+using System;
 using System.Runtime.CompilerServices;
-using Aura_OS.System.Graphics.UI.GUI.Components;
-using Aura_OS.System.Processing.Processes;
 using Cosmos.Core;
 using Cosmos.System.Graphics;
 using Cosmos.System.Graphics.Fonts;
-using UniLua;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace Aura_OS.System.Graphics.UI.GUI
 {
@@ -320,17 +320,12 @@ namespace Aura_OS.System.Graphics.UI.GUI
             return bmp;
         }
 
-        public static void AlphaBltSSE2(uint *dest, int dbpl, uint* src, int sbpl, int width, int height)
+        public static void AlphaBlendSSE(uint *dest, int dbpl, uint* src, int sbpl, int width, int height)
         {
             // PLUGGED
         }
 
-        public static void AlphaBltSSE(byte* dst, byte* src, int w, int h, int wmul4)
-        {
-            // PLUGGED
-        }
-
-        public static void BrightnessSSE(byte* image, int len, byte alpha)
+        public static void OpacitySSE(uint* pixelPtr, int w, int h, int bpl, uint a)
         {
             // PLUGGED
         }
@@ -355,10 +350,10 @@ namespace Aura_OS.System.Graphics.UI.GUI
                 {
                     if (alpha < 0xFF)
                     {
-                        BrightnessSSE((byte*)fgBitmap, image.RawData.Length, alpha);
+                        OpacitySSE((uint*)fgBitmap, (int)image.Width, (int)image.Height, (int)image.Width * 4, alpha);
                     }
 
-                    AlphaBltSSE2((uint*)bgBitmap, (int)image.Width * 4, (uint*)fgBitmap, (int)image.Width * 4, (int)image.Width, (int)image.Height);
+                    AlphaBlendSSE((uint*)bgBitmap, (int)image.Width * 4, (uint*)fgBitmap, (int)image.Width * 4, (int)image.Width, (int)image.Height);
                 }
             }
 
