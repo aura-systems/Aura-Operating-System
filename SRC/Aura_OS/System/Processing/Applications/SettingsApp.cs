@@ -32,6 +32,7 @@ namespace Aura_OS.System.Processing.Applications
         Label _taskbarAlphaLabel;
 
         Checkbox _autoLogin;
+        Checkbox _guiDebug;
 
         Slider _windowsAlpha;
         Slider _taskbarAlpha;
@@ -67,6 +68,8 @@ namespace Aura_OS.System.Processing.Applications
             _windowsAlpha = new Slider(textBoxXOffset, baseY + (23 + spacing) * 5, 200, 23);
             _taskbarAlpha = new Slider(textBoxXOffset, baseY + (23 + spacing) * 6, 200, 23);
 
+            _guiDebug = new Checkbox("GUI Debug: ", Color.Black, labelX, baseY + (23 + spacing) * 7);
+
             if (Kernel.Installed)
             {
                 Settings config = new Settings(@"0:\System\settings.ini");
@@ -78,18 +81,18 @@ namespace Aura_OS.System.Processing.Applications
 
                 if (autologin == "true")
                 {
-                    _autoLogin = new Checkbox("Auto LogIn: ", Color.Black, labelX, baseY + (23 + spacing) * 7, true);
+                    _autoLogin = new Checkbox("Auto LogIn: ", Color.Black, labelX, baseY + (23 + spacing) * 8, true);
                 }
                 else
                 {
-                    _autoLogin = new Checkbox("Auto LogIn: ", Color.Black, labelX, baseY + (23 + spacing) * 7);
+                    _autoLogin = new Checkbox("Auto LogIn: ", Color.Black, labelX, baseY + (23 + spacing) * 8);
                 }
 
-                _save = new Button("Save Settings", Width / 2 - 100 / 2, baseY + (23 + spacing) * 8, 100, 23);
+                _save = new Button("Save Settings", Width / 2 - 100 / 2, baseY + (23 + spacing) * 9, 100, 23);
             }
             else
             {
-                _save = new Button("Save Settings", Width / 2 - 100 / 2, baseY + (23 + spacing) * 7, 100, 23);
+                _save = new Button("Save Settings", Width / 2 - 100 / 2, baseY + (23 + spacing) * 8, 100, 23);
             }
             
             _save.Click = new Action(() =>
@@ -104,6 +107,7 @@ namespace Aura_OS.System.Processing.Applications
                 Kernel.ThemeManager.XmlPath = _themeXmlPath.Text;
                 Explorer.WindowManager.WindowsTransparency = (byte)_windowsAlpha.Value;
                 Explorer.WindowManager.TaskbarTransparency = (byte)_taskbarAlpha.Value;
+                Kernel.GuiDebug = _guiDebug.Checked;
 
                 if (Kernel.Installed)
                 {
@@ -188,6 +192,8 @@ namespace Aura_OS.System.Processing.Applications
                     _autoLogin.Update();
                 }
 
+                _guiDebug.Update();
+
                 _save.Update();
             }
         }
@@ -237,6 +243,9 @@ namespace Aura_OS.System.Processing.Applications
                 _autoLogin.Draw();
                 _autoLogin.DrawInParent();
             }
+
+            _guiDebug.Draw();
+            _guiDebug.DrawInParent();
 
             _save.Draw();
             _save.DrawInParent();
