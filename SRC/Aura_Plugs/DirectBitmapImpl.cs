@@ -251,7 +251,23 @@ namespace Cosmos.System_Plugs.System.Drawing
             XS.LiteralCode("	dec edx");
             XS.LiteralCode("	jnz iadbld4alop");
             XS.LiteralCode("	align 16");
+
             XS.LiteralCode("iadbldexit:");
+
+            // Fix 0x00 alpha
+            XS.LiteralCode("    mov eax, [ebp+12]");
+            XS.LiteralCode("    mul dword [ebp+8]");
+            XS.LiteralCode("    mov ecx, eax");
+            XS.LiteralCode("alpha_loop:");
+            XS.LiteralCode("    movzx edx, byte [esi+3]");
+            XS.LiteralCode("    cmp edx, 0");
+            XS.LiteralCode("    jne next_pixel");
+            XS.LiteralCode("next_pixel:");
+            XS.LiteralCode("    add esi, 4");
+            XS.LiteralCode("    add edi, 4");
+            XS.LiteralCode("    dec ecx");
+            XS.LiteralCode("    jnz alpha_loop");
+
             XS.LiteralCode("	pop edi");
             XS.LiteralCode("	pop esi");
             XS.LiteralCode("	pop ebx");
