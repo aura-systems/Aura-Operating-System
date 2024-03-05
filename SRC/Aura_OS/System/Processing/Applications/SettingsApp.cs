@@ -91,6 +91,8 @@ namespace Aura_OS.System.Processing.Applications
             }
             else
             {
+                _windowsAlpha.Value = 0xFF;
+                _taskbarAlpha.Value = 0xFF;
                 _save = new Button("Save Settings", Width / 2 - 100 / 2, baseY + (23 + spacing) * 8, 100, 23);
             }
             
