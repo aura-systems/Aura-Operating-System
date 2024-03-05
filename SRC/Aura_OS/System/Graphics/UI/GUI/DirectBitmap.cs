@@ -320,6 +320,11 @@ namespace Aura_OS.System.Graphics.UI.GUI
             return bmp;
         }
 
+        public static void AlphaBltSSE2(uint *dest, int dbpl, uint* src, int sbpl, int width, int height)
+        {
+            // PLUGGED
+        }
+
         public static void AlphaBltSSE(byte* dst, byte* src, int w, int h, int wmul4)
         {
             // PLUGGED
@@ -344,11 +349,6 @@ namespace Aura_OS.System.Graphics.UI.GUI
 
             DirectBitmap tmp = ExtractImage(x, y, (int)image.Width, (int)image.Height);
 
-            int w = tmp.Width;
-            int wmul4 = w << 2;
-            if (w == 0) return;
-            w >>= 1;
-
             fixed (int* bgBitmap = tmp.Bitmap.RawData)
             {
                 fixed (int* fgBitmap = image.RawData)
@@ -358,7 +358,7 @@ namespace Aura_OS.System.Graphics.UI.GUI
                         BrightnessSSE((byte*)fgBitmap, image.RawData.Length, alpha);
                     }
 
-                    AlphaBltSSE((byte*)bgBitmap, (byte*)fgBitmap, w, (int)image.Height, wmul4);
+                    AlphaBltSSE2((uint*)bgBitmap, (int)image.Width * 4, (uint*)fgBitmap, (int)image.Width * 4, (int)image.Width, (int)image.Height);
                 }
             }
 
