@@ -2,6 +2,7 @@
 * PROJECT:          Aura Operating System Development
 * CONTENT:          Direct bitmap plugs (used for compositing)
 * PROGRAMMERS:      Valentin Charbonnier <valentinbreiz@gmail.com>
+*                   https://github.com/sswroom/SClass
 */
 
 using System;

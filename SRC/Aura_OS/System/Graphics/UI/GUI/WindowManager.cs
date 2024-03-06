@@ -100,23 +100,6 @@ namespace Aura_OS
             // Sort x index
             InsertionSortByZIndex(Component.Components);
 
-            // Draw apps
-            for (int i = 0; i < Applications.Count; i++)
-            {
-                Application app = Applications[i];
-
-                if ((app.Running && app.Visible) && (app.IsDirty() || app.ForceDirty))
-                {
-                    app.Draw();
-                    app.MarkCleaned();
-
-                    if (Kernel.GuiDebug)
-                    {
-                        Rectangle.AddClipRect(app.Window.GetRectangle());
-                    }
-                }
-            }
-
             // Draw components
             for (int i = 0; i < Component.Components.Count; i++)
             {
@@ -163,6 +146,23 @@ namespace Aura_OS
                 }
             }
 
+            // Draw apps
+            for (int i = 0; i < Applications.Count; i++)
+            {
+                Application app = Applications[i];
+
+                if ((app.Running && app.Visible) && (app.IsDirty() || app.ForceDirty))
+                {
+                    app.Draw();
+                    app.MarkCleaned();
+
+                    if (Kernel.GuiDebug)
+                    {
+                        Rectangle.AddClipRect(app.Window.GetRectangle());
+                    }
+                }
+            }
+
             // Draw context menu
             RightClick contextMenu = Explorer.WindowManager.ContextMenu;
             if (contextMenu != null && contextMenu.Opened)
@@ -191,7 +191,7 @@ namespace Aura_OS
             {
                 _screen.DrawImageAlpha(component.GetBuffer(), component.X, component.Y, WindowsTransparency);
             }
-            else if (component is Taskbar)
+            else if (component is Taskbar && TaskbarTransparency != 0xFF)
             {
                 _screen.DrawImageAlpha(component.GetBuffer(), component.X, component.Y, TaskbarTransparency);
             }
