@@ -28,6 +28,8 @@ namespace Aura_OS
         public List<Application> Applications;
         public List<Rectangle> ClipRects;
 
+        public List<Rectangle> ClickRects;
+
         private int _highestZIndex = -1;
         private DirectBitmap _screen;
 
@@ -37,6 +39,7 @@ namespace Aura_OS
 
             Applications = new List<Application>();
             ClipRects = new List<Rectangle>();
+            ClickRects = new List<Rectangle>();
 
             if (Kernel.Installed)
             {
@@ -95,6 +98,7 @@ namespace Aura_OS
             if (Kernel.GuiDebug)
             {
                 ClipRects.Clear();
+                ClickRects.Clear();
             }
 
             // Sort x index
@@ -117,6 +121,18 @@ namespace Aura_OS
                             Rectangle.AddClipRect(component.GetRectangle());
                         }
                     }
+
+                    if (Kernel.GuiDebug)
+                    {
+                        if (component is Button)
+                        {
+                            Button button = component as Button;
+                            if (button.Click != null)
+                            {
+                                Rectangle.AddClickRect(component.GetRectangle());
+                            }
+                        }
+                    }
                 }
 
                 for (int j = 0; j < component.Children.Count; j++)
@@ -136,6 +152,26 @@ namespace Aura_OS
                             int left = parentRect.Left + childRect.Left;
                             Rectangle realRect = new Rectangle(top, left, childRect.Height + top, childRect.Width + left);
                             Rectangle.AddClipRect(realRect);
+
+                            
+                        }
+                    }
+
+                    if (Kernel.GuiDebug)
+                    {
+                        if (child.Visible && child is Button)
+                        {
+                            Button button = child as Button;
+                            if (button.Click != null)
+                            {
+                                Rectangle childRect = child.GetRectangle();
+                                Rectangle parentRect = child.Parent.GetRectangle();
+                                int top = parentRect.Top + childRect.Top;
+                                int left = parentRect.Left + childRect.Left;
+                                Rectangle realRect = new Rectangle(top, left, childRect.Height + top, childRect.Width + left);
+
+                                Rectangle.AddClickRect(realRect);
+                            }
                         }
                     }
                 }
@@ -180,7 +216,16 @@ namespace Aura_OS
                     var tempRect = Explorer.WindowManager.ClipRects[i];
                     DrawRect(tempRect.Left, tempRect.Top,
                              tempRect.Right - tempRect.Left + 1,
-                             tempRect.Bottom - tempRect.Top + 1);
+                             tempRect.Bottom - tempRect.Top + 1, green);
+                }
+
+                // Draw click rects
+                for (int i = 0; i < Explorer.WindowManager.ClickRects.Count; i++)
+                {
+                    var tempRect = Explorer.WindowManager.ClickRects[i];
+                    DrawRect(tempRect.Left, tempRect.Top,
+                             tempRect.Right - tempRect.Left + 1,
+                             tempRect.Bottom - tempRect.Top + 1, red);
                 }
             }  
         }
@@ -202,10 +247,11 @@ namespace Aura_OS
         }
 
         private int green = Color.Green.ToArgb();
+        private int red = Color.Red.ToArgb();
 
-        public void DrawRect(int x, int y, int width, int height)
+        public void DrawRect(int x, int y, int width, int height, int color)
         {
-            _screen.DrawRectangle(green, x, y, width, height);
+            _screen.DrawRectangle(color, x, y, width, height);
         }
 
         public void SetScreen(DirectBitmap Screen)
