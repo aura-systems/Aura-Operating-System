@@ -115,7 +115,9 @@ namespace UniLua
 
 		ThreadStatus	Status { get; }
 
-		string 	DebugGetInstructionHistory();
+        int GetPid();
+
+        string 	DebugGetInstructionHistory();
 	}
 
 	public interface ILuaState : ILuaAPI, ILuaAuxLib
@@ -124,7 +126,12 @@ namespace UniLua
 
 	public static class LuaAPI
 	{
-		public static ILuaState NewState()
+        public static ILuaState NewState(int pid)
+        {
+            return new LuaState(pid);
+        }
+
+        public static ILuaState NewState()
 		{
 			return new LuaState();
 		}
@@ -1625,6 +1632,11 @@ namespace UniLua
 				return true;
 			}
 		}
+
+        public int GetPid()
+        {
+            return _pid;
+        }
 
         // private void RegisterGlobalFunc( string name, CSharpFunctionDelegate f )
         // {

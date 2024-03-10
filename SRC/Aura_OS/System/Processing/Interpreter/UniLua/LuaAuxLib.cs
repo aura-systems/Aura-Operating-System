@@ -591,6 +591,7 @@ namespace UniLua
 				new NameFuncPair( LuaDebugLib.LIB_NAME, LuaDebugLib.OpenLib ),
 				new NameFuncPair( LuaEncLib.LIB_NAME,	LuaEncLib.OpenLib	),
                 new NameFuncPair( LuaCosmosCryptoLib.LIB_NAME,   LuaCosmosCryptoLib.OpenLib   ),
+                new NameFuncPair( LuaCosmosUiLib.LIB_NAME,   LuaCosmosUiLib.OpenLib   ),
             };
 
 			for( var i=0; i<define.Length; ++i)

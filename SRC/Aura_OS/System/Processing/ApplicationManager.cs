@@ -97,6 +97,18 @@ namespace Aura_OS.System.Processing
             Explorer.Taskbar.UpdateApplicationButtons();
         }
 
+        public void StartApplication(Application app)
+        {
+            app.Initialize();
+            app.MarkFocused();
+            app.Visible = true;
+
+            Explorer.WindowManager.Applications.Add(app);
+            Kernel.ProcessManager.Start(app);
+
+            Explorer.Taskbar.UpdateApplicationButtons();
+        }
+
         public Application Instantiate(Type appType)
         {
             foreach (var config in ApplicationTemplates)

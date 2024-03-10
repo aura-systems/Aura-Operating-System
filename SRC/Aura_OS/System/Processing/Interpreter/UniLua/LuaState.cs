@@ -158,13 +158,20 @@ namespace UniLua
 
 		private ILuaAPI 	API;
 
+		private int _pid;
+
 		static LuaState()
 		{
 			TheNilValue = new StkId();
 			TheNilValue.V.SetNilValue();
 		}
 
-		public LuaState( GlobalState g=null )
+        public LuaState(int pid) : this()
+		{
+			_pid = pid;
+        }
+
+        public LuaState( GlobalState g=null )
 		{
 			API = (ILuaAPI)this;
 
