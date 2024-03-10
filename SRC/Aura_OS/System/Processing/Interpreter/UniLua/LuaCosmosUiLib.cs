@@ -31,7 +31,7 @@ namespace UniLua
             int width = lua.ToInteger(2);
             int height = lua.ToInteger(3);
 
-            LuaApp app = new LuaApp(title, width, height, lua.GetPid());
+            LuaApp app = new LuaApp(title, lua.GetPid(), width, height);
             Kernel.ApplicationManager.StartApplication(app);
 
             lua.PushInteger((int)app.ID);
@@ -49,12 +49,9 @@ namespace UniLua
 
             LuaApp app = Kernel.ApplicationManager.GetApplicationByPid((uint)pid) as LuaApp;
             Button button = new Button(text, x, y + app.Window.TopBar.Height + 3, text.Length * Kernel.font.Width + 6, Kernel.font.Height + 6);
-            button.Click = new Action(() =>
+            button.Click = new Action (() =>
             {
-                if (click != null)
-                {
-                    click.Resume(lua, 0);
-                }
+                LuaCoroLib.AuxResume(lua, click, 0);
             });
 
             app.AddChild(button);

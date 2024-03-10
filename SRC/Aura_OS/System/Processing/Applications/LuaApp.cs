@@ -10,9 +10,11 @@ namespace Aura_OS.System.Processing.Applications
 {
     public class LuaApp : Application
     {
-        public LuaApp(string name, int width, int height, int x = 0, int y = 0) : base(name, width, height, x, y)
-        {
+        private int _luaProcessPid = 0;
 
+        public LuaApp(string name, int pid, int width, int height, int x = 0, int y = 0) : base(name, width, height, x, y)
+        {
+            _luaProcessPid = pid;
         }
 
         public override void Update()

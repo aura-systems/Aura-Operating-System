@@ -106,6 +106,36 @@ namespace Aura_OS.System.Graphics.UI.GUI
             Explorer.WindowManager.ClipRects.Add(addedRect);
         }
 
+        public static void AddClickRect(Rectangle addedRect)
+        {
+            int i = 0;
+            while (i < Explorer.WindowManager.ClickRects.Count)
+            {
+                Rectangle curRect = Explorer.WindowManager.ClickRects[i];
+
+                if (!(curRect.Left <= addedRect.Right &&
+                      curRect.Right >= addedRect.Left &&
+                      curRect.Top <= addedRect.Bottom &&
+                      curRect.Bottom >= addedRect.Top))
+                {
+                    i++;
+                    continue;
+                }
+
+                Explorer.WindowManager.ClickRects.RemoveAt(i);
+                List<Rectangle> splitRects = RectSplit(curRect, addedRect);
+
+                foreach (var splitRect in splitRects)
+                {
+                    Explorer.WindowManager.ClickRects.Add(splitRect);
+                }
+
+                i = 0;
+            }
+
+            Explorer.WindowManager.ClickRects.Add(addedRect);
+        }
+
         public bool Intersects(Rectangle other)
         {
             return !(Left > other.Right || Right < other.Left || Top > other.Bottom || Bottom < other.Top);

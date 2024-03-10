@@ -31,7 +31,7 @@ namespace UniLua
 			return 1;
 		}
 
-		private static int AuxResume( ILuaState lua, ILuaState co, int narg )
+		public static int AuxResume( ILuaState lua, ILuaState co, int narg )
 		{
 			if(!co.CheckStack(narg)) {
 				lua.PushString("too many arguments to resume");
