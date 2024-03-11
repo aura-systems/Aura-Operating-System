@@ -125,7 +125,7 @@ namespace Aura_OS.System.Graphics.UI.GUI
 
         public bool IsInside(int x, int y)
         {
-            return x >= 0 && x <= Width && y >= 0 && y <= Height;
+            return x >= Left && x <= Right && y >= Top && y <= Bottom;
         }
     }
 }

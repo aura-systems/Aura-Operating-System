@@ -27,10 +27,14 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
         public bool HasMinimizeButton;
         public bool HasMaximizeButton;
 
+        public int MaxHeight { get; internal set; }
+        public int MaxWidth { get; internal set; }
+
         public Window(int x, int y, int width, int height) : base(x, y, width, height)
         {
             Frame = Kernel.ThemeManager.GetFrame("window");
-
+            MaxHeight = (int)Kernel.ScreenHeight;
+            MaxWidth = (int)Kernel.ScreenWidth;
             HasBorders = false;
         }
 

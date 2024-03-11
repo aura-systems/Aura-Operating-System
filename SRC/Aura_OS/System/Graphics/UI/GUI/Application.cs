@@ -34,12 +34,15 @@ namespace Aura_OS.System.Graphics.UI.GUI
         private bool _lck = false;
         private bool _pressed;
         private bool _resizePressed;
+        private bool _resizingFromBottom = false;
+        private bool _resizingFromRight = false;
         private bool _resizeWidthPressed = false;
         private bool _resizeHeightPressed = false;
 
         private bool _lckResize = false;
-        private int _newX;
-        private int _newY;
+
+        private int _firstX;
+        private int _firstY;
 
         /// <summary>
         /// Does window needs an update.
@@ -62,13 +65,20 @@ namespace Aura_OS.System.Graphics.UI.GUI
             InitWindow(name, width, height, x, y);
         }
 
+        public override void Initialize()
+        {
+            base.Initialize();
+
+            Kernel.ProcessManager.Register(this);
+        }
+
         private void InitWindow(string name, int width, int height, int x = 0, int y = 0)
         {
             Window = new Window(name, x, y, width + 1, height + 1);
             _rectangleTop = new Rectangle(0, 0, 3, Window.Width + 1);
             _rectangleLeft = new Rectangle(0, 0, Window.Height + 1, 3);
-            _rectangleBottom = new Rectangle(Window.Height + 1 - 3, 0, Window.Height + 1, Window.Width + 1);
-            _rectangleRight = new Rectangle(0, Window.Width + 1 - 3, Window.Height + 1, Window.Width + 1);
+            _rectangleBottom = new Rectangle(Window.Height + 1 - 6, 0, Window.Height + 1 - 3, Window.Width + 1);
+            _rectangleRight = new Rectangle(0, Window.Width + 1 - 6, Window.Height + 1, Window.Width + 1 - 3);
 
             Window.Close.Click = new Action(() =>
             {
@@ -136,16 +146,6 @@ namespace Aura_OS.System.Graphics.UI.GUI
             }
         }
 
-        public override void Initialize()
-        {
-            base.Initialize();
-
-            Kernel.ProcessManager.Register(this);
-        }
-
-        private int _firstX;
-        private int _firstY;
-
         public override void Update()
         {
             Window.Update();
@@ -169,6 +169,7 @@ namespace Aura_OS.System.Graphics.UI.GUI
                             }
                             _resizeWidthPressed = true;
                             _resizePressed = true;
+                            _resizingFromRight = false;
                         }
                         else if (!WindowManager.WindowMoving && _rectangleTop.IsInside(clickX, clickY))
                         {
@@ -180,6 +181,31 @@ namespace Aura_OS.System.Graphics.UI.GUI
                             }
                             _resizeHeightPressed = true;
                             _resizePressed = true;
+                            _resizingFromBottom = false;
+                        }
+                        else if (!WindowManager.WindowMoving && _rectangleRight.IsInside(clickX, clickY))
+                        {
+                            if (!_lckResize)
+                            {
+                                _firstX = (int)MouseManager.X;
+                                _firstY = (int)MouseManager.Y;
+                                _lckResize = true;
+                            }
+                            _resizeWidthPressed = true;
+                            _resizePressed = true;
+                            _resizingFromRight = true;
+                        }
+                        else if (!WindowManager.WindowMoving && _rectangleBottom.IsInside(clickX, clickY))
+                        {
+                            if (!_lckResize)
+                            {
+                                _firstX = (int)MouseManager.X;
+                                _firstY = (int)MouseManager.Y;
+                                _lckResize = true;
+                            }
+                            _resizeHeightPressed = true;
+                            _resizePressed = true;
+                            _resizingFromBottom = true;
                         }
 
                     }
@@ -227,6 +253,14 @@ namespace Aura_OS.System.Graphics.UI.GUI
                     {
                         Input.MouseManager.CursorState = Input.CursorState.ResizeVertical;
                     }
+                    else if (_rectangleRight.IsInside(clickX, clickY) || _resizePressed)
+                    {
+                        Input.MouseManager.CursorState = Input.CursorState.ResizeHorizontal;
+                    }
+                    else if (_rectangleBottom.IsInside(clickX, clickY) || _resizePressed)
+                    {
+                        Input.MouseManager.CursorState = Input.CursorState.ResizeVertical;
+                    }
                     else
                     {
                         Input.MouseManager.CursorState = Input.CursorState.Normal;
@@ -241,26 +275,52 @@ namespace Aura_OS.System.Graphics.UI.GUI
 
                         if (_resizeWidthPressed)
                         {
-                            _newX = _firstX - currentX;
-                            int newWidth = Window.Width + _newX;
-                            ResizeWindow(newWidth, Window.Height);
-                            Window.X = currentX;
+                            if (_resizingFromRight)
+                            {
+                                int deltaX = currentX - _firstX;
+                                int newWidth = Math.Max(Window.MaxWidth, Window.Width + deltaX);
+                                ResizeWindow(newWidth, Window.Height);
+                                _firstX = currentX;
+                            }
+                            else
+                            {
+                                int deltaX = _firstX - currentX;
+                                int newWidth = Math.Max(Window.MaxWidth, Window.Width + deltaX);
+                                if (newWidth != Window.Width)
+                                {
+                                    Window.X -= deltaX;
+                                }
+                                ResizeWindow(newWidth, Window.Height);
+                            }
                         }
 
                         if (_resizeHeightPressed)
                         {
-                            _newY = _firstY - currentY;
-                            int newHeight = Window.Height + _newY;
-                            ResizeWindow(Window.Width, newHeight);
-                            Window.Resize(Window.Width, newHeight);
-                            Window.Y = currentY;
+                            if (_resizingFromBottom)
+                            {
+                                int deltaY = currentY - _firstY;
+                                int newHeight = Math.Max(Window.MaxHeight, Window.Height + deltaY);
+                                ResizeWindow(Window.Width, newHeight);
+                                _firstY = currentY;
+                            }
+                            else
+                            {
+                                int deltaY = _firstY - currentY;
+                                int newHeight = Math.Max(Window.MaxHeight, Window.Height + deltaY);
+                                if (newHeight != Window.Height)
+                                {
+                                    Window.Y -= deltaY;
+                                }
+                                ResizeWindow(Window.Width, newHeight);
+                            }
                         }
 
-                        Kernel.Debug = "_firstX=" + _firstX + ", _firstY=" + _firstY + ", _newX=" + _newX + ", _newY=" + _newY + ", newWidth=" + Window.Width + ", newHeight=" + Window.Height;
                         _resizePressed = false;
                         _lckResize = false;
                         _resizeWidthPressed = false;
                         _resizeHeightPressed = false;
+                        _resizingFromRight = false;
+                        _resizingFromBottom = false;
 
                         MarkDirty();
                     }
@@ -300,7 +360,16 @@ namespace Aura_OS.System.Graphics.UI.GUI
         public virtual void ResizeWindow(int width, int height)
         {
             Window.Resize(width, height);
+
+            Width = width - 4;
+            Height = height - (Window.TopBar.Height + 4);
+
+            _rectangleTop = new Rectangle(0, 0, 3, Window.Width + 1);
+            _rectangleLeft = new Rectangle(0, 0, Window.Height + 1, 3);
+            _rectangleBottom = new Rectangle(Window.Height - 3, 0, Window.Height, Window.Width + 1);
+            _rectangleRight = new Rectangle(0, Window.Width - 3, Window.Height + 1, Window.Width);
         }
+
 
         public void AddChild(Component component)
         {
@@ -313,6 +382,47 @@ namespace Aura_OS.System.Graphics.UI.GUI
             Explorer.Taskbar.MarkDirty();
             Explorer.WindowManager.BringToFront(Window);
         }
+
+        public Rectangle GetAbsoluteLeftRectangle()
+        {
+            return new Rectangle(
+                _rectangleLeft.Top + Window.Y,
+                _rectangleLeft.Left + Window.X,
+                _rectangleLeft.Bottom + Window.Y,
+                _rectangleLeft.Right + Window.X
+            );
+        }
+
+        public Rectangle GetAbsoluteRightRectangle()
+        {
+            return new Rectangle(
+                _rectangleRight.Top + Window.Y,
+                _rectangleRight.Left + Window.X,
+                _rectangleRight.Bottom + Window.Y,
+                _rectangleRight.Right + Window.X
+            );
+        }
+
+        public Rectangle GetAbsoluteTopRectangle()
+        {
+            return new Rectangle(
+                _rectangleTop.Top + Window.Y,
+                _rectangleTop.Left + Window.X,
+                _rectangleTop.Bottom + Window.Y,
+                _rectangleTop.Right + Window.X
+            );
+        }
+
+        public Rectangle GetAbsoluteBottomRectangle()
+        {
+            return new Rectangle(
+                _rectangleBottom.Top + Window.Y,
+                _rectangleBottom.Left + Window.X,
+                _rectangleBottom.Bottom + Window.Y,
+                _rectangleBottom.Right + Window.X
+            );
+        }
+
 
         #region Status
 

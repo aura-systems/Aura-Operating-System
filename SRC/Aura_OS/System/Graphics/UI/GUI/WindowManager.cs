@@ -30,12 +30,14 @@ namespace Aura_OS
         public List<Rectangle> ClipRects;
         public List<Rectangle> ClickRects;
         public List<Rectangle> RefreshRects;
+        public List<Rectangle> ResizeRects;
 
         private int _highestZIndex = -1;
         private DirectBitmap _screen;
 
         private int green = Color.Green.ToArgb();
         private int red = Color.Red.ToArgb();
+        private int blue = Color.Blue.ToArgb();
 
         public void Initialize()
         {
@@ -45,6 +47,7 @@ namespace Aura_OS
             ClipRects = new List<Rectangle>();
             ClickRects = new List<Rectangle>();
             RefreshRects = new List<Rectangle>();
+            ResizeRects = new List<Rectangle>();
 
             if (Kernel.Installed)
             {
@@ -105,6 +108,7 @@ namespace Aura_OS
                 ClipRects.Clear();
                 ClickRects.Clear();
                 RefreshRects.Clear();
+                ResizeRects.Clear();
             }
 
             // Sort z index
@@ -118,7 +122,16 @@ namespace Aura_OS
 
             if (Kernel.GuiDebug)
             {
-                // Draw clip rects
+                // Draw resize rects
+                for (int i = 0; i < Explorer.WindowManager.ResizeRects.Count; i++)
+                {
+                    var tempRect = Explorer.WindowManager.ResizeRects[i];
+                    DrawRect(tempRect.Left, tempRect.Top,
+                             tempRect.Right - tempRect.Left + 1,
+                             tempRect.Bottom - tempRect.Top + 1, blue);
+                }
+
+                // Draw refresh rects
                 for (int i = 0; i < Explorer.WindowManager.RefreshRects.Count; i++)
                 {
                     var tempRect = Explorer.WindowManager.RefreshRects[i];
@@ -225,6 +238,14 @@ namespace Aura_OS
                     {
                         RefreshRects.Add(app.Window.GetRectangle());
                     }
+                }
+
+                if (Kernel.GuiDebug)
+                {
+                    ResizeRects.Add(app.GetAbsoluteBottomRectangle());
+                    ResizeRects.Add(app.GetAbsoluteRightRectangle());
+                    ResizeRects.Add(app.GetAbsoluteLeftRectangle());
+                    ResizeRects.Add(app.GetAbsoluteTopRectangle());
                 }
             }
         }
