@@ -14,7 +14,7 @@ using Aura_OS.System.Processing.Processes;
 
 namespace Aura_OS.System.Graphics.UI.GUI
 {
-    public class Application : Process
+    public class Application : Process, IDisposable
     {
         public int Width;
         public int Height;
@@ -72,11 +72,7 @@ namespace Aura_OS.System.Graphics.UI.GUI
 
             Window.Close.Click = new Action(() =>
             {
-                Window.Visible = false;
-                Stop();
-                Explorer.WindowManager.Applications.Remove(this);
-                Kernel.ProcessManager.Processes.Remove(this);
-                Explorer.Taskbar.UpdateApplicationButtons();
+               Dispose();
             });
             Window.Minimize.Click = new Action(() =>
             {
@@ -306,6 +302,20 @@ namespace Aura_OS.System.Graphics.UI.GUI
             Window.Resize(width, height);
         }
 
+        public void AddChild(Component component)
+        {
+            Window.AddChild(component);
+        }
+
+        private void BringToFront()
+        {
+            MarkFocused();
+            Explorer.Taskbar.MarkDirty();
+            Explorer.WindowManager.BringToFront(Window);
+        }
+
+        #region Status
+
         public bool IsDirty()
         {
             return _isDirty;
@@ -331,17 +341,7 @@ namespace Aura_OS.System.Graphics.UI.GUI
             Explorer.WindowManager.FocusedApp = this;
         }
 
-        public void AddChild(Component component)
-        {
-            Window.AddChild(component);
-        }
-
-        private void BringToFront()
-        {
-            MarkFocused();
-            Explorer.Taskbar.MarkDirty();
-            Explorer.WindowManager.BringToFront(Window);
-        }
+        #endregion
 
         #region Drawing
 
@@ -366,5 +366,14 @@ namespace Aura_OS.System.Graphics.UI.GUI
         }
 
         #endregion
+
+        public void Dispose()
+        {
+            Window.Dispose();
+            Stop();
+            Explorer.WindowManager.Applications.Remove(this);
+            Kernel.ProcessManager.Unregister(this);
+            Explorer.Taskbar.UpdateApplicationButtons();
+        }
     }
 }

@@ -11,6 +11,7 @@ using Cosmos.System.Graphics;
 using Cosmos.System.Graphics.Fonts;
 using Aura_OS.System.Graphics.UI.GUI.Skin;
 using Aura_OS.System.Processing.Processes;
+using System;
 
 namespace Aura_OS.System.Graphics.UI.GUI.Components
 {
@@ -21,7 +22,7 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
         Pressed,
     }
 
-    public class Component
+    public class Component : IDisposable
     {
         public static List<Component> Components = new List<Component>();
 
@@ -559,5 +560,15 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
         }
 
         #endregion
+
+        public void Dispose()
+        {
+            foreach (Component child in Children)
+            {
+                child.Dispose();
+            }
+
+            Components.Remove(this);
+        }
     }
 }
