@@ -235,7 +235,7 @@ namespace Aura_OS
 
                     if (Kernel.GuiDebug)
                     {
-                        Rectangle.AddClipRect(app.Window.GetRectangle());
+                        RefreshRects.Add(app.Window.GetRectangle());
                     }
                 }
             }
