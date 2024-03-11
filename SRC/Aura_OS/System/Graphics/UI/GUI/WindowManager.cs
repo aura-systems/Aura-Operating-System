@@ -26,12 +26,16 @@ namespace Aura_OS
         public byte TaskbarTransparency { get; set; }
 
         public List<Application> Applications;
-        public List<Rectangle> ClipRects;
 
+        public List<Rectangle> ClipRects;
         public List<Rectangle> ClickRects;
+        public List<Rectangle> RefreshRects;
 
         private int _highestZIndex = -1;
         private DirectBitmap _screen;
+
+        private int green = Color.Green.ToArgb();
+        private int red = Color.Red.ToArgb();
 
         public void Initialize()
         {
@@ -40,6 +44,7 @@ namespace Aura_OS
             Applications = new List<Application>();
             ClipRects = new List<Rectangle>();
             ClickRects = new List<Rectangle>();
+            RefreshRects = new List<Rectangle>();
 
             if (Kernel.Installed)
             {
@@ -99,11 +104,42 @@ namespace Aura_OS
             {
                 ClipRects.Clear();
                 ClickRects.Clear();
+                RefreshRects.Clear();
             }
 
-            // Sort x index
+            // Sort z index
             InsertionSortByZIndex(Component.Components);
 
+            DrawComponents();
+
+            DrawApps();
+
+            DrawContextMenu();
+
+            if (Kernel.GuiDebug)
+            {
+                // Draw clip rects
+                for (int i = 0; i < Explorer.WindowManager.RefreshRects.Count; i++)
+                {
+                    var tempRect = Explorer.WindowManager.RefreshRects[i];
+                    DrawRect(tempRect.Left, tempRect.Top,
+                             tempRect.Right - tempRect.Left + 1,
+                             tempRect.Bottom - tempRect.Top + 1, green);
+                }
+
+                // Draw click rects
+                for (int i = 0; i < Explorer.WindowManager.ClickRects.Count; i++)
+                {
+                    var tempRect = Explorer.WindowManager.ClickRects[i];
+                    DrawRect(tempRect.Left, tempRect.Top,
+                             tempRect.Right - tempRect.Left + 1,
+                             tempRect.Bottom - tempRect.Top + 1, red);
+                }
+            }
+        }
+
+        public void DrawComponents()
+        {
             // Draw components
             for (int i = 0; i < Component.Components.Count; i++)
             {
@@ -118,7 +154,7 @@ namespace Aura_OS
 
                         if (Kernel.GuiDebug)
                         {
-                            Rectangle.AddClipRect(component.GetRectangle());
+                            RefreshRects.Add(component.GetRectangle());
                         }
                     }
 
@@ -153,7 +189,8 @@ namespace Aura_OS
                                 int top = parentRect.Top + childRect.Top;
                                 int left = parentRect.Left + childRect.Left;
                                 Rectangle realRect = new Rectangle(top, left, childRect.Height + top, childRect.Width + left);
-                                Rectangle.AddClipRect(realRect);
+
+                                RefreshRects.Add(realRect);
                             }
                         }
 
@@ -179,10 +216,13 @@ namespace Aura_OS
 
                 if (component.IsRoot && component.Visible)
                 {
-                    DrawComponentAndChildren(component);
+                    DrawComponent(component);
                 }
             }
+        }
 
+        public void DrawApps()
+        {
             // Draw apps
             for (int i = 0; i < Applications.Count; i++)
             {
@@ -199,8 +239,10 @@ namespace Aura_OS
                     }
                 }
             }
+        }
 
-            // Draw context menu
+        public void DrawContextMenu()
+        {
             RightClick contextMenu = Explorer.WindowManager.ContextMenu;
             if (contextMenu != null && contextMenu.Opened)
             {
@@ -208,30 +250,9 @@ namespace Aura_OS
                 Explorer.WindowManager.ContextMenu.Draw();
                 _screen.DrawImage(contextMenu.GetBuffer(), contextMenu.X, contextMenu.Y);
             }
-
-            if (Kernel.GuiDebug)
-            {
-                // Draw clip rects
-                for (int i = 0; i < Explorer.WindowManager.ClipRects.Count; i++)
-                {
-                    var tempRect = Explorer.WindowManager.ClipRects[i];
-                    DrawRect(tempRect.Left, tempRect.Top,
-                             tempRect.Right - tempRect.Left + 1,
-                             tempRect.Bottom - tempRect.Top + 1, green);
-                }
-
-                // Draw click rects
-                for (int i = 0; i < Explorer.WindowManager.ClickRects.Count; i++)
-                {
-                    var tempRect = Explorer.WindowManager.ClickRects[i];
-                    DrawRect(tempRect.Left, tempRect.Top,
-                             tempRect.Right - tempRect.Left + 1,
-                             tempRect.Bottom - tempRect.Top + 1, red);
-                }
-            }  
         }
 
-        public void DrawComponentAndChildren(Component component)
+        public void DrawComponent(Component component)
         {
             if (component is Window)
             {
@@ -246,9 +267,6 @@ namespace Aura_OS
                 _screen.DrawImage(component.GetBuffer(), component.X, component.Y);
             }
         }
-
-        private int green = Color.Green.ToArgb();
-        private int red = Color.Red.ToArgb();
 
         public void DrawRect(int x, int y, int width, int height, int color)
         {
