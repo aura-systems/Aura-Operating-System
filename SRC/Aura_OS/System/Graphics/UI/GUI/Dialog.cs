@@ -41,11 +41,6 @@ namespace Aura_OS.System.Graphics.UI.GUI
             }
         }
 
-        public List<Button> GetButtons()
-        {
-            return _buttons;
-        }
-
         public void AddButton(string buttonText, Action onClickAction)
         {
             int buttonY = 80;

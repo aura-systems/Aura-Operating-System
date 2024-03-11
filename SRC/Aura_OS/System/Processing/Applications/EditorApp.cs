@@ -90,12 +90,6 @@ namespace Aura_OS.System.Processing.Applications
             {
                 _save.HandleLeftClick();
             }
-
-            List<Button> buttons = _dialog.GetButtons();
-            if (buttons[0].IsInside((int)Cosmos.System.MouseManager.X, (int)Cosmos.System.MouseManager.Y))
-            {
-                buttons[0].Click();
-            }
         }
 
         public override void Draw()

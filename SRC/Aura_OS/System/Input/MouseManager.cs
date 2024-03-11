@@ -254,14 +254,16 @@ namespace Aura_OS.System.Input
                     }
                 }
 
-                foreach (var child in component.Children)
+                for (int i = 0; i < component.Children.Count; i++)
                 {
+                    Component child = component.Children[i];
                     CheckComponent(child);
                 }
             }
 
-            foreach (var component in Component.Components)
+            for (int i = 0; i < Component.Components.Count; i++)
             {
+                Component component = Component.Components[i];
                 CheckComponent(component);
             }
 

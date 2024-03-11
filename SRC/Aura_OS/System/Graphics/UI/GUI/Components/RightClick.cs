@@ -17,6 +17,7 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
         {
             TextAlignStyle = TextAlign.Left;
             _rightclick = rightclick;
+            Visible = false;
         }
 
         public override void HandleLeftClick()
@@ -42,6 +43,11 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
             {
                 Visible = value;
                 _opened = value;
+
+                foreach (var entry in Entries)
+                {
+                    entry.Visible = value;
+                }
             }
         }
 
