@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using Aura_OS.Processing;
 using Aura_OS.System.Graphics.UI.GUI;
+using Aura_OS.System.Processing.Processes;
 
 namespace Aura_OS.System.Processing.Interpreter.Commands.Util
 {
@@ -44,10 +45,12 @@ namespace Aura_OS.System.Processing.Interpreter.Commands.Util
                         {
                             Application application = process as Application;
                             application.Window.Visible = false;
+                            Explorer.WindowManager.Applications.Remove(application);
                         }
 
                         Kernel.ProcessManager.Stop(process);
                         Kernel.ProcessManager.Unregister(process);
+                        Explorer.Taskbar.UpdateApplicationButtons();
 
                         Console.WriteLine("Process " + process.Name + " (pid " + pid + ") killed.");
 
