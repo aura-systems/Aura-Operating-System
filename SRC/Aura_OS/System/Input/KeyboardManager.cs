@@ -7,31 +7,41 @@
 using System.Collections.Generic;
 using Cosmos.System;
 using Aura_OS.System.Processing.Processes;
+using Aura_OS.Processing;
 
 namespace Aura_OS.System.Input
 {
     /// <summary>
     /// Manages keyboard for AuraOS. 
     /// </summary>
-    public class KeyboardManager : IManager
+    public class KeyboardManager : Process, IManager
     {
         private static Queue<KeyEvent> keyEvents = new Queue<KeyEvent>();
+
+        public KeyboardManager() : base(nameof(KeyboardManager), ProcessType.KernelComponent)
+        {
+        }
 
         /// <summary>
         /// Initializes the keyboard manager.
         /// </summary>
-        public void Initialize()
+        public override void Initialize()
         {
+            base.Initialize();
+
             CustomConsole.WriteLineInfo("Starting keyboard manager...");
 
             CustomConsole.WriteLineInfo("Starting keyboard...");
             Cosmos.System.KeyboardManager.SetKeyLayout(new Cosmos.System.ScanMaps.USStandardLayout());
+
+            Kernel.ProcessManager.Register(this);
+            Kernel.ProcessManager.Start(this);
         }
 
         /// <summary>
         /// Updates the state of the keyboard, processing keys.
         /// </summary>
-        public void Update()
+        public override void Update()
         {
             KeyEvent keyEvent;
             while (Cosmos.System.KeyboardManager.TryReadKey(out keyEvent))
@@ -77,7 +87,7 @@ namespace Aura_OS.System.Input
         /// <returns>The name of the manager.</returns>
         public string GetName()
         {
-            return "Keyboard Manager";
+            return nameof(KeyboardManager);
         }
     }
 }

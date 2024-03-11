@@ -234,8 +234,6 @@ namespace Aura_OS
                 }
 
                 ProcessManager.Update();
-                MouseManager.Update();
-                KeyboardManager.Update();
 
                 Explorer.Screen.DrawString("Aura Operating System [" + Version + "." + Revision + "]", font, WhiteColor.ToArgb(), 2, 0);
                 Explorer.Screen.DrawString("fps=" + _fps, font, WhiteColor.ToArgb(), 2, font.Height);

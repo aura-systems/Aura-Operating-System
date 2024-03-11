@@ -4,6 +4,7 @@
 * PROGRAMMERS:      Valentin Charbonnier <valentinbreiz@gmail.com>
 */
 
+using Aura_OS.Processing;
 using Aura_OS.System.Graphics.UI.GUI.Components;
 using Aura_OS.System.Processing.Processes;
 using Cosmos.System;
@@ -23,7 +24,7 @@ namespace Aura_OS.System.Input
     /// <summary>
     /// Manages mouse and cursor position for AuraOS. 
     /// </summary>
-    public class MouseManager : IManager
+    public class MouseManager : Process, IManager
     {
         /// <summary>
         /// Represents the top component currently under the mouse cursor.
@@ -77,11 +78,17 @@ namespace Aura_OS.System.Input
         private Bitmap _cursorResizeVertical;
         private Bitmap _cursorGrap;
 
+        public MouseManager() : base(nameof(MouseManager), ProcessType.KernelComponent)
+        {
+        }
+
         /// <summary>
         /// Initializes the mouse manager and prepares buttons states.
         /// </summary>
-        public void Initialize()
+        public override void Initialize()
         {
+            base.Initialize();
+
             CustomConsole.WriteLineInfo("Starting mouse manager...");
 
             _lastLeftClickTime = DateTime.MinValue;
@@ -101,12 +108,15 @@ namespace Aura_OS.System.Input
             _cursorResizeHorizontal = Kernel.ResourceManager.GetIcon("00-resize-horizontal.bmp");
             _cursorResizeVertical = Kernel.ResourceManager.GetIcon("00-resize-vertical.bmp");
             _cursorGrap = Kernel.ResourceManager.GetIcon("00-grab.bmp");
+
+            Kernel.ProcessManager.Register(this);
+            Kernel.ProcessManager.Start(this);
         }
 
         /// <summary>
         /// Updates the state of the mouse, processing clicks, double clicks, and scrolling.
         /// </summary>
-        public void Update()
+        public override void Update()
         {
             if (Cosmos.System.MouseManager.MouseState == MouseState.Left)
             {
@@ -297,7 +307,7 @@ namespace Aura_OS.System.Input
         /// <returns>The name of the manager.</returns>
         public string GetName()
         {
-            return "Mouse Manager";
+            return nameof(MouseManager);
         }
     }
 }
