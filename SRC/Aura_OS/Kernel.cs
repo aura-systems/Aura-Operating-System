@@ -123,6 +123,7 @@ namespace Aura_OS
 
         public static int FreeCount = 0;
 
+        private static int _frameCount = 0;
         private static int _frames = 0;
         private static int _fps = 0;
         private static int _deltaT = 0;
@@ -225,8 +226,13 @@ namespace Aura_OS
                 }
 
                 _frames++;
+                _frameCount++;
 
-                FreeCount = Heap.Collect();
+                if (_frameCount == 2)
+                {
+                    FreeCount = Heap.Collect();
+                    _frameCount = 0;
+                }
 
                 ProcessManager.Update();
                 MouseManager.Update();
