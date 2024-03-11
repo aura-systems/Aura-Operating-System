@@ -10,6 +10,7 @@ using Cosmos.System.Graphics;
 using Cosmos.System.Graphics.Fonts;
 using System.Drawing;
 using System.Runtime.InteropServices;
+using System.Xml.Linq;
 
 namespace Aura_OS.System.Graphics.UI.GUI.Components
 {
@@ -123,6 +124,17 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
                     Minimize.Draw(this);
                 }
             }
+        }
+
+        public override void Resize(int width, int height)
+        {
+            base.Resize(width, height);
+            TopBar.Dispose();
+            TopBar = new Panel(Color.Transparent, 3, 3, Width - 5, 18);
+            TopBar.Background = false;
+            TopBar.Borders = false;
+            TopBar.Text = Name;
+            AddChild(TopBar);
         }
     }
 }
