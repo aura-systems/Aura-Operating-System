@@ -84,7 +84,7 @@ public class RegionListBuilder
 
         foreach (NanoXMLNode element in frameElement.SubNodes)
         {
-            CustomConsole.WriteLineInfo(element.Name);
+            // CustomConsole.WriteLineInfo(element.Name);
 
             if (element.Name == "region")
             {
@@ -114,7 +114,7 @@ public class RegionListBuilder
 
                 regions.Add(region);
 
-                CustomConsole.WriteLineInfo("Left=" + region.SourceRegion.Left + " Top=" + region.SourceRegion.Top + " Right=" + region.SourceRegion.Right + " Bottom=" + region.SourceRegion.Bottom);
+                // .WriteLineInfo("Left=" + region.SourceRegion.Left + " Top=" + region.SourceRegion.Top + " Right=" + region.SourceRegion.Right + " Bottom=" + region.SourceRegion.Bottom);
             }
         }
 

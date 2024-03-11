@@ -67,8 +67,6 @@ namespace Aura_OS.System.Graphics.UI.GUI.Skin
                         bmpPath = Files.IsoVolume + "UI\\Themes\\" + _skinName + ".bmp";
                     }
 
-                    CustomConsole.WriteLineInfo("Loading bitmap: " + bmpPath);
-
                     try
                     {
                         Bitmap bitmap = new Bitmap(File.ReadAllBytes(bmpPath));
