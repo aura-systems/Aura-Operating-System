@@ -226,10 +226,7 @@ namespace Aura_OS
 
                 _frames++;
 
-                if (_frames % 50 == 0)
-                {
-                    FreeCount = Heap.Collect();
-                }
+                FreeCount = Heap.Collect();
 
                 ProcessManager.Update();
                 MouseManager.Update();
