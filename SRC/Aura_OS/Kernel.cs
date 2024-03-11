@@ -227,7 +227,7 @@ namespace Aura_OS
                 _frames++;
                 _frameCount++;
 
-                if (_frameCount == 2)
+                if (_frameCount == 4)
                 {
                     FreeCount = Heap.Collect();
                     _frameCount = 0;

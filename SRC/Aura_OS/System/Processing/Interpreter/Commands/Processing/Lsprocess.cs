@@ -27,17 +27,21 @@ namespace Aura_OS.System.Processing.Interpreter.Commands.Util
         /// </summary>
         public override ReturnInfo Execute()
         {
-            Console.WriteLine("ID      TYPE    STATE    NAME");
+            StringBuilder sb = new StringBuilder();
+
+            sb.AppendLine("ID      TYPE    STATE    NAME");
 
             for (int i = 0; i < Kernel.ProcessManager.Processes.Count; i++)
             {
-                Console.Write(Kernel.ProcessManager.Processes[i].ID.ToString().PadRight(8, ' '));
-                Console.Write(((int)Kernel.ProcessManager.Processes[i].Type).ToString().PadRight(8, ' '));
-                Console.Write((Kernel.ProcessManager.Processes[i].Running ? 1 : 0).ToString().PadRight(9, ' '));
-                Console.Write(Kernel.ProcessManager.Processes[i].Name.ToString().PadRight(24, ' '));
+                sb.Append(Kernel.ProcessManager.Processes[i].ID.ToString().PadRight(8, ' '));
+                sb.Append(((int)Kernel.ProcessManager.Processes[i].Type).ToString().PadRight(8, ' '));
+                sb.Append((Kernel.ProcessManager.Processes[i].Running ? 1 : 0).ToString().PadRight(9, ' '));
+                sb.Append(Kernel.ProcessManager.Processes[i].Name.ToString().PadRight(24, ' '));
 
-                Console.WriteLine();
+                sb.AppendLine();
             }
+
+            Console.WriteLine(sb.ToString());
 
             return new ReturnInfo(this, ReturnCode.OK);
         }
