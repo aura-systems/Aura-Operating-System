@@ -4,13 +4,9 @@
 * PROGRAMMERS:      Valentin Charbonnier <valentinbreiz@gmail.com>
 */
 
-using Aura_OS.System.Graphics.UI.GUI.Skin;
-using Cosmos.System;
-using Cosmos.System.Graphics;
-using Cosmos.System.Graphics.Fonts;
 using System.Drawing;
-using System.Runtime.InteropServices;
-using System.Xml.Linq;
+using Cosmos.System.Graphics;
+using Aura_OS.System.Graphics.UI.GUI.Skin;
 
 namespace Aura_OS.System.Graphics.UI.GUI.Components
 {

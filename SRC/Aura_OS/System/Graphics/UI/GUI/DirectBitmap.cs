@@ -388,7 +388,7 @@ namespace Aura_OS.System.Graphics.UI.GUI
                 return;
             }
 
-            if (y + image.Height > Bitmap.Height || y < 0)
+            if ((y + image.Height > Bitmap.Height || y < 0) && (x + image.Width < Bitmap.Width || x > 0))
             {
                 return;
             }
