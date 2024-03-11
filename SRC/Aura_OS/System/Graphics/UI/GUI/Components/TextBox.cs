@@ -18,7 +18,7 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
         private bool _isSelected = false;
         private bool _cursorVisible = true;
         private DateTime _lastCursorBlink = DateTime.Now;
-        private const int _cursorBlinkInterval = 1;
+        private const int _cursorBlinkInterval = 400;
 
         public TextBox(int x, int y, int width, int height, string text = "") : base(x, y, width, height)
         {
@@ -94,7 +94,7 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
                     }
                 }
 
-                if ((DateTime.Now - _lastCursorBlink).Seconds > _cursorBlinkInterval)
+                if ((DateTime.Now - _lastCursorBlink).TotalMilliseconds > _cursorBlinkInterval)
                 {
                     _cursorVisible = !_cursorVisible;
                     _lastCursorBlink = DateTime.Now;
