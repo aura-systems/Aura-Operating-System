@@ -351,9 +351,9 @@ namespace Aura_OS.System.Graphics.UI.GUI
             }
         }
 
-        public DirectBitmap ExtractImage(int srcX, int srcY, int width, int height)
+        public Bitmap ExtractImage(int srcX, int srcY, int width, int height)
         {
-            DirectBitmap bmp = new(width, height);
+            Bitmap bmp = new((uint)width, (uint)height, ColorDepth.ColorDepth32);
 
             for (int yi = 0; yi < height; yi++)
             {
@@ -361,7 +361,7 @@ namespace Aura_OS.System.Graphics.UI.GUI
                 int srcOffset = ((srcY + yi) * (int)Bitmap.Width + srcX);
                 int count = width;
 
-                MemoryOperations.Copy(bmp.Bitmap.RawData, destOffset, Bitmap.RawData, srcOffset, count);
+                MemoryOperations.Copy(bmp.RawData, destOffset, Bitmap.RawData, srcOffset, count);
             }
 
             return bmp;
@@ -393,10 +393,10 @@ namespace Aura_OS.System.Graphics.UI.GUI
                 return;
             }
 
-            DirectBitmap tmp = ExtractImage(x, y, (int)image.Width, (int)image.Height);
+            Bitmap tmp = ExtractImage(x, y, (int)image.Width, (int)image.Height);
             if (tmp.Width == 0) return;
 
-            fixed (int* bgBitmap = tmp.Bitmap.RawData)
+            fixed (int* bgBitmap = tmp.RawData)
             fixed (int* fgBitmap = image.RawData)
             {
                 if (alpha < 0xFF)
@@ -408,7 +408,7 @@ namespace Aura_OS.System.Graphics.UI.GUI
                 AlphaBlendSSE((uint*)bgBitmap, (int)image.Width * 4, (uint*)fgBitmap, (int)image.Width * 4, (int)image.Width, (int)image.Height);
             }
 
-            DrawImage(tmp.Bitmap, x, y);
+            DrawImage(tmp, x, y);
         }
 
         public void DrawImageStretchAlpha(Bitmap image, Rectangle sourceRect, Rectangle destRect)
