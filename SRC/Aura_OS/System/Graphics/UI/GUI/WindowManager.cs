@@ -121,16 +121,16 @@ namespace Aura_OS
                             Rectangle.AddClipRect(component.GetRectangle());
                         }
                     }
-                }
 
-                if (Kernel.GuiDebug)
-                {
-                    if (component is Button)
+                    if (Kernel.GuiDebug)
                     {
-                        Button button = component as Button;
-                        if (button.Click != null)
+                        if (component is Button)
                         {
-                            ClickRects.Add(component.GetRectangle());
+                            Button button = component as Button;
+                            if (button.Click != null)
+                            {
+                                ClickRects.Add(component.GetRectangle());
+                            }
                         }
                     }
                 }
@@ -139,36 +139,39 @@ namespace Aura_OS
                 {
                     Component child = component.Children[j];
 
-                    if (child.Visible && (child.IsDirty() || child.ForceDirty))
+                    if (child.Visible)
                     {
-                        child.Draw(child.Parent);
-                        child.MarkCleaned();
-
-                        if (Kernel.GuiDebug)
+                        if (child.IsDirty() || child.ForceDirty)
                         {
-                            Rectangle childRect = child.GetRectangle();
-                            Rectangle parentRect = child.Parent.GetRectangle();
-                            int top = parentRect.Top + childRect.Top;
-                            int left = parentRect.Left + childRect.Left;
-                            Rectangle realRect = new Rectangle(top, left, childRect.Height + top, childRect.Width + left);
-                            Rectangle.AddClipRect(realRect);
-                        }
-                    }
+                            child.Draw(child.Parent);
+                            child.MarkCleaned();
 
-                    if (Kernel.GuiDebug)
-                    {
-                        if (child.Visible && child is Button)
-                        {
-                            Button button = child as Button;
-                            if (button.Click != null)
+                            if (Kernel.GuiDebug)
                             {
                                 Rectangle childRect = child.GetRectangle();
                                 Rectangle parentRect = child.Parent.GetRectangle();
                                 int top = parentRect.Top + childRect.Top;
                                 int left = parentRect.Left + childRect.Left;
                                 Rectangle realRect = new Rectangle(top, left, childRect.Height + top, childRect.Width + left);
+                                Rectangle.AddClipRect(realRect);
+                            }
+                        }
 
-                                ClickRects.Add(realRect);
+                        if (Kernel.GuiDebug)
+                        {
+                            if (child is Button)
+                            {
+                                Button button = child as Button;
+                                if (button.Click != null)
+                                {
+                                    Rectangle childRect = child.GetRectangle();
+                                    Rectangle parentRect = child.Parent.GetRectangle();
+                                    int top = parentRect.Top + childRect.Top;
+                                    int left = parentRect.Left + childRect.Left;
+                                    Rectangle realRect = new Rectangle(top, left, childRect.Height + top, childRect.Width + left);
+
+                                    ClickRects.Add(realRect);
+                                }
                             }
                         }
                     }

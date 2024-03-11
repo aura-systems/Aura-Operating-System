@@ -48,7 +48,6 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
         public RightClick(int x, int y, int width, int height) : base(x, y, width, height)
         {
             Frame = Kernel.ThemeManager.GetFrame("window.borderless");
-
             Visible = false;
             HasBorders = false;
             Entries = new List<RightClickEntry>();
