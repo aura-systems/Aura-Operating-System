@@ -24,6 +24,8 @@ namespace Aura_OS.Processing
         /// </summary>
         public List<Process> Processes;
 
+        private uint nextProcessId = 0;
+
         /// <summary>
         /// Initializes the process manager, preparing it to manage processes.
         /// </summary>
@@ -32,6 +34,7 @@ namespace Aura_OS.Processing
             CustomConsole.WriteLineInfo("Starting process manager...");
 
             Processes = new List<Process>();
+            nextProcessId = 0;
         }
 
         /// <summary>
@@ -41,14 +44,13 @@ namespace Aura_OS.Processing
         /// <returns>True if the process was successfully registered; false if the process is already registered.</returns>
         public bool Register(Process process)
         {
-            for (int i = 0; i < Processes.Count; i++)
+            if (!Processes.Contains(process))
             {
-                if (Processes[i] == process) { return false; }
+                Processes.Add(process);
+                process.SetID(nextProcessId++);
+                return true;
             }
-
-            Processes.Add(process);
-            Processes[Processes.Count - 1].SetID((uint)(Processes.Count - 1));
-            return true;
+            return false;
         }
 
         /// <summary>
@@ -58,17 +60,7 @@ namespace Aura_OS.Processing
         /// <returns>True if the process was successfully unregistered; false if the process does not exist.</returns>
         public bool Unregister(Process process)
         {
-            for (int i = 0; i < Processes.Count; i++)
-            {
-                if (Processes[i] == process)
-                {
-                    Processes.Remove(process);
-
-                    return true;
-                }
-            }
-
-            return false;
+            return Processes.Remove(process);
         }
 
         /// <summary>
