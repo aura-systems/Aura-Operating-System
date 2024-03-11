@@ -66,24 +66,31 @@ namespace Aura_OS.System.Processing.Interpreter.Commands.SystemInfomation
 
                 int versionComparisonResult = CompareVersions(Kernel.Version, latestVersion);
 
-                if (versionComparisonResult > 0)
+                if (string.IsNullOrEmpty(Kernel.Version) || string.IsNullOrEmpty(latestVersion) || string.IsNullOrEmpty(Kernel.Revision) || string.IsNullOrEmpty(latestRevision))
                 {
-                    Console.WriteLine("Aura [version " + Kernel.Version + "-" + Kernel.Revision + "], you are on a dev version (last release is " + latestVersion + "-" + latestRevision + ").");
-                }
-                else if (versionComparisonResult < 0)
-                {
-                    Console.WriteLine("Aura [version " + Kernel.Version + "-" + Kernel.Revision + "], your version is outdated (last release is " + latestVersion + "-" + latestRevision + ").");
+                    Console.WriteLine("Aura [version " + Kernel.Version + "-" + Kernel.Revision + "]");
                 }
                 else
                 {
-                    int revisionComparisonResult = string.Compare(Kernel.Revision, latestRevision);
-                    if (revisionComparisonResult < 0)
+                    if (versionComparisonResult > 0)
+                    {
+                        Console.WriteLine("Aura [version " + Kernel.Version + "-" + Kernel.Revision + "], you are on a dev version (last release is " + latestVersion + "-" + latestRevision + ").");
+                    }
+                    else if (versionComparisonResult < 0)
                     {
                         Console.WriteLine("Aura [version " + Kernel.Version + "-" + Kernel.Revision + "], your version is outdated (last release is " + latestVersion + "-" + latestRevision + ").");
                     }
                     else
                     {
-                        Console.WriteLine("Aura [version " + Kernel.Version + "-" + Kernel.Revision + "], you are up to date.");
+                        int revisionComparisonResult = string.Compare(Kernel.Revision, latestRevision);
+                        if (revisionComparisonResult < 0)
+                        {
+                            Console.WriteLine("Aura [version " + Kernel.Version + "-" + Kernel.Revision + "], your version is outdated (last release is " + latestVersion + "-" + latestRevision + ").");
+                        }
+                        else
+                        {
+                            Console.WriteLine("Aura [version " + Kernel.Version + "-" + Kernel.Revision + "], you are up to date.");
+                        }
                     }
                 }
             }
@@ -100,8 +107,8 @@ namespace Aura_OS.System.Processing.Interpreter.Commands.SystemInfomation
 
         int CompareVersions(string version1, string version2)
         {
-            var version1Parts = version1.Split('.').Select(int.Parse).ToArray();
-            var version2Parts = version2.Split('.').Select(int.Parse).ToArray();
+            var version1Parts = version1.Split('.').Select(v => int.TryParse(v, out int val) ? val : 0).ToArray();
+            var version2Parts = version2.Split('.').Select(v => int.TryParse(v, out int val) ? val : 0).ToArray();
 
             for (int i = 0; i < Math.Min(version1Parts.Length, version2Parts.Length); i++)
             {

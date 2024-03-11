@@ -170,10 +170,10 @@ namespace Aura_OS.System.Processing
 
                 if (width < bitmap.Width)
                 {
-                    width = (int)bitmap.Width + 1;
+                    width = (int)bitmap.Width + 6;
                 }
 
-                var app = new PictureApp(name, bitmap, width, (int)bitmap.Height + 20);
+                var app = new PictureApp(name, bitmap, width, (int)bitmap.Height + 26, 40, 40);
                 app.Initialize();
                 app.MarkFocused();
                 app.Visible = true;

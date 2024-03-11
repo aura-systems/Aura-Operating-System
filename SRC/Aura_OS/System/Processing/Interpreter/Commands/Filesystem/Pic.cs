@@ -5,12 +5,12 @@
 *                   Valentin Charbonnier <valentinbreiz@gmail.com>
 */
 
-using Aura_OS.System.Processing.Applications;
-using Aura_OS.System.Processing.Processes;
-using Cosmos.System.Graphics;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using Cosmos.System.Graphics;
+using Aura_OS.System.Processing.Applications;
+using Aura_OS.System.Processing.Processes;
 
 namespace Aura_OS.System.Processing.Interpreter.Commands.Filesystem
 {
@@ -21,7 +21,7 @@ namespace Aura_OS.System.Processing.Interpreter.Commands.Filesystem
         /// </summary>
         public CommandPicture(string[] commandvalues) : base(commandvalues, CommandType.Filesystem)
         {
-            Description = "to display a bitmap in a new window.";
+            Description = "to display a bitmap in a new window";
         }
 
         public override ReturnInfo Execute(List<string> arguments)
@@ -41,10 +41,10 @@ namespace Aura_OS.System.Processing.Interpreter.Commands.Filesystem
 
                 if (width < bitmap.Width)
                 {
-                    width = (int)bitmap.Width + 1;
+                    width = (int)bitmap.Width + 6;
                 }
 
-                var app = new PictureApp(name, bitmap, width, (int)bitmap.Height + 20);
+                var app = new PictureApp(name, bitmap, width, (int)bitmap.Height + 26, 40, 40);
                 app.MarkFocused();
                 app.Initialize();
                 app.Visible = true;
@@ -67,7 +67,7 @@ namespace Aura_OS.System.Processing.Interpreter.Commands.Filesystem
         public override void PrintHelp()
         {
             Console.WriteLine("Usage:");
-            Console.WriteLine(" - cp {source_file/directory} {destination_file/directory}");
+            Console.WriteLine(" - pic {source_file}");
         }
     }
 }
