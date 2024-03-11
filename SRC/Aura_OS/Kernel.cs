@@ -9,7 +9,6 @@ using System.Collections.Generic;
 using System.Text;
 using System.Drawing;
 using System.IO;
-using Sys = Cosmos.System;
 using Cosmos.Core.Memory;
 using Cosmos.HAL;
 using Cosmos.System;
@@ -37,7 +36,7 @@ namespace Aura_OS
         public static bool Running = false;
         public static bool LoggedIn = true;
         public static bool Installed = false;
-        public static string Version = "0.7.3";
+        public static string Version = "0.7.4";
         public static string Revision = VersionInfo.revision;
         public static string langSelected = "en_US";
         public static string BootTime = "01/01/1970";
