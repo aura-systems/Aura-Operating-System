@@ -19,6 +19,7 @@ using Aura_OS.System.Processing.Interpreter.Commands.Graphics;
 using Aura_OS.System.Processing.Interpreter.Commands.Processing;
 using Cosmos.System.Network;
 using Aura_OS.System.Graphics.UI.GUI;
+using System.Text;
 
 namespace Aura_OS.System.Processing.Interpreter.Commands
 {
@@ -72,6 +73,7 @@ namespace Aura_OS.System.Processing.Interpreter.Commands
             //_commands.Add(new CommandCrash(new string[] { "crash" }));
 
             _commands.Add(new CommandLsprocess(new string[] { "lsprocess" }));
+            _commands.Add(new CommandKill(new string[] { "kill", "kil", "k" }));
 
             _commands.Add(new CommandVol(new string[] { "vol" }));
             _commands.Add(new CommandDir(new string[] { "dir", "ls", "l" }));
@@ -113,6 +115,8 @@ namespace Aura_OS.System.Processing.Interpreter.Commands
             }));
             _commands.Add(new CommandAction(new string[] { "components" }, () =>
             {
+                StringBuilder stringBuilder = new StringBuilder();
+
                 for (int i = 0; i < System.Graphics.UI.GUI.Components.Component.Components.Count; i++)
                 {
                     var component = System.Graphics.UI.GUI.Components.Component.Components[i];
@@ -128,8 +132,10 @@ namespace Aura_OS.System.Processing.Interpreter.Commands
                         text += $" Name:{window.Name}";
                     }
 
-                    Console.WriteLine(text);
+                    stringBuilder.AppendLine(text);
                 }
+
+                Console.WriteLine(stringBuilder.ToString());
             }));
 
         }

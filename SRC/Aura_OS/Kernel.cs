@@ -183,14 +183,14 @@ namespace Aura_OS
             ApplicationManager = new ApplicationManager();
             ApplicationManager.Initialize();
 
+            Explorer = new Explorer();
+            Explorer.Initialize();
+
             MouseManager = new System.Input.MouseManager();
             MouseManager.Initialize();
 
             KeyboardManager = new System.Input.KeyboardManager();
             KeyboardManager.Initialize();
-
-            Explorer = new Explorer();
-            Explorer.Initialize();
 
             //Load Localization
             CustomConsole.WriteLineInfo("Initializing localization...");

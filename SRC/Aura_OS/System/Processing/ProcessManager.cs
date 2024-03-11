@@ -52,6 +52,26 @@ namespace Aura_OS.Processing
         }
 
         /// <summary>
+        /// Unregisters a process with the process manager.
+        /// </summary>
+        /// <param name="process">The process to unregister.</param>
+        /// <returns>True if the process was successfully unregistered; false if the process does not exist.</returns>
+        public bool Unregister(Process process)
+        {
+            for (int i = 0; i < Processes.Count; i++)
+            {
+                if (Processes[i] == process)
+                {
+                    Processes.Remove(process);
+
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        /// <summary>
         /// Starts a registered process.
         /// </summary>
         /// <param name="process">The process to start.</param>
@@ -86,7 +106,10 @@ namespace Aura_OS.Processing
         {
             for (int i = 0; i < Processes.Count; i++)
             {
-                Processes[i].Update();
+                if (Processes[i].Running)
+                {
+                    Processes[i].Update();
+                }
             }
         }
 
