@@ -25,21 +25,25 @@ namespace Aura_OS.System.Graphics.UI.GUI
 
         public LoginScreen(int x, int y, int width, int height) : base(x, y, width, height)
         {
-            ForceDirty = true;
-
             _username = new TextBox(3, 3, 200, 23, "");
             _username.X = Width / 2 - _username.Width / 2;
             _username.Y = Height / 2 - _username.Height / 2 + 20;
 
+            AddChild(_username);
+
             _password = new TextBox(3, 3, 200, 23, "");
             _password.X = _username.X;
             _password.Y = _username.Y + 23 + 6;
+
+            AddChild(_password);
 
             _button = new Button("Login", _password.X, _password.Y + 23 + 6, 200, 23);
             _button.Click = new Action(() => {
             _username.Draw(this);
                 Login(_username.Text, _password.Text);
             });
+
+            AddChild(_button);
         }
 
         public override void Update()
@@ -132,6 +136,7 @@ namespace Aura_OS.System.Graphics.UI.GUI
             else
             {
                 _error = "User not found or password incorrect.";
+                MarkDirty();
                 return false;
             }
         }
