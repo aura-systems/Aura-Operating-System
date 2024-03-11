@@ -28,6 +28,8 @@ namespace Aura_OS.System.Processing.Interpreter.Commands.SystemInfomation
         /// </summary>
         public override ReturnInfo Execute()
         {
+            bool isOutdated = false;
+
             Console.ForegroundColor = ConsoleColor.White;
 
             if (NetworkStack.ConfigEmpty())
@@ -36,35 +38,9 @@ namespace Aura_OS.System.Processing.Interpreter.Commands.SystemInfomation
             }
             else
             {
-                string json = Http.DownloadFile("http://aura.valentin.bzh/os.json");
+                (string latestVersion, string latestRevision, string latestReleaseUrl) = System.Network.Version.GetLastVersionInfo();
 
-                JsonReader rdr = new(json);
-                rdr.ReadObjectStart();
-
-                string latestVersion = null;
-                string latestRevision = null;
-
-                while (rdr.NextProperty())
-                {
-                    var charSegment = rdr.ReadPropertyName();
-                    string propertyName = new string(charSegment.Array, charSegment.Offset, charSegment.Count);
-
-                    if (propertyName.Equals("last-version"))
-                    {
-                        var latestVersionCharSegment = rdr.ReadString();
-                        latestVersion = new string(latestVersionCharSegment.Array, latestVersionCharSegment.Offset, latestVersionCharSegment.Count);
-                    }
-                    else if (propertyName.Equals("last-revision"))
-                    {
-
-                        var latestRevisionCharSegment = rdr.ReadString();
-                        latestRevision = new string(latestRevisionCharSegment.Array, latestRevisionCharSegment.Offset, latestRevisionCharSegment.Count);
-                    }
-                }
-
-                rdr.ReadEof();
-
-                int versionComparisonResult = CompareVersions(Kernel.Version, latestVersion);
+                int versionComparisonResult = System.Network.Version.CompareVersions(Kernel.Version, latestVersion);
 
                 if (string.IsNullOrEmpty(Kernel.Version) || string.IsNullOrEmpty(latestVersion) || string.IsNullOrEmpty(Kernel.Revision) || string.IsNullOrEmpty(latestRevision))
                 {
@@ -79,19 +55,34 @@ namespace Aura_OS.System.Processing.Interpreter.Commands.SystemInfomation
                     else if (versionComparisonResult < 0)
                     {
                         Console.WriteLine("Aura [version " + Kernel.Version + "-" + Kernel.Revision + "], your version is outdated (last release is " + latestVersion + "-" + latestRevision + ").");
+                        isOutdated = true;
                     }
                     else
                     {
-                        int revisionComparisonResult = string.Compare(Kernel.Revision, latestRevision);
-                        if (revisionComparisonResult < 0)
+                        int revisionComparisonResult = System.Network.Version.CompareRevisions(Kernel.Revision, latestRevision);
+                        if (revisionComparisonResult > 0)
                         {
-                            Console.WriteLine("Aura [version " + Kernel.Version + "-" + Kernel.Revision + "], your version is outdated (last release is " + latestVersion + "-" + latestRevision + ").");
+                            Console.WriteLine("Aura [version " + Kernel.Version + "-" + Kernel.Revision + "], you are on a dev version (last release is " + latestVersion + "-" + latestRevision + ").");
+                        }
+                        else if (revisionComparisonResult < 0)
+                        {
+                            Console.WriteLine("Aura [version " + Kernel.Version + "-" + Kernel.Revision + "], your revision is outdated (last release is " + latestVersion + "-" + latestRevision + ").");
+                            isOutdated = true;
                         }
                         else
                         {
                             Console.WriteLine("Aura [version " + Kernel.Version + "-" + Kernel.Revision + "], you are up to date.");
                         }
                     }
+                }
+
+                if (isOutdated)
+                {
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    Console.WriteLine("Download last .iso at: " + latestReleaseUrl);
+                    Console.ForegroundColor = ConsoleColor.White;
+
+                    Console.WriteLine();
                 }
             }
 
@@ -103,22 +94,6 @@ namespace Aura_OS.System.Processing.Interpreter.Commands.SystemInfomation
             Console.ForegroundColor = ConsoleColor.White;
 
             return new ReturnInfo(this, ReturnCode.OK);
-        }
-
-        int CompareVersions(string version1, string version2)
-        {
-            var version1Parts = version1.Split('.').Select(v => int.TryParse(v, out int val) ? val : 0).ToArray();
-            var version2Parts = version2.Split('.').Select(v => int.TryParse(v, out int val) ? val : 0).ToArray();
-
-            for (int i = 0; i < Math.Min(version1Parts.Length, version2Parts.Length); i++)
-            {
-                if (version1Parts[i] > version2Parts[i])
-                    return 1;
-                if (version1Parts[i] < version2Parts[i])
-                    return -1;
-            }
-
-            return version1Parts.Length.CompareTo(version2Parts.Length);
         }
     }
 }
