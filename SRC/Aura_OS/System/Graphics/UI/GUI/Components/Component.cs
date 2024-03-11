@@ -29,19 +29,7 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
         {
             get
             {
-                int absoluteX = 0;
-                Component currentComponent = this;
-
-                while (currentComponent != null)
-                {
-                    absoluteX += currentComponent.X;
-
-                    if (currentComponent.IsRoot) break;
-
-                    currentComponent = currentComponent.Parent;
-                }
-
-                return absoluteX;
+                return _absoluteX;
             }
         }
 
@@ -49,19 +37,7 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
         {
             get
             {
-                int absoluteY = 0;
-                Component currentComponent = this;
-
-                while (currentComponent != null)
-                {
-                    absoluteY += currentComponent.Y;
-
-                    if (currentComponent.IsRoot) break;
-
-                    currentComponent = currentComponent.Parent;
-                }
-
-                return absoluteY;
+                return _absoluteY;
             }
         }
 
@@ -76,6 +52,8 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
                 int width = Width;
                 _rectangle.Left = value;
                 _rectangle.Right = value + width;
+
+                ComputeAbsoluteX();
             }
         }
 
@@ -90,6 +68,8 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
                 int height = Height;
                 _rectangle.Top = value;
                 _rectangle.Bottom = value + height;
+
+                ComputeAbsoluteY();
             }
         }
 
@@ -146,6 +126,9 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
         private Frame _normalFrame;
         private Frame _highlightedFrame;
         private Frame _pressedFrame;
+
+        private int _absoluteX;
+        private int _absoluteY;
 
         public Component(int x, int y, int width, int height)
         {
@@ -423,6 +406,7 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
             child.Parent = this;
             child.zIndex = zIndex + 1 + Children.Count;
             child.IsRoot = false;
+            child.ComputeAbsoluteCoordinates();
             Children.Add(child);
         }
 
@@ -447,6 +431,57 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
             return _buffer;
         }
 
+        public void ComputeAbsoluteCoordinates()
+        {
+            ComputeAbsoluteX();
+            ComputeAbsoluteY();
+        }
+
+        public void ComputeAbsoluteX()
+        {
+            int absoluteX = 0;
+            Component currentComponent = this;
+
+            while (currentComponent != null)
+            {
+                absoluteX += currentComponent.X;
+
+                if (currentComponent.IsRoot) break;
+
+                currentComponent = currentComponent.Parent;
+            }
+
+            _absoluteX = absoluteX;
+
+            for (int i = 0; i < Children.Count; i++)
+            {
+                Component child = Children[i];
+                child.ComputeAbsoluteX();
+            }
+        }
+
+        public void ComputeAbsoluteY()
+        {
+            int absoluteY = 0;
+            Component currentComponent = this;
+
+            while (currentComponent != null)
+            {
+                absoluteY += currentComponent.Y;
+
+                if (currentComponent.IsRoot) break;
+
+                currentComponent = currentComponent.Parent;
+            }
+
+            _absoluteY = absoluteY;
+
+            for (int i = 0; i < Children.Count; i++)
+            {
+                Component child = Children[i];
+                child.ComputeAbsoluteY();
+            }
+        }
 
         #region Draw
 
