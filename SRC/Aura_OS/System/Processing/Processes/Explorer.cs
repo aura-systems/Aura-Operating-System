@@ -121,8 +121,6 @@ namespace Aura_OS.System.Processing.Processes
 
                 WindowManager.DrawWindows();
 
-                Kernel.Canvas.DrawImage(Screen.Bitmap, 0, 0);
-
                 if (Kernel.MouseManager.IsLeftButtonDown)
                 {
                     if (!StartMenu.IsInside((int)MouseManager.X, (int)MouseManager.Y) && !Taskbar.StartButton.IsInside((int)MouseManager.X, (int)MouseManager.Y))
@@ -136,8 +134,6 @@ namespace Aura_OS.System.Processing.Processes
                 Login.Update();
 
                 WindowManager.DrawWindows();
-
-                Kernel.Canvas.DrawImage(Screen.Bitmap, 0, 0);
             }
         }
     }

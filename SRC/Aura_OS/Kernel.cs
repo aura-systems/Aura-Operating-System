@@ -97,8 +97,8 @@ namespace Aura_OS
 
         public static Canvas Canvas;
 
-        public static Color WhiteColor = Color.White;
-        public static Color BlackColor = Color.Black;
+        public static Color WhiteColor = Color.FromArgb(0xff, 0xff, 0xff, 0xff);
+        public static Color BlackColor = Color.FromArgb(0xff, 0x00, 0x00, 0x00);
         public static Color avgColPen = Color.PowderBlue;
 
         //WIN95 Colors
@@ -226,20 +226,24 @@ namespace Aura_OS
 
                 _frames++;
 
-                FreeCount = Heap.Collect();
+                if (_frames % 50 == 0)
+                {
+                    FreeCount = Heap.Collect();
+                }
 
                 ProcessManager.Update();
                 MouseManager.Update();
                 KeyboardManager.Update();
 
-                Canvas.DrawString("Aura Operating System [" + Version + "." + Revision + "]", font, WhiteColor, 2, 0);
-                Canvas.DrawString("fps=" + _fps, font, WhiteColor, 2, font.Height);
+                Explorer.Screen.DrawString("Aura Operating System [" + Version + "." + Revision + "]", font, WhiteColor.ToArgb(), 2, 0);
+                Explorer.Screen.DrawString("fps=" + _fps, font, WhiteColor.ToArgb(), 2, font.Height);
 
                 if (GuiDebug)
                 {
-                    Canvas.DrawString(Debug, font, WhiteColor, 2, font.Height * 2);
-                }  
+                    Explorer.Screen.DrawString(Debug, font, WhiteColor.ToArgb(), 2, font.Height * 2);
+                }
 
+                Canvas.DrawImage(Explorer.Screen.Bitmap, 0, 0);
                 Canvas.Display();
             }
             catch (Exception ex)

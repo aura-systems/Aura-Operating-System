@@ -5,6 +5,7 @@
 */
 
 using Aura_OS.System.Graphics.UI.GUI.Components;
+using Aura_OS.System.Processing.Processes;
 using Cosmos.System;
 using Cosmos.System.Graphics;
 using System;
@@ -274,19 +275,19 @@ namespace Aura_OS.System.Input
         {
             if (CursorState == CursorState.Normal)
             {
-                Kernel.Canvas.DrawImageAlpha(_cursorNormal, (int)x, (int)y);
+                Explorer.Screen.DrawImageAlpha(_cursorNormal, (int)x, (int)y);
             }
             else if (CursorState == CursorState.ResizeHorizontal)
             {
-                Kernel.Canvas.DrawImageAlpha(_cursorResizeHorizontal, (int)x - 23 / 2, (int)y);
+                Explorer.Screen.DrawImageAlpha(_cursorResizeHorizontal, (int)x - 23 / 2, (int)y);
             }
             else if (CursorState == CursorState.ResizeVertical)
             {
-                Kernel.Canvas.DrawImageAlpha(_cursorResizeVertical, (int)x, (int)y - 23 / 2);
+                Explorer.Screen.DrawImageAlpha(_cursorResizeVertical, (int)x, (int)y - 23 / 2);
             }
             else if (CursorState == CursorState.Grab)
             {
-                Kernel.Canvas.DrawImageAlpha(_cursorGrap, (int)x, (int)y);
+                Explorer.Screen.DrawImageAlpha(_cursorGrap, (int)x, (int)y);
             }
         }
 
