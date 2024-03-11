@@ -163,7 +163,7 @@ namespace Aura_OS.System.Graphics.UI.GUI
                 {
                     if (!_pressed)
                     {
-                        if (_rectangleLeft.IsInside(clickX, clickY))
+                        if (!WindowManager.WindowMoving && _rectangleLeft.IsInside(clickX, clickY))
                         {
                             if (!_lckResize)
                             {
@@ -174,7 +174,7 @@ namespace Aura_OS.System.Graphics.UI.GUI
                             _resizeWidthPressed = true;
                             _resizePressed = true;
                         }
-                        else if (_rectangleTop.IsInside(clickX, clickY))
+                        else if (!WindowManager.WindowMoving && _rectangleTop.IsInside(clickX, clickY))
                         {
                             if (!_lckResize)
                             {
