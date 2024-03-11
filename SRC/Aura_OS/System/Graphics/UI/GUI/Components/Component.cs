@@ -25,6 +25,46 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
     {
         public static List<Component> Components = new List<Component>();
 
+        public int AbsoluteX
+        {
+            get
+            {
+                int absoluteX = 0;
+                Component currentComponent = this;
+
+                while (currentComponent != null)
+                {
+                    absoluteX += currentComponent.X;
+
+                    if (currentComponent.IsRoot) break;
+
+                    currentComponent = currentComponent.Parent;
+                }
+
+                return absoluteX;
+            }
+        }
+
+        public int AbsoluteY
+        {
+            get
+            {
+                int absoluteY = 0;
+                Component currentComponent = this;
+
+                while (currentComponent != null)
+                {
+                    absoluteY += currentComponent.Y;
+
+                    if (currentComponent.IsRoot) break;
+
+                    currentComponent = currentComponent.Parent;
+                }
+
+                return absoluteY;
+            }
+        }
+
         public int X
         {
             get
@@ -309,21 +349,7 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
 
         public bool IsInside(int x, int y)
         {
-            int absoluteX = 0;
-            int absoluteY = 0;
-            Component currentComponent = this;
-
-            while (currentComponent != null)
-            {
-                absoluteX += currentComponent.X;
-                absoluteY += currentComponent.Y;
-
-                if (currentComponent.IsRoot) break;
-
-                currentComponent = currentComponent.Parent;
-            }
-
-            return x >= absoluteX && x <= absoluteX + Width && y >= absoluteY && y <= absoluteY + Height;
+            return x >= AbsoluteX && x <= AbsoluteX + Width && y >= AbsoluteY && y <= AbsoluteY + Height;
         }
 
         public void Resize(int width, int height)
@@ -403,6 +429,12 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
         public Rectangle GetRectangle()
         {
             return _rectangle;
+        }
+
+        public Rectangle GetAbsoluteRectangle()
+        {
+            Rectangle rectangle = new Rectangle(AbsoluteY, AbsoluteX, AbsoluteY + Height, AbsoluteX + Width);
+            return rectangle;
         }
 
         public Bitmap GetBuffer()

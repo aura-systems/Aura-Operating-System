@@ -184,13 +184,7 @@ namespace Aura_OS
 
                             if (Kernel.GuiDebug)
                             {
-                                Rectangle childRect = child.GetRectangle();
-                                Rectangle parentRect = child.Parent.GetRectangle();
-                                int top = parentRect.Top + childRect.Top;
-                                int left = parentRect.Left + childRect.Left;
-                                Rectangle realRect = new Rectangle(top, left, childRect.Height + top, childRect.Width + left);
-
-                                RefreshRects.Add(realRect);
+                                RefreshRects.Add(child.GetAbsoluteRectangle());
                             }
                         }
 
@@ -201,13 +195,7 @@ namespace Aura_OS
                                 Button button = child as Button;
                                 if (button.Click != null)
                                 {
-                                    Rectangle childRect = child.GetRectangle();
-                                    Rectangle parentRect = child.Parent.GetRectangle();
-                                    int top = parentRect.Top + childRect.Top;
-                                    int left = parentRect.Left + childRect.Left;
-                                    Rectangle realRect = new Rectangle(top, left, childRect.Height + top, childRect.Width + left);
-
-                                    ClickRects.Add(realRect);
+                                    ClickRects.Add(child.GetAbsoluteRectangle());
                                 }
                             }
                         }
