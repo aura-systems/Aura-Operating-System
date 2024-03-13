@@ -8,8 +8,10 @@ using System;
 using System.Drawing;
 using Aura_OS.System.Graphics.UI.GUI;
 using Aura_OS.System.Graphics.UI.GUI.Components;
+using Aura_OS.System.Processing.Interpreter.Commands;
 using Aura_OS.System.Processing.Processes;
 using Aura_OS.System.Utils;
+using Cosmos.System.Graphics;
 
 namespace Aura_OS.System.Processing.Applications
 {
@@ -289,15 +291,39 @@ namespace Aura_OS.System.Processing.Applications
 
         public void UpdateDialog()
         {
-            if (_waitingReboot == false && (_oldScreenWidth != uint.Parse(_resX.Text) || _oldScreenHeight != uint.Parse(_resY.Text)))
+            uint width = uint.Parse(_resX.Text);
+            uint height = uint.Parse(_resY.Text);
+
+            if (_waitingReboot == false && (_oldScreenWidth != width || _oldScreenHeight != height))
             {
-                _dialog.Message = "Settings updated. Reboot needed to change resolution.";
-                _dialog.AddButton("Reboot", new Action(() =>
+                bool modeExists = false;
+
+                foreach (var mode in Kernel.Canvas.AvailableModes)
                 {
-                    Cosmos.System.Power.Reboot();
-                }));
-                _dialog.MarkDirty();
-                _waitingReboot = true;
+                    if (mode.Width == width && mode.Height == height)
+                    {
+                        modeExists = true;
+                    }
+                }
+
+                if (modeExists)
+                {
+                    _dialog.SetState(DialogState.Information);
+                    _dialog.Message = "Settings updated. Reboot needed to change resolution.";
+                    _dialog.AddButton("Reboot", new Action(() =>
+                    {
+                        Cosmos.System.Power.Reboot();
+                    }));
+                    _dialog.MarkDirty();
+                    _waitingReboot = true;
+                }
+                else
+                {
+                    _dialog.SetState(DialogState.Error);
+                    _dialog.Message = width + "x" + height + "@32 is not a valid resolution. Type lsres to list available resolutions.";
+                    _dialog.MarkDirty();
+                    _waitingReboot = false;
+                }
             }
         }
     }

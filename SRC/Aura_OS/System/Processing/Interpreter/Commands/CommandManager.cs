@@ -68,7 +68,7 @@ namespace Aura_OS.System.Processing.Interpreter.Commands
             _commands.Add(new CommandTime(new string[] { "time", "date" }));
             _commands.Add(new CommandHelp(new string[] { "help" }));
 
-            _commands.Add(new CommandChangeRes(new string[] { "changeres", "cr" }));
+            _commands.Add(new CommandLsRes(new string[] { "lsres", "lsr" }));
             _commands.Add(new CommandLspci(new string[] { "lspci" }));
             //_commands.Add(new CommandCrash(new string[] { "crash" }));
 

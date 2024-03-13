@@ -11,20 +11,27 @@ using Aura_OS.System.Graphics.UI.GUI.Components;
 
 namespace Aura_OS.System.Graphics.UI.GUI
 {
+    public enum DialogState
+    {
+        Information,
+        Error
+    }
+
     public class Dialog : Window
     {
         public string Message;
+        public string Title;
 
-        private string _title;
         private List<Button> _buttons;
-        private Bitmap AlertIcon;
+        private Bitmap _alertIcon;
+        private DialogState _state;
 
         public Dialog(string title, string message, int x, int y) : base(title, x, y, 302, 119, false, false)
         {
-            _title = title;
+            Title = title;
             Message = message;
             _buttons = new List<Button>();
-            AlertIcon = Kernel.ResourceManager.GetIcon("32-dialog-information.bmp");
+            _alertIcon = Kernel.ResourceManager.GetIcon("32-dialog-information.bmp");
         }
 
         public override void Update()
@@ -39,6 +46,33 @@ namespace Aura_OS.System.Graphics.UI.GUI
                 {
                     MarkDirty();
                 }
+            }
+        }
+
+        public override void Draw()
+        {
+            base.Draw();
+
+            int messageY =  TopBar.Height + 25;
+            int messageX = 10 + (int)_alertIcon.Width + 10;
+            int messageWidth = Width - messageX;
+
+            List<string> lines = SplitMessageIntoLines(Message, messageWidth);
+
+            foreach (string line in lines)
+            {
+                DrawString(line, Kernel.font, Kernel.BlackColor, messageX, messageY);
+                messageY += Kernel.font.Height;
+            }
+
+            if (_alertIcon != null)
+            {
+                DrawImage(_alertIcon, 0 + 10, 0 + TopBar.Height + 25 - 8);
+            }
+
+            foreach (var button in _buttons)
+            {
+                button.Draw(this);
             }
         }
 
@@ -58,31 +92,11 @@ namespace Aura_OS.System.Graphics.UI.GUI
             AddChild(newButton);
         }
 
-        public override void Draw()
+        public void SetState(DialogState state)
         {
-            base.Draw();
-
-            int messageY =  TopBar.Height + 25;
-            int messageX = 10 + (int)AlertIcon.Width + 10;
-            int messageWidth = Width - messageX;
-
-            List<string> lines = SplitMessageIntoLines(Message, messageWidth);
-
-            foreach (string line in lines)
-            {
-                DrawString(line, Kernel.font, Kernel.BlackColor, messageX, messageY);
-                messageY += Kernel.font.Height;
-            }
-
-            if (AlertIcon != null)
-            {
-                DrawImage(AlertIcon, 0 + 10, 0 + TopBar.Height + 25 - 8);
-            }
-
-            foreach (var button in _buttons)
-            {
-                button.Draw(this);
-            }
+            _state = state;
+            UpdateIcon();
+            MarkDirty();
         }
 
         private List<string> SplitMessageIntoLines(string message, int maxWidth)
@@ -124,6 +138,21 @@ namespace Aura_OS.System.Graphics.UI.GUI
             }
 
             return lines;
+        }
+
+        private void UpdateIcon()
+        {
+            switch (_state)
+            {
+                case DialogState.Information:
+                    _alertIcon = Kernel.ResourceManager.GetIcon("32-dialog-information.bmp");
+                    break;
+                case DialogState.Error:
+                    _alertIcon = Kernel.ResourceManager.GetIcon("32-dialog-error.bmp");
+                    break;
+                default:
+                    throw new NotImplementedException($"Unsupported dialog state: {_state}");
+            }
         }
     }
 }
