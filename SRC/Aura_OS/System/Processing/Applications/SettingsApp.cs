@@ -17,29 +17,36 @@ namespace Aura_OS.System.Processing.Applications
     {
         public static string ApplicationName = "Settings";
 
-        TextBox _username;
-        TextBox _password;
-        TextBox _computerName;
-        TextBox _themeBmpPath;
-        TextBox _themeXmlPath;
+        private TextBox _username;
+        private TextBox _password;
+        private TextBox _computerName;
+        private TextBox _themeBmpPath;
+        private TextBox _themeXmlPath;
+        private TextBox _resX;
+        private TextBox _resY;
 
-        Label _usernameLabel;
-        Label _passwordLabel;
-        Label _computerNameLabel;
-        Label _themeBmpPathLabel;
-        Label _themeXmlPathLabel;
-        Label _windowsAlphaLabel;
-        Label _taskbarAlphaLabel;
+        private Label _usernameLabel;
+        private Label _passwordLabel;
+        private Label _computerNameLabel;
+        private Label _themeBmpPathLabel;
+        private Label _themeXmlPathLabel;
+        private Label _windowsAlphaLabel;
+        private Label _taskbarAlphaLabel;
+        private Label _resLabel;
 
-        Checkbox _autoLogin;
-        Checkbox _guiDebug;
+        private Checkbox _autoLogin;
+        private Checkbox _guiDebug;
 
-        Slider _windowsAlpha;
-        Slider _taskbarAlpha;
+        private Slider _windowsAlpha;
+        private Slider _taskbarAlpha;
 
-        Button _save;
+        private Button _save;
 
         private Dialog _dialog;
+
+        private uint _oldScreenWidth;
+        private uint _oldScreenHeight;
+        private bool _waitingReboot = false;
 
         public SettingsApp(int width, int height, int x = 0, int y = 0) : base(ApplicationName, width, height, x, y)
         {
@@ -56,6 +63,7 @@ namespace Aura_OS.System.Processing.Applications
             _themeXmlPathLabel = new Label("Theme XML Path: ", Color.Black, labelX, baseY + (23 + spacing) * 4);
             _windowsAlphaLabel = new Label("Windows Alpha: ", Color.Black, labelX, baseY + (23 + spacing) * 5);
             _taskbarAlphaLabel = new Label("Taskbar Alpha: ", Color.Black, labelX, baseY + (23 + spacing) * 6);
+            _resLabel = new Label("Resolution: ", Color.Black, labelX, baseY + (23 + spacing) * 7);
 
             int textBoxXOffset = 6 + (_themeXmlPathLabel.Text.Length * Kernel.font.Width);
 
@@ -66,8 +74,10 @@ namespace Aura_OS.System.Processing.Applications
             _themeXmlPath = new TextBox(textBoxXOffset, baseY + (23 + spacing) * 4, 200, 23, "");
             _windowsAlpha = new Slider(textBoxXOffset, baseY + (23 + spacing) * 5, 200, 23);
             _taskbarAlpha = new Slider(textBoxXOffset, baseY + (23 + spacing) * 6, 200, 23);
+            _resX = new TextBox(textBoxXOffset, baseY + (23 + spacing) * 7, 100, 23);
+            _resY = new TextBox(textBoxXOffset + 103, baseY + (23 + spacing) * 7, 100, 23);
 
-            _guiDebug = new Checkbox("GUI Debug: ", Color.Black, labelX, baseY + (23 + spacing) * 7);
+            _guiDebug = new Checkbox("GUI Debug: ", Color.Black, labelX, baseY + (23 + spacing) * 8);
 
             if (Kernel.Installed)
             {
@@ -80,11 +90,11 @@ namespace Aura_OS.System.Processing.Applications
 
                 if (autologin == "true")
                 {
-                    _autoLogin = new Checkbox("Auto LogIn: ", Color.Black, labelX, baseY + (23 + spacing) * 8, true);
+                    _autoLogin = new Checkbox("Auto LogIn: ", Color.Black, labelX, baseY + (23 + spacing) * 9, true);
                 }
                 else
                 {
-                    _autoLogin = new Checkbox("Auto LogIn: ", Color.Black, labelX, baseY + (23 + spacing) * 8);
+                    _autoLogin = new Checkbox("Auto LogIn: ", Color.Black, labelX, baseY + (23 + spacing) * 9);
                 }
 
                 _save = new Button("Save Settings", Width / 2 - 100 / 2, baseY + (23 + spacing) * 9, 100, 23);
@@ -93,7 +103,7 @@ namespace Aura_OS.System.Processing.Applications
             {
                 _windowsAlpha.Value = 0xFF;
                 _taskbarAlpha.Value = 0xFF;
-                _save = new Button("Save Settings", Width / 2 - 100 / 2, baseY + (23 + spacing) * 8, 100, 23);
+                _save = new Button("Save Settings", Width / 2 - 100 / 2, baseY + (23 + spacing) * 9, 100, 23);
             }
             
             _save.Click = new Action(() =>
@@ -114,6 +124,8 @@ namespace Aura_OS.System.Processing.Applications
                     config.EditValue("themeXmlPath", Kernel.ThemeManager.XmlPath);
                     config.EditValue("windowsTransparency", Explorer.WindowManager.WindowsTransparency.ToString());
                     config.EditValue("taskbarTransparency", Explorer.WindowManager.TaskbarTransparency.ToString());
+                    config.EditValue("screenWidth", _resX.Text);
+                    config.EditValue("screenHeight", _resY.Text);
                     if (_autoLogin.Checked)
                     {
                         config.EditValue("autologin", "true");
@@ -123,6 +135,8 @@ namespace Aura_OS.System.Processing.Applications
                         config.EditValue("autologin", "false");
                     }
                     config.Push();
+
+                    UpdateDialog();
                 }
 
                 _dialog.Visible = true;
@@ -150,6 +164,8 @@ namespace Aura_OS.System.Processing.Applications
             AddChild(_themeXmlPath);
             AddChild(_windowsAlpha);
             AddChild(_taskbarAlpha);
+            AddChild(_resX);
+            AddChild(_resY);
 
             AddChild(_usernameLabel);
             AddChild(_passwordLabel);
@@ -158,6 +174,7 @@ namespace Aura_OS.System.Processing.Applications
             AddChild(_themeXmlPathLabel);
             AddChild(_windowsAlphaLabel);
             AddChild(_taskbarAlphaLabel);
+            AddChild(_resLabel);
 
             AddChild(_dialog);
 
@@ -169,6 +186,17 @@ namespace Aura_OS.System.Processing.Applications
             AddChild(_guiDebug);
 
             AddChild(_save);
+
+            _oldScreenWidth = Kernel.ScreenWidth;
+            _oldScreenHeight = Kernel.ScreenHeight;
+
+            _username.Text = Kernel.userLogged;
+            _password.Text = "";
+            _computerName.Text = Kernel.ComputerName;
+            _themeBmpPath.Text = Kernel.ThemeManager.BmpPath;
+            _themeXmlPath.Text = Kernel.ThemeManager.XmlPath;
+            _resX.Text = Kernel.ScreenWidth.ToString();
+            _resY.Text = Kernel.ScreenHeight.ToString();
         }
 
         public override void Update()
@@ -188,6 +216,8 @@ namespace Aura_OS.System.Processing.Applications
                 _themeXmlPath.Update();
                 _windowsAlpha.Update();
                 _taskbarAlpha.Update();
+                _resX.Update();
+                _resY.Update();
 
                 if (Kernel.Installed)
                 {
@@ -204,12 +234,6 @@ namespace Aura_OS.System.Processing.Applications
         {
             base.Draw();
 
-            _username.Text = Kernel.userLogged;
-            _password.Text = "";
-            _computerName.Text = Kernel.ComputerName;
-            _themeBmpPath.Text = Kernel.ThemeManager.BmpPath;
-            _themeXmlPath.Text = Kernel.ThemeManager.XmlPath;
-
             _username.Draw();
             _username.DrawInParent();
             _password.Draw();
@@ -220,10 +244,12 @@ namespace Aura_OS.System.Processing.Applications
             _themeBmpPath.DrawInParent();
             _themeXmlPath.Draw();
             _themeXmlPath.DrawInParent();
-            _windowsAlpha.Update();
+            _windowsAlpha.Draw();
             _windowsAlpha.DrawInParent();
-            _taskbarAlpha.Update();
+            _taskbarAlpha.Draw();
             _taskbarAlpha.DrawInParent();
+            _resLabel.Draw();
+            _resLabel.DrawInParent();
 
             _usernameLabel.Draw();
             _usernameLabel.DrawInParent();
@@ -235,10 +261,12 @@ namespace Aura_OS.System.Processing.Applications
             _themeBmpPathLabel.DrawInParent();
             _themeXmlPathLabel.Draw();
             _themeXmlPathLabel.DrawInParent();
-            _windowsAlphaLabel.Update();
+            _windowsAlphaLabel.Draw();
             _windowsAlphaLabel.DrawInParent();
-            _taskbarAlphaLabel.Update();
-            _taskbarAlphaLabel.DrawInParent();
+            _resX.Draw();
+            _resX.DrawInParent();
+            _resY.Draw();
+            _resY.DrawInParent();
 
             if (Kernel.Installed)
             {
@@ -256,6 +284,20 @@ namespace Aura_OS.System.Processing.Applications
             {
                 _dialog.Draw();
                 _dialog.DrawInParent();
+            }
+        }
+
+        public void UpdateDialog()
+        {
+            if (_waitingReboot == false && (_oldScreenWidth != uint.Parse(_resX.Text) || _oldScreenHeight != uint.Parse(_resY.Text)))
+            {
+                _dialog.Message = "Settings updated. Reboot needed to change resolution.";
+                _dialog.AddButton("Reboot", new Action(() =>
+                {
+                    Cosmos.System.Power.Reboot();
+                }));
+                _dialog.MarkDirty();
+                _waitingReboot = true;
             }
         }
     }

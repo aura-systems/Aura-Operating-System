@@ -41,62 +41,12 @@ namespace Aura_OS.System.Processing.Interpreter.Commands.Graphics
         }
 
         /// <summary>
-        /// CommandDns
-        /// </summary>
-        /// <param name="arguments">Arguments</param>
-        public override ReturnInfo Execute(List<string> arguments)
-        {
-            if (arguments.Count != 2)
-            {
-                return new ReturnInfo(this, ReturnCode.ERROR_ARG);
-            }
-
-            try
-            {
-                uint width = uint.Parse(arguments[0]);
-                uint height = uint.Parse(arguments[1]);
-
-                bool modeExists = false;
-
-                foreach (var mode in Kernel.Canvas.AvailableModes)
-                {
-                    if (mode.Width == width && mode.Height == height)
-                    {
-                        modeExists = true;
-                    }
-                }
-
-                if (modeExists)
-                {
-                    Kernel.ScreenWidth = width;
-                    Kernel.ScreenHeight = height;
-
-                    Cosmos.System.MouseManager.ScreenWidth = width;
-                    Cosmos.System.MouseManager.ScreenHeight = height;
-
-                    Kernel.Canvas = FullScreenCanvas.GetFullScreenCanvas(new Mode(width, height, ColorDepth.ColorDepth32));
-
-                    return new ReturnInfo(this, ReturnCode.OK);
-                }
-                else
-                {
-                    return new ReturnInfo(this, ReturnCode.ERROR, "Requested graphic mode is not supported.");
-                }
-            }
-            catch (Exception ex)
-            {
-                return new ReturnInfo(this, ReturnCode.ERROR, ex.Message);
-            }
-        }
-
-        /// <summary>
         /// Print /help information
         /// </summary>
         public override void PrintHelp()
         {
             Console.WriteLine("Usage:");
             Console.WriteLine(" - changeres");
-            Console.WriteLine(" - changeres {x} {y}");
         }
     }
 }

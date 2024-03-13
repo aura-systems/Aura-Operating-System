@@ -24,6 +24,7 @@ using Aura_OS.System.Graphics;
 using Aura_OS.System.Processing.Interpreter;
 using Aura_OS.System.Processing.Processes;
 using Aura_OS.System.Graphics.UI.GUI.Skin;
+using Aura_OS.System.Utils;
 
 namespace Aura_OS
 {
@@ -144,6 +145,10 @@ namespace Aura_OS
             if (File.Exists(@"0:\System\settings.ini"))
             {
                 Installed = true;
+
+                Settings config = new Settings(@"0:\System\settings.ini");
+                ScreenWidth = uint.Parse(config.GetValue("screenWidth"));
+                ScreenHeight = uint.Parse(config.GetValue("screenHeight"));
             }
 
             ProcessManager = new ProcessManager();

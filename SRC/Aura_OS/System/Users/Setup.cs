@@ -231,6 +231,8 @@ namespace Aura_OS.System
             config.PutValue("themeXmlPath", @"0:\System\Themes\Suave.xml");
             config.PutValue("windowsTransparency", "255");
             config.PutValue("taskbarTransparency", "255");
+            config.PutValue("screenWidth", Kernel.ScreenWidth.ToString());
+            config.PutValue("screenHeight", Kernel.ScreenHeight.ToString());
 
             config.PutValue("debugger", "off");
 
