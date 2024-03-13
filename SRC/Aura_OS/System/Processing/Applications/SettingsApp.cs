@@ -6,6 +6,7 @@
 
 using System;
 using System.Drawing;
+using System.IO;
 using Aura_OS.System.Graphics.UI.GUI;
 using Aura_OS.System.Graphics.UI.GUI.Components;
 using Aura_OS.System.Processing.Interpreter.Commands;
@@ -26,6 +27,7 @@ namespace Aura_OS.System.Processing.Applications
         private TextBox _themeXmlPath;
         private TextBox _resX;
         private TextBox _resY;
+        private TextBox _wallpaperPath;
 
         private Label _usernameLabel;
         private Label _passwordLabel;
@@ -35,6 +37,7 @@ namespace Aura_OS.System.Processing.Applications
         private Label _windowsAlphaLabel;
         private Label _taskbarAlphaLabel;
         private Label _resLabel;
+        private Label _wallpaperLabel;
 
         private Checkbox _autoLogin;
         private Checkbox _guiDebug;
@@ -48,6 +51,7 @@ namespace Aura_OS.System.Processing.Applications
 
         private uint _oldScreenWidth;
         private uint _oldScreenHeight;
+        private string _oldWallpaperPath;
         private bool _waitingReboot = false;
 
         public SettingsApp(int width, int height, int x = 0, int y = 0) : base(ApplicationName, width, height, x, y)
@@ -66,6 +70,7 @@ namespace Aura_OS.System.Processing.Applications
             _windowsAlphaLabel = new Label("Windows Alpha: ", Color.Black, labelX, baseY + (23 + spacing) * 5);
             _taskbarAlphaLabel = new Label("Taskbar Alpha: ", Color.Black, labelX, baseY + (23 + spacing) * 6);
             _resLabel = new Label("Resolution: ", Color.Black, labelX, baseY + (23 + spacing) * 7);
+            _wallpaperLabel = new Label("Wallpaper Path: ", Color.Black, labelX, baseY + (23 + spacing) * 8);
 
             int textBoxXOffset = 6 + (_themeXmlPathLabel.Text.Length * Kernel.font.Width);
 
@@ -78,8 +83,9 @@ namespace Aura_OS.System.Processing.Applications
             _taskbarAlpha = new Slider(textBoxXOffset, baseY + (23 + spacing) * 6, 200, 23);
             _resX = new TextBox(textBoxXOffset, baseY + (23 + spacing) * 7, 100, 23);
             _resY = new TextBox(textBoxXOffset + 103, baseY + (23 + spacing) * 7, 100, 23);
+            _wallpaperPath = new TextBox(textBoxXOffset, baseY + (23 + spacing) * 8, 200, 23, "");
 
-            _guiDebug = new Checkbox("GUI Debug: ", Color.Black, labelX, baseY + (23 + spacing) * 8);
+            _guiDebug = new Checkbox("GUI Debug: ", Color.Black, labelX, baseY + (23 + spacing) * 9);
 
             if (Kernel.Installed)
             {
@@ -92,20 +98,20 @@ namespace Aura_OS.System.Processing.Applications
 
                 if (autologin == "true")
                 {
-                    _autoLogin = new Checkbox("Auto LogIn: ", Color.Black, labelX, baseY + (23 + spacing) * 9, true);
+                    _autoLogin = new Checkbox("Auto LogIn: ", Color.Black, labelX, baseY + (23 + spacing) * 10, true);
                 }
                 else
                 {
-                    _autoLogin = new Checkbox("Auto LogIn: ", Color.Black, labelX, baseY + (23 + spacing) * 9);
+                    _autoLogin = new Checkbox("Auto LogIn: ", Color.Black, labelX, baseY + (23 + spacing) * 10);
                 }
 
-                _save = new Button("Save Settings", Width / 2 - 100 / 2, baseY + (23 + spacing) * 9, 100, 23);
+                _save = new Button("Save Settings", Width / 2 - 100 / 2, baseY + (23 + spacing) * 11, 100, 23);
             }
             else
             {
                 _windowsAlpha.Value = 0xFF;
                 _taskbarAlpha.Value = 0xFF;
-                _save = new Button("Save Settings", Width / 2 - 100 / 2, baseY + (23 + spacing) * 9, 100, 23);
+                _save = new Button("Save Settings", Width / 2 - 100 / 2, baseY + (23 + spacing) * 10, 100, 23);
             }
             
             _save.Click = new Action(() =>
@@ -118,27 +124,34 @@ namespace Aura_OS.System.Processing.Applications
                 Explorer.WindowManager.TaskbarTransparency = (byte)_taskbarAlpha.Value;
                 Kernel.GuiDebug = _guiDebug.Checked;
 
+                if (_oldWallpaperPath != _wallpaperPath.Text)
+                {
+                    Explorer.Desktop.SetWallpaper(_wallpaperPath.Text);
+                }
+
                 if (Kernel.Installed)
                 {
-                    Settings config = new Settings(@"0:\System\settings.ini");
-                    config.EditValue("hostname", Kernel.ComputerName);
-                    config.EditValue("themeBmpPath", Kernel.ThemeManager.BmpPath);
-                    config.EditValue("themeXmlPath", Kernel.ThemeManager.XmlPath);
-                    config.EditValue("windowsTransparency", Explorer.WindowManager.WindowsTransparency.ToString());
-                    config.EditValue("taskbarTransparency", Explorer.WindowManager.TaskbarTransparency.ToString());
-                    config.EditValue("screenWidth", _resX.Text);
-                    config.EditValue("screenHeight", _resY.Text);
-                    if (_autoLogin.Checked)
+                    if (UpdateDialog())
                     {
-                        config.EditValue("autologin", "true");
+                        Settings config = new Settings(@"0:\System\settings.ini");
+                        config.EditValue("hostname", Kernel.ComputerName);
+                        config.EditValue("themeBmpPath", Kernel.ThemeManager.BmpPath);
+                        config.EditValue("themeXmlPath", Kernel.ThemeManager.XmlPath);
+                        config.EditValue("windowsTransparency", Explorer.WindowManager.WindowsTransparency.ToString());
+                        config.EditValue("taskbarTransparency", Explorer.WindowManager.TaskbarTransparency.ToString());
+                        config.EditValue("screenWidth", _resX.Text);
+                        config.EditValue("screenHeight", _resY.Text);
+                        config.EditValue("wallpaperPath", _wallpaperPath.Text);
+                        if (_autoLogin.Checked)
+                        {
+                            config.EditValue("autologin", "true");
+                        }
+                        else
+                        {
+                            config.EditValue("autologin", "false");
+                        }
+                        config.Push();
                     }
-                    else
-                    {
-                        config.EditValue("autologin", "false");
-                    }
-                    config.Push();
-
-                    UpdateDialog();
                 }
 
                 _dialog.Visible = true;
@@ -168,6 +181,7 @@ namespace Aura_OS.System.Processing.Applications
             AddChild(_taskbarAlpha);
             AddChild(_resX);
             AddChild(_resY);
+            AddChild(_wallpaperPath);
 
             AddChild(_usernameLabel);
             AddChild(_passwordLabel);
@@ -177,6 +191,7 @@ namespace Aura_OS.System.Processing.Applications
             AddChild(_windowsAlphaLabel);
             AddChild(_taskbarAlphaLabel);
             AddChild(_resLabel);
+            AddChild(_wallpaperLabel);
 
             AddChild(_dialog);
 
@@ -199,6 +214,8 @@ namespace Aura_OS.System.Processing.Applications
             _themeXmlPath.Text = Kernel.ThemeManager.XmlPath;
             _resX.Text = Kernel.ScreenWidth.ToString();
             _resY.Text = Kernel.ScreenHeight.ToString();
+            _wallpaperPath.Text = Explorer.Desktop.GetWallpaperPath();
+            _oldWallpaperPath = _wallpaperPath.Text;
         }
 
         public override void Update()
@@ -220,6 +237,7 @@ namespace Aura_OS.System.Processing.Applications
                 _taskbarAlpha.Update();
                 _resX.Update();
                 _resY.Update();
+                _wallpaperPath.Update();
 
                 if (Kernel.Installed)
                 {
@@ -252,6 +270,8 @@ namespace Aura_OS.System.Processing.Applications
             _taskbarAlpha.DrawInParent();
             _resLabel.Draw();
             _resLabel.DrawInParent();
+            _wallpaperLabel.Draw();
+            _wallpaperLabel.DrawInParent();
 
             _usernameLabel.Draw();
             _usernameLabel.DrawInParent();
@@ -269,6 +289,8 @@ namespace Aura_OS.System.Processing.Applications
             _resX.DrawInParent();
             _resY.Draw();
             _resY.DrawInParent();
+            _wallpaperPath.Draw();
+            _wallpaperPath.DrawInParent();
 
             if (Kernel.Installed)
             {
@@ -289,7 +311,7 @@ namespace Aura_OS.System.Processing.Applications
             }
         }
 
-        public void UpdateDialog()
+        public bool UpdateDialog()
         {
             uint width = uint.Parse(_resX.Text);
             uint height = uint.Parse(_resY.Text);
@@ -316,6 +338,8 @@ namespace Aura_OS.System.Processing.Applications
                     }));
                     _dialog.MarkDirty();
                     _waitingReboot = true;
+
+                    return true;
                 }
                 else
                 {
@@ -323,7 +347,37 @@ namespace Aura_OS.System.Processing.Applications
                     _dialog.Message = width + "x" + height + "@32 is not a valid resolution. Type lsres to list available resolutions.";
                     _dialog.MarkDirty();
                     _waitingReboot = false;
+
+                    return false;
                 }
+            }
+            else if (!File.Exists(_themeBmpPath.Text))
+            {
+                _dialog.SetState(DialogState.Error);
+                _dialog.Message = "Theme .bmp path is not valid.";
+                _dialog.MarkDirty();
+
+                return false;
+            }
+            else if (!File.Exists(_themeXmlPath.Text))
+            {
+                _dialog.SetState(DialogState.Error);
+                _dialog.Message = "Theme .xml path is not valid.";
+                _dialog.MarkDirty();
+
+                return false;
+            }
+            else if (!File.Exists(_wallpaperPath.Text))
+            {
+                _dialog.SetState(DialogState.Error);
+                _dialog.Message = "Wallpaper path is not valid.";
+                _dialog.MarkDirty();
+
+                return false;
+            }
+            else
+            {
+                return true;
             }
         }
     }

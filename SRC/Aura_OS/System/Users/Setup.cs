@@ -7,10 +7,12 @@
 
 using System;
 using System.IO;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using Aura_OS.System.Security;
 using Aura_OS.System.Users;
 using Aura_OS.System.Utils;
+using Cosmos.Core.Memory;
 using Cosmos.System.Network.Config;
 
 namespace Aura_OS.System
@@ -135,6 +137,7 @@ namespace Aura_OS.System
                     @"0:\System\",
                     @"0:\System\Programs",
                     @"0:\System\Themes",
+                    @"0:\System\Wallpapers",
                     @"0:\Users\"
                 };
 
@@ -165,7 +168,11 @@ namespace Aura_OS.System
             foreach (string user in Users)
             {
                 if (!Directory.Exists(@"0:\Users\" + user))
+                {
                     Directory.CreateDirectory(@"0:\Users\" + user);
+                    System.Users.Users.InitUserDirs(user);
+                }
+                    
             }
         }
 
@@ -194,10 +201,16 @@ namespace Aura_OS.System
             string[] Users = { "root", dirUsername };
             CreateUserDirectories(Users);
 
-            Console.WriteLine("Copying files...");
-
-            Filesystem.Entries.CopyFile(@"1:\UI\Themes\SuaveSheet.bmp", @"0:\System\Themes\Suave.bmp");
-            Filesystem.Entries.CopyFile(@"1:\UI\Themes\Suave.skin.xml", @"0:\System\Themes\Suave.xml");
+            Console.WriteLine("Copying SuaveSheet.bmp...");
+            Filesystem.Entries.CopyFile(Files.IsoVolume + @"UI\Themes\SuaveSheet.bmp", @"0:\System\Themes\Suave.bmp");
+            Console.WriteLine("Copying Suave.skin.xml...");
+            Filesystem.Entries.CopyFile(Files.IsoVolume + @"UI\Themes\Suave.skin.xml", @"0:\System\Themes\Suave.xml");
+            Console.WriteLine("Saving wallpaper-1.bmp...");
+            Filesystem.Entries.SaveFile(@"0:\System\Wallpapers\w1.bmp", Files.Wallpaper);
+            Heap.Collect();
+            Console.WriteLine("Saving wallpaper-2.bmp...");
+            Filesystem.Entries.SaveFile(@"0:\System\Wallpapers\w2.bmp", Files.Wallpaper2);
+            Heap.Collect();
 
             Settings config = new Settings(@"0:\System\settings.ini");
 
@@ -233,6 +246,7 @@ namespace Aura_OS.System
             config.PutValue("taskbarTransparency", "255");
             config.PutValue("screenWidth", Kernel.ScreenWidth.ToString());
             config.PutValue("screenHeight", Kernel.ScreenHeight.ToString());
+            config.PutValue("wallpaperPath", @"0:\System\Wallpapers\w1.bmp");
 
             config.PutValue("debugger", "off");
 

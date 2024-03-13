@@ -50,6 +50,11 @@ namespace Aura_OS.System.Filesystem
             }
         }
 
+        public static void SaveFile(string sourcePath, byte[] file)
+        {
+            File.WriteAllBytes(sourcePath, file);
+        }
+
         public static void CopyFile(string sourcePath, string destPath)
         {
             if (File.Exists(sourcePath))

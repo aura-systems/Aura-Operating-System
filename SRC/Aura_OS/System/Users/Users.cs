@@ -16,17 +16,10 @@ namespace Aura_OS.System.Users
     {
 
         #region UserDirs
-        public void InitUserDirs(string user)
+        public static void InitUserDirs(string user)
         {
             if (user == "root")
             {
-                string[] RootDirectories =
-                {
-                    @"0:\Users\" + user + @"\root"
-                };
-                foreach (string dirs in RootDirectories)
-                    if (!Directory.Exists(dirs))
-                        Directory.CreateDirectory(dirs);
                 return;
             }
             else

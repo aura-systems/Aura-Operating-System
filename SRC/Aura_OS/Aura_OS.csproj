@@ -25,17 +25,11 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<None Remove="Resources\auralogo_white.bmp" />
-		<None Remove="Resources\wallpaper-1.bmp" />
-		<None Remove="Resources\wallpaper-2.bmp" />
-	</ItemGroup>
-
-	<ItemGroup>
 		<EmbeddedResource Include="Resources\auralogo_white.bmp" />
 		<EmbeddedResource Include="Resources\error.bmp" />
 		<EmbeddedResource Include="Resources\Tetris.gb" />
+		<EmbeddedResource Include="Resources\wallpaper-1.bmp" />
 		<EmbeddedResource Include="Resources\wallpaper-2.bmp" />
-		<EmbeddedResource Include="Resources\wallpaper1920.bmp" />
 	</ItemGroup>
 
 	<ItemGroup>

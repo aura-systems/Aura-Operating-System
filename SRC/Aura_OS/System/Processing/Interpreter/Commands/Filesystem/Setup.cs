@@ -4,8 +4,6 @@
 * PROGRAMMER(S):    Valentin Charbonnier <valentinbreiz@gmail.com>
 */
 
-using Aura_OS.System.Processing.Interpreter;
-using Cosmos.System.FileSystem;
 using System;
 using System.Collections.Generic;
 
@@ -28,12 +26,19 @@ namespace Aura_OS.System.Processing.Interpreter.Commands.Filesystem
                 return new ReturnInfo(this, ReturnCode.ERROR_ARG);
             }
 
-            string username = arguments[0];
-            string password = arguments[1];
-            string hostname = arguments[2];
+            try
+            {
+                string username = arguments[0];
+                string password = arguments[1];
+                string hostname = arguments[2];
 
-            Setup setup = new();
-            setup.InitSetup(username, password, hostname, "en-US");
+                Setup setup = new();
+                setup.InitSetup(username, password, hostname, "en-US");
+            }
+            catch (Exception ex)
+            {
+                return new ReturnInfo(this, ReturnCode.ERROR, ex.ToString());
+            }
 
             return new ReturnInfo(this, ReturnCode.OK);
         }

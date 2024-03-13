@@ -16,11 +16,9 @@ namespace Aura_OS
         [ManifestResourceStream(ResourceName = "Aura_OS.Resources.Tetris.gb")]
         public static byte[] TetrisRom;
 
-        //1920x1024
-        [ManifestResourceStream(ResourceName = "Aura_OS.Resources.wallpaper1920.bmp")]
+        [ManifestResourceStream(ResourceName = "Aura_OS.Resources.wallpaper-1.bmp")]
         public static byte[] Wallpaper;
 
-        //1920x1024
         [ManifestResourceStream(ResourceName = "Aura_OS.Resources.wallpaper-2.bmp")]
         public static byte[] Wallpaper2;
 
@@ -51,10 +49,9 @@ namespace Aura_OS
             CustomConsole.WriteLineOK("error.bmp image loaded.");
 
             // Wallpapers
-            Kernel.wallpaper = new Bitmap(Files.Wallpaper);
+            Kernel.wallpaper1 = new Bitmap(Files.Wallpaper);
             CustomConsole.WriteLineOK("wallpaper-1.bmp wallpaper loaded.");
 
-            // Wallpapers
             Kernel.wallpaper2 = new Bitmap(Files.Wallpaper2);
             CustomConsole.WriteLineOK("wallpaper-2.bmp wallpaper loaded.");
 
@@ -78,8 +75,6 @@ namespace Aura_OS
             // Fonts
             Kernel.font = PCScreenFont.LoadFont(File.ReadAllBytes(IsoVolume + "UI\\Fonts\\zap-ext-light16.psf"));
             CustomConsole.WriteLineOK("zap-ext-light16.psf font loaded.");
-
-
         }
 
         public static void LoadImages()
