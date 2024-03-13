@@ -19,6 +19,9 @@ namespace Aura_OS
         [ManifestResourceStream(ResourceName = "Aura_OS.Resources.wallpaper-1.bmp")]
         public static byte[] Wallpaper;
 
+        [ManifestResourceStream(ResourceName = "Aura_OS.Resources.wallpaper-1.png")]
+        public static byte[] WallpaperPng;
+
         [ManifestResourceStream(ResourceName = "Aura_OS.Resources.wallpaper-2.bmp")]
         public static byte[] Wallpaper2;
 
@@ -51,6 +54,9 @@ namespace Aura_OS
             // Wallpapers
             Kernel.wallpaper1 = new Bitmap(Files.Wallpaper);
             CustomConsole.WriteLineOK("wallpaper-1.bmp wallpaper loaded.");
+
+            Kernel.wallpaper1png = new Png(Files.WallpaperPng);
+            CustomConsole.WriteLineOK("wallpaper-1.png wallpaper loaded.");
 
             Kernel.wallpaper2 = new Bitmap(Files.Wallpaper2);
             CustomConsole.WriteLineOK("wallpaper-2.bmp wallpaper loaded.");

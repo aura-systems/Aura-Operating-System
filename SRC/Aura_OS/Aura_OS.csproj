@@ -25,10 +25,15 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+	  <None Remove="Resources\wallpaper-1.png" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<EmbeddedResource Include="Resources\auralogo_white.bmp" />
 		<EmbeddedResource Include="Resources\error.bmp" />
 		<EmbeddedResource Include="Resources\Tetris.gb" />
 		<EmbeddedResource Include="Resources\wallpaper-1.bmp" />
+		<EmbeddedResource Include="Resources\wallpaper-1.png" />
 		<EmbeddedResource Include="Resources\wallpaper-2.bmp" />
 	</ItemGroup>
 
