@@ -268,10 +268,13 @@ namespace Aura_OS.System.Processing.Applications
             _windowsAlpha.DrawInParent();
             _taskbarAlpha.Draw();
             _taskbarAlpha.DrawInParent();
-            _resLabel.Draw();
-            _resLabel.DrawInParent();
-            _wallpaperLabel.Draw();
-            _wallpaperLabel.DrawInParent();
+            _resX.Draw();
+            _resX.DrawInParent();
+            _resY.Draw();
+            _resY.DrawInParent();
+            _wallpaperPath.Draw();
+            _wallpaperPath.DrawInParent();
+            
 
             _usernameLabel.Draw();
             _usernameLabel.DrawInParent();
@@ -285,12 +288,12 @@ namespace Aura_OS.System.Processing.Applications
             _themeXmlPathLabel.DrawInParent();
             _windowsAlphaLabel.Draw();
             _windowsAlphaLabel.DrawInParent();
-            _resX.Draw();
-            _resX.DrawInParent();
-            _resY.Draw();
-            _resY.DrawInParent();
-            _wallpaperPath.Draw();
-            _wallpaperPath.DrawInParent();
+            _taskbarAlphaLabel.Draw();
+            _taskbarAlphaLabel.DrawInParent();
+            _resLabel.Draw();
+            _resLabel.DrawInParent();
+            _wallpaperLabel.Draw();
+            _wallpaperLabel.DrawInParent();
 
             if (Kernel.Installed)
             {
