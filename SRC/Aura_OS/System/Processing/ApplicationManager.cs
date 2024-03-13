@@ -57,7 +57,7 @@ namespace Aura_OS.System.Processing
             RegisterApplication(typeof(CubeApp), 40, 40, 200, 200);
             RegisterApplication(typeof(GameBoyApp), 40, 40, 160 + 6, 144 + 26);
             RegisterApplication(typeof(SampleApp), 40, 40, 500, 500);
-            RegisterApplication(typeof(SettingsApp), 40, 40, 340, 360);
+            RegisterApplication(typeof(SettingsApp), 40, 40, 340, 420);
         }
 
         public void RegisterApplication(ApplicationConfig config)
