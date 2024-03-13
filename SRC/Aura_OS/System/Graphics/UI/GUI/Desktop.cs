@@ -16,7 +16,7 @@ namespace Aura_OS.System.Graphics.UI.GUI
     {
         public FilesystemPanel MainPanel;
         private string _wallpaperPath;
-        private Bitmap _wallpaper;
+        private Image _wallpaper;
 
         public Desktop(int x, int y, int width, int height) : base(x, y, width, height)
         {
@@ -29,7 +29,7 @@ namespace Aura_OS.System.Graphics.UI.GUI
             else
             {
                 _wallpaperPath = "Embedded";
-                _wallpaper = new Bitmap(Files.Wallpaper);
+                _wallpaper = Kernel.wallpaper1png;
                 MarkDirty();
             }
 
@@ -47,7 +47,7 @@ namespace Aura_OS.System.Graphics.UI.GUI
         {
             base.Draw();
 
-            DrawImage(_wallpaper, X, Y);
+            DrawImageNoAlpha(_wallpaper, X, Y);
 
             MainPanel.UpdateCurrentFolder();
             MainPanel.Draw(this);

@@ -85,6 +85,7 @@ namespace Aura_OS
         public static Bitmap CosmosLogo;
 
         public static Bitmap wallpaper1;
+        public static Png wallpaper1png;
         public static Bitmap wallpaper2;
         public static Bitmap auralogo_white;
 

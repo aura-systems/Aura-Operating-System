@@ -339,7 +339,7 @@ namespace Aura_OS.System.Graphics.UI.GUI
             y2 = (int)num4;
         }
 
-        public void DrawImage(Bitmap image, int x, int y)
+        public void DrawImage(Image image, int x, int y)
         {
             for (int yi = 0; yi < image.Height; yi++)
             {
@@ -381,7 +381,7 @@ namespace Aura_OS.System.Graphics.UI.GUI
             // PLUGGED
         }
 
-        public void DrawImageAlpha(Bitmap image, int x, int y, byte alpha = 0xFF)
+        public void DrawImageAlpha(Image image, int x, int y, byte alpha = 0xFF)
         {
             if (image.RawData.Length > Bitmap.RawData.Length)
             {
