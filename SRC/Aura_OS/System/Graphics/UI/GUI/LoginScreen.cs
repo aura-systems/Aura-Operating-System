@@ -34,6 +34,7 @@ namespace Aura_OS.System.Graphics.UI.GUI
             _password = new TextBox(3, 3, 200, 23, "");
             _password.X = _username.X;
             _password.Y = _username.Y + 23 + 6;
+            _password.Password = true;
 
             AddChild(_password);
 

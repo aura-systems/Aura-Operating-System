@@ -431,5 +431,31 @@ namespace Aura_OS.System.Graphics.UI.GUI
                 }
             }
         }
+
+        /// <summary>
+        /// Draws a filled circle at the given coordinates with the given radius.
+        /// </summary>
+        /// <param name="color">The color to draw with.</param>
+        /// <param name="x0">The X center coordinate.</param>
+        /// <param name="y0">The Y center coordinate.</param>
+        /// <param name="radius">The radius of the circle to draw.</param>
+        public void DrawFilledCircle(int color, int x0, int y0, int radius)
+        {
+            for (int y = -radius; y <= radius; y++)
+            {
+                for (int x = -radius; x <= radius; x++)
+                {
+                    if (x * x + y * y <= radius * radius)
+                    {
+                        int drawX = x0 + x;
+                        int drawY = y0 + y;
+                        if (drawX >= 0 && drawX < Width && drawY >= 0 && drawY < Height)
+                        {
+                            SetPixelAlpha(drawX, drawY, color);
+                        }
+                    }
+                }
+            }
+        }
     }
 }

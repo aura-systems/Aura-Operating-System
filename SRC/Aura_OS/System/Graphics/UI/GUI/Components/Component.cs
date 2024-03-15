@@ -538,6 +538,11 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
             _buffer.DrawImageAlpha(image, x, y);
         }
 
+        public void DrawFilledCircle(Color color, int x, int y, int radius)
+        {
+            _buffer.DrawFilledCircle(color.ToArgb(), x, y, radius);
+        }
+
         public void DrawGradient(Color color1, Color color2, int x, int y, int width, int height)
         {
             for (int i = 0; i < width; i++)
