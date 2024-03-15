@@ -31,6 +31,47 @@ namespace Aura_OS.System.Utils
             }
         }
 
+        /// <summary>
+        /// Check if the domain name is valid based on information from RFC 1035
+        /// </summary>
+        /// <param name="domainName">Valid or not valid domain name</param>
+        /// <returns>Boolean depending of the domain name param</returns>
+        // https://stackoverflow.com/questions/106179/regular-expression-to-match-dns-hostname-or-ip-address
+        public static bool isValidDomainName(string domainName)
+        {
+            if (domainName.Length < 1)
+            {
+                return false;
+            }
+            
+            if (domainName.Length > 255)
+            {
+                return false;
+            }
+
+            string[] labels = domainName.Split('.');
+            if (labels.Length > 63)
+            {
+                return false;
+            }
+
+            string pattern = @"^(?:(?=[a-z0-9-]{1,63}\.)[a-z0-9]+(?:-[a-z0-9]+)*\.)+[a-z]{2,}$";
+            Regex regex = new Regex(pattern);
+
+            if (regex.IsMatch(domainName)) {
+                return true;
+            } else {
+                return false
+            }
+
+            return true;
+        }
+
+        /// <summary>
+        /// Check if the IP address is valid based on information from RFC 791
+        /// </summary>
+        /// <param name="ip"></param>
+        /// <returns></returns>
         public static bool IsIPv4Address(string ip)
         {
             string[] items = ip.Split('.');
@@ -44,6 +85,12 @@ namespace Aura_OS.System.Utils
             }
         }
 
+        
+        /// <summary>
+        /// Parse a command line
+        /// </summary>
+        /// <param name="cmdLine"></param>
+        /// <returns></returns>
         //https://stackoverflow.com/questions/59638467/parsing-command-line-args-with-quotes
         public static List<string> ParseCommandLine(string cmdLine)
         {
