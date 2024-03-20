@@ -31,6 +31,8 @@ namespace Aura_OS.System
                 Console.ForegroundColor = ConsoleColor.White;
                 Console.Write(text + "\n");
             }
+
+            Logs.DoOSLog("[Info] " + text);
         }
 
         public static void WriteLineWarning(string text)
@@ -52,6 +54,8 @@ namespace Aura_OS.System
                 Console.ForegroundColor = ConsoleColor.White;
                 Console.Write(text + "\n");
             }
+
+            Logs.DoOSLog("[WARNING] " + text);
         }
 
         public static void WriteLineOK(string text)
@@ -73,6 +77,8 @@ namespace Aura_OS.System
                 Console.ForegroundColor = ConsoleColor.White;
                 Console.Write(text + "\n");
             }
+
+            Logs.DoOSLog("[OK] " + text);
         }
 
         public static void WriteLineError(string text)
@@ -93,7 +99,9 @@ namespace Aura_OS.System
                 Console.Write("[Error] ");
                 Console.ForegroundColor = ConsoleColor.White;
                 Console.Write(text + "\n");
-            } 
+            }
+
+            Logs.DoOSLog("[Error] " + text);
         }
     }
 }
