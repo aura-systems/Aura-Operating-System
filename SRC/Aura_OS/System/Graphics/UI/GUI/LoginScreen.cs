@@ -13,6 +13,7 @@ using Aura_OS.System.Processing.Processes;
 using Aura_OS.System.Security;
 using Aura_OS.System.Users;
 using Aura_OS.System.Utils;
+using Cosmos.System;
 
 namespace Aura_OS.System.Graphics.UI.GUI
 {
@@ -50,6 +51,41 @@ namespace Aura_OS.System.Graphics.UI.GUI
         public override void Update()
         {
             base.Update();
+
+            KeyEvent keyEvent = null;
+
+            while (Input.KeyboardManager.TryGetKey(out keyEvent))
+            {
+                switch (keyEvent.Key)
+                {
+                    case ConsoleKeyEx.Tab:
+                        if (Kernel.MouseManager.FocusedComponent.Equals(_username))
+                        {
+                            Kernel.MouseManager.FocusedComponent = _password;
+                            _username.SetSelected(false);
+                            _password.SetSelected(true);
+                        }
+                        else if (Kernel.MouseManager.FocusedComponent.Equals(_password))
+                        {
+                            Kernel.MouseManager.FocusedComponent = _username;
+                            _password.SetSelected(false);
+                            _username.SetSelected(true);
+                        }
+                        else
+                        {
+                            Kernel.MouseManager.FocusedComponent = _username;
+                        }
+                        break;
+                    case ConsoleKeyEx.Enter:
+                        _button.Click();
+                        break;
+                    default:
+                        _username.Update(keyEvent);
+                        _password.Update(keyEvent);
+                        break;
+
+                }
+            }
 
             _username.Update();
             _password.Update();

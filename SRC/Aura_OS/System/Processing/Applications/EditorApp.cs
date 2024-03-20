@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using Aura_OS.System.Processing.Processes;
 using Aura_OS.System.Graphics.UI.GUI;
 using Aura_OS.System.Graphics.UI.GUI.Components;
+using Cosmos.System;
 
 namespace Aura_OS.System.Processing.Applications
 {
@@ -74,6 +75,18 @@ namespace Aura_OS.System.Processing.Applications
             }
             else
             {
+                KeyEvent keyEvent = null;
+
+                while (Input.KeyboardManager.TryGetKey(out keyEvent))
+                {
+                    switch (keyEvent.Key)
+                    {
+                        default:
+                            _fileContentBox.Update(keyEvent);
+                            break;
+                    }
+                }
+
                 _save.Update();
                 _fileContentBox.Update();
             }

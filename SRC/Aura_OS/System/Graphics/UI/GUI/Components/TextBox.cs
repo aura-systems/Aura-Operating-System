@@ -66,15 +66,13 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
             }
         }
 
-        public override void Update()
+        public void Update(KeyEvent keyEvent)
         {
             base.Update();
 
             if (_isSelected)
             {
-                KeyEvent keyEvent = null;
-
-                while (Input.KeyboardManager.TryGetKey(out keyEvent))
+                if (keyEvent != null)
                 {
                     switch (keyEvent.Key)
                     {
@@ -96,6 +94,22 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
                     }
                 }
 
+                if ((DateTime.Now - _lastCursorBlink).TotalMilliseconds > _cursorBlinkInterval)
+                {
+                    _cursorVisible = !_cursorVisible;
+                    _lastCursorBlink = DateTime.Now;
+
+                    MarkDirty();
+                }
+            }
+        }
+
+        public override void Update()
+        {
+            base.Update();
+
+            if (_isSelected)
+            {
                 if ((DateTime.Now - _lastCursorBlink).TotalMilliseconds > _cursorBlinkInterval)
                 {
                     _cursorVisible = !_cursorVisible;
@@ -316,6 +330,13 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
         private void AdjustScrollOffsetToEnd()
         {
             _scrollOffset = Math.Max(0, Text.Length - (Width / Kernel.font.Width) + 1);
+        }
+
+        public void SetSelected(bool selected)
+        {
+            _isSelected = selected;
+            _cursorVisible = selected;
+            MarkDirty();
         }
     }
 }
