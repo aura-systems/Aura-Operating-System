@@ -72,7 +72,7 @@ jobs:
         run: |
           cd Cosmos/Cosmos/source
           dotnet pack Cosmos.Build.Tasks/Cosmos.Build.Tasks.csproj -p:PackageVersion=10.0.0 --output c:\packages
-          dotnet pack Cosmos.Common/Cosmos.Common.csproj-p:PackageVersion=10.0.0 --output c:\packages
+          dotnet pack Cosmos.Common/Cosmos.Common.csproj -p:PackageVersion=10.0.0 --output c:\packages
           dotnet pack Cosmos.Core/Cosmos.Core.csproj -p:PackageVersion=10.0.0 --output c:\packages
           dotnet pack Cosmos.Core_Plugs/Cosmos.Core_Plugs.csproj -p:PackageVersion=10.0.0 --output c:\packages
           dotnet pack Cosmos.Core_Asm/Cosmos.Core_Asm.csproj -p:PackageVersion=10.0.0 --output c:\packages
