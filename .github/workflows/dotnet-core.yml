@@ -71,18 +71,18 @@ jobs:
         if: ${{ matrix.os == 'windows-latest' }}
         run: |
           cd Cosmos/Cosmos/source
-          dotnet pack Cosmos.Build.Tasks/Cosmos.Build.Tasks.csproj --output c:\packages
-          dotnet pack Cosmos.Common/Cosmos.Common.csproj --output c:\packages
-          dotnet pack Cosmos.Core/Cosmos.Core.csproj --output c:\packages
-          dotnet pack Cosmos.Core_Plugs/Cosmos.Core_Plugs.csproj --output c:\packages
-          dotnet pack Cosmos.Core_Asm/Cosmos.Core_Asm.csproj --output c:\packages
-          dotnet pack Cosmos.HAL2/Cosmos.HAL2.csproj --output c:\packages
-          dotnet pack Cosmos.System2/Cosmos.System2.csproj --output c:\packages
-          dotnet pack Cosmos.System2_Plugs/Cosmos.System2_Plugs.csproj --output c:\packages
-          dotnet pack Cosmos.System2_Plugs/Cosmos.System2_Plugs.csproj --output c:\packages
-          dotnet pack Cosmos.Debug.Kernel/Cosmos.Debug.Kernel.csproj --output c:\packages
-          dotnet pack Cosmos.Debug.Kernel.Plugs.Asm/Cosmos.Debug.Kernel.Plugs.Asm.csproj --output c:\packages
-          dotnet pack Cosmos.Plugs/Cosmos.Plugs.csproj --output c:\packages
+          dotnet pack Cosmos.Build.Tasks/Cosmos.Build.Tasks.csproj -p:PackageVersion=10.0.0 --output c:\packages
+          dotnet pack Cosmos.Common/Cosmos.Common.csproj-p:PackageVersion=10.0.0 --output c:\packages
+          dotnet pack Cosmos.Core/Cosmos.Core.csproj -p:PackageVersion=10.0.0 --output c:\packages
+          dotnet pack Cosmos.Core_Plugs/Cosmos.Core_Plugs.csproj -p:PackageVersion=10.0.0 --output c:\packages
+          dotnet pack Cosmos.Core_Asm/Cosmos.Core_Asm.csproj -p:PackageVersion=10.0.0 --output c:\packages
+          dotnet pack Cosmos.HAL2/Cosmos.HAL2.csproj -p:PackageVersion=10.0.0 --output c:\packages
+          dotnet pack Cosmos.System2/Cosmos.System2.csproj -p:PackageVersion=10.0.0 --output c:\packages
+          dotnet pack Cosmos.System2_Plugs/Cosmos.System2_Plugs.csproj -p:PackageVersion=10.0.0 --output c:\packages
+          dotnet pack Cosmos.Plugs/Cosmos.Plugs.csproj -p:PackageVersion=10.0.0 --output c:\packages
+          dotnet pack Cosmos.Debug.Kernel/Cosmos.Debug.Kernel.csproj -p:PackageVersion=10.0.0 --output c:\packages
+          dotnet pack Cosmos.Debug.Kernel.Plugs.Asm/Cosmos.Debug.Kernel.Plugs.Asm.csproj -p:PackageVersion=10.0.0 --output c:\packages
+          dotnet pack Cosmos.Plugs/Cosmos.Plugs.csproj -p:PackageVersion=10.0.0 --output c:\packages
           cd ../../IL2CPU/source
           dotnet pack IL2CPU.API/IL2CPU.API.csproj --output c:\packages
       - name: Install packages
