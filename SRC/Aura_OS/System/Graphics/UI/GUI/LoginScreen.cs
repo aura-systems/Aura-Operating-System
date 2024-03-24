@@ -6,14 +6,11 @@
 
 using System;
 using System.Drawing;
-using System.IO;
+using Cosmos.System;
 using Aura_OS.System.Graphics.UI.GUI.Components;
-using Aura_OS.System.Input;
 using Aura_OS.System.Processing.Processes;
 using Aura_OS.System.Security;
-using Aura_OS.System.Users;
 using Aura_OS.System.Utils;
-using Cosmos.System;
 
 namespace Aura_OS.System.Graphics.UI.GUI
 {
@@ -23,6 +20,7 @@ namespace Aura_OS.System.Graphics.UI.GUI
         private TextBox _password;
         private Button _button;
         private string _error;
+        private Color? _color = null;
 
         public LoginScreen(int x, int y, int width, int height) : base(x, y, width, height)
         {
@@ -46,6 +44,11 @@ namespace Aura_OS.System.Graphics.UI.GUI
             });
 
             AddChild(_button);
+
+            if (Kernel.wallpaper2.Width != Kernel.ScreenWidth && Kernel.wallpaper2.Height != Kernel.ScreenHeight)
+            {
+                _color = Color.Black;
+            }
         }
 
         public override void Update()
@@ -87,8 +90,8 @@ namespace Aura_OS.System.Graphics.UI.GUI
                 }
             }
 
-            _username.Update();
-            _password.Update();
+            _username.UpdateNoGetKey();
+            _password.UpdateNoGetKey();
             _button.Update();
         }
 
@@ -96,7 +99,15 @@ namespace Aura_OS.System.Graphics.UI.GUI
         {
             base.Draw();
 
-            DrawImage(Kernel.wallpaper2, X, Y);
+            if (_color != null)
+            {
+                Clear((Color)_color);
+            }
+            else
+            {
+                DrawImage(Kernel.wallpaper2, X, Y);
+            }
+            
             DrawImage(Kernel.auralogo_white, Width / 2 - (int)Kernel.auralogo_white.Width / 2, _username.Y - (int)Kernel.auralogo_white.Height - 24);
 
             _username.Draw(this);

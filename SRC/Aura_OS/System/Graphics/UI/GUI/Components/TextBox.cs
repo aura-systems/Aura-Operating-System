@@ -104,7 +104,47 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
             }
         }
 
-        public override void Update()
+        public void Update()
+        {
+            base.Update();
+
+            if (_isSelected)
+            {
+                KeyEvent keyEvent = null;
+
+                while (Input.KeyboardManager.TryGetKey(out keyEvent))
+                {
+                    switch (keyEvent.Key)
+                    {
+                        case ConsoleKeyEx.Backspace:
+                            HandleBackspace();
+                            break;
+                        case ConsoleKeyEx.Enter:
+                            HandleEnter();
+                            break;
+                        case ConsoleKeyEx.LeftArrow:
+                            HandleLeftArrow();
+                            break;
+                        case ConsoleKeyEx.RightArrow:
+                            HandleRightArrow();
+                            break;
+                        default:
+                            HandleDefaultKey(keyEvent);
+                            break;
+                    }
+                }
+
+                if ((DateTime.Now - _lastCursorBlink).TotalMilliseconds > _cursorBlinkInterval)
+                {
+                    _cursorVisible = !_cursorVisible;
+                    _lastCursorBlink = DateTime.Now;
+
+                    MarkDirty();
+                }
+            }
+        }
+
+        public void UpdateNoGetKey()
         {
             base.Update();
 

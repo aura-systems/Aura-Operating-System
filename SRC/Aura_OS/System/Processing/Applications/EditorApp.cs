@@ -88,7 +88,7 @@ namespace Aura_OS.System.Processing.Applications
                 }
 
                 _save.Update();
-                _fileContentBox.Update();
+                _fileContentBox.UpdateNoGetKey();
             }
         }
 
