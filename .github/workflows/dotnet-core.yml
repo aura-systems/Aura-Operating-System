@@ -117,4 +117,4 @@ jobs:
       - name: Build Aura Operating System
         run: |
           cd "SRC"
-          sudo dotnet build --no-restore
+          dotnet build
