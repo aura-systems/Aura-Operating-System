@@ -84,7 +84,7 @@ jobs:
           dotnet pack Cosmos.Debug.Kernel.Plugs.Asm/Cosmos.Debug.Kernel.Plugs.Asm.csproj -p:PackageVersion=10.0.0 --output c:\packages
           dotnet pack Cosmos.Plugs/Cosmos.Plugs.csproj -p:PackageVersion=10.0.0 --output c:\packages
           cd ../../IL2CPU/source
-          dotnet pack IL2CPU.API/IL2CPU.API.csproj --output c:\packages
+          dotnet pack IL2CPU.API/IL2CPU.API.csproj -p:PackageVersion=10.0.0 --output c:\packages
       - name: Install packages
         if: ${{ matrix.os == 'windows-latest' }}
         run: |
