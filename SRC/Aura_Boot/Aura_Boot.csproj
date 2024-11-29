@@ -13,7 +13,7 @@
 		<IgnoreDebugStubAttribute>False</IgnoreDebugStubAttribute>
 		<ISOFile>bin\Debug\net6.0\Aura_Boot.iso</ISOFile>
 		<CompileVBEMultiboot>False</CompileVBEMultiboot>
-		<ExtractMapFile>True</ExtractMapFile>
+		<ExtractMapFile>False</ExtractMapFile>
 		<Launch>VMware</Launch>
 		<VisualStudioDebugPort>Pipe: Cosmos\Serial</VisualStudioDebugPort>
 		<CosmosDebugPort>Serial: COM1</CosmosDebugPort>
@@ -25,6 +25,7 @@
 		<Timeout>0</Timeout>
 		<RemoveBootDebugOutput>True</RemoveBootDebugOutput>
 		<CompressionType>Gzip</CompressionType>
+		<UseUEFI>False</UseUEFI>
 	</PropertyGroup>
 
 	<ItemGroup>

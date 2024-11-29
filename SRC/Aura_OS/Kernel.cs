@@ -161,12 +161,23 @@ namespace Aura_OS
             Files.LoadFiles();
 
             CustomConsole.WriteLineInfo("Checking for boot.bat script...");
-            if (File.Exists(CurrentDirectory + "boot.bat"))
+            for (int i = 0; i <= 5; i++)
             {
-                CustomConsole.WriteLineOK("Detected boot.bat, executing script...");
-
-                Batch.Execute(CurrentDirectory + "boot.bat");
+                string volumePath = i + @":\";
+                if (Directory.Exists(volumePath))
+                {
+                    CustomConsole.WriteLineInfo($"Checking for boot.bat on volume {volumePath}...");
+                    if (File.Exists(volumePath + "boot.bat"))
+                    {
+                        CustomConsole.WriteLineOK($"Detected boot.bat on {volumePath}, executing script...");
+                        Batch.Execute(volumePath + "boot.bat");
+                        CurrentVolume = volumePath;
+                        break;
+                    }
+                }
             }
+
+            global::System.Console.ReadKey();
 
             CustomConsole.WriteLineInfo("Starting Canvas...");
 
