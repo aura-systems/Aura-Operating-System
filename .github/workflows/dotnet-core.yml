@@ -111,10 +111,10 @@ jobs:
           Copy-Item -Path "Cosmos\Cosmos\source\Cosmos.Plugs\bin\Debug\net6.0\*" -Destination "C:\Users\runneradmin\AppData\Roaming\Cosmos User Kit\Kernel\" -Force
           Copy-Item -Path "Cosmos\Cosmos\source\Cosmos.Debug.Kernel\bin\Debug\netstandard2.0\*" -Destination "C:\Users\runneradmin\AppData\Roaming\Cosmos User Kit\Kernel\" -Force
           Copy-Item -Path "Cosmos\Cosmos\source\Cosmos.Debug.Kernel.Plugs.Asm\bin\Debug\netstandard2.0\*" -Destination "C:\Users\runneradmin\AppData\Roaming\Cosmos User Kit\Kernel\" -Force
-      - name: Restore dependancies
+      - name: Restore dependencies (prefer local first)
         run: |
           cd "SRC"
-          dotnet restore
+          dotnet restore --no-cache --force-evaluate --source "c:\packages" --source "https://api.nuget.org/v3/index.json"
       - name: Build Aura Operating System
         run: |
           cd "SRC"
