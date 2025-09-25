@@ -15,24 +15,19 @@ namespace Aura_OS.System.Parser
 
         protected static void SkipSpaces(string str, ref int i)
         {
-            while (i < str.Length)
-            {
-                if (!IsSpace(str[i]))
+            for(; i < str.Length; i++)
+            {                
+                if(!IsSpace(str[i]) && str.Length < i + 4 && str.Substring(i, i + 4).Equals("<!--"))
                 {
-                    if (str[i] == '<' && i + 4 < str.Length && str[i + 1] == '!' && str[i + 2] == '-' && str[i + 3] == '-')
-                    {
-                        i += 4; // skip <!--
+                    i += 4; // skip <!--
 
-                        while (i + 2 < str.Length && !(str[i] == '-' && str[i + 1] == '-'))
-                            i++;
+                    while (i + 2 < str.Length && str.Substring(i, i + 2).Equals("--"))
+                        i++;
 
-                        i += 2; // skip --
-                    }
-                    else
-                        break;
+                    i += 2; // skip --
                 }
-
-                i++;
+                else
+                    break;            
             }
         }
 
