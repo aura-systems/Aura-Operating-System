@@ -1,3 +1,5 @@
+**⚠️ Development paused** pending [nativeaot-patcher](https://github.com/valentinbreiz/nativeaot-patcher) merge into [Cosmos](https://github.com/CosmosOS/Cosmos).
+
 <p align="center">
   <picture>
     <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/aura-systems/Aura-Operating-System/master/ARTWORK/auralogo_white.png">
