@@ -5,7 +5,7 @@
 */
 
 using Aura_OS.System.Users;
-using Cosmos.System;
+using Cosmos.Kernel.System.Keyboard;
 using System;
 using System.Collections.Generic;
 using Aura_OS.System.Graphics.UI.GUI;

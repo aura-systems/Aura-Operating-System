@@ -6,7 +6,7 @@
 
 using System;
 using System.Drawing;
-using Cosmos.System;
+using Cosmos.Kernel.System.Keyboard;
 using Aura_OS.System.Graphics.UI.GUI.Components;
 using Aura_OS.System.Processing.Processes;
 using Aura_OS.System.Security;
@@ -169,14 +169,14 @@ namespace Aura_OS.System.Graphics.UI.GUI
                 }
 
                 Kernel.LoggedIn = true;
-                Kernel.userLogged = username; 
-                Kernel.UserDirectory = @"0:\Users\" + dirUsername + @"\";
+                Kernel.userLogged = username;
+                Kernel.UserDirectory = Kernel.RootVolume + "/Users/" + dirUsername + "/";
                 Kernel.CurrentDirectory = Kernel.UserDirectory;
 
                 Explorer.Desktop.MainPanel.CurrentPath = Kernel.CurrentDirectory;
                 Explorer.Desktop.MainPanel.RefreshFilesystem();
 
-                Settings config = new Settings(@"0:\System\settings.ini");
+                Settings config = new Settings(Kernel.RootVolume + "/System/settings.ini");
                 Kernel.ComputerName = config.GetValue("hostname");
 
                 return true;

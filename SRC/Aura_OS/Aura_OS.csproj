@@ -5,7 +5,8 @@
 		<OutputType>Exe</OutputType>
 		<TargetFramework>net10.0</TargetFramework>
 		<RootNamespace>Aura_OS</RootNamespace>
-		<DefineConstants>TRACE;NOASYNC</DefineConstants>
+		<!-- Append: the Cosmos architecture picker already put ARCH_X64/ARCH_ARM64 in here -->
+		<DefineConstants>$(DefineConstants);TRACE;NOASYNC</DefineConstants>
 		<!-- The gen2 codebase predates nullable annotations -->
 		<Nullable>disable</Nullable>
 		<ImplicitUsings>disable</ImplicitUsings>
@@ -48,6 +49,13 @@
 	<ItemGroup>
 		<PackageReference Include="Cosmos.Kernel" Version="3.0.63.20260713" />
 		<PackageReference Include="Cosmos.Kernel.System" Version="3.0.63.20260713" />
+	</ItemGroup>
+
+	<!-- Pure-managed packages kept from gen2 (no native/IL2CPU dependency).
+	     GEN3-TODO: unverified under the gen3 NativeAOT runtime, smoke-test at runtime. -->
+	<ItemGroup>
+		<PackageReference Include="acryptohashnet" Version="2.0.0" />
+		<PackageReference Include="jzero" Version="0.4.5" />
 	</ItemGroup>
 
 	<Target Name="GetVersion">

@@ -1,12 +1,12 @@
-﻿/*
+/*
 * PROJECT:          Aura Operating System Development
 * CONTENT:          Command Interpreter - SystemInfomation
 * PROGRAMMER(S):    John Welsh <djlw78@gmail.com>
 */
 
 using Aura_OS.Core;
-using Cosmos.Core;
 using System;
+using System.Runtime.Intrinsics.X86;
 using System.Text;
 
 namespace Aura_OS.System.Processing.Interpreter.Commands.SystemInfomation
@@ -30,8 +30,8 @@ namespace Aura_OS.System.Processing.Interpreter.Commands.SystemInfomation
 
             sb.AppendLine("        .    :?                         Computer name:                " + Kernel.ComputerName);
             sb.AppendLine("        !?:   G5.                       Operating system name:        Aura");
-            sb.AppendLine("         7BP!.!@#!                      Kernel name:                  Cosmos-devkit");
-            sb.AppendLine("          :5@@7J@@G~                    .NET version:                 6.0");
+            sb.AppendLine("         7BP!.!@#!                      Kernel name:                  Cosmos gen3 (NativeAOT)");
+            sb.AppendLine("          :5@@7J@@G~                    .NET version:                 10.0");
             sb.AppendLine("            :5~!GG&@B7.                 Operating system version:     " + Kernel.Version);
             sb.AppendLine("       .^J55Y?!^B#GPGGY:                Operating system revision:    " + Kernel.Revision);
             sb.AppendLine("      :!JBGP&@@&BBG&B5??B^              Date and time:                " + Time.MonthString() + "/" + Time.DayString() + "/" + Time.YearString() + ", " + Time.TimeString(true, true, true));
@@ -39,7 +39,7 @@ namespace Aura_OS.System.Processing.Interpreter.Commands.SystemInfomation
             sb.AppendLine("   :^?&@BPP55!YGJ?.~:.^!^:~GP:          Total memory:                 " + Memory.TotalMemory + "MB");
             sb.AppendLine("   :7J?G#5G5.?#G~#^!5J~:J7~^?~          Used memory:                  " + Memory.GetUsedMemory() + "MB");
             sb.AppendLine(" ^5&@##BP!@?GY75!!7BJ?PB5??J&@5^:.      Free memory:                  " + Memory.GetFreeMemory() + "MB");
-            sb.AppendLine(" .:JGB&P&7@?BYG7G&G?P#5!PB&@&&@&57J     Processor(s):                 " + CPU.GetCPUBrandString());
+            sb.AppendLine(" .:JGB&P&7@?BYG7G&G?P#5!PB&@&&@&57J     Processor(s):                 " + GetCpuBrandString());
             sb.AppendLine("  ?@GB#GGBGJ?J7#@&#5^JGPJ?7!7JPB#P!     Graphic mode:                 " + Kernel.Canvas.Name());
             sb.AppendLine(" ^#&5BP&BGPJG!YB7.^5@&GP555PB@@G7:      Screen size:                  " + Kernel.Canvas.Mode.ToString());
             sb.AppendLine(" ..~P#BB#B?~@#P7 !BP?!~^^^^^:!7         Theme name:                   " + Kernel.ThemeManager.GetThemeName());
@@ -52,6 +52,57 @@ namespace Aura_OS.System.Processing.Interpreter.Commands.SystemInfomation
             Console.WriteLine(sb.ToString());
 
             return new ReturnInfo(this, ReturnCode.OK);
+        }
+
+        /// <summary>
+        /// Reads the 48-byte CPUID brand string (leaves 0x80000002-0x80000004).
+        /// gen3 has no Cosmos.Core.CPU.GetCPUBrandString equivalent, so query CPUID directly.
+        /// </summary>
+        private static string GetCpuBrandString()
+        {
+            if (!X86Base.IsSupported)
+            {
+                return "Unknown CPU";
+            }
+
+            try
+            {
+                StringBuilder brand = new StringBuilder(48);
+
+                for (uint leaf = 0x80000002; leaf <= 0x80000004; leaf++)
+                {
+                    (int eax, int ebx, int ecx, int edx) = X86Base.CpuId(unchecked((int)leaf), 0);
+
+                    AppendRegister(brand, eax);
+                    AppendRegister(brand, ebx);
+                    AppendRegister(brand, ecx);
+                    AppendRegister(brand, edx);
+                }
+
+                string result = brand.ToString().Trim();
+
+                return result.Length == 0 ? "Unknown CPU" : result;
+            }
+            catch
+            {
+                return "Unknown CPU";
+            }
+        }
+
+        /// <summary>
+        /// Appends the four ASCII characters packed in a CPUID register (little-endian).
+        /// </summary>
+        private static void AppendRegister(StringBuilder brand, int value)
+        {
+            for (int i = 0; i < 4; i++)
+            {
+                char c = (char)((value >> (8 * i)) & 0xFF);
+
+                if (c != '\0')
+                {
+                    brand.Append(c);
+                }
+            }
         }
     }
 }

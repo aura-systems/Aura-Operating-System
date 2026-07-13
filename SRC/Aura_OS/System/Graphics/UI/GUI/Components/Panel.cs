@@ -4,7 +4,7 @@
 * PROGRAMMERS:      Valentin Charbonnier <valentinbreiz@gmail.com>
 */
 
-using Cosmos.System.Graphics.Fonts;
+using Cosmos.Kernel.System.Graphics.Fonts;
 using System.Drawing;
 
 namespace Aura_OS.System.Graphics.UI.GUI.Components
@@ -52,7 +52,10 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
 
             if (Text != "")
             {
-                DrawString(Text, PCScreenFont.Default, Kernel.WhiteColor, 5, 3);
+                // GEN3-TODO: gen2's PCScreenFont.Default was 8x16; gen3's PCScreenFont.DefaultFont
+                // is a 16x32 Spleen that overflows the 18px window top bar, so keep the metrics by
+                // drawing with Kernel.font (the 8x16 zap-ext-light16.psf Aura already loads).
+                DrawString(Text, Kernel.font, Kernel.WhiteColor, 5, 3);
             }
         }
     }

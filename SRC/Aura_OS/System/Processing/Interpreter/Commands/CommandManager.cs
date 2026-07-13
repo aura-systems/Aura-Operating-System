@@ -17,7 +17,8 @@ using Aura_OS.System.Processing.Interpreter.Commands.Network;
 using Aura_OS.System.Processing.Interpreter.Commands.SystemInfomation;
 using Aura_OS.System.Processing.Interpreter.Commands.Graphics;
 using Aura_OS.System.Processing.Interpreter.Commands.Processing;
-using Cosmos.System.Network;
+using Cosmos.Kernel.System.Network.Config;
+using Cosmos.Kernel.System.Vfs;
 using Aura_OS.System.Graphics.UI.GUI;
 using System.Text;
 
@@ -99,7 +100,7 @@ namespace Aura_OS.System.Processing.Interpreter.Commands
 
             _commands.Add(new CommandAction(new string[] { "beep" }, () =>
             {
-                Cosmos.System.PCSpeaker.Beep();
+                Beep();
             }));
             _commands.Add(new CommandAction(new string[] { "crash" }, () =>
             {
@@ -139,6 +140,46 @@ namespace Aura_OS.System.Processing.Interpreter.Commands
                 Console.WriteLine(stringBuilder.ToString());
             }));
 
+        }
+
+        /// <summary>
+        /// Emits a short beep on the PC speaker (PIT channel 2 gated through port 0x61).
+        /// GEN3-TODO: gen3 has no PCSpeaker HAL class yet, so the PIT is programmed
+        /// directly via raw port I/O; x64 only (Native.IO throws on ARM64).
+        /// </summary>
+        private static void Beep()
+        {
+            const uint PitFrequency = 1193180;
+            const uint BeepFrequency = 800;
+            const int BeepDurationMs = 125;
+
+            try
+            {
+                ushort divisor = (ushort)(PitFrequency / BeepFrequency);
+
+                // PIT channel 2, lobyte/hibyte, square wave generator.
+                Cosmos.Kernel.Core.Native.IO.Write8(0x43, 0xB6);
+                Cosmos.Kernel.Core.Native.IO.Write8(0x42, (byte)(divisor & 0xFF));
+                Cosmos.Kernel.Core.Native.IO.Write8(0x42, (byte)((divisor >> 8) & 0xFF));
+
+                // Gate the PIT channel 2 output onto the speaker.
+                byte gate = Cosmos.Kernel.Core.Native.IO.Read8(0x61);
+                Cosmos.Kernel.Core.Native.IO.Write8(0x61, (byte)(gate | 0x03));
+
+                long start = global::System.Diagnostics.Stopwatch.GetTimestamp();
+                long duration = global::System.Diagnostics.Stopwatch.Frequency * BeepDurationMs / 1000;
+                while (global::System.Diagnostics.Stopwatch.GetTimestamp() - start < duration)
+                {
+                }
+
+                // Disconnect the speaker again.
+                gate = Cosmos.Kernel.Core.Native.IO.Read8(0x61);
+                Cosmos.Kernel.Core.Native.IO.Write8(0x61, (byte)(gate & 0xFC));
+            }
+            catch (Exception)
+            {
+                Console.WriteLine("beep is not supported on this platform.");
+            }
         }
 
         /// <summary>
@@ -279,14 +320,14 @@ namespace Aura_OS.System.Processing.Interpreter.Commands
         {
             if (command.Type == CommandType.Filesystem)
             {
-                if (Kernel.VirtualFileSystem == null || Kernel.VirtualFileSystem.GetVolumes().Count == 0)
+                if (VfsManager.Mounts.Count == 0)
                 {
                     return new ReturnInfo(command, ReturnCode.ERROR, "No volume detected!");
                 }
             }
             if (command.Type == CommandType.Network)
             {
-                if (NetworkStack.ConfigEmpty())
+                if (NetworkConfigManager.Count == 0)
                 {
                     return new ReturnInfo(command, ReturnCode.ERROR, "No network configuration detected! Use ipconfig /set.");
                 }

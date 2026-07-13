@@ -8,7 +8,7 @@ using System;
 using System.Drawing;
 using Aura_OS.System.Graphics.UI.GUI;
 using Aura_OS.System.Graphics.UI.GUI.Components;
-using Cosmos.System.Network;
+using Cosmos.Kernel.System.Network.Config;
 
 namespace Aura_OS.System.Processing.Applications
 {
@@ -34,7 +34,7 @@ namespace Aura_OS.System.Processing.Applications
             _button = new Button(text, (Width / 2) - ((text.Length * Kernel.font.Width) / 2), 5 * Kernel.font.Height + 2, text.Length * Kernel.font.Width + 6, Kernel.font.Height + 6);
             _button.Click = new Action(() =>
             {
-                if (NetworkStack.ConfigEmpty())
+                if (NetworkConfigManager.Count == 0)
                 {
                     _version = "Aura [version " + Kernel.Version + "-" + Kernel.Revision + "]";
                 }
@@ -97,7 +97,7 @@ namespace Aura_OS.System.Processing.Applications
 
             var version = "[version " + Kernel.Version + "-" + Kernel.Revision + "]";
 
-            DrawString(_title, Cosmos.System.Graphics.Fonts.PCScreenFont.Default, Kernel.BlackColor, 0 + Width / 2 - _title.Length * Cosmos.System.Graphics.Fonts.PCScreenFont.Default.Width / 2, 0 + 1 * Kernel.font.Height);
+            DrawString(_title, Cosmos.Kernel.System.Graphics.Fonts.PCScreenFont.DefaultFont, Kernel.BlackColor, 0 + Width / 2 - _title.Length * Cosmos.Kernel.System.Graphics.Fonts.PCScreenFont.DefaultFont.Width / 2, 0 + 1 * Kernel.font.Height);
             DrawString(version, Kernel.font, Kernel.BlackColor, 0 + Width / 2 - version.Length * Kernel.font.Width / 2, 0 + 2 * Kernel.font.Height);
 
             DrawString(_credit, Kernel.font, Kernel.BlackColor, 0 + Width / 2 - _credit.Length * Kernel.font.Width / 2, 0 + 5 * Kernel.font.Height + 4);

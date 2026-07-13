@@ -1,4 +1,4 @@
-﻿/*
+/*
 * PROJECT:          Aura Operating System Development
 * CONTENT:          Time Implementation
 * PROGRAMMERS:      Valentin Charbonnier <valentinbreiz@gmail.com>
@@ -6,28 +6,32 @@
 *                   Alexy DA CRUZ <dacruzalexy@gmail.com>
 */
 
-using Cosmos.HAL;
+using System;
 
 namespace Aura_OS.System
 {
     public static class Time
     {
+        // gen3 has no public per-field RTC access (Cosmos.HAL.RTC is gone); DateTime.Now
+        // is plugged onto the RTC and covers every field, including day-of-week.
+        // GEN3-GAP(timezone): DateTime.Now is UTC only on gen3 (no timezone support),
+        // so all times below are UTC.
 
-        static int Hour() { return RTC.Hour; }
+        static int Hour() { return DateTime.Now.Hour; }
 
-        static int Minute() { return RTC.Minute; }
+        static int Minute() { return DateTime.Now.Minute; }
 
-        static int Second() { return RTC.Second; }
+        static int Second() { return DateTime.Now.Second; }
 
-        static int Century() { return RTC.Century; }
+        static int Century() { return DateTime.Now.Year / 100; }
 
-        static int Year() { return RTC.Year; }
+        static int Year() { return DateTime.Now.Year; }
 
-        static int Month() { return RTC.Month; }
+        static int Month() { return DateTime.Now.Month; }
 
-        static int DayOfMonth() { return RTC.DayOfTheMonth; }
+        static int DayOfMonth() { return DateTime.Now.Day; }
 
-        static int DayOfWeek() { return RTC.DayOfTheWeek; }
+        static int DayOfWeek() { return (int)DateTime.Now.DayOfWeek; }
 
         static string getTime24(bool hour, bool min, bool sec)
         {

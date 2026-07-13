@@ -1,6 +1,6 @@
 ﻿using Aura_OS.System.Parser;
 using Aura_OS.System.Utils;
-using Cosmos.System.Graphics;
+using Cosmos.Kernel.System.Graphics;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -50,26 +50,38 @@ namespace Aura_OS.System.Graphics.UI.GUI.Skin
                     string bitmapName = node.GetAttribute("name").Value;
                     _skinName = node.GetAttribute("contentPath").Value;
 
-                    string bmpPath;
+                    // GEN3-GAP(iso9660): gen2 read the theme sheet from the boot ISO
+                    // (Files.IsoVolume); gen3 cannot read the ISO, so the sheet ships as an
+                    // embedded resource (Resources/UI/Themes/<skin>.bmp) unless a themeBmpPath
+                    // from settings.ini points to a file on the mounted volume.
+                    string bmpPath = null;
 
                     if (Kernel.Installed)
                     {
-                        Settings config = new Settings(@"0:\System\settings.ini");
+                        Settings config = new Settings(Kernel.RootVolume + "/System/settings.ini");
                         bmpPath = config.GetValue("themeBmpPath");
 
-                        if (!File.Exists(bmpPath))
+                        if (bmpPath == null || !File.Exists(bmpPath))
                         {
-                            bmpPath = Files.IsoVolume + "UI\\Themes\\" + _skinName + ".bmp";
+                            bmpPath = null;
                         }
-                    }
-                    else
-                    {
-                        bmpPath = Files.IsoVolume + "UI\\Themes\\" + _skinName + ".bmp";
                     }
 
                     try
                     {
-                        Bitmap bitmap = new Bitmap(File.ReadAllBytes(bmpPath));
+                        byte[] bmpBytes;
+
+                        if (bmpPath == null)
+                        {
+                            bmpBytes = Files.GetUiResource("Themes/" + _skinName + ".bmp");
+                            bmpPath = "Embedded:Themes/" + _skinName + ".bmp";
+                        }
+                        else
+                        {
+                            bmpBytes = File.ReadAllBytes(bmpPath);
+                        }
+
+                        Bitmap bitmap = new Bitmap(bmpBytes);
                         Kernel.ThemeManager.BmpPath = bmpPath;
                         _bitmaps.Add(bitmapName, bitmap);
                         CustomConsole.WriteLineOK("Bitmap '" + bitmapName + "' added successfully!");

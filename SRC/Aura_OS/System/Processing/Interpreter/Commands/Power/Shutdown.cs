@@ -5,7 +5,7 @@
 */
 
 using System;
-using Sys = Cosmos.System;
+using Sys = Cosmos.Kernel.System;
 using Aura_OS;
 using Aura_OS.System.Processing.Interpreter;
 

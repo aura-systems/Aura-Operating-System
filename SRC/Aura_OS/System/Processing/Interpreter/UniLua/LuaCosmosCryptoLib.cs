@@ -1,4 +1,6 @@
 
+// GEN3-TODO: acryptohashnet (managed MD5/SHA512) is unverified under NativeAOT/gen3 —
+// smoke-test early; if it fails, vendor a managed SHA512/MD5 next to Aura_OS.System.Security.Sha256.
 using acryptohashnet;
 using Aura_OS;
 using System;

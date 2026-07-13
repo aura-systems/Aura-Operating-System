@@ -4,7 +4,7 @@
 * PROGRAMMERS:      Valentin Charbonnier <valentinbreiz@gmail.com>
 */
 
-using Cosmos.System.Graphics.Fonts;
+using Cosmos.Kernel.System.Graphics.Fonts;
 using System.Drawing;
 
 namespace Aura_OS.System.Graphics.UI.GUI.Components

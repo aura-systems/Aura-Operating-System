@@ -7,7 +7,6 @@ namespace UniLua
     using Aura_OS.System.Processing;
     using System.Text;
     using System.Xml.Linq;
-    using Cosmos.HAL.Drivers.Video.SVGAII;
 
 	public struct NameFuncPair
 	{

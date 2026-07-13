@@ -1,6 +1,6 @@
 /*
 * PROJECT:          Aura Operating System Development
-* CONTENT:          VGA Console
+* CONTENT:          Textmode console (gen3: cell-grid console on the graphical canvas)
 * PROGRAMMERS:      Valentin Charbonnier <valentinbreiz@gmail.com>
 *                   https://github.com/CosmosOS/Cosmos/blob/master/source/Cosmos.System2/Console.cs
 */
@@ -8,12 +8,14 @@
 using System;
 using System.Runtime.CompilerServices;
 using Aura_OS.System.Graphics.UI;
-using Cosmos.HAL;
-using Cosmos.System.Graphics;
+using Cosmos.Kernel.System.Graphics;
 
 namespace Aura_OS.System.Graphics.UI.CUI
 {
-
+    // GEN3-GAP(textmode): gen3 is UEFI/GOP only, there is no VGA text mode (TextScreenBase is
+    // gone). This console is re-targeted at Cosmos.Kernel.System.Graphics.KernelConsole.Default,
+    // the gen3 cell-grid console drawn on the framebuffer canvas. If the kernel console is not
+    // available every operation degrades to a no-op.
     public class Console : UI.Console
     {
         protected int mX = 0;
@@ -40,35 +42,34 @@ namespace Aura_OS.System.Graphics.UI.CUI
 
         public override int Cols
         {
-            get { return mText.Cols; }
+            get { return mText == null ? 80 : mText.Cols; }
         }
 
         public override int Rows
         {
-            get { return mText.Rows; }
+            get { return mText == null ? 25 : mText.Rows; }
         }
 
-        protected TextScreenBase mText;
+        protected KernelConsole mText;
 
-        public Console(TextScreenBase textScreen)
+        private ConsoleColor mForeground = ConsoleColor.White;
+        private ConsoleColor mBackground = ConsoleColor.Black;
+        private int mCursorSize = 25;
+
+        public Console()
         {
-            Name = "VGA Textmode";
+            Name = "Textmode";
             Type = ConsoleType.Text;
 
-            //Global.debugger.Send("VGA Textmode Class");
-            if (textScreen == null)
-            {
-                mText = new TextScreen();
-            }
-            else
-            {
-                mText = textScreen;
-            }
+            mText = KernelConsole.Default;
         }
 
         public override void Clear()
         {
-            mText.Clear();
+            if (mText != null)
+            {
+                mText.Clear();
+            }
             mX = 0;
             mY = 0;
             UpdateCursor();
@@ -76,28 +77,54 @@ namespace Aura_OS.System.Graphics.UI.CUI
 
         public override void Clear(uint color)
         {
-            mText.Clear();
-            mX = 0;
-            mY = 0;
-            UpdateCursor();
+            Clear();
         }
 
         //TODO: This is slow, batch it and only do it at end of updates
         public override void UpdateCursor()
         {
-            mText.SetCursorPos(mX, mY);
+            if (mText != null)
+            {
+                mText.SetCursorPosition(mX, mY);
+            }
         }
 
         private void DoLineFeed()
         {
             mY++;
             mX = 0;
-            if (mY == mText.Rows)
+            if (mY == Rows)
             {
-                mText.ScrollUp();
+                ScrollUp();
                 mY--;
             }
             UpdateCursor();
+        }
+
+        /// <summary>
+        /// Scrolls the cell grid up by one row (KernelConsole has no public scroll API,
+        /// so rows are moved cell by cell).
+        /// </summary>
+        private void ScrollUp()
+        {
+            if (mText == null)
+            {
+                return;
+            }
+
+            for (int row = 1; row < mText.Rows; row++)
+            {
+                for (int col = 0; col < mText.Cols; col++)
+                {
+                    mText.SetCellAt(col, row - 1, mText.GetCellAt(col, row));
+                }
+            }
+
+            Cell empty = Cell.Empty(KernelConsole.ConsoleColorToUint(mForeground), KernelConsole.ConsoleColorToUint(mBackground));
+            for (int col = 0; col < mText.Cols; col++)
+            {
+                mText.SetCellAt(col, mText.Rows - 1, empty);
+            }
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -118,9 +145,15 @@ namespace Aura_OS.System.Graphics.UI.CUI
 
         public void Write(byte aChar)
         {
-            mText[mX, mY] = aChar;
+            if (mText != null)
+            {
+                mText.SetCellAt(mX, mY, new Cell((char)aChar,
+                    KernelConsole.ConsoleColorToUint(mForeground),
+                    KernelConsole.ConsoleColorToUint(mBackground)));
+            }
+
             mX++;
-            if (mX == mText.Cols)
+            if (mX == Cols)
             {
                 DoLineFeed();
             }
@@ -172,42 +205,64 @@ namespace Aura_OS.System.Graphics.UI.CUI
 
         public override ConsoleColor Foreground
         {
-            get { return (ConsoleColor)(mText.GetColor() ^ (byte)((byte)Background << 4)); }
-            set { mText.SetColors(value, Background); }
+            get { return mForeground; }
+            set
+            {
+                mForeground = value;
+                if (mText != null)
+                {
+                    mText.SetForegroundColor(value);
+                }
+            }
         }
         public override ConsoleColor Background
         {
-            get { return (ConsoleColor)(mText.GetColor() >> 4); }
-            set { mText.SetColors(Foreground, value); }
+            get { return mBackground; }
+            set
+            {
+                mBackground = value;
+                if (mText != null)
+                {
+                    mText.SetBackgroundColor(value);
+                }
+            }
         }
 
         public override int CursorSize
         {
-            get { return mText.GetCursorSize(); }
+            // GEN3-GAP(textmode): KernelConsole has no cursor-size concept (block cursor only);
+            // the value is kept so callers still round-trip it.
+            get { return mCursorSize; }
             set
             {
                 // Value should be a percentage from [1, 100].
                 if (value < 1 || value > 100)
                     throw new ArgumentOutOfRangeException("value", value, "CursorSize value " + value + " out of range (1 - 100)");
 
-                mText.SetCursorSize(value);
+                mCursorSize = value;
             }
         }
 
         public override bool CursorVisible
         {
-            get { return mText.GetCursorVisible(); }
-            set { mText.SetCursorVisible(value); }
+            get { return mText != null && mText.CursorVisible; }
+            set
+            {
+                if (mText != null)
+                {
+                    mText.CursorVisible = value;
+                }
+            }
         }
 
         public override int Width
         {
-            get { return 80; }
+            get { return Cols; }
         }
 
         public override int Height
         {
-            get { return 25; }
+            get { return Rows; }
         }
 
     }

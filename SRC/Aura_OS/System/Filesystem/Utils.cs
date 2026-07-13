@@ -1,10 +1,11 @@
-﻿/*
+/*
 * PROJECT:          Aura Operating System Development
 * CONTENT:          Filesystem utils
 * PROGRAMMERS:      Valentin Charbonnier <valentinbreiz@gmail.com>
 */
 
-using System.IO;
+using Cosmos.Kernel.HAL.Vfs;
+using Cosmos.Kernel.System.Vfs;
 
 namespace Aura_OS.System.Filesystem
 {
@@ -16,33 +17,54 @@ namespace Aura_OS.System.Filesystem
             {
                 return path;
             }
-            if (path.EndsWith(Path.DirectorySeparatorChar.ToString()))
+            if (path.EndsWith("/"))
             {
-                path = path.TrimEnd(Path.DirectorySeparatorChar);
+                path = path.TrimEnd('/');
             }
 
-            int lastSeparatorIndex = path.LastIndexOf(Path.DirectorySeparatorChar);
+            // gen2 clamped at the drive root ("X:\"); gen3 clamps at the mount point.
+            if (path.Length <= Kernel.RootVolume.Length)
+            {
+                return Kernel.RootVolume + "/";
+            }
+
+            int lastSeparatorIndex = path.LastIndexOf('/');
             if (lastSeparatorIndex <= 0)
             {
-                return path + "\\";
+                return path + "/";
             }
-            if (lastSeparatorIndex == 2 && path[1] == ':')
+
+            string parent = path.Substring(0, lastSeparatorIndex);
+            if (parent.Length < Kernel.RootVolume.Length)
             {
-                return path.Substring(0, lastSeparatorIndex + 1);
+                parent = Kernel.RootVolume;
             }
-            return path.Substring(0, lastSeparatorIndex) + "\\";
+            return parent + "/";
         }
 
         public static string GetFreeSpace()
         {
-            var available_space = Kernel.VirtualFileSystem.GetAvailableFreeSpace(Kernel.CurrentVolume);
-            return ConvertSize(available_space);
+            // gen2: Kernel.VirtualFileSystem.GetAvailableFreeSpace(volume);
+            // gen3: no DriveInfo plug — read the numbers from the mounted superblock (StatFs).
+            if (VfsManager.TryGetMount(Kernel.CurrentVolume, out VfsManager.VfsMount mount) &&
+                mount.Superblock.SuperOperations.StatFs(mount.Superblock, out VfsStatFs statFs))
+            {
+                return ConvertSize((long)(statFs.Bfree * statFs.BlockSize));
+            }
+
+            return ConvertSize(0);
         }
 
         public static string GetCapacity()
         {
-            var total_size = Kernel.VirtualFileSystem.GetTotalSize(Kernel.CurrentVolume);
-            return ConvertSize(total_size);
+            // gen2: Kernel.VirtualFileSystem.GetTotalSize(volume); gen3: StatFs (see GetFreeSpace).
+            if (VfsManager.TryGetMount(Kernel.CurrentVolume, out VfsManager.VfsMount mount) &&
+                mount.Superblock.SuperOperations.StatFs(mount.Superblock, out VfsStatFs statFs))
+            {
+                return ConvertSize((long)(statFs.Blocks * statFs.BlockSize));
+            }
+
+            return ConvertSize(0);
         }
 
         public static string ConvertSize(long bytes)

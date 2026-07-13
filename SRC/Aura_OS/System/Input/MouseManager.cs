@@ -1,4 +1,4 @@
-﻿/*
+/*
 * PROJECT:          Aura Operating System Development
 * CONTENT:          Manages mouse interactions, including left and right clicks, double clicks, and scroll wheel actions.
 * PROGRAMMERS:      Valentin Charbonnier <valentinbreiz@gmail.com>
@@ -7,8 +7,7 @@
 using Aura_OS.Processing;
 using Aura_OS.System.Graphics.UI.GUI.Components;
 using Aura_OS.System.Processing.Processes;
-using Cosmos.System;
-using Cosmos.System.Graphics;
+using Cosmos.Kernel.System.Graphics;
 using System;
 
 namespace Aura_OS.System.Input
@@ -22,7 +21,7 @@ namespace Aura_OS.System.Input
     }
 
     /// <summary>
-    /// Manages mouse and cursor position for AuraOS. 
+    /// Manages mouse and cursor position for AuraOS.
     /// </summary>
     public class MouseManager : Process, IManager
     {
@@ -73,6 +72,11 @@ namespace Aura_OS.System.Input
         /// </summary>
         private bool _rightButtonPressed;
 
+        /// <summary>
+        /// Last raw scroll delta sampled from the gen3 mouse manager.
+        /// </summary>
+        private int _lastRawScrollDelta;
+
         private Bitmap _cursorNormal;
         private Bitmap _cursorResizeHorizontal;
         private Bitmap _cursorResizeVertical;
@@ -95,12 +99,12 @@ namespace Aura_OS.System.Input
             _lastRightClickTime = DateTime.MinValue;
             _leftButtonPressed = false;
             _rightButtonPressed = false;
+            _lastRawScrollDelta = 0;
             IsLeftButtonDown = false;
             IsRightButtonDown = false;
 
             CustomConsole.WriteLineInfo("Starting mouse...");
-            Cosmos.System.MouseManager.ScreenWidth = Kernel.ScreenWidth;
-            Cosmos.System.MouseManager.ScreenHeight = Kernel.ScreenHeight;
+            Cosmos.Kernel.System.Mouse.MouseManager.SetScreenSize((int)Kernel.ScreenWidth, (int)Kernel.ScreenHeight);
 
             CursorState = CursorState.Normal;
 
@@ -118,7 +122,13 @@ namespace Aura_OS.System.Input
         /// </summary>
         public override void Update()
         {
-            if (Cosmos.System.MouseManager.MouseState == MouseState.Left)
+            // GEN3-GAP(mouse-state): gen3 removed the MouseState flags enum; only the
+            // instantaneous LeftButton/RightButton booleans exist, so sample them once
+            // per frame and edge-detect locally.
+            bool leftButton = Cosmos.Kernel.System.Mouse.MouseManager.LeftButton;
+            bool rightButton = Cosmos.Kernel.System.Mouse.MouseManager.RightButton;
+
+            if (leftButton)
             {
                 if (!_leftButtonPressed)
                 {
@@ -136,7 +146,7 @@ namespace Aura_OS.System.Input
                 IsLeftButtonDown = false;
             }
 
-            if (Cosmos.System.MouseManager.MouseState == MouseState.Right)
+            if (rightButton)
             {
                 if (!_rightButtonPressed)
                 {
@@ -156,7 +166,7 @@ namespace Aura_OS.System.Input
 
             HandleScroll();
 
-            DrawCursor(Cosmos.System.MouseManager.X, Cosmos.System.MouseManager.Y);
+            DrawCursor((uint)Cosmos.Kernel.System.Mouse.MouseManager.X, (uint)Cosmos.Kernel.System.Mouse.MouseManager.Y);
         }
 
         /// <summary>
@@ -211,7 +221,7 @@ namespace Aura_OS.System.Input
         /// </summary>
         private void HandleLeftDoubleClick()
         {
-            
+
         }
 
         /// <summary>
@@ -236,13 +246,23 @@ namespace Aura_OS.System.Input
         }
 
         /// <summary>
-        /// Handles the mouse scroll action. Resets the scroll delta after processing.
+        /// Handles the mouse scroll action.
         /// </summary>
         private void HandleScroll()
         {
-            if (Cosmos.System.MouseManager.ScrollDelta != 0)
+            // GEN3-GAP(mouse-scroll): gen3 MouseManager.ScrollDelta is overwritten on
+            // each device event and never cleared (ResetScrollDelta() is gone), so a
+            // poller keeps seeing the last notch forever. Latch the raw value per frame
+            // and only treat a changed value as new scroll input; identical consecutive
+            // notches are lost until upstream adds a consume/reset API.
+            int rawScrollDelta = Cosmos.Kernel.System.Mouse.MouseManager.ScrollDelta;
+
+            if (rawScrollDelta != _lastRawScrollDelta)
             {
-                Cosmos.System.MouseManager.ResetScrollDelta();
+                _lastRawScrollDelta = rawScrollDelta;
+
+                // No component consumes scroll input yet (parity with gen2, which only
+                // reset the delta here).
             }
         }
 
@@ -256,7 +276,7 @@ namespace Aura_OS.System.Input
 
             void CheckComponent(Component component)
             {
-                if (component.Visible && component.IsInside((int)Cosmos.System.MouseManager.X, (int)Cosmos.System.MouseManager.Y))
+                if (component.Visible && component.IsInside(Cosmos.Kernel.System.Mouse.MouseManager.X, Cosmos.Kernel.System.Mouse.MouseManager.Y))
                 {
                     if (component.zIndex > topZIndex)
                     {

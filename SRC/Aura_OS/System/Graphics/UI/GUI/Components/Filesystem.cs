@@ -8,8 +8,8 @@ using Aura_OS.System.Filesystem;
 using Aura_OS.System.Processing.Applications;
 using Aura_OS.System.Processing.Applications.Terminal;
 using Aura_OS.System.Processing.Processes;
-using Cosmos.System;
-using Cosmos.System.Graphics;
+using Cosmos.Kernel.System.Graphics;
+using Cosmos.Kernel.System.Mouse;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -204,7 +204,7 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
             if (OpenNewWindow)
             {
                 /*
-                ExplorerApp app = new(CurrentPath + folderName + "\\", 500, 400, 40, 40);
+                ExplorerApp app = new(CurrentPath + folderName + "/", 500, 400, 40, 40);
                 app.Initialize();
                 app.MarkFocused();
                 app.Visible = true;
@@ -217,7 +217,7 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
             }
             else
             {
-                CurrentPath = CurrentPath + folderName + "\\";
+                CurrentPath = CurrentPath + folderName + "/";
             }
         }
 

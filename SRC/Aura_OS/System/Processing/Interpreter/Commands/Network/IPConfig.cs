@@ -1,4 +1,4 @@
-﻿/*
+/*
 * PROJECT:          Aura Operating System Development
 * CONTENT:          Command Interpreter - Network IPCONFIG
 * PROGRAMMER(S):    Alexy DA CRUZ <dacruzalexy@gmail.com>
@@ -7,11 +7,10 @@
 
 using Aura_OS.System.Network;
 using Aura_OS.System.Processing.Processes;
-using Cosmos.HAL;
-using Cosmos.System.Network;
-using Cosmos.System.Network.Config;
-using Cosmos.System.Network.IPv4;
-using Cosmos.System.Network.IPv4.UDP.DHCP;
+using Cosmos.Kernel.HAL.Interfaces.Devices;
+using Cosmos.Kernel.System.Network;
+using Cosmos.Kernel.System.Network.Config;
+using Cosmos.Kernel.System.Network.IPv4;
 using System;
 using System.Collections.Generic;
 
@@ -32,22 +31,16 @@ namespace Aura_OS.System.Processing.Interpreter.Commands.Network
         /// </summary>
         public override ReturnInfo Execute()
         {
-            if (NetworkStack.ConfigEmpty())
+            if (NetworkConfigManager.Count == 0)
             {
                 Console.WriteLine("No network configuration detected! Use ipconfig /help");
             }
-            foreach (NetworkConfig config in NetworkConfiguration.NetworkConfigs)
+            foreach (NetworkConfigEntry config in NetworkConfigManager.NetworkConfigs)
             {
-                switch (config.Device.CardType)
-                {
-                    case CardType.Ethernet:
-                        Console.Write("Ethernet Card : " + config.Device.NameID + " - " + config.Device.Name);
-                        break;
-                    case CardType.Wireless:
-                        Console.Write("Wireless Card : " + config.Device.NameID + " - " + config.Device.Name);
-                        break;
-                }
-                if (NetworkConfiguration.CurrentNetworkConfig.Device == config.Device)
+                // gen3 has no CardType (E1000E / VirtioNet are both Ethernet-class NICs).
+                Console.Write("Ethernet Card : " + config.Device.Name);
+
+                if (NetworkConfigManager.CurrentNetworkConfig != null && NetworkConfigManager.CurrentNetworkConfig.Device == config.Device)
                 {
                     Console.WriteLine(" (current)");
                 }
@@ -56,7 +49,7 @@ namespace Aura_OS.System.Processing.Interpreter.Commands.Network
                     Console.WriteLine();
                 }
 
-                Console.WriteLine("MAC Address          : " + config.Device.MACAddress.ToString());
+                Console.WriteLine("MAC Address          : " + config.Device.MacAddress.ToString());
                 Console.WriteLine("IP Address           : " + config.IPConfig.IPAddress.ToString());
                 Console.WriteLine("Subnet mask          : " + config.IPConfig.SubnetMask.ToString());
                 Console.WriteLine("Default Gateway      : " + config.IPConfig.DefaultGateway.ToString());
@@ -88,21 +81,18 @@ namespace Aura_OS.System.Processing.Interpreter.Commands.Network
                 }
                 else
                 {
-                    new ReturnInfo(this, ReturnCode.ERROR, "DHCP Discover failed. Can't apply dynamic IPv4 address.");
+                    return new ReturnInfo(this, ReturnCode.ERROR, "DHCP Discover failed. Can't apply dynamic IPv4 address.");
                 }
             }
             else if (arguments[0] == "/listnic")
             {
-                foreach (var device in NetworkDevice.Devices)
+                for (int i = 0; i < NetworkManager.DeviceCount; i++)
                 {
-                    switch (device.CardType)
+                    INetworkDevice device = NetworkManager.GetDevice(i);
+
+                    if (device != null)
                     {
-                        case CardType.Ethernet:
-                            Console.WriteLine("Ethernet Card - " + device.NameID + " - " + device.Name + " (" + device.MACAddress + ")");
-                            break;
-                        case CardType.Wireless:
-                            Console.WriteLine("Wireless Card - " + device.NameID + " - " + device.Name + " (" + device.MACAddress + ")");
-                            break;
+                        Console.WriteLine("Ethernet Card - " + device.Name + " (" + device.MacAddress + ")");
                     }
                 }
             }
@@ -112,7 +102,7 @@ namespace Aura_OS.System.Processing.Interpreter.Commands.Network
                 {
                     string[] adrnetwork = arguments[2].Split('/');
                     Address ip = Address.Parse(adrnetwork[0]);
-                    NetworkDevice nic = NetworkDevice.GetDeviceByName(arguments[1]);
+                    INetworkDevice nic = FindDeviceByName(arguments[1]);
                     Address gw = null;
                     if (arguments.Count == 4)
                     {
@@ -159,14 +149,26 @@ namespace Aura_OS.System.Processing.Interpreter.Commands.Network
             }
             else if (arguments[0] == "/nameserver")
             {
+                if (arguments.Count < 3)
+                {
+                    return new ReturnInfo(this, ReturnCode.ERROR, "Usage : ipconfig /nameserver {-add|-rem} {IP}");
+                }
+
+                Address nameserver = Address.Parse(arguments[2]);
+
+                if (nameserver == null)
+                {
+                    return new ReturnInfo(this, ReturnCode.ERROR, "Can't parse IP address " + arguments[2]);
+                }
+
                 if (arguments[1] == "-add")
                 {
-                    DNSConfig.Add(Address.Parse(arguments[2]));
+                    DNSConfig.Add(nameserver);
                     Console.WriteLine(arguments[2] + " has been added to nameservers.");
                 }
                 else if (arguments[1] == "-rem")
                 {
-                    DNSConfig.Remove(Address.Parse(arguments[2]));
+                    DNSConfig.Remove(nameserver);
                     Console.WriteLine(arguments[2] + " has been removed from nameservers list.");
                 }
                 else
@@ -179,6 +181,24 @@ namespace Aura_OS.System.Processing.Interpreter.Commands.Network
                 return new ReturnInfo(this, ReturnCode.ERROR, "Wrong usage, please type: ipconfig /help");
             }
             return new ReturnInfo(this, ReturnCode.OK);
+        }
+
+        /// <summary>
+        /// Finds a network device by name (gen3 has no NetworkDevice.GetDeviceByName).
+        /// </summary>
+        private static INetworkDevice FindDeviceByName(string name)
+        {
+            for (int i = 0; i < NetworkManager.DeviceCount; i++)
+            {
+                INetworkDevice device = NetworkManager.GetDevice(i);
+
+                if (device != null && device.Name == name)
+                {
+                    return device;
+                }
+            }
+
+            return null;
         }
 
         /// <summary>

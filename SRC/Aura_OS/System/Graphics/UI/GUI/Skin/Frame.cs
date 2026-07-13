@@ -55,7 +55,7 @@ namespace Aura_OS.System.Graphics.UI.GUI.Skin
             /// </remarks>
             public string Id;
             /// <summary>Texture the picture region is taken from</summary>
-            public Cosmos.System.Graphics.Bitmap Texture;
+            public Cosmos.Kernel.System.Graphics.Bitmap Texture;
             /// <summary>Area within the texture containing the picture region</summary>
             public Rectangle SourceRegion;
 
@@ -67,7 +67,7 @@ namespace Aura_OS.System.Graphics.UI.GUI.Skin
         public struct Text
         {
             /// <summary>Font to use for drawing the text</summary>
-            public Cosmos.System.Graphics.Fonts.Font Font;
+            public Cosmos.Kernel.System.Graphics.Fonts.Font Font;
             /// <summary>Offset of the text relative to its specified placement</summary>
             public Point Offset;
             /// <summary>Horizontal placement of the text within the frame</summary>

@@ -6,6 +6,7 @@
 
 using Aura_OS.System.Utils;
 using System.IO;
+using System.Text;
 
 namespace Aura_OS.System.Graphics.UI.GUI.Skin
 {
@@ -31,22 +32,30 @@ namespace Aura_OS.System.Graphics.UI.GUI.Skin
 
             _skinParser = new SkinParsing();
 
+            // GEN3-GAP(iso9660): gen2 read the default theme from the boot ISO (Files.IsoVolume);
+            // gen3 cannot read the ISO, so the default skin ships as an embedded resource
+            // (Resources/UI/Themes/Suave.skin.xml) unless a themeXmlPath from settings.ini points
+            // to a file on the mounted volume.
+            string xmlContent = null;
+
             if (Kernel.Installed)
             {
-                Settings config = new Settings(@"0:\System\settings.ini");
+                Settings config = new Settings(Kernel.RootVolume + "/System/settings.ini");
                 XmlPath = config.GetValue("themeXmlPath");
 
-                if (!File.Exists(XmlPath))
+                if (XmlPath != null && File.Exists(XmlPath))
                 {
-                    XmlPath = Files.IsoVolume + "UI\\Themes\\Suave.skin.xml";
+                    xmlContent = File.ReadAllText(XmlPath);
                 }
             }
-            else
+
+            if (xmlContent == null)
             {
-                XmlPath = Files.IsoVolume + "UI\\Themes\\Suave.skin.xml";
+                XmlPath = "Embedded:Themes/Suave.skin.xml";
+                xmlContent = Encoding.UTF8.GetString(Files.GetUiResource("Themes/Suave.skin.xml"));
             }
 
-            _skinParser.loadSkin(File.ReadAllText(XmlPath));
+            _skinParser.loadSkin(xmlContent);
         }
 
         /// <summary>

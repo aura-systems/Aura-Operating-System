@@ -12,8 +12,7 @@ using System.Runtime.CompilerServices;
 using Aura_OS.System.Security;
 using Aura_OS.System.Users;
 using Aura_OS.System.Utils;
-using Cosmos.Core.Memory;
-using Cosmos.System.Network.Config;
+using Cosmos.Kernel.System.Network.Config;
 
 namespace Aura_OS.System
 {
@@ -134,11 +133,11 @@ namespace Aura_OS.System
         {
             string[] DefaultSystemDirectories =
                 {
-                    @"0:\System\",
-                    @"0:\System\Programs",
-                    @"0:\System\Themes",
-                    @"0:\System\Wallpapers",
-                    @"0:\Users\"
+                    Kernel.RootVolume + "/System",
+                    Kernel.RootVolume + "/System/Programs",
+                    Kernel.RootVolume + "/System/Themes",
+                    Kernel.RootVolume + "/System/Wallpapers",
+                    Kernel.RootVolume + "/Users"
                 };
 
             foreach (string dirs in DefaultSystemDirectories)
@@ -153,10 +152,12 @@ namespace Aura_OS.System
         /// </summary>
         public void InitFiles()
         {
-            if (Directory.Exists(@"0:\System"))
+            if (Directory.Exists(Kernel.RootVolume + "/System"))
             {
-                File.Create(@"0:\System\settings.ini");
-                File.Create(@"0:\System\passwd");
+                // Dispose immediately: gen3 has no finalizers, an undisposed FileStream
+                // permanently leaks one of the 64 file descriptors.
+                File.Create(Kernel.RootVolume + "/System/settings.ini").Dispose();
+                File.Create(Kernel.RootVolume + "/System/passwd").Dispose();
             }
         }
 
@@ -167,12 +168,12 @@ namespace Aura_OS.System
         {
             foreach (string user in Users)
             {
-                if (!Directory.Exists(@"0:\Users\" + user))
+                if (!Directory.Exists(Kernel.RootVolume + "/Users/" + user))
                 {
-                    Directory.CreateDirectory(@"0:\Users\" + user);
+                    Directory.CreateDirectory(Kernel.RootVolume + "/Users/" + user);
                     System.Users.Users.InitUserDirs(user);
                 }
-                    
+
             }
         }
 
@@ -201,18 +202,20 @@ namespace Aura_OS.System
             string[] Users = { "root", dirUsername };
             CreateUserDirectories(Users);
 
+            // gen2 copied the theme assets from the boot ISO (Files.IsoVolume); gen3 has no
+            // ISO9660 driver, so they are embedded resources written out at install time.
             Console.WriteLine("Copying SuaveSheet.bmp...");
-            Filesystem.Entries.CopyFile(Files.IsoVolume + @"UI\Themes\SuaveSheet.bmp", @"0:\System\Themes\Suave.bmp");
+            Filesystem.Entries.SaveFile(Kernel.RootVolume + "/System/Themes/Suave.bmp", Files.GetUiResource("Themes/SuaveSheet.bmp"));
             Console.WriteLine("Copying Suave.skin.xml...");
-            Filesystem.Entries.CopyFile(Files.IsoVolume + @"UI\Themes\Suave.skin.xml", @"0:\System\Themes\Suave.xml");
+            Filesystem.Entries.SaveFile(Kernel.RootVolume + "/System/Themes/Suave.xml", Files.GetUiResource("Themes/Suave.skin.xml"));
             Console.WriteLine("Saving wallpaper-1.bmp...");
-            Filesystem.Entries.SaveFile(@"0:\System\Wallpapers\w1.bmp", Files.Wallpaper);
-            Heap.Collect();
+            Filesystem.Entries.SaveFile(Kernel.RootVolume + "/System/Wallpapers/w1.bmp", Files.Wallpaper);
+            GC.Collect();
             Console.WriteLine("Saving wallpaper-2.bmp...");
-            Filesystem.Entries.SaveFile(@"0:\System\Wallpapers\w2.bmp", Files.Wallpaper2);
-            Heap.Collect();
+            Filesystem.Entries.SaveFile(Kernel.RootVolume + "/System/Wallpapers/w2.bmp", Files.Wallpaper2);
+            GC.Collect();
 
-            Settings config = new Settings(@"0:\System\settings.ini");
+            Settings config = new Settings(Kernel.RootVolume + "/System/settings.ini");
 
             if ((FinalLang.Equals("en_US")) || FinalLang.Equals("en-US"))
             {
@@ -240,20 +243,23 @@ namespace Aura_OS.System
 
             config.PutValue("autologin", "false");
 
-            config.PutValue("themeBmpPath", @"0:\System\Themes\Suave.bmp");
-            config.PutValue("themeXmlPath", @"0:\System\Themes\Suave.xml");
+            config.PutValue("themeBmpPath", Kernel.RootVolume + "/System/Themes/Suave.bmp");
+            config.PutValue("themeXmlPath", Kernel.RootVolume + "/System/Themes/Suave.xml");
             config.PutValue("windowsTransparency", "255");
             config.PutValue("taskbarTransparency", "255");
             config.PutValue("screenWidth", Kernel.ScreenWidth.ToString());
             config.PutValue("screenHeight", Kernel.ScreenHeight.ToString());
-            config.PutValue("wallpaperPath", @"0:\System\Wallpapers\w1.bmp");
+            config.PutValue("wallpaperPath", Kernel.RootVolume + "/System/Wallpapers/w1.bmp");
 
             config.PutValue("debugger", "off");
 
-            foreach (NetworkConfig networkConfig in NetworkConfiguration.NetworkConfigs)
+            // gen2: NetworkConfiguration.NetworkConfigs + Device.NameID;
+            // gen3: NetworkConfigManager.NetworkConfigs + INetworkDevice.Name.
+            foreach (NetworkConfigEntry networkConfig in NetworkConfigManager.NetworkConfigs)
             {
-                File.Create(@"0:\System\" + networkConfig.Device.NameID + ".ini");
-                Settings settings = new Settings(@"0:\System\" + networkConfig.Device.NameID + ".ini");
+                string nicConfigPath = Kernel.RootVolume + "/System/" + networkConfig.Device.Name + ".ini";
+                File.Create(nicConfigPath).Dispose();
+                Settings settings = new Settings(nicConfigPath);
                 settings.Add("ipaddress", "0.0.0.0");
                 settings.Add("subnet", "0.0.0.0");
                 settings.Add("gateway", "0.0.0.0");
@@ -271,10 +277,10 @@ namespace Aura_OS.System
             Kernel.ComputerName = FinalHostname;
 
             Console.WriteLine("Changing current directory to user directory...");
-            Kernel.UserDirectory = @"0:\Users\" + dirUsername + @"\";
+            Kernel.UserDirectory = Kernel.RootVolume + "/Users/" + dirUsername + "/";
             Kernel.CurrentDirectory = Kernel.UserDirectory;
 
-            Console.WriteLine("AuraOS v" + Kernel.Version + "-" + Kernel.Revision + " is now installed on 0:\\ :)");
+            Console.WriteLine("AuraOS v" + Kernel.Version + "-" + Kernel.Revision + " is now installed on " + Kernel.RootVolume + " :)");
         }
     }
 }

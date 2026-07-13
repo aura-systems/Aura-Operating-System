@@ -1,0 +1,10 @@
+<Project>
+	<PropertyGroup>
+		<!-- GEN3-GAP(sdk-restore): Cosmos.Sdk's arch-conditional PackageReferences
+		     (Cosmos.Kernel.Native.X64 / .Core.X64 / .HAL.X64) are dropped from the restore
+		     graph when CosmosArch is only set by Cosmos.ArchitecturePicker.props, because
+		     package props don't exist yet when restore first evaluates the project.
+		     Define it up front (override with -p:CosmosArch=arm64). -->
+		<CosmosArch Condition="'$(CosmosArch)' == ''">x64</CosmosArch>
+	</PropertyGroup>
+</Project>

@@ -5,12 +5,10 @@
 */
 
 using System;
-using Sys = Cosmos.System;
-using Cosmos.System.Network;
 using System.Text;
 using System.Collections.Generic;
-using Cosmos.System.Network.IPv4;
-using Cosmos.System.Network.IPv4.UDP;
+using Cosmos.Kernel.System.Network.IPv4;
+using Cosmos.Kernel.System.Network.IPv4.UDP;
 using Aura_OS.System.Processing.Interpreter;
 
 namespace Aura_OS.System.Processing.Interpreter.Commands.Network

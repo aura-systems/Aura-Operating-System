@@ -27,12 +27,20 @@ namespace Aura_OS.System.Processing.Interpreter.Commands.Graphics
         {
             StringBuilder sb = new StringBuilder();
 
+            sb.AppendLine("Current mode: " + Kernel.Canvas.Mode.ToString());
+            sb.AppendLine();
             sb.AppendLine("Available modes:");
 
+            // GEN3-GAP(video-mode): gen3 has a single Limine-negotiated framebuffer fixed at
+            // boot; AvailableModes only reports the current mode and modes cannot be switched
+            // at runtime.
             foreach (var mode in Kernel.Canvas.AvailableModes)
             {
                 sb.AppendLine("- " + mode.ToString());
             }
+
+            sb.AppendLine();
+            sb.AppendLine("Note: the video mode is fixed at boot on Cosmos gen3 and cannot be changed at runtime.");
 
             Console.WriteLine(sb.ToString());
 

@@ -9,7 +9,7 @@ using Aura_OS.System.Processing.Applications;
 using Aura_OS.System.Processing.Applications.Emulators.GameBoyEmu;
 using Aura_OS.System.Processing.Applications.Terminal;
 using Aura_OS.System.Processing.Processes;
-using Cosmos.System.Graphics;
+using Cosmos.Kernel.System.Graphics;
 using System;
 using System.Collections.Generic;
 using System.IO;

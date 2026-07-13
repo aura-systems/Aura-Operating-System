@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System;
 using Aura_OS.System.Parser;
-using Cosmos.System.Graphics;
+using Cosmos.Kernel.System.Graphics;
 using Aura_OS.System.Graphics.UI.GUI;
 using System.Xml.Linq;
 using Aura_OS.System;

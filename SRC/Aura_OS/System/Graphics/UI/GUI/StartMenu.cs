@@ -6,8 +6,8 @@
 
 using System;
 using System.Collections.Generic;
-using Cosmos.System;
-using Cosmos.System.Graphics;
+using Cosmos.Kernel.System;
+using Cosmos.Kernel.System.Graphics;
 using Aura_OS.System.Graphics.UI.GUI.Components;
 using Aura_OS.System.Processing.Processes;
 

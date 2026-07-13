@@ -6,7 +6,7 @@
 
 using System.Drawing;
 using System.IO;
-using Cosmos.System.Graphics;
+using Cosmos.Kernel.System.Graphics;
 using Aura_OS.System.Graphics.UI.GUI.Components;
 using Aura_OS.System.Utils;
 
@@ -23,8 +23,8 @@ namespace Aura_OS.System.Graphics.UI.GUI
         {
             if (Kernel.Installed)
             {
-                CustomConsole.WriteLineInfo("Retrieving wallpaper from 0:\\.");
-                Settings config = new Settings(@"0:\System\settings.ini");
+                CustomConsole.WriteLineInfo("Retrieving wallpaper from " + Kernel.RootVolume + ".");
+                Settings config = new Settings(Kernel.RootVolume + "/System/settings.ini");
                 SetWallpaper(config.GetValue("wallpaperPath"));
             }
             else

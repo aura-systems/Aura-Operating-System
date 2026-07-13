@@ -7,9 +7,9 @@
 using System;
 using System.Drawing;
 using System.Runtime.CompilerServices;
-using Cosmos.Core;
-using Cosmos.System.Graphics;
-using Cosmos.System.Graphics.Fonts;
+using Cosmos.Kernel.Core.Memory;
+using Cosmos.Kernel.System.Graphics;
+using Cosmos.Kernel.System.Graphics.Fonts;
 
 namespace Aura_OS.System.Graphics.UI.GUI
 {
@@ -87,7 +87,20 @@ namespace Aura_OS.System.Graphics.UI.GUI
         {
             fixed (int* destPtr = Bitmap.RawData)
             {
-                MemoryOperations.Fill(destPtr, colour, Bitmap.RawData.Length);
+                int count = Bitmap.RawData.Length;
+
+                // GEN3-TODO: MemoryOp.MemSet's non-16-byte-aligned tail is filled per *byte*
+                // (only the low byte of the value), so fill any trailing pixels manually.
+                int bulk = count & ~3;
+                if (bulk > 0)
+                {
+                    MemoryOp.MemSet((uint*)destPtr, (uint)colour, bulk);
+                }
+
+                for (int i = bulk; i < count; i++)
+                {
+                    destPtr[i] = colour;
+                }
             }
         }
 
@@ -347,7 +360,7 @@ namespace Aura_OS.System.Graphics.UI.GUI
                 int srcOffset = yi * (int)image.Width;
                 int count = (int)image.Width;
 
-                MemoryOperations.Copy(Bitmap.RawData, destOffset, image.RawData, srcOffset, count);
+                Array.Copy(image.RawData, srcOffset, Bitmap.RawData, destOffset, count);
             }
         }
 
@@ -361,24 +374,77 @@ namespace Aura_OS.System.Graphics.UI.GUI
                 int srcOffset = ((srcY + yi) * (int)Bitmap.Width + srcX);
                 int count = width;
 
-                MemoryOperations.Copy(bmp.RawData, destOffset, Bitmap.RawData, srcOffset, count);
+                Array.Copy(Bitmap.RawData, srcOffset, bmp.RawData, destOffset, count);
             }
 
             return bmp;
         }
 
-        public static void AlphaBlendSSE(uint *dest, int dbpl, uint* src, int sbpl, int width, int height)
+        /// <summary>
+        /// Alpha-blends the <paramref name="src"/> pixel block over <paramref name="dest"/>.
+        /// gen2 implemented this as a 32-bit XSharp SSE assembler plug (Aura_Plugs); gen3 has no
+        /// assembler plugs, so this is a plain C# scalar rewrite of the same blend.
+        /// </summary>
+        /// <param name="dest">Destination (background) pixels, 32bpp ARGB.</param>
+        /// <param name="dbpl">Destination bytes per line.</param>
+        /// <param name="src">Source (foreground) pixels, 32bpp ARGB.</param>
+        /// <param name="sbpl">Source bytes per line.</param>
+        /// <param name="width">Width in pixels.</param>
+        /// <param name="height">Height in pixels.</param>
+        public static void AlphaBlendSSE(uint* dest, int dbpl, uint* src, int sbpl, int width, int height)
         {
-            // PLUGGED
+            for (int y = 0; y < height; y++)
+            {
+                uint* destRow = (uint*)((byte*)dest + y * dbpl);
+                uint* srcRow = (uint*)((byte*)src + y * sbpl);
+
+                for (int x = 0; x < width; x++)
+                {
+                    uint srcPixel = srcRow[x];
+                    uint alpha = srcPixel >> 24;
+
+                    if (alpha == 0xFF)
+                    {
+                        destRow[x] = srcPixel;
+                    }
+                    else if (alpha != 0)
+                    {
+                        uint dstPixel = destRow[x];
+                        uint invAlpha = 255 - alpha;
+                        uint rb = (((srcPixel & 0x00FF00FF) * alpha + (dstPixel & 0x00FF00FF) * invAlpha) >> 8) & 0x00FF00FF;
+                        uint g = (((srcPixel & 0x0000FF00) * alpha + (dstPixel & 0x0000FF00) * invAlpha) >> 8) & 0x0000FF00;
+                        destRow[x] = 0xFF000000 | rb | g;
+                    }
+                }
+            }
         }
 
-        public static void AlphaBltSSE2(byte* dst, byte* src, int w, int h, int wmul4)
-        {
-        }
-
+        /// <summary>
+        /// Rewrites the alpha byte of every non-transparent pixel to <paramref name="a"/>
+        /// (used to apply window/taskbar opacity before blending). C# rewrite of the gen2
+        /// XSharp assembler plug, which was a scalar loop doing exactly this.
+        /// </summary>
+        /// <param name="pixelPtr">Pixels, 32bpp ARGB.</param>
+        /// <param name="w">Width in pixels.</param>
+        /// <param name="h">Height in pixels.</param>
+        /// <param name="bpl">Bytes per line.</param>
+        /// <param name="a">New alpha value (0-255).</param>
         public static void OpacitySSE(uint* pixelPtr, int w, int h, int bpl, uint a)
         {
-            // PLUGGED
+            for (int y = 0; y < h; y++)
+            {
+                uint* row = (uint*)((byte*)pixelPtr + y * bpl);
+
+                for (int x = 0; x < w; x++)
+                {
+                    uint pixel = row[x];
+
+                    if ((pixel >> 24) != 0)
+                    {
+                        row[x] = (pixel & 0x00FFFFFF) | (a << 24);
+                    }
+                }
+            }
         }
 
         public void DrawImageAlpha(Bitmap image, int x, int y, byte alpha = 0xFF)
@@ -404,7 +470,6 @@ namespace Aura_OS.System.Graphics.UI.GUI
                     OpacitySSE((uint*)fgBitmap, (int)image.Width, (int)image.Height, (int)image.Width * 4, alpha);
                 }
 
-                // AlphaBltSSE2((byte*)bgBitmap, (byte*)fgBitmap, w, (int)image.Height, wmul4);
                 AlphaBlendSSE((uint*)bgBitmap, (int)image.Width * 4, (uint*)fgBitmap, (int)image.Width * 4, (int)image.Width, (int)image.Height);
             }
 

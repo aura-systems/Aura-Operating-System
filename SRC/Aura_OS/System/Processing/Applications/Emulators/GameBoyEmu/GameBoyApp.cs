@@ -7,8 +7,7 @@
 using Aura_OS.System.Graphics.UI.GUI;
 using Aura_OS.System.Processing.Applications.Emulators.GameBoyEmu.DMG;
 using Aura_OS.System.Processing.Applications.Emulators.GameBoyEmu.Utils;
-using Cosmos.Core;
-using Cosmos.System;
+using Cosmos.Kernel.System.Keyboard;
 using CPU = Aura_OS.System.Processing.Applications.Emulators.GameBoyEmu.DMG.CPU;
 
 namespace Aura_OS.System.Processing.Applications.Emulators.GameBoyEmu

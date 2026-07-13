@@ -1,12 +1,13 @@
-﻿/*
+/*
 * PROJECT:          Aura Operating System Development
 * CONTENT:          Dhcp utils class
 * PROGRAMMER(S):    Valentin Charbonnier <valentinbreiz@gmail.com>
 */
 
 using System;
-using Cosmos.System.Network.Config;
-using Cosmos.System.Network.IPv4.UDP.DHCP;
+using Cosmos.Kernel.System.Network;
+using Cosmos.Kernel.System.Network.Config;
+using Cosmos.Kernel.System.Network.IPv4.UDP.DHCP;
 using Aura_OS.System.Processing.Processes;
 
 namespace Aura_OS.System.Network
@@ -17,9 +18,12 @@ namespace Aura_OS.System.Network
         {
             var xClient = new DHCPClient();
             xClient.SendReleasePacket();
-            xClient.Close();
 
-            NetworkConfiguration.ClearConfigs();
+            // gen3 SendReleasePacket() closes the client itself and re-enables a
+            // 0.0.0.0 placeholder config; RemoveAllConfigIP() (unlike the gen2
+            // ClearConfigs()) also clears the route/interface tables so the stack
+            // reads as unconfigured again.
+            NetworkStack.RemoveAllConfigIP();
 
             Kernel.NetworkConnected = false;
             Explorer.Taskbar.MarkDirty();
@@ -31,13 +35,20 @@ namespace Aura_OS.System.Network
             if (xClient.SendDiscoverPacket() != -1)
             {
                 xClient.Close();
-                Console.WriteLine("Configuration applied! Your local IPv4 Address is " + NetworkConfiguration.CurrentAddress + ".");
+
+                // gen3 CurrentAddress is nullable when no lease was applied.
+                var currentAddress = NetworkConfigManager.CurrentAddress;
+                if (currentAddress != null)
+                {
+                    Console.WriteLine("Configuration applied! Your local IPv4 Address is " + currentAddress + ".");
+                }
+
                 Kernel.NetworkConnected = true;
                 return true;
             }
             else
             {
-                NetworkConfiguration.ClearConfigs();
+                NetworkStack.RemoveAllConfigIP();
 
                 xClient.Close();
                 return false;

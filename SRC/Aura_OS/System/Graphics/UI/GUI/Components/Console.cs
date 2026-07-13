@@ -4,7 +4,6 @@
 * PROGRAMMERS:      Valentin Charbonnier <valentinbreiz@gmail.com>
 */
 
-using Cosmos.System.Graphics;
 using System;
 using System.Collections.Generic;
 using System.Drawing;

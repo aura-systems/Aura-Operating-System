@@ -7,7 +7,7 @@
 using Aura_OS.Processing;
 using Aura_OS.System.Graphics.UI.GUI;
 using Aura_OS.System.Utils;
-using Cosmos.System;
+using Cosmos.Kernel.System.Mouse;
 
 namespace Aura_OS.System.Processing.Processes
 {
@@ -77,7 +77,7 @@ namespace Aura_OS.System.Processing.Processes
 
             if (Kernel.Installed)
             {
-                Settings config = new Settings(@"0:\System\settings.ini");
+                Settings config = new Settings(Kernel.RootVolume + "/System/settings.ini");
                 string value = config.GetValue("autologin");
                 string computerName = config.GetValue("hostname");
                 Kernel.ComputerName = computerName;

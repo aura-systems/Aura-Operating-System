@@ -6,7 +6,7 @@
 
 using Aura_OS.System.Processing.Interpreter;
 using Aura_OS.System.Network;
-using Cosmos.System.Network;
+using Cosmos.Kernel.System.Network.Config;
 using JZero;
 using System;
 using System.Linq;
@@ -32,7 +32,8 @@ namespace Aura_OS.System.Processing.Interpreter.Commands.SystemInfomation
 
             Console.ForegroundColor = ConsoleColor.White;
 
-            if (NetworkStack.ConfigEmpty())
+            // gen3 has no NetworkStack.ConfigEmpty(); an empty config list is the same gate.
+            if (NetworkConfigManager.Count == 0)
             {
                 Console.WriteLine("Aura [version " + Kernel.Version + "-" + Kernel.Revision + "]");
             }

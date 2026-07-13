@@ -10,7 +10,7 @@ using System.Collections.Generic;
 using Aura_OS.System.Processing.Processes;
 using Aura_OS.System.Graphics.UI.GUI;
 using Aura_OS.System.Graphics.UI.GUI.Components;
-using Cosmos.System;
+using Cosmos.Kernel.System.Keyboard;
 
 namespace Aura_OS.System.Processing.Applications
 {

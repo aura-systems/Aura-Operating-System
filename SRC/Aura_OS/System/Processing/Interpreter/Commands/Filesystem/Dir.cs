@@ -92,12 +92,16 @@ namespace Aura_OS.System.Processing.Interpreter.Commands.Filesystem
             /// <param name="directory"></param>
             public static void DispDirectories(string directory)
             {
+                // gen3's plugged System.IO returns full paths (gen2 Cosmos returned bare
+                // names), so reduce entries to their name for display and prefix checks.
                 foreach (string dir in Directory.GetDirectories(directory))
                 {
-                    if (!dir.StartsWith("."))
+                    string name = Path.GetFileName(dir);
+
+                    if (!name.StartsWith("."))
                     {
                         Console.ForegroundColor = ConsoleColor.Yellow;
-                        Console.Write(dir + "\t");
+                        Console.Write(name + "\t");
                         Console.ForegroundColor = ConsoleColor.White;
                     }
                 }
@@ -120,29 +124,31 @@ namespace Aura_OS.System.Processing.Interpreter.Commands.Filesystem
             {
                 foreach (string file in Directory.GetFiles(directory))
                 {
+                    string name = Path.GetFileName(file);
+
                     Char formatDot = '.';
-                    string[] ext = file.Split(formatDot);
+                    string[] ext = name.Split(formatDot);
                     string lastext = ext[ext.Length - 1];
 
                     //display file that doesn't have a dot before the name.
-                    if (!file.StartsWith("."))
+                    if (!name.StartsWith("."))
                     {
                         if (lastext == "conf")
                         {
                             Console.ForegroundColor = ConsoleColor.Red;
-                            Console.Write(file + "\t");
+                            Console.Write(name + "\t");
                             Console.ForegroundColor = ConsoleColor.White;
                         }
-                        else if (file.StartsWith("passwd"))
+                        else if (name.StartsWith("passwd"))
                         {
                             Console.ForegroundColor = ConsoleColor.Red;
-                            Console.Write(file + "\t");
+                            Console.Write(name + "\t");
                             Console.ForegroundColor = ConsoleColor.White;
                         }
                         else
                         {
                             Console.ForegroundColor = ConsoleColor.Blue;
-                            Console.Write(file + "\t");
+                            Console.Write(name + "\t");
                             Console.ForegroundColor = ConsoleColor.White;
                         }
                     }
@@ -157,31 +163,33 @@ namespace Aura_OS.System.Processing.Interpreter.Commands.Filesystem
             {
                 foreach (string file in Directory.GetFiles(directory))
                 {
+                    string name = Path.GetFileName(file);
+
                     Char formatDot = '.';
-                    string[] ext = file.Split(formatDot);
+                    string[] ext = name.Split(formatDot);
                     string lastext = ext[ext.Length - 1];
 
                     if (lastext == "conf")
                     {
                         Console.ForegroundColor = ConsoleColor.Red;
-                        Console.Write(file + "\t");
+                        Console.Write(name + "\t");
                         Console.ForegroundColor = ConsoleColor.White;
                     }
-                    else if (file.StartsWith("passwd"))
+                    else if (name.StartsWith("passwd"))
                     {
                         Console.ForegroundColor = ConsoleColor.Red;
-                        Console.Write(file + "\t");
+                        Console.Write(name + "\t");
                         Console.ForegroundColor = ConsoleColor.White;
                     }
-                    else if (file.StartsWith("."))
+                    else if (name.StartsWith("."))
                     {
                         Console.ForegroundColor = ConsoleColor.Magenta;
-                        Console.Write(file + "\t");
+                        Console.Write(name + "\t");
                         Console.ForegroundColor = ConsoleColor.White;
                     }
                     else
                     {
-                        Console.Write(file + "\t");
+                        Console.Write(name + "\t");
                     }
                 }
             }

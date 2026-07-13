@@ -5,7 +5,7 @@
 */
 
 using System.Collections.Generic;
-using Cosmos.System;
+using Cosmos.Kernel.System.Mouse;
 using Aura_OS.System.Graphics.UI.GUI.Components;
 using Aura_OS.System.Processing.Processes;
 using System;

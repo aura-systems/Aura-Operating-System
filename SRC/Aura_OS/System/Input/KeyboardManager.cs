@@ -1,18 +1,18 @@
-﻿/*
+/*
 * PROJECT:          Aura Operating System Development
 * CONTENT:          Manages keyboard interactions
 * PROGRAMMERS:      Valentin Charbonnier <valentinbreiz@gmail.com>
 */
 
 using System.Collections.Generic;
-using Cosmos.System;
+using Cosmos.Kernel.System.Keyboard;
 using Aura_OS.System.Processing.Processes;
 using Aura_OS.Processing;
 
 namespace Aura_OS.System.Input
 {
     /// <summary>
-    /// Manages keyboard for AuraOS. 
+    /// Manages keyboard for AuraOS.
     /// </summary>
     public class KeyboardManager : Process, IManager
     {
@@ -32,7 +32,7 @@ namespace Aura_OS.System.Input
             CustomConsole.WriteLineInfo("Starting keyboard manager...");
 
             CustomConsole.WriteLineInfo("Starting keyboard...");
-            Cosmos.System.KeyboardManager.SetKeyLayout(new Cosmos.System.ScanMaps.USStandardLayout());
+            Cosmos.Kernel.System.Keyboard.KeyboardManager.SetKeyLayout(new Cosmos.Kernel.System.Keyboard.ScanMaps.USStandardLayout());
 
             Kernel.ProcessManager.Register(this);
             Kernel.ProcessManager.Start(this);
@@ -44,14 +44,14 @@ namespace Aura_OS.System.Input
         public override void Update()
         {
             KeyEvent keyEvent;
-            while (Cosmos.System.KeyboardManager.TryReadKey(out keyEvent))
+            while (Cosmos.Kernel.System.Keyboard.KeyboardManager.TryReadKey(out keyEvent))
             {
-                if (Cosmos.System.KeyboardManager.ControlPressed && Cosmos.System.KeyboardManager.AltPressed && keyEvent.Key == ConsoleKeyEx.Delete)
+                if (Cosmos.Kernel.System.Keyboard.KeyboardManager.ControlPressed && Cosmos.Kernel.System.Keyboard.KeyboardManager.AltPressed && keyEvent.Key == ConsoleKeyEx.Delete)
                 {
-                    Power.Reboot();
+                    Cosmos.Kernel.System.Power.Reboot();
                     continue;
                 }
-                if (Cosmos.System.KeyboardManager.AltPressed && keyEvent.Key == ConsoleKeyEx.F4)
+                if (Cosmos.Kernel.System.Keyboard.KeyboardManager.AltPressed && keyEvent.Key == ConsoleKeyEx.F4)
                 {
                     if (Explorer.WindowManager.FocusedApp != null)
                     {

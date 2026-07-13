@@ -1,4 +1,4 @@
-﻿/*
+/*
 * PROJECT:          Aura Operating System Development
 * CONTENT:          Command Interpreter - Ftp command
 * PROGRAMMER(S):    Valentin Charbonnier <valentinbreiz@gmail.com>
@@ -6,13 +6,7 @@
 
 using System;
 using System.Collections.Generic;
-using Cosmos.System.Network.IPv4.UDP.DNS;
-using Cosmos.System.Network.IPv4;
-using Cosmos.System.Network.Config;
-using Cosmos.System.Network.IPv4.TCP;
-using System.Text;
 using Aura_OS.System.Processing.Interpreter;
-using CosmosFtpServer;
 
 namespace Aura_OS.System.Processing.Interpreter.Commands.Network
 {
@@ -31,19 +25,12 @@ namespace Aura_OS.System.Processing.Interpreter.Commands.Network
         /// </summary>
         public override ReturnInfo Execute()
         {
-            try
-            {
-                using (var xServer = new FtpServer(Kernel.VirtualFileSystem, Kernel.CurrentDirectory, true))
-                {
-                    Console.WriteLine("FTP Server listening at " + NetworkConfiguration.CurrentAddress + ":21 ...");
-
-                    xServer.Listen();
-                }
-            }
-            catch (Exception ex)
-            {
-                return new ReturnInfo(this, ReturnCode.ERROR, ex.Message);
-            }
+            // GEN3-GAP(ftp-server): CosmosFtpServer targets gen2's kernel TcpListener and
+            // CosmosVFS, neither of which exists in gen3. A rewrite on the plugged
+            // System.Net.Sockets.TcpListener + System.IO is planned as a follow-up, but
+            // gen3's SocketPlug.Accept currently supports only one connection per listener
+            // with no cancellation, which makes a usable server impractical for now.
+            Console.WriteLine("The FTP server is not supported on Cosmos gen3 yet (no CosmosFtpServer; TcpListener accept semantics too limited).");
 
             return new ReturnInfo(this, ReturnCode.OK);
         }
@@ -54,23 +41,7 @@ namespace Aura_OS.System.Processing.Interpreter.Commands.Network
         /// <param name="arguments">Arguments</param>
         public override ReturnInfo Execute(List<string> arguments)
         {
-            try
-            {
-                string vol = arguments[0];
-
-                using (var xServer = new FtpServer(Kernel.VirtualFileSystem, vol, true))
-                {
-                    Console.WriteLine("FTP Server listening at " + NetworkConfiguration.CurrentAddress + ":21 ...");
-
-                    xServer.Listen();
-                }
-            }
-            catch (Exception ex)
-            {
-                return new ReturnInfo(this, ReturnCode.ERROR, ex.Message);
-            }
-
-            return new ReturnInfo(this, ReturnCode.OK);
+            return Execute();
         }
 
         /// <summary>
@@ -79,7 +50,7 @@ namespace Aura_OS.System.Processing.Interpreter.Commands.Network
         public override void PrintHelp()
         {
             Console.WriteLine("Usage:");
-            Console.WriteLine(" - ftp            Open FTP server with path 0:\\");
+            Console.WriteLine(" - ftp            Open FTP server with path " + Kernel.RootVolume);
             Console.WriteLine(" - ftp {path}     Open FTP server with custom path");
         }
     }

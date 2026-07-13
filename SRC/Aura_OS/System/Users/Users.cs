@@ -26,10 +26,10 @@ namespace Aura_OS.System.Users
             {
                 string[] DefaultDirectories =
                 {
-                    @"0:\Users\" + user + @"\Desktop",
-                    @"0:\Users\" + user + @"\Documents",
-                    @"0:\Users\" + user + @"\Downloads",
-                    @"0:\Users\" + user + @"\Music",
+                    Kernel.RootVolume + "/Users/" + user + "/Desktop",
+                    Kernel.RootVolume + "/Users/" + user + "/Documents",
+                    Kernel.RootVolume + "/Users/" + user + "/Downloads",
+                    Kernel.RootVolume + "/Users/" + user + "/Music",
                 };
                 foreach (string dirs in DefaultDirectories)
                     if (!Directory.Exists(dirs))
@@ -78,7 +78,7 @@ namespace Aura_OS.System.Users
             {
                 LoadUsers();
                 DeleteUser(username);
-                //Directory.Delete(@"0:\Users\" + username, true);
+                //Directory.Delete(Kernel.RootVolume + "/Users/" + username, true);
                 Console.WriteLine("User has been remnoved.");
             }
             else
@@ -95,10 +95,12 @@ namespace Aura_OS.System.Users
 
             LoadUsers();
             EditUser(username, password);
-            File.Delete(@"0:\System\passwd");
-            File.Create(@"0:\System\passwd");
+            File.Delete(Kernel.RootVolume + "/System/passwd");
+            // Dispose immediately: gen3 has no finalizers, an undisposed FileStream
+            // permanently leaks one of the 64 file descriptors.
+            File.Create(Kernel.RootVolume + "/System/passwd").Dispose();
             PushUsers();
-            //Directory.Delete(@"0:\Users\" + username, true);
+            //Directory.Delete(Kernel.RootVolume + "/Users/" + username, true);
             Console.WriteLine("Password has been changed.");
 
         }
@@ -133,7 +135,7 @@ namespace Aura_OS.System.Users
 
                 usersfile.Clear();
 
-                File.Delete(@"0:\System\passwd");
+                File.Delete(Kernel.RootVolume + "/System/passwd");
 
                 PushUsers();
             }
@@ -219,7 +221,7 @@ namespace Aura_OS.System.Users
 
         public static void PushUsers()
         {
-            File.WriteAllLines(@"0:\System\passwd", users);
+            File.WriteAllLines(Kernel.RootVolume + "/System/passwd", users);
         }
 
         public static void LoadUsers()
@@ -227,7 +229,7 @@ namespace Aura_OS.System.Users
             //reset of users string array in memory if there is "something"
             users = reset;
             //load
-            users = File.ReadAllLines(@"0:\System\passwd");
+            users = File.ReadAllLines(Kernel.RootVolume + "/System/passwd");
         }
 
     }

@@ -6,9 +6,9 @@
 */
 
 using Aura_OS.System.Processing.Interpreter;
+using Aura_OS.System.Compression;
 using System;
 using System.Collections.Generic;
-using System.IO.Compression;
 using System.IO;
 using UniLua;
 

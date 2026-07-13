@@ -12,7 +12,6 @@ using Aura_OS.System.Graphics.UI.GUI.Components;
 using Aura_OS.System.Processing.Interpreter.Commands;
 using Aura_OS.System.Processing.Processes;
 using Aura_OS.System.Utils;
-using Cosmos.System.Graphics;
 
 namespace Aura_OS.System.Processing.Applications
 {
@@ -52,7 +51,6 @@ namespace Aura_OS.System.Processing.Applications
         private uint _oldScreenWidth;
         private uint _oldScreenHeight;
         private string _oldWallpaperPath;
-        private bool _waitingReboot = false;
 
         public SettingsApp(int width, int height, int x = 0, int y = 0) : base(ApplicationName, width, height, x, y)
         {
@@ -89,7 +87,7 @@ namespace Aura_OS.System.Processing.Applications
 
             if (Kernel.Installed)
             {
-                Settings config = new Settings(@"0:\System\settings.ini");
+                Settings config = new Settings(Kernel.RootVolume + "/System/settings.ini");
                 string autologin = config.GetValue("autologin");
                 byte windowsTransparency = byte.Parse(config.GetValue("windowsTransparency"));
                 _windowsAlpha.Value = windowsTransparency;
@@ -133,7 +131,7 @@ namespace Aura_OS.System.Processing.Applications
                 {
                     if (UpdateDialog())
                     {
-                        Settings config = new Settings(@"0:\System\settings.ini");
+                        Settings config = new Settings(Kernel.RootVolume + "/System/settings.ini");
                         config.EditValue("hostname", Kernel.ComputerName);
                         config.EditValue("themeBmpPath", Kernel.ThemeManager.BmpPath);
                         config.EditValue("themeXmlPath", Kernel.ThemeManager.XmlPath);
@@ -319,40 +317,19 @@ namespace Aura_OS.System.Processing.Applications
             uint width = uint.Parse(_resX.Text);
             uint height = uint.Parse(_resY.Text);
 
-            if (_waitingReboot == false && (_oldScreenWidth != width || _oldScreenHeight != height))
+            if (_oldScreenWidth != width || _oldScreenHeight != height)
             {
-                bool modeExists = false;
+                // GEN3-GAP(video-mode): gen3 GopCanvas resolution is fixed by the bootloader
+                // framebuffer (GopCanvas.SetMode is dead code, AvailableModes is decorative),
+                // so the resolution setting is informational only.
+                _dialog.SetState(DialogState.Error);
+                _dialog.Message = "Resolution change is not supported on Cosmos gen3 yet (fixed at boot by the bootloader). Current resolution: " + _oldScreenWidth + "x" + _oldScreenHeight + "@32.";
+                _dialog.MarkDirty();
 
-                foreach (var mode in Kernel.Canvas.AvailableModes)
-                {
-                    if (mode.Width == width && mode.Height == height)
-                    {
-                        modeExists = true;
-                    }
-                }
+                _resX.Text = _oldScreenWidth.ToString();
+                _resY.Text = _oldScreenHeight.ToString();
 
-                if (modeExists)
-                {
-                    _dialog.SetState(DialogState.Information);
-                    _dialog.Message = "Settings updated. Reboot needed to change resolution.";
-                    _dialog.AddButton("Reboot", new Action(() =>
-                    {
-                        Cosmos.System.Power.Reboot();
-                    }));
-                    _dialog.MarkDirty();
-                    _waitingReboot = true;
-
-                    return true;
-                }
-                else
-                {
-                    _dialog.SetState(DialogState.Error);
-                    _dialog.Message = width + "x" + height + "@32 is not a valid resolution. Type lsres to list available resolutions.";
-                    _dialog.MarkDirty();
-                    _waitingReboot = false;
-
-                    return false;
-                }
+                return false;
             }
             else if (!File.Exists(_themeBmpPath.Text))
             {

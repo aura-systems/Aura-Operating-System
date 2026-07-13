@@ -7,7 +7,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.IO.Compression;
+using Aura_OS.System.Compression;
 using System.Text;
 
 namespace Aura_OS.System.Processing

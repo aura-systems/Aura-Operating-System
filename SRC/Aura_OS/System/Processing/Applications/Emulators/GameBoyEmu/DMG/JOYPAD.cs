@@ -1,4 +1,4 @@
-﻿using Cosmos.System;
+﻿using Cosmos.Kernel.System.Keyboard;
 using static Aura_OS.System.Processing.Applications.Emulators.GameBoyEmu.Utils.BitOps;
 
 namespace Aura_OS.System.Processing.Applications.Emulators.GameBoyEmu.DMG

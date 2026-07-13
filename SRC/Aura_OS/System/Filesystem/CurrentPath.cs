@@ -1,4 +1,4 @@
-﻿/*
+/*
 * PROJECT:          Aura Operating System Development
 * CONTENT:          File interface
 * PROGRAMMERS:      Valentin Charbonnier <valentinbreiz@gmail.com>
@@ -16,11 +16,18 @@ namespace Aura_OS.System.Filesystem
             {
                 Directory.SetCurrentDirectory(Kernel.CurrentDirectory);
 
-                var root = Kernel.VirtualFileSystem.GetDirectory(Kernel.CurrentDirectory);
-
                 if (Kernel.CurrentDirectory != Kernel.CurrentVolume)
                 {
-                    Kernel.CurrentDirectory = root.mParent.mFullPath;
+                    // gen2 walked DirectoryEntry.mParent.mFullPath; gen3 has no DirectoryEntry,
+                    // so compute the parent from the path itself, clamped at the mount point.
+                    string parent = Path.GetDirectoryName(Kernel.CurrentDirectory.TrimEnd('/'));
+
+                    if (parent == null || parent.Length < Kernel.RootVolume.Length)
+                    {
+                        parent = Kernel.RootVolume;
+                    }
+
+                    Kernel.CurrentDirectory = parent.TrimEnd('/') + "/";
                 }
             }
             else if (dir == "~")
@@ -45,7 +52,7 @@ namespace Aura_OS.System.Filesystem
                 if (Directory.Exists(Kernel.CurrentDirectory + dir))
                 {
                     Directory.SetCurrentDirectory(Kernel.CurrentDirectory);
-                    Kernel.CurrentDirectory = Kernel.CurrentDirectory + dir + @"\";
+                    Kernel.CurrentDirectory = Kernel.CurrentDirectory + dir + "/";
                 }
                 else if (File.Exists(Kernel.CurrentDirectory + dir))
                 {

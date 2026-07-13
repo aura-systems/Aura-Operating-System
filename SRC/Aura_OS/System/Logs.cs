@@ -30,14 +30,21 @@ namespace Aura_OS.System
     {
         public static List<LogEntry> LogList = new List<LogEntry>();
 
+        // GEN3-GAP(log-sink): gen3 has no pluggable kernel log sink (core components
+        // write straight to serial), so LogLevel.Kernel entries only come from Aura
+        // itself now — the gen2 Debugger plug that fed Cosmos kernel logs into this
+        // list has no gen3 equivalent. Aura logs are mirrored to serial instead.
+
         public static void DoKernelLog(string log)
         {
             LogList.Add(new LogEntry(LogLevel.Kernel, log, DateTime.Now));
+            Cosmos.Kernel.Core.IO.Serial.WriteString("[Aura] " + log + "\n");
         }
 
         public static void DoOSLog(string log)
         {
             LogList.Add(new LogEntry(LogLevel.OS, log, DateTime.Now));
+            Cosmos.Kernel.Core.IO.Serial.WriteString("[Aura] " + log + "\n");
         }
     }
 }

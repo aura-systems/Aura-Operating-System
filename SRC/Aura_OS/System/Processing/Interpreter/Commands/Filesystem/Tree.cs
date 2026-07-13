@@ -46,7 +46,9 @@ namespace Aura_OS.System.Processing.Interpreter.Commands.Filesystem
         {
             try
             {
-                DoTree(Kernel.CurrentDirectory + "/" + arguments[0], 0);
+                string result = DoTree(Path.Combine(Kernel.CurrentDirectory, arguments[0]), 0);
+                Console.WriteLine(result);
+
                 return new ReturnInfo(this, ReturnCode.OK);
             }
             catch (Exception ex)
@@ -57,6 +59,8 @@ namespace Aura_OS.System.Processing.Interpreter.Commands.Filesystem
 
         private string DoTree(string directory, int depth)
         {
+            // gen3's plugged System.IO returns full paths (gen2 Cosmos returned bare
+            // names): recurse on the returned path and print only the entry name.
             StringBuilder sb = new StringBuilder();
             var directories = Directory.GetDirectories(directory);
 
@@ -66,7 +70,7 @@ namespace Aura_OS.System.Processing.Interpreter.Commands.Filesystem
                 {
                     sb.Append(" ");
                 }
-                sb.AppendLine(file);
+                sb.AppendLine(Path.GetFileName(file));
             }
 
             for (int j = 0; j < directories.Length; j++)
@@ -75,8 +79,8 @@ namespace Aura_OS.System.Processing.Interpreter.Commands.Filesystem
                 {
                     sb.Append(" ");
                 }
-                sb.AppendLine(directories[j]);
-                sb.Append(DoTree(directory + "/" + directories[j], depth + 4));
+                sb.AppendLine(Path.GetFileName(directories[j]));
+                sb.Append(DoTree(directories[j], depth + 4));
             }
 
             return sb.ToString();

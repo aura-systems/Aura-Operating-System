@@ -23,7 +23,8 @@ namespace UniLua
 #if !UNITY_WEBPLAYER
 		private static int OS_Clock( ILuaState lua )
 		{
-			lua.PushNumber(0); //TO PLUG
+			// Seconds since boot; Stopwatch is TSC-backed on Cosmos gen3 (StopwatchPlug).
+			lua.PushNumber( Stopwatch.GetTimestamp() / (double)Stopwatch.Frequency );
 			return 1;
 		}
 #endif

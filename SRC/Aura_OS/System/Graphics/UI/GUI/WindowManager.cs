@@ -51,7 +51,7 @@ namespace Aura_OS
 
             if (Kernel.Installed)
             {
-                Settings config = new Settings(@"0:\System\settings.ini");
+                Settings config = new Settings(Kernel.RootVolume + "/System/settings.ini");
                 byte windowsTransparency = byte.Parse(config.GetValue("windowsTransparency"));
                 byte taskbarTransparency = byte.Parse(config.GetValue("taskbarTransparency"));
                 WindowsTransparency = windowsTransparency;

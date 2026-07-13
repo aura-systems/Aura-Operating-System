@@ -40,7 +40,9 @@ namespace Aura_OS.System.Processing.Interpreter.Commands.Filesystem
 
             if (!File.Exists(Kernel.CurrentDirectory + file))
             {
-                File.Create(Kernel.CurrentDirectory + file);
+                // GEN3-TODO: dispose the stream explicitly — gen3 has no finalizers, an
+                // undisposed FileStream permanently leaks one of the 64 file descriptors.
+                File.Create(Kernel.CurrentDirectory + file).Dispose();
             }
             else
             {

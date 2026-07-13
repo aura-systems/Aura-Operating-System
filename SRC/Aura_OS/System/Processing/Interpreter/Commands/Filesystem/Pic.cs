@@ -8,7 +8,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using Cosmos.System.Graphics;
+using Cosmos.Kernel.System.Graphics;
 using Aura_OS.System.Processing.Applications;
 using Aura_OS.System.Processing.Processes;
 

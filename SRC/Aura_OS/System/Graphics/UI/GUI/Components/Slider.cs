@@ -4,7 +4,7 @@
 * PROGRAMMERS:      Valentin Charbonnier <valentinbreiz@gmail.com>
 */
 
-using Cosmos.System;
+using Cosmos.Kernel.System.Mouse;
 using UniLua;
 
 namespace Aura_OS.System.Graphics.UI.GUI.Components

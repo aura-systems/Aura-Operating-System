@@ -73,7 +73,7 @@ namespace Aura_OS.System.Processing
                         }
                     }
 
-                    string installedPath = "0:\\System\\Programs\\" + package.Name + ".cexe";
+                    string installedPath = Kernel.RootVolume + "/System/Programs/" + package.Name + ".cexe";
 
                     if (File.Exists(installedPath))
                     {
@@ -120,9 +120,9 @@ namespace Aura_OS.System.Processing
                     Packages.Add(package);
                     package.Download();
 
-                    if (Directory.Exists("0:\\System\\Programs"))
+                    if (Directory.Exists(Kernel.RootVolume + "/System/Programs"))
                     {
-                        File.WriteAllBytes("0:\\System\\Programs\\" + package.Name + ".cexe", package.Executable.RawData);
+                        File.WriteAllBytes(Kernel.RootVolume + "/System/Programs/" + package.Name + ".cexe", package.Executable.RawData);
                         Console.WriteLine(packageName + " installed.");
                     }
                     else

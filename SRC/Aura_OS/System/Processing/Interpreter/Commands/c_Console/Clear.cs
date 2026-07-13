@@ -33,7 +33,7 @@ namespace Aura_OS.System.Processing.Interpreter.Commands.c_Console
             }
             else
             {
-                Cosmos.System.Power.Shutdown();
+                Cosmos.Kernel.System.Power.Shutdown();
             }
 
             return new ReturnInfo(this, ReturnCode.OK);

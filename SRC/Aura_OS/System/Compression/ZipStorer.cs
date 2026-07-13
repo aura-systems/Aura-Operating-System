@@ -1,12 +1,13 @@
 ﻿// ZipStorer, by Jaime Olivares
 // Website: http://github.com/jaime-olivares/zipstorer
 
-using Ionic.Zlib;
+using ICSharpCode.SharpZipLib.Zip.Compression;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
 
-namespace System.IO.Compression
+namespace Aura_OS.System.Compression
 {
     /// <summary>
     /// Unique class for compression/decompression file. Represents a Zip file.
@@ -67,7 +68,8 @@ namespace System.IO.Compression
         #region Public fields
         /// <summary>True if UTF8 encoding for filename and comments, false if default (CP 437)</summary>
         public bool EncodeUTF8 = false;
-        /// <summary>Force deflate algotithm even if it inflates the stored file. Off by default.</summary>
+        /// <summary>Force deflate algotithm even if it inflates the stored file. Off by default.
+        /// GEN3-GAP(deflate-encoder): ignored — gen3 has no deflate encoder, writing always stores.</summary>
         public bool ForceDeflating = false;
         #endregion
 
@@ -213,7 +215,7 @@ namespace System.IO.Compression
             if (!_leaveOpen)
                 zip.Close();
 
-            throw new System.IO.InvalidDataException();
+            throw new InvalidDataException();
         }
 
         /// <summary>
@@ -230,6 +232,8 @@ namespace System.IO.Compression
 
             using (var stream = new FileStream(_pathname, FileMode.Open, FileAccess.Read))
             {
+                // GEN3-GAP(fat-timestamps): the gen3 FAT driver reports epoch (0) file times,
+                // so entries added from disk carry a 1980-era zip timestamp.
                 return this.AddStream(_method, _filenameInZip, stream, File.GetLastWriteTime(_pathname), _comment);
             }
         }
@@ -481,32 +485,75 @@ namespace System.IO.Compression
             if (BitConverter.ToUInt32(signature, 0) != 0x04034b50)
                 return false;
 
-            // Select input stream for inflating or just reading
-            Stream inStream;
+            this.ZipFileStream.Seek(_zfe.FileOffset, SeekOrigin.Begin);
 
             if (_zfe.Method == Compression.Store)
-                inStream = this.ZipFileStream;
-            else if (_zfe.Method == Compression.Deflate)
-                inStream = new Ionic.Zlib.DeflateStream(this.ZipFileStream, Ionic.Zlib.CompressionMode.Decompress, true);
-            else
-                return false;
-
-            // Buffered copy
-            byte[] buffer = new byte[65535];
-            this.ZipFileStream.Seek(_zfe.FileOffset, SeekOrigin.Begin);
-            long bytesPending = _zfe.FileSize;
-
-            while (bytesPending > 0)
             {
-                int bytesRead = inStream.Read(buffer, 0, (int)Math.Min(bytesPending, buffer.Length));
-                _stream.Write(buffer, 0, bytesRead);
+                // Buffered copy
+                byte[] buffer = new byte[65535];
+                long bytesPending = _zfe.FileSize;
 
-                bytesPending -= (uint)bytesRead;
+                while (bytesPending > 0)
+                {
+                    int bytesRead = this.ZipFileStream.Read(buffer, 0, (int)Math.Min(bytesPending, buffer.Length));
+
+                    if (bytesRead <= 0)
+                        return false;
+
+                    _stream.Write(buffer, 0, bytesRead);
+                    bytesPending -= (uint)bytesRead;
+                }
             }
-            _stream.Flush();
+            else if (_zfe.Method == Compression.Deflate)
+            {
+                // gen2 inflated with Ionic.Zlib.DeflateStream (Zlib.Portable); gen3 ships a
+                // vendored SharpZipLib inflater in Cosmos.Kernel.System instead
+                // (noHeader: true = raw deflate data, as stored in zip entries).
+                Inflater inflater = new Inflater(true);
+                byte[] inBuffer = new byte[16384];
+                byte[] outBuffer = new byte[16384];
+                long compressedPending = _zfe.CompressedSize;
+                long bytesPending = _zfe.FileSize;
 
-            if (_zfe.Method == Compression.Deflate)
-                inStream.Dispose();
+                while (bytesPending > 0 && !inflater.IsFinished)
+                {
+                    if (inflater.IsNeedingInput)
+                    {
+                        if (compressedPending <= 0)
+                            return false;
+
+                        int bytesRead = this.ZipFileStream.Read(inBuffer, 0, (int)Math.Min(compressedPending, inBuffer.Length));
+
+                        if (bytesRead <= 0)
+                            return false;
+
+                        inflater.SetInput(inBuffer, 0, bytesRead);
+                        compressedPending -= bytesRead;
+                    }
+
+                    int inflated = inflater.Inflate(outBuffer, 0, (int)Math.Min(bytesPending, outBuffer.Length));
+
+                    if (inflated > 0)
+                    {
+                        _stream.Write(outBuffer, 0, inflated);
+                        bytesPending -= inflated;
+                    }
+                    else if (!inflater.IsNeedingInput && !inflater.IsFinished)
+                    {
+                        // Corrupted or truncated deflate stream.
+                        return false;
+                    }
+                }
+
+                if (bytesPending > 0)
+                    return false;
+            }
+            else
+            {
+                return false;
+            }
+
+            _stream.Flush();
 
             return true;
         }
@@ -535,61 +582,10 @@ namespace System.IO.Compression
             }
         }
 
-        /// <summary>
-        /// Removes one of many files in storage. It creates a new Zip file.
-        /// </summary>
-        /// <param name="_zip">Reference to the current Zip object</param>
-        /// <param name="_zfes">List of Entries to remove from storage</param>
-        /// <returns>True if success, false if not</returns>
-        /// <remarks>This method only works for storage of type FileStream</remarks>
-        public static bool RemoveEntries(ref ZipStorer _zip, List<ZipFileEntry> _zfes)
-        {
-            if (!(_zip.ZipFileStream is FileStream))
-                throw new InvalidOperationException("RemoveEntries is allowed just over streams of type FileStream");
-
-            //Get full list of entries
-            var fullList = _zip.ReadCentralDir();
-
-            //In order to delete we need to create a copy of the zip file excluding the selected items
-            var tempZipName = Path.GetTempFileName();
-            var tempEntryName = Path.GetTempFileName();
-
-            try
-            {
-                var tempZip = ZipStorer.Create(tempZipName, string.Empty);
-
-                foreach (ZipFileEntry zfe in fullList)
-                {
-                    if (!_zfes.Contains(zfe))
-                    {
-                        if (_zip.ExtractFile(zfe, tempEntryName))
-                        {
-                            tempZip.AddFile(zfe.Method, tempEntryName, zfe.FilenameInZip, zfe.Comment);
-                        }
-                    }
-                }
-
-                _zip.Close();
-                tempZip.Close();
-
-                File.Delete(_zip.FileName);
-                File.Move(tempZipName, _zip.FileName);
-
-                _zip = ZipStorer.Open(_zip.FileName, _zip.Access);
-            }
-            catch
-            {
-                return false;
-            }
-            finally
-            {
-                if (File.Exists(tempZipName))
-                    File.Delete(tempZipName);
-                if (File.Exists(tempEntryName))
-                    File.Delete(tempEntryName);
-            }
-            return true;
-        }
+        // GEN3-GAP(tmpfs): RemoveEntries was deleted — it rebuilt the archive through
+        // Path.GetTempFileName(), and gen3 mounts nothing at /tmp so temp files cannot be
+        // created. No Aura code called it. Restore it once a writable /tmp (or an in-memory
+        // rebuild) is available.
         #endregion
 
         #region Private methods
@@ -780,7 +776,10 @@ namespace System.IO.Compression
             this.ZipFileStream.Write(encodedComment, 0, encodedComment.Length);
         }
 
-        // Copies all the source file into the zip storage
+        // Copies all the source file into the zip storage.
+        // GEN3-GAP(deflate-encoder): gen3's vendored SharpZipLib is inflate-only and the BCL
+        // System.IO.Compression relies on native zlib that does not exist on bare metal, so
+        // entries are always written with the STORE method (no compression).
         private Compression Store(ZipFileEntry _zfe, Stream _source)
         {
             byte[] buffer = new byte[16384];
@@ -788,36 +787,16 @@ namespace System.IO.Compression
             uint totalRead = 0;
 
             long posStart = this.ZipFileStream.Position;
-            long sourceStart = _source.CanSeek ? _source.Position : 0;
 
-            ZlibCodec compressingStream = new ZlibCodec();
-            compressingStream.InitializeDeflate(Ionic.Zlib.CompressionLevel.Default);
-
+            _zfe.Method = Compression.Store;
             _zfe.Crc32 = 0 ^ 0xffffffff;
-
-            compressingStream.InputBuffer = new byte[16384];
-            compressingStream.OutputBuffer = new byte[16384];
-            compressingStream.NextOut = 0;
-            compressingStream.AvailableBytesOut = 16384;
 
             do
             {
                 bytesRead = _source.Read(buffer, 0, buffer.Length);
                 if (bytesRead > 0)
                 {
-                    compressingStream.InputBuffer = buffer;
-                    compressingStream.NextIn = 0;
-                    compressingStream.AvailableBytesIn = bytesRead;
-
-                    while (compressingStream.TotalBytesIn != bytesRead && compressingStream.TotalBytesOut < 16384)
-                    {
-                        compressingStream.AvailableBytesIn = compressingStream.AvailableBytesOut = 1; // force small buffers
-                        compressingStream.Deflate(FlushType.None);
-                    }
-
-                    this.ZipFileStream.Write(compressingStream.OutputBuffer, 0, compressingStream.NextOut);
-                    compressingStream.NextOut = 0;
-                    compressingStream.AvailableBytesOut = 16384;
+                    this.ZipFileStream.Write(buffer, 0, bytesRead);
                 }
 
                 for (uint i = 0; i < bytesRead; i++)
@@ -828,23 +807,9 @@ namespace System.IO.Compression
                 totalRead += (uint)bytesRead;
             } while (bytesRead > 0);
 
-            compressingStream.EndDeflate();
-
             _zfe.Crc32 ^= 0xFFFFFFFF;
             _zfe.FileSize = totalRead;
             _zfe.CompressedSize = (uint)(this.ZipFileStream.Position - posStart);
-
-            // Verify for real compression
-            if (_zfe.Method == Compression.Deflate && !this.ForceDeflating && _source.CanSeek && _zfe.CompressedSize > _zfe.FileSize)
-            {
-                // Start operation again with Store algorithm
-                _zfe.Method = Compression.Store;
-                this.ZipFileStream.Position = posStart;
-                this.ZipFileStream.SetLength(posStart);
-                _source.Position = sourceStart;
-
-                return this.Store(_zfe, _source);
-            }
 
             return _zfe.Method;
         }

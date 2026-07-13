@@ -5,7 +5,7 @@
 */
 
 using System.Drawing;
-using Cosmos.System.Graphics;
+using Cosmos.Kernel.System.Graphics;
 using Aura_OS.System.Graphics.UI.GUI.Skin;
 
 namespace Aura_OS.System.Graphics.UI.GUI.Components

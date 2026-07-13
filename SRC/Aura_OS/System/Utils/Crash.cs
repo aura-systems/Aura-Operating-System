@@ -5,7 +5,7 @@
 */
 
 using System;
-using Sys = Cosmos.System;
+using Sys = Cosmos.Kernel.System;
 
 namespace Aura_OS.System
 {

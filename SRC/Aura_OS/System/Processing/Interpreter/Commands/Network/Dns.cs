@@ -6,9 +6,9 @@
 
 using System;
 using System.Collections.Generic;
-using Cosmos.System.Network.IPv4.UDP.DNS;
-using Cosmos.System.Network.IPv4;
-using Cosmos.System.Network.Config;
+using Cosmos.Kernel.System.Network.IPv4.UDP.DNS;
+using Cosmos.Kernel.System.Network.IPv4;
+using Cosmos.Kernel.System.Network.Config;
 using Aura_OS;
 using Aura_OS.System.Processing.Interpreter;
 
@@ -47,18 +47,40 @@ namespace Aura_OS.System.Processing.Interpreter.Commands.Network
             {
                 return new ReturnInfo(this, ReturnCode.ERROR_ARG);
             }
-            else if (arguments.Count == 1)
+
+            try
             {
-                xClient.Connect(DNSConfig.DNSNameservers[0]);
-                Console.WriteLine("DNS used : " + DNSConfig.DNSNameservers[0].ToString());
-                xClient.SendAsk(arguments[0]);
-                domainname = arguments[0];
+                if (arguments.Count == 1)
+                {
+                    if (DNSConfig.DNSNameservers.Count == 0)
+                    {
+                        return new ReturnInfo(this, ReturnCode.ERROR, "No DNS server configured. Use ipconfig /nameserver -add or dhcp.");
+                    }
+
+                    xClient.Connect(DNSConfig.DNSNameservers[0]);
+                    Console.WriteLine("DNS used : " + DNSConfig.DNSNameservers[0].ToString());
+                    xClient.SendAsk(arguments[0]);
+                    domainname = arguments[0];
+                }
+                else
+                {
+                    Address dnsServer = Address.Parse(arguments[0]);
+
+                    if (dnsServer == null)
+                    {
+                        return new ReturnInfo(this, ReturnCode.ERROR, "Can't parse DNS server address " + arguments[0]);
+                    }
+
+                    xClient.Connect(dnsServer);
+                    xClient.SendAsk(arguments[1]);
+                    domainname = arguments[1];
+                }
             }
-            else
+            catch (Exception ex)
             {
-                xClient.Connect(Address.Parse(arguments[0]));
-                xClient.SendAsk(arguments[1]);
-                domainname = arguments[1];
+                // gen3 DnsClient.SendAsk throws when no route/config exists.
+                xClient.Close();
+                return new ReturnInfo(this, ReturnCode.ERROR, ex.Message);
             }
 
             Address address = xClient.Receive();

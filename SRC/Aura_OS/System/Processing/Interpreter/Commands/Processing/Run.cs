@@ -45,7 +45,7 @@ namespace Aura_OS.System.Processing.Interpreter.Commands.Processing
                         }
                     }
 
-                    string installedPath = "0:\\System\\Programs\\" + arguments[0] + ".cexe";
+                    string installedPath = Kernel.RootVolume + "/System/Programs/" + arguments[0] + ".cexe";
 
                     if (File.Exists(installedPath))
                     {
