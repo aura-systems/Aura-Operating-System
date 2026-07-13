@@ -88,8 +88,11 @@ public class RegionListBuilder
 
             if (element.Name == "region")
             {
-                string idAttribute = element.GetAttribute("id").Value;
-                string id = (idAttribute == null) ? null : idAttribute;
+                // "id" is optional (e.g. the cursor frame's region has none). On gen2/IL2CPU
+                // dereferencing the null attribute silently read mapped low memory; gen3's
+                // real paging turns it into a page fault, so guard properly.
+                NanoXMLAttribute idAttribute = element.GetAttribute("id");
+                string id = idAttribute == null ? null : idAttribute.Value;
                 string source = element.GetAttribute("source").Value;
                 string hplacement = element.GetAttribute("hplacement").Value;
                 string vplacement = element.GetAttribute("vplacement").Value;

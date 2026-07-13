@@ -52,7 +52,7 @@ namespace Aura_OS.System.Graphics.UI.GUI.Skin
             if (xmlContent == null)
             {
                 XmlPath = "Embedded:Themes/Suave.skin.xml";
-                xmlContent = Encoding.UTF8.GetString(Files.GetUiResource("Themes/Suave.skin.xml"));
+                xmlContent = Files.GetUiResourceText("Themes/Suave.skin.xml");
             }
 
             _skinParser.loadSkin(xmlContent);

@@ -42,6 +42,17 @@ namespace Aura_OS
             return ResourceManager.GetResourceAsSpan("Aura_OS.Resources." + name).ToArray();
         }
 
+        /// <summary>
+        /// Reads an embedded UI asset as UTF-8 text, stripping the byte-order mark if present
+        /// (gen2 read these files with File.ReadAllText, which strips BOMs; raw GetString does not).
+        /// </summary>
+        public static string GetUiResourceText(string relPath)
+        {
+            byte[] bytes = GetUiResource(relPath);
+            int offset = bytes.Length >= 3 && bytes[0] == 0xEF && bytes[1] == 0xBB && bytes[2] == 0xBF ? 3 : 0;
+            return global::System.Text.Encoding.UTF8.GetString(bytes, offset, bytes.Length - offset);
+        }
+
         public static void LoadFiles()
         {
             // GEN3-TODO: ResourceManager re-parses the resource index on every lookup (cache field
