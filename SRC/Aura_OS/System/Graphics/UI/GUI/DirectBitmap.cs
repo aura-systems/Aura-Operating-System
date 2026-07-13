@@ -449,20 +449,23 @@ namespace Aura_OS.System.Graphics.UI.GUI
 
         public void DrawImageAlpha(Bitmap image, int x, int y, byte alpha = 0xFF)
         {
-            if (image.RawData.Length > Bitmap.RawData.Length)
+            // Blend straight into the backing buffer (AlphaBlendSSE takes separate
+            // dest/src pitches) instead of the old extract-blend-copy-back, which
+            // allocated a temporary Bitmap the size of the source on EVERY call —
+            // ~1.6MB of garbage per window per frame, forcing constant GC pressure.
+            int srcX = 0, srcY = 0;
+            int w = (int)image.Width, h = (int)image.Height;
+
+            if (x < 0) { srcX = -x; w -= srcX; x = 0; }
+            if (y < 0) { srcY = -y; h -= srcY; y = 0; }
+            if (x + w > (int)Bitmap.Width) w = (int)Bitmap.Width - x;
+            if (y + h > (int)Bitmap.Height) h = (int)Bitmap.Height - y;
+            if (w <= 0 || h <= 0)
             {
                 return;
             }
 
-            if ((y + image.Height > Bitmap.Height || y < 0) && (x + image.Width < Bitmap.Width || x > 0))
-            {
-                return;
-            }
-
-            Bitmap tmp = ExtractImage(x, y, (int)image.Width, (int)image.Height);
-            if (tmp.Width == 0) return;
-
-            fixed (int* bgBitmap = tmp.RawData)
+            fixed (int* bgBitmap = Bitmap.RawData)
             fixed (int* fgBitmap = image.RawData)
             {
                 if (alpha < 0xFF)
@@ -470,10 +473,10 @@ namespace Aura_OS.System.Graphics.UI.GUI
                     OpacitySSE((uint*)fgBitmap, (int)image.Width, (int)image.Height, (int)image.Width * 4, alpha);
                 }
 
-                AlphaBlendSSE((uint*)bgBitmap, (int)image.Width * 4, (uint*)fgBitmap, (int)image.Width * 4, (int)image.Width, (int)image.Height);
+                uint* destPtr = (uint*)(bgBitmap + y * (int)Bitmap.Width + x);
+                uint* srcPtr = (uint*)(fgBitmap + srcY * (int)image.Width + srcX);
+                AlphaBlendSSE(destPtr, (int)Bitmap.Width * 4, srcPtr, (int)image.Width * 4, w, h);
             }
-
-            DrawImage(tmp, x, y);
         }
 
         public void DrawImageStretchAlpha(Bitmap image, Rectangle sourceRect, Rectangle destRect)
