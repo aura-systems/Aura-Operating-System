@@ -176,6 +176,7 @@ namespace Aura_OS
 
             CustomConsole.WriteLineInfo("Loading files...");
             Files.LoadFiles();
+            
 
             CustomConsole.WriteLineInfo("Checking for boot.bat script...");
             foreach (var mount in VfsManager.Mounts)
@@ -220,10 +221,17 @@ namespace Aura_OS
             ApplicationManager = new ApplicationManager();
             ApplicationManager.Initialize();
 
+            // Kernel.MouseManager must be assigned before the Explorer ctor runs:
+            // it reaches LoginScreen.Hide(), which sets MouseManager.FocusedComponent
+            // (gen2/IL2CPU identity-mapped low memory and silently absorbed that
+            // null-field write; on gen3 it is a hard #PF — GEN3-GAP note §2.6).
+            // Initialize() must stay AFTER Explorer's: ProcessManager updates in
+            // registration order, and the cursor has to draw on top of the desktop.
+            MouseManager = new System.Input.MouseManager();
+
             Explorer = new Explorer();
             Explorer.Initialize();
 
-            MouseManager = new System.Input.MouseManager();
             MouseManager.Initialize();
 
             KeyboardManager = new System.Input.KeyboardManager();

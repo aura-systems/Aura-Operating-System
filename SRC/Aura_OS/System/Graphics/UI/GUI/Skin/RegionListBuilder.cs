@@ -42,28 +42,42 @@ public class RegionListBuilder
     {
         foreach (NanoXMLNode element in frameElement.SubNodes)
         {
-            // Left and right border width determination
-            string hplacement = element.GetAttribute("hplacement").Value;
-            string w = element.GetAttribute("w").Value;
-            if (hplacement == "left")
+            // Only <region> nodes carry border geometry; <text> nodes share the placement
+            // attributes but have no w/h. On gen2/IL2CPU dereferencing the null attribute
+            // silently read mapped low memory; gen3's real paging turns it into a page fault.
+            if (element.Name != "region")
             {
-                this.leftBorderWidth = Math.Max(this.leftBorderWidth, int.Parse(w));
+                continue;
             }
-            else if (hplacement == "right")
+
+            // Left and right border width determination
+            NanoXMLAttribute hplacementAttribute = element.GetAttribute("hplacement");
+            NanoXMLAttribute wAttribute = element.GetAttribute("w");
+            if (hplacementAttribute != null && wAttribute != null)
             {
-                this.rightBorderWidth = Math.Max(this.rightBorderWidth, int.Parse(w));
+                if (hplacementAttribute.Value == "left")
+                {
+                    this.leftBorderWidth = Math.Max(this.leftBorderWidth, int.Parse(wAttribute.Value));
+                }
+                else if (hplacementAttribute.Value == "right")
+                {
+                    this.rightBorderWidth = Math.Max(this.rightBorderWidth, int.Parse(wAttribute.Value));
+                }
             }
 
             // Top and bottom border width determination
-            string vplacement = element.GetAttribute("vplacement").Value;
-            string h = element.GetAttribute("h").Value;
-            if (vplacement == "top")
+            NanoXMLAttribute vplacementAttribute = element.GetAttribute("vplacement");
+            NanoXMLAttribute hAttribute = element.GetAttribute("h");
+            if (vplacementAttribute != null && hAttribute != null)
             {
-                this.topBorderWidth = Math.Max(this.topBorderWidth, int.Parse(h));
-            }
-            else if (vplacement == "bottom")
-            {
-                this.bottomBorderWidth = Math.Max(this.bottomBorderWidth, int.Parse(h));
+                if (vplacementAttribute.Value == "top")
+                {
+                    this.topBorderWidth = Math.Max(this.topBorderWidth, int.Parse(hAttribute.Value));
+                }
+                else if (vplacementAttribute.Value == "bottom")
+                {
+                    this.bottomBorderWidth = Math.Max(this.bottomBorderWidth, int.Parse(hAttribute.Value));
+                }
             }
         }
     }

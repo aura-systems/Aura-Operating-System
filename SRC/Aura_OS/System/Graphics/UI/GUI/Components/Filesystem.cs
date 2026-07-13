@@ -100,8 +100,21 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
             int currentX = startX;
             int currentY = startY;
 
-            string[] directories = Directory.GetDirectories(CurrentPath);
-            string[] files = Directory.GetFiles(CurrentPath);
+            // GEN3-GAP(no-volume): gen2 always had at least the boot ISO mounted as 0:\, so the
+            // desktop could enumerate its start path unconditionally. On gen3 nothing is mounted
+            // when no FAT volume exists — show an empty desktop instead of faulting at boot.
+            string[] directories;
+            string[] files;
+            if (Directory.Exists(CurrentPath))
+            {
+                directories = Directory.GetDirectories(CurrentPath);
+                files = Directory.GetFiles(CurrentPath);
+            }
+            else
+            {
+                directories = new string[0];
+                files = new string[0];
+            }
 
             _buttons.Clear();
             Children.Clear();

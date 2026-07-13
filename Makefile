@@ -12,7 +12,7 @@ QEMU := qemu-system-x86_64 -M q35 -cpu max -m 1G
 
 ISO_FLAGS  := -drive file=$(OUTPUT)/Aura_OS.iso,if=none,id=cosmoscd,format=raw,readonly=on \
               -device ide-cd,drive=cosmoscd,bootindex=0 \
-              -vga std -device i8042 -serial file:uart.log
+              -vga std -serial file:uart.log
 
 DISK_IMG   := disk.img
 DISK_FLAGS := -drive file=$(DISK_IMG),if=none,id=ahcidisk,format=raw \
