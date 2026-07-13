@@ -1,4 +1,4 @@
-﻿/*
+/*
 * PROJECT:          Aura Operating System Development
 * CONTENT:          Kernel.cs, the main init class + main loop class
 * PROGRAMMER(S):    Valentin Charbonnier <valentinbreiz@gmail.com>
@@ -6,17 +6,14 @@
 
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Drawing;
 using System.IO;
-using Cosmos.Core.Memory;
-using Cosmos.HAL;
-using Cosmos.System;
-using Cosmos.System.ExtendedASCII;
-using Cosmos.System.FileSystem;
-using Cosmos.System.FileSystem.VFS;
-using Cosmos.System.Graphics;
-using Cosmos.System.Graphics.Fonts;
+using Cosmos.Kernel.HAL.Vfs;
+using Cosmos.Kernel.System.Filesystems.Fat;
+using Cosmos.Kernel.System.Graphics;
+using Cosmos.Kernel.System.Graphics.Fonts;
+using Cosmos.Kernel.System.Storage;
+using Cosmos.Kernel.System.Vfs;
 using Aura_OS.System;
 using Aura_OS.Processing;
 using Aura_OS.System.Processing;
@@ -45,8 +42,13 @@ namespace Aura_OS
         public static string Clipboard { get; internal set; }
         public static string UserDirectory { get; internal set; }
 
-        public static string CurrentVolume = @"0:\";
-        public static string CurrentDirectory = @"0:\";
+        // gen3 uses Unix-style mount-point paths ("/mnt") instead of gen2 drive letters ("0:\").
+        public const string RootVolume = "/mnt";
+        public static string CurrentVolume = RootVolume + "/";
+        public static string CurrentDirectory = RootVolume + "/";
+
+        /// <summary>True once a FAT volume is mounted at <see cref="RootVolume"/>.</summary>
+        public static bool VolumeMounted = false;
 
         private static bool _networkConnected = false;
         public static bool NetworkConnected
@@ -120,6 +122,8 @@ namespace Aura_OS
         public static Explorer Explorer;
 
         // Textmode Console
+        // GEN3-GAP(textmode): gen3 is UEFI/GOP only, no VGA text mode; the CUI console is
+        // retargeted at the graphical KernelConsole and this stays null unless explicitly used.
         public static System.Graphics.UI.CUI.Console TextmodeConsole;
 
         public static int FreeCount = 0;
@@ -129,24 +133,37 @@ namespace Aura_OS
         private static int _fps = 0;
         private static int _deltaT = 0;
 
-        public static CosmosVFS VirtualFileSystem;
-
         public static string CommandOutput = "";
         public static bool Redirect = false;
 
         public static void BeforeRun()
         {
             EnvironmentVariables = new Dictionary<string, string>();
-            VirtualFileSystem = new CosmosVFS();
 
             //Start Filesystem
-            VFSManager.RegisterVFS(VirtualFileSystem);
+            // gen2: new CosmosVFS() + VFSManager.RegisterVFS (auto-mounted every volume as N:\).
+            // gen3: register the FAT driver and mount partition 0 at /mnt explicitly.
+            if (VfsManager.RegisterFilesystem("fat", new FatFilesystemType()))
+            {
+                if (StorageManager.Partitions.Count > 0 &&
+                    VfsManager.TryMount("fat", "0", MountFlags.None, RootVolume, out _))
+                {
+                    VolumeMounted = true;
+                    CustomConsole.WriteLineOK("FAT volume mounted on " + RootVolume);
+                }
+                else
+                {
+                    // GEN3-GAP(iso9660): without a FAT disk attached there is no filesystem at all —
+                    // gen2 could always fall back to reading the boot ISO (ISO9660), gen3 cannot.
+                    CustomConsole.WriteLineInfo("No FAT volume found, running without persistent storage.");
+                }
+            }
 
-            if (File.Exists(@"0:\System\settings.ini"))
+            if (VolumeMounted && File.Exists(RootVolume + @"/System/settings.ini"))
             {
                 Installed = true;
 
-                Settings config = new Settings(@"0:\System\settings.ini");
+                Settings config = new Settings(RootVolume + @"/System/settings.ini");
                 ScreenWidth = uint.Parse(config.GetValue("screenWidth"));
                 ScreenHeight = uint.Parse(config.GetValue("screenHeight"));
             }
@@ -161,19 +178,15 @@ namespace Aura_OS
             Files.LoadFiles();
 
             CustomConsole.WriteLineInfo("Checking for boot.bat script...");
-            for (int i = 0; i <= 5; i++)
+            foreach (var mount in VfsManager.Mounts)
             {
-                string volumePath = i + @":\";
-                if (Directory.Exists(volumePath))
+                string volumePath = mount.MountPoint + "/";
+                if (File.Exists(volumePath + "boot.bat"))
                 {
-                    CustomConsole.WriteLineInfo($"Checking for boot.bat on volume {volumePath}...");
-                    if (File.Exists(volumePath + "boot.bat"))
-                    {
-                        CustomConsole.WriteLineOK($"Detected boot.bat on {volumePath}, executing script...");
-                        Batch.Execute(volumePath + "boot.bat");
-                        CurrentVolume = volumePath;
-                        break;
-                    }
+                    CustomConsole.WriteLineOK($"Detected boot.bat on {volumePath}, executing script...");
+                    Batch.Execute(volumePath + "boot.bat");
+                    CurrentVolume = volumePath;
+                    break;
                 }
             }
 
@@ -183,6 +196,13 @@ namespace Aura_OS
 
             //START GRAPHICS
             Canvas = FullScreenCanvas.GetFullScreenCanvas(new Mode(ScreenWidth, ScreenHeight, ColorDepth.ColorDepth32));
+
+            // GEN3-GAP(video-mode): GetFullScreenCanvas(Mode) silently ignores the requested mode —
+            // the resolution is whatever Limine negotiated at boot. Read back the real values so the
+            // whole UI sizes itself correctly (request a mode via Bootloader/limine.conf instead).
+            ScreenWidth = Canvas.Mode.Width;
+            ScreenHeight = Canvas.Mode.Height;
+
             Canvas.DrawImage(AuraLogoWhite, (int)((ScreenWidth / 2) - (AuraLogoWhite.Width / 2)), (int)((ScreenHeight / 2) - (AuraLogoWhite.Height / 2)));
             Canvas.Display();
 
@@ -209,17 +229,10 @@ namespace Aura_OS
             KeyboardManager = new System.Input.KeyboardManager();
             KeyboardManager.Initialize();
 
-            //Load Localization
-            CustomConsole.WriteLineInfo("Initializing localization...");
-            Encoding.RegisterProvider(CosmosEncodingProvider.Instance);
+            // GEN3-GAP(encoding): CosmosEncodingProvider / Console.InputEncoding/OutputEncoding have
+            // no gen3 equivalent (InvariantGlobalization; KernelConsole consumes UTF-16 directly).
 
-            CustomConsole.WriteLineInfo("Initializing ASCII encoding...");
-            global::System.Console.InputEncoding = Encoding.ASCII;
-            global::System.Console.OutputEncoding = Encoding.ASCII;
-
-            CustomConsole.WriteLineInfo("Try cleaning memory...");
-            FreeCount = Heap.Collect();
-            CustomConsole.WriteLineInfo("Cosmos Memory Manager works.");
+            // gen3 has a real tracing GC — no manual Heap.Collect() needed at boot or per frame.
 
             BootTime = Time.MonthString() + "/" + Time.DayString() + "/" + Time.YearString() + ", " + Time.TimeString(true, true, true);
 
@@ -234,21 +247,16 @@ namespace Aura_OS
         {
             try
             {
-                if (_deltaT != RTC.Second)
+                int second = DateTime.Now.Second;
+                if (_deltaT != second)
                 {
                     _fps = _frames;
                     _frames = 0;
-                    _deltaT = RTC.Second;
+                    _deltaT = second;
                 }
 
                 _frames++;
                 _frameCount++;
-
-                if (_frameCount == 4)
-                {
-                    FreeCount = Heap.Collect();
-                    _frameCount = 0;
-                }
 
                 ProcessManager.Update();
 

@@ -1,17 +1,17 @@
-﻿/*
+/*
 * PROJECT:          Aura Operating System Development
 * CONTENT:          Memory Informations
 * PROGRAMMER(S):    Arawn Davies <arawn.davies@gmail.com>
 *                   Valentin Charbonnier <valentinbreiz@gmail.com>
 */
 
-using Cosmos.Core;
+using Cosmos.Kernel.Core.Memory;
 
 namespace Aura_OS.Core
 {
     public class Memory
     {
-        public static uint TotalMemory = CPU.GetAmountOfRAM();
+        public static uint TotalMemory = (uint)(PageAllocator.RamSize / div);
         public uint FreePercentage;
         public uint UsedPercentage = (GetUsedMemory() * 100) / TotalMemory;
         public uint FreeMemory = TotalMemory - GetUsedMemory();
@@ -24,7 +24,7 @@ namespace Aura_OS.Core
 
         public static void GetTotalMemory()
         {
-            TotalMemory = CPU.GetAmountOfRAM() + 1;
+            TotalMemory = (uint)(PageAllocator.RamSize / div) + 1;
         }
 
         public void Monitor()
@@ -33,7 +33,7 @@ namespace Aura_OS.Core
             FreeMemory = TotalMemory - GetUsedMemory();
             UsedPercentage = (GetUsedMemory() * 100) / TotalMemory;
             FreePercentage = 100 - UsedPercentage;
-        } 
+        }
 
         public static uint GetFreeMemory()
         {
@@ -42,8 +42,9 @@ namespace Aura_OS.Core
 
         public static uint GetUsedMemory()
         {
-            uint UsedRAM = CPU.GetEndOfKernel() + 1024;
-            return UsedRAM / div;
+            // gen2 used CPU.GetEndOfKernel() as a heuristic; gen3 exposes real page accounting.
+            ulong usedBytes = (PageAllocator.TotalPageCount - PageAllocator.FreePageCount) * PageAllocator.PageSize;
+            return (uint)(usedBytes / div);
         }
     }
 }
