@@ -32,7 +32,7 @@ namespace Aura_OS.System.Input
             CustomConsole.WriteLineInfo("Starting keyboard manager...");
 
             CustomConsole.WriteLineInfo("Starting keyboard...");
-            Cosmos.Kernel.System.Keyboard.KeyboardManager.SetKeyLayout(new Cosmos.Kernel.System.Keyboard.ScanMaps.USStandardLayout());
+            KeyboardLayouts.Set(KeyboardLayouts.CurrentCode);
 
             Kernel.ProcessManager.Register(this);
             Kernel.ProcessManager.Start(this);

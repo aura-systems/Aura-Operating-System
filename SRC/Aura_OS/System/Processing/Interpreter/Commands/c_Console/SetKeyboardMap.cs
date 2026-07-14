@@ -1,9 +1,6 @@
 using Aura_OS.System.Processing.Interpreter;
 using System;
 using System.Collections.Generic;
-using System.Text;
-using Cosmos.Kernel.System.Keyboard;
-using Cosmos.Kernel.System.Keyboard.ScanMaps;
 
 namespace Aura_OS.System.Processing.Interpreter.Commands.c_Console
 {
@@ -23,21 +20,23 @@ namespace Aura_OS.System.Processing.Interpreter.Commands.c_Console
         /// <param name="arguments">Arguments</param>
         public override ReturnInfo Execute(List<string> arguments)
         {
-            switch (arguments[0])
-            {
-                case "azerty":
-                case "fr":
-                    // gen3 ships only the US layout; the AZERTY table is ported into Aura itself.
-                    KeyboardManager.SetKeyLayout(new Aura_OS.System.Input.FRStandardLayout());
-                    break;
+            string code = arguments[0];
 
-                case "qwerty":
-                case "us":
-                    KeyboardManager.SetKeyLayout(new USStandardLayout());
-                    break;
-                default:
-                    return new ReturnInfo(this, ReturnCode.ERROR, "This keyboardmap isn't supported, please type: setkeyboardmap /help");
+            // gen2 aliases kept for muscle memory.
+            if (code == "azerty")
+            {
+                code = "fr";
             }
+            else if (code == "qwerty")
+            {
+                code = "us";
+            }
+
+            if (!Aura_OS.System.Input.KeyboardLayouts.Set(code))
+            {
+                return new ReturnInfo(this, ReturnCode.ERROR, "This keyboardmap isn't supported, please type: setkeyboardmap /help");
+            }
+
             return new ReturnInfo(this, ReturnCode.OK);
         }
 
@@ -47,8 +46,10 @@ namespace Aura_OS.System.Processing.Interpreter.Commands.c_Console
         public override void PrintHelp()
         {
             Console.WriteLine("Available keyboards map:");
-            Console.WriteLine("- setkeyboardmap azerty");
-            Console.WriteLine("- setkeyboardmap qwerty");
+            foreach (string code in Aura_OS.System.Input.KeyboardLayouts.Codes)
+            {
+                Console.WriteLine("- setkeyboardmap " + code.ToLower() + "    " + Aura_OS.System.Input.KeyboardLayouts.GetDisplayName(code));
+            }
         }
     }
 }
