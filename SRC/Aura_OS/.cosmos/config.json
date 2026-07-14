@@ -1,0 +1,21 @@
+{
+  "qemu": {
+    "memory": "512M",
+    "machineType": "q35",
+    "cpuModel": "max",
+    "serialMode": "stdio",
+    "networkCard": "e1000e",
+    "keyboard": "ps2",
+    "mouse": "ps2",
+    "enableNetwork": false,
+    "networkPorts": "5555",
+    "extraArgs": "",
+    "disks": [
+      {
+        "path": "disk5.img",
+        "type": "ahci",
+        "size": "256M"
+      }
+    ]
+  }
+}

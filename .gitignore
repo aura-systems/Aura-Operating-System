@@ -289,4 +289,4 @@ __pycache__/
 *.xsd.cs
 
 SRC/Aura_OS/output-x64/
-disk.img
+disk*.img

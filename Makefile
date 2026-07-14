@@ -8,7 +8,10 @@ DEFINE      := ARCH_X64
 OUTPUT      := ./output-$(ARCH)
 KERNEL_PROJ := ./SRC/Aura_OS/Aura_OS.csproj
 
-QEMU := qemu-system-x86_64 -M q35 -cpu max -m 1G
+# KVM when the host exposes it (TCG is ~10x slower and tanks the GUI FPS);
+# -cpu host needs KVM, so the TCG fallback keeps -cpu max (CI, containers).
+KVM_FLAGS := $(shell test -w /dev/kvm && echo "-enable-kvm -cpu host" || echo "-cpu max")
+QEMU := qemu-system-x86_64 -M q35 $(KVM_FLAGS) -m 1G
 
 ISO_FLAGS  := -drive file=$(OUTPUT)/Aura_OS.iso,if=none,id=cosmoscd,format=raw,readonly=on \
               -device ide-cd,drive=cosmoscd,bootindex=0 \
