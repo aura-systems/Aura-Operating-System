@@ -6,6 +6,7 @@
 
 using System;
 using System.Drawing;
+using Cosmos.Kernel.System.Graphics;
 using Cosmos.Kernel.System.Keyboard;
 using Aura_OS.System.Graphics.UI.GUI.Components;
 using Aura_OS.System.Processing.Processes;
@@ -19,8 +20,9 @@ namespace Aura_OS.System.Graphics.UI.GUI
         private TextBox _username;
         private TextBox _password;
         private Button _button;
+        private KeyboardLayoutButton _keyboardButton;
+        private Bitmap _wallpaper;
         private string _error;
-        private Color? _color = null;
 
         public LoginScreen(int x, int y, int width, int height) : base(x, y, width, height)
         {
@@ -45,10 +47,13 @@ namespace Aura_OS.System.Graphics.UI.GUI
 
             AddChild(_button);
 
-            if (Kernel.wallpaper2.Width != Kernel.ScreenWidth && Kernel.wallpaper2.Height != Kernel.ScreenHeight)
-            {
-                _color = Color.Black;
-            }
+            // Keyboard layout switcher, bottom-right like the taskbar's.
+            _keyboardButton = new KeyboardLayoutButton(Width - 40 - 8, Height - 23 - 8, 40, 23);
+            AddChild(_keyboardButton);
+
+            // gen2 blanked to black when the wallpaper didn't match the screen;
+            // gen3 runs at the real framebuffer size, so scale instead.
+            _wallpaper = ImageUtils.ScaleToScreen(Kernel.wallpaper2);
         }
 
         public override void Update()
@@ -93,26 +98,21 @@ namespace Aura_OS.System.Graphics.UI.GUI
             _username.UpdateNoGetKey();
             _password.UpdateNoGetKey();
             _button.Update();
+            _keyboardButton.Update();
         }
 
         public override void Draw()
         {
             base.Draw();
 
-            if (_color != null)
-            {
-                Clear((Color)_color);
-            }
-            else
-            {
-                DrawImage(Kernel.wallpaper2, X, Y);
-            }
-            
+            DrawImage(_wallpaper, X, Y);
+
             DrawImage(Kernel.auralogo_white, Width / 2 - (int)Kernel.auralogo_white.Width / 2, _username.Y - (int)Kernel.auralogo_white.Height - 24);
 
             _username.Draw(this);
             _password.Draw(this);
             _button.Draw(this);
+            _keyboardButton.Draw(this);
 
             if (_error != null)
             {
@@ -128,6 +128,7 @@ namespace Aura_OS.System.Graphics.UI.GUI
             _username.Visible = false;
             _password.Visible = false;
             _button.Visible = false;
+            _keyboardButton.Visible = false;
             Explorer.Taskbar.Visible = true;
         }
 
@@ -144,6 +145,7 @@ namespace Aura_OS.System.Graphics.UI.GUI
             _password.Text = "";
             _password.Visible = true;
             _button.Visible = true;
+            _keyboardButton.Visible = true;
             _error = null;
             Explorer.Taskbar.Visible = false;
             Explorer.StartMenu.Visible = false;

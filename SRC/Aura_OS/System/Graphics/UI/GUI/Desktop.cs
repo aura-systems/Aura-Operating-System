@@ -17,7 +17,6 @@ namespace Aura_OS.System.Graphics.UI.GUI
         public FilesystemPanel MainPanel;
         private string _wallpaperPath;
         private Bitmap _wallpaper;
-        private Color? _color = null;
 
         public Desktop(int x, int y, int width, int height) : base(x, y, width, height)
         {
@@ -30,7 +29,7 @@ namespace Aura_OS.System.Graphics.UI.GUI
             else
             {
                 _wallpaperPath = "Embedded";
-                _wallpaper = new Bitmap(Files.Wallpaper);
+                _wallpaper = ImageUtils.ScaleToScreen(new Bitmap(Files.Wallpaper));
                 MarkDirty();
             }
 
@@ -48,14 +47,7 @@ namespace Aura_OS.System.Graphics.UI.GUI
         {
             base.Draw();
 
-            if (_color != null)
-            {
-                Clear((Color)_color);
-            }
-            else
-            {
-                DrawImage(_wallpaper, X, Y);
-            }
+            DrawImage(_wallpaper, X, Y);
 
             MainPanel.UpdateCurrentFolder();
             MainPanel.Draw(this);
@@ -69,12 +61,9 @@ namespace Aura_OS.System.Graphics.UI.GUI
         public void SetWallpaper(string path)
         {
             _wallpaperPath = path;
-            _wallpaper = new Bitmap(File.ReadAllBytes(path));
-
-            if (_wallpaper.Width != Kernel.ScreenWidth && _wallpaper.Height != Kernel.ScreenHeight)
-            {
-                _color = Color.Black;
-            }
+            // gen2 blanked to black when the wallpaper didn't match the screen;
+            // gen3 runs at the real framebuffer size, so scale instead.
+            _wallpaper = ImageUtils.ScaleToScreen(new Bitmap(File.ReadAllBytes(path)));
 
             MarkDirty();
         }

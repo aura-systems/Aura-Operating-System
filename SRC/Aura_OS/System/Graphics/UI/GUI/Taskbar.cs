@@ -100,31 +100,8 @@ namespace Aura_OS.System.Graphics.UI.GUI
             int keyboardButtonHeight = 16;
             int keyboardButtonX = netoworkButtonX - keyboardButtonWidth - 6;
             int keyboardButtonY = (taskbarHeight / 2) - (keyboardButtonHeight / 2);
-            KeyboardButton = new Button(Input.KeyboardLayouts.CurrentCode, keyboardButtonX, keyboardButtonY, keyboardButtonWidth, keyboardButtonHeight);
+            KeyboardButton = new KeyboardLayoutButton(keyboardButtonX, keyboardButtonY, keyboardButtonWidth, keyboardButtonHeight);
             KeyboardButton.NoBackground = true;
-            KeyboardButton.RightClick = new RightClick((int)MouseManager.X, (int)MouseManager.Y - (Input.KeyboardLayouts.Codes.Length * RightClickEntry.ConstHeight), 240, Input.KeyboardLayouts.Codes.Length * RightClickEntry.ConstHeight);
-
-            foreach (string code in Input.KeyboardLayouts.Codes)
-            {
-                RightClickEntry layoutEntry = new(code + " - " + Input.KeyboardLayouts.GetDisplayName(code), KeyboardButton.RightClick.Width, KeyboardButton.RightClick);
-                layoutEntry.Click = new Action(() =>
-                {
-                    if (Input.KeyboardLayouts.Set(code))
-                    {
-                        KeyboardButton.Text = Input.KeyboardLayouts.CurrentCode;
-                        MarkDirty();
-                    }
-                });
-                KeyboardButton.RightClick.AddEntry(layoutEntry);
-            }
-
-            // The network icon only reacts to right click; a layout switcher is
-            // expected to open on left click too, so both open the same menu.
-            KeyboardButton.Click = new Action(() =>
-            {
-                KeyboardButton.HandleRightClick();
-            });
-
             AddChild(KeyboardButton);
 
             Buttons = new Dictionary<uint, Button>();
@@ -255,7 +232,6 @@ namespace Aura_OS.System.Graphics.UI.GUI
 
             NetworkButton.Draw(this);
 
-            KeyboardButton.Text = Input.KeyboardLayouts.CurrentCode;
             KeyboardButton.Draw(this);
         }
 
