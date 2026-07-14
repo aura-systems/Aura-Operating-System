@@ -31,23 +31,18 @@ namespace Aura_OS.System.Processing.Interpreter.Commands.Util
                 return new ReturnInfo(this, ReturnCode.ERROR, "PCI bus has not been scanned.");
             }
 
-            int count = 0;
             StringBuilder sb = new();
 
-            foreach (PciDevice device in PciManager.Devices)
+            // Devices is a fixed-size array; only the first Count slots are
+            // populated. Iterating the whole array would dereference the null
+            // trailing slots (page fault). Walk only the populated entries.
+            for (int i = 0; i < PciManager.Count; i++)
             {
+                PciDevice device = PciManager.Devices[i];
+
                 string line = Conversion.D2(device.Bus) + ":" + Conversion.D2(device.Slot) + ":" + Conversion.D2(device.Function) + " - " + "0x" + Conversion.D4(Conversion.DecToHex(device.VendorId)) + ":0x" + Conversion.D4(Conversion.DecToHex(device.DeviceId)) + " : " + device.GetTypeString() + ": " + device.GetDeviceString();
 
                 sb.AppendLine(line);
-                count++;
-
-                /*
-                if (count == Kernel.console.Rows - 4)
-                {
-                    //Console.ReadKey();
-                    count = 0;
-                }
-                */
             }
 
             Console.Write(sb.ToString());
