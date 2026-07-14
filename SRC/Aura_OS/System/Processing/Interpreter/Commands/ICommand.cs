@@ -16,6 +16,10 @@ namespace Aura_OS.System.Processing.Interpreter.Commands
     public enum CommandType
     {
         Filesystem,
+        /// <summary>Block-device level (lsblk, mkfs, mount, df): must run
+        /// before any volume is mounted, so CheckCommand does not gate these
+        /// on VfsManager.Mounts.</summary>
+        Disk,
         Network,
         Utils,
         Unknown

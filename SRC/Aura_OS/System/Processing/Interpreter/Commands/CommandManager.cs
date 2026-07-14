@@ -77,7 +77,12 @@ namespace Aura_OS.System.Processing.Interpreter.Commands
             _commands.Add(new CommandLsprocess(new string[] { "lsprocess" }));
             _commands.Add(new CommandKill(new string[] { "kill", "kil", "k" }));
 
-            _commands.Add(new CommandVol(new string[] { "vol" }));
+            // gen3 filesystem commands (Unix-style, replacing the gen2-era DOS `vol`):
+            _commands.Add(new CommandDf(new string[] { "df" }));
+            _commands.Add(new CommandLsblk(new string[] { "lsblk", "fdisk" }));
+            _commands.Add(new CommandMount(new string[] { "mount" }));
+            _commands.Add(new CommandUmount(new string[] { "umount", "unmount" }));
+            _commands.Add(new CommandMkfs(new string[] { "mkfs", "format" }));
             _commands.Add(new CommandDir(new string[] { "dir", "ls", "l" }));
             _commands.Add(new CommandMkdir(new string[] { "mkdir", "md" }));
             _commands.Add(new CommandCat(new string[] { "cat" }));

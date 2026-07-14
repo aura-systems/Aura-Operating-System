@@ -142,14 +142,25 @@ namespace Aura_OS
 
             //Start Filesystem
             // gen2: new CosmosVFS() + VFSManager.RegisterVFS (auto-mounted every volume as N:\).
-            // gen3: register the FAT driver and mount partition 0 at /mnt explicitly.
+            // gen3: register the FAT driver and probe every detected partition (gen2 parity):
+            // the first FAT volume becomes /mnt (the root volume), later ones /mnt1, /mnt2...
             if (VfsManager.RegisterFilesystem("fat", new FatFilesystemType()))
             {
-                if (StorageManager.Partitions.Count > 0 &&
-                    VfsManager.TryMount("fat", "0", MountFlags.None, RootVolume, out _))
+                int mounted = 0;
+                for (int i = 0; i < StorageManager.Partitions.Count; i++)
+                {
+                    string mountPoint = mounted == 0 ? RootVolume : RootVolume + mounted;
+
+                    if (VfsManager.TryMount("fat", i.ToString(), MountFlags.None, mountPoint, out _))
+                    {
+                        CustomConsole.WriteLineOK("FAT volume (partition " + i + ") mounted on " + mountPoint);
+                        mounted++;
+                    }
+                }
+
+                if (mounted > 0)
                 {
                     VolumeMounted = true;
-                    CustomConsole.WriteLineOK("FAT volume mounted on " + RootVolume);
                 }
                 else
                 {

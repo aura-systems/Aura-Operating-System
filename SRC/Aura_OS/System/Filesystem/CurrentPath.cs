@@ -4,6 +4,7 @@
 * PROGRAMMERS:      Valentin Charbonnier <valentinbreiz@gmail.com>
 */
 
+using Cosmos.Kernel.System.Vfs;
 using System.IO;
 
 namespace Aura_OS.System.Filesystem
@@ -22,13 +23,46 @@ namespace Aura_OS.System.Filesystem
                     // so compute the parent from the path itself, clamped at the mount point.
                     string parent = Path.GetDirectoryName(Kernel.CurrentDirectory.TrimEnd('/'));
 
-                    if (parent == null || parent.Length < Kernel.RootVolume.Length)
+                    if (parent == null || parent.Length < Kernel.CurrentVolume.TrimEnd('/').Length)
                     {
-                        parent = Kernel.RootVolume;
+                        parent = Kernel.CurrentVolume.TrimEnd('/');
                     }
 
                     Kernel.CurrentDirectory = parent.TrimEnd('/') + "/";
                 }
+            }
+            else if (dir.StartsWith("/"))
+            {
+                // Absolute path: may land on any mount point (gen3 has several,
+                // e.g. /mnt, /mnt1), so track which volume now contains us.
+                string normalized = dir.TrimEnd('/');
+
+                VfsManager.VfsMount covering = null;
+                foreach (VfsManager.VfsMount mount in VfsManager.Mounts)
+                {
+                    if (normalized == mount.MountPoint || normalized.StartsWith(mount.MountPoint + "/"))
+                    {
+                        if (covering == null || mount.MountPoint.Length > covering.MountPoint.Length)
+                        {
+                            covering = mount;
+                        }
+                    }
+                }
+
+                if (covering == null)
+                {
+                    error = "No mounted volume contains " + dir + " (see: mount).";
+                    return false;
+                }
+
+                if (normalized != covering.MountPoint && !Directory.Exists(normalized))
+                {
+                    error = "This directory doesn't exist!";
+                    return false;
+                }
+
+                Kernel.CurrentVolume = covering.MountPoint + "/";
+                Kernel.CurrentDirectory = normalized + "/";
             }
             else if (dir == "~")
             {
