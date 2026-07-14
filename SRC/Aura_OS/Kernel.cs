@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
+using Cosmos.Kernel.Core.Memory.Heap;
 using Cosmos.Kernel.HAL.Vfs;
 using Cosmos.Kernel.System.Filesystems.Fat;
 using Cosmos.Kernel.System.Graphics;
@@ -251,7 +252,12 @@ namespace Aura_OS
             // GEN3-GAP(encoding): CosmosEncodingProvider / Console.InputEncoding/OutputEncoding have
             // no gen3 equivalent (InvariantGlobalization; KernelConsole consumes UTF-16 directly).
 
-            // gen3 has a real tracing GC — no manual Heap.Collect() needed at boot or per frame.
+            // gen2 parity: Aura drives the GC itself — the gen3 kernel only collects
+            // on its own when the heap is exhausted, so without these calls memory
+            // just grows (Heap.Collect forwards to GarbageCollector.Collect).
+            CustomConsole.WriteLineInfo("Try cleaning memory...");
+            FreeCount = Heap.Collect();
+            CustomConsole.WriteLineInfo("Cosmos Memory Manager works.");
 
             BootTime = Time.MonthString() + "/" + Time.DayString() + "/" + Time.YearString() + ", " + Time.TimeString(true, true, true);
 
@@ -276,6 +282,12 @@ namespace Aura_OS
 
                 _frames++;
                 _frameCount++;
+
+                if (_frameCount == 4)
+                {
+                    FreeCount = Heap.Collect();
+                    _frameCount = 0;
+                }
 
                 ProcessManager.Update();
 
