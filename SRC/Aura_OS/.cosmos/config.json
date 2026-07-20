@@ -4,18 +4,12 @@
     "machineType": "q35",
     "cpuModel": "max",
     "serialMode": "stdio",
-    "networkCard": "e1000e",
-    "keyboard": "ps2",
-    "mouse": "ps2",
+    "networkCard": "virtio-net-pci",
+    "keyboard": "virtio-keyboard-pci",
+    "mouse": "virtio-mouse-pci",
     "enableNetwork": false,
     "networkPorts": "5555",
     "extraArgs": "",
-    "disks": [
-      {
-        "path": "disk5.img",
-        "type": "ahci",
-        "size": "256M"
-      }
-    ]
+    "disks": []
   }
 }

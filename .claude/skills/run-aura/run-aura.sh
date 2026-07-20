@@ -62,6 +62,11 @@ for q in "$HOME/.cosmos/tools/qemu/qemu-system-x86_64" /usr/bin/qemu-system-x86_
 done
 [ -n "$QEMU" ] || { echo "ERROR: no working qemu-system-x86_64 found"; exit 1; }
 
+# KVM when the host exposes it (TCG is ~10x slower and tanks the GUI FPS);
+# -cpu host needs KVM, so the TCG fallback keeps -cpu max.
+KVM_FLAGS=(-cpu max)
+[ -w /dev/kvm ] && KVM_FLAGS=(-enable-kvm -cpu host)
+
 [ -f "$DISK" ] || truncate -s 256M "$DISK"
 if [ "$TEMP_DISK" = 1 ]; then
     TMP="$(mktemp "${TMPDIR:-/tmp}/aura-disk.XXXXXX.img")"
@@ -74,7 +79,7 @@ GDB_FLAGS=()
 [ -n "$GDB_PORT" ] && GDB_FLAGS=(-gdb "tcp::$GDB_PORT") && echo "gdb stub on :$GDB_PORT"
 
 echo "Booting $ISO (serial -> $UART). Close the window or Ctrl+C to stop."
-"$QEMU" -M q35 -cpu max -m 1G \
+"$QEMU" -M q35 "${KVM_FLAGS[@]}" -m 1G \
     -drive file="$ISO",if=none,id=cosmoscd,format=raw,readonly=on \
     -device ide-cd,drive=cosmoscd,bootindex=0 \
     -vga std \

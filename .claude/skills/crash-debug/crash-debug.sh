@@ -81,6 +81,11 @@ for p in $(seq "$PORT_BASE" $((PORT_BASE + 9))); do
 done
 [ -n "$PORT" ] || { echo "ERROR: no free gdb port in $PORT_BASE-$((PORT_BASE + 9))"; exit 1; }
 
+# KVM when the host exposes it — boots and runs the kernel ~10x faster, and
+# the gdb usage here (halt, register reads, memory dumps) works fine under it.
+KVM_FLAGS=(-cpu max)
+[ -w /dev/kvm ] && KVM_FLAGS=(-enable-kvm -cpu host)
+
 WORK="$(mktemp -d "${TMPDIR:-/tmp}/aura-crash-debug.XXXXXX")"
 echo "Workdir: $WORK (uart.log, stack.txt, disk copy)"
 
@@ -90,7 +95,7 @@ else
     truncate -s 256M "$WORK/disk.img"
 fi
 
-"$QEMU" -M q35 -cpu max -m "$MEM" \
+"$QEMU" -M q35 "${KVM_FLAGS[@]}" -m "$MEM" \
     -drive file="$ISO",if=none,id=cosmoscd,format=raw,readonly=on \
     -device ide-cd,drive=cosmoscd,bootindex=0 \
     -vga std \
