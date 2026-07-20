@@ -98,7 +98,10 @@ namespace Aura_OS.Processing
         {
             for (int i = 0; i < Processes.Count; i++)
             {
-                if (Processes[i].Running)
+                // Threaded processes drive themselves on their own kernel thread;
+                // ticking them here would run their work a second time and off
+                // their intended thread.
+                if (Processes[i].Running && !Processes[i].IsThreaded)
                 {
                     Processes[i].Update();
                 }

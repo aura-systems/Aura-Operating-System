@@ -60,6 +60,19 @@ namespace Aura_OS.System.Graphics.UI.GUI
         private Rectangle _rectangleTop;
         private Rectangle _rectangleBottom;
 
+        // Optional per-app background thread. When RunsWorker is set, Start()
+        // spawns a kernel thread that repeatedly calls Work() at WorkIntervalMs,
+        // so app logic (compute, emulation, command execution) runs off the
+        // shared UI thread — a slow app can no longer freeze the desktop.
+        // Update() (input + window interaction) and Draw() stay on the UI thread
+        // because they touch the single framebuffer and the window-manager state;
+        // cross-thread results are published via volatile fields (see Cube/GameBoy).
+        private WorkerThread _worker;
+        protected bool RunsWorker = false;
+        protected int WorkIntervalMs = 16;
+
+        public override uint ThreadId => _worker != null ? _worker.ThreadId : 0;
+
         public Application(string name, int width, int height, int x = 0, int y = 0) : base(name, ProcessType.Program)
         {
             InitWindow(name, width, height, x, y);
@@ -71,6 +84,41 @@ namespace Aura_OS.System.Graphics.UI.GUI
 
             Kernel.ProcessManager.Register(this);
         }
+
+        public override void Start()
+        {
+            if (Running)
+            {
+                return;
+            }
+            base.Start();
+            if (RunsWorker)
+            {
+                _worker = new WorkerThread(Name + "/work", Work, WorkIntervalMs);
+                _worker.Start();
+            }
+        }
+
+        public override void Stop()
+        {
+            if (!Running)
+            {
+                return;
+            }
+            if (_worker != null)
+            {
+                _worker.Stop();
+            }
+            base.Stop();
+        }
+
+        /// <summary>
+        /// Per-app background work, run repeatedly on the app's own kernel thread
+        /// when <see cref="RunsWorker"/> is set. Override for compute/emulation/
+        /// command execution. Publish results to the UI thread via volatile fields.
+        /// Default: no-op (the app is purely cooperative).
+        /// </summary>
+        protected virtual void Work() { }
 
         private void InitWindow(string name, int width, int height, int x = 0, int y = 0)
         {
@@ -481,7 +529,7 @@ namespace Aura_OS.System.Graphics.UI.GUI
         {
             Window.Dispose();
             Stop();
-            Explorer.WindowManager.Applications.Remove(this);
+            Explorer.WindowManager.RemoveApplication(this);
             Kernel.ProcessManager.Unregister(this);
             Explorer.Taskbar.UpdateApplicationButtons();
         }

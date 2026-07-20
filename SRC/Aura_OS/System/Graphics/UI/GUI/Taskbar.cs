@@ -117,7 +117,7 @@ namespace Aura_OS.System.Graphics.UI.GUI
 
             int buttonX = 74;
 
-            foreach (var app in Explorer.WindowManager.Applications)
+            foreach (var app in Explorer.WindowManager.SnapshotApplications())
             {
                 string appName = app.Name + " (" + app.ID.ToString() + ")";
                 var spacing = appName.Length * 9 + (int)app.Window.Icon.Width;

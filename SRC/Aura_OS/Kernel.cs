@@ -122,6 +122,9 @@ namespace Aura_OS
         public static ThemeManager ThemeManager;
         public static Explorer Explorer;
 
+        // Background services (self-driven on their own gen3 kernel threads).
+        public static System.Processing.Services.SystemMonitor SystemMonitor;
+
         // Textmode Console
         // GEN3-GAP(textmode): gen3 is UEFI/GOP only, no VGA text mode; the CUI console is
         // retargeted at the graphical KernelConsole and this stays null unless explicitly used.
@@ -248,6 +251,13 @@ namespace Aura_OS
 
             KeyboardManager = new System.Input.KeyboardManager();
             KeyboardManager.Initialize();
+
+            // gen3 multithreading: start background services on their own kernel
+            // threads. SystemMonitor samples CPU/heap/live-thread-count once a
+            // second off the UI thread (see ThreadedProcess / WorkerThread).
+            CustomConsole.WriteLineInfo("Starting system monitor service...");
+            SystemMonitor = new System.Processing.Services.SystemMonitor();
+            SystemMonitor.Initialize();
 
             // GEN3-GAP(encoding): CosmosEncodingProvider / Console.InputEncoding/OutputEncoding have
             // no gen3 equivalent (InvariantGlobalization; KernelConsole consumes UTF-16 directly).

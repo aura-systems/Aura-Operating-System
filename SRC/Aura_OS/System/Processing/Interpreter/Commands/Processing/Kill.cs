@@ -45,7 +45,7 @@ namespace Aura_OS.System.Processing.Interpreter.Commands.Util
                         {
                             Application application = process as Application;
                             application.Window.Visible = false;
-                            Explorer.WindowManager.Applications.Remove(application);
+                            Explorer.WindowManager.RemoveApplication(application);
                         }
 
                         Kernel.ProcessManager.Stop(process);

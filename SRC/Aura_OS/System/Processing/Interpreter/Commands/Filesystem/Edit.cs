@@ -39,7 +39,7 @@ namespace Aura_OS.System.Processing.Interpreter.Commands.Filesystem
                     app.MarkFocused();
                     app.Visible = true;
 
-                    Explorer.WindowManager.Applications.Add(app);
+                    Explorer.WindowManager.AddApplication(app);
                     Kernel.ProcessManager.Start(app);
 
                     Explorer.Taskbar.UpdateApplicationButtons();

@@ -7,6 +7,7 @@
 
 using System;
 using System.Drawing;
+using Aura_OS.Processing;
 using Aura_OS.System.Graphics.UI.GUI;
 
 namespace Aura_OS.System.Processing.Applications
@@ -19,9 +20,19 @@ namespace Aura_OS.System.Processing.Applications
         private int[][] _faces;
         private int _angle;
 
+        // The rotation/projection maths runs on the app's Work() thread; the main
+        // thread only reads the latest projected vertices and draws them. Publishing
+        // is a single atomic reference write (_projected), so no lock is needed — and
+        // we deliberately avoid lock/Monitor, whose contended path routes through
+        // the kernel LowLevelMonitor that faults under concurrency (see
+        // WorkerThread / project-multithreading notes). Draw sees either the old
+        // array or the new one, never a torn one.
+        private volatile Vertex[] _projected;
+
         public CubeApp(int width, int height, int x = 0, int y = 0) : base(ApplicationName, width, height, x, y)
         {
             ForceDirty = true;
+            RunsWorker = true;
 
             _vertices = new Vertex[]
             {
@@ -52,6 +63,26 @@ namespace Aura_OS.System.Processing.Applications
         Color pen = Color.DeepSkyBlue;
         Figure figure;
 
+        /// <summary>
+        /// Work()-thread body: rotate and project every vertex, then publish the
+        /// result. The trig runs off the compositing thread.
+        /// </summary>
+        protected override void Work()
+        {
+            var projected = new Vertex[figure.Vertices.Length];
+            for (var i = 0; i < figure.Vertices.Length; i++)
+            {
+                var vertex = figure.Vertices[i];
+
+                var transformed = vertex.RotateX(_angle).RotateY(_angle).RotateZ(_angle);
+                projected[i] = transformed.Project(viewWidth, viewHeight, 256, 6);
+            }
+
+            _projected = projected;
+
+            _angle++;
+        }
+
         public override void Draw()
         {
             base.Draw();
@@ -62,13 +93,12 @@ namespace Aura_OS.System.Processing.Applications
             // Draw y-axis
             DrawLine(Color.White, 0 + 30 + viewWidth / 2, 0 + 30 + 0, 0 + 30 + viewWidth / 2, 0 + 30 + viewHeight);
 
-            var projected = new Vertex[figure.Vertices.Length];
-            for (var i = 0; i < figure.Vertices.Length; i++)
+            // Single volatile read: the worker either hasn't published yet (null)
+            // or has published a complete projected set.
+            Vertex[] projected = _projected;
+            if (projected == null)
             {
-                var vertex = figure.Vertices[i];
-
-                var transformed = vertex.RotateX(_angle).RotateY(_angle).RotateZ(_angle);
-                projected[i] = transformed.Project(viewWidth, viewHeight, 256, 6);
+                return;
             }
 
             for (var j = 0; j < 6; j++) //This loop draws each of the six faces of the cube
@@ -97,7 +127,6 @@ namespace Aura_OS.System.Processing.Applications
                     0 + 30 + (int)projected[figure.Faces[j][0]].X,
                     0 + 30 + (int)projected[figure.Faces[j][0]].Y);
             }
-            _angle++;
         }
     }
 

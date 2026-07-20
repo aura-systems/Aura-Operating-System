@@ -7,6 +7,7 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using Aura_OS.Processing;
 
 namespace Aura_OS.System.Graphics.UI.GUI.Components
 {
@@ -37,6 +38,11 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
         private Cell[] _text;
         private List<Cell[]> _terminalHistory;
         private int _terminalHistoryIndex = 0;
+
+        // Scroll() runs on a Terminal's command worker thread (output triggers it);
+        // ScrollUp/ScrollDown run on the UI thread. Guard the history list so a
+        // concurrent Add vs read/Clear cannot corrupt it.
+        private readonly SpinGuard _historyGuard = new SpinGuard();
         
         public Color ForegroundColor = Color.White;
         private uint _foreground = (byte)ConsoleColor.White;
@@ -199,7 +205,17 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
 
             Cell[] lineToHistory = new Cell[mCols];
             Array.Copy(_text, 0, lineToHistory, 0, mCols);
-            _terminalHistory.Add(lineToHistory);
+
+            _historyGuard.Enter();
+            try
+            {
+                _terminalHistory.Add(lineToHistory);
+                _terminalHistoryIndex = _terminalHistory.Count;
+            }
+            finally
+            {
+                _historyGuard.Exit();
+            }
 
             Array.Copy(_text, mCols, _text, 0, (mRows - 1) * mCols);
 
@@ -210,22 +226,28 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
                 _text[i].ForegroundColor = (uint)ForegroundColor.ToArgb();
                 _text[i].BackgroundColor = (uint)BackgroundColor.ToArgb();
             }
-
-            _terminalHistoryIndex = _terminalHistory.Count;
         }
 
         public void ScrollUp()
         {
-            if (_terminalHistoryIndex > 0)
+            _historyGuard.Enter();
+            try
             {
-                ScrollMode = true;
+                if (_terminalHistoryIndex > 0)
+                {
+                    ScrollMode = true;
 
-                _terminalHistoryIndex--;
+                    _terminalHistoryIndex--;
 
-                Array.Copy(_text, 0, _text, mCols, (mRows - 1) * mCols);
+                    Array.Copy(_text, 0, _text, mCols, (mRows - 1) * mCols);
 
-                Cell[] lineFromHistory = _terminalHistory[_terminalHistoryIndex];
-                Array.Copy(lineFromHistory, 0, _text, 0, mCols);
+                    Cell[] lineFromHistory = _terminalHistory[_terminalHistoryIndex];
+                    Array.Copy(lineFromHistory, 0, _text, 0, mCols);
+                }
+            }
+            finally
+            {
+                _historyGuard.Exit();
             }
 
             MarkDirty();
@@ -233,9 +255,16 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
 
         public void ScrollDown()
         {
-            _terminalHistoryIndex = 0;
-
-            _terminalHistory.Clear();
+            _historyGuard.Enter();
+            try
+            {
+                _terminalHistoryIndex = 0;
+                _terminalHistory.Clear();
+            }
+            finally
+            {
+                _historyGuard.Exit();
+            }
 
             ScrollMode = false;
 

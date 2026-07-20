@@ -296,10 +296,18 @@ namespace Aura_OS.System.Processing.Applications.Emulators.GameBoyEmu.DMG
             return attr >> 7 == 0;
         }
 
+        /// <summary>
+        /// Set when a full frame has been rendered into <see cref="bmp"/>. The
+        /// emulation now runs on a worker thread, so the PPU must not blit into
+        /// the window buffer itself (that memory is composited by the UI thread).
+        /// GameBoyApp watches this flag, copies the finished frame out under a
+        /// lock, and does the actual DrawImage on the UI thread.
+        /// </summary>
+        public bool FrameReady;
+
         public void RenderFrame()
         {
-
-            _app.DrawImage(bmp.Bitmap, 0, 0);
+            FrameReady = true;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

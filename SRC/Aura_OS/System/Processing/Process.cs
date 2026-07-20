@@ -22,6 +22,22 @@ namespace Aura_OS.Processing
         public bool Initialized { get; protected set; }
         public bool Running { get; private set; }
 
+        /// <summary>
+        /// True when the process drives its own work on a dedicated gen3 kernel
+        /// thread (see <see cref="ThreadedProcess"/>). The cooperative
+        /// ProcessManager.Update() loop skips these so their work is not also
+        /// run — twice, and on the wrong thread — from the main UI thread.
+        /// </summary>
+        public virtual bool IsThreaded => false;
+
+        /// <summary>
+        /// Kernel scheduler thread id backing this process, or 0 when it runs
+        /// cooperatively on the main UI thread. Cooperative GUI apps that spawn
+        /// a compute worker override this to report the worker's id. Surfaced
+        /// by the lsprocess command.
+        /// </summary>
+        public virtual uint ThreadId => 0;
+
         private static string[] TypeNames = new string[]
         {
             "KernelComponent",

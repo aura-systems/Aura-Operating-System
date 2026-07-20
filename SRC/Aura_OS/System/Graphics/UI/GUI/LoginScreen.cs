@@ -134,7 +134,7 @@ namespace Aura_OS.System.Graphics.UI.GUI
 
         public void Show()
         {
-            foreach (Application app in Explorer.WindowManager.Applications)
+            foreach (Application app in Explorer.WindowManager.SnapshotApplications())
             {
                 app.Window.Minimize.Click();
             }

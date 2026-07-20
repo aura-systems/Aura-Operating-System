@@ -7,6 +7,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using Aura_OS.System;
+using Aura_OS.Processing;
 using Aura_OS.System.Processing.Processes;
 using Aura_OS.System.Graphics.UI.GUI;
 using Aura_OS.System.Graphics.UI.GUI.Components;
@@ -26,6 +27,12 @@ namespace Aura_OS
         public byte TaskbarTransparency { get; set; }
 
         public List<Application> Applications;
+
+        // Guards structural changes to Applications. Threaded apps (e.g. Terminal
+        // commands like edit/pic/kill) add or remove entries from their own kernel
+        // thread while the compositor iterates the list on the UI thread; without
+        // this a concurrent Add/Remove during iteration corrupts the List.
+        private readonly SpinGuard _appsGuard = new SpinGuard();
 
         public List<Rectangle> ClipRects;
         public List<Rectangle> ClickRects;
@@ -61,6 +68,52 @@ namespace Aura_OS
             {
                 WindowsTransparency = 0xFF;
                 TaskbarTransparency = 0xFF;
+            }
+        }
+
+        /// <summary>Add an app to the z-order set (thread-safe).</summary>
+        public void AddApplication(Application app)
+        {
+            _appsGuard.Enter();
+            try
+            {
+                Applications.Add(app);
+            }
+            finally
+            {
+                _appsGuard.Exit();
+            }
+        }
+
+        /// <summary>Remove an app from the z-order set (thread-safe).</summary>
+        public bool RemoveApplication(Application app)
+        {
+            _appsGuard.Enter();
+            try
+            {
+                return Applications.Remove(app);
+            }
+            finally
+            {
+                _appsGuard.Exit();
+            }
+        }
+
+        /// <summary>
+        /// Take a stable snapshot of the app list so UI-thread iterators (compositor,
+        /// taskbar, login) never observe a concurrent structural mutation from a
+        /// threaded app. The copy is cheap (a handful of apps).
+        /// </summary>
+        public Application[] SnapshotApplications()
+        {
+            _appsGuard.Enter();
+            try
+            {
+                return Applications.ToArray();
+            }
+            finally
+            {
+                _appsGuard.Exit();
             }
         }
 
@@ -224,10 +277,14 @@ namespace Aura_OS
 
         public void DrawApps()
         {
+            // Snapshot so a threaded app adding/removing a window mid-frame can't
+            // corrupt this iteration (see _appsGuard).
+            Application[] apps = SnapshotApplications();
+
             // Draw apps
-            for (int i = 0; i < Applications.Count; i++)
+            for (int i = 0; i < apps.Length; i++)
             {
-                Application app = Applications[i];
+                Application app = apps[i];
 
                 if ((app.Running && app.Visible) && (app.IsDirty() || app.ForceDirty))
                 {

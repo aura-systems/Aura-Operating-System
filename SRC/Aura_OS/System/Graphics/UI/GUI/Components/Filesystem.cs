@@ -222,7 +222,7 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
                 app.MarkFocused();
                 app.Visible = true;
 
-                Explorer.WindowManager.Applications.Add(app);
+                Explorer.WindowManager.AddApplication(app);
                 Kernel.ProcessManager.Start(app);
 
                 Explorer.Taskbar.UpdateApplicationButtons();

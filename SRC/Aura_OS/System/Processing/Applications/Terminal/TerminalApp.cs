@@ -8,6 +8,7 @@ using Aura_OS.System.Users;
 using Cosmos.Kernel.System.Keyboard;
 using System;
 using System.Collections.Generic;
+using Aura_OS.Processing;
 using Aura_OS.System.Graphics.UI.GUI;
 using Aura_OS.System.Processing.Interpreter.Commands;
 using Aura_OS.System.Graphics.UI.GUI.Components;
@@ -29,8 +30,18 @@ namespace Aura_OS.System.Processing.Applications.Terminal
         private bool _redirect = false;
         private TerminalTextWriter _writer;
 
+        // Commands run on the app's Work() thread so a slow one (long output,
+        // network, compute) no longer freezes the desktop. Update() (UI thread)
+        // enqueues the command and marks the terminal busy; Work() drains the
+        // queue and executes. While busy the terminal ignores further command
+        // input, but the compositor and every other app stay responsive.
+        private readonly Queue<string> _pending = new Queue<string>();
+        private readonly SpinGuard _pendingGuard = new SpinGuard();
+        private volatile bool _busy = false;
+
         public TerminalApp(int width, int height, int x = 0, int y = 0) : base(ApplicationName, width, height, x, y)
         {
+            RunsWorker = true;
             Window.Icon = Kernel.ResourceManager.GetIcon("16-terminal.bmp");
 
             Console = new(4, Window.TopBar.Height + 6, width - 7, height - Window.TopBar.Height - 9);
@@ -58,6 +69,15 @@ namespace Aura_OS.System.Processing.Applications.Terminal
 
                 KeyEvent keyEvent = null;
 
+                // While a command runs on the Work() thread, don't process command
+                // input (leave keys queued, exactly as when the old synchronous
+                // Execute blocked the UI). The desktop stays responsive because the
+                // command is off the UI thread.
+                if (_busy)
+                {
+                    return;
+                }
+
                 if (Input.KeyboardManager.TryGetKey(out keyEvent))
                 {
                     MarkDirty();
@@ -77,14 +97,30 @@ namespace Aura_OS.System.Processing.Applications.Terminal
 
                                 global::System.Console.WriteLine(_command);
 
-                                _commandManager.Execute(_command);
-
-                                Console.ScrollMode = false;
-
+                                // History is UI-thread-only; add here so Work()
+                                // never touches _commands concurrently with the
+                                // Up/Down history navigation below.
                                 _commands.Add(_command);
                                 _commandIndex = _commands.Count - 1;
 
+                                // Hand the command to the Work() thread and mark
+                                // busy; Work() prints the next prompt when it's done.
+                                _pendingGuard.Enter();
+                                try
+                                {
+                                    _pending.Enqueue(_command);
+                                }
+                                finally
+                                {
+                                    _pendingGuard.Exit();
+                                }
+                                _busy = true;
+
                                 _command = string.Empty;
+
+                                MarkDirty();
+
+                                break;
                             }
                             else
                             {
@@ -158,6 +194,45 @@ namespace Aura_OS.System.Processing.Applications.Terminal
             {
                 DeactivateRedirection();
             }
+        }
+
+        /// <summary>
+        /// Work() thread: execute one queued command off the UI thread, then print
+        /// the next prompt and clear the busy flag. Command output reaches this
+        /// terminal's Console through the global Console redirection set by
+        /// ActivateRedirection while this terminal is focused.
+        /// </summary>
+        protected override void Work()
+        {
+            string command = null;
+
+            _pendingGuard.Enter();
+            try
+            {
+                if (_pending.Count > 0)
+                {
+                    command = _pending.Dequeue();
+                }
+            }
+            finally
+            {
+                _pendingGuard.Exit();
+            }
+
+            if (command == null)
+            {
+                return;
+            }
+
+            _commandManager.Execute(command);
+
+            Console.ScrollMode = false;
+
+            BeforeCommand();
+
+            MarkDirty();
+
+            _busy = false;
         }
 
         public override void Draw()
