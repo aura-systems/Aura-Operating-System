@@ -82,6 +82,17 @@ namespace Aura_OS.System.Input
         private Bitmap _cursorResizeVertical;
         private Bitmap _cursorGrap;
 
+        /// <summary>
+        /// SVGA canvas when the device offers a host-composed hardware cursor;
+        /// null means the cursor is blitted in software into Explorer.Screen.
+        /// </summary>
+        private SVGAII3DCanvas _hardwareCursorCanvas;
+
+        /// <summary>
+        /// Shape currently loaded in the hardware cursor slot.
+        /// </summary>
+        private CursorState _hardwareCursorState;
+
         public MouseManager() : base(nameof(MouseManager), ProcessType.KernelComponent)
         {
         }
@@ -112,6 +123,14 @@ namespace Aura_OS.System.Input
             _cursorResizeHorizontal = Kernel.ResourceManager.GetIcon("00-resize-horizontal.bmp");
             _cursorResizeVertical = Kernel.ResourceManager.GetIcon("00-resize-vertical.bmp");
             _cursorGrap = Kernel.ResourceManager.GetIcon("00-grab.bmp");
+
+            if (Kernel.Canvas is SVGAII3DCanvas svgaCanvas && svgaCanvas.HasHardwareCursor)
+            {
+                _hardwareCursorCanvas = svgaCanvas;
+                _hardwareCursorState = CursorState.Normal;
+                DefineHardwareCursor(CursorState.Normal);
+                CustomConsole.WriteLineOK("SVGA hardware cursor enabled.");
+            }
 
             Kernel.ProcessManager.Register(this);
             Kernel.ProcessManager.Start(this);
@@ -303,6 +322,20 @@ namespace Aura_OS.System.Input
 
         public void DrawCursor(uint x, uint y)
         {
+            if (_hardwareCursorCanvas != null)
+            {
+                // The host composes the cursor: reload the shape only when it
+                // changes, then just update the position registers.
+                if (CursorState != _hardwareCursorState)
+                {
+                    DefineHardwareCursor(CursorState);
+                    _hardwareCursorState = CursorState;
+                }
+
+                _hardwareCursorCanvas.SetCursor(true, (int)x, (int)y);
+                return;
+            }
+
             if (CursorState == CursorState.Normal)
             {
                 Explorer.Screen.DrawImageAlpha(_cursorNormal, (int)x, (int)y);
@@ -319,6 +352,47 @@ namespace Aura_OS.System.Input
             {
                 Explorer.Screen.DrawImageAlpha(_cursorGrap, (int)x, (int)y);
             }
+        }
+
+        /// <summary>
+        /// Loads the bitmap for the given cursor state into the hardware cursor
+        /// slot. Hotspots mirror the offsets the software path draws with.
+        /// </summary>
+        private void DefineHardwareCursor(CursorState state)
+        {
+            Bitmap bitmap = _cursorNormal;
+            int hotspotX = 0;
+            int hotspotY = 0;
+
+            if (state == CursorState.ResizeHorizontal)
+            {
+                bitmap = _cursorResizeHorizontal;
+                hotspotX = 23 / 2;
+            }
+            else if (state == CursorState.ResizeVertical)
+            {
+                bitmap = _cursorResizeVertical;
+                hotspotY = 23 / 2;
+            }
+            else if (state == CursorState.Grab)
+            {
+                bitmap = _cursorGrap;
+            }
+
+            // SVGA alpha cursors are premultiplied BGRA; the icons carry straight alpha.
+            int[] raw = bitmap.RawData;
+            int[] premultiplied = new int[raw.Length];
+            for (int i = 0; i < raw.Length; i++)
+            {
+                uint pixel = (uint)raw[i];
+                uint a = pixel >> 24;
+                uint r = ((pixel >> 16) & 0xFF) * a / 255;
+                uint g = ((pixel >> 8) & 0xFF) * a / 255;
+                uint b = (pixel & 0xFF) * a / 255;
+                premultiplied[i] = (int)((a << 24) | (r << 16) | (g << 8) | b);
+            }
+
+            _hardwareCursorCanvas.DefineAlphaCursor(hotspotX, hotspotY, (int)bitmap.Width, (int)bitmap.Height, premultiplied);
         }
 
         /// <summary>
