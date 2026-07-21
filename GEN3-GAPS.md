@@ -99,13 +99,14 @@ is now computed from the actual page allocation.
 
 ## 2. Open — missing features (gen2 parity)
 
-### 2.1 ICMP is not implemented at all
-No `ICMPClient`, and `IPPacket`'s IPv4 handler drops protocol 1 — **ping is
-impossible in both directions** (docs acknowledge it). gen2's
-`ICMPPacket`/`ICMPEchoRequest`/`ICMPEchoReply`/`ICMPClient` port almost
-verbatim next to the existing UDP/DHCP/DNS classes (which are themselves gen2
-ports), plus a `case 1:` dispatch and an echo responder.
-*Aura impact: `ping` command stubbed (`GEN3-GAP(icmp)`).*
+### 2.1 ICMP is not implemented at all — FIXED (3.0.75)
+No `ICMPClient`, and `IPPacket`'s IPv4 handler dropped protocol 1 — **ping was
+impossible in both directions**. Fixed upstream in 3.0.75: gen2's
+`ICMPPacket`/`ICMPEchoRequest`/`ICMPEchoReply`/`ICMPClient` ported next to the
+existing UDP/DHCP/DNS classes, plus the `case 1:` dispatch and the echo
+responder (inbound pings are answered). Note the API drift:
+`Receive` now returns elapsed **milliseconds** (10ms granularity), not seconds.
+*Aura impact: `ping` command restored (the `GEN3-GAP(icmp)` stub is gone).*
 
 ### 2.2 No ISO9660 driver and no way to ship files on the boot ISO
 Two halves of one problem:

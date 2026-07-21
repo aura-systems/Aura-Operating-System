@@ -39,11 +39,11 @@ namespace Aura_OS.System.Processing.Interpreter.Commands.Network
 
                 try
                 {
-                    var xClient = new DnsClient();
-                    xClient.Connect(DNSConfig.DNSNameservers[0]);
-                    xClient.SendAsk(arguments[0]);
-                    destination = xClient.Receive();
-                    xClient.Close();
+                    var dnsClient = new DnsClient();
+                    dnsClient.Connect(DNSConfig.DNSNameservers[0]);
+                    dnsClient.SendAsk(arguments[0]);
+                    destination = dnsClient.Receive();
+                    dnsClient.Close();
                 }
                 catch (Exception ex)
                 {
@@ -58,11 +58,64 @@ namespace Aura_OS.System.Processing.Interpreter.Commands.Network
                 Console.WriteLine(arguments[0] + " resolved to " + destination.ToString());
             }
 
-            // GEN3-GAP(icmp): Cosmos gen3 has no ICMP support at all (the IPv4 handler only
-            // dispatches TCP and UDP), so echo requests can neither be sent nor answered.
-            // The gen2 ICMPClient loop is preserved in git history; restore it once ICMP
-            // lands upstream.
-            Console.WriteLine("ping is not supported on Cosmos gen3 yet (no ICMP).");
+            if (IPConfig.FindNetwork(destination) == null)
+            {
+                return new ReturnInfo(this, ReturnCode.ERROR, "No network route to " + destination.ToString() + ". Use ipconfig or dhcp first.");
+            }
+
+            int packetSent = 0;
+            int packetReceived = 0;
+            int packetLost = 0;
+
+            Console.WriteLine("Sending ping to " + destination.ToString());
+
+            var xClient = new ICMPClient();
+            xClient.Connect(destination);
+
+            try
+            {
+                for (int i = 0; i < 4; i++)
+                {
+                    xClient.SendEcho(0x0001, (ushort)(i + 1));
+                    packetSent++;
+
+                    var endpoint = new EndPoint(Address.Zero, 0);
+
+                    // gen3 Receive reports elapsed milliseconds (10ms granularity),
+                    // where gen2 reported whole seconds.
+                    int ms = xClient.Receive(ref endpoint, 4000);
+
+                    if (ms == -1)
+                    {
+                        Console.WriteLine("Request timed out.");
+                        packetLost++;
+                    }
+                    else if (ms < 10)
+                    {
+                        Console.WriteLine("Reply received from " + endpoint.Address.ToString() + " time < 10ms");
+                        packetReceived++;
+                    }
+                    else
+                    {
+                        Console.WriteLine("Reply received from " + endpoint.Address.ToString() + " time = " + ms + "ms");
+                        packetReceived++;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                return new ReturnInfo(this, ReturnCode.ERROR, ex.Message);
+            }
+            finally
+            {
+                xClient.Close();
+            }
+
+            int percentLoss = packetSent == 0 ? 0 : packetLost * 100 / packetSent;
+
+            Console.WriteLine();
+            Console.WriteLine("Ping statistics for " + destination.ToString() + ":");
+            Console.WriteLine("    Packets: Sent = " + packetSent + ", Received = " + packetReceived + ", Lost = " + packetLost + " (" + percentLoss + "% loss)");
 
             return new ReturnInfo(this, ReturnCode.OK);
         }
