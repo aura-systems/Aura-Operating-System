@@ -47,8 +47,8 @@
 
 	<!-- Core gen3 kernel packages (resolved from the nativeaot-patcher local feed, see NuGet.Config) -->
 	<ItemGroup>
-		<PackageReference Include="Cosmos.Kernel" Version="3.0.75.20260720" />
-		<PackageReference Include="Cosmos.Kernel.System" Version="3.0.75.20260720" />
+		<PackageReference Include="Cosmos.Kernel" Version="3.0.77.20260721" />
+		<PackageReference Include="Cosmos.Kernel.System" Version="3.0.77.20260721" />
 	</ItemGroup>
 
 	<!-- Pure-managed packages kept from gen2 (no native/IL2CPU dependency).
