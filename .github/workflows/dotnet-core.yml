@@ -1,121 +1,95 @@
 name: .NET Core
 
+# Builds the Aura OS ISO on Cosmos gen3 (NativeAOT).
+#
+# The Cosmos 3.0.89 dev packages Aura pins in global.json are not on nuget.org,
+# so this job:
+#   1. checks out CosmosOS/Cosmos at a pinned commit,
+#   2. builds its local package feed with `make setup`,
+#   3. points Aura at it. NuGet.Config expects the sibling ../Cosmos checkout.
+# `make setup` stamps the packages with today's date (<base>.<yyyyMMdd>), so
+# Aura's global.json Cosmos.Sdk literal is rewritten to that stamp before the
+# build. Directory.Build.props derives every other Cosmos version from it.
 on:
-  push:
-    branches: [ master ]
-  pull_request:
-    branches: [ master ]
-  workflow_dispatch: {}
+  workflow_dispatch:
+    inputs:
+      cosmos_ref:
+        description: 'CosmosOS/Cosmos commit SHA (or branch/tag) to build the packages from'
+        required: true
+        type: string
+        default: '6c857b5676596587fcccf164ae6dd680db2104df'
 
 jobs:
   build:
-    name: Build & test Lamscript on ${{ matrix.os }} with ${{ matrix.compiler }}.
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [windows-latest]
-        include:
-          - os: windows-latest
-            target: Windows
+    name: Build Aura OS ISO (Cosmos gen3, x64)
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    env:
+      DOTNET_CLI_TELEMETRY_OPTOUT: 1
+      DOTNET_SKIP_FIRST_TIME_EXPERIENCE: 1
+      DOTNET_NOLOGO: 1
 
     steps:
-      - uses: actions/checkout@v3
-      - name: Setup .NET Core
-        uses: actions/setup-dotnet@v3
+      # actions/checkout only writes under $GITHUB_WORKSPACE, so both repos go
+      # there side by side: Cosmos is then ../Cosmos from the Aura checkout.
+      - name: Check out Aura
+        uses: actions/checkout@v4
         with:
-          dotnet-version: '6.0.x'
+          path: Aura-Operating-System
 
-      - name: Add msbuild to PATH
-        if: ${{ matrix.os == 'windows-latest' }}
-        uses: microsoft/setup-msbuild@v1.0.2
-        env:
-          ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
-          
-      - name: Install Visual C++ 2010 Service Pack 1 Redistributable Update
-        if: ${{ matrix.os == 'windows-latest' }}
-        run: choco install vcredist2010
-        
-      - name: Clone Cosmos
-        if: ${{ matrix.os == 'windows-latest' }}
+      - name: Check out Cosmos
+        uses: actions/checkout@v4
+        with:
+          repository: CosmosOS/Cosmos
+          ref: ${{ inputs.cosmos_ref }}
+          path: Cosmos
+          submodules: recursive   # dotnet/runtime sources + lai (ACPI), as in Cosmos's own CI
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.201'
+
+      # clang (asm/C), ld.lld (link), xorriso (ISO), make + the runner's cc (Limine CLI).
+      - name: Install native toolchain
         run: |
-          mkdir Cosmos
-          mkdir c:/CosmosRun
-          cd Cosmos
-          git clone https://github.com/CosmosOS/Common
-          git clone https://github.com/CosmosOS/IL2CPU
-          git clone https://github.com/CosmosOS/Cosmos
-          git clone https://github.com/CosmosOS/XSharp
-      - name: Build Cosmos
-        if: ${{ matrix.os == 'windows-latest' }}
+          sudo apt-get update
+          sudo apt-get install -y clang lld xorriso make
+          echo "$HOME/.dotnet/tools" >> "$GITHUB_PATH"
+
+      - name: Build the Cosmos packages (make setup)
+        working-directory: Cosmos
+        run: make setup
+
+      - name: Pin Aura to the stamped Cosmos version
+        id: cosmos
+        working-directory: Aura-Operating-System
         run: |
-          cd Cosmos/Cosmos
-          msbuild Build.sln /t:Restore
-          msbuild Build.sln /maxcpucount /verbosity:normal /t:Build
-      - name: Build Cosmos
-        if: ${{ matrix.os == 'ubuntu-20.04' }}
+          # postCreateCommand.sh rewrites Cosmos's own global.json to the version it stamped.
+          VERSION=$(sed -nE 's/.*"Cosmos\.Sdk"[[:space:]]*:[[:space:]]*"([^"]+)".*/\1/p' ../Cosmos/global.json | head -n1)
+          if [ -z "$VERSION" ] || [ ! -f "../Cosmos/artifacts/package/release/Cosmos.Sdk.$VERSION.nupkg" ]; then
+            echo "::error::Could not determine the stamped Cosmos version (got '$VERSION')"
+            ls ../Cosmos/artifacts/package/release/ || true
+            exit 1
+          fi
+          echo "Cosmos packages: $VERSION"
+          sed -i -E "s|(\"Cosmos\.Sdk\"[[:space:]]*:[[:space:]]*\")[^\"]+(\")|\1${VERSION}\2|" global.json
+          cat global.json
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+
+      - name: Install Cosmos.Patcher
+        working-directory: Aura-Operating-System
         run: |
-          sudo apt-get install yasm mkisofs make binutils git && \
-            cd ~ && \
-            mkdir cosmos && \
-            cd cosmos && \
-            git clone https://github.com/CosmosOS/Cosmos --depth 1 && \
-            git clone https://github.com/CosmosOS/IL2CPU --depth 1 && \
-            git clone https://github.com/CosmosOS/XSharp --depth 1 && \
-            git clone https://github.com/CosmosOS/Common --depth 1 && \
-            cd Cosmos && \
-            sudo make
-      - name: Publish IL2CPU
-        if: ${{ matrix.os == 'windows-latest' }}
-        run: |
-          dotnet publish Cosmos\IL2CPU\source\IL2CPU -r win10-x64 -o "c:\CosmosRun\Build\IL2CPU\"
-      - name: Pack packages
-        if: ${{ matrix.os == 'windows-latest' }}
-        run: |
-          cd Cosmos/Cosmos/source
-          dotnet pack Cosmos.Build.Tasks/Cosmos.Build.Tasks.csproj -p:PackageVersion=10.0.0 --output c:\packages
-          dotnet pack Cosmos.Common/Cosmos.Common.csproj -p:PackageVersion=10.0.0 --output c:\packages
-          dotnet pack Cosmos.Core/Cosmos.Core.csproj -p:PackageVersion=10.0.0 --output c:\packages
-          dotnet pack Cosmos.Core_Plugs/Cosmos.Core_Plugs.csproj -p:PackageVersion=10.0.0 --output c:\packages
-          dotnet pack Cosmos.Core_Asm/Cosmos.Core_Asm.csproj -p:PackageVersion=10.0.0 --output c:\packages
-          dotnet pack Cosmos.HAL2/Cosmos.HAL2.csproj -p:PackageVersion=10.0.0 --output c:\packages
-          dotnet pack Cosmos.System2/Cosmos.System2.csproj -p:PackageVersion=10.0.0 --output c:\packages
-          dotnet pack Cosmos.System2_Plugs/Cosmos.System2_Plugs.csproj -p:PackageVersion=10.0.0 --output c:\packages
-          dotnet pack Cosmos.Plugs/Cosmos.Plugs.csproj -p:PackageVersion=10.0.0 --output c:\packages
-          dotnet pack Cosmos.Debug.Kernel/Cosmos.Debug.Kernel.csproj -p:PackageVersion=10.0.0 --output c:\packages
-          dotnet pack Cosmos.Debug.Kernel.Plugs.Asm/Cosmos.Debug.Kernel.Plugs.Asm.csproj -p:PackageVersion=10.0.0 --output c:\packages
-          dotnet pack Cosmos.Plugs/Cosmos.Plugs.csproj -p:PackageVersion=10.0.0 --output c:\packages
-          cd ../../IL2CPU/source
-          dotnet pack IL2CPU.API/IL2CPU.API.csproj -p:PackageVersion=10.0.0 --output c:\packages
-      - name: Install packages
-        if: ${{ matrix.os == 'windows-latest' }}
-        run: |
-          nuget sources Add -Name "Cosmos Local Package Feed" -Source "c:\packages"
-          cd "C:\Users\runneradmin\AppData\Roaming\"
-          mkdir "Cosmos User Kit"
-          cd "Cosmos User Kit"
-          mkdir "Build"
-          mkdir "Kernel"
-          cd "Build"
-          mkdir "IL2CPU"
-      - name: Install files
-        if: ${{ matrix.os == 'windows-latest' }}
-        run: |
-          copy "Cosmos\IL2CPU\source\IL2CPU\bin\Debug\net6.0\*" "C:\Users\runneradmin\AppData\Roaming\Cosmos User Kit\Build\IL2CPU\"
-          Copy-Item -Path "Cosmos\Cosmos\source\Cosmos.Common\bin\Debug\net6.0\*" -Destination "C:\Users\runneradmin\AppData\Roaming\Cosmos User Kit\Kernel\" -Force
-          Copy-Item -Path "Cosmos\Cosmos\source\Cosmos.Core_Asm\bin\Debug\net6.0\*" -Destination "C:\Users\runneradmin\AppData\Roaming\Cosmos User Kit\Kernel\" -Force
-          Copy-Item -Path "Cosmos\Cosmos\source\Cosmos.Core_Plugs\bin\Debug\net6.0\*" -Destination "C:\Users\runneradmin\AppData\Roaming\Cosmos User Kit\Kernel\" -Force
-          Copy-Item -Path "Cosmos\Cosmos\source\Cosmos.Core\bin\Debug\net6.0\*" -Destination "C:\Users\runneradmin\AppData\Roaming\Cosmos User Kit\Kernel\" -Force
-          Copy-Item -Path "Cosmos\Cosmos\source\Cosmos.System2\bin\Debug\net6.0\*" -Destination "C:\Users\runneradmin\AppData\Roaming\Cosmos User Kit\Kernel\" -Force
-          Copy-Item -Path "Cosmos\Cosmos\source\Cosmos.HAL2\bin\Debug\net6.0\*" -Destination "C:\Users\runneradmin\AppData\Roaming\Cosmos User Kit\Kernel\" -Force
-          Copy-Item -Path "Cosmos\Cosmos\source\Cosmos.System2_Plugs\bin\Debug\net6.0\*" -Destination "C:\Users\runneradmin\AppData\Roaming\Cosmos User Kit\Kernel\" -Force
-          Copy-Item -Path "Cosmos\Cosmos\source\Cosmos.Plugs\bin\Debug\net6.0\*" -Destination "C:\Users\runneradmin\AppData\Roaming\Cosmos User Kit\Kernel\" -Force
-          Copy-Item -Path "Cosmos\Cosmos\source\Cosmos.Debug.Kernel\bin\Debug\netstandard2.0\*" -Destination "C:\Users\runneradmin\AppData\Roaming\Cosmos User Kit\Kernel\" -Force
-          Copy-Item -Path "Cosmos\Cosmos\source\Cosmos.Debug.Kernel.Plugs.Asm\bin\Debug\netstandard2.0\*" -Destination "C:\Users\runneradmin\AppData\Roaming\Cosmos User Kit\Kernel\" -Force
-      - name: Restore dependancies
-        run: |
-          cd "SRC"
-          dotnet restore
-      - name: Build Aura Operating System
-        run: |
-          cd "SRC"
-          dotnet build
+          dotnet tool uninstall -g Cosmos.Patcher 2>/dev/null || true
+          dotnet tool install -g Cosmos.Patcher --add-source ../Cosmos/artifacts/package/release --version "${{ steps.cosmos.outputs.version }}"
+
+      - name: Publish Aura OS
+        working-directory: Aura-Operating-System
+        run: dotnet publish SRC/Aura_OS/Aura_OS.csproj -c Release -r linux-x64 -o out
+
+      - name: Upload ISO
+        uses: actions/upload-artifact@v4
+        with:
+          name: Aura_OS-iso
+          path: Aura-Operating-System/out/Aura_OS.iso
+          if-no-files-found: error
