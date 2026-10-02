@@ -7,8 +7,8 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.IO.Compression;
 using System.Text;
+using Aura_OS.System.Compression;
 
 namespace Aura_OS.System.Processing
 {
@@ -33,6 +33,12 @@ namespace Aura_OS.System.Processing
 
         private void ParseExecutable(byte[] executableBytes)
         {
+            // GEN3-GAP(null-deref): check the header before reading it (C6).
+            if (executableBytes == null || executableBytes.Length < SignatureSize + ArchiveSizeLength)
+            {
+                throw new InvalidOperationException("This is not a Cosmos executable.");
+            }
+
             Signature = Encoding.ASCII.GetString(executableBytes, 0, SignatureSize);
 
             if (Signature != ExpectedSignature)
@@ -41,7 +47,10 @@ namespace Aura_OS.System.Processing
             }
 
             ArchiveSize = BitConverter.ToInt32(executableBytes, SignatureSize);
-            if (SignatureSize + ArchiveSizeLength + ArchiveSize > executableBytes.Length)
+
+            // GEN3-GAP(null-deref): a negative size makes gen3's new byte[] return null instead of throwing,
+            // and a huge one overflowed the gen2 sum; compare without int overflow.
+            if (ArchiveSize < 0 || ArchiveSize > executableBytes.Length - SignatureSize - ArchiveSizeLength)
             {
                 throw new InvalidOperationException("Cosmos executable corrupted.");
             }
@@ -57,27 +66,48 @@ namespace Aura_OS.System.Processing
         {
             bool mainFound = false;
 
-            using (MemoryStream zipStream = new MemoryStream(ZipContent))
+            // GEN3-GAP(finally): no using blocks, gen3 does not run finally/Dispose when an exception unwinds (C7),
+            // so a corrupted archive is caught here, the ZipStorer closed explicitly, then rethrown.
+            MemoryStream zipStream = new MemoryStream(ZipContent);
+            ZipStorer zip = null;
+            Exception error = null;
+
+            try
             {
-                using (ZipStorer zip = ZipStorer.Open(zipStream, FileAccess.Read))
+                zip = ZipStorer.Open(zipStream, FileAccess.Read);
+
+                List<ZipStorer.ZipFileEntry> dir = zip.ReadCentralDir();
+
+                foreach (ZipStorer.ZipFileEntry entry in dir)
                 {
-                    List<ZipStorer.ZipFileEntry> dir = zip.ReadCentralDir();
+                    MemoryStream fileStream = new MemoryStream();
+                    zip.ExtractFile(entry, fileStream);
+                    byte[] script = fileStream.ToArray();
+                    fileStream.Dispose();
 
-                    foreach (ZipStorer.ZipFileEntry entry in dir)
+                    LuaSources.Add(entry.FilenameInZip, script);
+
+                    if (entry.FilenameInZip == "main.lua")
                     {
-                        using (MemoryStream fileStream = new MemoryStream())
-                        {
-                            zip.ExtractFile(entry, fileStream);
-                            byte[] script = fileStream.ToArray();
-                            LuaSources.Add(entry.FilenameInZip, script);
-
-                            if (entry.FilenameInZip == "main.lua")
-                            {
-                                mainFound = true;
-                            }
-                        }
+                        mainFound = true;
                     }
                 }
+            }
+            catch (Exception ex)
+            {
+                error = ex;
+            }
+
+            if (zip != null)
+            {
+                zip.Close();
+            }
+
+            zipStream.Dispose();
+
+            if (error != null)
+            {
+                throw error;
             }
 
             if (!mainFound)

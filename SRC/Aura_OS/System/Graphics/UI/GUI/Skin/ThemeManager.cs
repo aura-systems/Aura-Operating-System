@@ -4,6 +4,7 @@
 * PROGRAMMER(S):    Valentin Charbonnier <valentinbreiz@gmail.com>
 */
 
+using Aura_OS.System.Filesystem;
 using Aura_OS.System.Utils;
 using System.IO;
 
@@ -31,22 +32,27 @@ namespace Aura_OS.System.Graphics.UI.GUI.Skin
 
             _skinParser = new SkinParsing();
 
+            XmlPath = null;
+
             if (Kernel.Installed)
             {
-                Settings config = new Settings(@"0:\System\settings.ini");
-                XmlPath = config.GetValue("themeXmlPath");
+                Settings config = new Settings(AuraPaths.SettingsIni);
+                string themeXmlPath = AuraPath.FromLegacy(config.GetValue("themeXmlPath"));
 
-                if (!File.Exists(XmlPath))
+                if (!string.IsNullOrEmpty(themeXmlPath) && File.Exists(themeXmlPath))
                 {
-                    XmlPath = Files.IsoVolume + "UI\\Themes\\Suave.skin.xml";
+                    XmlPath = themeXmlPath;
                 }
             }
-            else
+
+            if (XmlPath == null)
             {
-                XmlPath = Files.IsoVolume + "UI\\Themes\\Suave.skin.xml";
+                // GEN3-GAP(iso-files): no ISO volume; the default skin is an embedded resource.
+                XmlPath = Files.EmbeddedScheme + "UI/Themes/Suave.skin.xml";
             }
 
-            _skinParser.loadSkin(File.ReadAllText(XmlPath));
+            // Disk or embedded; the UTF-8 BOM (Suave.skin.xml has one) is stripped on both paths.
+            _skinParser.loadSkin(Files.ReadAllText(XmlPath));
         }
 
         /// <summary>

@@ -10,7 +10,7 @@ using System.Collections.Generic;
 using Aura_OS.System.Processing.Processes;
 using Aura_OS.System.Graphics.UI.GUI;
 using Aura_OS.System.Graphics.UI.GUI.Components;
-using Cosmos.System;
+using Cosmos.Kernel.System.Keyboard;
 
 namespace Aura_OS.System.Processing.Applications
 {
@@ -45,7 +45,11 @@ namespace Aura_OS.System.Processing.Applications
 
             _fileContentBox = new TextBox(3, _topPanel.Height + Window.TopBar.Height + 3, width - 5, height - _topPanel.Height - Window.TopBar.Height - 6, "");
             _fileContentBox.Multiline = true;
-            _fileContentBox.Text = File.ReadAllText(filePath);
+            // An empty path (new document from the start menu) or a file that does not exist yet opens empty.
+            if (!string.IsNullOrEmpty(filePath) && File.Exists(filePath))
+            {
+                _fileContentBox.Text = File.ReadAllText(filePath);
+            }
             AddChild(_fileContentBox);
 
             _dialog = new("Save", "Your file has been saved!", (int)Width / 2 - 302 / 2, Height / 2 - 119 / 2);
@@ -60,7 +64,29 @@ namespace Aura_OS.System.Processing.Applications
 
         private void SaveFile()
         {
-            File.WriteAllText(_filePath, _fileContentBox.Text);
+            if (string.IsNullOrEmpty(_filePath))
+            {
+                ShowDialog(DialogState.Error, "This document has no file path, nothing was saved.");
+                return;
+            }
+
+            try
+            {
+                File.WriteAllText(_filePath, _fileContentBox.Text);
+            }
+            catch (Exception ex)
+            {
+                ShowDialog(DialogState.Error, "Save failed: " + ex.Message);
+                return;
+            }
+
+            ShowDialog(DialogState.Information, "Your file has been saved!");
+        }
+
+        private void ShowDialog(DialogState state, string message)
+        {
+            _dialog.SetState(state);
+            _dialog.Message = message;
             _dialog.Visible = true;
             MarkDirty();
         }

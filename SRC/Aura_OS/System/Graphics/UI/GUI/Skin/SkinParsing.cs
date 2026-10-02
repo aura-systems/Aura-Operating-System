@@ -1,6 +1,7 @@
-﻿using Aura_OS.System.Parser;
+﻿using Aura_OS.System.Filesystem;
+using Aura_OS.System.Parser;
 using Aura_OS.System.Utils;
-using Cosmos.System.Graphics;
+using Cosmos.Kernel.System.Graphics;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -47,29 +48,45 @@ namespace Aura_OS.System.Graphics.UI.GUI.Skin
             {
                 if (node.Name.Equals("bitmap"))
                 {
-                    string bitmapName = node.GetAttribute("name").Value;
-                    _skinName = node.GetAttribute("contentPath").Value;
+                    string bitmapName = Attr(node, "name");
+                    _skinName = Attr(node, "contentPath");
 
-                    string bmpPath;
+                    if (bitmapName == null)
+                    {
+                        CustomConsole.WriteLineError("Skipping skin bitmap without a name.");
+                        continue;
+                    }
+
+                    // Installed: the theme bitmap on disk (FromLegacy converts paths stored by gen2 installs).
+                    string bmpPath = null;
 
                     if (Kernel.Installed)
                     {
-                        Settings config = new Settings(@"0:\System\settings.ini");
-                        bmpPath = config.GetValue("themeBmpPath");
+                        Settings config = new Settings(AuraPaths.SettingsIni);
+                        string themeBmpPath = AuraPath.FromLegacy(config.GetValue("themeBmpPath"));
 
-                        if (!File.Exists(bmpPath))
+                        if (!string.IsNullOrEmpty(themeBmpPath) && File.Exists(themeBmpPath))
                         {
-                            bmpPath = Files.IsoVolume + "UI\\Themes\\" + _skinName + ".bmp";
+                            bmpPath = themeBmpPath;
                         }
-                    }
-                    else
-                    {
-                        bmpPath = Files.IsoVolume + "UI\\Themes\\" + _skinName + ".bmp";
                     }
 
                     try
                     {
-                        Bitmap bitmap = new Bitmap(File.ReadAllBytes(bmpPath));
+                        byte[] bmpData;
+
+                        if (bmpPath != null)
+                        {
+                            bmpData = File.ReadAllBytes(bmpPath);
+                        }
+                        else
+                        {
+                            // GEN3-GAP(iso-files): no ISO volume; the default skin bitmap is an embedded resource.
+                            bmpPath = Files.EmbeddedScheme + "UI/Themes/" + _skinName + ".bmp";
+                            bmpData = Files.Get("UI/Themes/" + _skinName + ".bmp");
+                        }
+
+                        Bitmap bitmap = new Bitmap(bmpData);
                         Kernel.ThemeManager.BmpPath = bmpPath;
                         _bitmaps.Add(bitmapName, bitmap);
                         CustomConsole.WriteLineOK("Bitmap '" + bitmapName + "' added successfully!");
@@ -88,11 +105,11 @@ namespace Aura_OS.System.Graphics.UI.GUI.Skin
             {
                 if (node.Name.Equals("frame"))
                 {
-                    string name = node.GetAttribute("name").Value;
+                    string name = Attr(node, "name");
 
-                    if (name.StartsWith("window") || name.StartsWith("button") ||
+                    if (name != null && (name.StartsWith("window") || name.StartsWith("button") ||
                         name.StartsWith("slider") || name.StartsWith("rail") ||
-                        name.StartsWith("cursor")  || name.StartsWith("check") || name.StartsWith("input"))
+                        name.StartsWith("cursor")  || name.StartsWith("check") || name.StartsWith("input")))
                     {
                         Frame.Region[] regions = RegionListBuilder.Build(node, _bitmaps);
                         Frame.Text[] texts = null;
@@ -103,6 +120,15 @@ namespace Aura_OS.System.Graphics.UI.GUI.Skin
                     }
                 }
             }
+        }
+
+        /// <summary>Value of an optional XML attribute, or null if the node has no such attribute.</summary>
+        private static string Attr(NanoXMLNode node, string name)
+        {
+            // GEN3-GAP(null-deref): GetAttribute returns null for a missing attribute; dereferencing it
+            // is a fatal #PF on gen3.
+            NanoXMLAttribute attribute = node.GetAttribute(name);
+            return attribute == null ? null : attribute.Value;
         }
 
         public Frame GetFrame(string name)

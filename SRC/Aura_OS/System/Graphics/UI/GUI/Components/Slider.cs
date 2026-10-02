@@ -4,8 +4,7 @@
 * PROGRAMMERS:      Valentin Charbonnier <valentinbreiz@gmail.com>
 */
 
-using Cosmos.System;
-using UniLua;
+using Cosmos.Kernel.System.Mouse;
 
 namespace Aura_OS.System.Graphics.UI.GUI.Components
 {
@@ -83,7 +82,12 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
                 _slide.MarkDirty();
                 MarkDirty();
 
-                Value = (currentX * 255) / (Width - _slide.Width);
+                // GEN3-GAP(null-deref): an integer /0 halts the kernel, so guard the rail length.
+                int range = Width - _slide.Width;
+                if (range > 0)
+                {
+                    Value = (currentX * 255) / range;
+                }
             }
 
             _slide.Update();

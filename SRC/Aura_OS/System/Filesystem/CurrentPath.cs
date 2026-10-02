@@ -4,59 +4,54 @@
 * PROGRAMMERS:      Valentin Charbonnier <valentinbreiz@gmail.com>
 */
 
+using Cosmos.Kernel.System.Vfs;
 using System.IO;
 
 namespace Aura_OS.System.Filesystem
 {
     public class CurrentPath
     {
+        /// <summary>
+        /// Changes Kernel.CurrentDirectory (and Kernel.CurrentVolume to the volume holding it).
+        /// Accepts "~", relative paths, "..", absolute paths ("/1/Docs") and gen2 input ("1:\Docs").
+        /// ".." at a volume root goes to "/", the volume list.
+        /// </summary>
         public static bool Set(string dir, out string error)
         {
-            if (dir == "..")
-            {
-                Directory.SetCurrentDirectory(Kernel.CurrentDirectory);
+            string target;
 
-                var root = Kernel.VirtualFileSystem.GetDirectory(Kernel.CurrentDirectory);
-
-                if (Kernel.CurrentDirectory != Kernel.CurrentVolume)
-                {
-                    Kernel.CurrentDirectory = root.mParent.mFullPath;
-                }
-            }
-            else if (dir == "~")
+            if (dir == "~")
             {
-                if (Directory.Exists(Kernel.UserDirectory))
-                {
-                    Directory.SetCurrentDirectory(Kernel.CurrentDirectory);
-                    Kernel.CurrentDirectory = Kernel.UserDirectory;
-                }
-                else
+                if (string.IsNullOrEmpty(Kernel.UserDirectory) || !Directory.Exists(Kernel.UserDirectory))
                 {
                     error = "No user directory found.";
                     return false;
                 }
-            }
-            else if (dir == Kernel.CurrentVolume)
-            {
-                Kernel.CurrentDirectory = Kernel.CurrentVolume;
+
+                target = Kernel.UserDirectory;
             }
             else
             {
-                if (Directory.Exists(Kernel.CurrentDirectory + dir))
-                {
-                    Directory.SetCurrentDirectory(Kernel.CurrentDirectory);
-                    Kernel.CurrentDirectory = Kernel.CurrentDirectory + dir + @"\";
-                }
-                else if (File.Exists(Kernel.CurrentDirectory + dir))
-                {
-                    error = "This is a file.";
-                    return false;
-                }
-                else
-                {
-                    error = "This directory doesn't exist!";
-                    return false;
-                }
+                target = AuraPath.Resolve(dir);
+            }
+
+            if (Directory.Exists(target))
+            {
+                // The Kernel.CurrentDirectory setter also syncs Directory.SetCurrentDirectory.
+                Kernel.CurrentDirectory = AuraPath.AsDirectory(target);
+
+                VfsManager.VfsMount mount = Volumes.MountOf(target);
+                Kernel.CurrentVolume = AuraPath.AsDirectory(mount != null ? mount.MountPoint : "/");
+            }
+            else if (File.Exists(target))
+            {
+                error = "This is a file.";
+                return false;
+            }
+            else
+            {
+                error = "This directory doesn't exist!";
+                return false;
             }
 
             error = "none";

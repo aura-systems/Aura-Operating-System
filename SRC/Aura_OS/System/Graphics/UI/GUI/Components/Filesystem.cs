@@ -8,8 +8,8 @@ using Aura_OS.System.Filesystem;
 using Aura_OS.System.Processing.Applications;
 using Aura_OS.System.Processing.Applications.Terminal;
 using Aura_OS.System.Processing.Processes;
-using Cosmos.System;
-using Cosmos.System.Graphics;
+using Cosmos.Kernel.System.Graphics;
+using Cosmos.Kernel.System.Mouse;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -39,16 +39,27 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
             RightClickEntry entry = new("Open in Terminal", RightClick.Width, RightClick);
             entry.Click = new Action(() =>
             {
-                Kernel.CurrentDirectory = CurrentPath;
+                Kernel.CurrentDirectory = AuraPath.AsDirectory(CurrentPath);
                 Kernel.ApplicationManager.StartApplication(typeof(TerminalApp));
             });
 
             RightClickEntry entry2 = new("Paste", RightClick.Width, RightClick);
             entry2.Click = new Action(() =>
             {
-                if (Kernel.Clipboard != null)
+                // Nothing can be created in the volume list ("/" is read-only).
+                if (Kernel.Clipboard != null && !IsVolumeList())
                 {
-                    Entries.ForceCopy(Kernel.Clipboard, CurrentPath);
+                    // Copies into the folder. ForceCopy throws on I/O errors, and a GUI click must not
+                    // reach the crash screen.
+                    try
+                    {
+                        Entries.ForceCopy(Kernel.Clipboard, CurrentPath);
+                    }
+                    catch (Exception ex)
+                    {
+                        Logs.DoOSLog("[Error] Cannot paste " + Kernel.Clipboard + ": " + ex.Message);
+                    }
+
                     RefreshFilesystem();
                     Kernel.Clipboard = null;
                 }
@@ -100,22 +111,49 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
             int currentX = startX;
             int currentY = startY;
 
-            string[] directories = Directory.GetDirectories(CurrentPath);
-            string[] files = Directory.GetFiles(CurrentPath);
+            // At "/" the entries are the mounted volumes ("/0", "/1"), which cannot be deleted.
+            bool volumeList = IsVolumeList();
+
+            string[] directories;
+            string[] files;
+
+            // GEN3-GAP(mounts): gen2 always had drive 0 mounted. In gen3 the path may be unmounted (no FAT
+            // disk, live mode, a pulled USB stick): show an empty folder instead of faulting at boot.
+            if (!string.IsNullOrEmpty(CurrentPath) && Directory.Exists(CurrentPath))
+            {
+                try
+                {
+                    directories = Directory.GetDirectories(CurrentPath);
+                    files = Directory.GetFiles(CurrentPath);
+                }
+                catch (Exception)
+                {
+                    directories = Array.Empty<string>();
+                    files = Array.Empty<string>();
+                }
+            }
+            else
+            {
+                directories = Array.Empty<string>();
+                files = Array.Empty<string>();
+            }
 
             _buttons.Clear();
             Children.Clear();
             foreach (string directory in directories)
             {
+                // GetDirectories returns full paths.
                 string folderName = Path.GetFileName(directory);
-                var button = new FileButton(folderName, _textColor, Kernel.ResourceManager.GetIcon("32-folder.bmp"), 0 + startX + currentX, 0 + currentY, 70, 70);
+                Bitmap folderIcon = volumeList ? Kernel.ResourceManager.GetIcon("16-drive.bmp") : Kernel.ResourceManager.GetIcon("32-folder.bmp");
+                var button = new FileButton(folderName, _textColor, folderIcon, 0 + startX + currentX, 0 + currentY, 70, 70);
                 button.Click = new Action(() =>
                 {
                     OpenFolder(folderName);
                     UpdateCurrentFolder();
                 });
 
-                button.RightClick = new RightClick((int)MouseManager.X, (int)MouseManager.Y, 200, 3 * RightClickEntry.ConstHeight);
+                int entryCount = volumeList ? 2 : 3;
+                button.RightClick = new RightClick((int)MouseManager.X, (int)MouseManager.Y, 200, entryCount * RightClickEntry.ConstHeight);
 
                 RightClickEntry entry = new("Open", button.RightClick.Width, button.RightClick);
                 entry.Click = new Action(() =>
@@ -126,20 +164,24 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
                 RightClickEntry entry2 = new("Copy", button.RightClick.Width, button.RightClick);
                 entry2.Click = new Action(() =>
                 {
-                    string path = CurrentPath + folderName;
+                    string path = Path.Combine(CurrentPath, folderName);
                     Kernel.Clipboard = path;
-                });
-
-                RightClickEntry entry3 = new("Delete", button.RightClick.Width, button.RightClick);
-                entry3.Click = new Action(() =>
-                {
-                    Entries.ForceRemove(CurrentPath + folderName);
-                    RefreshFilesystem();
                 });
 
                 button.RightClick.AddEntry(entry);
                 button.RightClick.AddEntry(entry2);
-                button.RightClick.AddEntry(entry3);
+
+                // A volume is never deleted from here.
+                if (!volumeList)
+                {
+                    RightClickEntry entry3 = new("Delete", button.RightClick.Width, button.RightClick);
+                    entry3.Click = new Action(() =>
+                    {
+                        Delete(Path.Combine(CurrentPath, folderName));
+                    });
+
+                    button.RightClick.AddEntry(entry3);
+                }
 
                 _buttons.Add(button);
                 AddChild(button);
@@ -172,15 +214,14 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
                 RightClickEntry entry2 = new("Copy", button.RightClick.Width, button.RightClick);
                 entry2.Click = new Action(() =>
                 {
-                    string path = CurrentPath + fileName;
+                    string path = Path.Combine(CurrentPath, fileName);
                     Kernel.Clipboard = path;
                 });
 
                 RightClickEntry entry3 = new("Delete", button.RightClick.Width, button.RightClick);
                 entry3.Click = new Action(() =>
                 {
-                    Entries.ForceRemove(CurrentPath + fileName);
-                    RefreshFilesystem();
+                    Delete(Path.Combine(CurrentPath, fileName));
                 });
 
                 button.RightClick.AddEntry(entry);
@@ -204,7 +245,7 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
             if (OpenNewWindow)
             {
                 /*
-                ExplorerApp app = new(CurrentPath + folderName + "\\", 500, 400, 40, 40);
+                ExplorerApp app = new(AuraPath.AsDirectory(Path.Combine(CurrentPath, folderName)), 500, 400, 40, 40);
                 app.Initialize();
                 app.MarkFocused();
                 app.Visible = true;
@@ -217,8 +258,32 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
             }
             else
             {
-                CurrentPath = CurrentPath + folderName + "\\";
+                CurrentPath = AuraPath.AsDirectory(Path.Combine(CurrentPath, folderName));
             }
+        }
+
+        /// <summary>
+        /// True when this panel shows the virtual root "/", whose entries are the mounted volumes.
+        /// </summary>
+        private bool IsVolumeList()
+        {
+            return CurrentPath == "/";
+        }
+
+        private void Delete(string path)
+        {
+            // ForceRemove refuses volumes and throws on I/O errors; a GUI click must not reach the
+            // crash screen.
+            try
+            {
+                Entries.ForceRemove(path);
+            }
+            catch (Exception ex)
+            {
+                Logs.DoOSLog("[Error] Cannot delete " + path + ": " + ex.Message);
+            }
+
+            RefreshFilesystem();
         }
 
         public void RefreshFilesystem()

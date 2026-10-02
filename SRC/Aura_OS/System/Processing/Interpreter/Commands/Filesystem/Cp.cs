@@ -29,8 +29,18 @@ namespace Aura_OS.System.Processing.Interpreter.Commands.Filesystem
                 return new ReturnInfo(this, ReturnCode.ERROR_ARG);
             }
 
-            string sourcePath = ResolvePath(arguments[0]);
-            string destPath = ResolvePath(arguments[1]);
+            string sourcePath = AuraPath.Resolve(arguments[0]);
+            string destPath = AuraPath.Resolve(arguments[1]);
+
+            // GEN3-GAP(fat-names): the FAT driver writes any character into a long name, so reject the
+            // reserved ones in the destination (a directory copy creates the whole chain).
+            foreach (string part in destPath.Split('/'))
+            {
+                if (part.Length > 0 && !AuraPath.IsValidName(part))
+                {
+                    return new ReturnInfo(this, ReturnCode.ERROR, "Invalid destination name.");
+                }
+            }
 
             try
             {
@@ -47,24 +57,6 @@ namespace Aura_OS.System.Processing.Interpreter.Commands.Filesystem
             {
                 Console.WriteLine("Error: " + ex.Message);
                 return new ReturnInfo(this, ReturnCode.ERROR);
-            }
-        }
-
-        private string ResolvePath(string path)
-        {
-            if (path.StartsWith("./"))
-            {
-                path = path.Substring(2);
-                path = Kernel.CurrentDirectory + path;
-            }
-
-            if (path == ".")
-            {
-                return Kernel.CurrentDirectory;
-            }
-            else
-            {
-                return Path.Combine(Kernel.CurrentDirectory, path);
             }
         }
 

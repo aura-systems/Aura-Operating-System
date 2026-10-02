@@ -111,7 +111,7 @@ namespace Aura_OS.System.Graphics.UI.GUI
             return !(Left > other.Right || Right < other.Left || Top > other.Bottom || Bottom < other.Top);
         }
 
-        public static Rectangle? Intersection(Rectangle rect1, Rectangle rect2)
+        public static Rectangle Intersection(Rectangle rect1, Rectangle rect2)
         {
             if (!rect1.Intersects(rect2)) return null;
 

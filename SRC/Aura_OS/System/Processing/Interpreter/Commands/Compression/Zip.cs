@@ -5,12 +5,12 @@
 *                   Valentin Charbonnier <valentinbreiz@gmail.com>
 */
 
+using Aura_OS.System.Compression;
+using Aura_OS.System.Filesystem;
 using Aura_OS.System.Processing.Interpreter;
 using System;
 using System.Collections.Generic;
-using System.IO.Compression;
 using System.IO;
-using UniLua;
 
 namespace Aura_OS.System.Processing.Interpreter.Commands.Util
 {
@@ -46,12 +46,12 @@ namespace Aura_OS.System.Processing.Interpreter.Commands.Util
 
         private ReturnInfo Extract(List<string> arguments)
         {
-            string archivePath = ResolvePath(arguments[1]);
+            string archivePath = AuraPath.Resolve(arguments[1]);
             string extractPath;
 
             if (arguments.Count > 2)
             {
-                extractPath = ResolvePath(arguments[2]);
+                extractPath = AuraPath.Resolve(arguments[2]);
             }
             else
             {
@@ -59,46 +59,81 @@ namespace Aura_OS.System.Processing.Interpreter.Commands.Util
                 extractPath = Path.Combine(Kernel.CurrentDirectory, archiveName);
             }
 
-            Directory.CreateDirectory(extractPath);
+            if (!File.Exists(archivePath))
+            {
+                return new ReturnInfo(this, ReturnCode.ERROR, "This file does not exist.");
+            }
+
+            // GEN3-GAP(finally): `using` does not dispose when an exception unwinds (a bad archive throws
+            // InvalidDataException), so catch inside and close the archive explicitly.
+            ZipStorer zip = null;
+            string error = null;
 
             try
             {
-                using (ZipStorer zip = ZipStorer.Open(archivePath, FileAccess.Read))
+                Directory.CreateDirectory(extractPath);
+
+                zip = ZipStorer.Open(archivePath, FileAccess.Read);
+
+                List<ZipStorer.ZipFileEntry> dir = zip.ReadCentralDir();
+
+                foreach (ZipStorer.ZipFileEntry entry in dir)
                 {
-                    List<ZipStorer.ZipFileEntry> dir = zip.ReadCentralDir();
+                    // Entry names use '/', and gen2 also accepted '\' (a plain character in gen3 names).
+                    string name = entry.FilenameInZip.Replace('\\', '/').TrimStart('/');
+                    string outputFile = Path.GetFullPath(Path.Combine(extractPath, name));
 
-                    foreach (ZipStorer.ZipFileEntry entry in dir)
+                    // Never write outside the destination ("../" in an entry name), and skip names the FAT
+                    // driver would store as-is with reserved characters (GEN3-GAP(fat-names)).
+                    if (!outputFile.StartsWith(AuraPath.AsDirectory(extractPath), StringComparison.Ordinal)
+                        || !IsValidEntryName(name))
                     {
-                        string outputFile = Path.Combine(extractPath, entry.FilenameInZip);
-                        zip.ExtractFile(entry, outputFile);
+                        continue;
                     }
-                }
 
-                Console.WriteLine("Extraction completed.");
-                return new ReturnInfo(this, ReturnCode.OK);
+                    zip.ExtractFile(entry, outputFile);
+                }
             }
             catch (Exception e)
             {
-                return new ReturnInfo(this, ReturnCode.ERROR, e.ToString());
+                error = e.ToString();
             }
+
+            if (zip != null)
+            {
+                try
+                {
+                    zip.Dispose();
+                }
+                catch (Exception e)
+                {
+                    if (error == null)
+                    {
+                        error = e.ToString();
+                    }
+                }
+            }
+
+            if (error != null)
+            {
+                return new ReturnInfo(this, ReturnCode.ERROR, error);
+            }
+
+            Console.WriteLine("Extraction completed.");
+            return new ReturnInfo(this, ReturnCode.OK);
         }
 
-        private string ResolvePath(string path)
+        private static bool IsValidEntryName(string name)
         {
-            if (path.StartsWith("./"))
+            foreach (string part in name.Split('/'))
             {
-                path = path.Substring(2);
-                path = Kernel.CurrentDirectory + path;
+                if (part.Length > 0 && !AuraPath.IsValidName(part))
+                {
+                    return false;
+                }
             }
 
-            if (path == ".")
-            {
-                return Kernel.CurrentDirectory;
-            }
-            else
-            {
-                return Path.Combine(Kernel.CurrentDirectory, path);
-            }
+            return true;
         }
 
         public override void PrintHelp()

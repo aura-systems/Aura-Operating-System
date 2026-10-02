@@ -1,48 +1,65 @@
-﻿<Project InitialTargets="GetVersion" Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Cosmos.Sdk">
 
-	<PropertyGroup>
-		<TargetFramework>net6.0</TargetFramework>
-		<DefineConstants>TRACE;NOASYNC</DefineConstants>
-	</PropertyGroup>
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+    <RootNamespace>Aura_OS</RootNamespace>
+    <!-- Default would be Aura_OS.Kernel (Aura's static state class, not a Cosmos.Kernel.System.Kernel). -->
+    <CosmosKernelClass>Aura_Boot.Kernel</CosmosKernelClass>
+    <ImplicitUsings>disable</ImplicitUsings>   <!-- Aura relies on explicit usings + Aura_OS.System shadowing -->
+    <Nullable>disable</Nullable>               <!-- gen2 code; no '?' annotations on reference types (CS8632) -->
+    <InvariantTimezone>true</InvariantTimezone><!-- TimeZoneInfo.Local never probes tzfiles -->
+    <CosmosDefaultFont>Aura_OS/UI/Fonts/zap-ext-light16.psf</CosmosDefaultFont> <!-- boot KernelConsole in Aura's font -->
+    <!-- No DefineConstants (UniLua was the only user). If ever needed: $(DefineConstants);X  (never replace: drops ARCH_X64). -->
+    <!-- Feature switches stay at their defaults (all true). AllowUnsafeBlocks already true in Sdk.props. -->
+  </PropertyGroup>
 
-	<PropertyGroup>
-		<Year>$([System.DateTime]::Now.ToString("yyyy"))</Year>
-		<Month>$([System.DateTime]::Now.ToString("MM"))</Month>
-		<Date>$([System.DateTime]::Now.ToString("dd"))</Date>
-		<Time>$([System.DateTime]::Now.ToString("HHmm"))</Time>
-		<SomeThing>
-			<![CDATA[
-        namespace Aura_OS
-{
-    public class VersionInfo
-    {
-        public static string revision = "$(Date)$(Month)$(Year)$(Time)"%3b
-    }
-}
-       ]]>
-		</SomeThing>
-		<AllowUnsafeBlocks>True</AllowUnsafeBlocks>
-	</PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Cosmos.Kernel" Version="$(AuraCosmosVersion)" />
+    <PackageReference Include="Cosmos.Kernel.System" Version="$(AuraCosmosVersion)" />
+    <PackageReference Include="Cosmos.Network.Ftp" Version="$(AuraFtpVersion)" />
+    <PackageReference Include="Cosmos.Executable.Lua" Version="$(AuraLuaVersion)" />
+    <PackageReference Include="acryptohashnet" Version="2.0.0" />                 <!-- cosmos.crypto Lua lib only -->
+    <PackageReference Include="jzero" Version="0.4.5" />                           <!-- JsonReader only -->
+    <PackageReference Include="Zlib.Portable" Version="1.11.0" NoWarn="NU1701" />  <!-- managed DEFLATE for ZipStorer/.cexe -->
+  </ItemGroup>
 
-	<ItemGroup>
-		<EmbeddedResource Include="Resources\auralogo_white.bmp" />
-		<EmbeddedResource Include="Resources\error.bmp" />
-		<EmbeddedResource Include="Resources\Tetris.gb" />
-		<EmbeddedResource Include="Resources\wallpaper-1.bmp" />
-		<EmbeddedResource Include="Resources\wallpaper-2.bmp" />
-	</ItemGroup>
+  <!-- Every file under Resources/ is embedded as "Aura_OS/<path relative to Resources, '/'-separated>".
+       ASCII names only; read through Files.Get(relPath). -->
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\**\*">
+      <LogicalName>Aura_OS/$([System.String]::Copy('%(RecursiveDir)').Replace('\', '/'))%(Filename)%(Extension)</LogicalName>
+    </EmbeddedResource>
+  </ItemGroup>
 
-	<ItemGroup>
-		<PackageReference Include="acryptohashnet" Version="2.0.0" />
-		<PackageReference Include="Cosmos.System2" Version="0.1.0-localbuild*" NoWarn="NU1604;NU1605" />
-		<PackageReference Include="CosmosHttp" Version="1.0.4" />
-		<PackageReference Include="CosmosFtpServer" Version="1.0.9" />
-		<PackageReference Include="jzero" Version="0.4.5" />
-		<PackageReference Include="Zlib.Portable" Version="1.11.0" />
-	</ItemGroup>
+  <!-- gen2 revision format ddMMyyyyHHmm; Debug pins HHmm=0000 so build caches survive a dev session -->
+  <PropertyGroup>
+    <AuraRevision Condition="'$(AuraRevision)' == '' and '$(Configuration)' == 'Release'">$([System.DateTime]::Now.ToString("ddMMyyyyHHmm"))</AuraRevision>
+    <AuraRevision Condition="'$(AuraRevision)' == ''">$([System.DateTime]::Now.ToString("ddMMyyyy"))0000</AuraRevision>
+  </PropertyGroup>
 
-	<Target Name="GetVersion">
-		<WriteLinesToFile File="Properties\VersionInfo.cs" Lines="$(SomeThing)" Overwrite="true" />
-	</Target>
+  <!-- Adapted from GenerateKernelVersionCs in Cosmos.Kernel.System.csproj (replaces gen2's GetVersion target
+       and the tracked Properties/VersionInfo.cs). -->
+  <Target Name="AuraGenerateVersionInfo" BeforeTargets="CoreCompile">
+    <PropertyGroup>
+      <_AuraVersionInfoFile>$(IntermediateOutputPath)VersionInfo.g.cs</_AuraVersionInfoFile>
+    </PropertyGroup>
+    <ItemGroup>
+      <_AuraVersionInfoLine Include="// &lt;auto-generated/&gt;" />
+      <_AuraVersionInfoLine Include="namespace Aura_OS" />
+      <_AuraVersionInfoLine Include="{" />
+      <_AuraVersionInfoLine Include="    public class VersionInfo" />
+      <_AuraVersionInfoLine Include="    {" />
+      <_AuraVersionInfoLine Include="        public static string revision = &quot;$(AuraRevision)&quot;%3B" />
+      <_AuraVersionInfoLine Include="    }" />
+      <_AuraVersionInfoLine Include="}" />
+    </ItemGroup>
+    <MakeDir Directories="$(IntermediateOutputPath)" />
+    <WriteLinesToFile File="$(_AuraVersionInfoFile)" Lines="@(_AuraVersionInfoLine)" Overwrite="true" WriteOnlyWhenDifferent="true" />
+    <ItemGroup>
+      <Compile Include="$(_AuraVersionInfoFile)" />
+      <FileWrites Include="$(_AuraVersionInfoFile)" />
+    </ItemGroup>
+  </Target>
 
 </Project>

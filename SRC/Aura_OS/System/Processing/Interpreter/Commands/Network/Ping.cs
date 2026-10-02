@@ -5,12 +5,11 @@
 */
 
 using System;
-using Sys = Cosmos.System;
-using Cosmos.System.Network;
 using System.Collections.Generic;
-using Cosmos.System.Network.IPv4;
-using Cosmos.System.Network.Config;
-using Cosmos.System.Network.IPv4.UDP.DNS;
+using Aura_OS.System.Network;
+using Cosmos.Kernel.System.Network;
+using Cosmos.Kernel.System.Network.IPv4;
+using Cosmos.Kernel.System.Network.IPv6;
 
 namespace Aura_OS.System.Processing.Interpreter.Commands.Network
 {
@@ -35,71 +34,99 @@ namespace Aura_OS.System.Processing.Interpreter.Commands.Network
             int PacketLost = 0;
             int PercentLoss;
 
-            Address source;
-            Address destination = Address.Parse(arguments[0]);
-
-            if (destination != null)
+            if (arguments.Count != 1)
             {
-                source = IPConfig.FindNetwork(destination);
+                return new ReturnInfo(this, ReturnCode.ERROR_ARG);
             }
-            else //Make a DNS request if it's not an IP
+
+            // IP literal (v4 or v6), else a DNS request (A record) on the first nameserver.
+            Address destination = NetworkHelper.Resolve(arguments[0]);
+
+            if (destination is null)
             {
-                var xClient = new DnsClient();
-                xClient.Connect(DNSConfig.DNSNameservers[0]);
-                xClient.SendAsk(arguments[0]);
-                destination = xClient.Receive();
-                xClient.Close();
-
-                if (destination == null)
-                {
-                    return new ReturnInfo(this, ReturnCode.ERROR, "Failed to get DNS response for " + arguments[0]);
-                }
-
-                source = IPConfig.FindNetwork(destination);
+                return new ReturnInfo(this, ReturnCode.ERROR, "Failed to get DNS response for " + arguments[0]);
             }
+
+            Address6 destination6 = destination as Address6;
+            IcmpClient xClient = null;
+            Icmpv6Client xClient6 = null;
+            string error = null;
 
             try
             {
                 Console.WriteLine("Sending ping to " + destination.ToString());
 
-                var xClient = new ICMPClient();
-                xClient.Connect(destination);
-
-                for (int i = 0; i < 4; i++)
+                // IcmpClient builds IPv4 packets only.
+                if (destination6 is not null)
                 {
-                    xClient.SendEcho();
+                    xClient6 = new Icmpv6Client();
+                    xClient6.Connect(destination6);
+                }
+                else
+                {
+                    xClient = new IcmpClient();
+                    xClient.Connect(destination);
+                }
+
+                for (ushort sequence = 1; sequence <= 4; sequence++)
+                {
+                    // InvalidOperationException when no configured interface reaches the destination.
+                    if (xClient6 != null)
+                    {
+                        xClient6.SendEcho(1, sequence);
+                    }
+                    else
+                    {
+                        xClient.SendEcho(1, sequence);
+                    }
 
                     PacketSent++;
 
-                    var endpoint = new EndPoint(Address.Zero, 0);
+                    var endpoint = new EndPoint(Address4.Zero, 0);
 
-                    int second = xClient.Receive(ref endpoint, 4000);
+                    // gen3 returns the elapsed milliseconds (10 ms steps), gen2 returned seconds.
+                    // GEN3-GAP(net-misc): IcmpClient doesn't match the echo id/sequence.
+                    int milliseconds = xClient6 != null ? xClient6.Receive(ref endpoint, 4000) : xClient.Receive(ref endpoint, 4000);
 
-                    if (second == -1)
+                    if (milliseconds == -1)
                     {
                         Console.WriteLine("Destination host unreachable.");
                         PacketLost++;
                     }
                     else
                     {
-                        if (second < 1)
+                        if (milliseconds == 0)
                         {
-                            Console.WriteLine("Reply received from " + endpoint.Address.ToString() + " time < 1s");
+                            Console.WriteLine("Reply received from " + endpoint.Address.ToString() + " time<10ms");
                         }
-                        else if (second >= 1)
+                        else
                         {
-                            Console.WriteLine("Reply received from " + endpoint.Address.ToString() + " time " + second + "s");
+                            Console.WriteLine("Reply received from " + endpoint.Address.ToString() + " time=" + milliseconds + "ms");
                         }
 
                         PacketReceived++;
                     }
                 }
-
-                xClient.Close();
             }
-            catch
+            catch (Exception ex)
             {
-                return new ReturnInfo(this, ReturnCode.ERROR, "Ping process error.");
+                error = ex.Message;
+            }
+
+            // gen3: finally/using do not run on the exception path, dispose explicitly.
+            if (xClient != null)
+            {
+                xClient.Dispose();
+            }
+
+            if (xClient6 != null)
+            {
+                xClient6.Dispose();
+            }
+
+            if (error != null)
+            {
+                return new ReturnInfo(this, ReturnCode.ERROR, "Ping process error: " + error);
             }
 
             PercentLoss = 25 * PacketLost;

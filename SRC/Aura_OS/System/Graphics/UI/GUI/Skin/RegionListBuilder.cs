@@ -2,9 +2,8 @@
 using System.Collections.Generic;
 using System;
 using Aura_OS.System.Parser;
-using Cosmos.System.Graphics;
+using Cosmos.Kernel.System.Graphics;
 using Aura_OS.System.Graphics.UI.GUI;
-using System.Xml.Linq;
 using Aura_OS.System;
 
 public class RegionListBuilder
@@ -34,6 +33,18 @@ public class RegionListBuilder
         return builder.createAndPlaceRegions(frameElement, bitmaps);
     }
 
+    /// <summary>Value of an optional XML attribute</summary>
+    /// <param name="node">XML node holding the attribute</param>
+    /// <param name="name">Name of the attribute</param>
+    /// <returns>The attribute's value, or null if the node has no such attribute</returns>
+    private static string Attr(NanoXMLNode node, string name)
+    {
+        // GEN3-GAP(null-deref): GetAttribute returns null for a missing attribute; dereferencing it
+        // is a fatal #PF on gen3 (gen2 silently read low memory).
+        NanoXMLAttribute attribute = node.GetAttribute(name);
+        return attribute == null ? null : attribute.Value;
+    }
+
     /// <summary>Retrieves the sizes of the border regions in a frame</summary>
     /// <param name="frameElement">
     ///   XML node for the frame containing the region
@@ -42,28 +53,40 @@ public class RegionListBuilder
     {
         foreach (NanoXMLNode element in frameElement.SubNodes)
         {
-            // Left and right border width determination
-            string hplacement = element.GetAttribute("hplacement").Value;
-            string w = element.GetAttribute("w").Value;
-            if (hplacement == "left")
+            // Only regions have a size (<text> nodes have no w/h)
+            if (element.Name != "region")
             {
-                this.leftBorderWidth = Math.Max(this.leftBorderWidth, int.Parse(w));
+                continue;
             }
-            else if (hplacement == "right")
+
+            // Left and right border width determination
+            string hplacement = Attr(element, "hplacement");
+            string w = Attr(element, "w");
+            if (hplacement != null && w != null)
             {
-                this.rightBorderWidth = Math.Max(this.rightBorderWidth, int.Parse(w));
+                if (hplacement == "left")
+                {
+                    this.leftBorderWidth = Math.Max(this.leftBorderWidth, int.Parse(w));
+                }
+                else if (hplacement == "right")
+                {
+                    this.rightBorderWidth = Math.Max(this.rightBorderWidth, int.Parse(w));
+                }
             }
 
             // Top and bottom border width determination
-            string vplacement = element.GetAttribute("vplacement").Value;
-            string h = element.GetAttribute("h").Value;
-            if (vplacement == "top")
+            string vplacement = Attr(element, "vplacement");
+            string h = Attr(element, "h");
+            if (vplacement != null && h != null)
             {
-                this.topBorderWidth = Math.Max(this.topBorderWidth, int.Parse(h));
-            }
-            else if (vplacement == "bottom")
-            {
-                this.bottomBorderWidth = Math.Max(this.bottomBorderWidth, int.Parse(h));
+                if (vplacement == "top")
+                {
+                    this.topBorderWidth = Math.Max(this.topBorderWidth, int.Parse(h));
+                }
+                else if (vplacement == "bottom")
+                {
+                    this.bottomBorderWidth = Math.Max(this.bottomBorderWidth, int.Parse(h));
+                }
             }
         }
     }
@@ -88,15 +111,15 @@ public class RegionListBuilder
 
             if (element.Name == "region")
             {
-                string idAttribute = element.GetAttribute("id").Value;
-                string id = (idAttribute == null) ? null : idAttribute;
-                string source = element.GetAttribute("source").Value;
-                string hplacement = element.GetAttribute("hplacement").Value;
-                string vplacement = element.GetAttribute("vplacement").Value;
-                string x = element.GetAttribute("x").Value;
-                string y = element.GetAttribute("y").Value;
-                string w = element.GetAttribute("w").Value;
-                string h = element.GetAttribute("h").Value;
+                // The region id is optional (the cursor frame's region has none)
+                string id = Attr(element, "id");
+                string source = Attr(element, "source");
+                string hplacement = Attr(element, "hplacement");
+                string vplacement = Attr(element, "vplacement");
+                string x = Attr(element, "x");
+                string y = Attr(element, "y");
+                string w = Attr(element, "w");
+                string h = Attr(element, "h");
 
                 // Assign the trivial attributes
                 var region = new Frame.Region()

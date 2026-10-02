@@ -5,7 +5,7 @@
 */
 
 using Aura_OS.System.Users;
-using Cosmos.System;
+using Cosmos.Kernel.System.Keyboard;
 using System;
 using System.Collections.Generic;
 using Aura_OS.System.Graphics.UI.GUI;
@@ -28,6 +28,12 @@ namespace Aura_OS.System.Processing.Applications.Terminal
 
         private bool _redirect = false;
         private TerminalTextWriter _writer;
+
+        /// <summary>
+        /// Terminal whose writer is currently installed as Console.Out (null: Kernel.GuiSink).
+        /// Console.SetOut is process-global, so with several terminals only the owner may restore the sink.
+        /// </summary>
+        private static TerminalApp _redirectOwner;
 
         public TerminalApp(int width, int height, int x = 0, int y = 0) : base(ApplicationName, width, height, x, y)
         {
@@ -115,7 +121,8 @@ namespace Aura_OS.System.Processing.Applications.Terminal
                             }
                             else
                             {
-                                if (_commandIndex >= 0)
+                                // Count check: Up on an empty history indexed _commands[0] (crash screen, C6).
+                                if (_commandIndex >= 0 && _commandIndex < _commands.Count)
                                 {
                                     Console.mX -= _command.Length;
                                     _command = _commands[_commandIndex];
@@ -202,12 +209,21 @@ namespace Aura_OS.System.Processing.Applications.Terminal
             Console.MarkDirty();
         }
 
+        public override void Stop()
+        {
+            // Minimized or closed: Update() no longer runs, give Console.Out back to the GUI sink now.
+            DeactivateRedirection();
+
+            base.Stop();
+        }
+
         public void ActivateRedirection()
         {
             if (_redirect == false)
             {
                 global::System.Console.SetOut(_writer);
                 _writer.Enable();
+                _redirectOwner = this;
                 _redirect = true;
             }
         }
@@ -216,8 +232,25 @@ namespace Aura_OS.System.Processing.Applications.Terminal
         {
             if (_redirect == true)
             {
-                // global::System.Console.SetOut(global::System.Console.Out);
                 _writer.Disable();
+
+                // GEN3-GAP(console-global): Console.SetOut is process-global. Restore Aura's serial sink, never
+                // Console.Out (SetOut(Console.Out) is a no-op) and never the KernelConsole, which would paint
+                // over the desktop. Skip it when another terminal already took Console.Out.
+                if (_redirectOwner == this)
+                {
+                    if (Kernel.GuiSink != null)
+                    {
+                        global::System.Console.SetOut(Kernel.GuiSink);
+                    }
+                    else
+                    {
+                        global::System.Console.SetOut(global::System.IO.TextWriter.Null);
+                    }
+
+                    _redirectOwner = null;
+                }
+
                 _redirect = false;
             }
         }

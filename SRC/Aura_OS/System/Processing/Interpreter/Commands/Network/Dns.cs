@@ -6,9 +6,9 @@
 
 using System;
 using System.Collections.Generic;
-using Cosmos.System.Network.IPv4.UDP.DNS;
-using Cosmos.System.Network.IPv4;
-using Cosmos.System.Network.Config;
+using Cosmos.Kernel.System.Network;
+using Cosmos.Kernel.System.Network.Config;
+using Cosmos.Kernel.System.Network.DNS;
 using Aura_OS;
 using Aura_OS.System.Processing.Interpreter;
 
@@ -40,7 +40,7 @@ namespace Aura_OS.System.Processing.Interpreter.Commands.Network
         /// <param name="arguments">Arguments</param>
         public override ReturnInfo Execute(List<string> arguments)
         {
-            var xClient = new DnsClient();
+            Address server;
             string domainname;
 
             if (arguments.Count < 1 || arguments.Count > 2)
@@ -49,25 +49,57 @@ namespace Aura_OS.System.Processing.Interpreter.Commands.Network
             }
             else if (arguments.Count == 1)
             {
-                xClient.Connect(DNSConfig.DNSNameservers[0]);
-                Console.WriteLine("DNS used : " + DNSConfig.DNSNameservers[0].ToString());
-                xClient.SendAsk(arguments[0]);
+                if (DnsConfig.Nameservers.Count == 0)
+                {
+                    return new ReturnInfo(this, ReturnCode.ERROR, "No DNS server, use ipconfig /ask or ipconfig /nameserver -add {IP}");
+                }
+
+                server = DnsConfig.Nameservers[0];
                 domainname = arguments[0];
+                Console.WriteLine("DNS used : " + server.ToString());
             }
             else
             {
-                xClient.Connect(Address.Parse(arguments[0]));
-                xClient.SendAsk(arguments[1]);
+                server = Address.Parse(arguments[0]);
+                if (server is null)
+                {
+                    return new ReturnInfo(this, ReturnCode.ERROR, "Can't parse DNS server address: " + arguments[0]);
+                }
+
                 domainname = arguments[1];
             }
 
-            Address address = xClient.Receive();
+            // Cosmos DnsClient (not System.Net.Dns): it can query a chosen server.
+            DnsClient xClient = null;
+            Address address = null;
+            string error = null;
 
-            xClient.Close();
-
-            if (address == null)
+            try
             {
-                return new ReturnInfo(this, ReturnCode.ERROR, "Unable to find " + arguments[0]);
+                xClient = new DnsClient();
+                xClient.Connect(server);
+                xClient.SendQuery(domainname); // InvalidOperationException: no configured interface reaches the server
+                address = xClient.Receive(5000);
+            }
+            catch (Exception ex)
+            {
+                error = ex.Message;
+            }
+
+            // gen3: finally/using do not run on the exception path, dispose explicitly.
+            if (xClient != null)
+            {
+                xClient.Dispose();
+            }
+
+            if (error != null)
+            {
+                return new ReturnInfo(this, ReturnCode.ERROR, "Can't query DNS server " + server.ToString() + ": " + error);
+            }
+
+            if (address is null)
+            {
+                return new ReturnInfo(this, ReturnCode.ERROR, "Unable to find " + domainname);
             }
             else
             {

@@ -6,7 +6,7 @@
 
 using Aura_OS.System.Graphics.UI.GUI;
 using Aura_OS.System.Graphics.UI.GUI.Components;
-using Cosmos.System.Graphics;
+using Cosmos.Kernel.System.Graphics;
 using System.ComponentModel;
 using System.Drawing;
 using Component = Aura_OS.System.Graphics.UI.GUI.Components.Component;

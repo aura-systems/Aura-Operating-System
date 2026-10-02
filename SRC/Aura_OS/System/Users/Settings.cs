@@ -20,7 +20,8 @@ namespace Aura_OS.System.Utils
         {
             this.path = path;
 
-            fileContent = null;
+            // A missing file behaves as an empty one: Add/Edit work and Push creates it.
+            fileContent = Array.Empty<string>();
             if (File.Exists(path))
             {
                 fileContent = File.ReadAllLines(path);
@@ -128,6 +129,8 @@ namespace Aura_OS.System.Utils
             }
             else
             {
+                // Add re-reads fileContent into config: clear it first or every line is duplicated.
+                config.Clear();
                 Add(parameter, value);
             }
         }

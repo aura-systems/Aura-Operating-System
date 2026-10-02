@@ -97,6 +97,12 @@ namespace Aura_OS.System.Parser
         {
             int i = 0;
 
+            // Skip a leading BOM (U+FEFF): Encoding.UTF8.GetString keeps it, and it is not a valid token.
+            if (xmlString != null && xmlString.Length > 0 && xmlString[0] == '\uFEFF')
+            {
+                i = 1;
+            }
+
             while (true)
             {
                 SkipSpaces(xmlString, ref i);

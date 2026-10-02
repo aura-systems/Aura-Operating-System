@@ -13,6 +13,7 @@ using Aura_OS.System.Graphics.UI.GUI.Components;
 using Rectangle = Aura_OS.System.Graphics.UI.GUI.Rectangle;
 using Component = Aura_OS.System.Graphics.UI.GUI.Components.Component;
 using Aura_OS.System.Utils;
+using Aura_OS.System.Filesystem;
 
 namespace Aura_OS
 {
@@ -51,9 +52,18 @@ namespace Aura_OS
 
             if (Kernel.Installed)
             {
-                Settings config = new Settings(@"0:\System\settings.ini");
-                byte windowsTransparency = byte.Parse(config.GetValue("windowsTransparency"));
-                byte taskbarTransparency = byte.Parse(config.GetValue("taskbarTransparency"));
+                Settings config = new Settings(AuraPaths.SettingsIni);
+                // C6: a missing key reads as "null"; fall back to opaque instead of failing the boot.
+                byte windowsTransparency;
+                if (!byte.TryParse(config.GetValue("windowsTransparency"), out windowsTransparency))
+                {
+                    windowsTransparency = 0xFF;
+                }
+                byte taskbarTransparency;
+                if (!byte.TryParse(config.GetValue("taskbarTransparency"), out taskbarTransparency))
+                {
+                    taskbarTransparency = 0xFF;
+                }
                 WindowsTransparency = windowsTransparency;
                 TaskbarTransparency = taskbarTransparency;
             }

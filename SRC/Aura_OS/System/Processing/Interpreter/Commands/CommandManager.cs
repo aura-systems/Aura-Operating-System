@@ -17,8 +17,10 @@ using Aura_OS.System.Processing.Interpreter.Commands.Network;
 using Aura_OS.System.Processing.Interpreter.Commands.SystemInfomation;
 using Aura_OS.System.Processing.Interpreter.Commands.Graphics;
 using Aura_OS.System.Processing.Interpreter.Commands.Processing;
-using Cosmos.System.Network;
+using Aura_OS.System.Filesystem;
+using Aura_OS.System.Network;
 using Aura_OS.System.Graphics.UI.GUI;
+using Cosmos.Kernel.System.Vfs;
 using System.Text;
 
 namespace Aura_OS.System.Processing.Interpreter.Commands
@@ -97,10 +99,8 @@ namespace Aura_OS.System.Processing.Interpreter.Commands
 
             CMDs.Add(new CommandMIV(new string[] { "miv", "edit" }));*/
 
-            _commands.Add(new CommandAction(new string[] { "beep" }, () =>
-            {
-                Cosmos.System.PCSpeaker.Beep();
-            }));
+            // GEN3-GAP(pc-speaker): gen3 has no PC speaker driver (port I/O is internal), so the
+            // gen2 'beep' command is not registered (decision D2).
             _commands.Add(new CommandAction(new string[] { "crash" }, () =>
             {
                 throw new Exception("Exception test");
@@ -149,7 +149,7 @@ namespace Aura_OS.System.Processing.Interpreter.Commands
         {
             //CommandsHistory.Add(cmd); //adding last command to the commands history
 
-            if (cmd.Length <= 0)
+            if (cmd == null || cmd.Length <= 0)
             {
                 Console.WriteLine();
                 return;
@@ -168,6 +168,15 @@ namespace Aura_OS.System.Processing.Interpreter.Commands
             }
 
             List<string> arguments = Misc.ParseCommandLine(cmd);
+
+            if (arguments.Count == 0)
+            {
+                // Blank command (or a lone redirection): nothing to run. Never index an empty list (C6).
+                Kernel.Redirect = false;
+                Kernel.CommandOutput = "";
+                Console.WriteLine();
+                return;
+            }
 
             string firstarg = arguments[0]; //command name
 
@@ -279,16 +288,16 @@ namespace Aura_OS.System.Processing.Interpreter.Commands
         {
             if (command.Type == CommandType.Filesystem)
             {
-                if (Kernel.VirtualFileSystem == null || Kernel.VirtualFileSystem.GetVolumes().Count == 0)
+                if (VfsManager.Mounts.Count == 0)
                 {
-                    return new ReturnInfo(command, ReturnCode.ERROR, "No volume detected!");
+                    return new ReturnInfo(command, ReturnCode.ERROR, "No volume detected! Use vol /lp, vol /mp, vol /fp.");
                 }
             }
             if (command.Type == CommandType.Network)
             {
-                if (NetworkStack.ConfigEmpty())
+                if (!NetworkHelper.IsConfigured)
                 {
-                    return new ReturnInfo(command, ReturnCode.ERROR, "No network configuration detected! Use ipconfig /set.");
+                    return new ReturnInfo(command, ReturnCode.ERROR, "No network configuration detected! Use ipconfig /ask or ipconfig /set.");
                 }
             }
             return new ReturnInfo(command, ReturnCode.OK);
@@ -318,9 +327,16 @@ namespace Aura_OS.System.Processing.Interpreter.Commands
 
         private void HandleRedirection(string filePath, string commandOutput)
         {
-            string fullPath = Kernel.CurrentDirectory + filePath;
-
-            File.WriteAllText(fullPath, commandOutput);
+            try
+            {
+                File.WriteAllText(AuraPath.Resolve(filePath), commandOutput);
+            }
+            catch (Exception ex)
+            {
+                Console.ForegroundColor = ConsoleColor.DarkRed;
+                Console.WriteLine("Error: cannot write output to '" + filePath + "': " + ex.Message);
+                Console.ForegroundColor = ConsoleColor.White;
+            }
         }
 
         /// <summary>

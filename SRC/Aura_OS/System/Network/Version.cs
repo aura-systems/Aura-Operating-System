@@ -12,8 +12,13 @@ namespace Aura_OS.System.Network
 {
     public static class Version
     {
+        /// <summary>
+        /// Latest release info. Throws on any network/HTTP/JSON failure: callers wrap it in try/catch.
+        /// </summary>
         public static (string, string, string) GetLastVersionInfo()
         {
+            // GEN3-GAP(backend): http://aura.valentin.bzh/os.json currently answers 301 -> https, then 404,
+            // and gen3 has no TLS, so this throws until the file is served over plain HTTP.
             string json = Http.DownloadFile("http://aura.valentin.bzh/os.json");
 
             JsonReader rdr = new(json);
@@ -52,6 +57,12 @@ namespace Aura_OS.System.Network
 
         public static int CompareVersions(string version1, string version2)
         {
+            // Null-safe: a missing version (failed update check) compares as equal.
+            if (version1 == null || version2 == null)
+            {
+                return 0;
+            }
+
             var version1Parts = version1.Split('.').Select(v => int.TryParse(v, out int val) ? val : 0).ToArray();
             var version2Parts = version2.Split('.').Select(v => int.TryParse(v, out int val) ? val : 0).ToArray();
 

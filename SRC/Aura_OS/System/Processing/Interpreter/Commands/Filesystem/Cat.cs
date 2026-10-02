@@ -4,6 +4,7 @@
 * PROGRAMMER(S):    Valentin Charbonnier <valentinbreiz@gmail.com>
 */
 
+using Aura_OS.System.Filesystem;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -26,15 +27,20 @@ namespace Aura_OS.System.Processing.Interpreter.Commands.Filesystem
         /// </summary>
         public override ReturnInfo Execute(List<string> arguments)
         {
+            if (arguments.Count < 1)
+            {
+                return new ReturnInfo(this, ReturnCode.ERROR_ARG);
+            }
+
             try
             {
-                string file = arguments[0];
+                string file = AuraPath.Resolve(arguments[0]);
 
-                if (File.Exists(Kernel.CurrentDirectory + file))
+                if (File.Exists(file))
                 {
                     StringBuilder sb = new();
 
-                    foreach (string line in File.ReadAllLines(Kernel.CurrentDirectory + file))
+                    foreach (string line in File.ReadAllLines(file))
                     {
                         sb.AppendLine(line);
                     }

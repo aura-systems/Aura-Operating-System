@@ -6,9 +6,9 @@
 
 using System.Collections.Generic;
 using System.Drawing;
-using Cosmos.System;
-using Cosmos.System.Graphics;
-using Cosmos.System.Graphics.Fonts;
+using Cosmos.Kernel.System.Mouse;
+using Cosmos.Kernel.System.Graphics;
+using Cosmos.Kernel.System.Graphics.Fonts;
 using Aura_OS.System.Graphics.UI.GUI.Skin;
 using Aura_OS.System.Processing.Processes;
 using System;
@@ -295,7 +295,11 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
                 {
                     if (entry.IsInside((int)MouseManager.X, (int)MouseManager.Y))
                     {
-                        entry.Click();
+                        // GEN3-GAP(null-deref): invoking a null delegate halts the kernel.
+                        if (entry.Click != null)
+                        {
+                            entry.Click();
+                        }
                         return;
                     }
                 }
@@ -533,7 +537,7 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
             _buffer.DrawLine(color.ToArgb(), xStart, yStart, width, height);
         }
 
-        public void DrawImage(Bitmap image, int x, int y)
+        public void DrawImage(Image image, int x, int y)
         {
             _buffer.DrawImageAlpha(image, x, y);
         }

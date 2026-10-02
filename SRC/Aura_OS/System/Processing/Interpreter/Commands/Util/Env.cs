@@ -36,7 +36,9 @@ namespace Aura_OS.System.Processing.Interpreter.Commands.Util
             string var = exportcmd[0];
             string value = exportcmd[1];
 
-            Kernel.EnvironmentVariables.Add(var, value);
+            // GEN3-GAP(env): BCL environment variables are unusable on gen3, Aura keeps its own table.
+            // Indexer, not Add: re-exporting an existing variable must overwrite it, not throw.
+            Kernel.EnvironmentVariables[var] = value;
 
             return new ReturnInfo(this, ReturnCode.OK);
         }

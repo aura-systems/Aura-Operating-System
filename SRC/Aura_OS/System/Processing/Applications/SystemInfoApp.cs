@@ -8,7 +8,7 @@ using System;
 using System.Drawing;
 using Aura_OS.System.Graphics.UI.GUI;
 using Aura_OS.System.Graphics.UI.GUI.Components;
-using Cosmos.System.Network;
+using Aura_OS.System.Network;
 
 namespace Aura_OS.System.Processing.Applications
 {
@@ -34,48 +34,58 @@ namespace Aura_OS.System.Processing.Applications
             _button = new Button(text, (Width / 2) - ((text.Length * Kernel.font.Width) / 2), 5 * Kernel.font.Height + 2, text.Length * Kernel.font.Width + 6, Kernel.font.Height + 6);
             _button.Click = new Action(() =>
             {
-                if (NetworkStack.ConfigEmpty())
+                if (!NetworkHelper.IsConfigured)
                 {
                     _version = "Aura [version " + Kernel.Version + "-" + Kernel.Revision + "]";
                 }
                 else
                 {
-                    (string latestVersion, string latestRevision, string latestReleaseUrl) = Network.Version.GetLastVersionInfo();
-
-                    int versionComparisonResult = Network.Version.CompareVersions(Kernel.Version, latestVersion);
-
-                    if (string.IsNullOrEmpty(Kernel.Version) || string.IsNullOrEmpty(latestVersion) || string.IsNullOrEmpty(Kernel.Revision) || string.IsNullOrEmpty(latestRevision))
+                    // Phase 1: still synchronous on the UI thread (gen2 behaviour).
+                    // GEN3-GAP(backend): the HTTP download can throw (no TLS, os.json endpoint down).
+                    try
                     {
-                        _version = "Failed to parse os.json.";
-                    }
-                    else
-                    {
-                        if (versionComparisonResult > 0)
+                        (string latestVersion, string latestRevision, string latestReleaseUrl) = Network.Version.GetLastVersionInfo();
+
+                        if (string.IsNullOrEmpty(Kernel.Version) || string.IsNullOrEmpty(latestVersion) || string.IsNullOrEmpty(Kernel.Revision) || string.IsNullOrEmpty(latestRevision))
                         {
-                            _version = "You are on a dev version (last release is " + latestVersion + "-" + latestRevision + ").";
-                        }
-                        else if (versionComparisonResult < 0)
-                        {
-                            _version = "Your version is outdated (last release is " + latestVersion + "-" + latestRevision + ").";
-                            _isOutdated = true;
+                            _version = "Failed to parse os.json.";
                         }
                         else
                         {
-                            int revisionComparisonResult = Network.Version.CompareRevisions(Kernel.Revision, latestRevision);
-                            if (revisionComparisonResult > 0)
+                            int versionComparisonResult = Network.Version.CompareVersions(Kernel.Version, latestVersion);
+
+                            if (versionComparisonResult > 0)
                             {
                                 _version = "You are on a dev version (last release is " + latestVersion + "-" + latestRevision + ").";
                             }
-                            else if (revisionComparisonResult < 0)
+                            else if (versionComparisonResult < 0)
                             {
-                                 _version = "Your revision is outdated (last release is " + latestVersion + "-" + latestRevision + ").";
+                                _version = "Your version is outdated (last release is " + latestVersion + "-" + latestRevision + ").";
                                 _isOutdated = true;
                             }
                             else
                             {
-                                _version = "You are up to date.";
+                                int revisionComparisonResult = Network.Version.CompareRevisions(Kernel.Revision, latestRevision);
+                                if (revisionComparisonResult > 0)
+                                {
+                                    _version = "You are on a dev version (last release is " + latestVersion + "-" + latestRevision + ").";
+                                }
+                                else if (revisionComparisonResult < 0)
+                                {
+                                     _version = "Your revision is outdated (last release is " + latestVersion + "-" + latestRevision + ").";
+                                    _isOutdated = true;
+                                }
+                                else
+                                {
+                                    _version = "You are up to date.";
+                                }
                             }
                         }
+                    }
+                    catch (Exception ex)
+                    {
+                        Logs.DoOSLog("[Error] Update check failed: " + ex.Message);
+                        _version = "Failed to check for updates.";
                     }
                 }
                 _button.Visible = false;
@@ -97,7 +107,7 @@ namespace Aura_OS.System.Processing.Applications
 
             var version = "[version " + Kernel.Version + "-" + Kernel.Revision + "]";
 
-            DrawString(_title, Cosmos.System.Graphics.Fonts.PCScreenFont.Default, Kernel.BlackColor, 0 + Width / 2 - _title.Length * Cosmos.System.Graphics.Fonts.PCScreenFont.Default.Width / 2, 0 + 1 * Kernel.font.Height);
+            DrawString(_title, Kernel.font, Kernel.BlackColor, 0 + Width / 2 - _title.Length * Kernel.font.Width / 2, 0 + 1 * Kernel.font.Height);
             DrawString(version, Kernel.font, Kernel.BlackColor, 0 + Width / 2 - version.Length * Kernel.font.Width / 2, 0 + 2 * Kernel.font.Height);
 
             DrawString(_credit, Kernel.font, Kernel.BlackColor, 0 + Width / 2 - _credit.Length * Kernel.font.Width / 2, 0 + 5 * Kernel.font.Height + 4);

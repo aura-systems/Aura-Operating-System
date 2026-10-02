@@ -6,6 +6,7 @@
 */
 
 using System.IO;
+using Aura_OS.System.Filesystem;
 using Aura_OS.System.Security;
 using System.Collections.Generic;
 using System;
@@ -26,10 +27,10 @@ namespace Aura_OS.System.Users
             {
                 string[] DefaultDirectories =
                 {
-                    @"0:\Users\" + user + @"\Desktop",
-                    @"0:\Users\" + user + @"\Documents",
-                    @"0:\Users\" + user + @"\Downloads",
-                    @"0:\Users\" + user + @"\Music",
+                    AuraPaths.UsersDir + user + "/Desktop",
+                    AuraPaths.UsersDir + user + "/Documents",
+                    AuraPaths.UsersDir + user + "/Downloads",
+                    AuraPaths.UsersDir + user + "/Music",
                 };
                 foreach (string dirs in DefaultDirectories)
                     if (!Directory.Exists(dirs))
@@ -38,8 +39,8 @@ namespace Aura_OS.System.Users
         }
         #endregion UserDirs
 
-        public static string[] users;
-        static string[] reset;
+        public static string[] users = Array.Empty<string>();
+        static string[] reset = Array.Empty<string>();
         static List<string> usersfile = new List<string>();
 
         /// <summary>
@@ -78,7 +79,7 @@ namespace Aura_OS.System.Users
             {
                 LoadUsers();
                 DeleteUser(username);
-                //Directory.Delete(@"0:\Users\" + username, true);
+                //Directory.Delete(AuraPaths.UsersDir + username, true);
                 Console.WriteLine("User has been remnoved.");
             }
             else
@@ -95,10 +96,8 @@ namespace Aura_OS.System.Users
 
             LoadUsers();
             EditUser(username, password);
-            File.Delete(@"0:\System\passwd");
-            File.Create(@"0:\System\passwd");
-            PushUsers();
-            //Directory.Delete(@"0:\Users\" + username, true);
+            PushUsers(); // WriteAllLines truncates passwd (gen2 Delete + undisposed Create leaked an fd)
+            //Directory.Delete(AuraPaths.UsersDir + username, true);
             Console.WriteLine("Password has been changed.");
 
         }
@@ -132,8 +131,6 @@ namespace Aura_OS.System.Users
                 users = usersfile.ToArray();
 
                 usersfile.Clear();
-
-                File.Delete(@"0:\System\passwd");
 
                 PushUsers();
             }
@@ -219,15 +216,18 @@ namespace Aura_OS.System.Users
 
         public static void PushUsers()
         {
-            File.WriteAllLines(@"0:\System\passwd", users);
+            File.WriteAllLines(AuraPaths.Passwd, users);
         }
 
         public static void LoadUsers()
         {
             //reset of users string array in memory if there is "something"
             users = reset;
-            //load
-            users = File.ReadAllLines(@"0:\System\passwd");
+            //load (a missing passwd behaves as an empty one: users never becomes null)
+            if (File.Exists(AuraPaths.Passwd))
+            {
+                users = File.ReadAllLines(AuraPaths.Passwd);
+            }
         }
 
     }

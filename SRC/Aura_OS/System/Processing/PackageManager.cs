@@ -4,6 +4,7 @@
 * PROGRAMMER(S):    Valentin Charbonnier <valentinbreiz@gmail.com>
 */
 
+using Aura_OS.System.Filesystem;
 using Aura_OS.System.Network;
 using JZero;
 using System;
@@ -30,7 +31,20 @@ namespace Aura_OS.System.Processing
         {
             Console.WriteLine("Updating from '" + RepositoryUrl + "'...");
 
-            string json = Http.DownloadFile(RepositoryUrl);
+            string json;
+            try
+            {
+                // GEN3-GAP(backend): the repository currently answers 301 -> https, then 404, and gen3 has no TLS.
+                json = Http.DownloadFile(RepositoryUrl);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Failed to download the package list: " + ex.Message);
+                return;
+            }
+
+            // gen2 appended to the list on every update.
+            Repository.Clear();
 
             var rdr = new JsonReader(json);
             rdr.ReadArrayStart();
@@ -73,7 +87,7 @@ namespace Aura_OS.System.Processing
                         }
                     }
 
-                    string installedPath = "0:\\System\\Programs\\" + package.Name + ".cexe";
+                    string installedPath = AuraPaths.ProgramsDir + package.Name + ".cexe";
 
                     if (File.Exists(installedPath))
                     {
@@ -98,8 +112,16 @@ namespace Aura_OS.System.Processing
             foreach (var package in Packages)
             {
                 Console.Write("- '" + package.Link + "' ");
-                package.Download();
-                Console.WriteLine("[OK]");
+
+                try
+                {
+                    package.Download();
+                    Console.WriteLine("[OK]");
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("[FAILED] " + ex.Message);
+                }
 
                 upgraded = true;
             }
@@ -116,13 +138,22 @@ namespace Aura_OS.System.Processing
             {
                 if (package.Name == packageName)
                 {
+                    try
+                    {
+                        package.Download();
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine("Failed to download " + packageName + ": " + ex.Message);
+                        return;
+                    }
+
                     package.Installed = true;
                     Packages.Add(package);
-                    package.Download();
 
-                    if (Directory.Exists("0:\\System\\Programs"))
+                    if (Directory.Exists(AuraPaths.ProgramsDir))
                     {
-                        File.WriteAllBytes("0:\\System\\Programs\\" + package.Name + ".cexe", package.Executable.RawData);
+                        File.WriteAllBytes(AuraPaths.ProgramsDir + package.Name + ".cexe", package.Executable.RawData);
                         Console.WriteLine(packageName + " installed.");
                     }
                     else

@@ -287,3 +287,9 @@ __pycache__/
 *.btm.cs
 *.odx.cs
 *.xsd.cs
+
+# Cosmos gen3 build output (cosmos build / dotnet publish -o output-<arch>), QEMU disk images and serial logs
+output-x64/
+output-arm64/
+*.img
+uart.log
