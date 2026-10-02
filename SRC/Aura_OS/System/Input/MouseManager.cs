@@ -7,9 +7,10 @@
 using Aura_OS.Processing;
 using Aura_OS.System.Graphics.UI.GUI.Components;
 using Aura_OS.System.Processing.Processes;
-using Cosmos.System;
-using Cosmos.System.Graphics;
+using Cosmos.Kernel.System;
+using Cosmos.Kernel.System.Graphics;
 using System;
+using CosmosMouse = Cosmos.Kernel.System.Mouse.MouseManager;
 
 namespace Aura_OS.System.Input
 {
@@ -99,8 +100,19 @@ namespace Aura_OS.System.Input
             IsRightButtonDown = false;
 
             CustomConsole.WriteLineInfo("Starting mouse...");
-            Cosmos.System.MouseManager.ScreenWidth = Kernel.ScreenWidth;
-            Cosmos.System.MouseManager.ScreenHeight = Kernel.ScreenHeight;
+            if (KernelFeatures.Mouse)
+            {
+                // Kernel.ScreenWidth/Height hold the real canvas size; the kernel default clamp is 1024x768.
+                int width = (int)Kernel.ScreenWidth;
+                int height = (int)Kernel.ScreenHeight;
+
+                CosmosMouse.SetScreenSize(width, height);
+                CosmosMouse.SetPosition(width / 2, height / 2);
+            }
+            else
+            {
+                CustomConsole.WriteLineWarning("Mouse support is disabled in this kernel.");
+            }
 
             CursorState = CursorState.Normal;
 
@@ -118,7 +130,12 @@ namespace Aura_OS.System.Input
         /// </summary>
         public override void Update()
         {
-            if (Cosmos.System.MouseManager.MouseState == MouseState.Left)
+            // GEN3-GAP(mouse): buttons are level-only (no press/release events), so sample them once
+            // per frame and keep Aura's own edge detection below.
+            bool leftButton = CosmosMouse.LeftButton;
+            bool rightButton = CosmosMouse.RightButton;
+
+            if (leftButton)
             {
                 if (!_leftButtonPressed)
                 {
@@ -136,7 +153,7 @@ namespace Aura_OS.System.Input
                 IsLeftButtonDown = false;
             }
 
-            if (Cosmos.System.MouseManager.MouseState == MouseState.Right)
+            if (rightButton)
             {
                 if (!_rightButtonPressed)
                 {
@@ -156,7 +173,7 @@ namespace Aura_OS.System.Input
 
             HandleScroll();
 
-            DrawCursor(Cosmos.System.MouseManager.X, Cosmos.System.MouseManager.Y);
+            DrawCursor(CosmosMouse.X, CosmosMouse.Y);
         }
 
         /// <summary>
@@ -240,9 +257,11 @@ namespace Aura_OS.System.Input
         /// </summary>
         private void HandleScroll()
         {
-            if (Cosmos.System.MouseManager.ScrollDelta != 0)
+            // The delta accumulates until reset (the driver never clears it).
+            int d = CosmosMouse.ScrollDelta;
+            if (d != 0)
             {
-                Cosmos.System.MouseManager.ResetScrollDelta();
+                CosmosMouse.ResetScrollDelta();
             }
         }
 
@@ -256,7 +275,7 @@ namespace Aura_OS.System.Input
 
             void CheckComponent(Component component)
             {
-                if (component.Visible && component.IsInside((int)Cosmos.System.MouseManager.X, (int)Cosmos.System.MouseManager.Y))
+                if (component.Visible && component.IsInside(CosmosMouse.X, CosmosMouse.Y))
                 {
                     if (component.zIndex > topZIndex)
                     {
@@ -281,23 +300,45 @@ namespace Aura_OS.System.Input
             return topComponent;
         }
 
-        public void DrawCursor(uint x, uint y)
+        /// <summary>
+        /// Draws the software cursor into Explorer.Screen (DrawImageAlpha clips at the screen edges).
+        /// GEN3-GAP(hw-cursor): the IHardwareCursor facet is experimental and VMware-only; software cursor in phase 1.
+        /// </summary>
+        public void DrawCursor(int x, int y)
         {
+            // A null dereference is a fatal #PF on gen3 (C6): skip the frame if the screen or an icon is missing.
+            if (Explorer.Screen == null)
+            {
+                return;
+            }
+
             if (CursorState == CursorState.Normal)
             {
-                Explorer.Screen.DrawImageAlpha(_cursorNormal, (int)x, (int)y);
+                if (_cursorNormal != null)
+                {
+                    Explorer.Screen.DrawImageAlpha(_cursorNormal, x, y);
+                }
             }
             else if (CursorState == CursorState.ResizeHorizontal)
             {
-                Explorer.Screen.DrawImageAlpha(_cursorResizeHorizontal, (int)x - 23 / 2, (int)y);
+                if (_cursorResizeHorizontal != null)
+                {
+                    Explorer.Screen.DrawImageAlpha(_cursorResizeHorizontal, x - 23 / 2, y);
+                }
             }
             else if (CursorState == CursorState.ResizeVertical)
             {
-                Explorer.Screen.DrawImageAlpha(_cursorResizeVertical, (int)x, (int)y - 23 / 2);
+                if (_cursorResizeVertical != null)
+                {
+                    Explorer.Screen.DrawImageAlpha(_cursorResizeVertical, x, y - 23 / 2);
+                }
             }
             else if (CursorState == CursorState.Grab)
             {
-                Explorer.Screen.DrawImageAlpha(_cursorGrap, (int)x, (int)y);
+                if (_cursorGrap != null)
+                {
+                    Explorer.Screen.DrawImageAlpha(_cursorGrap, x, y);
+                }
             }
         }
 

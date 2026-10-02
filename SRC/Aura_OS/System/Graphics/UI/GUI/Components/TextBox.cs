@@ -4,7 +4,8 @@
 * PROGRAMMERS:      Valentin Charbonnier <valentinbreiz@gmail.com>
 */
 
-using Cosmos.System;
+using Cosmos.Kernel.System.Keyboard;
+using Cosmos.Kernel.System.Mouse;
 using System;
 using System.Collections.Generic;
 using System.Linq;

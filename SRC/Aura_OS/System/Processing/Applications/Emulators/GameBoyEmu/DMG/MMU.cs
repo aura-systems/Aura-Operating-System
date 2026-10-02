@@ -194,7 +194,6 @@ namespace Aura_OS.System.Processing.Applications.Emulators.GameBoyEmu.DMG
                     }
                     //if (addr == 0xFF02 && b == 0x81) { //Temp Serial Link output for debug
                     //Console.Write(Convert.ToChar(readByte(0xFF01)));
-                    //Console.ReadLine();
                     //}
                     IO[addr & 0x7F] = b;
                     break;
@@ -242,6 +241,14 @@ namespace Aura_OS.System.Processing.Applications.Emulators.GameBoyEmu.DMG
 
         public void loadGamePak(byte[] rom)
         {
+            // GEN3-GAP(null-deref): a null dereference halts the kernel, so reject bad ROMs with a
+            // catchable exception instead of calling Init on a null gamePak. The smallest cartridge is
+            // 32 KiB (two 16 KiB banks); a shorter file would index past the ROM array while running.
+            if (rom == null || rom.Length < 0x8000)
+            {
+                throw new ArgumentException("Invalid GameBoy ROM.");
+            }
+
             switch (rom[0x147])
             {
                 case 0x00:
@@ -269,8 +276,7 @@ namespace Aura_OS.System.Processing.Applications.Emulators.GameBoyEmu.DMG
                     gamePak = new MBC5();
                     break;
                 default:
-                    Console.WriteLine("Unsupported MBC: " + rom[0x147].ToString("x2"));
-                    break;
+                    throw new NotSupportedException("Unsupported MBC: " + rom[0x147].ToString("x2"));
             }
             gamePak.Init(rom);
         }

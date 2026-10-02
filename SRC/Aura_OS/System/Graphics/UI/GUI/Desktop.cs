@@ -4,9 +4,11 @@
 * PROGRAMMERS:      Valentin Charbonnier <valentinbreiz@gmail.com>
 */
 
+using System;
 using System.Drawing;
 using System.IO;
-using Cosmos.System.Graphics;
+using Cosmos.Kernel.System.Graphics;
+using Aura_OS.System.Filesystem;
 using Aura_OS.System.Graphics.UI.GUI.Components;
 using Aura_OS.System.Utils;
 
@@ -16,21 +18,34 @@ namespace Aura_OS.System.Graphics.UI.GUI
     {
         public FilesystemPanel MainPanel;
         private string _wallpaperPath;
-        private Bitmap _wallpaper;
-        private Color? _color = null;
+        private Image _wallpaper;
 
         public Desktop(int x, int y, int width, int height) : base(x, y, width, height)
         {
             if (Kernel.Installed)
             {
-                CustomConsole.WriteLineInfo("Retrieving wallpaper from 0:\\.");
-                Settings config = new Settings(@"0:\System\settings.ini");
-                SetWallpaper(config.GetValue("wallpaperPath"));
+                CustomConsole.WriteLineInfo("Retrieving wallpaper from " + AuraPaths.SettingsIni + ".");
+                Settings config = new Settings(AuraPaths.SettingsIni);
+                string wallpaperPath = config.GetValue("wallpaperPath");
+
+                try
+                {
+                    SetWallpaper(wallpaperPath);
+                }
+                catch (Exception ex)
+                {
+                    // GEN3-GAP(bmp): a wallpaper the gen3 BMP loader rejects must not stop the boot.
+                    CustomConsole.WriteLineWarning("Cannot load wallpaper " + wallpaperPath + ": " + ex.Message);
+                    _wallpaperPath = string.IsNullOrEmpty(wallpaperPath) ? "Embedded" : AuraPath.FromLegacy(wallpaperPath);
+                    _wallpaper = ImageUtils.ScaleToScreen(Kernel.wallpaper1);
+                    MarkDirty();
+                }
             }
             else
             {
                 _wallpaperPath = "Embedded";
-                _wallpaper = new Bitmap(Files.Wallpaper);
+                // Kernel.wallpaper1 is Files.Wallpaper, already decoded at boot (Files.LoadFiles).
+                _wallpaper = ImageUtils.ScaleToScreen(Kernel.wallpaper1);
                 MarkDirty();
             }
 
@@ -48,14 +63,7 @@ namespace Aura_OS.System.Graphics.UI.GUI
         {
             base.Draw();
 
-            if (_color != null)
-            {
-                Clear((Color)_color);
-            }
-            else
-            {
-                DrawImage(_wallpaper, X, Y);
-            }
+            DrawImage(_wallpaper, X, Y);
 
             MainPanel.UpdateCurrentFolder();
             MainPanel.Draw(this);
@@ -66,15 +74,30 @@ namespace Aura_OS.System.Graphics.UI.GUI
             return _wallpaperPath;
         }
 
+        /// <summary>
+        /// Loads and shows a wallpaper. A missing file falls back to the embedded wallpaper;
+        /// a BMP the loader rejects throws (SettingsApp reports it) and keeps the current one.
+        /// </summary>
         public void SetWallpaper(string path)
         {
-            _wallpaperPath = path;
-            _wallpaper = new Bitmap(File.ReadAllBytes(path));
+            // gen2-installed disks store DOS-style paths (drive 0, backslashes): convert them.
+            path = AuraPath.FromLegacy(path);
 
-            if (_wallpaper.Width != Kernel.ScreenWidth && _wallpaper.Height != Kernel.ScreenHeight)
+            Image wallpaper;
+
+            if (!string.IsNullOrEmpty(path) && File.Exists(path))
             {
-                _color = Color.Black;
+                wallpaper = new Bitmap(File.ReadAllBytes(path));
             }
+            else
+            {
+                wallpaper = Kernel.wallpaper1;
+            }
+
+            // gen2 blanked to black when the wallpaper did not match the screen; gen3 runs at the
+            // real framebuffer size (GEN3-GAP(display-mode)), so scale once here, never per frame.
+            _wallpaper = ImageUtils.ScaleToScreen(wallpaper);
+            _wallpaperPath = string.IsNullOrEmpty(path) ? "Embedded" : path;
 
             MarkDirty();
         }

@@ -12,8 +12,13 @@ namespace Aura_OS.System
     {
         public static System.Graphics.UI.GUI.Components.Console BootConsole;
 
+        // Every line goes to Logs first, which mirrors it to the serial log (before any drawing,
+        // so the message survives a fault while drawing).
+
         public static void WriteLineInfo(string text)
         {
+            Logs.DoOSLog("[Info] " + text);
+
             if (BootConsole != null)
             {
                 BootConsole.Foreground = ConsoleColor.Cyan;
@@ -26,17 +31,14 @@ namespace Aura_OS.System
             }
             else
             {
-                Console.ForegroundColor = ConsoleColor.Cyan;
-                Console.Write("[Info] ");
-                Console.ForegroundColor = ConsoleColor.White;
-                Console.Write(text + "\n");
+                WriteConsole(ConsoleColor.Cyan, "[Info] ", text);
             }
-
-            Logs.DoOSLog("[Info] " + text);
         }
 
         public static void WriteLineWarning(string text)
         {
+            Logs.DoOSLog("[WARNING] " + text);
+
             if (BootConsole != null)
             {
                 BootConsole.Foreground = ConsoleColor.Yellow;
@@ -49,17 +51,14 @@ namespace Aura_OS.System
             }
             else
             {
-                Console.ForegroundColor = ConsoleColor.Yellow;
-                Console.Write("[WARNING] ");
-                Console.ForegroundColor = ConsoleColor.White;
-                Console.Write(text + "\n");
+                WriteConsole(ConsoleColor.Yellow, "[WARNING] ", text);
             }
-
-            Logs.DoOSLog("[WARNING] " + text);
         }
 
         public static void WriteLineOK(string text)
         {
+            Logs.DoOSLog("[OK] " + text);
+
             if (BootConsole != null)
             {
                 BootConsole.Foreground = ConsoleColor.Green;
@@ -72,17 +71,14 @@ namespace Aura_OS.System
             }
             else
             {
-                Console.ForegroundColor = ConsoleColor.Green;
-                Console.Write("[OK] ");
-                Console.ForegroundColor = ConsoleColor.White;
-                Console.Write(text + "\n");
+                WriteConsole(ConsoleColor.Green, "[OK] ", text);
             }
-
-            Logs.DoOSLog("[OK] " + text);
         }
 
         public static void WriteLineError(string text)
         {
+            Logs.DoOSLog("[Error] " + text);
+
             if (BootConsole != null)
             {
                 BootConsole.Foreground = ConsoleColor.DarkRed;
@@ -95,13 +91,27 @@ namespace Aura_OS.System
             }
             else
             {
-                Console.ForegroundColor = ConsoleColor.DarkRed;
-                Console.Write("[Error] ");
+                WriteConsole(ConsoleColor.DarkRed, "[Error] ", text);
+            }
+        }
+
+        /// <summary>
+        /// Before BootConsole exists: the gen3 KernelConsole (boot text on the framebuffer), or Kernel.GuiSink
+        /// once Console.Out is redirected. The plugged Console members throw when the KernelConsole is not
+        /// initialized (no display): the line is already on serial, so ignore it.
+        /// </summary>
+        private static void WriteConsole(ConsoleColor color, string prefix, string text)
+        {
+            try
+            {
+                Console.ForegroundColor = color;
+                Console.Write(prefix);
                 Console.ForegroundColor = ConsoleColor.White;
                 Console.Write(text + "\n");
             }
-
-            Logs.DoOSLog("[Error] " + text);
+            catch (Exception)
+            {
+            }
         }
     }
 }

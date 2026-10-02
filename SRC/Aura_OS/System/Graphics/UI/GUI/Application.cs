@@ -7,7 +7,7 @@
 
 using System;
 using System.Drawing;
-using Cosmos.System;
+using Cosmos.Kernel.System.Mouse;
 using Aura_OS.Processing;
 using Aura_OS.System.Graphics.UI.GUI.Components;
 using Aura_OS.System.Processing.Processes;
@@ -465,12 +465,12 @@ namespace Aura_OS.System.Graphics.UI.GUI
             Window.DrawString(str, x + 4, y + Window.TopBar.Height + 6);
         }
 
-        public void DrawString(string str, Cosmos.System.Graphics.Fonts.Font font, Color color, int x, int y)
+        public void DrawString(string str, Cosmos.Kernel.System.Graphics.Fonts.Font font, Color color, int x, int y)
         {
             Window.DrawString(str, font, color, x + 4, y + Window.TopBar.Height + 6);
         }
 
-        public void DrawImage(Cosmos.System.Graphics.Bitmap image, int x, int y)
+        public void DrawImage(Cosmos.Kernel.System.Graphics.Bitmap image, int x, int y)
         {
             Window.DrawImage(image, x + 4, y + Window.TopBar.Height + 6);
         }

@@ -9,7 +9,7 @@ using Aura_OS.System.Processing.Applications;
 using Aura_OS.System.Processing.Applications.Emulators.GameBoyEmu;
 using Aura_OS.System.Processing.Applications.Terminal;
 using Aura_OS.System.Processing.Processes;
-using Cosmos.System.Graphics;
+using Cosmos.Kernel.System.Graphics;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -160,12 +160,32 @@ namespace Aura_OS.System.Processing
 
         public void StartFileApplication(string fileName, string currentPath)
         {
-            if (fileName.EndsWith(".bmp"))
+            // A null dereference halts the kernel on gen3, and Path.Combine throws on a null path.
+            if (string.IsNullOrEmpty(fileName) || currentPath == null)
             {
-                string path = currentPath + fileName;
+                return;
+            }
+
+            if (fileName.EndsWith(".bmp", StringComparison.OrdinalIgnoreCase))
+            {
+                string path = Path.Combine(currentPath, fileName);
                 string name = fileName;
-                byte[] bytes = File.ReadAllBytes(path);
-                Bitmap bitmap = new Bitmap(bytes);
+                Bitmap bitmap;
+
+                // GEN3-GAP(bmp): the gen3 BMP loader throws on top-down and < 24 bpp files (BI_BITFIELDS
+                // masks are ignored). CheckBmpHeader rejects the headers it cannot survive at all.
+                try
+                {
+                    byte[] bytes = File.ReadAllBytes(path);
+                    CheckBmpHeader(bytes);
+                    bitmap = new Bitmap(bytes);
+                }
+                catch (Exception ex)
+                {
+                    ReportOpenError(path, ex);
+                    return;
+                }
+
                 int width = name.Length * 8 + 50;
 
                 if (width < bitmap.Width)
@@ -183,13 +203,23 @@ namespace Aura_OS.System.Processing
 
                 Explorer.Taskbar.UpdateApplicationButtons();
             }
-            else if (fileName.EndsWith(".gb"))
+            else if (fileName.EndsWith(".gb", StringComparison.OrdinalIgnoreCase))
             {
-                string path = currentPath + fileName;
+                string path = Path.Combine(currentPath, fileName);
                 string name = fileName;
-                byte[] bytes = File.ReadAllBytes(path);
+                GameBoyApp app;
 
-                var app = new GameBoyApp(bytes, name, 160 + 6, 144 + 26, 40, 40);
+                try
+                {
+                    byte[] bytes = File.ReadAllBytes(path);
+                    app = new GameBoyApp(bytes, name, 160 + 6, 144 + 26, 40, 40);
+                }
+                catch (Exception ex)
+                {
+                    ReportOpenError(path, ex);
+                    return;
+                }
+
                 app.Initialize();
                 app.MarkFocused();
                 app.Visible = true;
@@ -201,9 +231,19 @@ namespace Aura_OS.System.Processing
             }
             else
             {
-                string path = currentPath + fileName;
+                string path = Path.Combine(currentPath, fileName);
+                EditorApp app;
 
-                var app = new EditorApp(path, 701, 600, 40, 40);
+                try
+                {
+                    app = new EditorApp(path, 701, 600, 40, 40);
+                }
+                catch (Exception ex)
+                {
+                    ReportOpenError(path, ex);
+                    return;
+                }
+
                 app.Initialize();
                 app.MarkFocused();
                 app.Visible = true;
@@ -212,6 +252,36 @@ namespace Aura_OS.System.Processing
                 Kernel.ProcessManager.Start(app);
 
                 Explorer.Taskbar.UpdateApplicationButtons();
+            }
+        }
+
+        /// <summary>
+        /// Reports a file that could not be opened (unreadable file, unsupported image or ROM).
+        /// Logged rather than drawn: CustomConsole would paint the full-screen boot console over the desktop.
+        /// </summary>
+        private static void ReportOpenError(string path, Exception ex)
+        {
+            Logs.DoOSLog("[Error] Cannot open '" + path + "': " + ex.Message);
+        }
+
+        /// <summary>
+        /// Throws for a BMP header the gen3 loader cannot survive: it divides by the height (a #DE
+        /// halts the kernel) and allocates Width * Height pixels before reading any pixel data.
+        /// </summary>
+        private static void CheckBmpHeader(byte[] bytes)
+        {
+            if (bytes == null || bytes.Length < 54)
+            {
+                throw new InvalidDataException("The file is too small to be a BMP image.");
+            }
+
+            int width = BitConverter.ToInt32(bytes, 18);
+            int height = BitConverter.ToInt32(bytes, 22);
+
+            // Only 24 and 32 bpp are supported, so every pixel takes at least 3 bytes of the file.
+            if (width <= 0 || height <= 0 || (long)width * height * 3 > bytes.Length)
+            {
+                throw new InvalidDataException("Unsupported BMP size " + width + "x" + height + ".");
             }
         }
 

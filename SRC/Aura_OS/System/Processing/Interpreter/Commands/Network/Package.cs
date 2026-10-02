@@ -109,7 +109,8 @@ namespace Aura_OS.System.Processing.Interpreter.Commands.Network
             }
             catch (Exception ex)
             {
-                return new ReturnInfo(this, ReturnCode.ERROR_ARG, ex.ToString());
+                // Network/HTTP failures (HttpException, NotSupportedException for https, ...).
+                return new ReturnInfo(this, ReturnCode.ERROR, ex.Message);
             }
         }
 

@@ -4,7 +4,7 @@
 * PROGRAMMERS:      Valentin Charbonnier <valentinbreiz@gmail.com>
 */
 
-using Cosmos.System.Graphics;
+using Cosmos.Kernel.System.Graphics;
 using System.Collections.Generic;
 
 namespace Aura_OS.System.Graphics
@@ -50,16 +50,15 @@ namespace Aura_OS.System.Graphics
         /// <exception cref="System.Exception">Thrown when the icon is not found.</exception>
         public Bitmap GetIcon(string key)
         {
-            try
+            Bitmap bitmap;
+
+            if (key != null && _icons != null && _icons.TryGetValue(key, out bitmap))
             {
-                Bitmap bitmap = _icons[key];
                 return bitmap;
             }
-            catch
-            {
-                Crash.StopKernel(key + " not found", "Error while getting resource file.", "0x00000000", "0");
-                throw;
-            }
+
+            Crash.StopKernel(key + " not found", "Error while getting resource file.", "0x00000000", "0");
+            throw new KeyNotFoundException(key + " not found");
         }
 
         /// <summary>

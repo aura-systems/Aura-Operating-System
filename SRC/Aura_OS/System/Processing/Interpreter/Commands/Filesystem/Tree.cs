@@ -4,6 +4,7 @@
 * PROGRAMMER(S):    Valentin Charbonnier <valentinbreiz@gmail.com>
 */
 
+using Aura_OS.System.Filesystem;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -44,9 +45,23 @@ namespace Aura_OS.System.Processing.Interpreter.Commands.Filesystem
         /// </summary>
         public override ReturnInfo Execute(List<string> arguments)
         {
+            if (arguments.Count < 1)
+            {
+                return Execute();
+            }
+
             try
             {
-                DoTree(Kernel.CurrentDirectory + "/" + arguments[0], 0);
+                string directory = AuraPath.Resolve(arguments[0]);
+
+                if (!Directory.Exists(directory))
+                {
+                    return new ReturnInfo(this, ReturnCode.ERROR, "This directory doesn't exist!");
+                }
+
+                string result = DoTree(directory, 0);
+                Console.WriteLine(result);
+
                 return new ReturnInfo(this, ReturnCode.OK);
             }
             catch (Exception ex)
@@ -66,7 +81,7 @@ namespace Aura_OS.System.Processing.Interpreter.Commands.Filesystem
                 {
                     sb.Append(" ");
                 }
-                sb.AppendLine(file);
+                sb.AppendLine(Path.GetFileName(file));
             }
 
             for (int j = 0; j < directories.Length; j++)
@@ -75,8 +90,9 @@ namespace Aura_OS.System.Processing.Interpreter.Commands.Filesystem
                 {
                     sb.Append(" ");
                 }
-                sb.AppendLine(directories[j]);
-                sb.Append(DoTree(directory + "/" + directories[j], depth + 4));
+                // gen3 returns full paths: print the name, recurse on the path itself.
+                sb.AppendLine(Path.GetFileName(directories[j]));
+                sb.Append(DoTree(directories[j], depth + 4));
             }
 
             return sb.ToString();

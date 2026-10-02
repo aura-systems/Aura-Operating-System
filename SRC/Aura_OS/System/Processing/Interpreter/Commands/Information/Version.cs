@@ -6,7 +6,6 @@
 
 using Aura_OS.System.Processing.Interpreter;
 using Aura_OS.System.Network;
-using Cosmos.System.Network;
 using JZero;
 using System;
 using System.Linq;
@@ -32,15 +31,27 @@ namespace Aura_OS.System.Processing.Interpreter.Commands.SystemInfomation
 
             Console.ForegroundColor = ConsoleColor.White;
 
-            if (NetworkStack.ConfigEmpty())
+            if (!NetworkHelper.IsConfigured)
             {
                 Console.WriteLine("Aura [version " + Kernel.Version + "-" + Kernel.Revision + "]");
             }
             else
             {
-                (string latestVersion, string latestRevision, string latestReleaseUrl) = System.Network.Version.GetLastVersionInfo();
+                string latestVersion = null;
+                string latestRevision = null;
+                string latestReleaseUrl = null;
 
-                int versionComparisonResult = System.Network.Version.CompareVersions(Kernel.Version, latestVersion);
+                try
+                {
+                    (latestVersion, latestRevision, latestReleaseUrl) = System.Network.Version.GetLastVersionInfo();
+                }
+                catch (Exception)
+                {
+                    // GEN3-GAP(backend): HTTP/DNS/TLS failure, fall back to the local version below.
+                    latestVersion = null;
+                    latestRevision = null;
+                    latestReleaseUrl = null;
+                }
 
                 if (string.IsNullOrEmpty(Kernel.Version) || string.IsNullOrEmpty(latestVersion) || string.IsNullOrEmpty(Kernel.Revision) || string.IsNullOrEmpty(latestRevision))
                 {
@@ -48,6 +59,8 @@ namespace Aura_OS.System.Processing.Interpreter.Commands.SystemInfomation
                 }
                 else
                 {
+                    int versionComparisonResult = System.Network.Version.CompareVersions(Kernel.Version, latestVersion);
+
                     if (versionComparisonResult > 0)
                     {
                         Console.WriteLine("Aura [version " + Kernel.Version + "-" + Kernel.Revision + "], you are on a dev version (last release is " + latestVersion + "-" + latestRevision + ").");

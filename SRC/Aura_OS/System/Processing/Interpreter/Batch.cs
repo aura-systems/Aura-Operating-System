@@ -20,7 +20,7 @@ namespace Aura_OS.System.Processing.Interpreter
         {
             try
             {
-                if (filename.EndsWith(".bat"))
+                if (filename.EndsWith(".bat", StringComparison.OrdinalIgnoreCase))
                 {
                     string[] lines = File.ReadAllLines(filename);
                     foreach (string line in lines)

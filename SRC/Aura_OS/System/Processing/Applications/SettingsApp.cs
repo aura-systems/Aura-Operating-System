@@ -5,14 +5,16 @@
 */
 
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
+using Aura_OS.System.Filesystem;
 using Aura_OS.System.Graphics.UI.GUI;
 using Aura_OS.System.Graphics.UI.GUI.Components;
 using Aura_OS.System.Processing.Interpreter.Commands;
 using Aura_OS.System.Processing.Processes;
 using Aura_OS.System.Utils;
-using Cosmos.System.Graphics;
+using Cosmos.Kernel.System.Graphics;
 
 namespace Aura_OS.System.Processing.Applications
 {
@@ -49,8 +51,8 @@ namespace Aura_OS.System.Processing.Applications
 
         private Dialog _dialog;
 
-        private uint _oldScreenWidth;
-        private uint _oldScreenHeight;
+        private int _oldScreenWidth;
+        private int _oldScreenHeight;
         private string _oldWallpaperPath;
         private bool _waitingReboot = false;
 
@@ -89,11 +91,19 @@ namespace Aura_OS.System.Processing.Applications
 
             if (Kernel.Installed)
             {
-                Settings config = new Settings(@"0:\System\settings.ini");
+                Settings config = new Settings(AuraPaths.SettingsIni);
                 string autologin = config.GetValue("autologin");
-                byte windowsTransparency = byte.Parse(config.GetValue("windowsTransparency"));
+                byte windowsTransparency;
+                if (!byte.TryParse(config.GetValue("windowsTransparency"), out windowsTransparency))
+                {
+                    windowsTransparency = 0xFF;
+                }
                 _windowsAlpha.Value = windowsTransparency;
-                byte taskbarTransparency = byte.Parse(config.GetValue("taskbarTransparency"));
+                byte taskbarTransparency;
+                if (!byte.TryParse(config.GetValue("taskbarTransparency"), out taskbarTransparency))
+                {
+                    taskbarTransparency = 0xFF;
+                }
                 _taskbarAlpha.Value = taskbarTransparency;
 
                 if (autologin == "true")
@@ -116,24 +126,58 @@ namespace Aura_OS.System.Processing.Applications
             
             _save.Click = new Action(() =>
             {
+                // Reset a previous error; keep the reboot notice once a resolution change is pending.
+                _dialog.SetState(DialogState.Information);
+                _dialog.Message = _waitingReboot ? "Settings updated. Reboot needed to change resolution." : "Settings updated.";
+
                 Kernel.userLogged = _username.Text;
                 Kernel.ComputerName = _computerName.Text;
-                Kernel.ThemeManager.BmpPath = _themeBmpPath.Text;
-                Kernel.ThemeManager.XmlPath = _themeXmlPath.Text;
+                if (!string.IsNullOrEmpty(Kernel.ComputerName))
+                {
+                    Cosmos.Kernel.System.Network.Config.DnsConfig.HostName = Kernel.ComputerName;
+                }
+                Kernel.ThemeManager.BmpPath = NormalizePath(_themeBmpPath.Text);
+                Kernel.ThemeManager.XmlPath = NormalizePath(_themeXmlPath.Text);
                 Explorer.WindowManager.WindowsTransparency = (byte)_windowsAlpha.Value;
                 Explorer.WindowManager.TaskbarTransparency = (byte)_taskbarAlpha.Value;
                 Kernel.GuiDebug = _guiDebug.Checked;
 
+                string wallpaperPath = NormalizePath(_wallpaperPath.Text);
+                string wallpaperError = null;
+
+                // A missing file or a BMP the gen3 loader rejects would throw out of Kernel.Run (crash screen)
                 if (_oldWallpaperPath != _wallpaperPath.Text)
                 {
-                    Explorer.Desktop.SetWallpaper(_wallpaperPath.Text);
+                    if (!File.Exists(wallpaperPath))
+                    {
+                        wallpaperError = "Wallpaper path is not valid.";
+                    }
+                    else
+                    {
+                        try
+                        {
+                            Explorer.Desktop.SetWallpaper(wallpaperPath);
+                            _oldWallpaperPath = _wallpaperPath.Text;
+                        }
+                        catch (Exception)
+                        {
+                            // GEN3-GAP(bmp): no top-down, bitfield or < 24 bpp BMPs
+                            wallpaperError = "Wallpaper could not be loaded.";
+                        }
+                    }
                 }
 
-                if (Kernel.Installed)
+                if (wallpaperError != null)
+                {
+                    _dialog.SetState(DialogState.Error);
+                    _dialog.Message = wallpaperError;
+                    _dialog.MarkDirty();
+                }
+                else if (Kernel.Installed)
                 {
                     if (UpdateDialog())
                     {
-                        Settings config = new Settings(@"0:\System\settings.ini");
+                        Settings config = new Settings(AuraPaths.SettingsIni);
                         config.EditValue("hostname", Kernel.ComputerName);
                         config.EditValue("themeBmpPath", Kernel.ThemeManager.BmpPath);
                         config.EditValue("themeXmlPath", Kernel.ThemeManager.XmlPath);
@@ -141,7 +185,7 @@ namespace Aura_OS.System.Processing.Applications
                         config.EditValue("taskbarTransparency", Explorer.WindowManager.TaskbarTransparency.ToString());
                         config.EditValue("screenWidth", _resX.Text);
                         config.EditValue("screenHeight", _resY.Text);
-                        config.EditValue("wallpaperPath", _wallpaperPath.Text);
+                        config.EditValue("wallpaperPath", wallpaperPath);
                         if (_autoLogin.Checked)
                         {
                             config.EditValue("autologin", "true");
@@ -204,17 +248,18 @@ namespace Aura_OS.System.Processing.Applications
 
             AddChild(_save);
 
-            _oldScreenWidth = Kernel.ScreenWidth;
-            _oldScreenHeight = Kernel.ScreenHeight;
+            _oldScreenWidth = (int)Kernel.ScreenWidth;
+            _oldScreenHeight = (int)Kernel.ScreenHeight;
 
-            _username.Text = Kernel.userLogged;
+            // A null TextBox.Text would be a null deref (kernel halt) on the first draw
+            _username.Text = Kernel.userLogged ?? "";
             _password.Text = "";
-            _computerName.Text = Kernel.ComputerName;
-            _themeBmpPath.Text = Kernel.ThemeManager.BmpPath;
-            _themeXmlPath.Text = Kernel.ThemeManager.XmlPath;
+            _computerName.Text = Kernel.ComputerName ?? "";
+            _themeBmpPath.Text = Kernel.ThemeManager.BmpPath ?? "";
+            _themeXmlPath.Text = Kernel.ThemeManager.XmlPath ?? "";
             _resX.Text = Kernel.ScreenWidth.ToString();
             _resY.Text = Kernel.ScreenHeight.ToString();
-            _wallpaperPath.Text = Explorer.Desktop.GetWallpaperPath();
+            _wallpaperPath.Text = Explorer.Desktop.GetWallpaperPath() ?? "";
             _oldWallpaperPath = _wallpaperPath.Text;
         }
 
@@ -314,16 +359,48 @@ namespace Aura_OS.System.Processing.Applications
             }
         }
 
+        /// <summary>
+        /// User-typed path to an absolute gen3 path (gen2 DOS-style input accepted, see AuraPath.FromLegacy).
+        /// The embedded: theme sentinel and empty input are returned unchanged.
+        /// </summary>
+        private static string NormalizePath(string path)
+        {
+            if (string.IsNullOrEmpty(path) || Files.IsEmbeddedPath(path))
+            {
+                return path;
+            }
+
+            return AuraPath.Resolve(path);
+        }
+
+        /// <summary>
+        /// A theme file is valid on disk or as an embedded resource (live mode / missing install files).
+        /// </summary>
+        private static bool IsValidThemePath(string path)
+        {
+            return Files.IsEmbeddedPath(path) || File.Exists(path);
+        }
+
         public bool UpdateDialog()
         {
-            uint width = uint.Parse(_resX.Text);
-            uint height = uint.Parse(_resY.Text);
+            int width;
+            int height;
+
+            if (!int.TryParse(_resX.Text, out width) || !int.TryParse(_resY.Text, out height))
+            {
+                _dialog.SetState(DialogState.Error);
+                _dialog.Message = "Resolution is not valid.";
+                _dialog.MarkDirty();
+
+                return false;
+            }
 
             if (_waitingReboot == false && (_oldScreenWidth != width || _oldScreenHeight != height))
             {
                 bool modeExists = false;
+                IReadOnlyList<Mode> modes = Kernel.Canvas.AvailableModes;
 
-                foreach (var mode in Kernel.Canvas.AvailableModes)
+                foreach (Mode mode in modes)
                 {
                     if (mode.Width == width && mode.Height == height)
                     {
@@ -337,12 +414,23 @@ namespace Aura_OS.System.Processing.Applications
                     _dialog.Message = "Settings updated. Reboot needed to change resolution.";
                     _dialog.AddButton("Reboot", new Action(() =>
                     {
-                        Cosmos.System.Power.Reboot();
+                        AuraPower.Reboot();
                     }));
                     _dialog.MarkDirty();
                     _waitingReboot = true;
 
                     return true;
+                }
+                else if (modes.Count <= 1)
+                {
+                    // GEN3-GAP(display-mode): only VMware SVGA II switches modes; on GOP/virtio-gpu
+                    // AvailableModes holds just the current mode, set at boot by limine.conf.
+                    _dialog.SetState(DialogState.Error);
+                    _dialog.Message = "Resolution is fixed by the bootloader on this display.";
+                    _dialog.MarkDirty();
+                    _waitingReboot = false;
+
+                    return false;
                 }
                 else
                 {
@@ -354,7 +442,7 @@ namespace Aura_OS.System.Processing.Applications
                     return false;
                 }
             }
-            else if (!File.Exists(_themeBmpPath.Text))
+            else if (!IsValidThemePath(NormalizePath(_themeBmpPath.Text)))
             {
                 _dialog.SetState(DialogState.Error);
                 _dialog.Message = "Theme .bmp path is not valid.";
@@ -362,7 +450,7 @@ namespace Aura_OS.System.Processing.Applications
 
                 return false;
             }
-            else if (!File.Exists(_themeXmlPath.Text))
+            else if (!IsValidThemePath(NormalizePath(_themeXmlPath.Text)))
             {
                 _dialog.SetState(DialogState.Error);
                 _dialog.Message = "Theme .xml path is not valid.";
@@ -370,7 +458,7 @@ namespace Aura_OS.System.Processing.Applications
 
                 return false;
             }
-            else if (!File.Exists(_wallpaperPath.Text))
+            else if (!File.Exists(NormalizePath(_wallpaperPath.Text)))
             {
                 _dialog.SetState(DialogState.Error);
                 _dialog.Message = "Wallpaper path is not valid.";

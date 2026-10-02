@@ -8,7 +8,8 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using Cosmos.System.Graphics;
+using Cosmos.Kernel.System.Graphics;
+using Aura_OS.System.Filesystem;
 using Aura_OS.System.Processing.Applications;
 using Aura_OS.System.Processing.Processes;
 
@@ -33,10 +34,25 @@ namespace Aura_OS.System.Processing.Interpreter.Commands.Filesystem
 
             try
             {
-                string path = arguments[0];
+                string path = AuraPath.Resolve(arguments[0]);
                 string name = Path.GetFileName(path);
-                byte[] bytes = File.ReadAllBytes(Kernel.CurrentDirectory + path);
+
+                if (!File.Exists(path))
+                {
+                    return new ReturnInfo(this, ReturnCode.ERROR, "This file does not exist.");
+                }
+
+                byte[] bytes = File.ReadAllBytes(path);
+
+                // GEN3-GAP(bmp): the gen3 BMP loader rejects top-down, bitfield and < 24 bpp images
+                // with an exception, reported by the catch below.
                 Bitmap bitmap = new Bitmap(bytes);
+
+                if (bitmap.Width <= 0 || bitmap.Height <= 0)
+                {
+                    return new ReturnInfo(this, ReturnCode.ERROR, "Invalid bitmap.");
+                }
+
                 int width = name.Length * 8 + 50;
 
                 if (width < bitmap.Width)

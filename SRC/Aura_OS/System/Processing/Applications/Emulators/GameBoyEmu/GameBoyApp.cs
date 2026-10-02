@@ -4,11 +4,11 @@
 * PROGRAMMERS:      Valentin Charbonnier <valentinbreiz@gmail.com>
 */
 
+using System.Collections.Generic;
 using Aura_OS.System.Graphics.UI.GUI;
 using Aura_OS.System.Processing.Applications.Emulators.GameBoyEmu.DMG;
 using Aura_OS.System.Processing.Applications.Emulators.GameBoyEmu.Utils;
-using Cosmos.Core;
-using Cosmos.System;
+using Cosmos.Kernel.System.Keyboard;
 using CPU = Aura_OS.System.Processing.Applications.Emulators.GameBoyEmu.DMG.CPU;
 
 namespace Aura_OS.System.Processing.Applications.Emulators.GameBoyEmu
@@ -52,7 +52,8 @@ namespace Aura_OS.System.Processing.Applications.Emulators.GameBoyEmu
             _mmu.loadGamePak(Rom);
         }
 
-        private KeyEvent keyEvent = null;
+        // Keys pressed this frame. Reused to avoid a per-frame allocation.
+        private List<ConsoleKeyEx> _pressedKeys = new List<ConsoleKeyEx>();
 
         public override void Update()
         {
@@ -60,9 +61,12 @@ namespace Aura_OS.System.Processing.Applications.Emulators.GameBoyEmu
 
             if (Focused)
             {
+                KeyEvent keyEvent;
+
                 while (Input.KeyboardManager.TryGetKey(out keyEvent))
                 {
                     _joypad.handleKeyDown(keyEvent.Key);
+                    _pressedKeys.Add(keyEvent.Key);
                 }
             }
 
@@ -78,15 +82,14 @@ namespace Aura_OS.System.Processing.Applications.Emulators.GameBoyEmu
             }
             _cyclesThisUpdate -= Constants.CYCLES_PER_UPDATE;
 
-            if (Focused)
+            // GEN3-GAP(key-release): only key presses are queued, so a key is held for one emulation
+            // slice and released here. (gen2 meant to do this but released nothing: the last failing
+            // TryGetKey had already set its out field to null.)
+            for (int i = 0; i < _pressedKeys.Count; i++)
             {
-                if (keyEvent != null)
-                {
-                    _joypad.handleKeyUp(keyEvent.Key);
-
-                    keyEvent = null;
-                }
+                _joypad.handleKeyUp(_pressedKeys[i]);
             }
+            _pressedKeys.Clear();
         }
 
         private void handleInterrupts()

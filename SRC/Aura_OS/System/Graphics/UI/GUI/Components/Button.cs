@@ -4,7 +4,7 @@
 * PROGRAMMERS:      Valentin Charbonnier <valentinbreiz@gmail.com>
 */
 
-using Cosmos.System.Graphics;
+using Cosmos.Kernel.System.Graphics;
 using System;
 using System.Drawing;
 
@@ -81,7 +81,7 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
         {
             if (Click != null)
             {
-                if (IsInside((int)Cosmos.System.MouseManager.X, (int)Cosmos.System.MouseManager.Y))
+                if (IsInside((int)Cosmos.Kernel.System.Mouse.MouseManager.X, (int)Cosmos.Kernel.System.Mouse.MouseManager.Y))
                 {
                     Click();
                 }

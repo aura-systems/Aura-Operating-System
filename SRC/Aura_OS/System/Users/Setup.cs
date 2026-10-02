@@ -7,13 +7,13 @@
 
 using System;
 using System.IO;
-using System.Linq;
-using System.Runtime.CompilerServices;
+using Aura_OS.System.Filesystem;
+using Aura_OS.System.Network;
 using Aura_OS.System.Security;
 using Aura_OS.System.Users;
 using Aura_OS.System.Utils;
-using Cosmos.Core.Memory;
-using Cosmos.System.Network.Config;
+using Cosmos.Kernel.System.Diagnostics;
+using Cosmos.Kernel.System.Network;
 
 namespace Aura_OS.System
 {
@@ -23,6 +23,7 @@ namespace Aura_OS.System
         private string FinalPassword;
         private string FinalLang;
         private string FinalHostname;
+        private string FinalKeyboardLayout;
 
         /// <summary>
         /// Verify filesystem
@@ -55,6 +56,15 @@ namespace Aura_OS.System
             }
             if (InstallExists() == "continue")
             {
+                Volumes.RefreshSystemVolume();
+
+                if (AuraPaths.SystemVolume == null)
+                {
+                    Console.WriteLine("No FAT volume is mounted, AuraOS cannot be installed.");
+                    Console.WriteLine("Use 'vol /lp' to list partitions, 'vol /mp' to create one and 'vol /fp' to format it.");
+                    return;
+                }
+
                 RegisterLanguage(language);
                 RegisterUser(username, password);
                 RegisterHostname(hostname);
@@ -80,6 +90,13 @@ namespace Aura_OS.System
         {
             if ((username.Length >= 4) && (username.Length <= 20))
             {
+                // The username becomes a directory name and a passwd field.
+                // GEN3-GAP(fat-names): the FAT driver accepts any character, so reject / \ : * ? " < > | here.
+                if (!AuraPath.IsValidName(username))
+                {
+                    throw new Exception("Username contains invalid characters.");
+                }
+
                 if ((password.Length >= 6) && (password.Length <= 40))
                 {
                     FinalUsername = username;
@@ -105,26 +122,37 @@ namespace Aura_OS.System
             {
                 Kernel.langSelected = "en_US";
                 FinalLang = "en_US";
-                //Keyboard.Init();
             }
             else if ((language.Equals("fr_FR")) || language.Equals("fr-FR"))
             {
                 Kernel.langSelected = "fr_FR";
                 FinalLang = "fr_FR";
-                //Keyboard.Init();
             }
             else if ((language.Equals("nl_NL")) || language.Equals("nl-NL"))
             {
                 Kernel.langSelected = "nl_NL";
                 FinalLang = "nl_NL";
-                //Keyboard.Init();
             }
             else if ((language.Equals("it_IT")) || language.Equals("it-IT"))
             {
                 Kernel.langSelected = "it_IT";
                 FinalLang = "it_IT";
-                //Keyboard.Init();
             }
+            else
+            {
+                // Unknown language: default to en_US (FinalLang must not stay null, a null deref halts gen3)
+                Kernel.langSelected = "en_US";
+                FinalLang = "en_US";
+            }
+
+            // fr_FR selects AZERTY; otherwise keep the live layout (setkeyboardmap / taskbar, "US" by default),
+            // since the setup command always passes en-US. Installation persists it as keyboardLayout.
+            FinalKeyboardLayout = FinalLang == "fr_FR" ? "FR" : Input.KeyboardLayouts.CurrentCode;
+            if (string.IsNullOrEmpty(FinalKeyboardLayout))
+            {
+                FinalKeyboardLayout = "US";
+            }
+            Input.KeyboardLayouts.Set(FinalKeyboardLayout);
         }
 
         /// <summary>
@@ -134,11 +162,11 @@ namespace Aura_OS.System
         {
             string[] DefaultSystemDirectories =
                 {
-                    @"0:\System\",
-                    @"0:\System\Programs",
-                    @"0:\System\Themes",
-                    @"0:\System\Wallpapers",
-                    @"0:\Users\"
+                    AuraPaths.SystemDir,
+                    AuraPaths.ProgramsDir,
+                    AuraPaths.ThemesDir,
+                    AuraPaths.WallpapersDir,
+                    AuraPaths.UsersDir
                 };
 
             foreach (string dirs in DefaultSystemDirectories)
@@ -153,10 +181,11 @@ namespace Aura_OS.System
         /// </summary>
         public void InitFiles()
         {
-            if (Directory.Exists(@"0:\System"))
+            if (Directory.Exists(AuraPaths.SystemDir))
             {
-                File.Create(@"0:\System\settings.ini");
-                File.Create(@"0:\System\passwd");
+                // gen3 has no finalizers: never leave a File.Create stream undisposed (truncate/create instead)
+                File.WriteAllText(AuraPaths.SettingsIni, string.Empty);
+                File.WriteAllText(AuraPaths.Passwd, string.Empty);
             }
         }
 
@@ -167,9 +196,9 @@ namespace Aura_OS.System
         {
             foreach (string user in Users)
             {
-                if (!Directory.Exists(@"0:\Users\" + user))
+                if (!Directory.Exists(AuraPaths.UsersDir + user))
                 {
-                    Directory.CreateDirectory(@"0:\Users\" + user);
+                    Directory.CreateDirectory(AuraPaths.UsersDir + user);
                     System.Users.Users.InitUserDirs(user);
                 }
                     
@@ -201,18 +230,19 @@ namespace Aura_OS.System
             string[] Users = { "root", dirUsername };
             CreateUserDirectories(Users);
 
+            // GEN3-GAP(iso-files): theme assets are embedded resources (no ISO volume to copy from)
             Console.WriteLine("Copying SuaveSheet.bmp...");
-            Filesystem.Entries.CopyFile(Files.IsoVolume + @"UI\Themes\SuaveSheet.bmp", @"0:\System\Themes\Suave.bmp");
+            File.WriteAllBytes(AuraPaths.ThemesDir + "Suave.bmp", Files.Get("UI/Themes/SuaveSheet.bmp"));
             Console.WriteLine("Copying Suave.skin.xml...");
-            Filesystem.Entries.CopyFile(Files.IsoVolume + @"UI\Themes\Suave.skin.xml", @"0:\System\Themes\Suave.xml");
+            File.WriteAllBytes(AuraPaths.ThemesDir + "Suave.xml", Files.Get("UI/Themes/Suave.skin.xml"));
             Console.WriteLine("Saving wallpaper-1.bmp...");
-            Filesystem.Entries.SaveFile(@"0:\System\Wallpapers\w1.bmp", Files.Wallpaper);
-            Heap.Collect();
+            Filesystem.Entries.SaveFile(AuraPaths.WallpapersDir + "w1.bmp", Files.Wallpaper);
+            MemoryInfo.Collect();
             Console.WriteLine("Saving wallpaper-2.bmp...");
-            Filesystem.Entries.SaveFile(@"0:\System\Wallpapers\w2.bmp", Files.Wallpaper2);
-            Heap.Collect();
+            Filesystem.Entries.SaveFile(AuraPaths.WallpapersDir + "w2.bmp", Files.Wallpaper2);
+            MemoryInfo.Collect();
 
-            Settings config = new Settings(@"0:\System\settings.ini");
+            Settings config = new Settings(AuraPaths.SettingsIni);
 
             if ((FinalLang.Equals("en_US")) || FinalLang.Equals("en-US"))
             {
@@ -234,26 +264,30 @@ namespace Aura_OS.System
                 config.PutValue("language", "it_IT");
             }
 
+            config.PutValue("keyboardLayout", FinalKeyboardLayout);
+
             config.PutValue("hostname", FinalHostname);
 
             config.PutValue("setuptime", Time.MonthString() + "/" + Time.DayString() + "/" + Time.YearString() + ", " + Time.TimeString(true, true, true));
 
             config.PutValue("autologin", "false");
 
-            config.PutValue("themeBmpPath", @"0:\System\Themes\Suave.bmp");
-            config.PutValue("themeXmlPath", @"0:\System\Themes\Suave.xml");
+            config.PutValue("themeBmpPath", AuraPaths.ThemesDir + "Suave.bmp");
+            config.PutValue("themeXmlPath", AuraPaths.ThemesDir + "Suave.xml");
             config.PutValue("windowsTransparency", "255");
             config.PutValue("taskbarTransparency", "255");
             config.PutValue("screenWidth", Kernel.ScreenWidth.ToString());
             config.PutValue("screenHeight", Kernel.ScreenHeight.ToString());
-            config.PutValue("wallpaperPath", @"0:\System\Wallpapers\w1.bmp");
+            config.PutValue("wallpaperPath", AuraPaths.WallpapersDir + "w1.bmp");
 
             config.PutValue("debugger", "off");
 
-            foreach (NetworkConfig networkConfig in NetworkConfiguration.NetworkConfigs)
+            for (int i = 0; i < NetworkManager.DeviceCount; i++)
             {
-                File.Create(@"0:\System\" + networkConfig.Device.NameID + ".ini");
-                Settings settings = new Settings(@"0:\System\" + networkConfig.Device.NameID + ".ini");
+                // GEN3-GAP(nic-names): no interface names in gen3, Aura aliases adapters as eth{Index}
+                string networkIni = AuraPaths.NetworkIni(NetworkHelper.AliasOf(NetworkManager.GetAdapter(i)));
+                File.WriteAllText(networkIni, string.Empty);
+                Settings settings = new Settings(networkIni);
                 settings.Add("ipaddress", "0.0.0.0");
                 settings.Add("subnet", "0.0.0.0");
                 settings.Add("gateway", "0.0.0.0");
@@ -269,12 +303,17 @@ namespace Aura_OS.System
 
             Kernel.userLogged = FinalUsername;
             Kernel.ComputerName = FinalHostname;
+            if (!string.IsNullOrEmpty(FinalHostname))
+            {
+                Cosmos.Kernel.System.Network.Config.DnsConfig.HostName = FinalHostname;
+            }
 
             Console.WriteLine("Changing current directory to user directory...");
-            Kernel.UserDirectory = @"0:\Users\" + dirUsername + @"\";
+            Kernel.UserDirectory = AuraPaths.UsersDir + dirUsername + "/";
+            Kernel.CurrentVolume = AuraPaths.SystemVolume;
             Kernel.CurrentDirectory = Kernel.UserDirectory;
 
-            Console.WriteLine("AuraOS v" + Kernel.Version + "-" + Kernel.Revision + " is now installed on 0:\\ :)");
+            Console.WriteLine("AuraOS v" + Kernel.Version + "-" + Kernel.Revision + " is now installed on " + AuraPaths.SystemVolume + " :)");
         }
     }
 }

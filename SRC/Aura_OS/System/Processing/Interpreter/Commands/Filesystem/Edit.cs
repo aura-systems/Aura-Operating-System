@@ -7,6 +7,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using Aura_OS.System.Filesystem;
 using Aura_OS.System.Processing.Applications;
 using Aura_OS.System.Processing.Processes;
 
@@ -27,10 +28,14 @@ namespace Aura_OS.System.Processing.Interpreter.Commands.Filesystem
         /// </summary>
         public override ReturnInfo Execute(List<string> arguments)
         {
+            if (arguments.Count < 1)
+            {
+                return new ReturnInfo(this, ReturnCode.ERROR_ARG);
+            }
+
             try
             {
-                string file = arguments[0];
-                string path = Kernel.CurrentDirectory + file;
+                string path = AuraPath.Resolve(arguments[0]);
 
                 if (File.Exists(path))
                 {

@@ -5,18 +5,19 @@
 */
 
 using System;
-using Sys = Cosmos.System;
-using Cosmos.System.Network;
-using System.Text;
 using System.Collections.Generic;
-using Cosmos.System.Network.IPv4;
-using Cosmos.System.Network.IPv4.UDP;
+using System.Net;
+using System.Net.Sockets;
+using System.Text;
+using Cosmos.Kernel.System.Timer;
 using Aura_OS.System.Processing.Interpreter;
 
 namespace Aura_OS.System.Processing.Interpreter.Commands.Network
 {
     class CommandUdp : ICommand
     {
+        private const int DefaultListenTimeoutSeconds = 30;
+
         /// <summary>
         /// Empty constructor.
         /// </summary>
@@ -37,23 +38,86 @@ namespace Aura_OS.System.Processing.Interpreter.Commands.Network
             }
             if (arguments[0] == "/l")
             {
-                if (arguments.Count <= 1)
+                if (arguments.Count < 2 || arguments.Count > 3)
                 {
                     return new ReturnInfo(this, ReturnCode.ERROR_ARG);
                 }
-                int port = int.Parse(arguments[1]);
 
-                Console.WriteLine("Listening at " + port + "...");
+                int port;
+                if (!int.TryParse(arguments[1], out port) || port < 1 || port > 65535)
+                {
+                    return new ReturnInfo(this, ReturnCode.ERROR, "Invalid port: " + arguments[1]);
+                }
 
-                var client = new UdpClient(port);
+                // gen2 waited forever (ESC does not reach a command running in the GUI terminal): bounded wait.
+                int timeoutSeconds = DefaultListenTimeoutSeconds;
+                if (arguments.Count == 3 && (!int.TryParse(arguments[2], out timeoutSeconds) || timeoutSeconds < 1 || timeoutSeconds > 86400))
+                {
+                    return new ReturnInfo(this, ReturnCode.ERROR, "Invalid timeout: " + arguments[2]);
+                }
 
-                EndPoint RemoteIpEndPoint = new EndPoint(Address.Zero, 0);
+                Console.WriteLine("Listening at " + port + " for " + timeoutSeconds + "s...");
 
-                byte[] received = client.Receive(ref RemoteIpEndPoint);
+                UdpClient client = null;
+                byte[] received = null;
+                string remote = null;
+                string error = null;
 
-                Console.WriteLine("Received UDP packet from " + RemoteIpEndPoint.Address.ToString() + ": \"" + Encoding.ASCII.GetString(received) + "\"");
+                try
+                {
+                    client = new UdpClient(port);
 
-                client.Close();
+                    IPEndPoint remoteIpEndPoint = new IPEndPoint(IPAddress.Any, 0);
+
+                    // The BCL Receive returns an empty array at once when nothing is queued: wait first.
+                    // GEN3-GAP(socket-misc): UDP Available counts queued datagrams, not bytes.
+                    int timeoutMs = timeoutSeconds * 1000;
+                    int waited = 0;
+                    while (client.Available == 0 && waited < timeoutMs)
+                    {
+                        TimerManager.Wait(50);
+                        waited += 50;
+                    }
+
+                    if (client.Available > 0)
+                    {
+                        received = client.Receive(ref remoteIpEndPoint);
+
+                        // GEN3-GAP(ipaddress): explicit ToString(), interpolation prints 0.0.0.0.
+                        // The IPEndPoint plug returns a null Address for an endpoint it doesn't know.
+                        IPAddress remoteAddress = remoteIpEndPoint == null ? null : remoteIpEndPoint.Address;
+                        remote = (remoteAddress is null ? "?" : remoteAddress.ToString()) + ":"
+                            + (remoteIpEndPoint == null ? "?" : remoteIpEndPoint.Port.ToString());
+                    }
+                }
+                catch (Exception ex)
+                {
+                    error = ex.Message;
+                }
+
+                // gen3: finally/using do not run on the exception path, close explicitly.
+                if (client != null)
+                {
+                    try
+                    {
+                        client.Close();
+                    }
+                    catch (Exception)
+                    {
+                    }
+                }
+
+                if (error != null)
+                {
+                    return new ReturnInfo(this, ReturnCode.ERROR, error);
+                }
+
+                if (received == null)
+                {
+                    return new ReturnInfo(this, ReturnCode.ERROR, "No UDP packet received at " + port + " after " + timeoutSeconds + "s.");
+                }
+
+                Console.WriteLine("Received UDP packet from " + remote + ": \"" + Encoding.ASCII.GetString(received) + "\"");
 
                 return new ReturnInfo(this, ReturnCode.OK);
             }
@@ -63,20 +127,54 @@ namespace Aura_OS.System.Processing.Interpreter.Commands.Network
                 {
                     return new ReturnInfo(this, ReturnCode.ERROR_ARG);
                 }
-                Address ip = Address.Parse(arguments[1]);
 
-                int port = int.Parse(arguments[2]);
+                // GEN3-GAP(ipaddress): the plugged IPAddress.Parse returns null instead of throwing.
+                IPAddress ip = IPAddress.Parse(arguments[1]);
+                if (ip is null)
+                {
+                    return new ReturnInfo(this, ReturnCode.ERROR, "Can't parse IPv4 address: " + arguments[1]);
+                }
 
-                string message = arguments[3];
+                int port;
+                if (!int.TryParse(arguments[2], out port) || port < 1 || port > 65535)
+                {
+                    return new ReturnInfo(this, ReturnCode.ERROR, "Invalid port: " + arguments[2]);
+                }
 
-                var xClient = new UdpClient(port);
+                string message = string.Join(" ", arguments.GetRange(3, arguments.Count - 3));
+                byte[] data = Encoding.ASCII.GetBytes(message);
 
-                xClient.Connect(ip, port);
+                UdpClient xClient = null;
+                string error = null;
 
-                xClient.Send(Encoding.ASCII.GetBytes(message));
+                try
+                {
+                    xClient = new UdpClient();
+                    xClient.Send(data, data.Length, new IPEndPoint(ip, port)); // SendTo pumps the stack
+                }
+                catch (Exception ex)
+                {
+                    error = ex.Message;
+                }
+
+                if (xClient != null)
+                {
+                    try
+                    {
+                        xClient.Close();
+                    }
+                    catch (Exception)
+                    {
+                    }
+                }
+
+                if (error != null)
+                {
+                    return new ReturnInfo(this, ReturnCode.ERROR, error);
+                }
+
                 Console.WriteLine("Sent UDP packet to " + ip.ToString() + ":" + port);
 
-                xClient.Close();
                 return new ReturnInfo(this, ReturnCode.OK);
             }
             else
@@ -91,7 +189,7 @@ namespace Aura_OS.System.Processing.Interpreter.Commands.Network
         public override void PrintHelp()
         {
             Console.WriteLine("Usage:");
-            Console.WriteLine(" - udp /l {port}                       listen for an UDP packet at a specific port");
+            Console.WriteLine(" - udp /l {port} [timeout_s]           listen for an UDP packet at a specific port (default timeout 30s)");
             Console.WriteLine(" - udp /s {ip} {port} {text_message}   send an UDP packet to and IP/port");
         }
     }

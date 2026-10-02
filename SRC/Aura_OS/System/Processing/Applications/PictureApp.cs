@@ -5,7 +5,7 @@
 */
 
 using Aura_OS.System.Graphics.UI.GUI;
-using Cosmos.System.Graphics;
+using Cosmos.Kernel.System.Graphics;
 
 namespace Aura_OS.System.Processing.Applications
 {

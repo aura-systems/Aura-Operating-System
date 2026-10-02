@@ -4,6 +4,7 @@
 * PROGRAMMER(S):    Valentin Charbonnier <valentinbreiz@gmail.com>
 */
 
+using Aura_OS.System.Filesystem;
 using Aura_OS.Utils;
 using System;
 using System.Collections.Generic;
@@ -26,15 +27,20 @@ namespace Aura_OS.System.Processing.Interpreter.Commands.Filesystem
         /// </summary>
         public override ReturnInfo Execute(List<string> arguments)
         {
+            if (arguments.Count < 1)
+            {
+                return new ReturnInfo(this, ReturnCode.ERROR_ARG);
+            }
+
             try
             {
-                string file = arguments[0];
+                string file = AuraPath.Resolve(arguments[0]);
 
-                if (File.Exists(Kernel.CurrentDirectory + file))
+                if (File.Exists(file))
                 {
                     Console.WriteLine("Offset(h)  00 01 02 03 04 05 06 07  08 09 0A 0B 0C 0D 0E 0F");
                     Console.WriteLine();
-                    Console.WriteLine(Conversion.HexDump(File.ReadAllBytes(Kernel.CurrentDirectory + file)));
+                    Console.WriteLine(Conversion.HexDump(File.ReadAllBytes(file)));
                 }
                 else
                 {

@@ -9,6 +9,7 @@ using Aura_OS.System.Processing.Interpreter;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using Cosmos.Kernel.System.Diagnostics;
 
 namespace Aura_OS.System.Processing.Interpreter.Commands.Util
 {
@@ -41,9 +42,67 @@ namespace Aura_OS.System.Processing.Interpreter.Commands.Util
                 sb.AppendLine();
             }
 
+            AppendKernelThreads(sb);
+
             Console.WriteLine(sb.ToString());
 
             return new ReturnInfo(this, ReturnCode.OK);
+        }
+
+        /// <summary>
+        /// Kernel scheduler threads (Aura processes all run on the main loop thread).
+        /// GEN3-GAP(idle-thread): the main loop is the scheduler's idle thread, so no CPU% is shown.
+        /// </summary>
+        private static void AppendKernelThreads(StringBuilder sb)
+        {
+            if (!SchedulerInfo.IsInitialized)
+            {
+                return;
+            }
+
+            sb.AppendLine();
+            sb.AppendLine("TID     STATE     RUNTIME");
+
+            int slotCount = SchedulerInfo.ThreadSlotCount;
+            for (int slot = 0; slot < slotCount; slot++)
+            {
+                if (!SchedulerInfo.TryGetThreadInSlot(slot, out KernelThreadInfo thread) || thread.State == KernelThreadState.Dead)
+                {
+                    continue;
+                }
+
+                sb.Append(thread.Id.ToString().PadRight(8, ' '));
+                sb.Append(GetStateName(thread.State).PadRight(10, ' '));
+                sb.Append((thread.TotalRuntimeNs / SchedulerInfo.NanosecondsPerMillisecond).ToString() + "ms");
+                if (thread.IsIdle)
+                {
+                    sb.Append(" (main loop)");
+                }
+
+                sb.AppendLine();
+            }
+        }
+
+        // No enum ToString() under NativeAOT: map the state by hand.
+        private static string GetStateName(KernelThreadState state)
+        {
+            switch (state)
+            {
+                case KernelThreadState.Created:
+                    return "Created";
+                case KernelThreadState.Ready:
+                    return "Ready";
+                case KernelThreadState.Running:
+                    return "Running";
+                case KernelThreadState.Blocked:
+                    return "Blocked";
+                case KernelThreadState.Sleeping:
+                    return "Sleeping";
+                case KernelThreadState.Dead:
+                    return "Dead";
+                default:
+                    return "?";
+            }
         }
     }
 }

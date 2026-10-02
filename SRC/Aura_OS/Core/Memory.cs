@@ -5,45 +5,49 @@
 *                   Valentin Charbonnier <valentinbreiz@gmail.com>
 */
 
-using Cosmos.Core;
+using Cosmos.Kernel.System.Diagnostics;
 
 namespace Aura_OS.Core
 {
     public class Memory
     {
-        public static uint TotalMemory = CPU.GetAmountOfRAM();
+        // GEN3-GAP(meminfo): MemoryInfo.TotalPages/RamSizeBytes only cover the largest usable
+        // Limine memory-map region (the page allocator's pool), so the total reads below the
+        // machine's installed RAM. All figures are in MB.
+
+        public static uint TotalMemory
+        {
+            get
+            {
+                return (uint)((MemoryInfo.TotalPages * MemoryInfo.PageSizeBytes) >> 20);
+            }
+        }
+
         public uint FreePercentage;
-        public uint UsedPercentage = (GetUsedMemory() * 100) / TotalMemory;
-        public uint FreeMemory = TotalMemory - GetUsedMemory();
-        private const uint div = 1048576;
+        public uint UsedPercentage;
+        public uint FreeMemory;
 
         public Memory()
         {
             this.Monitor();
         }
 
-        public static void GetTotalMemory()
-        {
-            TotalMemory = CPU.GetAmountOfRAM() + 1;
-        }
-
         public void Monitor()
         {
-            GetTotalMemory();
-            FreeMemory = TotalMemory - GetUsedMemory();
-            UsedPercentage = (GetUsedMemory() * 100) / TotalMemory;
+            uint total = TotalMemory;
+            FreeMemory = GetFreeMemory();
+            UsedPercentage = total == 0 ? 0 : (GetUsedMemory() * 100) / total;
             FreePercentage = 100 - UsedPercentage;
         } 
 
         public static uint GetFreeMemory()
         {
-            return TotalMemory - GetUsedMemory();
+            return (uint)((MemoryInfo.FreePages * MemoryInfo.PageSizeBytes) >> 20);
         }
 
         public static uint GetUsedMemory()
         {
-            uint UsedRAM = CPU.GetEndOfKernel() + 1024;
-            return UsedRAM / div;
+            return (uint)(((MemoryInfo.TotalPages - MemoryInfo.FreePages) * MemoryInfo.PageSizeBytes) >> 20);
         }
     }
 }

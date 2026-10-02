@@ -6,7 +6,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using Aura_OS.System;
 using Aura_OS.System.Graphics.UI.GUI;
 

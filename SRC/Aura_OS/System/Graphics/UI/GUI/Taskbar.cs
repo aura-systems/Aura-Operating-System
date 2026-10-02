@@ -5,7 +5,7 @@
 */
 
 using System.Collections.Generic;
-using Cosmos.System;
+using Cosmos.Kernel.System.Mouse;
 using Aura_OS.System.Graphics.UI.GUI.Components;
 using Aura_OS.System.Processing.Processes;
 using System;
@@ -38,6 +38,7 @@ namespace Aura_OS.System.Graphics.UI.GUI
         public Button StartButton;
         public Button HourButton;
         public Button NetworkButton;
+        public KeyboardLayoutButton KeyboardButton;
 
         public bool Clicked = false;
 
@@ -78,19 +79,45 @@ namespace Aura_OS.System.Graphics.UI.GUI
             RightClickEntry entry = new("ipconfig /ask", NetworkButton.RightClick.Width, NetworkButton.RightClick);
             entry.Click = new Action(() =>
             {
-                Dhcp.Ask();
+                // Phase 1: still synchronous (Ask can block the UI for ~10 s); a GUI click must not
+                // reach the crash screen.
+                try
+                {
+                    Dhcp.Ask();
+                }
+                catch (Exception ex)
+                {
+                    Logs.DoOSLog("[Error] ipconfig /ask: " + ex.Message);
+                }
             });
 
             RightClickEntry entry2 = new("ipconfig /release", NetworkButton.RightClick.Width, NetworkButton.RightClick);
             entry2.Click = new Action(() =>
             {
-                Dhcp.Release();
+                try
+                {
+                    Dhcp.Release();
+                }
+                catch (Exception ex)
+                {
+                    Logs.DoOSLog("[Error] ipconfig /release: " + ex.Message);
+                }
             });
 
             NetworkButton.RightClick.AddEntry(entry);
             NetworkButton.RightClick.AddEntry(entry2);
 
             AddChild(NetworkButton);
+
+            // Keyboard layout switcher, left of the network icon. Its face is the layout code
+            // ("US", "FR", ...); a click lists every layout.
+            int keyboardButtonWidth = 2 * Kernel.font.Width + 6;
+            int keyboardButtonHeight = 16;
+            int keyboardButtonX = netoworkButtonX - keyboardButtonWidth - 6;
+            int keyboardButtonY = (taskbarHeight / 2) - (keyboardButtonHeight / 2);
+            KeyboardButton = new KeyboardLayoutButton(keyboardButtonX, keyboardButtonY, keyboardButtonWidth, keyboardButtonHeight);
+            KeyboardButton.NoBackground = true;
+            AddChild(KeyboardButton);
 
             Buttons = new Dictionary<uint, Button>();
         }
@@ -143,6 +170,7 @@ namespace Aura_OS.System.Graphics.UI.GUI
         public override void Update()
         {
             StartButton.Update();
+            KeyboardButton.Update();
 
             foreach (var button in Buttons)
             {
@@ -150,7 +178,8 @@ namespace Aura_OS.System.Graphics.UI.GUI
                 Button btn = button.Value;
                 Application application = Kernel.ApplicationManager.GetApplicationByPid(pid);
 
-                if (application.Focused)
+                // GEN3-GAP(null-deref): the process may be gone before the buttons are rebuilt.
+                if (application != null && application.Focused)
                 {
                     btn.State = State.Highlighted;
                     btn.UpdateFrame();
@@ -187,7 +216,7 @@ namespace Aura_OS.System.Graphics.UI.GUI
                 Button btn = button.Value;
                 Application application = Kernel.ApplicationManager.GetApplicationByPid(pid);
 
-                if (application.Focused)
+                if (application != null && application.Focused)
                 {
                     btn.Frame = Kernel.ThemeManager.GetFrame("button.highlighted");
                 }
@@ -219,6 +248,8 @@ namespace Aura_OS.System.Graphics.UI.GUI
             }
 
             NetworkButton.Draw(this);
+
+            KeyboardButton.Draw(this);
         }
 
         public override void MarkDirty()

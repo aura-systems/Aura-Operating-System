@@ -6,17 +6,12 @@
 
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Drawing;
 using System.IO;
-using Cosmos.Core.Memory;
-using Cosmos.HAL;
-using Cosmos.System;
-using Cosmos.System.ExtendedASCII;
-using Cosmos.System.FileSystem;
-using Cosmos.System.FileSystem.VFS;
-using Cosmos.System.Graphics;
-using Cosmos.System.Graphics.Fonts;
+using Cosmos.Kernel.System.Diagnostics;
+using Cosmos.Kernel.System.Graphics;
+using Cosmos.Kernel.System.Graphics.Fonts;
+using Cosmos.Kernel.System.Vfs;
 using Aura_OS.System;
 using Aura_OS.Processing;
 using Aura_OS.System.Processing;
@@ -24,6 +19,7 @@ using Aura_OS.System.Graphics;
 using Aura_OS.System.Processing.Interpreter;
 using Aura_OS.System.Processing.Processes;
 using Aura_OS.System.Graphics.UI.GUI.Skin;
+using Aura_OS.System.Filesystem;
 using Aura_OS.System.Utils;
 
 namespace Aura_OS
@@ -45,8 +41,38 @@ namespace Aura_OS
         public static string Clipboard { get; internal set; }
         public static string UserDirectory { get; internal set; }
 
-        public static string CurrentVolume = @"0:\";
-        public static string CurrentDirectory = @"0:\";
+        /// <summary>
+        /// Current volume: "/N/" (the N-th FAT volume), or "/" when no volume is mounted. Always ends with '/'.
+        /// </summary>
+        public static string CurrentVolume = "/";
+
+        private static string _currentDirectory = "/";
+
+        /// <summary>
+        /// Current directory, always ending with '/'. The setter also moves the BCL current directory
+        /// (Lua, FTP, relative System.IO paths).
+        /// </summary>
+        public static string CurrentDirectory
+        {
+            get
+            {
+                return _currentDirectory;
+            }
+            set
+            {
+                _currentDirectory = value;
+
+                try
+                {
+                    // GEN3-GAP(cwd): the current directory is kernel-global (VfsManager.CurrentDirectory is internal).
+                    Directory.SetCurrentDirectory(value);
+                }
+                catch (Exception)
+                {
+                    // DirectoryNotFoundException when the volume is gone: keep Aura's own value.
+                }
+            }
+        }
 
         private static bool _networkConnected = false;
         public static bool NetworkConnected
@@ -97,6 +123,13 @@ namespace Aura_OS
 
         public static Canvas Canvas;
 
+        /// <summary>
+        /// Console.Out/Error once the canvas is acquired: keeps Console output (serial) off Aura's frame,
+        /// because the KernelConsole draws on the same canvas. The Terminal swaps in its own writer
+        /// while focused and must restore this one, never the original console writer.
+        /// </summary>
+        public static TextWriter GuiSink;
+
         public static Color WhiteColor = Color.FromArgb(0xff, 0xff, 0xff, 0xff);
         public static int WhiteColorInt = WhiteColor.ToArgb();
         public static Color BlackColor = Color.FromArgb(0xff, 0x00, 0x00, 0x00);
@@ -119,17 +152,12 @@ namespace Aura_OS
         public static ThemeManager ThemeManager;
         public static Explorer Explorer;
 
-        // Textmode Console
-        public static System.Graphics.UI.CUI.Console TextmodeConsole;
-
         public static int FreeCount = 0;
 
-        private static int _frameCount = 0;
         private static int _frames = 0;
         private static int _fps = 0;
-        private static int _deltaT = 0;
-
-        public static CosmosVFS VirtualFileSystem;
+        private static long _lastFpsTick = 0;
+        private static long _lastCollectTick = 0;
 
         public static string CommandOutput = "";
         public static bool Redirect = false;
@@ -137,18 +165,31 @@ namespace Aura_OS
         public static void BeforeRun()
         {
             EnvironmentVariables = new Dictionary<string, string>();
-            VirtualFileSystem = new CosmosVFS();
 
             //Start Filesystem
-            VFSManager.RegisterVFS(VirtualFileSystem);
+            CustomConsole.WriteLineInfo("Mounting volumes...");
+            Volumes.Initialize();
 
-            if (File.Exists(@"0:\System\settings.ini"))
+            CurrentVolume = AuraPaths.SystemVolume ?? "/";
+            CurrentDirectory = CurrentVolume;
+
+            if (AuraPaths.SystemVolume != null && File.Exists(AuraPaths.SettingsIni))
             {
                 Installed = true;
 
-                Settings config = new Settings(@"0:\System\settings.ini");
-                ScreenWidth = uint.Parse(config.GetValue("screenWidth"));
-                ScreenHeight = uint.Parse(config.GetValue("screenHeight"));
+                Settings config = new Settings(AuraPaths.SettingsIni);
+
+                uint width;
+                if (uint.TryParse(config.GetValue("screenWidth"), out width) && width > 0)
+                {
+                    ScreenWidth = width;
+                }
+
+                uint height;
+                if (uint.TryParse(config.GetValue("screenHeight"), out height) && height > 0)
+                {
+                    ScreenHeight = height;
+                }
             }
 
             ProcessManager = new ProcessManager();
@@ -161,35 +202,50 @@ namespace Aura_OS
             Files.LoadFiles();
 
             CustomConsole.WriteLineInfo("Checking for boot.bat script...");
-            for (int i = 0; i <= 5; i++)
+            IReadOnlyList<VfsManager.VfsMount> mounts = VfsManager.Mounts; // immutable snapshot
+            for (int i = 0; i < mounts.Count; i++)
             {
-                string volumePath = i + @":\";
-                if (Directory.Exists(volumePath))
+                string volumePath = AuraPath.AsDirectory(mounts[i].MountPoint);
+                CustomConsole.WriteLineInfo($"Checking for boot.bat on volume {volumePath}...");
+                if (File.Exists(volumePath + "boot.bat"))
                 {
-                    CustomConsole.WriteLineInfo($"Checking for boot.bat on volume {volumePath}...");
-                    if (File.Exists(volumePath + "boot.bat"))
-                    {
-                        CustomConsole.WriteLineOK($"Detected boot.bat on {volumePath}, executing script...");
-                        Batch.Execute(volumePath + "boot.bat");
-                        CurrentVolume = volumePath;
-                        break;
-                    }
+                    CustomConsole.WriteLineOK($"Detected boot.bat on {volumePath}, executing script...");
+                    Batch.Execute(volumePath + "boot.bat");
+                    CurrentVolume = volumePath;
+                    break;
                 }
             }
-
-            global::System.Console.ReadKey();
 
             CustomConsole.WriteLineInfo("Starting Canvas...");
 
             //START GRAPHICS
-            Canvas = FullScreenCanvas.GetFullScreenCanvas(new Mode(ScreenWidth, ScreenHeight, ColorDepth.ColorDepth32));
-            Canvas.DrawImage(AuraLogoWhite, (int)((ScreenWidth / 2) - (AuraLogoWhite.Width / 2)), (int)((ScreenHeight / 2) - (AuraLogoWhite.Height / 2)));
-            Canvas.Display();
+            try
+            {
+                // Display that can switch modes (VMware SVGA II): switches. Firmware framebuffer / virtio-gpu:
+                // ignored, the resolution is the one limine.conf asked for.
+                Canvas = Canvas.GetFullScreen(new Mode((int)ScreenWidth, (int)ScreenHeight, ColorDepth.ColorDepth32));
+            }
+            catch (ArgumentOutOfRangeException)
+            {
+                // Mode refused by the display (screenWidth/screenHeight come from a user-editable settings.ini).
+                Canvas = Canvas.GetFullScreen();
+            }
+
+            // GEN3-GAP(display-mode): the real framebuffer size from here on.
+            ScreenWidth = (uint)Canvas.Width;
+            ScreenHeight = (uint)Canvas.Height;
+
+            // GEN3-GAP(kernelconsole): no public way to detach or hide the KernelConsole, which draws on this
+            // same canvas; redirecting Console.Out/Error keeps it from painting over the GUI.
+            GuiSink = new SerialTextWriter();
+            global::System.Console.SetOut(GuiSink);
+            global::System.Console.SetError(GuiSink);
+
+            Canvas.DrawImage(AuraLogoWhite, (Canvas.Width - AuraLogoWhite.Width) / 2, (Canvas.Height - AuraLogoWhite.Height) / 2);
+            Present();
 
             CustomConsole.BootConsole = new(0, 0, (int)ScreenWidth, (int)ScreenHeight);
             CustomConsole.BootConsole.DrawBackground = false;
-
-            TextmodeConsole = null;
 
             ResourceManager = new ResourceManager();
             ResourceManager.Initialize();
@@ -200,30 +256,33 @@ namespace Aura_OS
             ApplicationManager = new ApplicationManager();
             ApplicationManager.Initialize();
 
+            // The Explorer constructor (LoginScreen.Hide()) writes MouseManager.FocusedComponent:
+            // construct the input managers first (a null dereference is a fatal #PF in gen3).
+            MouseManager = new System.Input.MouseManager();
+            KeyboardManager = new System.Input.KeyboardManager();
+
             Explorer = new Explorer();
             Explorer.Initialize();
 
-            MouseManager = new System.Input.MouseManager();
+            // Process order stays Explorer -> Mouse (cursor drawn on top) -> Keyboard.
             MouseManager.Initialize();
-
-            KeyboardManager = new System.Input.KeyboardManager();
             KeyboardManager.Initialize();
 
-            //Load Localization
-            CustomConsole.WriteLineInfo("Initializing localization...");
-            Encoding.RegisterProvider(CosmosEncodingProvider.Instance);
-
-            CustomConsole.WriteLineInfo("Initializing ASCII encoding...");
-            global::System.Console.InputEncoding = Encoding.ASCII;
-            global::System.Console.OutputEncoding = Encoding.ASCII;
+            if (!string.IsNullOrEmpty(ComputerName))
+            {
+                Cosmos.Kernel.System.Network.Config.DnsConfig.HostName = ComputerName;
+            }
 
             CustomConsole.WriteLineInfo("Try cleaning memory...");
-            FreeCount = Heap.Collect();
+            FreeCount = MemoryInfo.Collect();
             CustomConsole.WriteLineInfo("Cosmos Memory Manager works.");
 
             BootTime = Time.MonthString() + "/" + Time.DayString() + "/" + Time.YearString() + ", " + Time.TimeString(true, true, true);
 
             CustomConsole.WriteLineOK("Aura Operating System boot sequence done.");
+
+            _lastFpsTick = Environment.TickCount64;
+            _lastCollectTick = _lastFpsTick;
 
             Running = true;
         }
@@ -234,20 +293,27 @@ namespace Aura_OS
         {
             try
             {
-                if (_deltaT != RTC.Second)
+                long now = Environment.TickCount64;
+
+                if (now - _lastFpsTick >= 1000)
                 {
                     _fps = _frames;
                     _frames = 0;
-                    _deltaT = RTC.Second;
+                    _lastFpsTick = now;
+
+                    // GEN3-GAP(mounts): no hot-plug event, poll once per second.
+                    Volumes.PollHotplug();
                 }
 
                 _frames++;
-                _frameCount++;
 
-                if (_frameCount == 4)
+                // GEN3-GAP(gc-trigger): OrionGC only collects on page-allocator exhaustion.
+                // 1 Hz, 10 Hz under memory pressure (rate-limited: a collection is stop-the-world).
+                bool lowMemory = MemoryInfo.FreePages < MemoryInfo.TotalPages / 4;
+                if (now - _lastCollectTick >= (lowMemory ? 100 : 1000))
                 {
-                    FreeCount = Heap.Collect();
-                    _frameCount = 0;
+                    FreeCount = MemoryInfo.Collect();
+                    _lastCollectTick = now;
                 }
 
                 ProcessManager.Update();
@@ -260,20 +326,39 @@ namespace Aura_OS
                     Explorer.Screen.DrawString(Debug, font, WhiteColorInt, 2, font.Height * 2);
                 }
 
-                Canvas.DrawImage(Explorer.Screen.Bitmap, 0, 0);
-                Canvas.Display();
+                Present();
             }
             catch (Exception ex)
             {
                 if (ex.InnerException != null)
                 {
-                    Crash.StopKernel(ex.Message, ex.InnerException.Message, "0x00000000", "0");
+                    Crash.StopKernel(ex.Message, ex.InnerException.Message, "", "0");
                 }
                 else
                 {
-                    Crash.StopKernel("Fatal dotnet exception occured.", ex.Message, "0x00000000", "0");
+                    Crash.StopKernel("Fatal dotnet exception occured.", ex.Message, "", "0");
                 }
             }
+        }
+
+        /// <summary>
+        /// Shows the frame. Explorer.Screen aliases the canvas back buffer, so this is a single
+        /// Canvas.Display(); a separate screen bitmap (if any) is blitted first.
+        /// </summary>
+        public static void Present()
+        {
+            if (Canvas == null)
+            {
+                // Before BeforeRun acquired the screen (a null dereference is a fatal #PF in gen3).
+                return;
+            }
+
+            if (Explorer != null && Explorer.Screen != null && Explorer.Screen.Bitmap != null)
+            {
+                Canvas.DrawImage(Explorer.Screen.Bitmap, 0, 0);
+            }
+
+            Canvas.Display();
         }
     }
 }

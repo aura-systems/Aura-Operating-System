@@ -2,7 +2,8 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using Sys = Cosmos.System;
+using Cosmos.Kernel.System;
+using Aura_OS.System.Input;
 
 namespace Aura_OS.System.Processing.Interpreter.Commands.c_Console
 {
@@ -22,18 +23,24 @@ namespace Aura_OS.System.Processing.Interpreter.Commands.c_Console
         /// <param name="arguments">Arguments</param>
         public override ReturnInfo Execute(List<string> arguments)
         {
-            switch (arguments[0])
+            if (arguments == null || arguments.Count == 0)
             {
-                case "azerty":
-                    Sys.KeyboardManager.SetKeyLayout(new Sys.ScanMaps.FRStandardLayout());
-                    break;
-
-                case "qwerty":
-                    Sys.KeyboardManager.SetKeyLayout(new Sys.ScanMaps.USStandardLayout());
-                    break;
-                default:
-                    return new ReturnInfo(this, ReturnCode.ERROR, "This keyboardmap isn't supported, please type: setkeyboardmap /help");
+                return new ReturnInfo(this, ReturnCode.ERROR_ARG);
             }
+
+            if (!KernelFeatures.Keyboard)
+            {
+                return new ReturnInfo(this, ReturnCode.ERROR, "Keyboard support is disabled in this kernel.");
+            }
+
+            // Accepts a layout code (us, gb, fr, de, es, tr, dv) or an alias (azerty, qwerty, qwertz, dvorak).
+            if (!KeyboardLayouts.Set(arguments[0]))
+            {
+                return new ReturnInfo(this, ReturnCode.ERROR, "This keyboardmap isn't supported, please type: setkeyboardmap /help");
+            }
+
+            KeyboardLayouts.Persist();
+
             return new ReturnInfo(this, ReturnCode.OK);
         }
 
@@ -43,8 +50,20 @@ namespace Aura_OS.System.Processing.Interpreter.Commands.c_Console
         public override void PrintHelp()
         {
             Console.WriteLine("Available keyboards map:");
-            Console.WriteLine("- setkeyboardmap azerty");
-            Console.WriteLine("- setkeyboardmap qwerty");
+            foreach (string code in KeyboardLayouts.Codes)
+            {
+                Console.WriteLine("- setkeyboardmap " + code.ToLowerInvariant() + " (" + KeyboardLayouts.GetDisplayName(code) + ")");
+            }
+
+            Console.WriteLine("Aliases:");
+            foreach (string alias in KeyboardLayouts.Aliases)
+            {
+                string target = KeyboardLayouts.ResolveCode(alias);
+                if (target != null)
+                {
+                    Console.WriteLine("- setkeyboardmap " + alias + " (= " + target.ToLowerInvariant() + ")");
+                }
+            }
         }
     }
 }

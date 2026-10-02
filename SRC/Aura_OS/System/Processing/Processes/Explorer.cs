@@ -5,9 +5,10 @@
 */
 
 using Aura_OS.Processing;
+using Aura_OS.System.Filesystem;
 using Aura_OS.System.Graphics.UI.GUI;
 using Aura_OS.System.Utils;
-using Cosmos.System;
+using Cosmos.Kernel.System.Mouse;
 
 namespace Aura_OS.System.Processing.Processes
 {
@@ -42,7 +43,10 @@ namespace Aura_OS.System.Processing.Processes
 
         public Explorer() : base("Explorer", ProcessType.KernelComponent)
         {
-            Screen = new((int)Kernel.ScreenWidth, (int)Kernel.ScreenHeight);
+            // Zero-copy alias of the canvas back buffer (Screen.Bitmap is null): the composited frame
+            // is shown by Kernel.Present() with a single Canvas.Display(), no extra 8 MB blit.
+            // Re-create it (and SetScreen again) if the canvas mode ever changes at runtime.
+            Screen = new DirectBitmap(Kernel.Canvas);
             WindowManager.Initialize();
             WindowManager.SetScreen(Screen);
 
@@ -77,7 +81,7 @@ namespace Aura_OS.System.Processing.Processes
 
             if (Kernel.Installed)
             {
-                Settings config = new Settings(@"0:\System\settings.ini");
+                Settings config = new Settings(AuraPaths.SettingsIni);
                 string value = config.GetValue("autologin");
                 string computerName = config.GetValue("hostname");
                 Kernel.ComputerName = computerName;

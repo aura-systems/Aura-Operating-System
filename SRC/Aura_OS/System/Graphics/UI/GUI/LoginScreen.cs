@@ -6,7 +6,9 @@
 
 using System;
 using System.Drawing;
-using Cosmos.System;
+using Cosmos.Kernel.System.Graphics;
+using Cosmos.Kernel.System.Keyboard;
+using Aura_OS.System.Filesystem;
 using Aura_OS.System.Graphics.UI.GUI.Components;
 using Aura_OS.System.Processing.Processes;
 using Aura_OS.System.Security;
@@ -19,8 +21,9 @@ namespace Aura_OS.System.Graphics.UI.GUI
         private TextBox _username;
         private TextBox _password;
         private Button _button;
+        private KeyboardLayoutButton _keyboardButton;
+        private Image _wallpaper;
         private string _error;
-        private Color? _color = null;
 
         public LoginScreen(int x, int y, int width, int height) : base(x, y, width, height)
         {
@@ -45,10 +48,13 @@ namespace Aura_OS.System.Graphics.UI.GUI
 
             AddChild(_button);
 
-            if (Kernel.wallpaper2.Width != Kernel.ScreenWidth && Kernel.wallpaper2.Height != Kernel.ScreenHeight)
-            {
-                _color = Color.Black;
-            }
+            // Keyboard layout switcher at the bottom-right, so AZERTY users can type their password.
+            _keyboardButton = new KeyboardLayoutButton(Width - 40 - 8, Height - 23 - 8, 40, 23);
+            AddChild(_keyboardButton);
+
+            // gen2 blanked to black when the wallpaper did not match the screen; gen3 runs at the
+            // real framebuffer size (GEN3-GAP(display-mode)), so scale once here, never per frame.
+            _wallpaper = ImageUtils.ScaleToScreen(Kernel.wallpaper2);
         }
 
         public override void Update()
@@ -62,13 +68,15 @@ namespace Aura_OS.System.Graphics.UI.GUI
                 switch (keyEvent.Key)
                 {
                     case ConsoleKeyEx.Tab:
-                        if (Kernel.MouseManager.FocusedComponent.Equals(_username))
+                        // GEN3-GAP(null-deref): FocusedComponent is null before any focus, and calling
+                        // Equals on it is a fatal #PF in gen3.
+                        if (ReferenceEquals(Kernel.MouseManager.FocusedComponent, _username))
                         {
                             Kernel.MouseManager.FocusedComponent = _password;
                             _username.SetSelected(false);
                             _password.SetSelected(true);
                         }
-                        else if (Kernel.MouseManager.FocusedComponent.Equals(_password))
+                        else if (ReferenceEquals(Kernel.MouseManager.FocusedComponent, _password))
                         {
                             Kernel.MouseManager.FocusedComponent = _username;
                             _password.SetSelected(false);
@@ -93,26 +101,21 @@ namespace Aura_OS.System.Graphics.UI.GUI
             _username.UpdateNoGetKey();
             _password.UpdateNoGetKey();
             _button.Update();
+            _keyboardButton.Update();
         }
 
         public override void Draw()
         {
             base.Draw();
 
-            if (_color != null)
-            {
-                Clear((Color)_color);
-            }
-            else
-            {
-                DrawImage(Kernel.wallpaper2, X, Y);
-            }
-            
+            DrawImage(_wallpaper, X, Y);
+
             DrawImage(Kernel.auralogo_white, Width / 2 - (int)Kernel.auralogo_white.Width / 2, _username.Y - (int)Kernel.auralogo_white.Height - 24);
 
             _username.Draw(this);
             _password.Draw(this);
             _button.Draw(this);
+            _keyboardButton.Draw(this);
 
             if (_error != null)
             {
@@ -128,6 +131,7 @@ namespace Aura_OS.System.Graphics.UI.GUI
             _username.Visible = false;
             _password.Visible = false;
             _button.Visible = false;
+            _keyboardButton.Visible = false;
             Explorer.Taskbar.Visible = true;
         }
 
@@ -144,6 +148,7 @@ namespace Aura_OS.System.Graphics.UI.GUI
             _password.Text = "";
             _password.Visible = true;
             _button.Visible = true;
+            _keyboardButton.Visible = true;
             _error = null;
             Explorer.Taskbar.Visible = false;
             Explorer.StartMenu.Visible = false;
@@ -170,14 +175,20 @@ namespace Aura_OS.System.Graphics.UI.GUI
 
                 Kernel.LoggedIn = true;
                 Kernel.userLogged = username; 
-                Kernel.UserDirectory = @"0:\Users\" + dirUsername + @"\";
+                Kernel.UserDirectory = AuraPaths.UsersDir + dirUsername + "/";
                 Kernel.CurrentDirectory = Kernel.UserDirectory;
 
                 Explorer.Desktop.MainPanel.CurrentPath = Kernel.CurrentDirectory;
                 Explorer.Desktop.MainPanel.RefreshFilesystem();
 
-                Settings config = new Settings(@"0:\System\settings.ini");
+                Settings config = new Settings(AuraPaths.SettingsIni);
                 Kernel.ComputerName = config.GetValue("hostname");
+
+                if (!string.IsNullOrEmpty(Kernel.ComputerName))
+                {
+                    // DNS and FTP report this name.
+                    Cosmos.Kernel.System.Network.Config.DnsConfig.HostName = Kernel.ComputerName;
+                }
 
                 return true;
             }

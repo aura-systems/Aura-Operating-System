@@ -4,48 +4,101 @@
 * PROGRAMMERS:      Valentin Charbonnier <valentinbreiz@gmail.com>
 */
 
+using Cosmos.Kernel.System.Vfs;
+using System;
 using System.IO;
 
 namespace Aura_OS.System.Filesystem
 {
     public class Utils
     {
+        /// <summary>
+        /// Parent directory, always ending with '/': "/0/Users/bob/" -> "/0/Users/", "/0/" -> "/" (volume list),
+        /// "/" -> "/".
+        /// </summary>
         public static string GetParentPath(string path)
         {
             if (string.IsNullOrEmpty(path))
             {
                 return path;
             }
-            if (path.EndsWith(Path.DirectorySeparatorChar.ToString()))
+
+            string trimmed = path.TrimEnd(AuraPath.Separator);
+            if (trimmed.Length == 0)
             {
-                path = path.TrimEnd(Path.DirectorySeparatorChar);
+                return "/";
             }
 
-            int lastSeparatorIndex = path.LastIndexOf(Path.DirectorySeparatorChar);
-            if (lastSeparatorIndex <= 0)
+            string parent = Path.GetDirectoryName(trimmed);
+            if (parent == null)
             {
-                return path + "\\";
+                return "/";
             }
-            if (lastSeparatorIndex == 2 && path[1] == ':')
+            if (parent.Length == 0)
             {
-                return path.Substring(0, lastSeparatorIndex + 1);
+                return trimmed + AuraPath.Separator;
             }
-            return path.Substring(0, lastSeparatorIndex) + "\\";
+            return AuraPath.AsDirectory(parent);
         }
 
         public static string GetFreeSpace()
         {
-            var available_space = Kernel.VirtualFileSystem.GetAvailableFreeSpace(Kernel.CurrentVolume);
-            return ConvertSize(available_space);
+            ulong freeBytes, totalBytes;
+            TryGetCurrentVolumeSpace(out freeBytes, out totalBytes);
+            return ConvertSize(freeBytes);
         }
 
         public static string GetCapacity()
         {
-            var total_size = Kernel.VirtualFileSystem.GetTotalSize(Kernel.CurrentVolume);
-            return ConvertSize(total_size);
+            ulong freeBytes, totalBytes;
+            TryGetCurrentVolumeSpace(out freeBytes, out totalBytes);
+            return ConvertSize(totalBytes);
         }
 
-        public static string ConvertSize(long bytes)
+        // GEN3-GAP(driveinfo): TryStatFs sweeps the whole FAT on every call, so the result is cached
+        // per mount point for a few seconds.
+        private const long SpaceCacheMs = 5000;
+        private static string _spaceMountPoint;
+        private static long _spaceTick;
+        private static ulong _spaceFree;
+        private static ulong _spaceTotal;
+
+        private static bool TryGetCurrentVolumeSpace(out ulong freeBytes, out ulong totalBytes)
+        {
+            freeBytes = 0;
+            totalBytes = 0;
+
+            // null in live mode (no FAT volume, Kernel.CurrentVolume == "/").
+            VfsManager.VfsMount mount = Volumes.MountOf(Kernel.CurrentVolume);
+            if (mount == null)
+            {
+                return false;
+            }
+
+            string mountPoint = mount.MountPoint;
+            long now = Environment.TickCount64;
+
+            if (_spaceMountPoint != null && _spaceMountPoint == mountPoint && now - _spaceTick < SpaceCacheMs)
+            {
+                freeBytes = _spaceFree;
+                totalBytes = _spaceTotal;
+                return true;
+            }
+
+            if (!Volumes.TryGetSpace(mountPoint, out freeBytes, out totalBytes))
+            {
+                _spaceMountPoint = null;
+                return false;
+            }
+
+            _spaceMountPoint = mountPoint;
+            _spaceTick = now;
+            _spaceFree = freeBytes;
+            _spaceTotal = totalBytes;
+            return true;
+        }
+
+        public static string ConvertSize(ulong bytes)
         {
             string suffix = " Bytes";
             double size = bytes;

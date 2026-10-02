@@ -5,7 +5,6 @@
 */
 
 using System;
-using Sys = Cosmos.System;
 using Aura_OS;
 using Aura_OS.System.Processing.Interpreter;
 
@@ -27,7 +26,7 @@ namespace Aura_OS.System.Processing.Interpreter.Commands.Power
         public override ReturnInfo Execute()
         {
             Console.WriteLine("Shutting Down...");
-            Sys.Power.Shutdown();
+            AuraPower.Shutdown();
             return new ReturnInfo(this, ReturnCode.OK);
         }
     }

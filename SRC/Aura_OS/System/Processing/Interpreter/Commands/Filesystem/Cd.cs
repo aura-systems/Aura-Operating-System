@@ -26,6 +26,11 @@ namespace Aura_OS.System.Processing.Interpreter.Commands.Filesystem
         /// </summary>
         public override ReturnInfo Execute(List<string> arguments)
         {
+            if (arguments.Count < 1)
+            {
+                return new ReturnInfo(this, ReturnCode.ERROR_ARG);
+            }
+
             string dir = arguments[0];
 
             try
@@ -54,6 +59,9 @@ namespace Aura_OS.System.Processing.Interpreter.Commands.Filesystem
             Console.WriteLine("Available commands:");
             Console.WriteLine("- cd {directory}    change current directory");
             Console.WriteLine("- cd ..             go to last directory");
+            Console.WriteLine("- cd ~              go to user directory");
+            Console.WriteLine("- cd /1/Docs        absolute path (volume N is /N/)");
+            Console.WriteLine("- cd /              list of volumes");
         }
     }
 }

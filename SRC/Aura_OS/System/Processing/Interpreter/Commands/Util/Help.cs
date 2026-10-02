@@ -78,7 +78,7 @@ namespace Aura_OS.System.Processing.Interpreter.Commands.Util
                 count++;
                 if (count == Kernel.console.Rows - 3)
                 {
-                    //Console.ReadKey(); TODO FIX THIS
+                    //TODO FIX THIS: wait for a key from Aura's Input.KeyboardManager (never the Console key APIs, C10)
                     count = 0;
                 }
                 */

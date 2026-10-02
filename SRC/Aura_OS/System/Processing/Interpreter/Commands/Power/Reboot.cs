@@ -7,7 +7,6 @@
 using Aura_OS;
 using Aura_OS.System.Processing.Interpreter;
 using System;
-using Sys = Cosmos.System;
 
 namespace Aura_OS.System.Processing.Interpreter.Commands.Power
 {
@@ -27,7 +26,7 @@ namespace Aura_OS.System.Processing.Interpreter.Commands.Power
         public override ReturnInfo Execute()
         {
             Console.WriteLine("Restarting...");
-            Sys.Power.Reboot();
+            AuraPower.Reboot();
             return new ReturnInfo(this, ReturnCode.OK);
         }
     }

@@ -18,7 +18,7 @@ namespace Aura_OS.System.Processing.Interpreter.Commands.SystemInfomation
         /// </summary>
         public CommandLogs(string[] commandvalues) : base(commandvalues)
         {
-            Description = "to display Cosmos kernel logs";
+            Description = "to display Aura logs";
         }
 
         /// <summary>
@@ -32,7 +32,7 @@ namespace Aura_OS.System.Processing.Interpreter.Commands.SystemInfomation
             {
                 if (entry.Level == LogLevel.Kernel)
                 {
-                    sb.AppendLine(entry.DateTime.ToString() + " - [Cosmos] - " + entry.Log);
+                    sb.AppendLine(entry.DateTime.ToString() + " - [Kernel] - " + entry.Log);
                 }
                 else
                 {
@@ -79,7 +79,7 @@ namespace Aura_OS.System.Processing.Interpreter.Commands.SystemInfomation
                 {
                     if (entry.Level == LogLevel.Kernel)
                     {
-                        sb.AppendLine(entry.DateTime.ToString() + " - [Cosmos] - " + entry.Log);
+                        sb.AppendLine(entry.DateTime.ToString() + " - [Kernel] - " + entry.Log);
                     }
                     else
                     {
@@ -98,7 +98,9 @@ namespace Aura_OS.System.Processing.Interpreter.Commands.SystemInfomation
         {
             Console.WriteLine("Usage:");
             Console.WriteLine(" - logs        Show all logs");
-            Console.WriteLine(" - logs /k     Show Cosmos logs");
+            // GEN3-GAP(log-sink): Cosmos kernel logs cannot be captured any more (serial only);
+            // LogLevel.Kernel now carries Aura's own kernel-level messages.
+            Console.WriteLine(" - logs /k     Show Aura kernel logs");
             Console.WriteLine(" - logs /o     Show AuraOS logs");
         }
     }

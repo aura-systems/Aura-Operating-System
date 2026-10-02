@@ -7,12 +7,18 @@
 using System;
 using System.Drawing;
 using System.Runtime.CompilerServices;
-using Cosmos.Core;
-using Cosmos.System.Graphics;
-using Cosmos.System.Graphics.Fonts;
+using Cosmos.Kernel.System.Graphics;
+using Cosmos.Kernel.System.Graphics.Fonts;
 
 namespace Aura_OS.System.Graphics.UI.GUI
 {
+    /// <summary>
+    /// Aura's compositor surface: raw ARGB ints, either owned by a Bitmap or aliasing the canvas
+    /// back buffer. Every operation clips to the surface, never throws for off-screen coordinates
+    /// (windows and the cursor go off-screen) and never allocates (except ExtractImage).
+    /// GEN3-GAP(blit): Canvas.DrawImageAlpha is per-pixel and forces opaque output, and the BCL
+    /// replaces the gen2 kernel memory helpers, so blending and copies are done here in plain C#.
+    /// </summary>
     public unsafe class DirectBitmap
     {
         /// <summary>
@@ -25,22 +31,59 @@ namespace Aura_OS.System.Graphics.UI.GUI
         /// </summary>
         internal int Pitch;
 
+        /// <summary>
+        /// Raw ARGB pixels, row-major, Width * Height. This is Bitmap.RawData (same array, no copy),
+        /// or the canvas back buffer for a canvas-backed DirectBitmap.
+        /// </summary>
+        public readonly int[] Pixels;
+
+        /// <summary>
+        /// Backing bitmap. Null only when this DirectBitmap aliases the canvas back buffer.
+        /// </summary>
         public Bitmap Bitmap { get; private set; }
         public int Height = 144;
         public int Width = 160;
 
         public DirectBitmap()
         {
-            Bitmap = new Bitmap((uint)Width, (uint)Height, ColorDepth.ColorDepth32);
+            Bitmap = new Bitmap(Width, Height, ColorDepth.ColorDepth32);
+            Pixels = Bitmap.RawData;
             Stride = (int)32 / 8;
             Pitch = (int)Width * Stride;
         }
 
         public DirectBitmap(int width, int height)
         {
-            Width = width;
-            Height = height;
-            Bitmap = new Bitmap((uint)Width, (uint)Height, ColorDepth.ColorDepth32);
+            Width = Math.Max(0, width);
+            Height = Math.Max(0, height);
+            Bitmap = new Bitmap(Width, Height, ColorDepth.ColorDepth32);
+            Pixels = Bitmap.RawData;
+            Stride = (int)32 / 8;
+            Pitch = (int)Width * Stride;
+        }
+
+        /// <summary>
+        /// Zero-copy surface over the canvas back buffer: whatever is drawn here is shown by the
+        /// next Canvas.Display(). Bitmap stays null. The canvas reallocates its buffer on a mode
+        /// change, so create a new DirectBitmap after any Canvas.GetFullScreen(mode).
+        /// </summary>
+        public DirectBitmap(Canvas canvas)
+        {
+            int[] buffer = canvas != null ? canvas.GetBuffer() : null;
+
+            if (buffer != null)
+            {
+                Width = canvas.Width;
+                Height = canvas.Height;
+                Pixels = buffer;
+            }
+            else
+            {
+                Width = 0;
+                Height = 0;
+                Pixels = Array.Empty<int>();
+            }
+
             Stride = (int)32 / 8;
             Pitch = (int)Width * Stride;
         }
@@ -48,51 +91,61 @@ namespace Aura_OS.System.Graphics.UI.GUI
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void SetPixel(int x, int y, int colour)
         {
-            int index = x + y * Width;
-            Bitmap.RawData[index] = colour | (0xFF << 24);
+            if ((uint)x < (uint)Width && (uint)y < (uint)Height)
+            {
+                Pixels[x + y * Width] = colour | (0xFF << 24);
+            }
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void SetPixelAlpha(int x, int y, int colour)
         {
+            if ((uint)x >= (uint)Width || (uint)y >= (uint)Height)
+            {
+                return;
+            }
+
             int index = x + y * Width;
 
-            if (index < Bitmap.RawData.Length)
+            if (((uint)colour >> 24) == 0xFF)
             {
-                if ((colour >> 24) == 0xFF)
-                {
-                    Bitmap.RawData[index] = colour;
-                    return;
-                }
-
-                int bgColour = Bitmap.RawData[index];
-                int alpha = (colour >> 24) & 0xff;
-                int invAlpha = 255 - alpha;
-                int newRed = (((colour >> 16) & 0xff) * alpha + ((bgColour >> 16) & 0xff) * invAlpha) >> 8;
-                int newGreen = (((colour >> 8) & 0xff) * alpha + ((bgColour >> 8) & 0xff) * invAlpha) >> 8;
-                int newBlue = ((colour & 0xff) * alpha + (bgColour & 0xff) * invAlpha) >> 8;
-
-                Bitmap.RawData[index] = (alpha << 24) | (newRed << 16) | (newGreen << 8) | newBlue;
+                Pixels[index] = colour;
+                return;
             }
+
+            int bgColour = Pixels[index];
+            int alpha = (colour >> 24) & 0xff;
+            int invAlpha = 255 - alpha;
+            int newRed = (((colour >> 16) & 0xff) * alpha + ((bgColour >> 16) & 0xff) * invAlpha) >> 8;
+            int newGreen = (((colour >> 8) & 0xff) * alpha + ((bgColour >> 8) & 0xff) * invAlpha) >> 8;
+            int newBlue = ((colour & 0xff) * alpha + (bgColour & 0xff) * invAlpha) >> 8;
+
+            Pixels[index] = (alpha << 24) | (newRed << 16) | (newGreen << 8) | newBlue;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public int GetPixel(int x, int y)
         {
-            int index = x + y * Width;
-            return Bitmap.RawData[index];
+            if ((uint)x < (uint)Width && (uint)y < (uint)Height)
+            {
+                return Pixels[x + y * Width];
+            }
+
+            return 0;
         }
 
         public void Clear(int colour)
         {
-            fixed (int* destPtr = Bitmap.RawData)
-            {
-                MemoryOperations.Fill(destPtr, colour, Bitmap.RawData.Length);
-            }
+            Pixels.AsSpan().Fill(colour);
         }
 
         public void DrawString(string str, Font font, int color, int x, int y)
         {
+            if (str == null || font == null)
+            {
+                return;
+            }
+
             int length = str.Length;
             byte width = font.Width;
             for (int i = 0; i < length; i++)
@@ -104,17 +157,43 @@ namespace Aura_OS.System.Graphics.UI.GUI
 
         public void DrawChar(char c, Font font, int color, int x, int y)
         {
-            byte height = font.Height;
-            byte width = font.Width;
-            byte[] data = font.Data;
-            int num = height * (byte)c;
-            for (int i = 0; i < height; i++)
+            if (font == null)
             {
-                for (byte b = 0; b < width; b = (byte)(b + 1))
+                return;
+            }
+
+            int height = font.Height;
+            int width = font.Width;
+            byte[] data = font.Data;
+
+            // PSF glyph rows are (Width + 7) / 8 bytes wide (zap is 6 px = 1 byte, DefaultFont 16 px = 2 bytes).
+            int bytesPerRow = (width + 7) / 8;
+            int p = height * bytesPerRow * (byte)c;
+
+            if (data == null || p + height * bytesPerRow > data.Length)
+            {
+                return;
+            }
+
+            if (x >= Width || y >= Height || x + width <= 0 || y + height <= 0)
+            {
+                return;
+            }
+
+            for (int cy = 0; cy < height; cy++)
+            {
+                int py = y + cy;
+                if ((uint)py >= (uint)Height)
                 {
-                    if (font.ConvertByteToBitAddress(data[num + i], b + 1))
+                    continue;
+                }
+
+                int row = p + cy * bytesPerRow;
+                for (int cx = 0; cx < width; cx++)
+                {
+                    if (font.ConvertByteToBitAddress(data[row + cx / 8], (cx % 8) + 1))
                     {
-                        SetPixelAlpha((ushort)(x + b), (ushort)(y + i), color);
+                        SetPixelAlpha(x + cx, py, color);
                     }
                 }
             }
@@ -339,95 +418,279 @@ namespace Aura_OS.System.Graphics.UI.GUI
             y2 = (int)num4;
         }
 
-        public void DrawImage(Bitmap image, int x, int y)
+        /// <summary>
+        /// Clips a width x height rectangle placed at (x, y) against this bitmap.
+        /// On success (x, y) is the first visible destination pixel, (srcX, srcY) the matching
+        /// offset inside the rectangle and w x h the visible size.
+        /// </summary>
+        private bool ClipRect(ref int x, ref int y, int width, int height, out int srcX, out int srcY, out int w, out int h)
         {
-            for (int yi = 0; yi < image.Height; yi++)
-            {
-                int destOffset = ((y + yi) * (int)Bitmap.Width + x);
-                int srcOffset = yi * (int)image.Width;
-                int count = (int)image.Width;
+            srcX = 0;
+            srcY = 0;
+            w = width;
+            h = height;
 
-                MemoryOperations.Copy(Bitmap.RawData, destOffset, image.RawData, srcOffset, count);
+            if (width <= 0 || height <= 0 || x >= Width || y >= Height || x <= -width || y <= -height)
+            {
+                return false;
+            }
+
+            if (x < 0)
+            {
+                srcX = -x;
+                w += x;
+                x = 0;
+            }
+
+            if (y < 0)
+            {
+                srcY = -y;
+                h += y;
+                y = 0;
+            }
+
+            if (w > Width - x)
+            {
+                w = Width - x;
+            }
+
+            if (h > Height - y)
+            {
+                h = Height - y;
+            }
+
+            return w > 0 && h > 0;
+        }
+
+        /// <summary>
+        /// Validates an image and clips it against this bitmap (see ClipRect).
+        /// </summary>
+        private bool ClipImage(Image image, ref int x, ref int y, out int[] src, out int srcX, out int srcY, out int w, out int h)
+        {
+            src = image != null ? image.RawData : null;
+
+            if (src == null || src.Length < image.Width * image.Height)
+            {
+                srcX = 0;
+                srcY = 0;
+                w = 0;
+                h = 0;
+                return false;
+            }
+
+            return ClipRect(ref x, ref y, image.Width, image.Height, out srcX, out srcY, out w, out h);
+        }
+
+        public void DrawImage(Image image, int x, int y)
+        {
+            int[] src;
+            int srcX, srcY, w, h;
+
+            if (!ClipImage(image, ref x, ref y, out src, out srcX, out srcY, out w, out h))
+            {
+                return;
+            }
+
+            int srcWidth = image.Width;
+
+            for (int yi = 0; yi < h; yi++)
+            {
+                int destOffset = (y + yi) * Width + x;
+                int srcOffset = (srcY + yi) * srcWidth + srcX;
+
+                // The gen2 copy helper took the destination first; Span.CopyTo is source.CopyTo(destination).
+                src.AsSpan(srcOffset, w).CopyTo(Pixels.AsSpan(destOffset, w));
             }
         }
 
         public Bitmap ExtractImage(int srcX, int srcY, int width, int height)
         {
-            Bitmap bmp = new((uint)width, (uint)height, ColorDepth.ColorDepth32);
+            width = Math.Max(0, width);
+            height = Math.Max(0, height);
 
-            for (int yi = 0; yi < height; yi++)
+            Bitmap bmp = new(width, height, ColorDepth.ColorDepth32);
+
+            int x = srcX;
+            int y = srcY;
+            int offsetX, offsetY, w, h;
+
+            if (ClipRect(ref x, ref y, width, height, out offsetX, out offsetY, out w, out h))
             {
-                int destOffset = yi * width;
-                int srcOffset = ((srcY + yi) * (int)Bitmap.Width + srcX);
-                int count = width;
+                int[] dest = bmp.RawData;
 
-                MemoryOperations.Copy(bmp.RawData, destOffset, Bitmap.RawData, srcOffset, count);
+                for (int yi = 0; yi < h; yi++)
+                {
+                    int destOffset = (offsetY + yi) * width + offsetX;
+                    int srcOffset = (y + yi) * Width + x;
+
+                    Pixels.AsSpan(srcOffset, w).CopyTo(dest.AsSpan(destOffset, w));
+                }
             }
 
             return bmp;
         }
 
+        /// <summary>
+        /// Blends straight-alpha ARGB source rows over destination rows, in place
+        /// (bpl = bytes per line). Formerly the X# SSE2 plug AlphaBltSSE2ASM, now plain C#.
+        /// </summary>
         public static void AlphaBlendSSE(uint *dest, int dbpl, uint* src, int sbpl, int width, int height)
         {
-            // PLUGGED
+            if (dest == null || src == null || width <= 0 || height <= 0)
+            {
+                return;
+            }
+
+            for (int row = 0; row < height; row++)
+            {
+                BlendRow(new Span<int>((byte*)dest + (long)row * dbpl, width), new ReadOnlySpan<int>((byte*)src + (long)row * sbpl, width));
+            }
         }
 
-        public static void AlphaBltSSE2(byte* dst, byte* src, int w, int h, int wmul4)
-        {
-        }
-
+        /// <summary>
+        /// Sets the alpha byte of every non fully transparent pixel to a (bpl = bytes per line).
+        /// Formerly the X# plug BrightnessASM, now plain C#.
+        /// </summary>
         public static void OpacitySSE(uint* pixelPtr, int w, int h, int bpl, uint a)
         {
-            // PLUGGED
+            if (pixelPtr == null || w <= 0 || h <= 0)
+            {
+                return;
+            }
+
+            for (int row = 0; row < h; row++)
+            {
+                ApplyOpacity(new Span<int>((byte*)pixelPtr + (long)row * bpl, w), (byte)a);
+            }
         }
 
-        public void DrawImageAlpha(Bitmap image, int x, int y, byte alpha = 0xFF)
+        /// <summary>
+        /// Blends one row of straight-alpha ARGB source pixels over the destination, in place.
+        /// a == 255 copies, a == 0 skips, otherwise colour = (src * a + dst * (255 - a)) >> 8
+        /// and alpha = min(255, dstA + a * a / 255) (gen2 AlphaBltSSE2ASM alpha word: the result
+        /// stays opaque over opaque buffers and keeps transparency over Color.Transparent ones).
+        /// </summary>
+        private static void BlendRow(Span<int> dest, ReadOnlySpan<int> src)
         {
-            if (image.RawData.Length > Bitmap.RawData.Length)
-            {
-                return;
-            }
+            int count = Math.Min(dest.Length, src.Length);
 
-            if ((y + image.Height > Bitmap.Height || y < 0) && (x + image.Width < Bitmap.Width || x > 0))
+            for (int i = 0; i < count; i++)
             {
-                return;
-            }
+                uint sp = (uint)src[i];
+                uint a = sp >> 24;
 
-            Bitmap tmp = ExtractImage(x, y, (int)image.Width, (int)image.Height);
-            if (tmp.Width == 0) return;
-
-            fixed (int* bgBitmap = tmp.RawData)
-            fixed (int* fgBitmap = image.RawData)
-            {
-                if (alpha < 0xFF)
+                if (a == 0xFF)
                 {
-                    OpacitySSE((uint*)fgBitmap, (int)image.Width, (int)image.Height, (int)image.Width * 4, alpha);
+                    dest[i] = (int)sp;
+                    continue;
                 }
 
-                // AlphaBltSSE2((byte*)bgBitmap, (byte*)fgBitmap, w, (int)image.Height, wmul4);
-                AlphaBlendSSE((uint*)bgBitmap, (int)image.Width * 4, (uint*)fgBitmap, (int)image.Width * 4, (int)image.Width, (int)image.Height);
-            }
+                if (a == 0)
+                {
+                    continue;
+                }
 
-            DrawImage(tmp, x, y);
+                uint dp = (uint)dest[i];
+                uint ia = 255 - a;
+                uint rb = (((sp & 0x00FF00FF) * a + (dp & 0x00FF00FF) * ia) >> 8) & 0x00FF00FF;
+                uint g = (((sp & 0x0000FF00) * a + (dp & 0x0000FF00) * ia) >> 8) & 0x0000FF00;
+                uint oa = Math.Min(255u, (dp >> 24) + (a * a + 127) / 255);
+
+                dest[i] = (int)((oa << 24) | rb | g);
+            }
         }
 
-        public void DrawImageStretchAlpha(Bitmap image, Rectangle sourceRect, Rectangle destRect)
+        /// <summary>
+        /// gen2 OpacitySSE semantics: rewrites in place the alpha byte of every pixel whose alpha is not 0.
+        /// </summary>
+        private static void ApplyOpacity(Span<int> pixels, byte alpha)
         {
+            int a = alpha << 24;
+
+            for (int i = 0; i < pixels.Length; i++)
+            {
+                int p = pixels[i];
+
+                if (((uint)p >> 24) != 0)
+                {
+                    pixels[i] = (p & 0x00FFFFFF) | a;
+                }
+            }
+        }
+
+        public void DrawImageAlpha(Image image, int x, int y, byte alpha = 0xFF)
+        {
+            int[] src;
+            int srcX, srcY, w, h;
+
+            if (!ClipImage(image, ref x, ref y, out src, out srcX, out srcY, out w, out h))
+            {
+                return;
+            }
+
+            if (alpha < 0xFF)
+            {
+                // As in gen2, this permanently mutates the source image.
+                ApplyOpacity(src, alpha);
+            }
+
+            int srcWidth = image.Width;
+
+            for (int yi = 0; yi < h; yi++)
+            {
+                int destOffset = (y + yi) * Width + x;
+                int srcOffset = (srcY + yi) * srcWidth + srcX;
+
+                BlendRow(Pixels.AsSpan(destOffset, w), src.AsSpan(srcOffset, w));
+            }
+        }
+
+        public void DrawImageStretchAlpha(Image image, Rectangle sourceRect, Rectangle destRect)
+        {
+            if (image == null || sourceRect == null || destRect == null)
+            {
+                return;
+            }
+
+            int[] src = image.RawData;
+            int srcWidth = image.Width;
+            int srcHeight = image.Height;
+
+            if (src == null || src.Length < srcWidth * srcHeight || destRect.Width <= 0 || destRect.Height <= 0)
+            {
+                return;
+            }
+
             float scaleX = (float)sourceRect.Width / destRect.Width;
             float scaleY = (float)sourceRect.Height / destRect.Height;
 
-            for (int xi = 0; xi < destRect.Width; xi++)
+            // Only walk the destination pixels that land inside this bitmap.
+            int xStart = Math.Max(0, -destRect.Left);
+            int xEnd = Math.Min(destRect.Width, Width - destRect.Left);
+            int yStart = Math.Max(0, -destRect.Top);
+            int yEnd = Math.Min(destRect.Height, Height - destRect.Top);
+
+            for (int yi = yStart; yi < yEnd; yi++)
             {
-                for (int yi = 0; yi < destRect.Height; yi++)
+                int srcY = (int)(yi * scaleY) + sourceRect.Top;
+                srcY = Math.Min(srcY, sourceRect.Bottom - 1);
+
+                if ((uint)srcY >= (uint)srcHeight)
+                {
+                    continue;
+                }
+
+                int destY = destRect.Top + yi;
+
+                for (int xi = xStart; xi < xEnd; xi++)
                 {
                     int srcX = (int)(xi * scaleX) + sourceRect.Left;
-                    int srcY = (int)(yi * scaleY) + sourceRect.Top;
-
                     srcX = Math.Min(srcX, sourceRect.Right - 1);
-                    srcY = Math.Min(srcY, sourceRect.Bottom - 1);
 
-                    int color = image.RawData[srcX + srcY * image.Width];
-                    SetPixelAlpha(destRect.Left + xi, destRect.Top + yi, color);
+                    if ((uint)srcX < (uint)srcWidth)
+                    {
+                        SetPixelAlpha(destRect.Left + xi, destY, src[srcX + srcY * srcWidth]);
+                    }
                 }
             }
         }
@@ -449,7 +712,7 @@ namespace Aura_OS.System.Graphics.UI.GUI
                     {
                         int drawX = x0 + x;
                         int drawY = y0 + y;
-                        if (drawX >= 0 && drawX < Width && drawY >= 0 && drawY < Height)
+                        if ((uint)drawX < (uint)Width && (uint)drawY < (uint)Height)
                         {
                             SetPixelAlpha(drawX, drawY, color);
                         }

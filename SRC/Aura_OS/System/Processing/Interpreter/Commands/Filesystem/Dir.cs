@@ -4,6 +4,7 @@
 * PROGRAMMER(S):    John Welsh <djlw78@gmail.com>
 */
 
+using Aura_OS.System.Filesystem;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -25,8 +26,16 @@ namespace Aura_OS.System.Processing.Interpreter.Commands.Filesystem
         /// </summary>
         public override ReturnInfo Execute()
         {
-            DirectoryListing.DispDirectories(Kernel.CurrentDirectory);
-            DirectoryListing.DispFiles(Kernel.CurrentDirectory);
+            try
+            {
+                DirectoryListing.DispDirectories(Kernel.CurrentDirectory);
+                DirectoryListing.DispFiles(Kernel.CurrentDirectory);
+            }
+            catch (Exception ex)
+            {
+                Console.ForegroundColor = ConsoleColor.White;
+                return new ReturnInfo(this, ReturnCode.ERROR, ex.Message);
+            }
             Console.WriteLine();
             return new ReturnInfo(this, ReturnCode.OK);
         }
@@ -36,38 +45,52 @@ namespace Aura_OS.System.Processing.Interpreter.Commands.Filesystem
         /// </summary>
         public override ReturnInfo Execute(List<string> arguments)
         {
-            string directory;
-
-            if (!arguments[0].StartsWith("-"))
+            if (arguments.Count < 1)
             {
-                directory = arguments[0];
-
-                if (Directory.Exists(Kernel.CurrentDirectory + directory))
-                {
-                    DirectoryListing.DispDirectories(Kernel.CurrentDirectory + directory);
-                    DirectoryListing.DispFiles(Kernel.CurrentDirectory + directory);
-                }
+                return Execute();
             }
 
-            else
+            string directory;
+
+            try
             {
-                if (arguments[0].Equals("-a"))
+                if (!arguments[0].StartsWith("-"))
                 {
-                    DirectoryListing.DispDirectories(Kernel.CurrentDirectory);
-                    DirectoryListing.DispHiddenFiles(Kernel.CurrentDirectory);
+                    directory = AuraPath.Resolve(arguments[0]);
 
-                    if (arguments.Count == 2)
+                    if (!Directory.Exists(directory))
                     {
-                        directory = arguments[1];
-
-                        DirectoryListing.DispDirectories(Kernel.CurrentDirectory + directory);
-                        DirectoryListing.DispHiddenFiles(Kernel.CurrentDirectory + directory);
+                        return new ReturnInfo(this, ReturnCode.ERROR, "This directory doesn't exist!");
                     }
+
+                    DirectoryListing.DispDirectories(directory);
+                    DirectoryListing.DispFiles(directory);
                 }
+
                 else
                 {
-                    return new ReturnInfo(this, ReturnCode.ERROR_ARG);
+                    if (arguments[0].Equals("-a"))
+                    {
+                        directory = arguments.Count >= 2 ? AuraPath.Resolve(arguments[1]) : Kernel.CurrentDirectory;
+
+                        if (!Directory.Exists(directory))
+                        {
+                            return new ReturnInfo(this, ReturnCode.ERROR, "This directory doesn't exist!");
+                        }
+
+                        DirectoryListing.DispDirectories(directory);
+                        DirectoryListing.DispHiddenFiles(directory);
+                    }
+                    else
+                    {
+                        return new ReturnInfo(this, ReturnCode.ERROR_ARG);
+                    }
                 }
+            }
+            catch (Exception ex)
+            {
+                Console.ForegroundColor = ConsoleColor.White;
+                return new ReturnInfo(this, ReturnCode.ERROR, ex.Message);
             }
 
             Console.WriteLine();
@@ -92,8 +115,11 @@ namespace Aura_OS.System.Processing.Interpreter.Commands.Filesystem
             /// <param name="directory"></param>
             public static void DispDirectories(string directory)
             {
-                foreach (string dir in Directory.GetDirectories(directory))
+                // gen3 returns full paths ("/0/Users"); listing "/" gives the volumes ("0", "1").
+                foreach (string entry in Directory.GetDirectories(directory))
                 {
+                    string dir = Path.GetFileName(entry);
+
                     if (!dir.StartsWith("."))
                     {
                         Console.ForegroundColor = ConsoleColor.Yellow;
@@ -118,8 +144,9 @@ namespace Aura_OS.System.Processing.Interpreter.Commands.Filesystem
             /// <param name="directory"></param>
             public static void DispFiles(string directory)
             {
-                foreach (string file in Directory.GetFiles(directory))
+                foreach (string entry in Directory.GetFiles(directory))
                 {
+                    string file = Path.GetFileName(entry);
                     Char formatDot = '.';
                     string[] ext = file.Split(formatDot);
                     string lastext = ext[ext.Length - 1];
@@ -155,8 +182,9 @@ namespace Aura_OS.System.Processing.Interpreter.Commands.Filesystem
             /// <param name="directory"></param>
             public static void DispHiddenFiles(string directory)
             {
-                foreach (string file in Directory.GetFiles(directory))
+                foreach (string entry in Directory.GetFiles(directory))
                 {
+                    string file = Path.GetFileName(entry);
                     Char formatDot = '.';
                     string[] ext = file.Split(formatDot);
                     string lastext = ext[ext.Length - 1];

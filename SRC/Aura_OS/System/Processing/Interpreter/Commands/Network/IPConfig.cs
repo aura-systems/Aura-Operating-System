@@ -6,12 +6,9 @@
 
 
 using Aura_OS.System.Network;
-using Aura_OS.System.Processing.Processes;
-using Cosmos.HAL;
-using Cosmos.System.Network;
-using Cosmos.System.Network.Config;
-using Cosmos.System.Network.IPv4;
-using Cosmos.System.Network.IPv4.UDP.DHCP;
+using Cosmos.Kernel.System.Network;
+using Cosmos.Kernel.System.Network.Config;
+using Cosmos.Kernel.System.Network.IPv4;
 using System;
 using System.Collections.Generic;
 
@@ -32,22 +29,26 @@ namespace Aura_OS.System.Processing.Interpreter.Commands.Network
         /// </summary>
         public override ReturnInfo Execute()
         {
-            if (NetworkStack.ConfigEmpty())
+            if (!NetworkHelper.IsConfigured)
             {
                 Console.WriteLine("No network configuration detected! Use ipconfig /help");
             }
-            foreach (NetworkConfig config in NetworkConfiguration.NetworkConfigs)
+
+            for (int i = 0; i < NetworkManager.DeviceCount; i++)
             {
-                switch (config.Device.CardType)
+                NetworkAdapter adapter = NetworkManager.GetAdapter(i);
+                IPConfig config = adapter.IPConfig;
+
+                // GEN3-GAP(dhcp): a DHCP timeout/release can leave a 0.0.0.0 config behind, it counts as none.
+                if (config is null || config.Address.IsZero)
                 {
-                    case CardType.Ethernet:
-                        Console.Write("Ethernet Card : " + config.Device.NameID + " - " + config.Device.Name);
-                        break;
-                    case CardType.Wireless:
-                        Console.Write("Wireless Card : " + config.Device.NameID + " - " + config.Device.Name);
-                        break;
+                    continue;
                 }
-                if (NetworkConfiguration.CurrentNetworkConfig.Device == config.Device)
+
+                // GEN3-GAP(nic-names): no interface names nor card types; both gen3 drivers are Ethernet.
+                Console.Write("Ethernet Card : " + NetworkHelper.AliasOf(adapter) + " - " + adapter.Name);
+
+                if (adapter == NetworkManager.Primary)
                 {
                     Console.WriteLine(" (current)");
                 }
@@ -56,14 +57,14 @@ namespace Aura_OS.System.Processing.Interpreter.Commands.Network
                     Console.WriteLine();
                 }
 
-                Console.WriteLine("MAC Address          : " + config.Device.MACAddress.ToString());
-                Console.WriteLine("IP Address           : " + config.IPConfig.IPAddress.ToString());
-                Console.WriteLine("Subnet mask          : " + config.IPConfig.SubnetMask.ToString());
-                Console.WriteLine("Default Gateway      : " + config.IPConfig.DefaultGateway.ToString());
+                Console.WriteLine("MAC Address          : " + adapter.MacAddress?.ToString());
+                Console.WriteLine("IP Address           : " + config.Address.ToString());
+                Console.WriteLine("Subnet mask          : " + config.SubnetMask.ToString());
+                Console.WriteLine("Default Gateway      : " + config.DefaultGateway.ToString());
                 Console.WriteLine("DNS Nameservers      : ");
-                foreach (Address dnsnameserver in DNSConfig.DNSNameservers)
+                for (int j = 0; j < DnsConfig.Nameservers.Count; j++)
                 {
-                    Console.WriteLine("                       " + dnsnameserver.ToString());
+                    Console.WriteLine("                       " + DnsConfig.Nameservers[j].ToString());
                 }
             }
 
@@ -76,6 +77,11 @@ namespace Aura_OS.System.Processing.Interpreter.Commands.Network
         /// <param name="arguments">Arguments</param>
         public override ReturnInfo Execute(List<string> arguments)
         {
+            if (arguments.Count == 0)
+            {
+                return Execute();
+            }
+
             if (arguments[0] == "/release")
             {
                 Dhcp.Release();
@@ -88,90 +94,122 @@ namespace Aura_OS.System.Processing.Interpreter.Commands.Network
                 }
                 else
                 {
-                    new ReturnInfo(this, ReturnCode.ERROR, "DHCP Discover failed. Can't apply dynamic IPv4 address.");
+                    return new ReturnInfo(this, ReturnCode.ERROR, "DHCP Discover failed. Can't apply dynamic IPv4 address.");
                 }
             }
             else if (arguments[0] == "/listnic")
             {
-                foreach (var device in NetworkDevice.Devices)
+                if (NetworkManager.DeviceCount == 0)
                 {
-                    switch (device.CardType)
-                    {
-                        case CardType.Ethernet:
-                            Console.WriteLine("Ethernet Card - " + device.NameID + " - " + device.Name + " (" + device.MACAddress + ")");
-                            break;
-                        case CardType.Wireless:
-                            Console.WriteLine("Wireless Card - " + device.NameID + " - " + device.Name + " (" + device.MACAddress + ")");
-                            break;
-                    }
+                    Console.WriteLine("No network device found.");
+                }
+
+                for (int i = 0; i < NetworkManager.DeviceCount; i++)
+                {
+                    NetworkAdapter adapter = NetworkManager.GetAdapter(i);
+
+                    // GEN3-GAP(nic-names): eth{Index} aliases, no card type (both gen3 drivers are Ethernet).
+                    Console.WriteLine("Ethernet Card - " + NetworkHelper.AliasOf(adapter) + " - " + adapter.Name
+                        + " (" + adapter.MacAddress?.ToString() + ")"
+                        + (adapter.LinkUp ? " - link up" : " - link down")
+                        + (adapter == NetworkManager.Primary ? " (current)" : ""));
                 }
             }
             else if (arguments[0] == "/set")
             {
-                if (arguments.Count == 3 || arguments.Count == 4) // ipconfig /set eth0 192.168.1.2/24 {gw}
+                if (arguments.Count != 3 && arguments.Count != 4) // ipconfig /set eth0 192.168.1.2/24 {gw|null}
                 {
-                    string[] adrnetwork = arguments[2].Split('/');
-                    Address ip = Address.Parse(adrnetwork[0]);
-                    NetworkDevice nic = NetworkDevice.GetDeviceByName(arguments[1]);
-                    Address gw = null;
-                    if (arguments.Count == 4)
-                    {
-                        gw = Address.Parse(arguments[3]);
-                    }
+                    return new ReturnInfo(this, ReturnCode.ERROR, "Usage : ipconfig /set {device} {IPv4/CIDR} [Gateway|null]");
+                }
 
-                    int cidr;
+                NetworkAdapter nic = NetworkHelper.FindAdapter(arguments[1]);
+                if (!nic.IsValid)
+                {
+                    return new ReturnInfo(this, ReturnCode.ERROR, "Couldn't find network device: " + arguments[1] + " (see ipconfig /listnic)");
+                }
+
+                string[] adrnetwork = arguments[2].Split('/');
+                if (adrnetwork.Length != 2)
+                {
+                    return new ReturnInfo(this, ReturnCode.ERROR, "Can't parse IP address, use the IPv4/CIDR format (e.g. 192.168.1.2/24).");
+                }
+
+                int cidr;
+                if (!int.TryParse(adrnetwork[1], out cidr) || cidr < 1 || cidr > 32)
+                {
+                    return new ReturnInfo(this, ReturnCode.ERROR, "Invalid CIDR: " + adrnetwork[1] + " (expected 1 to 32).");
+                }
+
+                Address4 ip = Address4.Parse(adrnetwork[0], AddressNumericStyle.Dec);
+                Address4 subnet = Address4.CIDRToAddress(cidr);
+
+                // No gateway (or "null"): 0.0.0.0, only on-link traffic works.
+                Address4 gw = Address4.Zero;
+                if (arguments.Count == 4 && arguments[3] != "null")
+                {
+                    gw = Address4.Parse(arguments[3], AddressNumericStyle.Dec);
+                }
+
+                if (ip is null || subnet is null || gw is null)
+                {
+                    return new ReturnInfo(this, ReturnCode.ERROR, "Can't parse IP addresses (make sure they are well formated).");
+                }
+
+                bool applied;
+                try
+                {
+                    applied = IPConfig.Enable(nic, ip, subnet, gw);
+                }
+                catch (Exception ex)
+                {
+                    // GEN3-GAP(dhcp): ArgumentException when another adapter already holds this address
+                    // (duplicate key in the stack's address map).
+                    return new ReturnInfo(this, ReturnCode.ERROR, "Can't apply the configuration: " + ex.Message);
+                }
+
+                if (!applied)
+                {
+                    return new ReturnInfo(this, ReturnCode.ERROR, "Can't apply the configuration to " + arguments[1] + ".");
+                }
+
+                // GEN3-GAP(tcp-primary): TCP always sources from NetworkManager.Primary, make the configured card primary.
+                if (nic != NetworkManager.Primary)
+                {
                     try
                     {
-                        cidr = int.Parse(adrnetwork[1]);
+                        NetworkManager.Primary = nic;
                     }
-                    catch (Exception ex)
+                    catch (Exception)
                     {
-                        return new ReturnInfo(this, ReturnCode.ERROR, ex.Message);
-                    }
-                    Address subnet = Address.CIDRToAddress(cidr);
-
-                    if (nic == null)
-                    {
-                        return new ReturnInfo(this, ReturnCode.ERROR, "Couldn't find network device: " + arguments[1]);
-                    }
-
-                    if (ip != null && subnet != null && gw != null)
-                    {
-                        IPConfig.Enable(nic, ip, subnet, gw);
-                        Console.WriteLine("Config OK!");
-                        Kernel.NetworkConnected = true;
-                    }
-                    else if (ip != null && subnet != null)
-                    {
-                        IPConfig.Enable(nic, ip, subnet, ip);
-                        Console.WriteLine("Config OK!");
-                        Kernel.NetworkConnected = true;
-                    }
-                    else
-                    {
-                        return new ReturnInfo(this, ReturnCode.ERROR, "Can't parse IP addresses (make sure they are well formated).");
+                        // Invalid handle or network disabled: keep the current primary.
                     }
                 }
-                else
-                {
-                    return new ReturnInfo(this, ReturnCode.ERROR, "Usage : ipconfig /set {device} {IPv4/CIDR} {Gateway|null}");
-                }
+
+                Console.WriteLine("Config OK!");
+                Kernel.NetworkConnected = true;
             }
             else if (arguments[0] == "/nameserver")
             {
+                if (arguments.Count != 3 || (arguments[1] != "-add" && arguments[1] != "-rem"))
+                {
+                    return new ReturnInfo(this, ReturnCode.ERROR, "Usage : ipconfig /nameserver {-add|-rem} {IP}");
+                }
+
+                Address nameserver = Address.Parse(arguments[2]);
+                if (nameserver is null)
+                {
+                    return new ReturnInfo(this, ReturnCode.ERROR, "Can't parse IP address: " + arguments[2]);
+                }
+
                 if (arguments[1] == "-add")
                 {
-                    DNSConfig.Add(Address.Parse(arguments[2]));
-                    Console.WriteLine(arguments[2] + " has been added to nameservers.");
-                }
-                else if (arguments[1] == "-rem")
-                {
-                    DNSConfig.Remove(Address.Parse(arguments[2]));
-                    Console.WriteLine(arguments[2] + " has been removed from nameservers list.");
+                    DnsConfig.Add(nameserver);
+                    Console.WriteLine(nameserver.ToString() + " has been added to nameservers.");
                 }
                 else
                 {
-                    return new ReturnInfo(this, ReturnCode.ERROR, "Usage : ipconfig /nameserver {add|remove} {IP}");
+                    DnsConfig.Remove(nameserver);
+                    Console.WriteLine(nameserver.ToString() + " has been removed from nameservers list.");
                 }
             }
             else
@@ -192,10 +230,11 @@ namespace Aura_OS.System.Processing.Interpreter.Commands.Network
             Console.WriteLine("- ipconfig /release      Tell the DHCP server to make the IP address available");
             Console.WriteLine("- ipconfig /set          Manually set an IP Address");
             Console.WriteLine("     Usage:");
-            Console.WriteLine("     - ipconfig /set {device} {IPv4} {Subnet} {Gateway}");
+            Console.WriteLine("     - ipconfig /set {device} {IPv4/CIDR} [Gateway|null]");
+            Console.WriteLine("     - {device} is eth0, eth1... (see /listnic), e.g. ipconfig /set eth0 192.168.1.2/24 192.168.1.254");
             Console.WriteLine("- ipconfig /nameserver   Manually set an DNS server");
             Console.WriteLine("     Usage:");
-            Console.WriteLine("     - ipconfig /nameserver {-add|-rem} {IPv4}");
+            Console.WriteLine("     - ipconfig /nameserver {-add|-rem} {IP}");
         }
     }
 }

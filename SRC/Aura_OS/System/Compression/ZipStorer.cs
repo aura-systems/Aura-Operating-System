@@ -1,12 +1,15 @@
 ﻿// ZipStorer, by Jaime Olivares
 // Website: http://github.com/jaime-olivares/zipstorer
 
+// Inside `namespace Aura_OS.System.*` the bare identifier `System` binds to `Aura_OS.System`:
+// never write `System.X` in the body, use these usings.
 using Ionic.Zlib;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
 
-namespace System.IO.Compression
+namespace Aura_OS.System.Compression
 {
     /// <summary>
     /// Unique class for compression/decompression file. Represents a Zip file.
@@ -213,7 +216,7 @@ namespace System.IO.Compression
             if (!_leaveOpen)
                 zip.Close();
 
-            throw new System.IO.InvalidDataException();
+            throw new InvalidDataException();
         }
 
         /// <summary>
@@ -228,10 +231,34 @@ namespace System.IO.Compression
             if (Access == FileAccess.Read)
                 throw new InvalidOperationException("Writing is not alowed");
 
-            using (var stream = new FileStream(_pathname, FileMode.Open, FileAccess.Read))
+            // GEN3-GAP(fat-time): FAT timestamps are always 0 (1970) and a DOS date cannot hold a year
+            // before 1980, so fall back to the current time.
+            DateTime modTime = File.GetLastWriteTime(_pathname);
+            if (modTime.Year < 1980)
+                modTime = DateTime.Now;
+            if (modTime.Year < 1980)
+                modTime = new DateTime(1980, 1, 1);
+
+            // GEN3-GAP(finally): `using` does not dispose when an exception unwinds, close explicitly.
+            var stream = new FileStream(_pathname, FileMode.Open, FileAccess.Read);
+            ZipFileEntry entry = null;
+            Exception error = null;
+
+            try
             {
-                return this.AddStream(_method, _filenameInZip, stream, File.GetLastWriteTime(_pathname), _comment);
+                entry = this.AddStream(_method, _filenameInZip, stream, modTime, _comment);
             }
+            catch (Exception e)
+            {
+                error = e;
+            }
+
+            stream.Dispose();
+
+            if (error != null)
+                throw error;
+
+            return entry;
         }
 
         /// <summary>
@@ -332,33 +359,61 @@ namespace System.IO.Compression
         /// <remarks>This is a required step, unless automatic dispose is used</remarks>
         public void Close()
         {
-            if (this.Access != FileAccess.Read)
+            // Already closed: a null dereference halts the gen3 kernel.
+            if (this.ZipFileStream == null)
+                return;
+
+            Exception error = null;
+
+            try
             {
-                uint centralOffset = (uint)this.ZipFileStream.Position;
-                uint centralSize = 0;
-
-                if (this.CentralDirImage != null)
-                    this.ZipFileStream.Write(CentralDirImage, 0, CentralDirImage.Length);
-
-                for (int i = 0; i < Files.Count; i++)
+                if (this.Access != FileAccess.Read)
                 {
-                    long pos = this.ZipFileStream.Position;
-                    this.WriteCentralDirRecord(Files[i]);
-                    centralSize += (uint)(this.ZipFileStream.Position - pos);
+                    uint centralOffset = (uint)this.ZipFileStream.Position;
+                    uint centralSize = 0;
+
+                    if (this.CentralDirImage != null)
+                        this.ZipFileStream.Write(CentralDirImage, 0, CentralDirImage.Length);
+
+                    for (int i = 0; i < Files.Count; i++)
+                    {
+                        long pos = this.ZipFileStream.Position;
+                        this.WriteCentralDirRecord(Files[i]);
+                        centralSize += (uint)(this.ZipFileStream.Position - pos);
+                    }
+
+                    if (this.CentralDirImage != null)
+                        this.WriteEndRecord(centralSize + (uint)CentralDirImage.Length, centralOffset);
+                    else
+                        this.WriteEndRecord(centralSize, centralOffset);
                 }
 
-                if (this.CentralDirImage != null)
-                    this.WriteEndRecord(centralSize + (uint)CentralDirImage.Length, centralOffset);
-                else
-                    this.WriteEndRecord(centralSize, centralOffset);
+                if (!this.leaveOpen)
+                    this.ZipFileStream.Flush();
+            }
+            catch (Exception e)
+            {
+                error = e;
             }
 
-            if (this.ZipFileStream != null && !this.leaveOpen)
+            // GEN3-GAP(finally)/GEN3-GAP(finalizers): release the file descriptor on every path.
+            if (!this.leaveOpen)
             {
-                this.ZipFileStream.Flush();
-                this.ZipFileStream.Dispose();
+                try
+                {
+                    this.ZipFileStream.Dispose();
+                }
+                catch (Exception e)
+                {
+                    if (error == null)
+                        error = e;
+                }
+
                 this.ZipFileStream = null;
             }
+
+            if (error != null)
+                throw error;
         }
 
         /// <summary>
@@ -442,11 +497,34 @@ namespace System.IO.Compression
             if (Directory.Exists(_filename))
                 return true;
 
-            bool result;
-            using (var output = new FileStream(_filename, FileMode.Create, FileAccess.Write))
+            // GEN3-GAP(finally): `using` does not dispose when an exception unwinds, close explicitly.
+            // bufferSize 1 disables the FileStream buffer, so Dispose has nothing left to flush and
+            // always releases the descriptor (a failing flush inside Dispose would skip its finally).
+            bool result = false;
+            Exception error = null;
+            var output = new FileStream(_filename, FileMode.Create, FileAccess.Write, FileShare.Read, 1);
+
+            try
             {
                 result = this.ExtractFile(_zfe, output);
             }
+            catch (Exception e)
+            {
+                error = e;
+            }
+
+            try
+            {
+                output.Dispose();
+            }
+            catch (Exception e)
+            {
+                if (error == null)
+                    error = e;
+            }
+
+            if (error != null)
+                throw error;
 
             return result;
         }
@@ -499,6 +577,16 @@ namespace System.IO.Compression
             while (bytesPending > 0)
             {
                 int bytesRead = inStream.Read(buffer, 0, (int)Math.Min(bytesPending, buffer.Length));
+
+                // Truncated or corrupt archive: stop instead of spinning forever on the UI thread.
+                if (bytesRead <= 0)
+                {
+                    if (_zfe.Method == Compression.Deflate)
+                        inStream.Dispose();
+
+                    return false;
+                }
+
                 _stream.Write(buffer, 0, bytesRead);
 
                 bytesPending -= (uint)bytesRead;
@@ -544,19 +632,23 @@ namespace System.IO.Compression
         /// <remarks>This method only works for storage of type FileStream</remarks>
         public static bool RemoveEntries(ref ZipStorer _zip, List<ZipFileEntry> _zfes)
         {
-            if (!(_zip.ZipFileStream is FileStream))
+            if (!(_zip.ZipFileStream is FileStream) || string.IsNullOrEmpty(_zip.FileName))
                 throw new InvalidOperationException("RemoveEntries is allowed just over streams of type FileStream");
 
             //Get full list of entries
             var fullList = _zip.ReadCentralDir();
 
             //In order to delete we need to create a copy of the zip file excluding the selected items
-            var tempZipName = Path.GetTempFileName();
-            var tempEntryName = Path.GetTempFileName();
+            // GEN3-GAP(tmp): Path.GetTempFileName is unplugged and there is no /tmp, so the temporary
+            // files sit next to the archive, on the same volume.
+            var tempZipName = _zip.FileName + ".tmp";
+            var tempEntryName = _zip.FileName + ".entry.tmp";
+            ZipStorer tempZip = null;
+            bool result = true;
 
             try
             {
-                var tempZip = ZipStorer.Create(tempZipName, string.Empty);
+                tempZip = ZipStorer.Create(tempZipName, string.Empty);
 
                 foreach (ZipFileEntry zfe in fullList)
                 {
@@ -571,6 +663,7 @@ namespace System.IO.Compression
 
                 _zip.Close();
                 tempZip.Close();
+                tempZip = null;
 
                 File.Delete(_zip.FileName);
                 File.Move(tempZipName, _zip.FileName);
@@ -579,16 +672,34 @@ namespace System.IO.Compression
             }
             catch
             {
-                return false;
+                result = false;
             }
-            finally
+
+            // GEN3-GAP(finally): this cleanup used to sit in a finally block, which gen3 skips when an
+            // exception unwinds.
+            if (tempZip != null)
+            {
+                try
+                {
+                    tempZip.Close();
+                }
+                catch (Exception)
+                {
+                }
+            }
+
+            try
             {
                 if (File.Exists(tempZipName))
                     File.Delete(tempZipName);
                 if (File.Exists(tempEntryName))
                     File.Delete(tempEntryName);
             }
-            return true;
+            catch (Exception)
+            {
+            }
+
+            return result;
         }
         #endregion
 
