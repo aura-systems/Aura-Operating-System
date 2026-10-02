@@ -6,7 +6,12 @@
   </picture>
 </p>
 
-![Build Status](https://github.com/aura-systems/Aura-Operating-System/workflows/.NET%20Core/badge.svg)[![Issues](https://img.shields.io/github/issues/aura-systems/Aura-Operating-System.svg)](https://github.com/aura-systems/Aura-Operating-System/issues)[![Pull requests](https://img.shields.io/github/issues-pr/aura-systems/Aura-Operating-System.svg)](https://github.com/aura-systems/Aura-Operating-System/pulls)[![Discord](https://img.shields.io/badge/join%20us%20on-discord-blue.svg)](https://discord.gg/DFbAtVA)
+<p align="center">
+  <a href="https://github.com/aura-systems/Aura-Operating-System/workflows/.NET%20Core"><img src="https://github.com/aura-systems/Aura-Operating-System/workflows/.NET%20Core/badge.svg" alt="Build Status" /></a>
+  <a href="https://github.com/aura-systems/Aura-Operating-System/issues"><img src="https://img.shields.io/github/issues/aura-systems/Aura-Operating-System.svg" alt="Issues" /></a>
+  <a href="https://github.com/aura-systems/Aura-Operating-System/pulls"><img src="https://img.shields.io/github/issues-pr/aura-systems/Aura-Operating-System.svg" alt="Pull requests" /></a>
+  <a href="https://discord.gg/DFbAtVA"><img src="https://img.shields.io/badge/join%20us%20on-discord-blue.svg" alt="Discord" /></a>
+</p>
 
 English | [Chinese（简体中文）](https://github.com/aura-systems/Aura-Operating-System/blob/master/README_CN.md)
 
