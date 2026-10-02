@@ -131,8 +131,9 @@ jobs:
             ls ../Cosmos/artifacts/package/release/ || true
             exit 1
           fi
+          # Aura's NuGet.Config maps Cosmos.* to that feed (and forbids --add-source).
           dotnet tool uninstall -g Cosmos.Patcher 2>/dev/null || true
-          dotnet tool install -g Cosmos.Patcher --add-source ../Cosmos/artifacts/package/release --version "$COSMOS_VERSION"
+          dotnet tool install -g Cosmos.Patcher --version "$COSMOS_VERSION"
 
       - name: Publish Aura OS
         working-directory: Aura-Operating-System
