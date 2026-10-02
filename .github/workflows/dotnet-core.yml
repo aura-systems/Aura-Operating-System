@@ -46,7 +46,7 @@ env:
 jobs:
   build:
     name: Build Aura OS ISO (Cosmos gen3, x64)
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 90
     outputs:
       version: ${{ steps.version.outputs.version }}
@@ -115,7 +115,11 @@ jobs:
         working-directory: Cosmos
         env:
           VersionPrefix: ${{ steps.version.outputs.cosmos_version }}
-        run: make setup
+        # The script ends by restoring Cosmos's whole solution, whose DevKernel needs Cosmos.Network.Telnet
+        # (not on nuget.org, not packed by the script). Aura only needs the packages: skip that restore.
+        run: |
+          sed -i '/^dotnet restore \.\/nativeaot-patcher\.slnx/d' .devcontainer/postCreateCommand.sh
+          make setup
 
       - name: Install Cosmos.Patcher
         working-directory: Aura-Operating-System
@@ -150,7 +154,7 @@ jobs:
     name: Publish the release
     needs: build
     if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     permissions:
       contents: write
     env:
