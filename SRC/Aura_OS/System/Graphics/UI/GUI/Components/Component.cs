@@ -570,7 +570,7 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
 
         #endregion
 
-        public void Dispose()
+        public virtual void Dispose()
         {
             foreach (Component child in Children)
             {
