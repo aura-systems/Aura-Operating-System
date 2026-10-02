@@ -1,14 +1,19 @@
 <p align="center">
   <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/aura-systems/Aura-Operating-System/master/ARTWORK/auralogo_white.png">
-    <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/aura-systems/Aura-Operating-System/master/ARTWORK/auralogo_black.png">
+    <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/aura-systems/Aura-Operating-System/main/ARTWORK/auralogo_white.png">
+    <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/aura-systems/Aura-Operating-System/main/ARTWORK/auralogo_black.png">
     <img width=60% alt="Shows a black logo in light color mode and a white one in dark color mode." src="">
   </picture>
 </p>
 
-![Build Status](https://github.com/aura-systems/Aura-Operating-System/workflows/.NET%20Core/badge.svg)[![Issues](https://img.shields.io/github/issues/aura-systems/Aura-Operating-System.svg)](https://github.com/aura-systems/Aura-Operating-System/issues)[![Pull requests](https://img.shields.io/github/issues-pr/aura-systems/Aura-Operating-System.svg)](https://github.com/aura-systems/Aura-Operating-System/pulls)[![Discord](https://img.shields.io/badge/通过-discord%20加入我们-blue.svg)](https://discord.gg/DFbAtVA)
+<p align="center">
+  <a href="https://github.com/aura-systems/Aura-Operating-System/workflows/.NET%20Core"><img src="https://github.com/aura-systems/Aura-Operating-System/workflows/.NET%20Core/badge.svg" alt="Build Status" /></a>
+  <a href="https://github.com/aura-systems/Aura-Operating-System/issues"><img src="https://img.shields.io/github/issues/aura-systems/Aura-Operating-System.svg" alt="Issues" /></a>
+  <a href="https://github.com/aura-systems/Aura-Operating-System/pulls"><img src="https://img.shields.io/github/issues-pr/aura-systems/Aura-Operating-System.svg" alt="Pull requests" /></a>
+  <a href="https://discord.gg/DFbAtVA"><img src="https://img.shields.io/badge/通过-discord%20加入我们-blue.svg" alt="Discord" /></a>
+</p>
 
-[English](https://github.com/aura-systems/Aura-Operating-System/blob/master/README.md) | Chinese
+[English](https://github.com/aura-systems/Aura-Operating-System/blob/main/README.md) | Chinese
 
 一个基于[Cosmos](https://github.com/CosmosOS/Cosmos)的操作系统，由 Alexy DA CRUZ (GeomTech)和 Valentin Charbonnier (valentinbreiz)使用 C#开发。请阅读 [我们的 Wiki](https://github.com/aura-systems/Aura-Operating-System/wiki/%E7%AE%80%E4%BD%93%E4%B8%AD%E6%96%87-%7C-%E4%B8%BB%E9%A1%B5) 获得更多信息 🌼
 
@@ -31,4 +36,4 @@
 
 ## 屏幕截图
 
-<p align="center"><img src="https://raw.githubusercontent.com/aura-systems/Aura-Operating-System/master/ARTWORK/aura1.png"></p>
+<p align="center"><img src="https://raw.githubusercontent.com/aura-systems/Aura-Operating-System/main/ARTWORK/aura1.png"></p>
