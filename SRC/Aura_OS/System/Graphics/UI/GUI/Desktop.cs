@@ -19,6 +19,7 @@ namespace Aura_OS.System.Graphics.UI.GUI
         public FilesystemPanel MainPanel;
         private string _wallpaperPath;
         private Image _wallpaper;
+        private Image _wallpaperSource;
 
         public Desktop(int x, int y, int width, int height) : base(x, y, width, height)
         {
@@ -37,7 +38,8 @@ namespace Aura_OS.System.Graphics.UI.GUI
                     // GEN3-GAP(bmp): a wallpaper the gen3 BMP loader rejects must not stop the boot.
                     CustomConsole.WriteLineWarning("Cannot load wallpaper " + wallpaperPath + ": " + ex.Message);
                     _wallpaperPath = string.IsNullOrEmpty(wallpaperPath) ? "Embedded" : AuraPath.FromLegacy(wallpaperPath);
-                    _wallpaper = ImageUtils.ScaleToScreen(Kernel.wallpaper1);
+                    _wallpaperSource = Kernel.wallpaper1;
+                    _wallpaper = ImageUtils.ScaleToScreen(_wallpaperSource);
                     MarkDirty();
                 }
             }
@@ -45,7 +47,8 @@ namespace Aura_OS.System.Graphics.UI.GUI
             {
                 _wallpaperPath = "Embedded";
                 // Kernel.wallpaper1 is Files.Wallpaper, already decoded at boot (Files.LoadFiles).
-                _wallpaper = ImageUtils.ScaleToScreen(Kernel.wallpaper1);
+                _wallpaperSource = Kernel.wallpaper1;
+                _wallpaper = ImageUtils.ScaleToScreen(_wallpaperSource);
                 MarkDirty();
             }
 
@@ -97,9 +100,23 @@ namespace Aura_OS.System.Graphics.UI.GUI
             // gen2 blanked to black when the wallpaper did not match the screen; gen3 runs at the
             // real framebuffer size (GEN3-GAP(display-mode)), so scale once here, never per frame.
             _wallpaper = ImageUtils.ScaleToScreen(wallpaper);
+            _wallpaperSource = wallpaper;
             _wallpaperPath = string.IsNullOrEmpty(path) ? "Embedded" : path;
 
             MarkDirty();
+        }
+
+        /// <summary>
+        /// Fits the desktop and its wallpaper to the screen after a resolution change.
+        /// </summary>
+        public void ResizeToScreen()
+        {
+            SetSize((int)Kernel.ScreenWidth, (int)Kernel.ScreenHeight);
+            MainPanel.SetSize(Width - 7 - 75, Height - Taskbar.taskbarHeight);
+
+            // Drop the old scaled wallpaper first, so a collection during the scaling can reclaim it.
+            _wallpaper = null;
+            _wallpaper = ImageUtils.ScaleToScreen(_wallpaperSource);
         }
     }
 }

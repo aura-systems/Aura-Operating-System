@@ -41,7 +41,7 @@ exception path, C8 dispose everything.
 | Area | Major | Minor |
 |---|---|---|
 | Build / tooling | `iso-files` | `resources`, `resources-perf`, `update-pins`, `prop-trap`, `defines`, `compile-only`, `iso-path`, `dev-stamp`, `bytes-only` |
-| Core runtime | `cpu-exception`, `null-deref`, `unhandled`, `finally`, `eh-global`, `finalizers`, `gc-trigger`, `gc-conservative`, `idle-thread` | `run-spam`, `log-sink`, `meminfo`, `cpuinfo`, `pci`, `tz-rtc`, `env`, `pc-speaker`, `encoding` |
+| Core runtime | `cpu-exception`, `null-deref`, `unhandled`, `finally`, `eh-global`, `finalizers`, `gc-trigger`, `oom`, `gc-conservative`, `idle-thread` | `run-spam`, `log-sink`, `meminfo`, `cpuinfo`, `pci`, `tz-rtc`, `env`, `pc-speaker`, `encoding` |
 | Console / graphics | `console-input` | `kernelconsole`, `console-global`, `present`, `display-mode`, `blit`, `psf`, `hw-cursor`, `bmp`, `canvas3d` |
 | Input | `keyboard-altgr`, `ps2-sync` | `key-release`, `key-repeat`, `e0`, `sessions`, `mouse`, `key-docs` |
 | Filesystem / storage | `ide`, `fat-names`, `vfs-threads` (phase 2) | `driveinfo`, `fat-label`, `fat-time`, `mounts`, `tmp`, `cwd`, `mbr`, `ext2` |
@@ -292,6 +292,22 @@ exception path, C8 dispose everything.
   `Aura_OS.Kernel.Run`: 1 Hz, or 10 Hz under memory pressure.
 - **Upstream ask:** an allocation-budget trigger.
 - **Source:** 02, 08.
+
+### `oom`: a failed allocation returns null instead of throwing (major)
+- **Gap:** when the heap is exhausted, `AllocObjectSlow` collects once, then
+  returns null. `RhpNewArray` / `RhpNewFast` hand that null to managed code: no
+  `OutOfMemoryException`. The first access is a page fault at a small offset
+  (`CR2=0x8`), far from the allocation, and nothing can catch it.
+  - Seen in VMware (256 MB, 203 MB heap) when switching to 3200x2400: each
+    screen-sized buffer is 31 MB.
+- **Aura workaround:** `Explorer.ChangeResolution` checks the free pages (after
+  `MemoryInfo.Collect()`) against the screen-sized buffers a mode needs, and
+  refuses the mode with a message. Screen-sized buffers are kept to a minimum:
+  the component cache buffer is allocated on first use, and the hidden login
+  screen frees its buffers.
+- **Upstream ask:** throw `OutOfMemoryException` from the allocation helpers,
+  and a `MemoryInfo.TryReserve(bytes)` or largest-free-block query.
+- **Source:** found while adding runtime resolution changes (not in the notes).
 
 ### `meminfo`: memory figures describe one region / the last GC (minor)
 - **Gap:** `MemoryInfo.RamSizeBytes` / `TotalPages` cover only the largest

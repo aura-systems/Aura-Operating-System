@@ -135,7 +135,6 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
         {
             _rectangle = new Rectangle(y, x, y + height, x + width);
             _buffer = new DirectBitmap(width, height);
-            _cacheBuffer = new DirectBitmap(width, height);
             _dirty = true;
             Visible = true;
             ForceDirty = false;
@@ -272,14 +271,27 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
             return new Rectangle(y, x, y + height, x + width);
         }
 
+        /// <summary>
+        /// Copies the buffer into the cache buffer, allocated on first use: only windows being moved or
+        /// resized use it, and a screen-sized component (desktop, login screen) would pay a second
+        /// screen buffer for nothing.
+        /// </summary>
         public void SaveCacheBuffer()
         {
+            if (_cacheBuffer == null || _cacheBuffer.Width != Width || _cacheBuffer.Height != Height)
+            {
+                _cacheBuffer = new DirectBitmap(Width, Height);
+            }
+
             _cacheBuffer.DrawImage(_buffer.Bitmap, 0, 0);
         }
 
         public void DrawCacheBuffer()
         {
-            _buffer.DrawImage(_cacheBuffer.Bitmap, 0, 0);
+            if (_cacheBuffer != null)
+            {
+                _buffer.DrawImage(_cacheBuffer.Bitmap, 0, 0);
+            }
         }
 
         public virtual void HandleLeftClick()
@@ -369,7 +381,7 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
 
             _rectangle = new Rectangle(Y, X, Y + height, X + width);
             _buffer = new DirectBitmap(width, height);
-            _cacheBuffer = new DirectBitmap(width, height);
+            _cacheBuffer = null;
 
             Draw();
             foreach (Component child in Children)
@@ -380,6 +392,23 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
                 }
             }
             SaveCacheBuffer();
+        }
+
+        /// <summary>
+        /// Gives the component a new size and blank buffers, without the window limits of Resize and
+        /// without moving the children. For the screen-sized components after a resolution change.
+        /// </summary>
+        public void SetSize(int width, int height)
+        {
+            // Drop the old buffers first, so a collection during the allocation can reclaim them.
+            _buffer = null;
+            _cacheBuffer = null;
+
+            _rectangle = new Rectangle(Y, X, Y + height, X + width);
+            _buffer = new DirectBitmap(width, height);
+
+            ComputeAbsoluteCoordinates();
+            MarkDirty();
         }
 
         public virtual bool IsDirty()

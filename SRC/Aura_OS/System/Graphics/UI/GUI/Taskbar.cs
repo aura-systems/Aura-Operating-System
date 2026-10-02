@@ -122,6 +122,19 @@ namespace Aura_OS.System.Graphics.UI.GUI
             Buttons = new Dictionary<uint, Button>();
         }
 
+        /// <summary>
+        /// Moves the taskbar to the bottom of the screen after a resolution change.
+        /// </summary>
+        public void ResizeToScreen()
+        {
+            Y = (int)Kernel.ScreenHeight - taskbarHeight;
+            SetSize((int)Kernel.ScreenWidth, taskbarHeight);
+
+            HourButton.X = (int)Kernel.ScreenWidth - HourButton.Width - 2;
+            NetworkButton.X = HourButton.X - 20;
+            KeyboardButton.X = NetworkButton.X - KeyboardButton.Width - 6;
+        }
+
         public void UpdateApplicationButtons()
         {
             foreach (var button in Buttons.Values)

@@ -301,6 +301,21 @@ namespace Aura_OS.System.Input
         }
 
         /// <summary>
+        /// Clamps the cursor to the screen after a resolution change.
+        /// </summary>
+        public void ResizeToScreen()
+        {
+            if (KernelFeatures.Mouse)
+            {
+                int width = (int)Kernel.ScreenWidth;
+                int height = (int)Kernel.ScreenHeight;
+
+                CosmosMouse.SetScreenSize(width, height);
+                CosmosMouse.SetPosition(Math.Min(CosmosMouse.X, width - 1), Math.Min(CosmosMouse.Y, height - 1));
+            }
+        }
+
+        /// <summary>
         /// Draws the software cursor into Explorer.Screen (DrawImageAlpha clips at the screen edges).
         /// GEN3-GAP(hw-cursor): the IHardwareCursor facet is experimental and VMware-only; software cursor in phase 1.
         /// </summary>

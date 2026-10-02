@@ -27,8 +27,7 @@ namespace Aura_OS.System.Processing.Applications
         private TextBox _computerName;
         private TextBox _themeBmpPath;
         private TextBox _themeXmlPath;
-        private TextBox _resX;
-        private TextBox _resY;
+        private DropDown _resolution;
         private TextBox _wallpaperPath;
 
         private Label _usernameLabel;
@@ -51,10 +50,10 @@ namespace Aura_OS.System.Processing.Applications
 
         private Dialog _dialog;
 
+        private List<Mode> _modes;
         private int _oldScreenWidth;
         private int _oldScreenHeight;
         private string _oldWallpaperPath;
-        private bool _waitingReboot = false;
 
         public SettingsApp(int width, int height, int x = 0, int y = 0) : base(ApplicationName, width, height, x, y)
         {
@@ -83,8 +82,7 @@ namespace Aura_OS.System.Processing.Applications
             _themeXmlPath = new TextBox(textBoxXOffset, baseY + (23 + spacing) * 4, 200, 23, "");
             _windowsAlpha = new Slider(textBoxXOffset, baseY + (23 + spacing) * 5, 200, 23);
             _taskbarAlpha = new Slider(textBoxXOffset, baseY + (23 + spacing) * 6, 200, 23);
-            _resX = new TextBox(textBoxXOffset, baseY + (23 + spacing) * 7, 100, 23);
-            _resY = new TextBox(textBoxXOffset + 103, baseY + (23 + spacing) * 7, 100, 23);
+            _resolution = new DropDown(textBoxXOffset, baseY + (23 + spacing) * 7, 200, 23);
             _wallpaperPath = new TextBox(textBoxXOffset, baseY + (23 + spacing) * 8, 200, 23, "");
 
             _guiDebug = new Checkbox("GUI Debug: ", Color.Black, labelX, baseY + (23 + spacing) * 9);
@@ -126,9 +124,9 @@ namespace Aura_OS.System.Processing.Applications
             
             _save.Click = new Action(() =>
             {
-                // Reset a previous error; keep the reboot notice once a resolution change is pending.
+                // Reset a previous error.
                 _dialog.SetState(DialogState.Information);
-                _dialog.Message = _waitingReboot ? "Settings updated. Reboot needed to change resolution." : "Settings updated.";
+                _dialog.Message = "Settings updated.";
 
                 Kernel.userLogged = _username.Text;
                 Kernel.ComputerName = _computerName.Text;
@@ -167,10 +165,12 @@ namespace Aura_OS.System.Processing.Applications
                     }
                 }
 
-                if (wallpaperError != null)
+                string resolutionError = wallpaperError == null ? ApplyResolution() : null;
+
+                if (wallpaperError != null || resolutionError != null)
                 {
                     _dialog.SetState(DialogState.Error);
-                    _dialog.Message = wallpaperError;
+                    _dialog.Message = wallpaperError ?? resolutionError;
                     _dialog.MarkDirty();
                 }
                 else if (Kernel.Installed)
@@ -183,8 +183,8 @@ namespace Aura_OS.System.Processing.Applications
                         config.EditValue("themeXmlPath", Kernel.ThemeManager.XmlPath);
                         config.EditValue("windowsTransparency", Explorer.WindowManager.WindowsTransparency.ToString());
                         config.EditValue("taskbarTransparency", Explorer.WindowManager.TaskbarTransparency.ToString());
-                        config.EditValue("screenWidth", _resX.Text);
-                        config.EditValue("screenHeight", _resY.Text);
+                        config.EditValue("screenWidth", Kernel.ScreenWidth.ToString());
+                        config.EditValue("screenHeight", Kernel.ScreenHeight.ToString());
                         config.EditValue("wallpaperPath", wallpaperPath);
                         if (_autoLogin.Checked)
                         {
@@ -223,8 +223,7 @@ namespace Aura_OS.System.Processing.Applications
             AddChild(_themeXmlPath);
             AddChild(_windowsAlpha);
             AddChild(_taskbarAlpha);
-            AddChild(_resX);
-            AddChild(_resY);
+            AddChild(_resolution);
             AddChild(_wallpaperPath);
 
             AddChild(_usernameLabel);
@@ -257,8 +256,7 @@ namespace Aura_OS.System.Processing.Applications
             _computerName.Text = Kernel.ComputerName ?? "";
             _themeBmpPath.Text = Kernel.ThemeManager.BmpPath ?? "";
             _themeXmlPath.Text = Kernel.ThemeManager.XmlPath ?? "";
-            _resX.Text = Kernel.ScreenWidth.ToString();
-            _resY.Text = Kernel.ScreenHeight.ToString();
+            LoadResolutions();
             _wallpaperPath.Text = Explorer.Desktop.GetWallpaperPath() ?? "";
             _oldWallpaperPath = _wallpaperPath.Text;
         }
@@ -280,8 +278,7 @@ namespace Aura_OS.System.Processing.Applications
                 _themeXmlPath.Update();
                 _windowsAlpha.Update();
                 _taskbarAlpha.Update();
-                _resX.Update();
-                _resY.Update();
+                _resolution.Update();
                 _wallpaperPath.Update();
 
                 if (Kernel.Installed)
@@ -313,10 +310,8 @@ namespace Aura_OS.System.Processing.Applications
             _windowsAlpha.DrawInParent();
             _taskbarAlpha.Draw();
             _taskbarAlpha.DrawInParent();
-            _resX.Draw();
-            _resX.DrawInParent();
-            _resY.Draw();
-            _resY.DrawInParent();
+            _resolution.Draw();
+            _resolution.DrawInParent();
             _wallpaperPath.Draw();
             _wallpaperPath.DrawInParent();
             
@@ -381,68 +376,97 @@ namespace Aura_OS.System.Processing.Applications
             return Files.IsEmbeddedPath(path) || File.Exists(path);
         }
 
+        /// <summary>
+        /// Lists the display's modes in the resolution drop down and selects the running one.
+        /// GEN3-GAP(display-mode): only VMware SVGA II switches modes; on GOP/virtio-gpu
+        /// AvailableModes holds just the current mode, set at boot by limine.conf.
+        /// </summary>
+        private void LoadResolutions()
+        {
+            _modes = new List<Mode>();
+
+            if (Kernel.Canvas != null)
+            {
+                foreach (Mode mode in Kernel.Canvas.AvailableModes)
+                {
+                    _modes.Add(mode);
+                }
+            }
+
+            int current = FindMode(_oldScreenWidth, _oldScreenHeight);
+
+            // The running mode is always selectable, even when the display does not list it.
+            if (current == -1)
+            {
+                _modes.Add(new Mode(_oldScreenWidth, _oldScreenHeight, ColorDepth.ColorDepth32));
+                current = _modes.Count - 1;
+            }
+
+            foreach (Mode mode in _modes)
+            {
+                _resolution.AddItem(mode.Width + "x" + mode.Height);
+            }
+
+            _resolution.SelectedIndex = current;
+        }
+
+        /// <summary>
+        /// Index of width x height in the resolution list, -1 when not listed.
+        /// </summary>
+        private int FindMode(int width, int height)
+        {
+            for (int i = 0; i < _modes.Count; i++)
+            {
+                if (_modes[i].Width == width && _modes[i].Height == height)
+                {
+                    return i;
+                }
+            }
+
+            return -1;
+        }
+
+        private Mode GetSelectedMode()
+        {
+            if (_resolution.SelectedIndex < 0)
+            {
+                return new Mode(_oldScreenWidth, _oldScreenHeight, ColorDepth.ColorDepth32);
+            }
+
+            return _modes[_resolution.SelectedIndex];
+        }
+
+        /// <summary>
+        /// Switches the screen to the selected resolution now (Explorer.ChangeResolution). Returns the
+        /// error to show, or null; on a refusal the running resolution is selected again.
+        /// </summary>
+        private string ApplyResolution()
+        {
+            Mode resolution = GetSelectedMode();
+
+            if (resolution.Width == _oldScreenWidth && resolution.Height == _oldScreenHeight)
+            {
+                return null;
+            }
+
+            string error;
+            bool changed = Explorer.ChangeResolution(resolution.Width, resolution.Height, out error);
+
+            // The mode the screen is really in (a refused switch changes nothing).
+            _oldScreenWidth = (int)Kernel.ScreenWidth;
+            _oldScreenHeight = (int)Kernel.ScreenHeight;
+
+            if (!changed)
+            {
+                _resolution.SelectedIndex = FindMode(_oldScreenWidth, _oldScreenHeight);
+            }
+
+            return error;
+        }
+
         public bool UpdateDialog()
         {
-            int width;
-            int height;
-
-            if (!int.TryParse(_resX.Text, out width) || !int.TryParse(_resY.Text, out height))
-            {
-                _dialog.SetState(DialogState.Error);
-                _dialog.Message = "Resolution is not valid.";
-                _dialog.MarkDirty();
-
-                return false;
-            }
-
-            if (_waitingReboot == false && (_oldScreenWidth != width || _oldScreenHeight != height))
-            {
-                bool modeExists = false;
-                IReadOnlyList<Mode> modes = Kernel.Canvas.AvailableModes;
-
-                foreach (Mode mode in modes)
-                {
-                    if (mode.Width == width && mode.Height == height)
-                    {
-                        modeExists = true;
-                    }
-                }
-
-                if (modeExists)
-                {
-                    _dialog.SetState(DialogState.Information);
-                    _dialog.Message = "Settings updated. Reboot needed to change resolution.";
-                    _dialog.AddButton("Reboot", new Action(() =>
-                    {
-                        AuraPower.Reboot();
-                    }));
-                    _dialog.MarkDirty();
-                    _waitingReboot = true;
-
-                    return true;
-                }
-                else if (modes.Count <= 1)
-                {
-                    // GEN3-GAP(display-mode): only VMware SVGA II switches modes; on GOP/virtio-gpu
-                    // AvailableModes holds just the current mode, set at boot by limine.conf.
-                    _dialog.SetState(DialogState.Error);
-                    _dialog.Message = "Resolution is fixed by the bootloader on this display.";
-                    _dialog.MarkDirty();
-                    _waitingReboot = false;
-
-                    return false;
-                }
-                else
-                {
-                    _dialog.SetState(DialogState.Error);
-                    _dialog.Message = width + "x" + height + "@32 is not a valid resolution. Type lsres to list available resolutions.";
-                    _dialog.MarkDirty();
-                    _waitingReboot = false;
-
-                    return false;
-                }
-            }
-            else if (!IsValidThemePath(NormalizePath(_themeBmpPath.Text)))
+            if (!IsValidThemePath(NormalizePath(_themeBmpPath.Text)))
             {
                 _dialog.SetState(DialogState.Error);
                 _dialog.Message = "Theme .bmp path is not valid.";

@@ -28,19 +28,15 @@ namespace Aura_OS.System.Graphics.UI.GUI
         public LoginScreen(int x, int y, int width, int height) : base(x, y, width, height)
         {
             _username = new TextBox(3, 3, 200, 23, "");
-            _username.X = Width / 2 - _username.Width / 2;
-            _username.Y = Height / 2 - _username.Height / 2 + 20;
 
             AddChild(_username);
 
             _password = new TextBox(3, 3, 200, 23, "");
-            _password.X = _username.X;
-            _password.Y = _username.Y + 23 + 6;
             _password.Password = true;
 
             AddChild(_password);
 
-            _button = new Button("Login", _password.X, _password.Y + 23 + 6, 200, 23);
+            _button = new Button("Login", 3, 3, 200, 23);
             _button.Click = new Action(() => {
             _username.Draw(this);
                 Login(_username.Text, _password.Text);
@@ -49,12 +45,41 @@ namespace Aura_OS.System.Graphics.UI.GUI
             AddChild(_button);
 
             // Keyboard layout switcher at the bottom-right, so AZERTY users can type their password.
-            _keyboardButton = new KeyboardLayoutButton(Width - 40 - 8, Height - 23 - 8, 40, 23);
+            _keyboardButton = new KeyboardLayoutButton(3, 3, 40, 23);
             AddChild(_keyboardButton);
+
+            LayoutControls();
+        }
+
+        /// <summary>
+        /// Fits the login screen and its wallpaper to the screen after a resolution change. While hidden
+        /// it holds no screen-sized buffer (see Hide), and Show sizes it to the screen then.
+        /// </summary>
+        public void ResizeToScreen()
+        {
+            if (Visible)
+            {
+                SetSize((int)Kernel.ScreenWidth, (int)Kernel.ScreenHeight);
+                LayoutControls();
+            }
+        }
+
+        private void LayoutControls()
+        {
+            _username.X = Width / 2 - _username.Width / 2;
+            _username.Y = Height / 2 - _username.Height / 2 + 20;
+            _password.X = _username.X;
+            _password.Y = _username.Y + 23 + 6;
+            _button.X = _password.X;
+            _button.Y = _password.Y + 23 + 6;
+            _keyboardButton.X = Width - 40 - 8;
+            _keyboardButton.Y = Height - 23 - 8;
 
             // gen2 blanked to black when the wallpaper did not match the screen; gen3 runs at the
             // real framebuffer size (GEN3-GAP(display-mode)), so scale once here, never per frame.
+            _wallpaper = null;
             _wallpaper = ImageUtils.ScaleToScreen(Kernel.wallpaper2);
+            MarkDirty();
         }
 
         public override void Update()
@@ -133,6 +158,11 @@ namespace Aura_OS.System.Graphics.UI.GUI
             _button.Visible = false;
             _keyboardButton.Visible = false;
             Explorer.Taskbar.Visible = true;
+
+            // GEN3-GAP(oom): the hidden login screen gives back its screen buffer and scaled wallpaper
+            // (two screen-sized buffers); Show allocates them again.
+            SetSize(1, 1);
+            _wallpaper = null;
         }
 
         public void Show()
@@ -141,6 +171,9 @@ namespace Aura_OS.System.Graphics.UI.GUI
             {
                 app.Window.Minimize.Click();
             }
+
+            SetSize((int)Kernel.ScreenWidth, (int)Kernel.ScreenHeight);
+            LayoutControls();
 
             Visible = true;
             _username.Text = "";
