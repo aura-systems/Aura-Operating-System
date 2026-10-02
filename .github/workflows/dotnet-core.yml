@@ -1,33 +1,57 @@
 name: .NET Core
 
-# Builds the Aura OS ISO on Cosmos gen3 (NativeAOT).
+# Builds the Aura OS ISO on Cosmos gen3 (NativeAOT) for every push to main and every pull request,
+# and publishes a GitHub release when the AuraVersion in SRC/Aura_OS/Aura_OS.csproj has none yet.
 #
-# The Cosmos 3.0.89 dev packages Aura pins in global.json are not on nuget.org,
-# so this job:
-#   1. checks out CosmosOS/Cosmos at a pinned commit,
-#   2. builds its local package feed with `make setup`,
-#   3. points Aura at it. NuGet.Config expects the sibling ../Cosmos checkout.
-# `make setup` stamps the packages with today's date (<base>.<yyyyMMdd>), so
-# Aura's global.json Cosmos.Sdk literal is rewritten to that stamp before the
-# build. Directory.Build.props derives every other Cosmos version from it.
+# The Cosmos 3.0.89 dev packages Aura pins in global.json are not on nuget.org, so the build job:
+#   1. checks out CosmosOS/Cosmos at COSMOS_REF,
+#   2. builds its local package feed with `make setup`, stamped with the Cosmos.Sdk version from
+#      Aura's global.json (VersionPrefix), so Aura needs no rewrite,
+#   3. caches that feed per (COSMOS_REF, version), so later commits skip steps 1-2.
+# NuGet.Config expects the feed in the sibling ../Cosmos checkout.
+#
+# Releases keep the gen2 style: tag <version>-<ddMMyyyyHHmm, Paris time>, title "Aura <version>",
+# asset Aura-<tag>.iso, text = the version's "## <version>" section of CHANGELOG.md.
 on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
   workflow_dispatch:
     inputs:
+      release:
+        description: 'Publish a release even if this version already has one (main only)'
+        type: boolean
+        default: false
       cosmos_ref:
-        description: 'CosmosOS/Cosmos commit SHA (or branch/tag) to build the packages from'
-        required: true
+        description: 'CosmosOS/Cosmos commit SHA to build the packages from (empty = the pinned one)'
         type: string
-        default: '6c857b5676596587fcccf164ae6dd680db2104df'
+        default: ''
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+permissions:
+  contents: read
+
+env:
+  # On the claude/remoteshell branch of CosmosOS/Cosmos: Aura needs its TCP, FTP and exception fixes,
+  # which are not on Cosmos main yet.
+  COSMOS_REF: ${{ inputs.cosmos_ref || '6c857b5676596587fcccf164ae6dd680db2104df' }}
+  DOTNET_CLI_TELEMETRY_OPTOUT: 1
+  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: 1
+  DOTNET_NOLOGO: 1
 
 jobs:
   build:
     name: Build Aura OS ISO (Cosmos gen3, x64)
     runs-on: ubuntu-latest
     timeout-minutes: 90
-    env:
-      DOTNET_CLI_TELEMETRY_OPTOUT: 1
-      DOTNET_SKIP_FIRST_TIME_EXPERIENCE: 1
-      DOTNET_NOLOGO: 1
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+      tag: ${{ steps.version.outputs.tag }}
+      iso: ${{ steps.version.outputs.iso }}
 
     steps:
       # actions/checkout only writes under $GITHUB_WORKSPACE, so both repos go
@@ -37,18 +61,31 @@ jobs:
         with:
           path: Aura-Operating-System
 
-      - name: Check out Cosmos
-        uses: actions/checkout@v4
-        with:
-          repository: CosmosOS/Cosmos
-          ref: ${{ inputs.cosmos_ref }}
-          path: Cosmos
-          submodules: recursive   # dotnet/runtime sources + lai (ACPI), as in Cosmos's own CI
+      - name: Read the versions
+        id: version
+        working-directory: Aura-Operating-System
+        run: |
+          VERSION=$(sed -nE 's|.*<AuraVersion>([^<]+)</AuraVersion>.*|\1|p' SRC/Aura_OS/Aura_OS.csproj | head -n1)
+          COSMOS_VERSION=$(sed -nE 's/.*"Cosmos\.Sdk"[[:space:]]*:[[:space:]]*"([^"]+)".*/\1/p' global.json | head -n1)
+          if [ -z "$VERSION" ] || [ -z "$COSMOS_VERSION" ]; then
+            echo "::error::Could not read AuraVersion ('$VERSION') or the Cosmos.Sdk version ('$COSMOS_VERSION')"
+            exit 1
+          fi
+          REVISION=$(TZ=Europe/Paris date +%d%m%Y%H%M)
+          TAG="$VERSION-$REVISION"
+          echo "Aura $TAG, Cosmos $COSMOS_VERSION from $COSMOS_REF"
+          {
+            echo "version=$VERSION"
+            echo "revision=$REVISION"
+            echo "tag=$TAG"
+            echo "iso=Aura-$TAG.iso"
+            echo "cosmos_version=$COSMOS_VERSION"
+          } >> "$GITHUB_OUTPUT"
 
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: '10.0.201'
+          global-json-file: Aura-Operating-System/global.json
 
       # clang (asm/C), ld.lld (link), xorriso (ISO), make + the runner's cc (Limine CLI).
       - name: Install native toolchain
@@ -57,39 +94,106 @@ jobs:
           sudo apt-get install -y clang lld xorriso make
           echo "$HOME/.dotnet/tools" >> "$GITHUB_PATH"
 
-      - name: Build the Cosmos packages (make setup)
-        working-directory: Cosmos
-        run: make setup
+      - name: Restore the Cosmos packages
+        id: cosmos-cache
+        uses: actions/cache@v4
+        with:
+          path: Cosmos/artifacts/package/release
+          key: cosmos-packages-${{ env.COSMOS_REF }}-${{ steps.version.outputs.cosmos_version }}
 
-      - name: Pin Aura to the stamped Cosmos version
-        id: cosmos
-        working-directory: Aura-Operating-System
-        run: |
-          # postCreateCommand.sh rewrites Cosmos's own global.json to the version it stamped.
-          VERSION=$(sed -nE 's/.*"Cosmos\.Sdk"[[:space:]]*:[[:space:]]*"([^"]+)".*/\1/p' ../Cosmos/global.json | head -n1)
-          if [ -z "$VERSION" ] || [ ! -f "../Cosmos/artifacts/package/release/Cosmos.Sdk.$VERSION.nupkg" ]; then
-            echo "::error::Could not determine the stamped Cosmos version (got '$VERSION')"
-            ls ../Cosmos/artifacts/package/release/ || true
-            exit 1
-          fi
-          echo "Cosmos packages: $VERSION"
-          sed -i -E "s|(\"Cosmos\.Sdk\"[[:space:]]*:[[:space:]]*\")[^\"]+(\")|\1${VERSION}\2|" global.json
-          cat global.json
-          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+      - name: Check out Cosmos
+        if: steps.cosmos-cache.outputs.cache-hit != 'true'
+        uses: actions/checkout@v4
+        with:
+          repository: CosmosOS/Cosmos
+          ref: ${{ env.COSMOS_REF }}
+          path: Cosmos
+          submodules: recursive   # dotnet/runtime sources + lai (ACPI), as in Cosmos's own CI
+
+      - name: Build the Cosmos packages (make setup)
+        if: steps.cosmos-cache.outputs.cache-hit != 'true'
+        working-directory: Cosmos
+        env:
+          VersionPrefix: ${{ steps.version.outputs.cosmos_version }}
+        run: make setup
 
       - name: Install Cosmos.Patcher
         working-directory: Aura-Operating-System
+        env:
+          COSMOS_VERSION: ${{ steps.version.outputs.cosmos_version }}
         run: |
+          if [ ! -f "../Cosmos/artifacts/package/release/Cosmos.Sdk.$COSMOS_VERSION.nupkg" ]; then
+            echo "::error::Cosmos.Sdk.$COSMOS_VERSION.nupkg is missing from the Cosmos package feed"
+            ls ../Cosmos/artifacts/package/release/ || true
+            exit 1
+          fi
           dotnet tool uninstall -g Cosmos.Patcher 2>/dev/null || true
-          dotnet tool install -g Cosmos.Patcher --add-source ../Cosmos/artifacts/package/release --version "${{ steps.cosmos.outputs.version }}"
+          dotnet tool install -g Cosmos.Patcher --add-source ../Cosmos/artifacts/package/release --version "$COSMOS_VERSION"
 
       - name: Publish Aura OS
         working-directory: Aura-Operating-System
-        run: dotnet publish SRC/Aura_OS/Aura_OS.csproj -c Release -r linux-x64 -o out
+        env:
+          REVISION: ${{ steps.version.outputs.revision }}
+          ISO: ${{ steps.version.outputs.iso }}
+        run: |
+          dotnet publish SRC/Aura_OS/Aura_OS.csproj -c Release -r linux-x64 -o out -p:AuraRevision="$REVISION"
+          mv out/Aura_OS.iso "out/$ISO"
 
       - name: Upload ISO
         uses: actions/upload-artifact@v4
         with:
-          name: Aura_OS-iso
-          path: Aura-Operating-System/out/Aura_OS.iso
+          name: Aura-${{ steps.version.outputs.tag }}
+          path: Aura-Operating-System/out/${{ steps.version.outputs.iso }}
           if-no-files-found: error
+
+  release:
+    name: Publish the release
+    needs: build
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    env:
+      GH_TOKEN: ${{ github.token }}
+      VERSION: ${{ needs.build.outputs.version }}
+      TAG: ${{ needs.build.outputs.tag }}
+      ISO: ${{ needs.build.outputs.iso }}
+      FORCE: ${{ inputs.release || false }}
+
+    steps:
+      - name: Check out Aura
+        uses: actions/checkout@v4
+
+      - name: Look for a release of this version
+        id: check
+        run: |
+          # Published releases are tagged <version>-<revision>; drafts have no tag yet and don't count.
+          EXISTING=$(gh release list --limit 100 --json tagName,isDraft \
+            | jq -r --arg prefix "$VERSION-" '[.[] | select(.isDraft | not) | .tagName | select(startswith($prefix))] | first // empty')
+          if [ -n "$EXISTING" ] && [ "$FORCE" != "true" ]; then
+            echo "Aura $VERSION is already released as $EXISTING. Bump AuraVersion in SRC/Aura_OS/Aura_OS.csproj to release again."
+            echo "publish=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "publish=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Extract the release notes
+        if: steps.check.outputs.publish == 'true'
+        run: |
+          # Lines after "## <version>", up to the next "## " heading.
+          awk -v v="$VERSION" '/^## / { if (found) exit; found = ($2 == v); next } found' CHANGELOG.md > notes.md
+          if ! grep -q '[^[:space:]]' notes.md; then
+            echo "::error::CHANGELOG.md has no '## $VERSION' section: add the release notes there"
+            exit 1
+          fi
+          cat notes.md
+
+      - name: Download the ISO
+        if: steps.check.outputs.publish == 'true'
+        uses: actions/download-artifact@v4
+        with:
+          name: Aura-${{ needs.build.outputs.tag }}
+
+      - name: Publish the release
+        if: steps.check.outputs.publish == 'true'
+        run: gh release create "$TAG" "$ISO" --title "Aura $VERSION" --notes-file notes.md --target "$GITHUB_SHA" --latest
