@@ -33,7 +33,7 @@ namespace Aura_OS
         public static bool Running = false;
         public static bool LoggedIn = true;
         public static bool Installed = false;
-        public static string Version = "0.7.4";
+        public static string Version = VersionInfo.version;
         public static string Revision = VersionInfo.revision;
         public static string langSelected = "en_US";
         public static string BootTime = "01/01/1970";

@@ -32,8 +32,11 @@
     </EmbeddedResource>
   </ItemGroup>
 
-  <!-- gen2 revision format ddMMyyyyHHmm; Debug pins HHmm=0000 so build caches survive a dev session -->
+  <!-- AuraVersion: bumping it on main makes CI publish a release (notes from its CHANGELOG.md section).
+       gen2 revision format ddMMyyyyHHmm; Debug pins HHmm=0000 so build caches survive a dev session;
+       CI passes -p:AuraRevision so the release tag and the in-OS revision match. -->
   <PropertyGroup>
+    <AuraVersion>0.8.0</AuraVersion>
     <AuraRevision Condition="'$(AuraRevision)' == '' and '$(Configuration)' == 'Release'">$([System.DateTime]::Now.ToString("ddMMyyyyHHmm"))</AuraRevision>
     <AuraRevision Condition="'$(AuraRevision)' == ''">$([System.DateTime]::Now.ToString("ddMMyyyy"))0000</AuraRevision>
   </PropertyGroup>
@@ -50,6 +53,7 @@
       <_AuraVersionInfoLine Include="{" />
       <_AuraVersionInfoLine Include="    public class VersionInfo" />
       <_AuraVersionInfoLine Include="    {" />
+      <_AuraVersionInfoLine Include="        public static string version = &quot;$(AuraVersion)&quot;%3B" />
       <_AuraVersionInfoLine Include="        public static string revision = &quot;$(AuraRevision)&quot;%3B" />
       <_AuraVersionInfoLine Include="    }" />
       <_AuraVersionInfoLine Include="}" />
