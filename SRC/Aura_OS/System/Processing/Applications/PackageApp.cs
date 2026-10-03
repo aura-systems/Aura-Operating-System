@@ -16,8 +16,8 @@ namespace Aura_OS.System.Processing.Applications
     /// <summary>
     /// An app whose window is its package's layout file and whose behaviour is its package's Lua:
     /// the main file runs once when the app opens, then the handlers it gave with app:on run on the
-    /// layout's events, on the UI thread. os.exit in a handler closes the app. SRC/Packages/README.md
-    /// describes the Lua side.
+    /// layout's events and its timers (app:every), on the UI thread. os.exit in a handler closes the
+    /// app. SRC/Packages/README.md describes the Lua side.
     /// </summary>
     public class PackageApp : Application
     {
@@ -27,6 +27,18 @@ namespace Aura_OS.System.Processing.Applications
 
         // Event name -> handler function (a registry reference).
         private readonly Dictionary<string, int> _handlers = new Dictionary<string, int>();
+
+        /// <summary>
+        /// A handler app:every calls every Interval milliseconds.
+        /// </summary>
+        private sealed class Timer
+        {
+            public int Reference;
+            public long Interval;
+            public long Next;
+        }
+
+        private readonly List<Timer> _timers = new List<Timer>();
 
         private bool _disposed;
 
@@ -99,14 +111,60 @@ namespace Aura_OS.System.Processing.Applications
         }
 
         /// <summary>
+        /// Calls the Lua function (a registry reference) every interval milliseconds, the first time
+        /// one interval from now.
+        /// </summary>
+        internal void AddTimer(long interval, int reference)
+        {
+            _timers.Add(new Timer
+            {
+                Reference = reference,
+                Interval = interval,
+                Next = Environment.TickCount64 + interval,
+            });
+        }
+
+        /// <summary>
+        /// Calls the timers that are due. One whose handler fails stops: it would fail again every time.
+        /// </summary>
+        private void RunTimers()
+        {
+            long now = Environment.TickCount64;
+
+            // By index: a handler can add a timer.
+            for (int i = 0; i < _timers.Count && !_disposed && !_exited; i++)
+            {
+                Timer timer = _timers[i];
+
+                if (now < timer.Next)
+                {
+                    continue;
+                }
+
+                // From now rather than from the last due time: a slow frame does not queue up calls.
+                timer.Next = now + timer.Interval;
+
+                if (!Call("every " + timer.Interval + " ms", timer.Reference))
+                {
+                    _timers.RemoveAt(i);
+                    _lua.State.L_Unref(LuaDef.LUA_REGISTRYINDEX, timer.Reference);
+                    i--;
+                }
+            }
+        }
+
+        /// <summary>
         /// Runs a handler. Its error is logged with the Lua traceback, and the app goes on.
         /// </summary>
-        private void Call(string name, int reference)
+        /// <returns>False when the handler raised an error.</returns>
+        private bool Call(string name, int reference)
         {
             if (_disposed || _exited)
             {
-                return;
+                return true;
             }
+
+            bool succeeded = true;
 
             ILuaState state = _lua.State;
             int top = state.GetTop();
@@ -119,6 +177,7 @@ namespace Aura_OS.System.Processing.Applications
                 if (state.PCall(0, 0, top + 1) != ThreadStatus.LUA_OK)
                 {
                     Logs.DoOSLog("[Error] " + Package.Name + ": " + name + ": " + LuaText.Decode(state.ToString(-1) ?? "(error object is not a string)"));
+                    succeeded = false;
                 }
             }
             catch (Exception ex)
@@ -132,6 +191,7 @@ namespace Aura_OS.System.Processing.Applications
                 else
                 {
                     Logs.DoOSLog("[Error] " + Package.Name + ": " + name + ": " + ex.Message);
+                    succeeded = false;
                 }
             }
 
@@ -139,10 +199,14 @@ namespace Aura_OS.System.Processing.Applications
 
             // The handler changed controls: draw the window again.
             MarkDirty();
+            return succeeded;
         }
 
         public override void Update()
         {
+            // Before the base update, which places the controls again when a text got longer or shorter.
+            RunTimers();
+
             base.Update();
 
             // Closed here rather than in the handler, which runs in the middle of the controls' updates.

@@ -9,6 +9,7 @@ using System.Drawing;
 using System.Globalization;
 using System.IO;
 using Cosmos.Executable.Lua;
+using Cosmos.Kernel.System.Diagnostics;
 using Cosmos.Kernel.System.Graphics;
 using Aura_OS.System.Filesystem;
 using Aura_OS.System.Graphics.UI.GUI;
@@ -78,6 +79,7 @@ namespace Aura_OS.System.Processing.Lua
             SetObject(lua, "system", SystemObject());
             SetObject(lua, "user", UserObject());
             SetObject(lua, "network", NetworkObject());
+            SetObject(lua, "memory", MemoryObject());
             SetObject(lua, "display", DisplayObject());
             SetObject(lua, "desktop", DesktopObject());
             SetObject(lua, "theme", ThemeObject());
@@ -169,6 +171,40 @@ namespace Aura_OS.System.Processing.Lua
         {
             return new LuaObject("aura.network")
                 .Function("isConfigured", lua => Push(lua, NetworkHelper.IsConfigured));
+        }
+
+        /// <summary>
+        /// The page allocator and the garbage collector. Each read is a fresh value.
+        /// </summary>
+        private static LuaObject MemoryObject()
+        {
+            return new LuaObject("aura.memory")
+                // GEN3-GAP(meminfo): the page allocator's pool is the largest usable memory-map region only.
+                .Property("totalPages", lua => Push(lua, (long)MemoryInfo.TotalPages))
+                .Property("freePages", lua => Push(lua, (long)MemoryInfo.FreePages))
+                .Property("pageSize", lua => Push(lua, (long)MemoryInfo.PageSizeBytes))
+                .Property("liveHeap", lua => Push(lua, GC.GetTotalMemory(false)))
+                .Property("collections", lua => Push(lua, MemoryInfo.TotalCollections))
+                .Property("objectsFreed", lua => Push(lua, MemoryInfo.TotalObjectsFreed))
+                .Property("gcTimePercent", lua => Push(lua, MemoryInfo.GcTimePercent))
+                // Objects the kernel's last periodic collection freed (Kernel.Run).
+                .Property("lastFreed", lua => Push(lua, Kernel.FreeCount))
+                // lastCollection(): the last collection's figures. It allocates: read it when collections changed.
+                .Function("lastCollection", lua =>
+                {
+                    GCMemoryInfo info = GC.GetGCMemoryInfo();
+
+                    lua.CreateTable(0, 4);
+                    lua.PushInteger(info.HeapSizeBytes);
+                    lua.SetField(-2, "heapSize");
+                    lua.PushInteger(info.TotalCommittedBytes);
+                    lua.SetField(-2, "committed");
+                    lua.PushInteger(info.FragmentedBytes);
+                    lua.SetField(-2, "fragmented");
+                    lua.PushInteger(info.PinnedObjectsCount);
+                    lua.SetField(-2, "pinnedObjects");
+                    return 1;
+                });
         }
 
         /// <summary>
@@ -338,6 +374,9 @@ namespace Aura_OS.System.Processing.Lua
                 case "on":
                     lua.PushCSharpFunction(AppOn);
                     return 1;
+                case "every":
+                    lua.PushCSharpFunction(AppEvery);
+                    return 1;
                 case "title":
                     return Text(lua, app.Window.Name);
             }
@@ -387,6 +426,22 @@ namespace Aura_OS.System.Processing.Lua
 
             lua.PushValue(3);
             app.SetHandler(name, lua.L_Ref(LuaDef.LUA_REGISTRYINDEX));
+            return 0;
+        }
+
+        /// <summary>
+        /// app:every(milliseconds, handler): calls handler() every that many milliseconds, on the UI
+        /// thread, until the app closes or the handler raises an error.
+        /// </summary>
+        private static int AppEvery(ILuaState lua)
+        {
+            PackageApp app = (PackageApp)lua.L_CheckUData(1, AppType);
+            long interval = lua.L_CheckInteger(2);
+            lua.L_ArgCheck(interval > 0, 2, "a positive number of milliseconds expected");
+            lua.L_CheckType(3, LuaType.LUA_TFUNCTION);
+
+            lua.PushValue(3);
+            app.AddTimer(interval, lua.L_Ref(LuaDef.LUA_REGISTRYINDEX));
             return 0;
         }
 
@@ -692,7 +747,7 @@ namespace Aura_OS.System.Processing.Lua
             return 1;
         }
 
-        private static int Push(ILuaState lua, int value)
+        private static int Push(ILuaState lua, long value)
         {
             lua.PushInteger(value);
             return 1;

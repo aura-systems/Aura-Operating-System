@@ -66,6 +66,7 @@ have, or setting a read-only one, is an error. Their functions are called with a
 |---|---|
 | `app:find(id)` | The element with that `id` in the layout file: a control, or a container (`Stack`, `Panel`, `Grid`, `Row`) that has only `id` and `visible`. An unknown id is an error. |
 | `app:on(event, handler)` | Calls `handler()` on the layout's event of that name (`onClick="event"`, `onChange`, `onEnter`). A later call replaces it. |
+| `app:every(milliseconds, handler)` | Calls `handler()` every that many milliseconds (the first time one interval from now), until the app closes. A handler that raises an error stops its timer. |
 | `app.title` | The window title, also the taskbar name. |
 
 An error in a handler is written to the OS log with its traceback, and the app goes on. `os.exit()` in
@@ -112,6 +113,20 @@ error. A change shows on the next frame.
 | | |
 |---|---|
 | `aura.network.isConfigured()` | True when a network card has an address. |
+
+### aura.memory
+
+Each read gives the current value.
+
+| | |
+|---|---|
+| `aura.memory.totalPages`, `aura.memory.freePages`, `aura.memory.pageSize` | The page allocator: its pool (the largest usable memory region only) and its page size in bytes. |
+| `aura.memory.liveHeap` | Bytes of live objects. |
+| `aura.memory.collections` | Garbage collections so far. |
+| `aura.memory.objectsFreed` | Objects the collections freed so far. |
+| `aura.memory.gcTimePercent` | Share of time spent collecting. |
+| `aura.memory.lastFreed` | Objects the kernel's last periodic collection freed. |
+| `aura.memory.lastCollection()` | The last collection's `{ heapSize = , committed = , fragmented = , pinnedObjects = }`. It allocates: read it again only when `collections` changed. |
 
 ### aura.display
 
