@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Package name="Editor" version="1.0.0" author="Aura Team"
+         description="A text file editor: run Editor {file}, or open a file from the desktop."
+         main="main.lua" layout="Editor.xml" menu="false" />

@@ -38,7 +38,7 @@ public class HelloApp : Application
 
 Register it with `RegisterApplication(typeof(HelloApp), x, y)` (the file gives the size) and create it
 with `new HelloApp(config.X, config.Y)` in `ApplicationManager.Instantiate`. `SetTitle` changes the
-title the file gives (the Editor shows the file path).
+title the file gives.
 
 `Application` updates, places and draws the controls: the app overrides `Update` or `Draw` only for
 work of its own, and calls the base method. A wrong file throws an `InvalidDataException` naming it

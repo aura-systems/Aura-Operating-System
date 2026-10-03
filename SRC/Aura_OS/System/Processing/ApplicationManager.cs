@@ -232,10 +232,6 @@ namespace Aura_OS.System.Processing
             {
                 app = new ExplorerApp(Kernel.CurrentVolume, config.Weight, config.Height, config.X, config.Y);
             }*/
-            else if (config.Template == typeof(EditorApp))
-            {
-                app = new EditorApp("", config.X, config.Y);
-            }
             else
             {
                 throw new InvalidOperationException("Type d'application non reconnu.");
@@ -317,27 +313,8 @@ namespace Aura_OS.System.Processing
             }
             else
             {
-                string path = Path.Combine(currentPath, fileName);
-                EditorApp app;
-
-                try
-                {
-                    app = new EditorApp(path, 40, 40);
-                }
-                catch (Exception ex)
-                {
-                    ReportOpenError(path, ex);
-                    return;
-                }
-
-                app.Initialize();
-                app.MarkFocused();
-                app.Visible = true;
-
-                Explorer.WindowManager.Applications.Add(app);
-                Kernel.ProcessManager.Start(app);
-
-                Explorer.Taskbar.UpdateApplicationButtons();
+                // Any other file opens in the Editor package.
+                StartPackage("Editor", new List<string> { Path.Combine(currentPath, fileName) });
             }
         }
 

@@ -8,8 +8,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using Aura_OS.System.Filesystem;
-using Aura_OS.System.Processing.Applications;
-using Aura_OS.System.Processing.Processes;
 
 namespace Aura_OS.System.Processing.Interpreter.Commands.Filesystem
 {
@@ -39,15 +37,14 @@ namespace Aura_OS.System.Processing.Interpreter.Commands.Filesystem
 
                 if (File.Exists(path))
                 {
-                    var app = new EditorApp(path, 40, 40);
-                    app.Initialize();
-                    app.MarkFocused();
-                    app.Visible = true;
+                    Package editor = Kernel.PackageManager.Find("Editor");
 
-                    Explorer.WindowManager.Applications.Add(app);
-                    Kernel.ProcessManager.Start(app);
+                    if (editor == null || !editor.IsApp)
+                    {
+                        return new ReturnInfo(this, ReturnCode.ERROR, "The Editor package is missing.");
+                    }
 
-                    Explorer.Taskbar.UpdateApplicationButtons();
+                    Kernel.ApplicationManager.StartPackage(editor, new List<string> { path });
                 }
                 else
                 {
