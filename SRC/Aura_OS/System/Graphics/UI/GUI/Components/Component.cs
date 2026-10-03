@@ -200,11 +200,25 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
             if (Frame != null && Frame.Regions.Length > 0)
             {
                 Clear(Color.Transparent);
+                DrawFrame(Frame, 0, 0, Width, Height);
+            }
+        }
 
-                foreach (Frame.Region region in Frame.Regions)
-                {
-                    DrawRegion(region, CalculateDestinationRect(region, Width, Height));
-                }
+        /// <summary>
+        /// Draws a skin frame's regions over that rectangle of the buffer, blending (a part of the
+        /// component: a scroll bar's rail and thumb).
+        /// </summary>
+        protected void DrawFrame(Frame frame, int x, int y, int width, int height)
+        {
+            if (frame == null)
+            {
+                return;
+            }
+
+            foreach (Frame.Region region in frame.Regions)
+            {
+                Rectangle destination = CalculateDestinationRect(frame, region, width, height);
+                DrawRegion(region, new Rectangle(destination.Top + y, destination.Left + x, destination.Bottom + y, destination.Right + x));
             }
         }
 
@@ -254,7 +268,7 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
             return new Canvas(Math.Max(0, width), Math.Max(0, height));
         }
 
-        private Rectangle CalculateDestinationRect(Frame.Region region, int frameWidth, int frameHeight)
+        private static Rectangle CalculateDestinationRect(Frame frame, Frame.Region region, int frameWidth, int frameHeight)
         {
             int x = 0, y = 0, width = region.SourceRegion.Width, height = region.SourceRegion.Height;
 
@@ -271,8 +285,8 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
                     break;
                 case "stretch":
                     // Between the left and right regions, which keep their own pixels.
-                    x = Frame.LeftBorder;
-                    width = frameWidth - Frame.LeftBorder - Frame.RightBorder;
+                    x = frame.LeftBorder;
+                    width = frameWidth - frame.LeftBorder - frame.RightBorder;
                     break;
             }
 
@@ -288,8 +302,8 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
                     y = (frameHeight - height) / 2;
                     break;
                 case "stretch":
-                    y = Frame.TopBorder;
-                    height = frameHeight - Frame.TopBorder - Frame.BottomBorder;
+                    y = frame.TopBorder;
+                    height = frameHeight - frame.TopBorder - frame.BottomBorder;
                     break;
             }
 
