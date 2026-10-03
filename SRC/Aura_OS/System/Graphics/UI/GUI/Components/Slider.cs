@@ -63,7 +63,8 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
 
             if (Kernel.MouseManager.IsLeftButtonDown)
             {
-                if (_slide.IsInside(clickX, clickY) && !_sliderPressed)
+                // Taken by a press on the slide, not by the button held from elsewhere crossing it.
+                if (!_sliderPressed && Kernel.MouseManager.IsLeftPressOn(_slide))
                 {
                     _firstX = clickX - _slide.X;
                     _sliderPressed = true;

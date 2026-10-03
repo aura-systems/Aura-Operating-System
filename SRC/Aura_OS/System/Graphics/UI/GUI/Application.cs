@@ -38,15 +38,12 @@ namespace Aura_OS.System.Graphics.UI.GUI
 
         private int _px;
         private int _py;
-        private bool _lck = false;
         private bool _pressed;
         private bool _resizePressed;
         private bool _resizingFromBottom = false;
         private bool _resizingFromRight = false;
         private bool _resizeWidthPressed = false;
         private bool _resizeHeightPressed = false;
-
-        private bool _lckResize = false;
 
         private int _firstX;
         private int _firstY;
@@ -107,10 +104,7 @@ namespace Aura_OS.System.Graphics.UI.GUI
         private void InitWindow(string name, int width, int height, int x = 0, int y = 0)
         {
             Window = new Window(name, x, y, width + 1, height + 1);
-            _rectangleTop = new Rectangle(0, 0, 3, Window.Width + 1);
-            _rectangleLeft = new Rectangle(0, 0, Window.Height + 1, 3);
-            _rectangleBottom = new Rectangle(Window.Height + 1 - 6, 0, Window.Height + 1 - 3, Window.Width + 1);
-            _rectangleRight = new Rectangle(0, Window.Width + 1 - 6, Window.Height + 1, Window.Width + 1 - 3);
+            PlaceResizeRectangles();
 
             Window.Close.Click = new Action(() =>
             {
@@ -187,95 +181,51 @@ namespace Aura_OS.System.Graphics.UI.GUI
                 int clickX = (int)MouseManager.X - Window.X;
                 int clickY = (int)MouseManager.Y - Window.Y;
 
-                if (Kernel.MouseManager.IsLeftButtonDown)
+                // Only a press on this window, where it is drawn on top, starts something: the button
+                // held from elsewhere (dragging a scroll bar's thumb) crossing a border, the title bar,
+                // its buttons or a window behind does not.
+                if (Kernel.MouseManager.IsLeftButtonDown && Kernel.MouseManager.IsLeftPressOn(Window))
                 {
-                    if (!_pressed)
-                    {
-                        if (!WindowManager.WindowMoving && _rectangleLeft.IsInside(clickX, clickY))
-                        {
-                            if (!_lckResize)
-                            {
-                                _firstX = (int)MouseManager.X;
-                                _firstY = (int)MouseManager.Y;
-                                _lckResize = true;
-                            }
-                            _resizeWidthPressed = true;
-                            _resizePressed = true;
-                            _resizingFromRight = false;
-                        }
-                        else if (!WindowManager.WindowMoving && _rectangleTop.IsInside(clickX, clickY))
-                        {
-                            if (!_lckResize)
-                            {
-                                _firstX = (int)MouseManager.X;
-                                _firstY = (int)MouseManager.Y;
-                                _lckResize = true;
-                            }
-                            _resizeHeightPressed = true;
-                            _resizePressed = true;
-                            _resizingFromBottom = false;
-                        }
-                        else if (!WindowManager.WindowMoving && _rectangleRight.IsInside(clickX, clickY))
-                        {
-                            if (!_lckResize)
-                            {
-                                _firstX = (int)MouseManager.X;
-                                _firstY = (int)MouseManager.Y;
-                                _lckResize = true;
-                            }
-                            _resizeWidthPressed = true;
-                            _resizePressed = true;
-                            _resizingFromRight = true;
-                        }
-                        else if (!WindowManager.WindowMoving && _rectangleBottom.IsInside(clickX, clickY))
-                        {
-                            if (!_lckResize)
-                            {
-                                _firstX = (int)MouseManager.X;
-                                _firstY = (int)MouseManager.Y;
-                                _lckResize = true;
-                            }
-                            _resizeHeightPressed = true;
-                            _resizePressed = true;
-                            _resizingFromBottom = true;
-                        }
+                    BringToFront();
 
+                    if (_rectangleLeft.IsInside(clickX, clickY))
+                    {
+                        StartResize(true, false);
                     }
-
-                    if (!_resizePressed)
+                    else if (_rectangleTop.IsInside(clickX, clickY))
                     {
-                        if (!WindowManager.WindowMoving && Window.IsInside((int)MouseManager.X, (int)MouseManager.Y))
-                        {
-                            BringToFront();
-                        }
+                        StartResize(false, false);
+                    }
+                    else if (_rectangleRight.IsInside(clickX, clickY))
+                    {
+                        StartResize(true, true);
+                    }
+                    else if (_rectangleBottom.IsInside(clickX, clickY))
+                    {
+                        StartResize(false, true);
+                    }
+                    else if (Window.Close.IsInside((int)MouseManager.X, (int)MouseManager.Y))
+                    {
+                        Window.Close.Click();
 
-                        if (!WindowManager.WindowMoving && Window.Close.IsInside((int)MouseManager.X, (int)MouseManager.Y))
-                        {
-                            Window.Close.Click();
+                        return;
+                    }
+                    else if (Window.Minimize.IsInside((int)MouseManager.X, (int)MouseManager.Y))
+                    {
+                        Window.Minimize.Click();
 
-                            return;
-                        }
-                        else if (!WindowManager.WindowMoving && Window.Minimize.IsInside((int)MouseManager.X, (int)MouseManager.Y))
-                        {
-                            Window.Minimize.Click();
+                        return;
+                    }
+                    else if (Window.TopBar.IsInside((int)MouseManager.X, (int)MouseManager.Y))
+                    {
+                        WindowManager.WindowMoving = true;
 
-                            return;
-                        }
-                        else if (!WindowManager.WindowMoving && Window.TopBar.IsInside((int)MouseManager.X, (int)MouseManager.Y))
-                        {
-                            WindowManager.WindowMoving = true;
-
-                            _pressed = true;
-                            if (!_lck)
-                            {
-                                _px = (int)MouseManager.X - Window.X;
-                                _py = (int)MouseManager.Y - Window.Y;
-                                _lck = true;
-                            }
-                        }
-                    } 
+                        _pressed = true;
+                        _px = (int)MouseManager.X - Window.X;
+                        _py = (int)MouseManager.Y - Window.Y;
+                    }
                 }
-                else
+                else if (!Kernel.MouseManager.IsLeftButtonDown)
                 {
                     if (_rectangleLeft.IsInside(clickX, clickY) || _resizePressed)
                     {
@@ -348,7 +298,6 @@ namespace Aura_OS.System.Graphics.UI.GUI
                         }
 
                         _resizePressed = false;
-                        _lckResize = false;
                         _resizeWidthPressed = false;
                         _resizeHeightPressed = false;
                         _resizingFromRight = false;
@@ -358,7 +307,6 @@ namespace Aura_OS.System.Graphics.UI.GUI
                     }
 
                     _pressed = false;
-                    _lck = false;
                 }
 
                 if (_pressed)
@@ -408,10 +356,34 @@ namespace Aura_OS.System.Graphics.UI.GUI
             Width = width - 4;
             Height = height - (Window.TopBar.Height + 4);
 
-            _rectangleTop = new Rectangle(0, 0, 3, Window.Width + 1);
-            _rectangleLeft = new Rectangle(0, 0, Window.Height + 1, 3);
-            _rectangleBottom = new Rectangle(Window.Height - 3, 0, Window.Height, Window.Width + 1);
-            _rectangleRight = new Rectangle(0, Window.Width - 3, Window.Height + 1, Window.Width);
+            PlaceResizeRectangles();
+        }
+
+        /// <summary>
+        /// The window's 3 pixel frame around the content, in window coordinates: a press there
+        /// resizes the window from that side.
+        /// </summary>
+        private void PlaceResizeRectangles()
+        {
+            _rectangleTop = new Rectangle(0, 0, 2, Window.Width);
+            _rectangleLeft = new Rectangle(0, 0, Window.Height, 2);
+            _rectangleBottom = new Rectangle(Window.Height - 3, 0, Window.Height, Window.Width);
+            _rectangleRight = new Rectangle(0, Window.Width - 3, Window.Height, Window.Width);
+        }
+
+        /// <summary>
+        /// Starts resizing from a side (left, top, right or bottom); the release applies the size.
+        /// </summary>
+        private void StartResize(bool horizontal, bool fromEnd)
+        {
+            _firstX = (int)MouseManager.X;
+            _firstY = (int)MouseManager.Y;
+
+            _resizePressed = true;
+            _resizeWidthPressed = horizontal;
+            _resizeHeightPressed = !horizontal;
+            _resizingFromRight = horizontal && fromEnd;
+            _resizingFromBottom = !horizontal && fromEnd;
         }
 
 

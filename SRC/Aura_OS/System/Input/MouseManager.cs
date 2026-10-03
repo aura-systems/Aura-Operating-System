@@ -38,6 +38,19 @@ namespace Aura_OS.System.Input
         public bool IsLeftButtonDown;
 
         /// <summary>
+        /// True from the update the left button went down until the next one only: what a press starts
+        /// (moving or resizing a window, taking a slider) checks it, so the button held from elsewhere
+        /// crossing a window border or a control starts nothing.
+        /// </summary>
+        public bool IsLeftButtonPressed;
+
+        /// <summary>
+        /// The root component (window, taskbar, start menu, menu...) drawn on top under the mouse
+        /// when the left button went down, null over none.
+        /// </summary>
+        public Component LeftPressRoot;
+
+        /// <summary>
         /// Indicates whether the right mouse button is currently being held down.
         /// </summary>
         public bool IsRightButtonDown;
@@ -136,10 +149,16 @@ namespace Aura_OS.System.Input
             bool leftButton = CosmosMouse.LeftButton;
             bool rightButton = CosmosMouse.RightButton;
 
+            IsLeftButtonPressed = false;
+
             if (leftButton)
             {
                 if (!_leftButtonPressed)
                 {
+                    // Before the click, which may close the menu that was pressed.
+                    LeftPressRoot = DetermineTopRoot();
+                    IsLeftButtonPressed = true;
+
                     ProcessLeftClick();
                     _leftButtonPressed = true;
                 }
@@ -299,6 +318,47 @@ namespace Aura_OS.System.Input
             }
 
             return topComponent;
+        }
+
+        /// <summary>
+        /// The visible root component under the mouse with the highest zIndex: the one drawn on top.
+        /// </summary>
+        private Component DetermineTopRoot()
+        {
+            Component top = null;
+
+            for (int i = 0; i < Component.Components.Count; i++)
+            {
+                Component component = Component.Components[i];
+
+                if (component.IsRoot && component.Visible && component.IsInside(CosmosMouse.X, CosmosMouse.Y)
+                    && (top == null || component.zIndex > top.zIndex))
+                {
+                    top = component;
+                }
+            }
+
+            return top;
+        }
+
+        /// <summary>
+        /// Whether the left button went down in this update over that component, in the window (or
+        /// other root component) drawn on top there.
+        /// </summary>
+        public bool IsLeftPressOn(Component component)
+        {
+            if (!IsLeftButtonPressed || !component.IsInside(CosmosMouse.X, CosmosMouse.Y))
+            {
+                return false;
+            }
+
+            Component root = component;
+            while (root.Parent != null)
+            {
+                root = root.Parent;
+            }
+
+            return root == LeftPressRoot;
         }
 
         /// <summary>
