@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Snake app window: the score over the board. main.lua runs the game, draws the board and fits the window to it. -->
+<Window title="Snake" width="340" height="300" padding="6" spacing="6">
+  <Label id="score" text="Score: 0" />
+  <Canvas id="board" width="320" height="240" background="#101418" />
+</Window>

@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Package name="Snake" version="1.0.0" author="Aura Team"
+         description="The snake game: steer with the arrow keys, eat the apples, avoid the walls and your tail."
+         main="main.lua" layout="Snake.xml" />
