@@ -13,7 +13,8 @@ namespace Aura_OS.System.Processing.Lua
 {
     /// <summary>
     /// cosmos.crypto: string and file hashes for Lua scripts (port of gen2's LuaCosmosCryptoLib).
-    /// Hashes are uppercase hex strings, as in gen2.
+    /// Hashes are uppercase hex strings, as in gen2. A string is hashed as its bytes (on ILuaState, one
+    /// character per byte), so a UTF-8 text hashes as its UTF-8 bytes.
     /// </summary>
     internal static class LuaCryptoLib
     {
@@ -49,6 +50,7 @@ namespace Aura_OS.System.Processing.Lua
 
         private static int CRYPTO_md5(ILuaState lua)
         {
+            // MD5.hash takes each character as a byte, which is what a Lua string is.
             string input = lua.L_CheckString(1);
             lua.PushString(Aura_OS.System.Security.MD5.hash(input));
             return 1;
@@ -57,14 +59,14 @@ namespace Aura_OS.System.Processing.Lua
         private static int CRYPTO_sha256(ILuaState lua)
         {
             string input = lua.L_CheckString(1);
-            lua.PushString(Aura_OS.System.Security.Sha256.hash(Encoding.UTF8.GetBytes(input)));
+            lua.PushString(Aura_OS.System.Security.Sha256.hash(Encoding.Latin1.GetBytes(input)));
             return 1;
         }
 
         private static int CRYPTO_sha512(ILuaState lua)
         {
             string input = lua.L_CheckString(1);
-            lua.PushString(Sha512Hex(Encoding.UTF8.GetBytes(input)));
+            lua.PushString(Sha512Hex(Encoding.Latin1.GetBytes(input)));
             return 1;
         }
 
@@ -74,7 +76,7 @@ namespace Aura_OS.System.Processing.Lua
 
         private static int FILE_CRYPTO_md5(ILuaState lua, LuaInterpreter interpreter)
         {
-            byte[] file = File.ReadAllBytes(ResolvePath(interpreter, lua.L_CheckString(1)));
+            byte[] file = File.ReadAllBytes(ResolvePath(interpreter, LuaText.Decode(lua.L_CheckString(1))));
             acryptohashnet.MD5 hashAlgorithm = new acryptohashnet.MD5();
             byte[] hashBytes = hashAlgorithm.ComputeHash(file);
             hashAlgorithm.Dispose();
@@ -84,14 +86,14 @@ namespace Aura_OS.System.Processing.Lua
 
         private static int FILE_CRYPTO_sha256(ILuaState lua, LuaInterpreter interpreter)
         {
-            byte[] file = File.ReadAllBytes(ResolvePath(interpreter, lua.L_CheckString(1)));
+            byte[] file = File.ReadAllBytes(ResolvePath(interpreter, LuaText.Decode(lua.L_CheckString(1))));
             lua.PushString(Aura_OS.System.Security.Sha256.hash(file));
             return 1;
         }
 
         private static int FILE_CRYPTO_sha512(ILuaState lua, LuaInterpreter interpreter)
         {
-            byte[] file = File.ReadAllBytes(ResolvePath(interpreter, lua.L_CheckString(1)));
+            byte[] file = File.ReadAllBytes(ResolvePath(interpreter, LuaText.Decode(lua.L_CheckString(1))));
             lua.PushString(Sha512Hex(file));
             return 1;
         }

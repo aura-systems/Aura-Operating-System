@@ -47,8 +47,8 @@ the package's files first.
 
 ## The aura library
 
-The kernel API for packages, a global table (also `require "aura"`). The Lua is 5.2
-(Cosmos.Executable.Lua 1.0.0), with its standard libraries and `cosmos.crypto`.
+The kernel API for packages, a global table (also `require "aura"`). The Lua is 5.5
+(Cosmos.Executable.Lua 4.0.1), with its standard libraries and `cosmos.crypto`.
 
 ### aura
 
@@ -68,7 +68,8 @@ have, or setting a read-only one, is an error. Their functions are called with a
 | `app:on(event, handler)` | Calls `handler()` on the layout's event of that name (`onClick="event"`, `onChange`, `onEnter`). A later call replaces it. |
 | `app.title` | The window title, also the taskbar name. |
 
-An error in a handler is written to the OS log with its traceback, and the app goes on.
+An error in a handler is written to the OS log with its traceback, and the app goes on. `os.exit()` in
+a handler closes the app; in the main file, it stops the window from opening.
 
 ### Controls
 
@@ -157,6 +158,7 @@ The files themselves are read and written with Lua's `io` library.
 
 ## Limits
 
-- A handler that never returns (`while true do end`) freezes the desktop: Lua 1.0.0 has no hook to stop it.
+- A handler that never returns (`while true do end`) freezes the desktop: nothing stops it yet (the
+  interpreter's hook is not public, see `lua-host` in GEN3-GAPS.md).
 - Packages are downloaded over plain HTTP, unsigned: there is no TLS in gen3 yet.
 - An app added with `pkg /add` opens with `run`, and shows in the start menu after a reboot.

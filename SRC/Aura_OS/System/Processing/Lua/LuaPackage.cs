@@ -49,6 +49,7 @@ namespace Aura_OS.System.Processing.Lua
 
             // GEN3-GAP(lua-host): Cosmos.Executable.Lua has no virtual-file loader (gen2 LuaFile.VirtualFiles),
             // so every source becomes a package.preload entry, the module name require asks for.
+            // File name -> its code as a Lua string (its bytes, one character each).
             Dictionary<string, string> sources = new Dictionary<string, string>();
 
             state.GetGlobal("package");
@@ -62,12 +63,20 @@ namespace Aura_OS.System.Processing.Lua
                     continue;
                 }
 
-                // L_LoadBuffer reads one byte per char: decode UTF-8 and drop a BOM so non-ASCII literals survive
-                string code = Encoding.UTF8.GetString(file.Value).TrimStart('\uFEFF');
+                // The code is loaded as its bytes, UTF-8 literals included, without a BOM.
+                byte[] code = file.Value;
+                int bom = code.Length >= 3 && code[0] == 0xEF && code[1] == 0xBB && code[2] == 0xBF ? 3 : 0;
 
-                if (state.L_LoadBuffer(code, "@" + file.Key) != ThreadStatus.LUA_OK)
+                if (bom > 0)
                 {
-                    string error = state.ToString(-1);
+                    byte[] trimmed = new byte[code.Length - bom];
+                    Array.Copy(code, bom, trimmed, 0, trimmed.Length);
+                    code = trimmed;
+                }
+
+                if (state.L_LoadBytes(code, LuaText.Encode("@" + file.Key)) != ThreadStatus.LUA_OK)
+                {
+                    string error = LuaText.Decode(state.ToString(-1));
                     state.Pop(3);
                     throw new LuaException(error);
                 }
@@ -80,19 +89,19 @@ namespace Aura_OS.System.Processing.Lua
                 {
                     // gen2 resolved require "lib/util" straight to the file name: keep that working too
                     state.PushValue(-1);
-                    state.SetField(-3, module);
+                    state.SetField(-3, LuaText.Encode(module));
                 }
 
-                state.SetField(-2, dottedModule);
-                sources[file.Key] = code;
+                state.SetField(-2, LuaText.Encode(dottedModule));
+                sources[file.Key] = Encoding.Latin1.GetString(code);
             }
 
             state.Pop(2);
 
             // dofile / loadfile on the package's own files
-            if (state.L_LoadBuffer(PackageLoaders, "=" + package.Name + Package.Extension) != ThreadStatus.LUA_OK)
+            if (state.L_LoadBuffer(PackageLoaders, LuaText.Encode("=" + package.Name + Package.Extension)) != ThreadStatus.LUA_OK)
             {
-                string error = state.ToString(-1);
+                string error = LuaText.Decode(state.ToString(-1));
                 state.Pop(1);
                 throw new LuaException(error);
             }
@@ -101,7 +110,7 @@ namespace Aura_OS.System.Processing.Lua
             {
                 string code;
 
-                if (sources.TryGetValue(l.L_CheckString(1), out code))
+                if (sources.TryGetValue(LuaText.Decode(l.L_CheckString(1)), out code))
                 {
                     l.PushString(code);
                 }
@@ -115,7 +124,7 @@ namespace Aura_OS.System.Processing.Lua
 
             if (state.PCall(1, 0, 0) != ThreadStatus.LUA_OK)
             {
-                string error = state.ToString(-1);
+                string error = LuaText.Decode(state.ToString(-1));
                 state.Pop(1);
                 throw new LuaException(error);
             }
@@ -131,12 +140,12 @@ namespace Aura_OS.System.Processing.Lua
             ILuaState state = lua.State;
 
             state.CreateTable(args.Count, 1);
-            state.PushString(package.Main);
+            state.PushString(LuaText.Encode(package.Main));
             state.RawSetI(-2, 0);
 
             for (int i = 0; i < args.Count; i++)
             {
-                state.PushString(args[i]);
+                state.PushString(LuaText.Encode(args[i] ?? ""));
                 state.RawSetI(-2, i + 1);
             }
 

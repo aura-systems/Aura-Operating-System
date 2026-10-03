@@ -18,7 +18,7 @@ namespace Aura_OS.System.Processing.Lua
     internal static class AuraLua
     {
         /// <summary>
-        /// Create a Lua 5.2 interpreter with the standard libraries, cosmos.crypto,
+        /// Create a Lua 5.5 interpreter with the standard libraries, cosmos.crypto,
         /// Aura's environment variables and os.execute wired to the shell.
         /// The caller must Dispose() it (after its try/catch, not in a using).
         /// </summary>
@@ -105,12 +105,13 @@ namespace Aura_OS.System.Processing.Lua
         /// </summary>
         private static int GetEnv(ILuaState lua)
         {
-            string name = lua.L_CheckString(1);
+            // Lua strings are UTF-8 bytes on ILuaState: convert to and from .NET text.
+            string name = LuaText.Decode(lua.L_CheckString(1));
             string value;
 
             if (Kernel.EnvironmentVariables != null && Kernel.EnvironmentVariables.TryGetValue(name, out value) && value != null)
             {
-                lua.PushString(value);
+                lua.PushString(LuaText.Encode(value));
             }
             else
             {

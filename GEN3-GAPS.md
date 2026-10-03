@@ -110,7 +110,7 @@ exception path, C8 dispose everything.
 - **Gap:** `ProjectPinUpdater.s_packagePin` matches any
   `PackageReference`/`PackageVersion` whose `Include` starts with `Cosmos.`.
   - It would therefore bump `Cosmos.Network.Ftp` (2.0.0) and
-    `Cosmos.Executable.Lua` (1.0.0) to the kernel version.
+    `Cosmos.Executable.Lua` (4.0.1) to the kernel version.
   - Values containing `$(` or `@` are skipped.
 - **Aura workaround:** keep those versions in `$(AuraFtpVersion)` /
   `$(AuraLuaVersion)`, defined in `Directory.Build.props`. The Cosmos version
@@ -766,16 +766,18 @@ exception path, C8 dispose everything.
 - **Upstream ask:** a managed hash plug, and RDRAND.
 - **Source:** 07, 08.
 
-### `lua-host`: Cosmos.Executable.Lua 1.0.0 host hooks (minor)
+### `lua-host`: Cosmos.Executable.Lua 4.0.1 host hooks (minor)
 - **Gap:**
   - There is no virtual-file loader.
   - Callbacks can't see host settings.
-  - `os.getenv` is hard-wired.
-  - There is no cancellation hook.
-  - The next version (Lua 5.3) breaks `ILuaState`.
-- **Aura workaround:** `package.preload`, closures, an `os.getenv` override.
-- **Upstream ask:** a loader hook, a host accessor, an env `Func`, and
-  `SetHook`.
+  - `os.getenv` is hard-wired (it reads `Environment`, always empty on gen3).
+  - There is no cancellation hook: `SetHook` is internal, only Lua's
+    `debug.sethook` reaches it.
+  - On `ILuaState` a Lua string is its UTF-8 bytes, one character each.
+- **Aura workaround:** `package.preload`, closures, an `os.getenv` override,
+  `LuaText.Encode`/`Decode` wherever a C# function takes or gives text.
+- **Upstream ask:** a loader hook, a host accessor, an env `Func`, and a
+  public `SetHook`.
 - **Source:** 07.
 
 ## Aura-side (not Cosmos)

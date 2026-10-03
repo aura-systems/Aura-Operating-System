@@ -86,7 +86,7 @@ namespace Aura_OS.System.Processing.Lua
         private static int Index(ILuaState lua)
         {
             LuaObject self = (LuaObject)lua.L_CheckUData(1, TypeName);
-            string key = lua.L_CheckString(2);
+            string key = CheckText(lua, 2);
             CSharpFunctionDelegate get;
 
             if (self._getters.TryGetValue(key, out get))
@@ -100,7 +100,7 @@ namespace Aura_OS.System.Processing.Lua
         private static int NewIndex(ILuaState lua)
         {
             LuaObject self = (LuaObject)lua.L_CheckUData(1, TypeName);
-            string key = lua.L_CheckString(2);
+            string key = CheckText(lua, 2);
             CSharpFunctionDelegate set;
 
             if (self._setters.TryGetValue(key, out set))
@@ -117,7 +117,7 @@ namespace Aura_OS.System.Processing.Lua
         }
 
         /// <summary>
-        /// A string, nil for null.
+        /// Text as a Lua string (its UTF-8 bytes, LuaText.Encode), nil for null.
         /// </summary>
         public static void PushText(ILuaState lua, string text)
         {
@@ -127,8 +127,16 @@ namespace Aura_OS.System.Processing.Lua
             }
             else
             {
-                lua.PushString(text);
+                lua.PushString(LuaText.Encode(text));
             }
+        }
+
+        /// <summary>
+        /// A string argument as text (LuaText.Decode): on ILuaState a Lua string is its bytes.
+        /// </summary>
+        public static string CheckText(ILuaState lua, int index)
+        {
+            return LuaText.Decode(lua.L_CheckString(index));
         }
 
         /// <summary>
@@ -137,7 +145,7 @@ namespace Aura_OS.System.Processing.Lua
         public static int Error(ILuaState lua, string message)
         {
             lua.L_Where(1);
-            lua.PushString(message);
+            lua.PushString(LuaText.Encode(message));
             lua.Concat(2);
             return lua.Error();
         }

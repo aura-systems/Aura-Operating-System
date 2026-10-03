@@ -24,7 +24,8 @@ namespace Aura_OS.System.Processing.Lua
 {
     /// <summary>
     /// The aura library (global, and require "aura"): the app's window and controls, and the system's
-    /// settings. SRC/Packages/README.md is its reference; keep both in step.
+    /// settings. SRC/Packages/README.md is its reference; keep both in step. Strings cross as text:
+    /// LuaObject.CheckText and PushText convert them from and to the Lua strings' UTF-8 bytes.
     /// </summary>
     internal static class LuaAuraLib
     {
@@ -117,7 +118,7 @@ namespace Aura_OS.System.Processing.Lua
         /// </summary>
         private static int Log(ILuaState lua, Package package)
         {
-            Logs.DoOSLog("[" + package.Name + "] " + lua.L_CheckString(1));
+            Logs.DoOSLog("[" + package.Name + "] " + LuaObject.CheckText(lua, 1));
             return 0;
         }
 
@@ -131,7 +132,7 @@ namespace Aura_OS.System.Processing.Lua
                 .Property("installed", lua => Push(lua, Kernel.Installed))
                 .Property("computerName", lua => Push(lua, Kernel.ComputerName ?? ""), lua =>
                 {
-                    Kernel.ComputerName = lua.L_CheckString(3);
+                    Kernel.ComputerName = LuaObject.CheckText(lua, 3);
 
                     if (!string.IsNullOrEmpty(Kernel.ComputerName))
                     {
@@ -150,8 +151,8 @@ namespace Aura_OS.System.Processing.Lua
                     LuaObject.PushText(lua, url);
                     return 3;
                 })
-                .Function("compareVersions", lua => Push(lua, Math.Sign(AuraVersion.CompareVersions(lua.L_CheckString(1), lua.L_CheckString(2)))))
-                .Function("compareRevisions", lua => Push(lua, Math.Sign(AuraVersion.CompareRevisions(lua.L_CheckString(1), lua.L_CheckString(2)))));
+                .Function("compareVersions", lua => Push(lua, Math.Sign(AuraVersion.CompareVersions(LuaObject.CheckText(lua, 1), LuaObject.CheckText(lua, 2)))))
+                .Function("compareRevisions", lua => Push(lua, Math.Sign(AuraVersion.CompareRevisions(LuaObject.CheckText(lua, 1), LuaObject.CheckText(lua, 2)))));
         }
 
         private static LuaObject UserObject()
@@ -159,7 +160,7 @@ namespace Aura_OS.System.Processing.Lua
             return new LuaObject("aura.user")
                 .Property("name", lua => Push(lua, Kernel.userLogged ?? ""), lua =>
                 {
-                    Kernel.userLogged = lua.L_CheckString(3);
+                    Kernel.userLogged = LuaObject.CheckText(lua, 3);
                     return 0;
                 });
         }
@@ -233,7 +234,7 @@ namespace Aura_OS.System.Processing.Lua
                 // Raises an error for a BMP the loader rejects; a missing file shows the default wallpaper.
                 .Function("setWallpaper", lua =>
                 {
-                    Explorer.Desktop.SetWallpaper(lua.L_CheckString(1));
+                    Explorer.Desktop.SetWallpaper(LuaObject.CheckText(lua, 1));
                     return 0;
                 })
                 .Property("windowsAlpha", lua => Push(lua, Explorer.WindowManager.WindowsTransparency), lua =>
@@ -261,12 +262,12 @@ namespace Aura_OS.System.Processing.Lua
             return new LuaObject("aura.theme")
                 .Property("bmpPath", lua => Text(lua, Kernel.ThemeManager.BmpPath), lua =>
                 {
-                    Kernel.ThemeManager.BmpPath = lua.L_CheckString(3);
+                    Kernel.ThemeManager.BmpPath = LuaObject.CheckText(lua, 3);
                     return 0;
                 })
                 .Property("xmlPath", lua => Text(lua, Kernel.ThemeManager.XmlPath), lua =>
                 {
-                    Kernel.ThemeManager.XmlPath = lua.L_CheckString(3);
+                    Kernel.ThemeManager.XmlPath = LuaObject.CheckText(lua, 3);
                     return 0;
                 });
         }
@@ -280,7 +281,7 @@ namespace Aura_OS.System.Processing.Lua
                 // get(key): the value, nil when unset or not installed.
                 .Function("get", lua =>
                 {
-                    string key = lua.L_CheckString(1);
+                    string key = LuaObject.CheckText(lua, 1);
                     return Text(lua, Kernel.Installed ? new Settings(AuraPaths.SettingsIni).GetValue(key) : null);
                 })
                 // save({ key = value, ... }): writes the pairs in one go; booleans as true/false.
@@ -303,7 +304,7 @@ namespace Aura_OS.System.Processing.Lua
                             return LuaObject.Error(lua, "settings keys are strings");
                         }
 
-                        config.EditValue(lua.ToString(-2), SettingText(lua, -1));
+                        config.EditValue(LuaText.Decode(lua.ToString(-2)), SettingText(lua, -1));
                         lua.Pop(1);
                     }
 
@@ -316,8 +317,8 @@ namespace Aura_OS.System.Processing.Lua
         {
             return new LuaObject("aura.fs")
                 // resolve(path): absolute, from the current directory; gen2 paths (0:\Users) are converted.
-                .Function("resolve", lua => Push(lua, AuraPath.Resolve(lua.L_CheckString(1))))
-                .Function("fileExists", lua => Push(lua, File.Exists(lua.L_CheckString(1))));
+                .Function("resolve", lua => Push(lua, AuraPath.Resolve(LuaObject.CheckText(lua, 1))))
+                .Function("fileExists", lua => Push(lua, File.Exists(LuaObject.CheckText(lua, 1))));
         }
 
         #endregion
@@ -327,7 +328,7 @@ namespace Aura_OS.System.Processing.Lua
         private static int AppIndex(ILuaState lua)
         {
             PackageApp app = (PackageApp)lua.L_CheckUData(1, AppType);
-            string key = lua.L_CheckString(2);
+            string key = LuaObject.CheckText(lua, 2);
 
             switch (key)
             {
@@ -347,11 +348,11 @@ namespace Aura_OS.System.Processing.Lua
         private static int AppNewIndex(ILuaState lua)
         {
             PackageApp app = (PackageApp)lua.L_CheckUData(1, AppType);
-            string key = lua.L_CheckString(2);
+            string key = LuaObject.CheckText(lua, 2);
 
             if (key == "title")
             {
-                app.SetTitle(lua.L_CheckString(3));
+                app.SetTitle(LuaObject.CheckText(lua, 3));
                 return 0;
             }
 
@@ -364,7 +365,7 @@ namespace Aura_OS.System.Processing.Lua
         private static int AppFind(ILuaState lua)
         {
             PackageApp app = (PackageApp)lua.L_CheckUData(1, AppType);
-            string id = lua.L_CheckString(2);
+            string id = LuaObject.CheckText(lua, 2);
 
             // Throws (a Lua error) for an id the file does not have.
             Component component = app.Layout.FindComponent(id);
@@ -381,7 +382,7 @@ namespace Aura_OS.System.Processing.Lua
         private static int AppOn(ILuaState lua)
         {
             PackageApp app = (PackageApp)lua.L_CheckUData(1, AppType);
-            string name = lua.L_CheckString(2);
+            string name = LuaObject.CheckText(lua, 2);
             lua.L_CheckType(3, LuaType.LUA_TFUNCTION);
 
             lua.PushValue(3);
@@ -396,13 +397,13 @@ namespace Aura_OS.System.Processing.Lua
         private static int ControlIndex(ILuaState lua)
         {
             Control control = (Control)lua.L_CheckUData(1, ControlType);
-            string key = lua.L_CheckString(2);
+            string key = LuaObject.CheckText(lua, 2);
             Component component = control.Component;
 
             switch (key)
             {
                 case "id":
-                    lua.PushString(control.Id);
+                    LuaObject.PushText(lua, control.Id);
                     return 1;
                 case "visible":
                     lua.PushBoolean(control.App.Layout.IsVisible(control.Id));
@@ -429,7 +430,7 @@ namespace Aura_OS.System.Processing.Lua
                     Color color;
                     if (TryGetColor(component, out color))
                     {
-                        lua.PushString(ColorText(color));
+                        LuaObject.PushText(lua, ColorText(color));
                         return 1;
                     }
                     break;
@@ -454,7 +455,7 @@ namespace Aura_OS.System.Processing.Lua
 
                         for (int i = 0; i < itemsDropDown.Items.Count; i++)
                         {
-                            lua.PushString(itemsDropDown.Items[i] ?? "");
+                            LuaObject.PushText(lua, itemsDropDown.Items[i] ?? "");
                             lua.RawSetI(-2, i + 1);
                         }
 
@@ -494,7 +495,7 @@ namespace Aura_OS.System.Processing.Lua
         private static int ControlNewIndex(ILuaState lua)
         {
             Control control = (Control)lua.L_CheckUData(1, ControlType);
-            string key = lua.L_CheckString(2);
+            string key = LuaObject.CheckText(lua, 2);
             Component component = control.Component;
             bool set = false;
 
@@ -505,7 +506,7 @@ namespace Aura_OS.System.Processing.Lua
                     control.App.Layout.SetVisible(control.Id, lua.ToBoolean(3));
                     return 0;
                 case "text":
-                    string text = lua.L_CheckString(3);
+                    string text = LuaObject.CheckText(lua, 3);
                     if (component is Label label)
                     {
                         label.Text = text;
@@ -529,7 +530,7 @@ namespace Aura_OS.System.Processing.Lua
                     break;
                 case "color":
                     Color color;
-                    string value = lua.L_CheckString(3);
+                    string value = LuaObject.CheckText(lua, 3);
                     if (!LayoutLoader.TryParseColor(value, out color))
                     {
                         return LuaObject.Error(lua, "a color is #RRGGBB, #AARRGGBB or a color name, not '" + value + "'");
@@ -562,7 +563,7 @@ namespace Aura_OS.System.Processing.Lua
                         {
                             // L_ToString pushes the text too (luaL_tolstring)
                             lua.RawGetI(3, i);
-                            itemsDropDown.AddItem(lua.L_ToString(-1));
+                            itemsDropDown.AddItem(LuaText.Decode(lua.L_ToString(-1)));
                             lua.Pop(2);
                         }
 
@@ -579,21 +580,21 @@ namespace Aura_OS.System.Processing.Lua
                 case "title":
                     if (component is Dialog titleDialog)
                     {
-                        titleDialog.Title = lua.L_CheckString(3);
+                        titleDialog.Title = LuaObject.CheckText(lua, 3);
                         set = true;
                     }
                     break;
                 case "message":
                     if (component is Dialog dialog)
                     {
-                        dialog.Message = lua.L_CheckString(3);
+                        dialog.Message = LuaObject.CheckText(lua, 3);
                         set = true;
                     }
                     break;
                 case "state":
                     if (component is Dialog stateDialog)
                     {
-                        string state = lua.L_CheckString(3);
+                        string state = LuaObject.CheckText(lua, 3);
                         if (state != "information" && state != "error")
                         {
                             return LuaObject.Error(lua, "a dialog state is 'information' or 'error', not '" + state + "'");
@@ -681,7 +682,7 @@ namespace Aura_OS.System.Processing.Lua
 
         private static int Push(ILuaState lua, string value)
         {
-            lua.PushString(value);
+            LuaObject.PushText(lua, value);
             return 1;
         }
 
@@ -731,7 +732,7 @@ namespace Aura_OS.System.Processing.Lua
                         ? ((long)number).ToString(CultureInfo.InvariantCulture)
                         : number.ToString(CultureInfo.InvariantCulture);
                 case LuaType.LUA_TSTRING:
-                    return lua.ToString(index);
+                    return LuaText.Decode(lua.ToString(index));
             }
 
             LuaObject.Error(lua, "a setting is a string, a number or a boolean");

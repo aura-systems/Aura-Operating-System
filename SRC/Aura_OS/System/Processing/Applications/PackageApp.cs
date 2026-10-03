@@ -16,7 +16,8 @@ namespace Aura_OS.System.Processing.Applications
     /// <summary>
     /// An app whose window is its package's layout file and whose behaviour is its package's Lua:
     /// the main file runs once when the app opens, then the handlers it gave with app:on run on the
-    /// layout's events, on the UI thread. SRC/Packages/README.md describes the Lua side.
+    /// layout's events, on the UI thread. os.exit in a handler closes the app. SRC/Packages/README.md
+    /// describes the Lua side.
     /// </summary>
     public class PackageApp : Application
     {
@@ -28,6 +29,9 @@ namespace Aura_OS.System.Processing.Applications
         private readonly Dictionary<string, int> _handlers = new Dictionary<string, int>();
 
         private bool _disposed;
+
+        // A handler called os.exit: the app closes after its update.
+        private bool _exited;
 
         /// <exception cref="InvalidDataException">The layout file is wrong.</exception>
         /// <exception cref="InvalidOperationException">The main file failed.</exception>
@@ -58,7 +62,21 @@ namespace Aura_OS.System.Processing.Applications
                 }
 
                 LuaException luaError = error as LuaException;
-                string message = luaError != null && luaError.LuaStackTrace != null ? luaError.Message + "\n" + luaError.LuaStackTrace : error.Message;
+                LuaExitException exit = error as LuaExitException;
+                string message;
+
+                if (exit != null)
+                {
+                    message = "exited with code " + exit.ExitCode + " before its window opened.";
+                }
+                else if (luaError != null && luaError.LuaStackTrace != null)
+                {
+                    message = luaError.Message + "\n" + luaError.LuaStackTrace;
+                }
+                else
+                {
+                    message = error.Message;
+                }
 
                 throw new InvalidOperationException(package.Name + ": " + message, error);
             }
@@ -85,7 +103,7 @@ namespace Aura_OS.System.Processing.Applications
         /// </summary>
         private void Call(string name, int reference)
         {
-            if (_disposed)
+            if (_disposed || _exited)
             {
                 return;
             }
@@ -96,15 +114,42 @@ namespace Aura_OS.System.Processing.Applications
             state.PushCSharpFunction(Traceback);
             state.RawGetI(LuaDef.LUA_REGISTRYINDEX, reference);
 
-            if (state.PCall(0, 0, top + 1) != ThreadStatus.LUA_OK)
+            try
             {
-                Logs.DoOSLog("[Error] " + Package.Name + ": " + name + ": " + state.ToString(-1));
+                if (state.PCall(0, 0, top + 1) != ThreadStatus.LUA_OK)
+                {
+                    Logs.DoOSLog("[Error] " + Package.Name + ": " + name + ": " + LuaText.Decode(state.ToString(-1) ?? "(error object is not a string)"));
+                }
+            }
+            catch (Exception ex)
+            {
+                // One clause: gen3 kernels up to 3.0.89 enter the first typed catch whatever the type.
+                // os.exit is the one error no protected call keeps: it reaches here as LuaExitException.
+                if (ex is LuaExitException)
+                {
+                    _exited = true;
+                }
+                else
+                {
+                    Logs.DoOSLog("[Error] " + Package.Name + ": " + name + ": " + ex.Message);
+                }
             }
 
             state.SetTop(top);
 
             // The handler changed controls: draw the window again.
             MarkDirty();
+        }
+
+        public override void Update()
+        {
+            base.Update();
+
+            // Closed here rather than in the handler, which runs in the middle of the controls' updates.
+            if (_exited && !_disposed)
+            {
+                Dispose();
+            }
         }
 
         /// <summary>

@@ -39,11 +39,11 @@ Open source project used in Aura Operating System:
 - License file: [LICENSE.MD](https://github.com/aura-systems/Aura-Operating-System/blob/master/LICENSES/SimpleHttpServer/LICENSE.md)
 
 ### Cosmos.Executable.Lua
-- Description: Lua 5.2 interpreter for Cosmos gen3 kernels, based on UniLua. Replaces the in-tree UniLua copy.
+- Description: Lua 5.5 interpreter for Cosmos gen3 kernels, based on UniLua. Replaces the in-tree UniLua copy.
 - Project: [github.com/CosmosOS/Cosmos.Executable.Lua](https://github.com/CosmosOS/Cosmos.Executable.Lua)
 - Package: NuGet `Cosmos.Executable.Lua` (referenced by SRC/Aura_OS/Aura_OS.csproj)
 - License: BSD 3-Clause, Copyright (c) 2021, CosmosOS, COSMOS Project (LICENSE.txt in the package).
-- Includes: [UniLua](https://github.com/xebecnan/UniLua), MIT License, Copyright (C) 2013 Sheng Lunan (THIRD-PARTY-NOTICES.txt in the package).
+- Includes: [UniLua](https://github.com/xebecnan/UniLua), MIT License, Copyright (C) 2013 Sheng Lunan, and code ported from Lua 5.3 to 5.5, MIT License, Copyright (C) 1994-2026 Lua.org, PUC-Rio (THIRD-PARTY-NOTICES.txt in the package).
 
 ### Cosmos.Network.Ftp
 - Description: FTP server for Cosmos gen3 kernels, used by the ftp command.

@@ -129,14 +129,14 @@ namespace Aura_OS.System.Processing.Interpreter.Commands.Processing
 
                 ILuaState state = lua.State;
 
-                // arg[0] = script path, arg[1..n] = arguments (as lua script.lua args...)
+                // arg[0] = script path, arg[1..n] = arguments (as lua script.lua args...), as Lua strings (UTF-8 bytes)
                 state.CreateTable(args.Count, 1);
-                state.PushString(filePath);
+                state.PushString(LuaText.Encode(filePath));
                 state.RawSetI(-2, 0);
 
                 for (int i = 0; i < args.Count; i++)
                 {
-                    state.PushString(args[i]);
+                    state.PushString(LuaText.Encode(args[i] ?? ""));
                     state.RawSetI(-2, i + 1);
                 }
 
@@ -149,20 +149,24 @@ namespace Aura_OS.System.Processing.Interpreter.Commands.Processing
                     "if type(m) == 'table' and type(m.main) == 'function' then m.main() end",
                     "=run");
             }
-            catch (LuaException e)
-            {
-                result = new ReturnInfo(this, ReturnCode.ERROR, e.Message + (e.LuaStackTrace != null ? "\n" + e.LuaStackTrace : ""));
-            }
-            catch (LuaExitException e)
-            {
-                if (e.ExitCode != 0)
-                {
-                    result = new ReturnInfo(this, ReturnCode.ERROR, "Exited with code " + e.ExitCode + ".");
-                }
-            }
             catch (Exception e)
             {
-                result = new ReturnInfo(this, ReturnCode.ERROR, e.ToString());
+                // One clause: gen3 kernels up to 3.0.89 enter the first typed catch whatever the type.
+                if (e is LuaExitException exit)
+                {
+                    if (exit.ExitCode != 0)
+                    {
+                        result = new ReturnInfo(this, ReturnCode.ERROR, "Exited with code " + exit.ExitCode + ".");
+                    }
+                }
+                else if (e is LuaException error)
+                {
+                    result = new ReturnInfo(this, ReturnCode.ERROR, error.Message + (error.LuaStackTrace != null ? "\n" + error.LuaStackTrace : ""));
+                }
+                else
+                {
+                    result = new ReturnInfo(this, ReturnCode.ERROR, e.ToString());
+                }
             }
 
             // GEN3-GAP(finally): not a using, gen3 does not run finally/Dispose when an exception unwinds (C7).
