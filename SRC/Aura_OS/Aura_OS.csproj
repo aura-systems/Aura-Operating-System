@@ -18,6 +18,7 @@
     <PackageReference Include="Cosmos.Kernel" Version="$(AuraCosmosVersion)" />
     <PackageReference Include="Cosmos.Kernel.System" Version="$(AuraCosmosVersion)" />
     <PackageReference Include="Cosmos.Network.Ftp" Version="$(AuraFtpVersion)" />
+    <PackageReference Include="Cosmos.Network.Http" Version="$(AuraHttpVersion)" />
     <PackageReference Include="Cosmos.Executable.Lua" Version="$(AuraLuaVersion)" />
     <PackageReference Include="acryptohashnet" Version="2.0.0" />                 <!-- cosmos.crypto Lua lib only -->
     <PackageReference Include="jzero" Version="0.4.5" />                           <!-- JsonReader only -->

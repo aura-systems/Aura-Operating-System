@@ -656,8 +656,9 @@ exception path, C8 dispose everything.
 ## Network
 
 ### `http-tls`: no HttpClient, no TLS (major)
-- **Aura workaround:** an Aura HTTP/1.1 GET client over `Socket`; `https` is
-  refused.
+- **Aura workaround:** the `Cosmos.Network.Http` 2.0 package, an HTTP/1.1
+  client over `Socket` that waits in `Poll`, so it runs on the UI thread;
+  `https` is refused.
 - **Upstream ask:** an HTTP handler or package, and a TLS roadmap.
 - **Source:** 06, 08.
 

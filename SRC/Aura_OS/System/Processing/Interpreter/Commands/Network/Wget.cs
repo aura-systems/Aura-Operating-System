@@ -1,6 +1,6 @@
 ﻿/*
 * PROJECT:          Aura Operating System Development
-* CONTENT:          Command Interpreter - Ping command
+* CONTENT:          Command Interpreter - Wget command
 * PROGRAMMER(S):    Valentin Charbonnier <valentinbreiz@gmail.com>
 */
 
@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.IO;
 using Aura_OS.System.Filesystem;
 using Aura_OS.System.Network;
+using Cosmos.Network.Http;
 
 namespace Aura_OS.System.Processing.Interpreter.Commands.Network
 {
@@ -46,13 +47,6 @@ namespace Aura_OS.System.Processing.Interpreter.Commands.Network
             }
 
             string url = arguments[0];
-
-            if (url.StartsWith("https://", StringComparison.OrdinalIgnoreCase))
-            {
-                // GEN3-GAP(http-tls): no TLS in gen3.
-                return new ReturnInfo(this, ReturnCode.ERROR_ARG, "HTTPS currently not supported, please use http://");
-            }
-
             string fileName = GetFileName(url);
             string path;
 
@@ -74,19 +68,37 @@ namespace Aura_OS.System.Processing.Interpreter.Commands.Network
                 path = AuraPath.AsDirectory(Kernel.CurrentDirectory) + fileName;
             }
 
+            HttpResponse response;
             try
             {
-                // Binary-safe: gen2 wrote the ASCII text to file.html whatever was downloaded.
-                byte[] data = Http.DownloadRawFile(url);
-
-                File.WriteAllBytes(path, data);
-
-                Console.WriteLine(url + " saved to " + path + " (" + data.Length + " bytes)");
+                response = Http.CreateRequest(url).Send();
             }
             catch (Exception ex)
             {
+                // HttpException (no address, no answer, timeout...), NotSupportedException (https://, no TLS in gen3),
+                // FormatException (bad host or port).
                 return new ReturnInfo(this, ReturnCode.ERROR, ex.Message);
             }
+
+            string status = (response.StatusCode + " " + response.ReasonPhrase).TrimEnd();
+            if (!response.IsSuccessStatusCode)
+            {
+                return new ReturnInfo(this, ReturnCode.ERROR, response.Url + ": " + status);
+            }
+
+            try
+            {
+                // Binary-safe: gen2 wrote the ASCII text to file.html whatever was downloaded.
+                File.WriteAllBytes(path, response.Content);
+            }
+            catch (Exception ex)
+            {
+                return new ReturnInfo(this, ReturnCode.ERROR, "Can't save " + path + ": " + ex.Message);
+            }
+
+            string type = response.ContentType is null ? "" : " [" + response.ContentType + "]";
+            Console.WriteLine(response.Url + ": " + status + ", " + response.Content.Length + " bytes" + type);
+            Console.WriteLine("Saved to " + path);
 
             return new ReturnInfo(this, ReturnCode.OK);
         }
