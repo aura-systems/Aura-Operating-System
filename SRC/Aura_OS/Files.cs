@@ -24,7 +24,6 @@ namespace Aura_OS
         private const string ResourcePrefix = "Aura_OS/";
 
         private static byte[] _errorImage;
-        private static byte[] _tetrisRom;
         private static byte[] _wallpaper;
         private static byte[] _wallpaper2;
         private static byte[] _auralogoWhite;
@@ -42,20 +41,6 @@ namespace Aura_OS
                 }
 
                 return _errorImage;
-            }
-        }
-
-        //.gb
-        public static byte[] TetrisRom
-        {
-            get
-            {
-                if (_tetrisRom == null)
-                {
-                    _tetrisRom = Get("Tetris.gb");
-                }
-
-                return _tetrisRom;
             }
         }
 

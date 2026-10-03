@@ -512,7 +512,8 @@ exception path, C8 dispose everything.
 
 ### `key-release`: only key presses are queued (minor)
 - **Gap:** there is no held-key query.
-- **Aura workaround:** GameBoy pulse model (fixed release).
+- **Aura workaround:** none needed since the GameBoy app was removed (it
+  released each key after a fixed time).
 - **Upstream ask:** opt-in Break events or a pressed-key bitmap.
 - **Source:** 05, 08.
 

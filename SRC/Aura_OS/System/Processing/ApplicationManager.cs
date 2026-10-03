@@ -6,7 +6,6 @@
 
 using Aura_OS.System.Graphics.UI.GUI;
 using Aura_OS.System.Processing.Applications;
-using Aura_OS.System.Processing.Applications.Emulators.GameBoyEmu;
 using Aura_OS.System.Processing.Processes;
 using System;
 using System.Collections.Generic;
@@ -85,7 +84,6 @@ namespace Aura_OS.System.Processing
         public void LoadApplications()
         {
             //RegisterApplication(typeof(ExplorerApp), 40, 40, 500, 400);
-            RegisterApplication(typeof(GameBoyApp), 40, 40, 160 + 6, 144 + 26);
 
             // Package apps: built in (SRC/Packages) or installed in Programs/.
             foreach (Package package in Kernel.PackageManager.Packages)
@@ -223,10 +221,6 @@ namespace Aura_OS.System.Processing
             {
                 app = new PackageApp(config.Package, config.X, config.Y);
             }
-            else if (config.Template == typeof(GameBoyApp))
-            {
-                app = new GameBoyApp(config.Width, config.Height, config.X, config.Y);
-            }
             /*else if (config.Template == typeof(ExplorerApp))
             {
                 app = new ExplorerApp(Kernel.CurrentVolume, config.Weight, config.Height, config.X, config.Y);
@@ -251,46 +245,11 @@ namespace Aura_OS.System.Processing
             {
                 StartPackage("Picture", new List<string> { Path.Combine(currentPath, fileName) });
             }
-            else if (fileName.EndsWith(".gb", StringComparison.OrdinalIgnoreCase))
-            {
-                string path = Path.Combine(currentPath, fileName);
-                string name = fileName;
-                GameBoyApp app;
-
-                try
-                {
-                    byte[] bytes = File.ReadAllBytes(path);
-                    app = new GameBoyApp(bytes, name, 160 + 6, 144 + 26, 40, 40);
-                }
-                catch (Exception ex)
-                {
-                    ReportOpenError(path, ex);
-                    return;
-                }
-
-                app.Initialize();
-                app.MarkFocused();
-                app.Visible = true;
-
-                Explorer.WindowManager.Applications.Add(app);
-                Kernel.ProcessManager.Start(app);
-
-                Explorer.Taskbar.UpdateApplicationButtons();
-            }
             else
             {
                 // Any other file opens in the Editor package.
                 StartPackage("Editor", new List<string> { Path.Combine(currentPath, fileName) });
             }
-        }
-
-        /// <summary>
-        /// Reports a file that could not be opened (unreadable file, unsupported image or ROM).
-        /// Logged rather than drawn: CustomConsole would paint the full-screen boot console over the desktop.
-        /// </summary>
-        private static void ReportOpenError(string path, Exception ex)
-        {
-            Logs.DoOSLog("[Error] Cannot open '" + path + "': " + ex.Message);
         }
 
         public Application GetApplicationByPid(uint pid)
