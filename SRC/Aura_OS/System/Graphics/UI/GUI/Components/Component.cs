@@ -190,32 +190,20 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
             }
         }
 
+        /// <summary>
+        /// Draws the frame (nine-slice skin regions) over the whole component. The regions do not
+        /// overlap and start from a transparent buffer, so the transparent pixels of the corners
+        /// stay transparent (rounded corners) and a redraw does not blend a translucent pixel twice.
+        /// </summary>
         public virtual void Draw()
         {
             if (Frame != null && Frame.Regions.Length > 0)
             {
-                foreach (Frame.Region region in Frame.Regions)
-                {
-                    if (region.HorizontalPlacement == "stretch" && region.VerticalPlacement == "stretch")
-                    {
-                        DrawRegion(region, CalculateDestinationRect(region, Width, Height));
-                    }
-                }
+                Clear(Color.Transparent);
 
                 foreach (Frame.Region region in Frame.Regions)
                 {
-                    if (region.HorizontalPlacement == "stretch" ^ region.VerticalPlacement == "stretch")
-                    {
-                        DrawRegion(region, CalculateDestinationRect(region, Width, Height));
-                    }
-                }
-
-                foreach (Frame.Region region in Frame.Regions)
-                {
-                    if (region.HorizontalPlacement != "stretch" && region.VerticalPlacement != "stretch")
-                    {
-                        DrawRegion(region, CalculateDestinationRect(region, Width, Height));
-                    }
+                    DrawRegion(region, CalculateDestinationRect(region, Width, Height));
                 }
             }
         }
@@ -247,7 +235,8 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
             Rectangle source = region.SourceRegion;
 
             // A null dereference is a fatal #PF in gen3: skip a region the theme left incomplete.
-            if (region.Texture == null || source == null)
+            // A component smaller than its borders leaves a stretched region no room.
+            if (region.Texture == null || source == null || destination.Width <= 0 || destination.Height <= 0)
             {
                 return;
             }
@@ -281,8 +270,9 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
                     x = (frameWidth - width) / 2;
                     break;
                 case "stretch":
-                    x = 0;
-                    width = frameWidth;
+                    // Between the left and right regions, which keep their own pixels.
+                    x = Frame.LeftBorder;
+                    width = frameWidth - Frame.LeftBorder - Frame.RightBorder;
                     break;
             }
 
@@ -298,8 +288,8 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
                     y = (frameHeight - height) / 2;
                     break;
                 case "stretch":
-                    y = 0;
-                    height = frameHeight;
+                    y = Frame.TopBorder;
+                    height = frameHeight - Frame.TopBorder - Frame.BottomBorder;
                     break;
             }
 

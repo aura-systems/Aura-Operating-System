@@ -83,6 +83,28 @@ namespace Aura_OS.System.Graphics.UI.GUI.Skin
         {
             this.Regions = regions;
             this.Texts = texts;
+
+            // The border sizes: the stretched regions fill the space between them.
+            foreach (Region region in regions)
+            {
+                if (region.HorizontalPlacement == "left")
+                {
+                    LeftBorder = Math.Max(LeftBorder, region.SourceRegion.Width);
+                }
+                else if (region.HorizontalPlacement == "right")
+                {
+                    RightBorder = Math.Max(RightBorder, region.SourceRegion.Width);
+                }
+
+                if (region.VerticalPlacement == "top")
+                {
+                    TopBorder = Math.Max(TopBorder, region.SourceRegion.Height);
+                }
+                else if (region.VerticalPlacement == "bottom")
+                {
+                    BottomBorder = Math.Max(BottomBorder, region.SourceRegion.Height);
+                }
+            }
         }
 
         /// <summary>Regions that need to be drawn to render the frame</summary>
@@ -90,6 +112,15 @@ namespace Aura_OS.System.Graphics.UI.GUI.Skin
 
         /// <summary>Locations where text can be drawn into the frame</summary>
         public Text[] Texts;
+
+        /// <summary>Width of the widest left-placed region (0 without)</summary>
+        public int LeftBorder;
+        /// <summary>Height of the tallest top-placed region (0 without)</summary>
+        public int TopBorder;
+        /// <summary>Width of the widest right-placed region (0 without)</summary>
+        public int RightBorder;
+        /// <summary>Height of the tallest bottom-placed region (0 without)</summary>
+        public int BottomBorder;
 
     }
 }

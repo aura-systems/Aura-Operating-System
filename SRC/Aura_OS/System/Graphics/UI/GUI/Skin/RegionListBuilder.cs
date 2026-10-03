@@ -29,7 +29,6 @@ public class RegionListBuilder
     )
     {
         RegionListBuilder builder = new RegionListBuilder();
-        builder.retrieveBorderSizes(frameElement);
         return builder.createAndPlaceRegions(frameElement, bitmaps);
     }
 
@@ -43,52 +42,6 @@ public class RegionListBuilder
         // is a fatal #PF on gen3 (gen2 silently read low memory).
         NanoXMLAttribute attribute = node.GetAttribute(name);
         return attribute == null ? null : attribute.Value;
-    }
-
-    /// <summary>Retrieves the sizes of the border regions in a frame</summary>
-    /// <param name="frameElement">
-    ///   XML node for the frame containing the region
-    /// </param>
-    private void retrieveBorderSizes(NanoXMLNode frameElement)
-    {
-        foreach (NanoXMLNode element in frameElement.SubNodes)
-        {
-            // Only regions have a size (<text> nodes have no w/h)
-            if (element.Name != "region")
-            {
-                continue;
-            }
-
-            // Left and right border width determination
-            string hplacement = Attr(element, "hplacement");
-            string w = Attr(element, "w");
-            if (hplacement != null && w != null)
-            {
-                if (hplacement == "left")
-                {
-                    this.leftBorderWidth = Math.Max(this.leftBorderWidth, int.Parse(w));
-                }
-                else if (hplacement == "right")
-                {
-                    this.rightBorderWidth = Math.Max(this.rightBorderWidth, int.Parse(w));
-                }
-            }
-
-            // Top and bottom border width determination
-            string vplacement = Attr(element, "vplacement");
-            string h = Attr(element, "h");
-            if (vplacement != null && h != null)
-            {
-                if (vplacement == "top")
-                {
-                    this.topBorderWidth = Math.Max(this.topBorderWidth, int.Parse(h));
-                }
-                else if (vplacement == "bottom")
-                {
-                    this.bottomBorderWidth = Math.Max(this.bottomBorderWidth, int.Parse(h));
-                }
-            }
-        }
     }
 
     /// <summary>
@@ -143,14 +96,5 @@ public class RegionListBuilder
 
         return regions.ToArray();
     }
-
-    /// <summary>Width of the frame's left border regions</summary>
-    private int leftBorderWidth;
-    /// <summary>Width of the frame's top border regions</summary>
-    private int topBorderWidth;
-    /// <summary>Width of the frame's right border regions</summary>
-    private int rightBorderWidth;
-    /// <summary>Width of the frame's bottom border regions</summary>
-    private int bottomBorderWidth;
 
 }
