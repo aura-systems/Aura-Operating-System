@@ -1,7 +1,9 @@
 # Packages
 
 A program that is not compiled into the kernel is a package: a `.pkg` file that Aura reads at run
-time. The packages in this folder are built into Aura; the same files can be downloaded with `pkg /add`.
+time. The packages in this folder are built into Aura, except the download-only ones
+(`AuraDownloadOnlyPackage` in `Aura_OS.csproj`: Snake), which only the online repository has. All of
+them can be downloaded with `pkg /add`.
 
 Each folder here is one package. The build zips `<Name>/` into `<Name>.pkg` and embeds it in the kernel
 (`AuraBuildPackages` in `Aura_OS.csproj`). Aura lists the built-in packages, then those in
@@ -46,6 +48,32 @@ package, or else one of the kernel's images (`UI/Images/AuraLogo.bmp`).
 
 The `.lua` files are modules: `require "lib.util"` loads `lib/util.lua`, and `dofile`/`loadfile` read
 the package's files first.
+
+## The online repository
+
+`pkg /update` reads the package list at `https://aura.valentin.bzh/repository.json`, and `pkg /add {name}`
+downloads and installs one of its packages. The list is an array of entries whose values are all strings:
+
+```json
+[
+  {
+    "name": "Snake",
+    "display-name": "Snake",
+    "description": "The snake game: ...",
+    "author": "Aura Team",
+    "version": "1.0.0",
+    "link": "https://aura.valentin.bzh/packages/Snake.pkg"
+  }
+]
+```
+
+`publish.sh` builds both from this folder, each package zipped as the build does and the list from their
+`package.xml`, then copies them to the server's document root (a directory or an rsync target), leaving
+anything else there (`os.json`, the latest release for the update check) as it is:
+
+```sh
+RSYNC_RSH="ssh -i ~/.ssh/<key>" SRC/Packages/publish.sh <user>@<server>:<document root>
+```
 
 ## The aura library
 
@@ -209,5 +237,5 @@ reads a file a byte at a time: `readText` is faster for a whole file.
 
 - A handler that never returns (`while true do end`) freezes the desktop: nothing stops it yet (the
   interpreter's hook is not public, see `lua-host` in GEN3-GAPS.md).
-- Packages are downloaded over plain HTTP, unsigned: there is no TLS in gen3 yet.
+- Packages are not signed: Aura installs what the repository serves.
 - An app added with `pkg /add` opens with `run`, and shows in the start menu after a reboot.

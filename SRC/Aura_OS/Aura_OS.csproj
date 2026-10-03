@@ -37,10 +37,13 @@
        <Name>.pkg, the same file a download installs, and embedded as "Aura_OS/Packages/<Name>.pkg".
        SRC/Packages/README.md describes the format. -->
   <ItemGroup>
-    <AuraPackage Include="..\Packages\*\package.xml">
+    <!-- Published to the online repository only: pkg /add downloads them. -->
+    <AuraDownloadOnlyPackage Include="Snake" />
+
+    <AuraPackage Include="..\Packages\*\package.xml" Exclude="@(AuraDownloadOnlyPackage->'..\Packages\%(Identity)\package.xml')">
       <PackageName>$([System.IO.Path]::GetFileName($([System.IO.Path]::GetDirectoryName('%(FullPath)'))))</PackageName>
     </AuraPackage>
-    <AuraPackageFile Include="..\Packages\*\**\*" />
+    <AuraPackageFile Include="..\Packages\*\**\*" Exclude="@(AuraDownloadOnlyPackage->'..\Packages\%(Identity)\**')" />
     <EmbeddedResource Include="@(AuraPackage->'$(IntermediateOutputPath)Packages\%(PackageName).pkg')">
       <LogicalName>Aura_OS/Packages/%(Filename)%(Extension)</LogicalName>
     </EmbeddedResource>
