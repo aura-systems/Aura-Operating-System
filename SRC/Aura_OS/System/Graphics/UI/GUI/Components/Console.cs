@@ -7,6 +7,8 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using Aura_OS.System.Graphics.UI.GUI.Skin;
+using Cosmos.Kernel.System.Mouse;
 
 namespace Aura_OS.System.Graphics.UI.GUI.Components
 {
@@ -19,7 +21,8 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
 
     /// <summary>
     /// A text console: a grid of colored characters, with a cursor and a line being typed when
-    /// CursorVisible (a terminal), without (the boot console).
+    /// CursorVisible (a terminal), without (the boot console). The lines that scroll off the top
+    /// are kept, and can be scrolled back to (ScrollUp, or the ScrollBar).
     /// </summary>
     public class Console : Component
     {
@@ -28,8 +31,21 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
         private const char Tab = '\t';
         private const char Space = ' ';
 
+        // The scroll bar, the size of the multiline TextBox's.
+        private const int ScrollBarSize = 15;
+        private const int MinThumbSize = 16;
+
+        /// <summary>
+        /// Lines kept above the screen; past it the oldest one goes.
+        /// </summary>
+        private const int MaxHistoryLines = 1000;
+
         public bool DrawBackground = true;
-        public bool ScrollMode = false;
+
+        /// <summary>
+        /// Hides the line being typed and the cursor (while a terminal runs a command).
+        /// </summary>
+        public bool InputHidden = false;
 
         /// <summary>
         /// Draws the cursor under the character at mX, mY (not in scroll mode).
@@ -44,8 +60,26 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
         private uint[] _pallete = new uint[16];
         private Cell[] _text;
         private List<Cell[]> _terminalHistory;
-        private int _terminalHistoryIndex = 0;
         private string _input = "";
+
+        /// <summary>
+        /// Lines the view is scrolled back from the screen being written (0: not scrolled).
+        /// </summary>
+        private int _viewOffset = 0;
+
+        private bool _scrollBar = false;
+        private Frame _rail;
+        private Frame _thumb;
+        private Frame _thumbHighlighted;
+        private Frame _thumbPressed;
+
+        // The thumb's state when last drawn: the mouse coming over it or leaving it redraws.
+        private Frame _drawnThumb;
+
+        private bool _dragging = false;
+
+        // Where the thumb was taken, from its top.
+        private int _scrollGrab;
 
         public Color ForegroundColor = Color.White;
         private uint _foreground = (byte)ConsoleColor.White;
@@ -122,20 +156,52 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
             }
         }
 
+        /// <summary>
+        /// A vertical scroll bar on the right, shown once lines scrolled off the top: dragging its
+        /// thumb scrolls back through them. Its width is kept for it from the start, so the columns
+        /// stay the same when it appears.
+        /// </summary>
+        public bool ScrollBar
+        {
+            get
+            {
+                return _scrollBar;
+            }
+            set
+            {
+                if (value == _scrollBar)
+                {
+                    return;
+                }
+
+                // Not in the constructor: the boot console exists before the theme does.
+                if (value && _rail == null)
+                {
+                    _rail = Kernel.ThemeManager.GetFrame("rail.vertical");
+                    _thumb = Kernel.ThemeManager.GetFrame("slider.vertical.normal");
+                    _thumbHighlighted = Kernel.ThemeManager.GetFrame("slider.vertical.highlighted");
+                    _thumbPressed = Kernel.ThemeManager.GetFrame("slider.vertical.depressed");
+                }
+
+                _scrollBar = value;
+                InitConsole(Width, Height);
+            }
+        }
+
         public void InitConsole(int width, int height)
         {
+            int textWidth = _scrollBar ? width - ScrollBarSize : width;
+
             // At least one cell: a negative count would throw out of the allocation.
-            mCols = Math.Max(1, width / Kernel.font.Width - 1);
+            mCols = Math.Max(1, textWidth / Kernel.font.Width - 1);
             mRows = Math.Max(1, height / Kernel.font.Height - 2);
 
             _text = new Cell[mCols * mRows];
 
-            ClearText();
-
+            // Kept lines are mCols long: they go with the old size.
             _terminalHistory = new List<Cell[]>();
 
-            mX = 0;
-            mY = 0;
+            ClearText();
         }
 
         private int GetIndex(int row, int col)
@@ -152,11 +218,93 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
             InitConsole(width, height);
         }
 
+        #region Scroll bar geometry (console coordinates)
+
+        private bool HasScrollBar => _scrollBar && _terminalHistory.Count > 0;
+
+        private int ScrollBarX => Width - ScrollBarSize;
+
+        private int ThumbHeight => Math.Min(Height, Math.Max(MinThumbSize, Height * mRows / (_terminalHistory.Count + mRows)));
+
         /// <summary>
-        /// No hover state: the mouse crossing the console does not redraw it.
+        /// The kept line at the top of the view.
+        /// </summary>
+        private int TopLine => _terminalHistory.Count - _viewOffset;
+
+        private int ThumbY => _terminalHistory.Count > 0 ? (Height - ThumbHeight) * TopLine / _terminalHistory.Count : 0;
+
+        #endregion
+
+        public override void HandleLeftClick()
+        {
+            base.HandleLeftClick();
+
+            int x = (int)MouseManager.X - AbsoluteX;
+            int y = (int)MouseManager.Y - AbsoluteY;
+
+            // On the rail: drag the thumb, brought under the mouse when the press is beside it.
+            if (HasScrollBar && x >= ScrollBarX)
+            {
+                bool onThumb = y >= ThumbY && y < ThumbY + ThumbHeight;
+                _scrollGrab = onThumb ? y - ThumbY : ThumbHeight / 2;
+                _dragging = true;
+                ScrollToThumb(y - _scrollGrab);
+                MarkDirty();
+            }
+        }
+
+        /// <summary>
+        /// Drags the thumb while the button pressed on the rail is down, and highlights the thumb
+        /// under the mouse. Nothing else in the console changes with the mouse.
         /// </summary>
         public override void Update()
         {
+            if (!HasScrollBar || !Kernel.MouseManager.IsLeftButtonDown)
+            {
+                _dragging = false;
+            }
+
+            if (!HasScrollBar)
+            {
+                return;
+            }
+
+            if (_dragging)
+            {
+                ScrollToThumb((int)MouseManager.Y - AbsoluteY - _scrollGrab);
+            }
+
+            if (GetThumbFrame() != _drawnThumb)
+            {
+                MarkDirty();
+            }
+        }
+
+        /// <summary>
+        /// Scrolls so the thumb starts at that y (console coordinates).
+        /// </summary>
+        private void ScrollToThumb(int thumbY)
+        {
+            int lines = _terminalHistory.Count;
+            int range = Height - ThumbHeight;
+            int topLine = range > 0 ? (thumbY * lines + range / 2) / range : lines;
+            topLine = Math.Max(0, Math.Min(topLine, lines));
+
+            SetViewOffset(lines - topLine);
+        }
+
+        private Frame GetThumbFrame()
+        {
+            if (_dragging)
+            {
+                return _thumbPressed;
+            }
+
+            int x = (int)MouseManager.X - AbsoluteX;
+            int y = (int)MouseManager.Y - AbsoluteY;
+            bool over = x >= ScrollBarX && x < Width && y >= ThumbY && y < ThumbY + ThumbHeight;
+
+            return over ? _thumbHighlighted : _thumb;
         }
 
         public override void Draw()
@@ -166,28 +314,48 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
                 Clear(Kernel.BlackColor);
             }
 
+            int kept = _terminalHistory.Count;
+            int topLine = TopLine;
+
             for (int i = 0; i < mRows; i++)
             {
+                // Scrolled back, the first rows are kept lines and the screen starts lower.
+                int line = topLine + i;
+                Cell[] cells = line < kept ? _terminalHistory[line] : _text;
+                int start = line < kept ? 0 : GetIndex(line - kept, 0);
+
                 for (int j = 0; j < mCols; j++)
                 {
-                    int index = GetIndex(i, j);
-                    if (_text[index].Char == 0 || _text[index].Char == '\n')
+                    Cell cell = cells[start + j];
+                    if (cell.Char == 0 || cell.Char == '\n')
                         continue;
 
-                    WriteByte(_text[index].Char, 0 + j * Kernel.font.Width, 0 + i * Kernel.font.Height, _text[index].ForegroundColor);
+                    WriteByte(cell.Char, 0 + j * Kernel.font.Width, 0 + i * Kernel.font.Height, cell.ForegroundColor);
                 }
             }
 
-            if (!ScrollMode)
+            // The line being typed moved down with the screen, maybe out of the view.
+            int inputRow = mY + _viewOffset;
+
+            if (!InputHidden && inputRow < mRows)
             {
                 int inputX = mX - _input.Length;
 
                 for (int i = 0; i < _input.Length; i++)
                 {
-                    WriteByte(_input[i], (inputX + i) * Kernel.font.Width, mY * Kernel.font.Height, (uint)ForegroundColor.ToArgb());
+                    WriteByte(_input[i], (inputX + i) * Kernel.font.Width, inputRow * Kernel.font.Height, (uint)ForegroundColor.ToArgb());
                 }
 
-                DrawCursor();
+                SetCursorPos(mX, inputRow);
+            }
+
+            // Last: over a line being typed past the columns.
+            if (HasScrollBar)
+            {
+                _drawnThumb = GetThumbFrame();
+
+                DrawFrame(_rail, ScrollBarX, 0, ScrollBarSize, Height);
+                DrawFrame(_drawnThumb, ScrollBarX, ThumbY, ScrollBarSize, ThumbHeight);
             }
         }
 
@@ -205,11 +373,18 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
             }
         }
 
+        /// <summary>
+        /// Empties the screen and the kept lines.
+        /// </summary>
         public void ClearText()
         {
             Clear(Color.Black);
             mX = 0;
             mY = 0;
+
+            _terminalHistory.Clear();
+            _viewOffset = 0;
+            _dragging = false;
 
             for (int i = 0; i < _text.Length; i++)
             {
@@ -219,11 +394,6 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
             }
 
             MarkDirty();
-        }
-
-        public void DrawCursor()
-        {
-            SetCursorPos(mX, mY);
         }
 
         /// <summary>
@@ -251,7 +421,18 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
         {
             Clear(Color.Black);
 
-            Cell[] lineToHistory = new Cell[mCols];
+            // Full: the oldest line goes, and its cells take the new one.
+            Cell[] lineToHistory;
+            if (_terminalHistory.Count >= MaxHistoryLines)
+            {
+                lineToHistory = _terminalHistory[0];
+                _terminalHistory.RemoveAt(0);
+            }
+            else
+            {
+                lineToHistory = new Cell[mCols];
+            }
+
             Array.Copy(_text, 0, lineToHistory, 0, mCols);
             _terminalHistory.Add(lineToHistory);
 
@@ -265,37 +446,46 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
                 _text[i].BackgroundColor = (uint)BackgroundColor.ToArgb();
             }
 
-            _terminalHistoryIndex = _terminalHistory.Count;
+            // Scrolled back, the view stays on the same lines.
+            if (_viewOffset > 0)
+            {
+                _viewOffset = Math.Min(_viewOffset + 1, _terminalHistory.Count);
+            }
         }
 
+        /// <summary>
+        /// Shows one more kept line at the top.
+        /// </summary>
         public void ScrollUp()
         {
-            if (_terminalHistoryIndex > 0)
-            {
-                ScrollMode = true;
-
-                _terminalHistoryIndex--;
-
-                Array.Copy(_text, 0, _text, mCols, (mRows - 1) * mCols);
-
-                Cell[] lineFromHistory = _terminalHistory[_terminalHistoryIndex];
-                Array.Copy(lineFromHistory, 0, _text, 0, mCols);
-            }
-
-            MarkDirty();
+            SetViewOffset(_viewOffset + 1);
         }
 
+        /// <summary>
+        /// Shows one more line at the bottom, up to the screen being written.
+        /// </summary>
         public void ScrollDown()
         {
-            _terminalHistoryIndex = 0;
+            SetViewOffset(_viewOffset - 1);
+        }
 
-            _terminalHistory.Clear();
+        /// <summary>
+        /// Back to the screen being written.
+        /// </summary>
+        public void ScrollToEnd()
+        {
+            SetViewOffset(0);
+        }
 
-            ScrollMode = false;
+        private void SetViewOffset(int offset)
+        {
+            offset = Math.Max(0, Math.Min(offset, _terminalHistory.Count));
 
-            ClearText();
-            mX = 0;
-            mY = 0;
+            if (offset != _viewOffset)
+            {
+                _viewOffset = offset;
+                MarkDirty();
+            }
         }
 
         private void DoCarriageReturn()

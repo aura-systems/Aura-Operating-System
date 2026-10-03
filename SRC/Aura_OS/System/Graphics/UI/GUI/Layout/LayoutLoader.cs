@@ -196,6 +196,7 @@ namespace Aura_OS.System.Graphics.UI.GUI.Layout
                 case "Console":
                     Components.Console console = new Components.Console(0, 0, ControlSize(element, "width", 400, layout), ControlSize(element, "height", 300, layout));
                     console.CursorVisible = BoolAttr(element, "cursor", false, layout);
+                    console.ScrollBar = BoolAttr(element, "scrollBar", false, layout);
                     component = console;
                     break;
 

@@ -60,24 +60,29 @@ namespace Aura_OS.System.Processing.Applications.Terminal
 
                 if (Input.KeyboardManager.TryGetKey(out keyEvent))
                 {
+                    bool scrollKey = KeyboardManager.ControlPressed
+                        && (keyEvent.Key == ConsoleKeyEx.UpArrow || keyEvent.Key == ConsoleKeyEx.DownArrow);
+
+                    // Any other key brings the view back to the line being typed.
+                    if (!scrollKey)
+                    {
+                        Console.ScrollToEnd();
+                    }
+
                     switch (keyEvent.Key)
                     {
                         case ConsoleKeyEx.Enter:
-                            if (Console.ScrollMode)
-                            {
-                                break;
-                            }
                             if (_command.Length > 0)
                             {
                                 Console.mX -= _command.Length;
 
-                                Console.ScrollMode = true;
+                                Console.InputHidden = true;
 
                                 global::System.Console.WriteLine(_command);
 
                                 _commandManager.Execute(_command);
 
-                                Console.ScrollMode = false;
+                                Console.InputHidden = false;
 
                                 _commands.Add(_command);
                                 _commandIndex = _commands.Count - 1;
@@ -94,10 +99,6 @@ namespace Aura_OS.System.Processing.Applications.Terminal
 
                             break;
                         case ConsoleKeyEx.Backspace:
-                            if (Console.ScrollMode)
-                            {
-                                break;
-                            }
                             if (_command.Length > 0)
                             {
                                 _command = _command.Remove(_command.Length - 1);
@@ -138,10 +139,6 @@ namespace Aura_OS.System.Processing.Applications.Terminal
                             }
                             break;
                         default:
-                            if (Console.ScrollMode)
-                            {
-                                break;
-                            }
                             if (char.IsLetterOrDigit(keyEvent.KeyChar) || char.IsPunctuation(keyEvent.KeyChar) || char.IsSymbol(keyEvent.KeyChar) || keyEvent.KeyChar == ' ')
                             {
                                 _command += keyEvent.KeyChar;

@@ -74,7 +74,7 @@ The root element. Its elements are stacked top to bottom.
 | `Checkbox` | `text`, `color`, `checked` | `onChange` |
 | `Slider` | `value` (0 to 255) | `onChange` |
 | `DropDown` | `selectedIndex`; `<Item>text</Item>` children | `onChange` |
-| `Console` | `cursor` (draws the cursor and the line being typed, `Console.Input`); default 400 x 300 | |
+| `Console` | `cursor` (draws the cursor and the line being typed, `Console.Input`), `scrollBar` (a vertical scroll bar on the right once lines scrolled off the top; its width is kept from the start); default 400 x 300 | |
 | `Dialog` | `title`, `message`, `state="information|error"`; `<Button text onClick>` children | |
 
 A `Dialog` is a child of the window only. It sits centered over the window and, while visible, is the

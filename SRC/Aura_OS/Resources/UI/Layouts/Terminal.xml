@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Terminal app window: a console filling the window. TerminalApp.cs reads the keys and runs the commands. -->
 <Window title="Terminal" width="700" height="600" icon="16-terminal.bmp" padding="1,3,1,1">
-  <Console id="console" width="*" height="*" cursor="true" />
+  <Console id="console" width="*" height="*" cursor="true" scrollBar="true" />
 </Window>
