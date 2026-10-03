@@ -36,9 +36,10 @@ permissions:
   contents: read
 
 env:
-  # On the claude/remoteshell branch of CosmosOS/Cosmos: Aura needs its TCP, FTP and exception fixes,
-  # which are not on Cosmos main yet.
-  COSMOS_REF: ${{ inputs.cosmos_ref || '6c857b5676596587fcccf164ae6dd680db2104df' }}
+  # On the feature/canvas-compositing branch of CosmosOS/Cosmos (claude/remoteshell plus the Canvas
+  # alpha blending): Aura needs its canvas compositing and its TCP, FTP and exception fixes, which are
+  # not on Cosmos main yet.
+  COSMOS_REF: ${{ inputs.cosmos_ref || '78b7bd5daf19da6d6b516f0c90c40a8df887c171' }}
   DOTNET_CLI_TELEMETRY_OPTOUT: 1
   DOTNET_SKIP_FIRST_TIME_EXPERIENCE: 1
   DOTNET_NOLOGO: 1
