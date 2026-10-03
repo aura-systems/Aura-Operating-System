@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Disk Manager app window: the actions, the disk shown, its partitions on a bar and in a list. The
+     panel on the right asks what an action needs, or tells about a partition. main.lua fills them,
+     and does the actions. -->
+<Window title="Disk Manager" width="780" height="500" icon="16-disks.bmp" padding="6" spacing="6">
+  <Stack orientation="horizontal" spacing="4" height="23">
+    <Button icon="16-add.bmp" text="New" onClick="new" />
+    <Button icon="16-delete.bmp" text="Delete" onClick="delete" />
+    <Button icon="16-resize.bmp" text="Resize/Move" onClick="resize" />
+    <Button icon="16-format.bmp" text="Format" onClick="format" />
+    <Button icon="16-label.bmp" text="Label" onClick="label" />
+    <!-- One of the two, for the selected partition. -->
+    <Button id="mount" icon="16-drive.bmp" text="Mount" onClick="mount" />
+    <Button id="unmount" icon="16-eject.bmp" text="Unmount" onClick="unmount" visible="false" />
+    <Button icon="16-properties.bmp" text="Information" onClick="information" />
+  </Stack>
+
+  <Stack orientation="horizontal" spacing="4" height="23">
+    <Label text="Disk:" />
+    <DropDown id="disks" width="*" onChange="disk" />
+    <Button icon="16-partition-table.bmp" text="Partition table" onClick="table" />
+    <Button icon="16-refresh.bmp" width="23" onClick="refresh" />
+  </Stack>
+
+  <!-- The partitions in their place on the disk; a click selects one. -->
+  <Canvas id="bar" width="*" height="64" background="white" onClick="barClick" />
+
+  <Stack orientation="horizontal" spacing="6" height="*">
+    <Stack spacing="2" width="*" height="*">
+      <!-- The list's column titles, over its texts: those start after the icons when a row has one. -->
+      <Label id="header" width="*" margin="24,0,0,0" />
+      <Label id="headerPlain" width="*" margin="4,0,0,0" visible="false" />
+      <ListBox id="partitions" width="*" height="*" onChange="select" onActivate="information" />
+    </Stack>
+
+    <Panel id="panel" width="280" height="*" borders="true" padding="8" spacing="8" visible="false">
+      <Label id="panelTitle" width="*" />
+      <Grid id="fields" columns="auto,*" columnSpacing="6" rowSpacing="6" rowHeight="23">
+        <Row id="beforeRow">
+          <Label text="Free before (MB):" />
+          <TextBox id="before" onEnter="ok" />
+        </Row>
+        <Row id="sizeRow">
+          <Label text="Size (MB):" />
+          <TextBox id="size" onEnter="ok" />
+        </Row>
+        <Row id="filesystemRow">
+          <Label text="File system:" />
+          <DropDown id="filesystem">
+            <Item>FAT32</Item>
+            <Item>FAT16</Item>
+            <Item>FAT12</Item>
+            <Item>unformatted</Item>
+          </DropDown>
+        </Row>
+        <Row id="labelRow">
+          <Label text="Label:" />
+          <TextBox id="label" onEnter="ok" />
+        </Row>
+        <Row id="tableRow">
+          <Label text="Table:" />
+          <DropDown id="tableType">
+            <Item>MBR</Item>
+            <Item>GPT</Item>
+          </DropDown>
+        </Row>
+      </Grid>
+      <Label id="panelText" width="*" />
+      <Stack orientation="horizontal" spacing="4" height="23">
+        <Button id="ok" text="OK" width="90" onClick="ok" />
+        <Button id="cancel" text="Cancel" width="90" onClick="cancel" />
+      </Stack>
+    </Panel>
+  </Stack>
+
+  <Label id="status" width="*" />
+
+  <Dialog id="confirm" title="Confirm" visible="false">
+    <Button text="Apply" onClick="confirmOk" />
+    <Button text="Cancel" onClick="closeConfirm" />
+  </Dialog>
+</Window>

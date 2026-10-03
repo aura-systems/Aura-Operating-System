@@ -346,6 +346,16 @@ namespace Aura_OS
             LoadImage("UI/Images/Icons/16/cut.bmp", "16");
             LoadImage("UI/Images/Icons/16/paste.bmp", "16");
             LoadImage("UI/Images/Icons/16/delete.bmp", "16");
+            // The Disk Manager's (Chicago95 icon theme).
+            LoadImage("UI/Images/Icons/16/disks.bmp", "16");
+            LoadImage("UI/Images/Icons/16/add.bmp", "16");
+            LoadImage("UI/Images/Icons/16/resize.bmp", "16");
+            LoadImage("UI/Images/Icons/16/format.bmp", "16");
+            LoadImage("UI/Images/Icons/16/label.bmp", "16");
+            LoadImage("UI/Images/Icons/16/eject.bmp", "16");
+            LoadImage("UI/Images/Icons/16/partition-table.bmp", "16");
+            LoadImage("UI/Images/Icons/16/properties.bmp", "16");
+            LoadImage("UI/Images/Icons/16/locked.bmp", "16");
             LoadImage("UI/Images/Icons/24/program.bmp", "24");
             LoadImage("UI/Images/Icons/24/reboot.bmp", "24");
             LoadImage("UI/Images/Icons/24/logout.bmp", "24");
@@ -353,6 +363,7 @@ namespace Aura_OS
             LoadImage("UI/Images/Icons/24/shutdown.bmp", "24");
             LoadImage("UI/Images/Icons/24/terminal.bmp", "24");
             LoadImage("UI/Images/Icons/24/explorer.bmp", "24");
+            LoadImage("UI/Images/Icons/24/disks.bmp", "24");
             LoadImage("UI/Images/Icons/32/file.bmp", "32");
             LoadImage("UI/Images/Icons/32/folder.bmp", "32");
             LoadImage("UI/Images/Icons/32/dialog-information.bmp", "32");

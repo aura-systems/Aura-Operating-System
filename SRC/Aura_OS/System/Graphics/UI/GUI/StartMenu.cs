@@ -76,6 +76,10 @@ namespace Aura_OS.System.Graphics.UI.GUI
                 {
                     icon = Kernel.ResourceManager.GetIcon("24-settings.bmp");
                 }
+                else if (applicationConfig.Name.StartsWith("Disk"))
+                {
+                    icon = Kernel.ResourceManager.GetIcon("24-disks.bmp");
+                }
                 else
                 {
                     icon = Kernel.ResourceManager.GetIcon("24-program.bmp");

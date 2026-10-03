@@ -136,6 +136,7 @@ error. A change shows on the next frame.
 | `input` | Console | The line being typed, drawn before the cursor and not written yet; the cursor moves with it. Emptied when the console is. |
 | `inputHidden` | Console | Hides the input line and the cursor (while a command runs). |
 | `selection` | Console | The text selected with the mouse, `nil` for none; read only. A line the console wrapped goes on with the next one, the others end with `\n`. |
+| `clickX`, `clickY` | Canvas | Where the last click on it was (its `onClick`), in pixels from its top left corner; read only. |
 
 A TextBox and a ListBox have a method: `control:focus()` gives them the keys, as a click on them does
 (a single line TextBox puts its cursor at the end).
@@ -146,7 +147,8 @@ the Image takes its size: `true`, or `false` and why. An `<Image>` without `src`
 A Canvas is drawn on with methods, in pixels from its top left corner; what falls outside it is
 clipped, and a drawing stays until drawn over: `canvas:clear([color])` (its `background` by default),
 `canvas:fillRect(x, y, width, height, color)` and `canvas:drawText(text, x, y, color)` (the system
-font, 8 x 16 pixels a character).
+font, 8 x 16 pixels a character). A click on it is its `onClick` event, `clickX` and `clickY` say
+where (the Disk Manager selects the partition under it).
 
 A Console also has methods: `console:write(text)`, `console:writeLine([text])`, `console:clear()`,
 `console:scrollUp()`, `console:scrollDown()` (one line back or forward through the lines that went off
@@ -260,6 +262,31 @@ button lists the last ones.
 |---|---|
 | `aura.clipboard.text` | The text Ctrl+V pastes, `nil` for none. Setting it copies a text, as Ctrl+C does. |
 | `aura.clipboard.history()` | The last texts copied (10 at most), newest first: a list of strings, `text` first. |
+
+### aura.disks
+
+The disks and their partitions, as the Disk Manager and `vol` change them. A disk is named by its
+device name (`"sata0"`, `"nvme0n1"`, `"usb0"`), a partition by its disk and the sector it starts at:
+the partitions' names (`"sata0p1"`) follow their order on the disk, and change when one is added
+before them. The actions run on the UI thread (the desktop waits for them, see `app:after`); each one
+unmounts what it changes first and mounts the FAT volumes again after. None of them changes the
+partition Aura runs from (an installed system's volume): they return `false` and why.
+
+| | |
+|---|---|
+| `aura.disks.list()` | The disks: a list of `{ name = , size = , sectors = , sectorSize = , table = , usableStart = , usableEnd = , primaries = , extended = , error = , partitions = }`. `size` is in bytes; `table` is `"MBR"`, `"GPT"`, `"none"`, or `"whole"` for a filesystem on the whole disk (with no table: its one partition starts at sector 0). New partitions go from `usableStart` to `usableEnd` (excluded). `primaries` counts an MBR's entries in use (4 at most); `extended` is an MBR's extended partition, `{ start = , sectors = }`, `nil` for none; `error` says why the disk could not be read. |
+| partitions | In disk order: `{ name = , start = , sectors = , size = , filesystem = , label = , mountPoint = , system = , logical = , boot = , mbrType = , gptType = }`. `filesystem` is `"FAT32"`, `"FAT16"`, `"FAT12"`, `"ext2"`, `"ext3"`, `"ext4"`, `"NTFS"`, `"exFAT"`, `"linux-swap"`, `"unformatted"` (only zeros at its start) or `"unknown"`; `label` is `""` for none; `mountPoint` (`"/1/"`) is `nil` when not mounted; `system` is true for the partition Aura runs from; `logical` for one in the extended partition; `boot` is the MBR's active flag; `mbrType` the MBR system ID (`0x0C`) and `gptType` the GPT type GUID (`"EBD0A0A2-..."`), `nil` on the other table. |
+| `aura.disks.createTable(disk, table)` | Writes a new, empty `"MBR"` or `"GPT"`: every partition of the disk is lost. `true`, or `false` and why. |
+| `aura.disks.create(disk, start, sectors, filesystem[, label])` | Adds a partition in free space and formats it: `filesystem` is `"FAT32"` (33 MB or more), `"FAT16"` (3 MB to 2 GB), `"FAT12"` (up to 127 MB) or `"unformatted"`; `label` is a FAT label. On an MBR disk, free space in the extended partition gets a logical partition, after the last one (after its EBR, the sector before it). `true` and the sector it starts at, or `false` and why: a partition that cannot be formatted is not left behind. |
+| `aura.disks.delete(disk, start)` | Removes a partition from the table: `true`, or `false` and why. |
+| `aura.disks.format(disk, start, filesystem[, label])` | Writes a new filesystem (as `create`): its files are lost. `true`, or `false` and why. |
+| `aura.disks.resize(disk, start, newStart, newSectors)` | Moves the partition (its sectors are copied: slow for a large one) and resizes it (only the table changes). A FAT volume keeps its size: the partition can grow, not shrink below it. `true`, or `false` and why. |
+| `aura.disks.setLabel(disk, start, label)` | Changes a FAT volume's label: up to 11 letters, digits, spaces, `-` and `_`, written in capitals; `""` for none. `true`, or `false` and why. |
+| `aura.disks.mount(disk, start)` | Mounts a FAT partition at the next free `/N/`: `true` and its mount point, or `false` and why. |
+| `aura.disks.unmount(disk, start)` | Unmounts a partition, its last writes flushed (a USB stick can then be pulled out), until a reboot or the next change to its disk: `true`, or `false` and why. |
+
+Aura writes the GPT's checksums and its backup copy at the end of the disk after each change, which
+Cosmos leaves out, so other systems read the table Aura wrote.
 
 ### aura.shell
 

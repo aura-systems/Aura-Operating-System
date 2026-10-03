@@ -7,34 +7,21 @@
 using Aura_OS.System.Filesystem;
 using Aura_OS.System.Processing.Interpreter;
 using Cosmos.Kernel.HAL.Interfaces.Devices;
-using Cosmos.Kernel.System.Filesystems.Fat;
 using Cosmos.Kernel.System.Storage;
 using Cosmos.Kernel.System.Vfs;
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Text;
 
 namespace Aura_OS.System.Processing.Interpreter.Commands.Filesystem
 {
     class CommandVol : ICommand
     {
         // gen2 numbering: the N-th FAT volume is mounted at /N (gen2 "N:\").
-        // Templates: Cosmos DevKernel Storage/StorageView.cs, Commands/PartitionCommands.cs, MountCommands.cs.
+        // The partitions are changed by Disks, as in the Disk Manager app.
 
-        /// <summary>MBR system ID of the partitions vol /mp creates (FAT32 LBA).</summary>
-        private const byte MbrFat32LbaSystemId = 0x0C;
-
-        /// <summary>First partition LBA on an MBR disk (1 MiB alignment).</summary>
-        private const ulong MbrFirstPartitionLba = 2048;
-
-        private const ulong BytesPerMiB = 1024UL * 1024UL;
+        private const ulong BytesPerMiB = Disks.BytesPerMiB;
 
         private const string FormatLabel = "AURAOS";
-
-        // static readonly, NOT const (C16): enum values from a Cosmos assembly.
-        private static readonly FatType Fat32 = FatType.Fat32;
-        private static readonly FatType FatAuto = FatType.Unknown;
 
         /// <summary>
         /// Empty constructor.
@@ -144,30 +131,9 @@ namespace Aura_OS.System.Processing.Interpreter.Commands.Filesystem
                 return new ReturnInfo(this, ReturnCode.ERROR, "Failed to find partition #" + index + " on disk #" + disknumber + ".");
             }
 
-            Partition target = partitions[index - 1];
-
-            if (IsSuperfloppy(partitions))
-            {
-                return new ReturnInfo(this, ReturnCode.ERROR, "Disk #" + disknumber + " has no partition table (whole-disk FAT volume).");
-            }
-
-            string error;
-            if (!ReleasePartition(target, out error))
-            {
-                return new ReturnInfo(this, ReturnCode.ERROR, error);
-            }
-
-            // Identity is (start, count), not an index.
-            if (!PartitionManager.Delete(disk, new PartitionManager.PartitionLocation(target.StartSector, target.BlockCount)))
-            {
-                Volumes.MountAll();
-                return new ReturnInfo(this, ReturnCode.ERROR, "Failed to delete partition #" + index + " on disk #" + disknumber + ".");
-            }
+            Disks.DeletePartition(disk, partitions[index - 1]);
 
             Console.WriteLine("Partition #" + index + " deleted on disk #" + disknumber + "!");
-
-            StorageManager.RescanPartitions(disk);
-            Volumes.MountAll();
 
             return new ReturnInfo(this, ReturnCode.OK);
         }
@@ -191,54 +157,51 @@ namespace Aura_OS.System.Processing.Interpreter.Commands.Filesystem
                 return new ReturnInfo(this, ReturnCode.ERROR, "Unsupported sector size on disk #" + disknumber + ".");
             }
 
-            // GEN3-GAP(mbr): Mbr.IsMbr only checks 0x55AA, which a FAT "superfloppy" (no partition table)
-            // also carries: a new entry would be written into its boot sector.
-            if (IsSuperfloppy(StorageManager.GetPartitions(disk)))
+            PartitionTable table = Disks.TableOf(disk);
+
+            if (table == PartitionTable.Whole)
             {
                 return new ReturnInfo(this, ReturnCode.ERROR, "Disk #" + disknumber + " holds a whole-disk FAT volume (no partition table), refusing to create a partition.");
             }
 
-            // GPT first: a GPT disk also carries a protective MBR.
-            bool isGpt = Gpt.IsGpt(disk);
-            if (!isGpt && !Mbr.IsMbr(disk))
+            if (table == PartitionTable.None)
             {
-                // Blank disk: write an empty MBR first, then rescan before computing the append point.
-                Mbr.Create(disk);
-                StorageManager.RescanPartitions(disk);
+                Disks.CreateTable(disk, false);
+                table = PartitionTable.Mbr;
                 Console.WriteLine("No partition table on disk #" + disknumber + ", MBR created.");
             }
 
-            ulong start = isGpt ? Gpt.FirstUsableLba : MbrFirstPartitionLba;
+            ulong first, end;
+            Disks.UsableRange(disk, table, out first, out end);
+
+            // After the last partition, on a 1 MiB boundary.
+            ulong alignment = BytesPerMiB / disk.BlockSize;
+            ulong start = first;
 
             IReadOnlyList<Partition> partitions = StorageManager.GetPartitions(disk);
             for (int i = 0; i < partitions.Count; i++)
             {
-                ulong end = partitions[i].StartSector + partitions[i].BlockCount;
-                if (end > start)
+                ulong partitionEnd = partitions[i].StartSector + partitions[i].BlockCount;
+                if (partitionEnd > start)
                 {
-                    start = end;
+                    start = partitionEnd;
                 }
             }
 
-            ulong sectors = (ulong)size * (BytesPerMiB / disk.BlockSize);
+            start = (start + alignment - 1) / alignment * alignment;
 
-            if (start >= disk.BlockCount || sectors > disk.BlockCount - start)
+            ulong sectors = (ulong)size * alignment;
+
+            if (start >= end || sectors > end - start)
             {
-                ulong free = start < disk.BlockCount ? (disk.BlockCount - start) * disk.BlockSize / BytesPerMiB : 0;
+                ulong free = start < end ? (end - start) * disk.BlockSize / BytesPerMiB : 0;
                 return new ReturnInfo(this, ReturnCode.ERROR, "Not enough free space on disk #" + disknumber + " (" + free + " MB available).");
             }
 
-            if (!PartitionManager.Create(disk, start, sectors, MbrFat32LbaSystemId, Gpt.BasicDataPartitionType))
-            {
-                return new ReturnInfo(this, ReturnCode.ERROR, "Failed to create partition (no free slot or bad geometry).");
-            }
-
-            StorageManager.RescanPartitions(disk);
-
-            Console.WriteLine("Partition created on disk #" + disknumber + "!");
+            Disks.CreatePartition(disk, start, sectors, Disks.Unformatted, null);
 
             // A fresh partition holds no filesystem: use vol /fp to format it.
-            Volumes.MountAll();
+            Console.WriteLine("Partition created on disk #" + disknumber + "!");
 
             return new ReturnInfo(this, ReturnCode.OK);
         }
@@ -295,28 +258,13 @@ namespace Aura_OS.System.Processing.Interpreter.Commands.Filesystem
 
             Partition target = partitions[partition - 1];
 
-            string error;
-            if (!ReleasePartition(target, out error))
-            {
-                return new ReturnInfo(this, ReturnCode.ERROR, error);
-            }
-
-            // FAT32 first (gen2 behaviour); a partition too small for FAT32 gets FAT12/16.
-            bool formatted = VfsManager.TryFormat(Volumes.FatDriver, target, new FatFormatOptions { Type = Fat32, VolumeLabel = FormatLabel })
-                || VfsManager.TryFormat(Volumes.FatDriver, target, new FatFormatOptions { Type = FatAuto, VolumeLabel = FormatLabel });
-
-            if (!formatted)
-            {
-                Volumes.MountAll();
-                return new ReturnInfo(this, ReturnCode.ERROR, "Failed to format partition #" + partition + " on disk #" + driveName + ".");
-            }
+            // FAT32 first (gen2 behaviour); a partition too small for FAT32 gets FAT16 or FAT12.
+            Disks.Format(disk, target, Disks.Fat, FormatLabel);
 
             string label;
-            Console.WriteLine("Partition #" + partition + " formatted to " + DetectFilesystem(target, out label) + " on disk #" + driveName + "!");
+            Console.WriteLine("Partition #" + partition + " formatted to " + Disks.DetectFilesystem(target, out label) + " on disk #" + driveName + "!");
 
-            Volumes.MountAll();
-
-            VfsManager.VfsMount mount = FindMount(target);
+            VfsManager.VfsMount mount = Volumes.MountOfPartition(target);
             if (mount != null)
             {
                 Console.WriteLine("Mounted at " + AuraPath.AsDirectory(mount.MountPoint));
@@ -360,7 +308,7 @@ namespace Aura_OS.System.Processing.Interpreter.Commands.Filesystem
                 VfsManager.VfsMount vol = vols[i];
                 string name = AuraPath.AsDirectory(vol.MountPoint);
                 string label = "";
-                string format = vol.Partition != null ? DetectFilesystem(vol.Partition, out label) : vol.Name;
+                string format = vol.Partition != null ? Disks.DetectFilesystem(vol.Partition, out label) : vol.Name;
                 string parent = vol.Partition != null ? vol.Partition.Name : vol.Source;
 
                 // GEN3-GAP(driveinfo): TryStatFs sweeps the whole FAT (fine for a user command).
@@ -385,7 +333,7 @@ namespace Aura_OS.System.Processing.Interpreter.Commands.Filesystem
             IReadOnlyList<Partition> partitions = StorageManager.GetPartitions(disk);
 
             Console.WriteLine();
-            Console.WriteLine("Disk #: " + disknumber + " (" + DescribePartitionTable(disk, partitions) + ")");
+            Console.WriteLine("Disk #: " + disknumber + " (" + DescribePartitionTable(disk) + ")");
             Console.WriteLine("  Name: " + disk.Name + ", " + (disk.BlockCount * disk.BlockSize / BytesPerMiB) + " MB, "
                 + disk.BlockCount + " sectors of " + disk.BlockSize + " bytes");
 
@@ -398,8 +346,8 @@ namespace Aura_OS.System.Processing.Interpreter.Commands.Filesystem
             {
                 Partition part = partitions[i];
                 string label;
-                string format = DetectFilesystem(part, out label);
-                VfsManager.VfsMount mount = FindMount(part);
+                string format = Disks.DetectFilesystem(part, out label);
+                VfsManager.VfsMount mount = Volumes.MountOfPartition(part);
 
                 Console.WriteLine("  Partition #" + (i + 1) + ": " + part.Name
                     + "  Start=" + part.StartSector
@@ -411,26 +359,18 @@ namespace Aura_OS.System.Processing.Interpreter.Commands.Filesystem
             }
         }
 
-        /// <summary>
-        /// GEN3-GAP(mbr): GPT first, then MBR; a superfloppy also passes Mbr.IsMbr.
-        /// </summary>
-        private static string DescribePartitionTable(IBlockDevice disk, IReadOnlyList<Partition> partitions)
+        private static string DescribePartitionTable(IBlockDevice disk)
         {
             try
             {
-                if (Gpt.IsGpt(disk))
+                switch (Disks.TableOf(disk))
                 {
-                    return "GPT";
-                }
-
-                if (IsSuperfloppy(partitions))
-                {
-                    return "None (whole-disk FAT)";
-                }
-
-                if (Mbr.IsMbr(disk))
-                {
-                    return "MBR";
+                    case PartitionTable.Gpt:
+                        return "GPT";
+                    case PartitionTable.Mbr:
+                        return "MBR";
+                    case PartitionTable.Whole:
+                        return "None (whole-disk FAT)";
                 }
             }
             catch (Exception)
@@ -439,155 +379,6 @@ namespace Aura_OS.System.Processing.Interpreter.Commands.Filesystem
             }
 
             return "None";
-        }
-
-        /// <summary>
-        /// A FAT volume formatted straight onto the disk: StorageManager surfaces it as one partition at LBA 0.
-        /// </summary>
-        private static bool IsSuperfloppy(IReadOnlyList<Partition> partitions)
-        {
-            return partitions.Count == 1 && partitions[0].StartSector == 0;
-        }
-
-        /// <summary>
-        /// FAT type from the boot sector (DevKernel StorageView.DetectFilesystem).
-        /// GEN3-GAP(fat-label): no API reads the volume label, so it comes from the BPB
-        /// (11 bytes at 0x2B on FAT12/16, 0x47 on FAT32, present when the boot signature is 0x29).
-        /// </summary>
-        internal static string DetectFilesystem(Partition partition, out string label)
-        {
-            label = "";
-
-            if (partition == null || partition.BlockSize < 512 || partition.BlockSize > 4096)
-            {
-                return "unknown";
-            }
-
-            byte[] boot = new byte[partition.BlockSize];
-            try
-            {
-                partition.ReadBlock(FatBootSector.BootSectorLba, 1, boot);
-            }
-            catch (Exception)
-            {
-                return "unreadable";
-            }
-
-            FatBootSector bootSector;
-            if (!FatBootSector.TryParse(boot, out bootSector) || bootSector == null)
-            {
-                return "unknown";
-            }
-
-            string type;
-            bool fat32 = false;
-
-            switch (bootSector.Type)
-            {
-                case FatType.Fat12:
-                    type = "FAT12";
-                    break;
-                case FatType.Fat16:
-                    type = "FAT16";
-                    break;
-                case FatType.Fat32:
-                    type = "FAT32";
-                    fat32 = true;
-                    break;
-                default:
-                    type = "FAT";
-                    break;
-            }
-
-            int signatureOffset = fat32 ? 0x42 : 0x26;
-            int labelOffset = fat32 ? 0x47 : 0x2B;
-
-            if (boot[signatureOffset] == 0x29)
-            {
-                label = Encoding.ASCII.GetString(boot, labelOffset, 11).Trim();
-            }
-
-            return type;
-        }
-
-        /// <summary>
-        /// The mount of a partition, by location (Host + StartSector): a rescan creates new Partition objects.
-        /// </summary>
-        private static VfsManager.VfsMount FindMount(Partition partition)
-        {
-            IReadOnlyList<VfsManager.VfsMount> mounts = VfsManager.Mounts;
-            for (int i = 0; i < mounts.Count; i++)
-            {
-                Partition p = mounts[i].Partition;
-                if (p != null && ReferenceEquals(p.Host, partition.Host) && p.StartSector == partition.StartSector)
-                {
-                    return mounts[i];
-                }
-            }
-
-            return null;
-        }
-
-        /// <summary>
-        /// Unmounts (flush + detach) every mount of a partition before a format or a delete.
-        /// GEN3-GAP(mounts): VfsManager guards format by Partition reference only, so do it by location here.
-        /// Refuses the system volume and the volume holding the current directory.
-        /// </summary>
-        private static bool ReleasePartition(Partition target, out string error)
-        {
-            error = null;
-
-            IReadOnlyList<VfsManager.VfsMount> mounts = VfsManager.Mounts;
-            List<string> mountPoints = new List<string>();
-
-            for (int i = 0; i < mounts.Count; i++)
-            {
-                Partition p = mounts[i].Partition;
-                if (p == null || !ReferenceEquals(p.Host, target.Host) || p.StartSector != target.StartSector)
-                {
-                    continue;
-                }
-
-                string volume = AuraPath.AsDirectory(mounts[i].MountPoint);
-
-                // Only an installed system is protected: in live mode AuraPaths.SystemVolume falls back to
-                // "/0/" without any System/settings.ini, and that disk must stay formattable before setup.
-                if (AuraPaths.SystemVolume != null && volume == AuraPaths.SystemVolume
-                    && File.Exists(volume + "System/settings.ini"))
-                {
-                    error = "This partition holds the system volume (" + volume + ").";
-                    return false;
-                }
-
-                if (volume == Kernel.CurrentVolume
-                    || AuraPath.AsDirectory(Kernel.CurrentDirectory).StartsWith(volume, StringComparison.Ordinal))
-                {
-                    error = "This partition holds the current directory (" + volume + "), leave it first (cd / or vol /cv).";
-                    return false;
-                }
-
-                mountPoints.Add(mounts[i].MountPoint);
-            }
-
-            for (int i = 0; i < mountPoints.Count; i++)
-            {
-                try
-                {
-                    VfsManager.TryUnmount(mountPoints[i]);
-                }
-                catch (Exception ex)
-                {
-                    // The mount is already removed from the table; only its last writes may be lost.
-                    Console.WriteLine("Warning: " + mountPoints[i] + " unmounted, but its last writes may be lost: " + ex.Message);
-                }
-            }
-
-            if (mountPoints.Count > 0)
-            {
-                Volumes.RefreshSystemVolume();
-            }
-
-            return true;
         }
 
         /// <summary>

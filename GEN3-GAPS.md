@@ -44,7 +44,7 @@ exception path, C8 dispose everything.
 | Core runtime | `cpu-exception`, `null-deref`, `unhandled`, `finally`, `eh-global`, `finalizers`, `gc-trigger`, `oom`, `gc-conservative`, `idle-thread` | `run-spam`, `log-sink`, `meminfo`, `cpuinfo`, `pci`, `tz-rtc`, `env`, `pc-speaker`, `encoding` |
 | Console / graphics | `console-input` | `kernelconsole`, `console-global`, `present`, `display-mode`, `blit`, `psf`, `hw-cursor`, `bmp`, `canvas3d` |
 | Input | `keyboard-altgr`, `ps2-sync` | `key-release`, `key-repeat`, `e0`, `sessions`, `mouse`, `key-docs` |
-| Filesystem / storage | `ide`, `fat-names`, `vfs-threads` (phase 2) | `driveinfo`, `fat-label`, `fat-time`, `mounts`, `tmp`, `cwd`, `mbr`, `ext2` |
+| Filesystem / storage | `ide`, `fat-names`, `vfs-threads` (phase 2), `gpt-crc` | `driveinfo`, `fat-label`, `fat-time`, `fat-resize`, `mounts`, `tmp`, `cwd`, `mbr`, `ext2` |
 | Network | `tcp-receive`, `ipaddress`, `net-threads` (phase 2), `nic-drivers`, `tcp-robust` | `http-tls`, `socket-misc`, `dhcp`, `tcp-primary`, `nic-names`, `net-misc` |
 | BCL / packages | | `deflate`, `crypto`, `lua-host` |
 
@@ -595,9 +595,21 @@ exception path, C8 dispose everything.
 - **Source:** 03, 08.
 
 ### `fat-label`: no API to read or set a FAT volume label (minor)
-- **Aura workaround:** parse the BPB bytes at 0x2B / 0x47.
-- **Upstream ask:** a label API.
-- **Source:** 03.
+- **Gap:** the formatter writes `VolumeLabel` in the boot sector only. Other
+  systems read the root folder's volume label entry, so they show no label,
+  and `fsck.vfat` removes it.
+- **Aura workaround:** `Disks` reads and writes the BPB bytes at 0x2B / 0x47
+  (and the FAT32 backup boot sector), and the root folder's label entry.
+- **Upstream ask:** a label API; the formatter writes the root entry too.
+- **Source:** 03, Disk Manager.
+
+### `fat-resize`: no FAT volume resize (minor)
+- **Gap:** `PartitionManager.Resize` changes the table only, and nothing grows
+  or shrinks a FAT volume.
+- **Aura workaround:** the Disk Manager lets a FAT partition grow (its volume
+  keeps its size until a format) and refuses to shrink it below its volume.
+- **Upstream ask:** a FAT grow and shrink.
+- **Source:** Disk Manager.
 
 ### `fat-time`: FAT timestamps always 0 (minor)
 - **Gap:** timestamps are always 0 (1970), and `SetLastWriteTime` is a no-op.
@@ -647,6 +659,17 @@ exception path, C8 dispose everything.
   LBA 0.
 - **Upstream ask:** real MBR validation.
 - **Source:** 03.
+
+### `gpt-crc`: GPT written without checksums or backup (major)
+- **Gap:** `Gpt.Create` writes a CRC of 0 and no backup header or array, and
+  `AddPartition`, `RemovePartition`, `ResizePartition` and `MovePartition`
+  leave a valid table's CRCs and backup stale. Other systems then take the
+  disk for a damaged GPT, or read the stale backup, the old partitions.
+- **Aura workaround:** `GptChecksums.Update` after each GPT change: both
+  CRC-32s, then the backup array and header at the end of the disk (checked
+  with `sgdisk -v`). Writing an MBR also wipes a GPT disk's backup header.
+- **Upstream ask:** the writers keep both copies and their CRCs.
+- **Source:** Disk Manager.
 
 ### `ext2`: Ext2 driver public but experimental and undocumented (minor)
 - **Aura workaround:** FAT only.

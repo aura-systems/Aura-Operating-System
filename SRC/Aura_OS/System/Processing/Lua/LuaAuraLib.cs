@@ -11,6 +11,7 @@ using System.Globalization;
 using System.IO;
 using Cosmos.Executable.Lua;
 using Cosmos.Kernel.System.Diagnostics;
+using Cosmos.Kernel.HAL.Interfaces.Devices;
 using Cosmos.Kernel.HAL.Vfs;
 using Cosmos.Kernel.System.Graphics;
 using Cosmos.Kernel.System.Vfs;
@@ -92,6 +93,7 @@ namespace Aura_OS.System.Processing.Lua
             SetObject(lua, "theme", ThemeObject());
             SetObject(lua, "settings", SettingsObject());
             SetObject(lua, "fs", FsObject());
+            SetObject(lua, "disks", DisksObject());
             SetObject(lua, "clipboard", ClipboardObject());
             SetObject(lua, "shell", ShellObject());
             SetObject(lua, "packages", PackagesObject());
@@ -601,13 +603,7 @@ namespace Aura_OS.System.Processing.Lua
             {
                 VfsManager.VfsMount mount = sorted[i];
                 string label = "";
-                string filesystem = mount.Partition != null ? CommandVol.DetectFilesystem(mount.Partition, out label) : mount.Name;
-
-                // What FAT formatters write for no label.
-                if (label == "NO NAME")
-                {
-                    label = "";
-                }
+                string filesystem = mount.Partition != null ? Disks.DetectFilesystem(mount.Partition, out label) : mount.Name;
 
                 lua.CreateTable(0, 3);
                 SetText(lua, "path", AuraPath.AsDirectory(mount.MountPoint));
@@ -669,6 +665,248 @@ namespace Aura_OS.System.Processing.Lua
             lua.PushBoolean(error == null);
             LuaObject.PushText(lua, error);
             return 2;
+        }
+
+        /// <summary>
+        /// The disks and their partitions (Disks), as the Disk Manager changes them. A disk is named by
+        /// its device name, a partition by its disk and the sector it starts at. The actions run on the
+        /// UI thread: the desktop waits for them.
+        /// </summary>
+        private static LuaObject DisksObject()
+        {
+            return new LuaObject("aura.disks")
+                .Function("list", ListDisks)
+                // createTable(disk, "MBR" or "GPT"): a new, empty partition table; true, or false and why.
+                .Function("createTable", lua =>
+                {
+                    string name = LuaObject.CheckText(lua, 1);
+                    string table = LuaObject.CheckText(lua, 2);
+                    lua.L_ArgCheck(table == "MBR" || table == "GPT", 2, "\"MBR\" or \"GPT\" expected");
+                    return Try(lua, () => Disks.CreateTable(Disks.FindDisk(name), table == "GPT"));
+                })
+                // create(disk, start, sectors, filesystem[, label]): true and where the partition starts, or
+                // false and why.
+                .Function("create", lua =>
+                {
+                    string name = LuaObject.CheckText(lua, 1);
+                    ulong start = CheckSector(lua, 2);
+                    ulong sectors = CheckSector(lua, 3);
+                    string filesystem = LuaObject.CheckText(lua, 4);
+                    string label = lua.IsNoneOrNil(5) ? null : LuaObject.CheckText(lua, 5);
+                    ulong begin = 0;
+                    string error = null;
+
+                    try
+                    {
+                        begin = Disks.CreatePartition(Disks.FindDisk(name), start, sectors, filesystem, label);
+                    }
+                    catch (Exception ex)
+                    {
+                        error = ex.Message;
+                    }
+
+                    lua.PushBoolean(error == null);
+
+                    if (error == null)
+                    {
+                        lua.PushInteger((long)begin);
+                    }
+                    else
+                    {
+                        LuaObject.PushText(lua, error);
+                    }
+
+                    return 2;
+                })
+                // delete(disk, start): true, or false and why.
+                .Function("delete", lua =>
+                {
+                    string name = LuaObject.CheckText(lua, 1);
+                    ulong start = CheckSector(lua, 2);
+                    return Try(lua, () =>
+                    {
+                        IBlockDevice disk = Disks.FindDisk(name);
+                        Disks.DeletePartition(disk, Disks.FindPartition(disk, start));
+                    });
+                })
+                // format(disk, start, filesystem[, label]): true, or false and why.
+                .Function("format", lua =>
+                {
+                    string name = LuaObject.CheckText(lua, 1);
+                    ulong start = CheckSector(lua, 2);
+                    string filesystem = LuaObject.CheckText(lua, 3);
+                    string label = lua.IsNoneOrNil(4) ? null : LuaObject.CheckText(lua, 4);
+                    return Try(lua, () =>
+                    {
+                        IBlockDevice disk = Disks.FindDisk(name);
+                        Disks.Format(disk, Disks.FindPartition(disk, start), filesystem, label);
+                    });
+                })
+                // resize(disk, start, newStart, newSectors): moves and resizes; true, or false and why.
+                .Function("resize", lua =>
+                {
+                    string name = LuaObject.CheckText(lua, 1);
+                    ulong start = CheckSector(lua, 2);
+                    ulong newStart = CheckSector(lua, 3);
+                    ulong newSectors = CheckSector(lua, 4);
+                    return Try(lua, () =>
+                    {
+                        IBlockDevice disk = Disks.FindDisk(name);
+                        Disks.Resize(disk, Disks.FindPartition(disk, start), newStart, newSectors);
+                    });
+                })
+                // setLabel(disk, start, label): a FAT volume's label; true, or false and why.
+                .Function("setLabel", lua =>
+                {
+                    string name = LuaObject.CheckText(lua, 1);
+                    ulong start = CheckSector(lua, 2);
+                    string label = LuaObject.CheckText(lua, 3);
+                    return Try(lua, () => Disks.SetLabel(Disks.FindPartition(Disks.FindDisk(name), start), label));
+                })
+                // mount(disk, start): true and the mount point ("/1/"), or false and why.
+                .Function("mount", lua =>
+                {
+                    string name = LuaObject.CheckText(lua, 1);
+                    ulong start = CheckSector(lua, 2);
+                    string mountPoint = null;
+                    string error = null;
+
+                    try
+                    {
+                        mountPoint = Disks.Mount(Disks.FindPartition(Disks.FindDisk(name), start));
+                    }
+                    catch (Exception ex)
+                    {
+                        error = ex.Message;
+                    }
+
+                    lua.PushBoolean(error == null);
+                    LuaObject.PushText(lua, error ?? mountPoint);
+                    return 2;
+                })
+                // unmount(disk, start): true, or false and why.
+                .Function("unmount", lua =>
+                {
+                    string name = LuaObject.CheckText(lua, 1);
+                    ulong start = CheckSector(lua, 2);
+                    return Try(lua, () => Disks.Unmount(Disks.FindPartition(Disks.FindDisk(name), start)));
+                });
+        }
+
+        /// <summary>
+        /// aura.disks.list(): the disks, each { name = , size = , sectors = , sectorSize = , table = ,
+        /// usableStart = , usableEnd = , extended = , primaries = , error = , partitions = }.
+        /// </summary>
+        private static int ListDisks(ILuaState lua)
+        {
+            List<DiskInfo> disks = Disks.List();
+            lua.CreateTable(disks.Count, 0);
+
+            for (int i = 0; i < disks.Count; i++)
+            {
+                DiskInfo disk = disks[i];
+                IBlockDevice device = disk.Device;
+
+                lua.CreateTable(0, 11);
+                SetText(lua, "name", device.Name);
+                SetInteger(lua, "size", (long)(device.BlockCount * device.BlockSize));
+                SetInteger(lua, "sectors", (long)device.BlockCount);
+                SetInteger(lua, "sectorSize", (long)device.BlockSize);
+                SetText(lua, "table", TableName(disk.Table));
+                SetInteger(lua, "usableStart", (long)disk.FirstUsable);
+                SetInteger(lua, "usableEnd", (long)disk.EndUsable);
+                SetInteger(lua, "primaries", disk.PrimaryCount);
+
+                if (disk.ExtendedSectors > 0)
+                {
+                    lua.CreateTable(0, 2);
+                    SetInteger(lua, "start", (long)disk.ExtendedStart);
+                    SetInteger(lua, "sectors", (long)disk.ExtendedSectors);
+                    lua.SetField(-2, "extended");
+                }
+
+                if (disk.Error != null)
+                {
+                    SetText(lua, "error", disk.Error);
+                }
+
+                lua.CreateTable(disk.Partitions.Count, 0);
+
+                for (int j = 0; j < disk.Partitions.Count; j++)
+                {
+                    PushPartition(lua, disk.Partitions[j]);
+                    lua.RawSetI(-2, j + 1);
+                }
+
+                lua.SetField(-2, "partitions");
+                lua.RawSetI(-2, i + 1);
+            }
+
+            return 1;
+        }
+
+        /// <summary>
+        /// { name = , start = , sectors = , size = , filesystem = , label = , mountPoint = , system = ,
+        /// logical = , boot = , mbrType = , gptType = }
+        /// </summary>
+        private static void PushPartition(ILuaState lua, PartitionInfo info)
+        {
+            Cosmos.Kernel.System.Storage.Partition partition = info.Partition;
+
+            lua.CreateTable(0, 12);
+            SetText(lua, "name", partition.Name);
+            SetInteger(lua, "start", (long)partition.StartSector);
+            SetInteger(lua, "sectors", (long)partition.BlockCount);
+            SetInteger(lua, "size", (long)(partition.BlockCount * partition.BlockSize));
+            SetText(lua, "filesystem", info.Filesystem);
+            SetText(lua, "label", info.Label);
+
+            if (info.MountPoint != null)
+            {
+                SetText(lua, "mountPoint", info.MountPoint);
+            }
+
+            lua.PushBoolean(info.System);
+            lua.SetField(-2, "system");
+            lua.PushBoolean(info.Logical);
+            lua.SetField(-2, "logical");
+            lua.PushBoolean(info.Boot);
+            lua.SetField(-2, "boot");
+
+            if (info.MbrType >= 0)
+            {
+                SetInteger(lua, "mbrType", info.MbrType);
+            }
+
+            if (info.GptType.HasValue)
+            {
+                SetText(lua, "gptType", info.GptType.Value.ToString("D").ToUpperInvariant());
+            }
+        }
+
+        private static string TableName(PartitionTable table)
+        {
+            switch (table)
+            {
+                case PartitionTable.Mbr:
+                    return "MBR";
+                case PartitionTable.Gpt:
+                    return "GPT";
+                case PartitionTable.Whole:
+                    return "whole";
+                default:
+                    return "none";
+            }
+        }
+
+        /// <summary>
+        /// A sector number or count argument: a whole number, 0 or more.
+        /// </summary>
+        private static ulong CheckSector(ILuaState lua, int index)
+        {
+            long value = lua.L_CheckInteger(index);
+            lua.L_ArgCheck(value >= 0, index, "a sector is 0 or more");
+            return (ulong)value;
         }
 
         /// <summary>
@@ -1071,6 +1309,20 @@ namespace Aura_OS.System.Processing.Lua
                     if (component is UIConsole selectionConsole)
                     {
                         return Text(lua, selectionConsole.SelectedText);
+                    }
+                    break;
+                case "clickX":
+                    if (component is Surface clickXSurface)
+                    {
+                        lua.PushInteger(clickXSurface.ClickX);
+                        return 1;
+                    }
+                    break;
+                case "clickY":
+                    if (component is Surface clickYSurface)
+                    {
+                        lua.PushInteger(clickYSurface.ClickY);
+                        return 1;
                     }
                     break;
                 case "text":
@@ -1718,6 +1970,15 @@ namespace Aura_OS.System.Processing.Lua
         {
             LuaObject.PushText(lua, value);
             return 1;
+        }
+
+        /// <summary>
+        /// Sets a field of the table on top of the stack to an integer.
+        /// </summary>
+        private static void SetInteger(ILuaState lua, string key, long value)
+        {
+            lua.PushInteger(value);
+            lua.SetField(-2, key);
         }
 
         /// <summary>

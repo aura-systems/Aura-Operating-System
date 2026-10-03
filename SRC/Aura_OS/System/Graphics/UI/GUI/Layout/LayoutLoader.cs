@@ -194,7 +194,9 @@ namespace Aura_OS.System.Graphics.UI.GUI.Layout
                     break;
 
                 case "Canvas":
-                    component = new Surface(ColorAttr(element, "background", Color.Black, layout), 0, 0, ControlSize(element, "width", 200, layout), ControlSize(element, "height", 150, layout));
+                    Surface surface = new Surface(ColorAttr(element, "background", Color.Black, layout), 0, 0, ControlSize(element, "width", 200, layout), ControlSize(element, "height", 150, layout));
+                    surface.Click = layout.Handler(Attr(element, "onClick"));
+                    component = surface;
                     break;
 
                 case "Console":

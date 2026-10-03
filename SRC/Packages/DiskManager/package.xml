@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Package name="DiskManager" displayName="Disk Manager" version="1.0.0" author="Aura Team"
+         description="The disks and their partitions, as GParted shows them: creates partition tables, creates, deletes, moves, resizes, formats and labels partitions, and mounts and unmounts their volumes."
+         main="main.lua" layout="DiskManager.xml" />

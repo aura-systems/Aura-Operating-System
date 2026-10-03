@@ -95,13 +95,43 @@ namespace Aura_OS.System.Filesystem
         }
 
         /// <summary>
-        /// By location (Host + StartSector), never by reference: RescanPartitions creates new Partition objects.
+        /// Mounts one FAT partition at the next free /N: its mount point ("/1/"), null when it holds no
+        /// FAT volume. Its mount point when it is mounted already.
         /// </summary>
-        public static bool IsMounted(Partition partition)
+        public static string Mount(Partition partition)
+        {
+            VfsManager.VfsMount mount = MountOfPartition(partition);
+
+            if (mount != null)
+            {
+                return AuraPath.AsDirectory(mount.MountPoint);
+            }
+
+            if (!KernelFeatures.Fat)
+            {
+                return null;
+            }
+
+            string mountPoint = NextFreeMountPoint();
+
+            if (!VfsManager.TryMount(FatDriver, partition, s_flags, mountPoint, out _))
+            {
+                return null;
+            }
+
+            Log.WriteString("[Aura] FAT volume " + partition.Name + " mounted at " + mountPoint + "\n");
+            RefreshSystemVolume();
+            return AuraPath.AsDirectory(mountPoint);
+        }
+
+        /// <summary>
+        /// The mount of a partition, null when it is not mounted. By location, as IsMounted.
+        /// </summary>
+        public static VfsManager.VfsMount MountOfPartition(Partition partition)
         {
             if (partition == null)
             {
-                return false;
+                return null;
             }
 
             IReadOnlyList<VfsManager.VfsMount> mounts = VfsManager.Mounts;
@@ -110,11 +140,19 @@ namespace Aura_OS.System.Filesystem
                 Partition p = mounts[i].Partition;
                 if (p != null && ReferenceEquals(p.Host, partition.Host) && p.StartSector == partition.StartSector)
                 {
-                    return true;
+                    return mounts[i];
                 }
             }
 
-            return false;
+            return null;
+        }
+
+        /// <summary>
+        /// By location (Host + StartSector), never by reference: RescanPartitions creates new Partition objects.
+        /// </summary>
+        public static bool IsMounted(Partition partition)
+        {
+            return MountOfPartition(partition) != null;
         }
 
         /// <summary>
@@ -218,22 +256,9 @@ namespace Aura_OS.System.Filesystem
                     changed = true;
                 }
 
-                string volume = Kernel.CurrentVolume;
-                if (volume != null && volume != "/" && MountOf(volume) == null)
+                if (LeaveVanishedVolume())
                 {
-                    RefreshSystemVolume();
-                    Kernel.CurrentVolume = AuraPaths.SystemVolume ?? "/";
-                    Kernel.CurrentDirectory = Kernel.CurrentVolume;
                     changed = true;
-                }
-                else
-                {
-                    string directory = Kernel.CurrentDirectory;
-                    if (directory != null && directory != "/" && MountOf(directory) == null)
-                    {
-                        Kernel.CurrentDirectory = Kernel.CurrentVolume ?? "/";
-                        changed = true;
-                    }
                 }
             }
             catch (Exception)
@@ -242,6 +267,31 @@ namespace Aura_OS.System.Filesystem
             }
 
             return changed;
+        }
+
+        /// <summary>
+        /// Moves Kernel.CurrentVolume and Kernel.CurrentDirectory to the system volume (or "/") when their
+        /// mount is gone: a pulled USB stick, an unmounted or formatted volume. True when they moved.
+        /// </summary>
+        public static bool LeaveVanishedVolume()
+        {
+            string volume = Kernel.CurrentVolume;
+            if (volume != null && volume != "/" && MountOf(volume) == null)
+            {
+                RefreshSystemVolume();
+                Kernel.CurrentVolume = AuraPaths.SystemVolume ?? "/";
+                Kernel.CurrentDirectory = Kernel.CurrentVolume;
+                return true;
+            }
+
+            string directory = Kernel.CurrentDirectory;
+            if (directory != null && directory != "/" && MountOf(directory) == null)
+            {
+                Kernel.CurrentDirectory = Kernel.CurrentVolume ?? "/";
+                return true;
+            }
+
+            return false;
         }
 
         /// <summary>
