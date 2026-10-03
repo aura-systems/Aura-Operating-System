@@ -6,7 +6,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using Aura_OS.System.Graphics.UI.GUI.Skin;
 using Aura_OS.System.Processing.Processes;
 using Cosmos.Kernel.System.Graphics;
@@ -36,8 +35,6 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
         // The rows' icons, and the space between an icon and its text.
         private const int IconSize = 16;
         private const int IconSpacing = 4;
-
-        private static readonly Color SelectionColor = Color.FromArgb(0xFF, 0x31, 0x6A, 0xC5);
 
         public List<string> Items = new List<string>();
         public Action SelectionChanged;
@@ -497,7 +494,7 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
 
                 if (selected)
                 {
-                    DrawFilledRectangle(SelectionColor, 1, y, rowWidth, RowHeight);
+                    DrawFilledRectangle(Kernel.SelectionColor, 1, y, rowWidth, RowHeight);
                 }
 
                 Bitmap icon = index < _icons.Count ? _icons[index] : null;

@@ -154,6 +154,9 @@ namespace Aura_OS
         public static Color DarkBlue = Color.FromArgb(0xff, 0x00, 0x00, 0x80);
         public static Color Pink = Color.FromArgb(0xff, 0xe7, 0x98, 0xde);
 
+        // Under a selected list row or text, written in white.
+        public static Color SelectionColor = Color.FromArgb(0xff, 0x31, 0x6a, 0xc5);
+
         // Managers
         public static ProcessManager ProcessManager;
         public static System.Input.MouseManager MouseManager;

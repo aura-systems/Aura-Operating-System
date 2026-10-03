@@ -148,6 +148,27 @@ namespace Aura_OS.System.Input
         }
 
         /// <summary>
+        /// Whether the key is that letter with Ctrl held (Ctrl+C), not a character AltGr types, which
+        /// also reports Ctrl.
+        /// </summary>
+        public static bool IsShortcut(KeyEvent keyEvent, ConsoleKeyEx letter)
+        {
+            char c = keyEvent.KeyChar;
+            bool typesCharacter = char.IsLetterOrDigit(c) || char.IsPunctuation(c) || char.IsSymbol(c) || c == ' ';
+
+            return keyEvent.Key == letter && !typesCharacter
+                && (CosmosKeyboard.ControlPressed || (keyEvent.Modifiers & ConsoleModifiers.Control) != 0);
+        }
+
+        /// <summary>
+        /// Whether Shift was held with the key.
+        /// </summary>
+        public static bool IsShiftHeld(KeyEvent keyEvent)
+        {
+            return CosmosKeyboard.ShiftPressed || (keyEvent.Modifiers & ConsoleModifiers.Shift) != 0;
+        }
+
+        /// <summary>
         /// Returns the name of the manager.
         /// </summary>
         /// <returns>The name of the manager.</returns>

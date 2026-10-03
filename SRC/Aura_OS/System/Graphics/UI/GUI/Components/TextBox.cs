@@ -8,15 +8,17 @@ using Aura_OS.System.Graphics.UI.GUI.Skin;
 using Cosmos.Kernel.System.Keyboard;
 using Cosmos.Kernel.System.Mouse;
 using System;
-using System.Collections.Generic;
-using System.Linq;
+using System.Text;
 
 namespace Aura_OS.System.Graphics.UI.GUI.Components
 {
     /// <summary>
-    /// Text input, on one line or several (Multiline). On several lines the arrows move the cursor
-    /// through the text, a click places it, the view follows it, and scroll bars appear when the
-    /// text is wider (at the bottom) or taller (on the right) than the box.
+    /// Text input, on one line or several (Multiline). The arrows move the cursor through the text, a
+    /// click places it, the view follows it, and on several lines scroll bars appear when the text is
+    /// wider (at the bottom) or taller (on the right) than the box. Dragging the mouse, Shift with a
+    /// move, a double click (a word) or Ctrl+A selects text: Ctrl+C and Ctrl+X copy it to the
+    /// TextClipboard (not from a password), Ctrl+V types the text copied in its place. A right click
+    /// opens the same as a menu.
     /// </summary>
     public class TextBox : Component
     {
@@ -49,6 +51,17 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
 
         // The column Up and Down aim for, kept through shorter lines; -1 outside vertical moves.
         private int _preferredColumn = -1;
+
+        // The selection runs from the anchor to the cursor (line and column, as the cursor's); nothing
+        // is selected when they are the same place.
+        private int _anchorLine = 0;
+        private int _anchorPosition = 0;
+
+        // The left button pressed on the text is still down: the cursor follows the mouse.
+        private bool _selecting = false;
+
+        // Cut, Copy, Paste, Select all; made on the first right click.
+        private EditMenu _menu;
 
         // One line: first character shown. Several lines: first column and first line shown.
         private int _scrollOffset = 0;
@@ -118,6 +131,9 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
                 {
                     _cursorPosition = _text.Length;
                 }
+
+                // A new text has nothing selected.
+                CollapseSelection();
             }
         }
 
@@ -238,6 +254,8 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
             int x = (int)MouseManager.X - AbsoluteX;
             int y = (int)MouseManager.Y - AbsoluteY;
 
+            _selecting = false;
+
             if (!IsInside((int)MouseManager.X, (int)MouseManager.Y))
             {
                 _isSelected = false;
@@ -281,29 +299,170 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
             {
                 // The corner between the bars.
             }
-            else if (Multiline)
+            else
             {
-                // The cursor goes to the character boundary nearest the click.
-                string[] lines = Lines;
-                _linePosition = Math.Max(0, Math.Min(_scrollY + (y - TextPadding) / Kernel.font.Height, lines.Length - 1));
+                // The cursor goes to the character boundary nearest the click, and the selection
+                // starts there: from where it started with Shift held.
+                ClampCursor();
+                PositionAt(x, y, out _linePosition, out _cursorPosition);
 
-                int column = _scrollX + (x - TextPadding + Kernel.font.Width / 2) / Kernel.font.Width;
-                _cursorPosition = Math.Max(0, Math.Min(column, lines[_linePosition].Length));
+                if (!KeyboardManager.ShiftPressed)
+                {
+                    CollapseSelection();
+                }
+
+                _selecting = true;
                 _cursorVisible = true;
                 ScrollToCursor();
                 MarkDirty();
             }
+        }
+
+        /// <summary>
+        /// The second click of a double click selects the word under the mouse (a password, all of it).
+        /// </summary>
+        public override void HandleLeftDoubleClick()
+        {
+            HandleLeftClick();
+
+            // On a scroll bar, or out of the box.
+            if (!_selecting)
+            {
+                return;
+            }
+
+            _selecting = false;
+
+            if (Password)
+            {
+                SelectAll();
+                return;
+            }
+
+            string line = Multiline ? Lines[_linePosition] : _text;
+            int x = (int)MouseManager.X - AbsoluteX;
+            int first = Multiline ? _scrollX : _scrollOffset;
+            int index = first + FloorDivide(x - TextPadding, Kernel.font.Width);
+
+            if (index < 0 || index >= line.Length)
+            {
+                return;
+            }
+
+            // The characters around it of the same kind: a word, spaces, or one other character.
+            int kind = KindOf(line[index]);
+            int start = index;
+            int end = index + 1;
+
+            if (kind != OtherKind)
+            {
+                while (start > 0 && KindOf(line[start - 1]) == kind)
+                {
+                    start--;
+                }
+
+                while (end < line.Length && KindOf(line[end]) == kind)
+                {
+                    end++;
+                }
+            }
+
+            _anchorLine = _linePosition;
+            _anchorPosition = start;
+            _cursorPosition = end;
+            ScrollToCursor();
+            MarkDirty();
+        }
+
+        /// <summary>
+        /// A right click gives the box the keys, its selection kept, and opens Cut, Copy, Paste and
+        /// Select all.
+        /// </summary>
+        public override void HandleRightClick()
+        {
+            TextBox focused = Kernel.MouseManager.FocusedComponent as TextBox;
+
+            if (focused != null && focused != this)
+            {
+                focused.SetSelected(false);
+            }
+
+            SetSelected(true);
+            Kernel.MouseManager.FocusedComponent = this;
+
+            if (_menu == null)
+            {
+                _menu = new EditMenu(
+                    new string[] { "Cut", "Copy", "Paste", "Select all" },
+                    new Action[] { Cut, Copy, Paste, SelectAll },
+                    new Func<bool>[] { CanCopy, CanCopy, CanPaste, () => _text.Length > 0 });
+                RightClick = _menu;
+            }
+
+            _menu.Refresh();
+            base.HandleRightClick();
+        }
+
+        public override void Dispose()
+        {
+            if (_menu != null)
+            {
+                _menu.CloseMenu();
+                _menu.Dispose();
+                _menu = null;
+                RightClick = null;
+            }
+
+            base.Dispose();
+        }
+
+        private const int WordKind = 0;
+        private const int SpaceKind = 1;
+        private const int OtherKind = 2;
+
+        private static int KindOf(char c)
+        {
+            if (char.IsLetterOrDigit(c) || c == '_')
+            {
+                return WordKind;
+            }
+
+            return char.IsWhiteSpace(c) ? SpaceKind : OtherKind;
+        }
+
+        /// <summary>
+        /// The character boundary nearest that point (box coordinates), as a line and a column. Out of
+        /// the text in view, it is past its edge, so that dragging there scrolls.
+        /// </summary>
+        private void PositionAt(int x, int y, out int line, out int column)
+        {
+            int first = Multiline ? _scrollX : _scrollOffset;
+            column = first + FloorDivide(x - TextPadding + Kernel.font.Width / 2, Kernel.font.Width);
+            line = 0;
+
+            if (Multiline)
+            {
+                string[] lines = Lines;
+                line = Math.Max(0, Math.Min(_scrollY + FloorDivide(y - TextPadding, Kernel.font.Height), lines.Length - 1));
+                column = Math.Max(0, Math.Min(column, lines[line].Length));
+            }
             else
             {
-                _cursorPosition = _text.Length;
-                AdjustScrollOffsetToEnd();
+                column = Math.Max(0, Math.Min(column, _text.Length));
             }
+        }
+
+        // Rounded down, also for a point left of or above the text.
+        private static int FloorDivide(int value, int divisor)
+        {
+            return value >= 0 ? value / divisor : -((divisor - 1 - value) / divisor);
         }
 
         public void Update(KeyEvent keyEvent)
         {
             base.Update();
             UpdateScrollBar();
+            UpdateSelection();
 
             if (_isSelected)
             {
@@ -320,6 +479,7 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
         {
             base.Update();
             UpdateScrollBar();
+            UpdateSelection();
 
             if (_isSelected)
             {
@@ -338,6 +498,7 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
         {
             base.Update();
             UpdateScrollBar();
+            UpdateSelection();
 
             if (_isSelected)
             {
@@ -384,6 +545,36 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
             if ((horizontal && GetHorizontalThumbFrame() != _drawnHorizontalThumb)
                 || (vertical && GetVerticalThumbFrame() != _drawnVerticalThumb))
             {
+                MarkDirty();
+            }
+        }
+
+        /// <summary>
+        /// While the button pressed on the text is down, the cursor follows the mouse: the text from
+        /// where the press was is selected, and the view scrolls when the mouse is out of it.
+        /// </summary>
+        private void UpdateSelection()
+        {
+            if (!_selecting)
+            {
+                return;
+            }
+
+            if (!Kernel.MouseManager.IsLeftButtonDown)
+            {
+                _selecting = false;
+                return;
+            }
+
+            int line, column;
+            PositionAt((int)MouseManager.X - AbsoluteX, (int)MouseManager.Y - AbsoluteY, out line, out column);
+
+            if (line != _linePosition || column != _cursorPosition)
+            {
+                _linePosition = line;
+                _cursorPosition = column;
+                _cursorVisible = true;
+                ScrollToCursor();
                 MarkDirty();
             }
         }
@@ -453,25 +644,44 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
             // The app may have changed Text under the cursor.
             ClampCursor();
 
+            if (HandleShortcut(keyEvent))
+            {
+                _preferredColumn = -1;
+                ScrollToCursor();
+                return;
+            }
+
+            // A move with Shift held selects the text it goes over.
+            bool extend = Input.KeyboardManager.IsShiftHeld(keyEvent);
+
             switch (keyEvent.Key)
             {
                 case ConsoleKeyEx.Backspace:
                     HandleBackspace();
                     break;
+                case ConsoleKeyEx.Delete:
+                    HandleDelete();
+                    break;
                 case ConsoleKeyEx.Enter:
                     HandleEnter();
                     break;
                 case ConsoleKeyEx.LeftArrow:
-                    HandleLeftArrow();
+                    HandleLeftArrow(extend);
                     break;
                 case ConsoleKeyEx.RightArrow:
-                    HandleRightArrow();
+                    HandleRightArrow(extend);
                     break;
                 case ConsoleKeyEx.UpArrow:
-                    HandleUpArrow();
+                    HandleUpArrow(extend);
                     break;
                 case ConsoleKeyEx.DownArrow:
-                    HandleDownArrow();
+                    HandleDownArrow(extend);
+                    break;
+                case ConsoleKeyEx.Home:
+                    MoveCursor(_linePosition, 0, extend);
+                    break;
+                case ConsoleKeyEx.End:
+                    MoveCursor(_linePosition, Multiline ? Lines[_linePosition].Length : _text.Length, extend);
                     break;
                 default:
                     HandleDefaultKey(keyEvent);
@@ -486,75 +696,316 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
             ScrollToCursor();
         }
 
-        private void ClampCursor()
+        /// <summary>
+        /// Ctrl+A selects all the text, Ctrl+C copies the selection, Ctrl+X cuts it, and Ctrl+V types
+        /// the copied text in its place. A password is neither copied nor cut.
+        /// </summary>
+        /// <returns>False for another key.</returns>
+        private bool HandleShortcut(KeyEvent keyEvent)
         {
-            if (Multiline)
+            if (Input.KeyboardManager.IsShortcut(keyEvent, ConsoleKeyEx.A))
             {
-                _linePosition = Math.Max(0, Math.Min(_linePosition, Lines.Length - 1));
-                _cursorPosition = Math.Max(0, Math.Min(_cursorPosition, Lines[_linePosition].Length));
+                SelectAll();
+            }
+            else if (Input.KeyboardManager.IsShortcut(keyEvent, ConsoleKeyEx.C))
+            {
+                Copy();
+            }
+            else if (Input.KeyboardManager.IsShortcut(keyEvent, ConsoleKeyEx.X))
+            {
+                Cut();
+            }
+            else if (Input.KeyboardManager.IsShortcut(keyEvent, ConsoleKeyEx.V))
+            {
+                Paste();
             }
             else
             {
-                _cursorPosition = Math.Max(0, Math.Min(_cursorPosition, _text.Length));
+                return false;
             }
+
+            return true;
         }
 
-        private void HandleLeftArrow()
+        // A password is neither copied nor cut.
+        private bool CanCopy() => HasSelection && !Password;
+
+        private bool CanPaste() => Pastable(TextClipboard.Text).Length > 0;
+
+        private void Copy()
         {
-            if (_cursorPosition > 0)
+            if (CanCopy())
             {
-                _cursorPosition--;
-                _cursorVisible = true;
-
-                MarkDirty();
-            }
-            else if (_linePosition > 0)
-            {
-                // Move to the end of the previous line
-                _linePosition--;
-                _cursorPosition = Lines[_linePosition].Length;
-                _cursorVisible = true;
-                MarkDirty();
+                TextClipboard.Copy(SelectedText);
             }
         }
 
-        private void HandleRightArrow()
+        private void Cut()
         {
-            var lines = Text.Split('\n');
-
-            if (_linePosition < lines.Length)
+            if (CanCopy())
             {
-                string currentLine = lines[_linePosition];
-                if (_cursorPosition < currentLine.Length)
-                {
-                    _cursorPosition++;
-                    _cursorVisible = true;
-                    MarkDirty();
-                }
-                else if (_linePosition < lines.Length - 1)
-                {
-                    // Move to the beginning of the next line if not on the last line
-                    _linePosition++;
-                    _cursorPosition = 0; // Reset cursor position for the new line
-                    _cursorVisible = true;
-                    MarkDirty();
-                }
+                TextClipboard.Copy(SelectedText);
+                ReplaceSelection("");
             }
         }
 
-        private void HandleUpArrow()
+        private void Paste()
+        {
+            string text = Pastable(TextClipboard.Text);
+
+            if (text.Length > 0)
+            {
+                ReplaceSelection(text);
+            }
+        }
+
+        /// <summary>
+        /// What a paste types: the characters a key types, a tab as four spaces, and the line breaks,
+        /// as spaces on one line.
+        /// </summary>
+        private string Pastable(string text)
+        {
+            if (text == null)
+            {
+                return "";
+            }
+
+            StringBuilder pasted = new StringBuilder(text.Length);
+
+            for (int i = 0; i < text.Length; i++)
+            {
+                char c = text[i];
+
+                if (c == '\r' || c == '\n')
+                {
+                    // "\r\n" is one line break.
+                    if (c == '\r' && i + 1 < text.Length && text[i + 1] == '\n')
+                    {
+                        i++;
+                    }
+
+                    pasted.Append(Multiline ? '\n' : ' ');
+                }
+                else if (c == '\t')
+                {
+                    pasted.Append("    ");
+                }
+                else if (IsTyped(c))
+                {
+                    pasted.Append(c);
+                }
+            }
+
+            return pasted.ToString();
+        }
+
+        private static bool IsTyped(char c)
+        {
+            return char.IsLetterOrDigit(c) || char.IsPunctuation(c) || char.IsSymbol(c) || c == ' ';
+        }
+
+        /// <summary>
+        /// Keeps the cursor and the selection's start in the text, which the app may have changed.
+        /// </summary>
+        private void ClampCursor()
+        {
+            ClampPosition(ref _linePosition, ref _cursorPosition);
+            ClampPosition(ref _anchorLine, ref _anchorPosition);
+        }
+
+        private void ClampPosition(ref int line, ref int column)
+        {
+            if (Multiline)
+            {
+                line = Math.Max(0, Math.Min(line, Lines.Length - 1));
+                column = Math.Max(0, Math.Min(column, Lines[line].Length));
+            }
+            else
+            {
+                line = 0;
+                column = Math.Max(0, Math.Min(column, _text.Length));
+            }
+        }
+
+        #region Selection
+
+        private bool HasSelection => _anchorLine != _linePosition || _anchorPosition != _cursorPosition;
+
+        /// <summary>
+        /// The selected text, "" for none.
+        /// </summary>
+        public string SelectedText
+        {
+            get
+            {
+                int start, end;
+                GetSelection(out start, out end);
+                return _text.Substring(start, end - start);
+            }
+        }
+
+        /// <summary>
+        /// The selection's start and end, lines and columns in the text's order (the same place when
+        /// nothing is selected).
+        /// </summary>
+        private void GetSelection(out int startLine, out int startColumn, out int endLine, out int endColumn)
+        {
+            int cursorLine = _linePosition;
+            int cursorColumn = _cursorPosition;
+            int anchorLine = _anchorLine;
+            int anchorColumn = _anchorPosition;
+
+            ClampPosition(ref cursorLine, ref cursorColumn);
+            ClampPosition(ref anchorLine, ref anchorColumn);
+
+            bool anchorFirst = anchorLine < cursorLine || (anchorLine == cursorLine && anchorColumn <= cursorColumn);
+
+            startLine = anchorFirst ? anchorLine : cursorLine;
+            startColumn = anchorFirst ? anchorColumn : cursorColumn;
+            endLine = anchorFirst ? cursorLine : anchorLine;
+            endColumn = anchorFirst ? cursorColumn : anchorColumn;
+        }
+
+        /// <summary>
+        /// The selection's start and end as indexes in Text.
+        /// </summary>
+        private void GetSelection(out int start, out int end)
+        {
+            int startLine, startColumn, endLine, endColumn;
+            GetSelection(out startLine, out startColumn, out endLine, out endColumn);
+
+            start = IndexOf(startLine, startColumn);
+            end = IndexOf(endLine, endColumn);
+        }
+
+        private int CursorIndex => IndexOf(_linePosition, _cursorPosition);
+
+        /// <summary>
+        /// The index in Text of a line and column.
+        /// </summary>
+        private int IndexOf(int line, int column)
+        {
+            int index = column;
+
+            if (Multiline)
+            {
+                string[] lines = Lines;
+
+                for (int i = 0; i < line && i < lines.Length; i++)
+                {
+                    index += lines[i].Length + 1;
+                }
+            }
+
+            return index;
+        }
+
+        /// <summary>
+        /// Puts the cursor there. The selection goes, unless extend (Shift held) keeps its start.
+        /// </summary>
+        private void MoveCursor(int line, int column, bool extend)
+        {
+            _linePosition = line;
+            _cursorPosition = column;
+
+            if (!extend)
+            {
+                CollapseSelection();
+            }
+
+            _cursorVisible = true;
+            MarkDirty();
+        }
+
+        /// <summary>
+        /// Puts the cursor at that index in Text, as MoveCursor.
+        /// </summary>
+        private void MoveToIndex(int index, bool extend)
+        {
+            int line = 0;
+
+            if (Multiline)
+            {
+                string[] lines = Lines;
+
+                while (line < lines.Length - 1 && index > lines[line].Length)
+                {
+                    index -= lines[line].Length + 1;
+                    line++;
+                }
+
+                index = Math.Min(index, lines[line].Length);
+            }
+            else
+            {
+                index = Math.Min(index, _text.Length);
+            }
+
+            MoveCursor(line, Math.Max(0, index), extend);
+        }
+
+        private void CollapseSelection()
+        {
+            _anchorLine = _linePosition;
+            _anchorPosition = _cursorPosition;
+        }
+
+        private void SelectAll()
+        {
+            _anchorLine = 0;
+            _anchorPosition = 0;
+            MoveToIndex(_text.Length, true);
+            ScrollToCursor();
+        }
+
+        /// <summary>
+        /// Puts that text in place of the selection, or at the cursor; the cursor goes after it.
+        /// </summary>
+        private void ReplaceSelection(string text)
+        {
+            int start, end;
+            GetSelection(out start, out end);
+
+            Text = _text.Substring(0, start) + text + _text.Substring(end);
+            MoveToIndex(start + text.Length, false);
+            _preferredColumn = -1;
+
+            // From the menu too, not only a key: the view follows the cursor.
+            ScrollToCursor();
+        }
+
+        #endregion
+
+        private void HandleLeftArrow(bool extend)
+        {
+            int start, end;
+            GetSelection(out start, out end);
+
+            // Without Shift, a selection leaves the cursor at its start.
+            MoveToIndex(!extend && start != end ? start : Math.Max(0, CursorIndex - 1), extend);
+        }
+
+        private void HandleRightArrow(bool extend)
+        {
+            int start, end;
+            GetSelection(out start, out end);
+
+            MoveToIndex(!extend && start != end ? end : Math.Min(_text.Length, CursorIndex + 1), extend);
+        }
+
+        private void HandleUpArrow(bool extend)
         {
             if (Multiline && _linePosition > 0)
             {
-                MoveToLine(_linePosition - 1);
+                MoveToLine(_linePosition - 1, extend);
             }
         }
 
-        private void HandleDownArrow()
+        private void HandleDownArrow(bool extend)
         {
             if (Multiline && _linePosition < Lines.Length - 1)
             {
-                MoveToLine(_linePosition + 1);
+                MoveToLine(_linePosition + 1, extend);
             }
         }
 
@@ -562,51 +1013,44 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
         /// Moves the cursor to that line, at the column the vertical moves started from, or at the
         /// line's end when the line is shorter.
         /// </summary>
-        private void MoveToLine(int line)
+        private void MoveToLine(int line, bool extend)
         {
             if (_preferredColumn < 0)
             {
                 _preferredColumn = _cursorPosition;
             }
 
-            _linePosition = line;
-            _cursorPosition = Math.Min(_preferredColumn, Lines[line].Length);
-            _cursorVisible = true;
-
-            MarkDirty();
+            MoveCursor(line, Math.Min(_preferredColumn, Lines[line].Length), extend);
         }
 
         private void HandleBackspace()
         {
-            if (_cursorPosition > 0 || _linePosition > 0)
+            int index = CursorIndex;
+
+            if (HasSelection)
             {
-                var lines = Text.Split('\n');
+                ReplaceSelection("");
+            }
+            else if (index > 0)
+            {
+                // At a line's start, it joins the line to the one above.
+                Text = _text.Remove(index - 1, 1);
+                MoveToIndex(index - 1, false);
+            }
+        }
 
-                if (_cursorPosition == 0 && _linePosition > 0)
-                {
-                    // Concatenate the current line to the end of the previous line, then remove the current line
-                    string prevLine = lines[_linePosition - 1];
-                    string currentLine = lines[_linePosition];
-                    lines[_linePosition - 1] = prevLine + currentLine;
-                    List<string> linesList = lines.ToList();
-                    linesList.RemoveAt(_linePosition);
-                    Text = string.Join("\n", linesList.ToArray());
+        private void HandleDelete()
+        {
+            int index = CursorIndex;
 
-                    _linePosition--;
-                    _cursorPosition = prevLine.Length; // Move the cursor to the end of the previous line
-                }
-                else
-                {
-                    // Normal backspace operation within the same line
-                    string currentLine = lines[_linePosition];
-                    string newLine = currentLine.Remove(_cursorPosition - 1, 1);
-                    lines[_linePosition] = newLine;
-                    Text = string.Join("\n", lines);
-
-                    _cursorPosition--;
-                }
-
-                MarkDirty();
+            if (HasSelection)
+            {
+                ReplaceSelection("");
+            }
+            else if (index < _text.Length)
+            {
+                Text = _text.Remove(index, 1);
+                MoveToIndex(index, false);
             }
         }
 
@@ -614,23 +1058,7 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
         {
             if (Multiline)
             {
-                // Insert a new line at the current cursor position within the text
-                var lines = Text.Split('\n');
-                if (_linePosition < lines.Length)
-                {
-                    // Inserting within existing lines
-                    lines[_linePosition] = lines[_linePosition].Insert(_cursorPosition, "\n");
-                    Text = string.Join("\n", lines);
-                }
-                else
-                {
-                    // Appending a new line at the end
-                    Text += "\n";
-                }
-
-                _linePosition++;
-                _cursorPosition = 0; // Reset cursor position for the new line
-                MarkDirty();
+                ReplaceSelection("\n");
             }
             else
             {
@@ -641,29 +1069,9 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
 
         private void HandleDefaultKey(KeyEvent keyEvent)
         {
-            if (char.IsLetterOrDigit(keyEvent.KeyChar) || char.IsPunctuation(keyEvent.KeyChar) || char.IsSymbol(keyEvent.KeyChar) || keyEvent.KeyChar == ' ')
+            if (IsTyped(keyEvent.KeyChar))
             {
-                if (Multiline)
-                {
-                    // Find the correct line and position to insert the character
-                    var lines = Text.Split('\n');
-                    if (_linePosition < lines.Length)
-                    {
-                        lines[_linePosition] = lines[_linePosition].Insert(_cursorPosition, keyEvent.KeyChar.ToString());
-                        Text = string.Join("\n", lines);
-                    }
-                    else
-                    {
-                        // If for some reason the line position is out of bounds, append the character
-                        Text += keyEvent.KeyChar;
-                    }
-                }
-                else
-                {
-                    Text = Text.Insert(_cursorPosition, keyEvent.KeyChar.ToString());
-                }
-                _cursorPosition++;
-                MarkDirty();
+                ReplaceSelection(keyEvent.KeyChar.ToString());
             }
         }
 
@@ -684,18 +1092,35 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
                     visibleText = visibleText.Substring(0, maxVisibleLength);
                 }
 
+                // The selected characters in view.
+                int from = 0;
+                int to = 0;
+
+                if (_isSelected)
+                {
+                    GetSelection(out from, out to);
+                    from = Math.Max(0, from - _scrollOffset);
+                    to = Math.Min(visibleText.Length, to - _scrollOffset);
+                }
+
                 if (Password)
                 {
+                    if (from < to)
+                    {
+                        DrawFilledRectangle(Kernel.SelectionColor, 2 + from * 8, TextPadding, (to - from) * 8, Kernel.font.Height);
+                    }
+
                     int px = 0 + 6;
                     for (int i = 0; i < visibleText.Length; i++)
                     {
-                        DrawFilledCircle(Kernel.BlackColor, px, Height / 2 - 3/2, 3);
+                        DrawFilledCircle(i >= from && i < to ? Kernel.WhiteColor : Kernel.BlackColor, px, Height / 2 - 3/2, 3);
                         px += 6 + 2;
                     }
                 }
                 else
                 {
                     DrawString(visibleText, Kernel.font, Kernel.BlackColor, 0 + 4, 0 + 4);
+                    DrawSelection(visibleText, from, to, TextPadding);
 
                     if (_isSelected && _cursorVisible)
                     {
@@ -719,6 +1144,10 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
             _scrollX = Math.Max(0, Math.Min(_scrollX, MaxScrollX));
             _scrollY = Math.Max(0, Math.Min(_scrollY, MaxScrollY));
 
+            int startLine, startColumn, endLine, endColumn;
+            GetSelection(out startLine, out startColumn, out endLine, out endColumn);
+            bool hasSelection = startLine != endLine || startColumn != endColumn;
+
             for (int row = 0; _scrollY + row < lines.Length; row++)
             {
                 int y = TextPadding + row * Kernel.font.Height;
@@ -730,10 +1159,17 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
 
                 int index = _scrollY + row;
                 string line = lines[index];
+                string visible = line.Length > _scrollX ? line.Substring(_scrollX, Math.Min(columns, line.Length - _scrollX)) : "";
 
-                if (line.Length > _scrollX)
+                DrawString(visible, Kernel.font, Kernel.BlackColor, TextPadding, y);
+
+                // A selected line break takes a column after the line.
+                if (_isSelected && hasSelection && index >= startLine && index <= endLine)
                 {
-                    DrawString(line.Substring(_scrollX, Math.Min(columns, line.Length - _scrollX)), Kernel.font, Kernel.BlackColor, TextPadding, y);
+                    int from = index == startLine ? startColumn : 0;
+                    int to = index == endLine ? endColumn : line.Length + 1;
+
+                    DrawSelection(visible, Math.Max(0, from - _scrollX), Math.Min(columns, to - _scrollX), y);
                 }
 
                 if (_isSelected && _cursorVisible && index == _linePosition)
@@ -764,6 +1200,27 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
 
                 DrawFrame(_verticalRail, VerticalBarX, VerticalBarY, ScrollBarSize, VerticalBarHeight);
                 DrawFrame(_drawnVerticalThumb, VerticalBarX, VerticalThumbY, ScrollBarSize, VerticalThumbHeight);
+            }
+        }
+
+        /// <summary>
+        /// Draws the columns from..to (0 the first in view) of a line drawn at y on the selection
+        /// color, their characters in white.
+        /// </summary>
+        private void DrawSelection(string visible, int from, int to, int y)
+        {
+            if (from >= to)
+            {
+                return;
+            }
+
+            DrawFilledRectangle(Kernel.SelectionColor, TextPadding + from * Kernel.font.Width, y, (to - from) * Kernel.font.Width, Kernel.font.Height);
+
+            int textTo = Math.Min(to, visible.Length);
+
+            if (from < textTo)
+            {
+                DrawString(visible.Substring(from, textTo - from), Kernel.font, Kernel.WhiteColor, TextPadding + from * Kernel.font.Width, y);
             }
         }
 
@@ -848,6 +1305,8 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
                 _cursorPosition = _text.Length;
                 AdjustScrollOffsetToEnd();
             }
+
+            CollapseSelection();
         }
     }
 }

@@ -101,7 +101,7 @@ have, or setting a read-only one, is an error. Their functions are called with a
 | | |
 |---|---|
 | `app:find(id)` | The element with that `id` in the layout file: a control, or a container (`Stack`, `Panel`, `Grid`, `Row`) that has only `id` and `visible`. An unknown id is an error. |
-| `app:on(event, handler)` | Calls `handler()` on the layout's event of that name (`onClick="event"`, `onChange`, `onEnter`, `onActivate`). A later call replaces it. |
+| `app:on(event, handler)` | Calls `handler()` on the layout's event of that name (`onClick="event"`, `onChange`, `onEnter`, `onActivate`, `onPaste`). A later call replaces it. |
 | `app:every(milliseconds, handler)` | Calls `handler()` every that many milliseconds (the first time one interval from now), until the app closes. A handler that raises an error stops its timer. |
 | `app:after(milliseconds, handler)` | Calls `handler()` once, that many milliseconds from now (0 is fine) and after the window was drawn: what the caller changed shows first. For slow work, a download: say what is going on, then do it here. |
 | `app:onKey(handler)` | Calls `handler(key)` with each key typed while the app is focused, but those a control with the keys uses (a TextBox all of them, a ListBox its moves and Enter): `key.name` for a key that types no character (`enter`, `backspace`, `tab`, `escape`, `up`, `down`, `left`, `right`, `home`, `end`, `pageUp`, `pageDown`, `insert`, `delete`, `f1` to `f12`), `key.char` for one that does (UTF-8; with Ctrl held, the key's letter: `"c"` for Ctrl+C), and `key.ctrl`, `key.shift`, `key.alt`. A later call replaces it. |
@@ -135,6 +135,7 @@ error. A change shows on the next frame.
 | `foreground` | Console | Color of the text written next: `black`, `darkBlue`, `darkGreen`, `darkCyan`, `darkRed`, `darkMagenta`, `darkYellow`, `gray`, `darkGray`, `blue`, `green`, `cyan`, `red`, `magenta`, `yellow`, `white`. |
 | `input` | Console | The line being typed, drawn before the cursor and not written yet; the cursor moves with it. Emptied when the console is. |
 | `inputHidden` | Console | Hides the input line and the cursor (while a command runs). |
+| `selection` | Console | The text selected with the mouse, `nil` for none; read only. A line the console wrapped goes on with the next one, the others end with `\n`. |
 
 A TextBox and a ListBox have a method: `control:focus()` gives them the keys, as a click on them does
 (a single line TextBox puts its cursor at the end).
@@ -149,7 +150,10 @@ font, 8 x 16 pixels a character).
 
 A Console also has methods: `console:write(text)`, `console:writeLine([text])`, `console:clear()`,
 `console:scrollUp()`, `console:scrollDown()` (one line back or forward through the lines that went off
-the top) and `console:scrollToEnd()`. A new size empties it.
+the top), `console:scrollToEnd()` and `console:clearSelection()`. A new size empties it. Dragging the
+mouse over its text selects it, a double click a word (up to the spaces); the app copies it on its keys
+(Terminal: Ctrl+C). A right click opens Copy, which copies the selection, and Paste, the Console's
+`onPaste` event: the app types `aura.clipboard.text` (gray without `onPaste`).
 
 ### aura.system
 
@@ -245,7 +249,17 @@ reads a file a byte at a time: `readText` is faster for a whole file.
 | `aura.fs.delete(path)` | Deletes a file, or a folder and everything in it (not a volume): `true`, or `false` and why. |
 | `aura.fs.copy(source, destination)` | Copies a file, or a folder and everything in it, to `destination`, a path that does not exist yet: `true`, or `false` and why. |
 | `aura.fs.move(source, destination)` | Moves or renames a file or a folder to `destination`, a path that does not exist yet (a change of case only is fine), to another volume too: `true`, or `false` and why. |
-| `aura.fs.clipboard` | The path the desktop's and the File Explorer's Copy keep, `nil` for none; read and set. |
+| `aura.fs.clipboard` | The path the desktop's and the File Explorer's Copy keep, `nil` for none; read and set. The copied text is `aura.clipboard.text`. |
+
+### aura.clipboard
+
+The text Ctrl+C copies, in a TextBox or the Terminal, and Ctrl+V pastes. The taskbar's clipboard
+button lists the last ones.
+
+| | |
+|---|---|
+| `aura.clipboard.text` | The text Ctrl+V pastes, `nil` for none. Setting it copies a text, as Ctrl+C does. |
+| `aura.clipboard.history()` | The last texts copied (10 at most), newest first: a list of strings, `text` first. |
 
 ### aura.shell
 

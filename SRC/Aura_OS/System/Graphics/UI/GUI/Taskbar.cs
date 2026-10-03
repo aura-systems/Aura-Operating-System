@@ -39,6 +39,7 @@ namespace Aura_OS.System.Graphics.UI.GUI
         public Button HourButton;
         public Button NetworkButton;
         public KeyboardLayoutButton KeyboardButton;
+        public ClipboardButton ClipboardButton;
 
         public bool Clicked = false;
 
@@ -119,6 +120,13 @@ namespace Aura_OS.System.Graphics.UI.GUI
             KeyboardButton.NoBackground = true;
             AddChild(KeyboardButton);
 
+            // Clipboard history, left of the keyboard layout: a click lists the texts copied last.
+            int clipboardButtonSize = 16;
+            int clipboardButtonX = keyboardButtonX - clipboardButtonSize - 6;
+            int clipboardButtonY = (taskbarHeight / 2) - (clipboardButtonSize / 2);
+            ClipboardButton = new ClipboardButton(clipboardButtonX, clipboardButtonY, clipboardButtonSize, clipboardButtonSize);
+            AddChild(ClipboardButton);
+
             Buttons = new Dictionary<uint, Button>();
         }
 
@@ -133,6 +141,7 @@ namespace Aura_OS.System.Graphics.UI.GUI
             HourButton.X = (int)Kernel.ScreenWidth - HourButton.Width - 2;
             NetworkButton.X = HourButton.X - 20;
             KeyboardButton.X = NetworkButton.X - KeyboardButton.Width - 6;
+            ClipboardButton.X = KeyboardButton.X - ClipboardButton.Width - 6;
         }
 
         public void UpdateApplicationButtons()
@@ -184,6 +193,7 @@ namespace Aura_OS.System.Graphics.UI.GUI
         {
             StartButton.Update();
             KeyboardButton.Update();
+            ClipboardButton.Update();
 
             foreach (var button in Buttons)
             {
@@ -263,6 +273,8 @@ namespace Aura_OS.System.Graphics.UI.GUI
             NetworkButton.Draw(this);
 
             KeyboardButton.Draw(this);
+
+            ClipboardButton.Draw(this);
         }
 
         public override void MarkDirty()

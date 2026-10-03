@@ -92,6 +92,7 @@ namespace Aura_OS.System.Processing.Lua
             SetObject(lua, "theme", ThemeObject());
             SetObject(lua, "settings", SettingsObject());
             SetObject(lua, "fs", FsObject());
+            SetObject(lua, "clipboard", ClipboardObject());
             SetObject(lua, "shell", ShellObject());
             SetObject(lua, "packages", PackagesObject());
 
@@ -671,6 +672,34 @@ namespace Aura_OS.System.Processing.Lua
         }
 
         /// <summary>
+        /// The text clipboard, Ctrl+C and Ctrl+V's (the desktop's copied file is aura.fs.clipboard).
+        /// </summary>
+        private static LuaObject ClipboardObject()
+        {
+            return new LuaObject("aura.clipboard")
+                // The text Ctrl+V pastes, nil for none. Setting it copies a text, as Ctrl+C does.
+                .Property("text", lua => Text(lua, TextClipboard.Text), lua =>
+                {
+                    TextClipboard.Copy(LuaObject.CheckText(lua, 3));
+                    return 0;
+                })
+                // The texts copied, newest first: text, then the ones before it.
+                .Function("history", lua =>
+                {
+                    IReadOnlyList<string> history = TextClipboard.History;
+                    lua.CreateTable(history.Count, 0);
+
+                    for (int i = 0; i < history.Count; i++)
+                    {
+                        LuaObject.PushText(lua, history[i]);
+                        lua.RawSetI(-2, i + 1);
+                    }
+
+                    return 1;
+                });
+        }
+
+        /// <summary>
         /// aura.shell.open(console): a shell in one of the app's Console controls, whose execute(line)
         /// runs a command line. While the app is focused, Console.Out (the commands' output) writes
         /// into the console; clear empties it, exit closes the app.
@@ -998,6 +1027,7 @@ namespace Aura_OS.System.Processing.Lua
                 case "scrollUp":
                 case "scrollDown":
                 case "scrollToEnd":
+                case "clearSelection":
                     if (component is UIConsole)
                     {
                         lua.PushCSharpFunction(ConsoleMethod(key));
@@ -1035,6 +1065,12 @@ namespace Aura_OS.System.Processing.Lua
                     {
                         lua.PushBoolean(hiddenConsole.InputHidden);
                         return 1;
+                    }
+                    break;
+                case "selection":
+                    if (component is UIConsole selectionConsole)
+                    {
+                        return Text(lua, selectionConsole.SelectedText);
                     }
                     break;
                 case "text":
@@ -1497,7 +1533,7 @@ namespace Aura_OS.System.Processing.Lua
 
         /// <summary>
         /// A Console control's method: console:write(text), console:writeLine([text]), console:clear(),
-        /// console:scrollUp(), console:scrollDown(), console:scrollToEnd().
+        /// console:scrollUp(), console:scrollDown(), console:scrollToEnd(), console:clearSelection().
         /// </summary>
         private static CSharpFunctionDelegate ConsoleMethod(string name)
         {
@@ -1530,6 +1566,9 @@ namespace Aura_OS.System.Processing.Lua
                         break;
                     case "scrollToEnd":
                         console.ScrollToEnd();
+                        break;
+                    case "clearSelection":
+                        console.ClearSelection();
                         break;
                 }
 
