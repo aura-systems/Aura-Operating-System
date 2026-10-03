@@ -109,6 +109,13 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
             }
         }
 
+        /// <summary>
+        /// Size the content wants (a label's text, a picture's image), -1 when the component has
+        /// none: a layout then keeps the size it was created with.
+        /// </summary>
+        public virtual int PreferredWidth => -1;
+        public virtual int PreferredHeight => -1;
+
         public bool ForceDirty { get; set; }
         public RightClick RightClick { get; set; }
         public Component Parent { get; set; }
@@ -395,34 +402,31 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
                 width++;
             }
 
-            foreach (Component child in Children)
-            {
-                if (child is Button)
-                {
-                    child.X += width - Width;
-                }
-            }
+            int deltaWidth = width - Width;
 
             _rectangle = new Rectangle(Y, X, Y + height, X + width);
             _buffer = NewBuffer(width, height);
             _cacheBuffer = null;
 
+            OnResized(deltaWidth);
             Draw();
-            foreach (Component child in Children)
-            {
-                if (child is Button)
-                {
-                    child.DrawInParent();
-                }
-            }
             SaveCacheBuffer();
         }
 
         /// <summary>
-        /// Gives the component a new size and blank buffers, without the window limits of Resize and
-        /// without moving the children. For the screen-sized components after a resolution change.
+        /// Called by Resize once the component has its new size, before it redraws: the place to
+        /// move the children anchored to the right edge.
         /// </summary>
-        public void SetSize(int width, int height)
+        protected virtual void OnResized(int deltaWidth)
+        {
+        }
+
+        /// <summary>
+        /// Gives the component a new size and blank buffers, without the window limits of Resize and
+        /// without moving the children. For the screen-sized components after a resolution change,
+        /// and the controls a layout stretches.
+        /// </summary>
+        public virtual void SetSize(int width, int height)
         {
             // Drop the old buffers first, so a collection during the allocation can reclaim them.
             _buffer = null;

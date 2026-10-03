@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using Aura_OS.System;
@@ -26,6 +27,8 @@ namespace Aura_OS
         private static byte[] _wallpaper;
         private static byte[] _wallpaper2;
         private static byte[] _auralogoWhite;
+
+        private static readonly Dictionary<string, Bitmap> _images = new Dictionary<string, Bitmap>();
 
         //200x178 .bmp
         public static byte[] ErrorImage
@@ -143,6 +146,24 @@ namespace Aura_OS
             byte[] bytes = Get(relPath);
             int skip = bytes.Length >= 3 && bytes[0] == 0xEF && bytes[1] == 0xBB && bytes[2] == 0xBF ? 3 : 0;
             return Encoding.UTF8.GetString(bytes, skip, bytes.Length - skip);
+        }
+
+        /// <summary>
+        /// Embedded BMP by its path relative to Resources/ ("UI/Images/AuraLogo.bmp"), decoded on first
+        /// use and shared afterwards (draw it, do not draw into it).
+        /// </summary>
+        /// <exception cref="FileNotFoundException">No such embedded resource.</exception>
+        public static Bitmap GetImage(string relPath)
+        {
+            Bitmap bitmap;
+
+            if (!_images.TryGetValue(relPath, out bitmap))
+            {
+                bitmap = new Bitmap(Get(relPath));
+                _images.Add(relPath, bitmap);
+            }
+
+            return bitmap;
         }
 
         /// <summary>
@@ -270,16 +291,16 @@ namespace Aura_OS
             CustomConsole.WriteLineOK("auralogo_white.bmp wallpaper loaded.");
 
             // Images
-            Kernel.AuraLogo = new Bitmap(Get("UI/Images/AuraLogo.bmp"));
+            Kernel.AuraLogo = GetImage("UI/Images/AuraLogo.bmp");
             CustomConsole.WriteLineOK("AuraLogo.bmp image loaded.");
 
-            Kernel.AuraLogoWhite = new Bitmap(Get("UI/Images/AuraLogoWhite.bmp"));
+            Kernel.AuraLogoWhite = GetImage("UI/Images/AuraLogoWhite.bmp");
             CustomConsole.WriteLineOK("AuraLogoWhite.bmp image loaded.");
 
-            Kernel.AuraLogo2 = new Bitmap(Get("UI/Images/aura.bmp"));
+            Kernel.AuraLogo2 = GetImage("UI/Images/aura.bmp");
             CustomConsole.WriteLineOK("aura.bmp image loaded.");
 
-            Kernel.CosmosLogo = new Bitmap(Get("UI/Images/CosmosLogo.bmp"));
+            Kernel.CosmosLogo = GetImage("UI/Images/CosmosLogo.bmp");
             CustomConsole.WriteLineOK("CosmosLogo.bmp image loaded.");
 
             // Fonts

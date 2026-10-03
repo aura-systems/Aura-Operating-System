@@ -10,6 +10,7 @@ using System.Drawing;
 using Cosmos.Kernel.System.Mouse;
 using Aura_OS.Processing;
 using Aura_OS.System.Graphics.UI.GUI.Components;
+using Aura_OS.System.Graphics.UI.GUI.Layout;
 using Aura_OS.System.Processing.Processes;
 
 namespace Aura_OS.System.Graphics.UI.GUI
@@ -25,6 +26,12 @@ namespace Aura_OS.System.Graphics.UI.GUI
         }
 
         public Window Window;
+
+        /// <summary>
+        /// The window's controls when they come from a layout file, else null (the app draws its UI).
+        /// </summary>
+        public AppLayout Layout { get; private set; }
+
         public bool ForceDirty = false;
         public bool Visible = false;
         public int zIndex = 0;
@@ -65,11 +72,36 @@ namespace Aura_OS.System.Graphics.UI.GUI
             InitWindow(name, width, height, x, y);
         }
 
+        /// <summary>
+        /// An app whose window and controls come from a layout file (AppLayout.Load). The derived
+        /// constructor gets its controls with Find and gives the code of the file's events with On;
+        /// this class updates, places and draws the controls.
+        /// </summary>
+        public Application(AppLayout layout, int x = 0, int y = 0) : base(layout.Title, ProcessType.Program)
+        {
+            InitWindow(layout.Title, layout.Width, layout.Height, x, y);
+
+            if (layout.Icon != null)
+            {
+                Window.Icon = Kernel.ResourceManager.GetIcon(layout.Icon);
+            }
+
+            Layout = layout;
+            Layout.Build(this);
+        }
+
         public override void Initialize()
         {
             base.Initialize();
 
             Kernel.ProcessManager.Register(this);
+
+            // The derived constructor may have hidden elements or changed texts: place them before
+            // the window manager first draws them.
+            if (Layout != null)
+            {
+                Layout.Arrange();
+            }
         }
 
         private void InitWindow(string name, int width, int height, int x = 0, int y = 0)
@@ -338,6 +370,11 @@ namespace Aura_OS.System.Graphics.UI.GUI
                     Window.X = (int)(MouseManager.X - _px);
                     Window.Y = (int)(MouseManager.Y - _py);
                 }
+
+                if (Layout != null)
+                {
+                    Layout.Update();
+                }
             }
         }
 
@@ -354,6 +391,13 @@ namespace Aura_OS.System.Graphics.UI.GUI
                 Window.Draw();
                 Window.SaveCacheBuffer();
                 _isCached = true;
+            }
+
+            if (Layout != null)
+            {
+                // Placed on every redraw: a resize, a hidden element or a longer label moves the others.
+                Layout.Arrange();
+                Layout.Draw();
             }
         }
 
@@ -374,6 +418,22 @@ namespace Aura_OS.System.Graphics.UI.GUI
         public void AddChild(Component component)
         {
             Window.AddChild(component);
+        }
+
+        /// <summary>
+        /// The layout file's control with that id (AppLayout.Find).
+        /// </summary>
+        protected T Find<T>(string id) where T : Component
+        {
+            return Layout.Find<T>(id);
+        }
+
+        /// <summary>
+        /// Runs handler on the layout file's event of that name: onClick="name", onChange="name"... (AppLayout.On).
+        /// </summary>
+        protected void On(string name, Action handler)
+        {
+            Layout.On(name, handler);
         }
 
         private void BringToFront()

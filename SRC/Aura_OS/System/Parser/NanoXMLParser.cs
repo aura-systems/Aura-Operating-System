@@ -49,6 +49,20 @@ namespace Aura_OS.System.Parser
             return c == '"' || c == '\'';
         }
 
+        /// <summary>
+        /// Replaces the five predefined XML entities (&amp;lt; &amp;gt; &amp;quot; &amp;apos; &amp;amp;).
+        /// </summary>
+        protected static string DecodeEntities(string value)
+        {
+            if (value == null || value.IndexOf('&') < 0)
+            {
+                return value;
+            }
+
+            // &amp; last, so "&amp;lt;" stays the text "&lt;".
+            return value.Replace("&lt;", "<").Replace("&gt;", ">").Replace("&quot;", "\"").Replace("&apos;", "'").Replace("&amp;", "&");
+        }
+
         // returns name
         protected static string ParseAttributes(string str, ref int i, List<NanoXMLAttribute> attributes, char endChar, char endChar2)
         {
@@ -73,7 +87,7 @@ namespace Aura_OS.System.Parser
                 string attrValue = GetValue(str, ref i, quote, '\0', false);
                 i++; // skip quote
 
-                attributes.Add(new NanoXMLAttribute(attrName, attrValue));
+                attributes.Add(new NanoXMLAttribute(attrName, DecodeEntities(attrValue)));
 
                 SkipSpaces(str, ref i);
             }
@@ -203,7 +217,7 @@ namespace Aura_OS.System.Parser
             }
             else // parse value
             {
-                value = GetValue(str, ref i, '<', '\0', false);
+                value = DecodeEntities(GetValue(str, ref i, '<', '\0', false));
                 i++; // skip <
 
                 if (str[i] != '/')

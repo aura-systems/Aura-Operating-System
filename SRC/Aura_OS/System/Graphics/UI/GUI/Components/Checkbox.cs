@@ -14,9 +14,14 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
     {
         public Color TextColor;
         public string Text = "";
-        public bool Checked = false;
+
+        /// <summary>
+        /// Called after a click checks or unchecks the box.
+        /// </summary>
+        public Action Changed;
 
         private Button _check;
+        private bool _checked;
 
         public Checkbox(string text, Color color, int x, int y, bool isChecked = false) : base(x, y, (text.Length * Kernel.font.Width) + 13 + 6, 13)
         {
@@ -26,7 +31,12 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
             _check.Click = new Action(() =>
             {
                 Checked = !Checked;
-                UpdateCheckbox();
+
+                // GEN3-GAP(null-deref): invoking a null delegate halts the kernel.
+                if (Changed != null)
+                {
+                    Changed();
+                }
             });
 
             AddChild(_check);
@@ -34,13 +44,27 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
             TextColor = color;
             Text = text;
             Checked = isChecked;
+        }
 
-            UpdateCheckbox();
+        /// <summary>
+        /// Setting it does not call Changed.
+        /// </summary>
+        public bool Checked
+        {
+            get
+            {
+                return _checked;
+            }
+            set
+            {
+                _checked = value;
+                UpdateCheckbox();
+            }
         }
 
         private void UpdateCheckbox()
         {
-            if (Checked)
+            if (_checked)
             {
                 _check.SetNormalFrame(Kernel.ThemeManager.GetFrame("check.on.normal"));
                 _check.SetHighlightedFrame(Kernel.ThemeManager.GetFrame("check.on.highlighted"));

@@ -122,15 +122,31 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
             }
         }
 
-        public override void Resize(int width, int height)
+        /// <summary>
+        /// The buttons stay at the right edge and the title bar spans the new width (it keeps its
+        /// context menu). Window.Draw draws them.
+        /// </summary>
+        protected override void OnResized(int deltaWidth)
         {
-            base.Resize(width, height);
-            TopBar.Dispose();
-            TopBar = new Panel(Color.Transparent, 3, 3, Width - 5, 18);
-            TopBar.Background = false;
-            TopBar.Borders = false;
-            TopBar.Text = Name;
-            AddChild(TopBar);
+            if (HasCloseButton)
+            {
+                Close.X += deltaWidth;
+            }
+
+            if (HasMinimizeButton)
+            {
+                Minimize.X += deltaWidth;
+            }
+
+            if (HasMaximizeButton)
+            {
+                Maximize.X += deltaWidth;
+            }
+
+            if (HasBorders)
+            {
+                TopBar.SetSize(Width - 5, TopBar.Height);
+            }
         }
     }
 }

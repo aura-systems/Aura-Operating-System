@@ -145,6 +145,16 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
             }
         }
 
+        /// <summary>
+        /// The list takes the new width the next time it opens.
+        /// </summary>
+        public override void SetSize(int width, int height)
+        {
+            Close();
+            base.SetSize(width, height);
+            _listOutdated = true;
+        }
+
         private void BuildList()
         {
             _listOutdated = false;

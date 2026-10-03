@@ -4,12 +4,21 @@
 * PROGRAMMERS:      Valentin Charbonnier <valentinbreiz@gmail.com>
 */
 
+using System;
 using Cosmos.Kernel.System.Mouse;
 
 namespace Aura_OS.System.Graphics.UI.GUI.Components
 {
+    /// <summary>
+    /// Horizontal slider, Value from 0 to 255.
+    /// </summary>
     public class Slider : Component
     {
+        /// <summary>
+        /// Called when dragging the slide changes Value (setting Value does not call it).
+        /// </summary>
+        public Action Changed;
+
         public int Value
         {
             get { return _value; }
@@ -86,7 +95,18 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
                 int range = Width - _slide.Width;
                 if (range > 0)
                 {
-                    Value = (currentX * 255) / range;
+                    int value = (currentX * 255) / range;
+
+                    if (value != _value)
+                    {
+                        Value = value;
+
+                        // GEN3-GAP(null-deref): invoking a null delegate halts the kernel.
+                        if (Changed != null)
+                        {
+                            Changed();
+                        }
+                    }
                 }
             }
 
@@ -96,6 +116,15 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
             {
                 MarkDirty();
             }
+        }
+
+        /// <summary>
+        /// Puts the slide back at Value on the new rail.
+        /// </summary>
+        public override void SetSize(int width, int height)
+        {
+            base.SetSize(width, height);
+            Value = _value;
         }
 
         public override void Draw()

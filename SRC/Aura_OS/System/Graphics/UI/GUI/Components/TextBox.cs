@@ -105,7 +105,7 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
             }
         }
 
-        public void Update()
+        public override void Update()
         {
             base.Update();
 

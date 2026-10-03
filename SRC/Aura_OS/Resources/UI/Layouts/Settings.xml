@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Settings app window. SettingsApp.cs fills the fields, finds them by id and handles the events. -->
+<Window title="Settings" width="340" height="453" icon="16-settings.bmp" padding="3,6" spacing="10">
+  <Grid columns="auto,*" columnSpacing="8" rowSpacing="10" rowHeight="23">
+    <Row>
+      <Label text="Username:" />
+      <TextBox id="username" />
+    </Row>
+    <Row>
+      <Label text="Password:" />
+      <TextBox id="password" password="true" />
+    </Row>
+    <Row>
+      <Label text="Computer Name:" />
+      <TextBox id="computerName" />
+    </Row>
+    <Row>
+      <Label text="Theme BMP Path:" />
+      <TextBox id="themeBmpPath" />
+    </Row>
+    <Row>
+      <Label text="Theme XML Path:" />
+      <TextBox id="themeXmlPath" />
+    </Row>
+    <Row>
+      <Label text="Windows Alpha:" />
+      <Slider id="windowsAlpha" />
+    </Row>
+    <Row>
+      <Label text="Taskbar Alpha:" />
+      <Slider id="taskbarAlpha" />
+    </Row>
+    <Row>
+      <Label text="Resolution:" />
+      <DropDown id="resolution" />
+    </Row>
+    <Row>
+      <Label text="Scale:" />
+      <DropDown id="scale" />
+    </Row>
+    <Row>
+      <Label text="Wallpaper Path:" />
+      <TextBox id="wallpaperPath" />
+    </Row>
+    <Row>
+      <Label text="GUI Debug:" />
+      <Checkbox id="guiDebug" />
+    </Row>
+    <!-- Hidden in live mode: there is no settings.ini to keep it. -->
+    <Row id="autoLoginRow">
+      <Label text="Auto LogIn:" />
+      <Checkbox id="autoLogin" />
+    </Row>
+  </Grid>
+
+  <Button id="save" text="Save Settings" width="100" align="center" onClick="save" />
+
+  <Dialog id="dialog" title="Save" visible="false">
+    <Button text="OK" onClick="closeDialog" />
+  </Dialog>
+</Window>
