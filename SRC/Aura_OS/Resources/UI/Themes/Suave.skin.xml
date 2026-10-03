@@ -98,7 +98,7 @@ that uses the theme, please give due credit to the original artist!
 		<frame name="window.borderless">
 			<region source="controls" hplacement="left" vplacement="top" x="92" y="74" w="4" h="4" />
 			<region source="controls" hplacement="stretch" vplacement="top" x="96" y="74" w="32" h="4" />
-			<region source="controls" hplacement="right" vplacement="top" x="129" y="74" w="4" h="4" />
+			<region source="controls" hplacement="right" vplacement="top" x="130" y="74" w="4" h="4" />
 			<region source="controls" hplacement="left" vplacement="stretch" x="92" y="78" w="4" h="18" id="border-w" />
 			<region source="controls" hplacement="stretch" vplacement="stretch" x="96" y="78" w="32" h="18" id="client" />
 			<region source="controls" hplacement="right" vplacement="stretch" x="130" y="78" w="4" h="18" id="border-e" />
