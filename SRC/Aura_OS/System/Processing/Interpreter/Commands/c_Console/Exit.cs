@@ -5,22 +5,19 @@
 *                   Valentin Charbonnier <valentinbreiz@gmail.com>
 */
 
-using Aura_OS.System.Graphics.UI.GUI;
-using Aura_OS.System.Processing.Applications.Terminal;
-
 namespace Aura_OS.System.Processing.Interpreter.Commands.c_Console
 {
     class CommandExit : ICommand
     {
-        private TerminalApp _terminal;
+        private IShellHost _host;
 
         /// <summary>
         /// Empty constructor.
         /// </summary>
-        public CommandExit(string[] commandvalues, Application terminal) : base(commandvalues)
+        public CommandExit(string[] commandvalues, IShellHost host) : base(commandvalues)
         {
             Description = "to exit the console";
-            _terminal = terminal as TerminalApp;
+            _host = host;
         }
 
         /// <summary>
@@ -28,9 +25,9 @@ namespace Aura_OS.System.Processing.Interpreter.Commands.c_Console
         /// </summary>
         public override ReturnInfo Execute()
         {
-            if (_terminal != null)
+            if (_host != null)
             {
-                _terminal.Window.Close.Click();
+                _host.Exit();
             }
 
             return new ReturnInfo(this, ReturnCode.OK);

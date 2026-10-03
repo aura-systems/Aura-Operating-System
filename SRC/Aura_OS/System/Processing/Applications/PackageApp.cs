@@ -8,16 +8,19 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using Cosmos.Executable.Lua;
+using Cosmos.Kernel.System.Keyboard;
 using Aura_OS.System.Graphics.UI.GUI;
+using Aura_OS.System.Processing.Interpreter;
 using Aura_OS.System.Processing.Lua;
 
 namespace Aura_OS.System.Processing.Applications
 {
     /// <summary>
     /// An app whose window is its package's layout file and whose behaviour is its package's Lua:
-    /// the main file runs once when the app opens, then the handlers it gave with app:on run on the
-    /// layout's events and its timers (app:every), on the UI thread. os.exit in a handler closes the
-    /// app. SRC/Packages/README.md describes the Lua side.
+    /// the main file runs once when the app opens, then the handlers it gave run on the layout's
+    /// events (app:on), its timers (app:every), the keys typed while it is focused (app:onKey) and
+    /// its resizes (app:onResize), on the UI thread. os.exit in a handler closes the app.
+    /// SRC/Packages/README.md describes the Lua side.
     /// </summary>
     public class PackageApp : Application
     {
@@ -39,6 +42,16 @@ namespace Aura_OS.System.Processing.Applications
         }
 
         private readonly List<Timer> _timers = new List<Timer>();
+
+        // app:onKey and app:onResize handlers (registry references), LuaConstants.LUA_NOREF for none.
+        private int _keyHandler = LuaConstants.LUA_NOREF;
+        private int _resizeHandler = LuaConstants.LUA_NOREF;
+
+        /// <summary>
+        /// The app's shell (aura.shell.open), null without one: Console.Out writes into its console
+        /// while the app is focused.
+        /// </summary>
+        internal ShellSession Shell { get; private set; }
 
         private bool _disposed;
 
@@ -111,6 +124,56 @@ namespace Aura_OS.System.Processing.Applications
         }
 
         /// <summary>
+        /// Calls the Lua function (a registry reference) with each key typed while the app is focused.
+        /// </summary>
+        internal void SetKeyHandler(int reference)
+        {
+            Unref(_keyHandler);
+            _keyHandler = reference;
+        }
+
+        /// <summary>
+        /// Calls the Lua function (a registry reference) once the window was resized and its controls
+        /// placed again.
+        /// </summary>
+        internal void SetResizeHandler(int reference)
+        {
+            Unref(_resizeHandler);
+            _resizeHandler = reference;
+        }
+
+        /// <summary>
+        /// Opens the app's shell in one of its Console controls.
+        /// </summary>
+        /// <exception cref="InvalidOperationException">The app already has one.</exception>
+        internal ShellSession OpenShell(Graphics.UI.GUI.Components.Console console)
+        {
+            if (Shell != null)
+            {
+                throw new InvalidOperationException("the app already has a shell");
+            }
+
+            Shell = new ShellSession(this, console, RequestExit);
+            return Shell;
+        }
+
+        /// <summary>
+        /// Closes the app once its update is over: safe from a handler, unlike Dispose.
+        /// </summary>
+        internal void RequestExit()
+        {
+            _exited = true;
+        }
+
+        private void Unref(int reference)
+        {
+            if (reference != LuaConstants.LUA_NOREF && !_disposed)
+            {
+                _lua.State.L_Unref(LuaDef.LUA_REGISTRYINDEX, reference);
+            }
+        }
+
+        /// <summary>
         /// Calls the Lua function (a registry reference) every interval milliseconds, the first time
         /// one interval from now.
         /// </summary>
@@ -154,10 +217,99 @@ namespace Aura_OS.System.Processing.Applications
         }
 
         /// <summary>
+        /// Passes the typed keys to the key handler, one call each.
+        /// </summary>
+        private void ReadKeys()
+        {
+            KeyEvent key;
+
+            while (_keyHandler != LuaConstants.LUA_NOREF && !_disposed && !_exited && Input.KeyboardManager.TryGetKey(out key))
+            {
+                // GEN3-GAP(null-deref): a null event would halt the kernel.
+                if (key != null)
+                {
+                    Call("key", _keyHandler, lua => PushKey(lua, key));
+                }
+            }
+        }
+
+        /// <summary>
+        /// A key as the handler gets it: { name = "enter", char = "a", ctrl = , shift = , alt = }.
+        /// </summary>
+        private static int PushKey(ILuaState lua, KeyEvent key)
+        {
+            lua.CreateTable(0, 5);
+
+            string name = KeyName(key.Key);
+            if (name != null)
+            {
+                lua.PushString(name);
+                lua.SetField(-2, "name");
+            }
+
+            char c = key.KeyChar;
+            if (char.IsLetterOrDigit(c) || char.IsPunctuation(c) || char.IsSymbol(c) || c == ' ')
+            {
+                lua.PushString(LuaText.Encode(c.ToString()));
+                lua.SetField(-2, "char");
+            }
+
+            lua.PushBoolean(KeyboardManager.ControlPressed || (key.Modifiers & ConsoleModifiers.Control) != 0);
+            lua.SetField(-2, "ctrl");
+            lua.PushBoolean(KeyboardManager.ShiftPressed || (key.Modifiers & ConsoleModifiers.Shift) != 0);
+            lua.SetField(-2, "shift");
+            lua.PushBoolean(KeyboardManager.AltPressed || (key.Modifiers & ConsoleModifiers.Alt) != 0);
+            lua.SetField(-2, "alt");
+            return 1;
+        }
+
+        /// <summary>
+        /// The name of a key that types no character, null for the others. A switch, not
+        /// Enum.ToString: NativeAOT keeps no enum names.
+        /// </summary>
+        private static string KeyName(ConsoleKeyEx key)
+        {
+            switch (key)
+            {
+                case ConsoleKeyEx.Enter:
+                    return "enter";
+                case ConsoleKeyEx.Backspace:
+                    return "backspace";
+                case ConsoleKeyEx.Tab:
+                    return "tab";
+                case ConsoleKeyEx.Escape:
+                    return "escape";
+                case ConsoleKeyEx.UpArrow:
+                    return "up";
+                case ConsoleKeyEx.DownArrow:
+                    return "down";
+                case ConsoleKeyEx.LeftArrow:
+                    return "left";
+                case ConsoleKeyEx.RightArrow:
+                    return "right";
+                case ConsoleKeyEx.Home:
+                    return "home";
+                case ConsoleKeyEx.End:
+                    return "end";
+                case ConsoleKeyEx.PageUp:
+                    return "pageUp";
+                case ConsoleKeyEx.PageDown:
+                    return "pageDown";
+                case ConsoleKeyEx.Insert:
+                    return "insert";
+                case ConsoleKeyEx.Delete:
+                    return "delete";
+            }
+
+            return null;
+        }
+
+        /// <summary>
         /// Runs a handler. Its error is logged with the Lua traceback, and the app goes on.
         /// </summary>
+        /// <param name="pushArguments">Pushes the handler's arguments and returns how many, null for none.</param>
         /// <returns>False when the handler raised an error.</returns>
-        private bool Call(string name, int reference)
+        private bool Call(string name, int reference, Func<ILuaState, int> pushArguments = null)
         {
             if (_disposed || _exited)
             {
@@ -171,10 +323,11 @@ namespace Aura_OS.System.Processing.Applications
 
             state.PushCSharpFunction(Traceback);
             state.RawGetI(LuaDef.LUA_REGISTRYINDEX, reference);
+            int arguments = pushArguments != null ? pushArguments(state) : 0;
 
             try
             {
-                if (state.PCall(0, 0, top + 1) != ThreadStatus.LUA_OK)
+                if (state.PCall(arguments, 0, top + 1) != ThreadStatus.LUA_OK)
                 {
                     Logs.DoOSLog("[Error] " + Package.Name + ": " + name + ": " + LuaText.Decode(state.ToString(-1) ?? "(error object is not a string)"));
                     succeeded = false;
@@ -209,11 +362,49 @@ namespace Aura_OS.System.Processing.Applications
 
             base.Update();
 
+            if (Focused && !_disposed)
+            {
+                if (Shell != null)
+                {
+                    Shell.Activate();
+                }
+
+                ReadKeys();
+            }
+            else if (Shell != null)
+            {
+                Shell.Deactivate();
+            }
+
             // Closed here rather than in the handler, which runs in the middle of the controls' updates.
             if (_exited && !_disposed)
             {
                 Dispose();
             }
+        }
+
+        public override void ResizeWindow(int width, int height)
+        {
+            base.ResizeWindow(width, height);
+
+            // Placed now rather than at the next draw: the handler sees the controls' new sizes.
+            Layout.Arrange();
+
+            if (_resizeHandler != LuaConstants.LUA_NOREF)
+            {
+                Call("resize", _resizeHandler);
+            }
+        }
+
+        public override void Stop()
+        {
+            // Minimized or closed: Update no longer runs, give Console.Out back now.
+            if (Shell != null)
+            {
+                Shell.Deactivate();
+            }
+
+            base.Stop();
         }
 
         /// <summary>

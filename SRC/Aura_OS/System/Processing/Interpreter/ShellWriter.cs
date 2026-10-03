@@ -1,25 +1,28 @@
 ﻿/*
 * PROJECT:          Aura Operating System Development
-* CONTENT:          Terminal redirections
+* CONTENT:          Console.Out of a shell session
 * PROGRAMMERS:      Valentin Charbonnier <valentinbreiz@gmail.com>
 */
 
+using Aura_OS.System.Graphics.UI.GUI;
 using Aura_OS.System.Processing.Processes;
 using System;
 using System.Diagnostics;
 using System.IO;
 using System.Text;
 
-namespace Aura_OS.System.Processing.Applications.Terminal
+namespace Aura_OS.System.Processing.Interpreter
 {
     /// <summary>
-    /// Console.Out of a focused terminal. Installed with Console.SetOut, so no member may throw:
-    /// gen3 does not run finally/lock release on the exception path and the SyncTextWriter monitor
-    /// would stay held (C7). Every body is wrapped in try/catch.
+    /// Console.Out of a focused shell session (ShellSession): writes into its Console control, and
+    /// draws its app's window while a command runs. Installed with Console.SetOut, so no member may
+    /// throw: gen3 does not run finally/lock release on the exception path and the SyncTextWriter
+    /// monitor would stay held (C7). Every body is wrapped in try/catch.
     /// </summary>
-    public class TerminalTextWriter : TextWriter
+    public class ShellWriter : TextWriter
     {
-        private TerminalApp _terminal;
+        private readonly Graphics.UI.GUI.Components.Console _console;
+        private readonly Application _app;
         private bool _isEnabled;
 
         /// <summary>
@@ -37,9 +40,10 @@ namespace Aura_OS.System.Processing.Applications.Terminal
         /// </summary>
         private bool _drawing;
 
-        public TerminalTextWriter(TerminalApp terminal)
+        public ShellWriter(Graphics.UI.GUI.Components.Console console, Application app)
         {
-            _terminal = terminal;
+            _console = console;
+            _app = app;
             _isEnabled = true;
             _presentInterval = Stopwatch.Frequency / 60;
             _lastPresent = 0;
@@ -52,10 +56,10 @@ namespace Aura_OS.System.Processing.Applications.Terminal
             {
                 if (_isEnabled)
                 {
-                    _terminal.Console.Foreground = Console.ForegroundColor;
-                    _terminal.Console.Background = Console.BackgroundColor;
+                    _console.Foreground = Console.ForegroundColor;
+                    _console.Background = Console.BackgroundColor;
 
-                    _terminal.Console.WriteLine(value);
+                    _console.WriteLine(value);
 
                     Refresh();
                 }
@@ -71,10 +75,10 @@ namespace Aura_OS.System.Processing.Applications.Terminal
             {
                 if (_isEnabled && value != null)
                 {
-                    _terminal.Console.Foreground = Console.ForegroundColor;
-                    _terminal.Console.Background = Console.BackgroundColor;
+                    _console.Foreground = Console.ForegroundColor;
+                    _console.Background = Console.BackgroundColor;
 
-                    _terminal.Console.Write(value);
+                    _console.Write(value);
 
                     Refresh();
                 }
@@ -90,10 +94,10 @@ namespace Aura_OS.System.Processing.Applications.Terminal
             {
                 if (_isEnabled)
                 {
-                    _terminal.Console.Foreground = Console.ForegroundColor;
-                    _terminal.Console.Background = Console.BackgroundColor;
+                    _console.Foreground = Console.ForegroundColor;
+                    _console.Background = Console.BackgroundColor;
 
-                    _terminal.Console.Write(value.ToString());
+                    _console.Write(value.ToString());
 
                     Refresh();
                 }
@@ -112,10 +116,10 @@ namespace Aura_OS.System.Processing.Applications.Terminal
             {
                 if (_isEnabled && buffer != null && count > 0)
                 {
-                    _terminal.Console.Foreground = Console.ForegroundColor;
-                    _terminal.Console.Background = Console.BackgroundColor;
+                    _console.Foreground = Console.ForegroundColor;
+                    _console.Background = Console.BackgroundColor;
 
-                    _terminal.Console.Write(new string(buffer, index, count));
+                    _console.Write(new string(buffer, index, count));
 
                     Refresh();
                 }
@@ -134,10 +138,10 @@ namespace Aura_OS.System.Processing.Applications.Terminal
             {
                 if (_isEnabled && buffer.Length > 0)
                 {
-                    _terminal.Console.Foreground = Console.ForegroundColor;
-                    _terminal.Console.Background = Console.BackgroundColor;
+                    _console.Foreground = Console.ForegroundColor;
+                    _console.Background = Console.BackgroundColor;
 
-                    _terminal.Console.Write(new string(buffer));
+                    _console.Write(new string(buffer));
 
                     Refresh();
                 }
@@ -160,12 +164,12 @@ namespace Aura_OS.System.Processing.Applications.Terminal
         }
 
         /// <summary>
-        /// Draw the terminal window on screen and present it, at most once every ~16 ms.
+        /// Draw the app's window on screen and present it, at most once every ~16 ms.
         /// </summary>
         private void Refresh()
         {
             // A skipped refresh is repainted by the main loop on its next frame.
-            _terminal.Console.MarkDirty();
+            _console.MarkDirty();
 
             if (_drawing)
             {
@@ -186,11 +190,11 @@ namespace Aura_OS.System.Processing.Applications.Terminal
             try
             {
                 // The console into the window (the rest of the window does not change).
-                _terminal.Console.Draw(_terminal.Window);
+                _console.Draw(_app.Window);
 
                 if (Explorer.Screen != null)
                 {
-                    Explorer.Screen.DrawCanvas(_terminal.Window.GetBuffer(), _terminal.Window.X, _terminal.Window.Y);
+                    Explorer.Screen.DrawCanvas(_app.Window.GetBuffer(), _app.Window.X, _app.Window.Y);
                 }
 
                 Kernel.Present();

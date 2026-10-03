@@ -7,7 +7,6 @@
 using Aura_OS.System.Graphics.UI.GUI;
 using Aura_OS.System.Processing.Applications;
 using Aura_OS.System.Processing.Applications.Emulators.GameBoyEmu;
-using Aura_OS.System.Processing.Applications.Terminal;
 using Aura_OS.System.Processing.Processes;
 using Cosmos.Kernel.System.Graphics;
 using System;
@@ -86,7 +85,6 @@ namespace Aura_OS.System.Processing
 
         public void LoadApplications()
         {
-            RegisterApplication(typeof(TerminalApp), 40, 40);
             //RegisterApplication(typeof(ExplorerApp), 40, 40, 500, 400);
             RegisterApplication(typeof(GameBoyApp), 40, 40, 160 + 6, 144 + 26);
 
@@ -147,6 +145,23 @@ namespace Aura_OS.System.Processing
         }
 
         /// <summary>
+        /// Opens the window of the package app with that name ("Terminal"). A missing or failing
+        /// package is logged.
+        /// </summary>
+        public void StartPackage(string name)
+        {
+            Package package = Kernel.PackageManager.Find(name);
+
+            if (package == null || !package.IsApp)
+            {
+                Logs.DoOSLog("[Error] Cannot start " + name + ": no such app package.");
+                return;
+            }
+
+            StartApplication(new ApplicationConfig(package, 40, 40));
+        }
+
+        /// <summary>
         /// Shows a new app focused, and starts its process.
         /// </summary>
         private void Show(Application app)
@@ -194,10 +209,6 @@ namespace Aura_OS.System.Processing
             if (config.Package != null)
             {
                 app = new PackageApp(config.Package, config.X, config.Y);
-            }
-            else if (config.Template == typeof(TerminalApp))
-            {
-                app = new TerminalApp(config.X, config.Y);
             }
             else if (config.Template == typeof(GameBoyApp))
             {

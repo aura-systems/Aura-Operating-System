@@ -67,6 +67,8 @@ have, or setting a read-only one, is an error. Their functions are called with a
 | `app:find(id)` | The element with that `id` in the layout file: a control, or a container (`Stack`, `Panel`, `Grid`, `Row`) that has only `id` and `visible`. An unknown id is an error. |
 | `app:on(event, handler)` | Calls `handler()` on the layout's event of that name (`onClick="event"`, `onChange`, `onEnter`). A later call replaces it. |
 | `app:every(milliseconds, handler)` | Calls `handler()` every that many milliseconds (the first time one interval from now), until the app closes. A handler that raises an error stops its timer. |
+| `app:onKey(handler)` | Calls `handler(key)` with each key typed while the app is focused: `key.name` for a key that types no character (`enter`, `backspace`, `tab`, `escape`, `up`, `down`, `left`, `right`, `home`, `end`, `pageUp`, `pageDown`, `insert`, `delete`), `key.char` for one that does (UTF-8), and `key.ctrl`, `key.shift`, `key.alt`. A later call replaces it. |
+| `app:onResize(handler)` | Calls `handler()` once the window was resized and its elements placed again. A later call replaces it. |
 | `app.title` | The window title, also the taskbar name. |
 
 An error in a handler is written to the OS log with its traceback, and the app goes on. `os.exit()` in
@@ -81,6 +83,7 @@ error. A change shows on the next frame.
 |---|---|---|
 | `id` | all | Read only. |
 | `visible` | all, containers too | A hidden element takes no space: the next ones move up. |
+| `width`, `height` | all controls | Read only, in pixels. |
 | `text` | Label, Button, TextBox, Checkbox | |
 | `color` | Label, Button, Checkbox | Text color: `"#RRGGBB"`, `"#AARRGGBB"` or a name (`red`, `green`, `blue`, `black`, `white`, `gray`, `darkgray`, `lightgray`, `transparent`). Reads as `"#RRGGBB"`. |
 | `checked` | Checkbox | |
@@ -90,6 +93,13 @@ error. A change shows on the next frame.
 | `selectedItem` | DropDown | Read only, `nil` for none. |
 | `title`, `message` | Dialog | |
 | `state` | Dialog | Set only: `"information"` or `"error"`. |
+| `foreground` | Console | Color of the text written next: `black`, `darkBlue`, `darkGreen`, `darkCyan`, `darkRed`, `darkMagenta`, `darkYellow`, `gray`, `darkGray`, `blue`, `green`, `cyan`, `red`, `magenta`, `yellow`, `white`. |
+| `input` | Console | The line being typed, drawn before the cursor and not written yet; the cursor moves with it. Emptied when the console is. |
+| `inputHidden` | Console | Hides the input line and the cursor (while a command runs). |
+
+A Console also has methods: `console:write(text)`, `console:writeLine([text])`, `console:clear()`,
+`console:scrollUp()`, `console:scrollDown()` (one line back or forward through the lines that went off
+the top) and `console:scrollToEnd()`. A new size empties it.
 
 ### aura.system
 
@@ -107,6 +117,7 @@ error. A change shows on the next frame.
 | | |
 |---|---|
 | `aura.user.name` | The logged in user's name, read and set. |
+| `aura.user.level` | The sign of the user's level, as the prompt shows it. |
 
 ### aura.network
 
@@ -168,8 +179,16 @@ The files themselves are read and written with Lua's `io` library.
 
 | | |
 |---|---|
+| `aura.fs.currentDirectory` | The shell's current directory (`cd`), ending with `/`. |
 | `aura.fs.resolve(path)` | The absolute path, from the current directory; gen2 paths (`0:\Users`) are converted. |
 | `aura.fs.fileExists(path)` | True when that file exists. |
+
+### aura.shell
+
+| | |
+|---|---|
+| `aura.shell.open(console)` | A shell in one of the app's Console controls, one per app. While the app is focused, `Console.Out` writes into that console: the commands' output, and anything else written to it. |
+| `shell.execute(line)` | Runs a command line (`help` lists the commands) and returns once it is done. `clear` empties the console, `exit` closes the app once the handler returns. |
 
 ## Limits
 

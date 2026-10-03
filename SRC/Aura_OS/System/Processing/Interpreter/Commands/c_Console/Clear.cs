@@ -4,22 +4,19 @@
 * PROGRAMMER(S):    John Welsh <djlw78@gmail.com>
 */
 
-using Aura_OS.System.Graphics.UI.GUI;
-using Aura_OS.System.Processing.Applications.Terminal;
-
 namespace Aura_OS.System.Processing.Interpreter.Commands.c_Console
 {
     class CommandClear : ICommand
     {
-        private TerminalApp _terminal;
+        private IShellHost _host;
 
         /// <summary>
         /// Empty constructor.
         /// </summary>
-        public CommandClear(string[] commandvalues, Application terminal) : base(commandvalues)
+        public CommandClear(string[] commandvalues, IShellHost host) : base(commandvalues)
         {
             Description = "to clear the console";
-            _terminal = terminal as TerminalApp;
+            _host = host;
         }
 
         /// <summary>
@@ -27,9 +24,9 @@ namespace Aura_OS.System.Processing.Interpreter.Commands.c_Console
         /// </summary>
         public override ReturnInfo Execute()
         {
-            if (_terminal != null)
+            if (_host != null)
             {
-                _terminal.Console.ClearText();
+                _host.ClearConsole();
             }
             else
             {

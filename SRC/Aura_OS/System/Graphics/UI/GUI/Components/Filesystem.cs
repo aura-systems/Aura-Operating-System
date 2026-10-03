@@ -6,7 +6,6 @@
 
 using Aura_OS.System.Filesystem;
 using Aura_OS.System.Processing.Applications;
-using Aura_OS.System.Processing.Applications.Terminal;
 using Aura_OS.System.Processing.Processes;
 using Cosmos.Kernel.System.Graphics;
 using Cosmos.Kernel.System.Mouse;
@@ -40,7 +39,7 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
             entry.Click = new Action(() =>
             {
                 Kernel.CurrentDirectory = AuraPath.AsDirectory(CurrentPath);
-                Kernel.ApplicationManager.StartApplication(typeof(TerminalApp));
+                Kernel.ApplicationManager.StartPackage("Terminal");
             });
 
             RightClickEntry entry2 = new("Paste", RightClick.Width, RightClick);

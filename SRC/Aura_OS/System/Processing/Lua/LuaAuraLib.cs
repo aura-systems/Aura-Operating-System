@@ -17,8 +17,11 @@ using Aura_OS.System.Graphics.UI.GUI.Components;
 using Aura_OS.System.Graphics.UI.GUI.Layout;
 using Aura_OS.System.Network;
 using Aura_OS.System.Processing.Applications;
+using Aura_OS.System.Processing.Interpreter;
 using Aura_OS.System.Processing.Processes;
+using Aura_OS.System.Users;
 using Aura_OS.System.Utils;
+using UIConsole = Aura_OS.System.Graphics.UI.GUI.Components.Console;
 using AuraVersion = Aura_OS.System.Network.Version;
 
 namespace Aura_OS.System.Processing.Lua
@@ -85,6 +88,7 @@ namespace Aura_OS.System.Processing.Lua
             SetObject(lua, "theme", ThemeObject());
             SetObject(lua, "settings", SettingsObject());
             SetObject(lua, "fs", FsObject());
+            SetObject(lua, "shell", ShellObject());
 
             if (app != null)
             {
@@ -164,7 +168,9 @@ namespace Aura_OS.System.Processing.Lua
                 {
                     Kernel.userLogged = LuaObject.CheckText(lua, 3);
                     return 0;
-                });
+                })
+                // The prompt's sign of the user's level.
+                .Property("level", lua => Push(lua, UserLevel.TypeUser ?? ""));
         }
 
         private static LuaObject NetworkObject()
@@ -352,9 +358,42 @@ namespace Aura_OS.System.Processing.Lua
         private static LuaObject FsObject()
         {
             return new LuaObject("aura.fs")
+                // The shell's current directory (cd), always ending with '/'.
+                .Property("currentDirectory", lua => Push(lua, Kernel.CurrentDirectory))
                 // resolve(path): absolute, from the current directory; gen2 paths (0:\Users) are converted.
                 .Function("resolve", lua => Push(lua, AuraPath.Resolve(LuaObject.CheckText(lua, 1))))
                 .Function("fileExists", lua => Push(lua, File.Exists(LuaObject.CheckText(lua, 1))));
+        }
+
+        /// <summary>
+        /// aura.shell.open(console): a shell in one of the app's Console controls, whose execute(line)
+        /// runs a command line. While the app is focused, Console.Out (the commands' output) writes
+        /// into the console; clear empties it, exit closes the app.
+        /// </summary>
+        private static LuaObject ShellObject()
+        {
+            return new LuaObject("aura.shell")
+                .Function("open", lua =>
+                {
+                    Control control = (Control)lua.L_CheckUData(1, ControlType);
+                    UIConsole console = control.Component as UIConsole;
+
+                    if (console == null)
+                    {
+                        return LuaObject.Error(lua, "'" + control.Id + "' is not a Console");
+                    }
+
+                    ShellSession session = control.App.OpenShell(console);
+
+                    new LuaObject("shell")
+                        .Function("execute", l =>
+                        {
+                            session.Execute(LuaObject.CheckText(l, 1));
+                            return 0;
+                        })
+                        .Push(lua);
+                    return 1;
+                });
         }
 
         #endregion
@@ -376,6 +415,12 @@ namespace Aura_OS.System.Processing.Lua
                     return 1;
                 case "every":
                     lua.PushCSharpFunction(AppEvery);
+                    return 1;
+                case "onKey":
+                    lua.PushCSharpFunction(AppOnKey);
+                    return 1;
+                case "onResize":
+                    lua.PushCSharpFunction(AppOnResize);
                     return 1;
                 case "title":
                     return Text(lua, app.Window.Name);
@@ -445,6 +490,34 @@ namespace Aura_OS.System.Processing.Lua
             return 0;
         }
 
+        /// <summary>
+        /// app:onKey(handler): calls handler(key) with each key typed while the app is focused. A later
+        /// call replaces it.
+        /// </summary>
+        private static int AppOnKey(ILuaState lua)
+        {
+            PackageApp app = (PackageApp)lua.L_CheckUData(1, AppType);
+            lua.L_CheckType(2, LuaType.LUA_TFUNCTION);
+
+            lua.PushValue(2);
+            app.SetKeyHandler(lua.L_Ref(LuaDef.LUA_REGISTRYINDEX));
+            return 0;
+        }
+
+        /// <summary>
+        /// app:onResize(handler): calls handler() once the window was resized and its controls placed
+        /// again. A later call replaces it.
+        /// </summary>
+        private static int AppOnResize(ILuaState lua)
+        {
+            PackageApp app = (PackageApp)lua.L_CheckUData(1, AppType);
+            lua.L_CheckType(2, LuaType.LUA_TFUNCTION);
+
+            lua.PushValue(2);
+            app.SetResizeHandler(lua.L_Ref(LuaDef.LUA_REGISTRYINDEX));
+            return 0;
+        }
+
         #endregion
 
         #region Controls
@@ -463,6 +536,51 @@ namespace Aura_OS.System.Processing.Lua
                 case "visible":
                     lua.PushBoolean(control.App.Layout.IsVisible(control.Id));
                     return 1;
+                case "width":
+                    if (component != null)
+                    {
+                        lua.PushInteger(component.Width);
+                        return 1;
+                    }
+                    break;
+                case "height":
+                    if (component != null)
+                    {
+                        lua.PushInteger(component.Height);
+                        return 1;
+                    }
+                    break;
+                case "write":
+                case "writeLine":
+                case "clear":
+                case "scrollUp":
+                case "scrollDown":
+                case "scrollToEnd":
+                    if (component is UIConsole)
+                    {
+                        lua.PushCSharpFunction(ConsoleMethod(key));
+                        return 1;
+                    }
+                    break;
+                case "foreground":
+                    if (component is UIConsole foregroundConsole)
+                    {
+                        return Text(lua, ConsoleColorName(foregroundConsole.Foreground));
+                    }
+                    break;
+                case "input":
+                    if (component is UIConsole inputConsole)
+                    {
+                        return Text(lua, inputConsole.Input);
+                    }
+                    break;
+                case "inputHidden":
+                    if (component is UIConsole hiddenConsole)
+                    {
+                        lua.PushBoolean(hiddenConsole.InputHidden);
+                        return 1;
+                    }
+                    break;
                 case "text":
                     if (component is Label label)
                     {
@@ -646,6 +764,33 @@ namespace Aura_OS.System.Processing.Lua
                         set = true;
                     }
                     break;
+                case "foreground":
+                    if (component is UIConsole foregroundConsole)
+                    {
+                        string name = LuaObject.CheckText(lua, 3);
+                        ConsoleColor consoleColor;
+                        if (!TryParseConsoleColor(name, out consoleColor))
+                        {
+                            return LuaObject.Error(lua, "not a console color: '" + name + "'");
+                        }
+                        foregroundConsole.Foreground = consoleColor;
+                        set = true;
+                    }
+                    break;
+                case "input":
+                    if (component is UIConsole inputConsole)
+                    {
+                        inputConsole.Input = LuaObject.CheckText(lua, 3);
+                        set = true;
+                    }
+                    break;
+                case "inputHidden":
+                    if (component is UIConsole hiddenConsole)
+                    {
+                        hiddenConsole.InputHidden = lua.ToBoolean(3);
+                        set = true;
+                    }
+                    break;
                 case "state":
                     if (component is Dialog stateDialog)
                     {
@@ -670,6 +815,83 @@ namespace Aura_OS.System.Processing.Lua
             control.App.MarkDirty();
             return 0;
         }
+
+        /// <summary>
+        /// A Console control's method: console:write(text), console:writeLine([text]), console:clear(),
+        /// console:scrollUp(), console:scrollDown(), console:scrollToEnd().
+        /// </summary>
+        private static CSharpFunctionDelegate ConsoleMethod(string name)
+        {
+            return lua =>
+            {
+                Control control = (Control)lua.L_CheckUData(1, ControlType);
+                UIConsole console = control.Component as UIConsole;
+
+                if (console == null)
+                {
+                    return LuaObject.Error(lua, "'" + control.Id + "' is not a Console");
+                }
+
+                switch (name)
+                {
+                    case "write":
+                        console.Write(LuaObject.CheckText(lua, 2));
+                        break;
+                    case "writeLine":
+                        console.WriteLine(lua.IsNoneOrNil(2) ? "" : LuaObject.CheckText(lua, 2));
+                        break;
+                    case "clear":
+                        console.ClearText();
+                        break;
+                    case "scrollUp":
+                        console.ScrollUp();
+                        break;
+                    case "scrollDown":
+                        console.ScrollDown();
+                        break;
+                    case "scrollToEnd":
+                        console.ScrollToEnd();
+                        break;
+                }
+
+                console.MarkDirty();
+                control.App.MarkDirty();
+                return 0;
+            };
+        }
+
+        /// <summary>
+        /// A console color by name: black, darkBlue, darkGreen, darkCyan, darkRed, darkMagenta,
+        /// darkYellow, gray, darkGray, blue, green, cyan, red, magenta, yellow, white. A table, not
+        /// Enum.Parse: NativeAOT keeps no enum names.
+        /// </summary>
+        private static bool TryParseConsoleColor(string name, out ConsoleColor color)
+        {
+            for (int i = 0; i < ConsoleColorNames.Length; i++)
+            {
+                if (ConsoleColorNames[i] == name)
+                {
+                    color = (ConsoleColor)i;
+                    return true;
+                }
+            }
+
+            color = ConsoleColor.White;
+            return false;
+        }
+
+        private static string ConsoleColorName(ConsoleColor color)
+        {
+            int index = (int)color;
+            return index >= 0 && index < ConsoleColorNames.Length ? ConsoleColorNames[index] : null;
+        }
+
+        // In ConsoleColor order (Black = 0 ... White = 15).
+        private static readonly string[] ConsoleColorNames =
+        {
+            "black", "darkBlue", "darkGreen", "darkCyan", "darkRed", "darkMagenta", "darkYellow", "gray",
+            "darkGray", "blue", "green", "cyan", "red", "magenta", "yellow", "white",
+        };
 
         private static bool TryGetColor(Component component, out Color color)
         {

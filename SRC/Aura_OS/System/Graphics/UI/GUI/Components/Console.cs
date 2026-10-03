@@ -141,7 +141,8 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
 
         /// <summary>
         /// Text typed before the cursor and not written yet (a terminal's command line): drawn
-        /// from mX - Input.Length, mX already being after it. Not in scroll mode.
+        /// from mX - Input.Length. Setting it moves the cursor along, so mX stays after it. Not in
+        /// scroll mode.
         /// </summary>
         public string Input
         {
@@ -151,7 +152,9 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
             }
             set
             {
-                _input = value ?? "";
+                value = value ?? "";
+                mX += value.Length - _input.Length;
+                _input = value;
                 MarkDirty();
             }
         }
@@ -374,13 +377,14 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
         }
 
         /// <summary>
-        /// Empties the screen and the kept lines.
+        /// Empties the screen and the kept lines, and the line being typed, which was on it.
         /// </summary>
         public void ClearText()
         {
             Clear(Color.Black);
             mX = 0;
             mY = 0;
+            _input = "";
 
             _terminalHistory.Clear();
             _viewOffset = 0;

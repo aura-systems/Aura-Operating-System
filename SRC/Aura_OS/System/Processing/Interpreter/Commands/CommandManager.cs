@@ -28,17 +28,20 @@ namespace Aura_OS.System.Processing.Interpreter.Commands
     public class CommandManager : IManager
     {
         public static List<ICommand> _commands;
-        private Application _terminal;
+        private IShellHost _host;
 
         public CommandManager()
         {
             _commands = new List<ICommand>();
         }
 
-        public CommandManager(Application terminal)
+        /// <summary>
+        /// The commands of a shell whose clear and exit act on host.
+        /// </summary>
+        public CommandManager(IShellHost host)
         {
             _commands = new List<ICommand>();
-            _terminal = terminal;
+            _host = host;
         }
 
         public void Initialize()
@@ -51,8 +54,8 @@ namespace Aura_OS.System.Processing.Interpreter.Commands
             _commands.Add(new CommandReboot(new string[] { "reboot", "rb" }));
             _commands.Add(new CommandShutdown(new string[] { "shutdown", "sd" }));
 
-            _commands.Add(new CommandClear(new string[] { "clear", "clr" }, _terminal));
-            _commands.Add(new CommandExit(new string[] { "exit" }, _terminal));
+            _commands.Add(new CommandClear(new string[] { "clear", "clr" }, _host));
+            _commands.Add(new CommandExit(new string[] { "exit" }, _host));
             _commands.Add(new CommandKeyboardMap(new string[] { "setkeyboardmap", "setkeyboard" }));
             _commands.Add(new CommandEnv(new string[] { "export", "set" }));
             _commands.Add(new CommandEcho(new string[] { "echo" }));
