@@ -64,15 +64,15 @@ namespace Aura_OS.System.Graphics.UI.GUI
             {
                 Bitmap icon = null;
 
-                if (applicationConfig.Template.Name.StartsWith("Terminal"))
+                if (applicationConfig.Name.StartsWith("Terminal"))
                 {
                     icon = Kernel.ResourceManager.GetIcon("24-terminal.bmp");
                 }
-                else if (applicationConfig.Template.Name.StartsWith("Explorer"))
+                else if (applicationConfig.Name.StartsWith("Explorer"))
                 {
                     icon = Kernel.ResourceManager.GetIcon("24-explorer.bmp");
                 }
-                else if (applicationConfig.Template.Name.StartsWith("Settings"))
+                else if (applicationConfig.Name.StartsWith("Settings"))
                 {
                     icon = Kernel.ResourceManager.GetIcon("24-settings.bmp");
                 }
@@ -81,7 +81,7 @@ namespace Aura_OS.System.Graphics.UI.GUI
                     icon = Kernel.ResourceManager.GetIcon("24-program.bmp");
                 }
 
-                var button = new Button(icon, applicationConfig.Template.Name, 3, 3 +  buttonY + 1, Width - 6, 35);
+                var button = new Button(icon, applicationConfig.Name, 3, 3 +  buttonY + 1, Width - 6, 35);
                 button.Click = new Action(() =>
                 {
                     Kernel.ApplicationManager.StartApplication(applicationConfig);

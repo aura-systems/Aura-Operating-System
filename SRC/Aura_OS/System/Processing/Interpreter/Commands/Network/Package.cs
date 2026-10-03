@@ -16,7 +16,7 @@ namespace Aura_OS.System.Processing.Interpreter.Commands.Network
         /// </summary>
         public CommandPackage(string[] commandvalues) : base(commandvalues, CommandType.Network)
         {
-            Description = "to manage Cosmos Executables.";
+            Description = "to manage packages (.pkg programs).";
         }
 
         /// <summary>

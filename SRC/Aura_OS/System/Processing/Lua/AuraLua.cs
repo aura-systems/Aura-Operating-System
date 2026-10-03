@@ -13,7 +13,7 @@ using Aura_OS.System.Processing.Interpreter.Commands;
 namespace Aura_OS.System.Processing.Lua
 {
     /// <summary>
-    /// Creates the Lua interpreters Aura runs scripts with (run file.lua, .cexe programs).
+    /// Creates the Lua interpreters Aura runs scripts with (run file.lua, .pkg programs and apps).
     /// </summary>
     internal static class AuraLua
     {

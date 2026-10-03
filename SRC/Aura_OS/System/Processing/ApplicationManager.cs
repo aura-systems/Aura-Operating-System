@@ -18,7 +18,16 @@ namespace Aura_OS.System.Processing
 {
     public class ApplicationConfig
     {
+        /// <summary>
+        /// The app's class, null for a package app.
+        /// </summary>
         public Type Template;
+
+        /// <summary>
+        /// A package app's package, else null.
+        /// </summary>
+        public Package Package;
+
         public int X;
         public int Y;
         public int Width;
@@ -31,6 +40,33 @@ namespace Aura_OS.System.Processing
             Y = y;
             Width = width;
             Height = height;
+        }
+
+        /// <summary>
+        /// A package app, whose layout file gives the size.
+        /// </summary>
+        public ApplicationConfig(Package package, int x, int y)
+        {
+            Package = package;
+            X = x;
+            Y = y;
+        }
+
+        /// <summary>
+        /// Start menu name: the class name without "App", or the package's display name.
+        /// </summary>
+        public string Name
+        {
+            get
+            {
+                if (Package != null)
+                {
+                    return Package.DisplayName;
+                }
+
+                string name = Template.Name;
+                return name.EndsWith("App") && name.Length > 3 ? name.Substring(0, name.Length - 3) : name;
+            }
         }
     }
 
@@ -56,6 +92,15 @@ namespace Aura_OS.System.Processing
             RegisterApplication(typeof(SystemInfoApp), 40, 40);
             RegisterApplication(typeof(GameBoyApp), 40, 40, 160 + 6, 144 + 26);
             RegisterApplication(typeof(SettingsApp), 40, 40);
+
+            // Package apps: built in (SRC/Packages) or installed in Programs/.
+            foreach (Package package in Kernel.PackageManager.Packages)
+            {
+                if (package.IsApp)
+                {
+                    RegisterApplication(new ApplicationConfig(package, 40, 40));
+                }
+            }
         }
 
         public void RegisterApplication(ApplicationConfig config)
@@ -79,7 +124,36 @@ namespace Aura_OS.System.Processing
 
         public void StartApplication(ApplicationConfig config)
         {
-            Application app = Kernel.ApplicationManager.Instantiate(config);
+            Application app;
+
+            // A package app's layout or Lua can fail: report it rather than take the start menu down.
+            try
+            {
+                app = Kernel.ApplicationManager.Instantiate(config);
+            }
+            catch (Exception ex)
+            {
+                Logs.DoOSLog("[Error] Cannot start " + config.Name + ": " + ex.Message);
+                return;
+            }
+
+            Show(app);
+        }
+
+        /// <summary>
+        /// Opens a package app's window.
+        /// </summary>
+        /// <exception cref="InvalidOperationException">Its layout or main file failed.</exception>
+        public void StartPackage(Package package)
+        {
+            Show(new PackageApp(package, 40, 40));
+        }
+
+        /// <summary>
+        /// Shows a new app focused, and starts its process.
+        /// </summary>
+        private void Show(Application app)
+        {
             app.Initialize();
             app.MarkFocused();
             app.Visible = true;
@@ -120,7 +194,11 @@ namespace Aura_OS.System.Processing
         {
             Application app = null;
 
-            if (config.Template == typeof(TerminalApp))
+            if (config.Package != null)
+            {
+                app = new PackageApp(config.Package, config.X, config.Y);
+            }
+            else if (config.Template == typeof(TerminalApp))
             {
                 app = new TerminalApp(config.X, config.Y);
             }

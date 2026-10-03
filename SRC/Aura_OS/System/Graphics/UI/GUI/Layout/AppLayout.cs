@@ -9,13 +9,14 @@ using System.Collections.Generic;
 using System.IO;
 using Aura_OS.System.Graphics.UI.GUI.Components;
 using Aura_OS.System.Parser;
+using Cosmos.Kernel.System.Graphics;
 
 namespace Aura_OS.System.Graphics.UI.GUI.Layout
 {
     /// <summary>
     /// The window and controls of an app, described by its layout file Resources/UI/Layouts/&lt;name&gt;.xml
-    /// (Layout/README.md lists the elements). The app finds its controls by id (Find) and gives the
-    /// code of the file's event names (On); Application updates, places and draws the controls.
+    /// or a package's (Layout/README.md lists the elements). The app finds its controls by id (Find) and
+    /// gives the code of the file's event names (On); Application updates, places and draws the controls.
     /// </summary>
     public class AppLayout
     {
@@ -34,6 +35,10 @@ namespace Aura_OS.System.Graphics.UI.GUI.Layout
         public readonly string Icon;
 
         private readonly NanoXMLNode _window;
+
+        // A package app's images (Package.GetImage), null for a kernel app.
+        private readonly Func<string, Bitmap> _images;
+
         private Application _owner;
         private StackNode _root;
 
@@ -49,10 +54,11 @@ namespace Aura_OS.System.Graphics.UI.GUI.Layout
         private readonly Dictionary<string, LayoutNode> _ids = new Dictionary<string, LayoutNode>();
         private readonly Dictionary<string, Action> _handlers = new Dictionary<string, Action>();
 
-        private AppLayout(string name, NanoXMLNode window)
+        private AppLayout(string name, NanoXMLNode window, Func<string, Bitmap> images)
         {
             Name = name;
             _window = window;
+            _images = images;
 
             Title = LayoutLoader.Attr(window, "title") ?? name;
             Width = LayoutLoader.IntAttr(window, "width", 400, this);
@@ -67,11 +73,23 @@ namespace Aura_OS.System.Graphics.UI.GUI.Layout
         /// <exception cref="InvalidDataException">The file is not a valid layout.</exception>
         public static AppLayout Load(string name)
         {
+            return Parse(name, Files.GetText("UI/Layouts/" + name + ".xml"), null);
+        }
+
+        /// <summary>
+        /// Reads a layout file's text: a package app's (Package.LoadLayout). The src of an Image is
+        /// looked up with images first, then in the kernel's embedded images.
+        /// </summary>
+        /// <param name="name">Layout name, for the error messages (name.xml).</param>
+        /// <param name="images">The package's image at a path, null when it has none; null for no package.</param>
+        /// <exception cref="InvalidDataException">The file is not a valid layout.</exception>
+        public static AppLayout Parse(string name, string xml, Func<string, Bitmap> images)
+        {
             NanoXMLNode root;
 
             try
             {
-                root = new NanoXMLDocument(Files.GetText("UI/Layouts/" + name + ".xml")).RootNode;
+                root = new NanoXMLDocument(xml).RootNode;
             }
             catch (XMLParsingException ex)
             {
@@ -83,7 +101,7 @@ namespace Aura_OS.System.Graphics.UI.GUI.Layout
                 throw new InvalidDataException(name + ".xml: the root element must be <Window>.");
             }
 
-            return new AppLayout(name, root);
+            return new AppLayout(name, root, images);
         }
 
         /// <summary>
@@ -325,6 +343,25 @@ namespace Aura_OS.System.Graphics.UI.GUI.Layout
             }
 
             return new Action(() => Raise(name));
+        }
+
+        /// <summary>
+        /// The bitmap of an Image's src: the package's file first, else an embedded image ("UI/Images/AuraLogo.bmp").
+        /// </summary>
+        /// <exception cref="FileNotFoundException">Neither has that image.</exception>
+        internal Bitmap GetImage(string src)
+        {
+            if (_images != null)
+            {
+                Bitmap image = _images(src);
+
+                if (image != null)
+                {
+                    return image;
+                }
+            }
+
+            return Files.GetImage(src);
         }
 
         internal InvalidDataException Error(string message)

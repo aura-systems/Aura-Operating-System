@@ -1,6 +1,6 @@
 ﻿/*
 * PROJECT:          Aura Operating System Development
-* CONTENT:          HTTP package manager for Cosmos (view https://github.com/aura-systems/CosmosExecutable to make packages)
+* CONTENT:          Package manager: the programs built in, installed or downloaded (.pkg)
 * PROGRAMMER(S):    Valentin Charbonnier <valentinbreiz@gmail.com>
 */
 
@@ -16,15 +16,60 @@ namespace Aura_OS.System.Processing
     public class PackageManager : IManager
     {
         public string RepositoryUrl = "http://aura.valentin.bzh/repository.json";
-        public List<Package> Repository;
+
+        /// <summary>
+        /// The repository's package list, filled by Update.
+        /// </summary>
+        public List<RepositoryPackage> Repository;
+
+        /// <summary>
+        /// The programs Aura can run: the packages built into the kernel (SRC/Packages), then those in
+        /// Programs/, which replace a built-in one of the same name.
+        /// </summary>
         public List<Package> Packages;
 
         public void Initialize()
         {
             CustomConsole.WriteLineInfo("Starting package manager...");
 
-            Repository = new List<Package>();
+            Repository = new List<RepositoryPackage>();
             Packages = new List<Package>();
+
+            foreach (string file in Files.List("Packages/"))
+            {
+                if (file.EndsWith(Package.Extension, StringComparison.OrdinalIgnoreCase))
+                {
+                    Load(file, () => Files.Get(file), true);
+                }
+            }
+
+            if (Directory.Exists(AuraPaths.ProgramsDir))
+            {
+                foreach (string file in Directory.GetFiles(AuraPaths.ProgramsDir))
+                {
+                    if (file.EndsWith(Package.Extension, StringComparison.OrdinalIgnoreCase))
+                    {
+                        string path = Path.Combine(AuraPaths.ProgramsDir, Path.GetFileName(file));
+                        Load(path, () => File.ReadAllBytes(path), false);
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// The package with that name (any case), null when there is none.
+        /// </summary>
+        public Package Find(string name)
+        {
+            foreach (Package package in Packages)
+            {
+                if (string.Equals(package.Name, name, StringComparison.OrdinalIgnoreCase))
+                {
+                    return package;
+                }
+            }
+
+            return null;
         }
 
         public void Update()
@@ -51,8 +96,7 @@ namespace Aura_OS.System.Processing
             {
                 while (rdr.NextElement())
                 {
-                    var package = new Package();
-                    package.Installed = false;
+                    var package = new RepositoryPackage();
 
                     rdr.ReadObjectStart();
                     {
@@ -87,15 +131,10 @@ namespace Aura_OS.System.Processing
                         }
                     }
 
-                    string installedPath = AuraPaths.ProgramsDir + package.Name + ".cexe";
+                    Package installed = Find(package.Name);
+                    package.Installed = installed != null && !installed.BuiltIn;
 
-                    if (File.Exists(installedPath))
-                    {
-                        package.Installed = true;
-                    }
-
-                    Kernel.PackageManager.Repository.Add(package);
-
+                    Repository.Add(package);
                 }
             }
             rdr.ReadEof();
@@ -109,13 +148,18 @@ namespace Aura_OS.System.Processing
 
             bool upgraded = false;
 
-            foreach (var package in Packages)
+            foreach (RepositoryPackage entry in Repository)
             {
-                Console.Write("- '" + package.Link + "' ");
+                if (!entry.Installed)
+                {
+                    continue;
+                }
+
+                Console.Write("- '" + entry.Link + "' ");
 
                 try
                 {
-                    package.Download();
+                    Install(entry.Download());
                     Console.WriteLine("[OK]");
                 }
                 catch (Exception ex)
@@ -134,13 +178,15 @@ namespace Aura_OS.System.Processing
 
         public void Add(string packageName)
         {
-            foreach (var package in Repository)
+            foreach (RepositoryPackage entry in Repository)
             {
-                if (package.Name == packageName)
+                if (entry.Name == packageName)
                 {
+                    Package package;
+
                     try
                     {
-                        package.Download();
+                        package = entry.Download();
                     }
                     catch (Exception ex)
                     {
@@ -148,17 +194,20 @@ namespace Aura_OS.System.Processing
                         return;
                     }
 
-                    package.Installed = true;
-                    Packages.Add(package);
+                    entry.Installed = true;
 
-                    if (Directory.Exists(AuraPaths.ProgramsDir))
+                    if (Install(package))
                     {
-                        File.WriteAllBytes(AuraPaths.ProgramsDir + package.Name + ".cexe", package.Executable.RawData);
-                        Console.WriteLine(packageName + " installed.");
+                        Console.WriteLine(package.Name + " installed.");
                     }
                     else
                     {
-                        Console.WriteLine(packageName + " added.");
+                        Console.WriteLine(package.Name + " added until the next boot (no Programs folder).");
+                    }
+
+                    if (package.IsApp)
+                    {
+                        Console.WriteLine("'run " + package.Name + "' opens it; it is in the start menu after a reboot.");
                     }
 
                     return;
@@ -170,20 +219,86 @@ namespace Aura_OS.System.Processing
 
         public void Remove(string packageName)
         {
-            foreach (var package in Repository)
+            Package package = Find(packageName);
+
+            if (package == null)
             {
-                if (package.Name == packageName)
+                Console.WriteLine(packageName + " not found.");
+                return;
+            }
+
+            if (package.BuiltIn)
+            {
+                Console.WriteLine(package.Name + " is built into Aura, it cannot be removed.");
+                return;
+            }
+
+            Packages.Remove(package);
+
+            string path = AuraPaths.ProgramsDir + package.Name + Package.Extension;
+
+            if (File.Exists(path))
+            {
+                File.Delete(path);
+            }
+
+            foreach (RepositoryPackage entry in Repository)
+            {
+                if (string.Equals(entry.Name, package.Name, StringComparison.OrdinalIgnoreCase))
                 {
-                    package.Installed = false;
-                    Packages.Remove(package);
-
-                    Console.WriteLine(packageName + " removed.");
-
-                    return;
+                    entry.Installed = false;
                 }
             }
 
-            Console.WriteLine(packageName + " not found.");
+            Console.WriteLine(package.Name + " removed.");
+        }
+
+        /// <summary>
+        /// Makes the package available (replacing one of the same name) and writes it to Programs/.
+        /// </summary>
+        /// <returns>False when there is no Programs folder (live mode): the package is gone after a reboot.</returns>
+        private bool Install(Package package)
+        {
+            Use(package);
+
+            if (!Directory.Exists(AuraPaths.ProgramsDir))
+            {
+                return false;
+            }
+
+            File.WriteAllBytes(AuraPaths.ProgramsDir + package.Name + Package.Extension, package.RawData);
+            return true;
+        }
+
+        private void Use(Package package)
+        {
+            Package existing = Find(package.Name);
+
+            if (existing != null)
+            {
+                Packages.Remove(existing);
+            }
+
+            Packages.Add(package);
+        }
+
+        /// <summary>
+        /// Reads a package at boot. A broken one is reported and skipped.
+        /// </summary>
+        private void Load(string path, Func<byte[]> read, bool builtIn)
+        {
+            try
+            {
+                Package package = new Package(read());
+                package.BuiltIn = builtIn;
+                Use(package);
+
+                CustomConsole.WriteLineOK(package.Name + " package loaded.");
+            }
+            catch (Exception ex)
+            {
+                CustomConsole.WriteLineError("Cannot load " + path + ": " + ex.Message);
+            }
         }
 
         /// <summary>

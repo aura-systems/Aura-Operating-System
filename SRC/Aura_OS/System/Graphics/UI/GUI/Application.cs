@@ -528,7 +528,10 @@ namespace Aura_OS.System.Graphics.UI.GUI
 
         #endregion
 
-        public void Dispose()
+        /// <summary>
+        /// Closes the app: its window, process and taskbar button. An override releases what the app holds.
+        /// </summary>
+        public virtual void Dispose()
         {
             Window.Dispose();
             Stop();

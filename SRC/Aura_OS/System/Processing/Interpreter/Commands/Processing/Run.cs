@@ -17,7 +17,7 @@ namespace Aura_OS.System.Processing.Interpreter.Commands.Processing
     {
         public CommandRun(string[] commandvalues) : base(commandvalues, CommandType.Filesystem)
         {
-            Description = "to run a program (supports .bat and .lua .cexe files)";
+            Description = "to run a program: an installed package by name, or a .bat, .lua or .pkg file";
         }
 
         public override ReturnInfo Execute(List<string> arguments)
@@ -44,25 +44,14 @@ namespace Aura_OS.System.Processing.Interpreter.Commands.Processing
 
                 if (fileExtension == string.Empty)
                 {
-                    if (Kernel.PackageManager != null && Kernel.PackageManager.Packages != null)
+                    Package package = Kernel.PackageManager != null ? Kernel.PackageManager.Find(arguments[0]) : null;
+
+                    if (package == null)
                     {
-                        foreach (var package in Kernel.PackageManager.Packages)
-                        {
-                            if (package != null && package.Name == arguments[0])
-                            {
-                                return RunCexe(package.Executable, args);
-                            }
-                        }
+                        return new ReturnInfo(this, ReturnCode.ERROR, "This package does not exist.");
                     }
 
-                    string installedPath = AuraPaths.ProgramsDir + arguments[0] + ".cexe";
-
-                    if (File.Exists(installedPath))
-                    {
-                        return RunCexe(new Executable(File.ReadAllBytes(installedPath)), args);
-                    }
-
-                    return new ReturnInfo(this, ReturnCode.ERROR, "This package does not exist.");
+                    return RunPackage(package, args);
                 }
                 else
                 {
@@ -83,10 +72,8 @@ namespace Aura_OS.System.Processing.Interpreter.Commands.Processing
                                 CommandManager._commands = callerCommands;
                             }
                             break;
-                        case ".cexe":
-                            byte[] executableBytes = File.ReadAllBytes(filePath);
-                            Executable executable = new(executableBytes);
-                            return RunCexe(executable, args);
+                        case ".pkg":
+                            return RunPackage(new Package(File.ReadAllBytes(filePath)), args);
                         case ".lua":
                             return RunLua(filePath, args);
                         default:
@@ -102,18 +89,28 @@ namespace Aura_OS.System.Processing.Interpreter.Commands.Processing
             }
         }
 
-        private ReturnInfo RunCexe(Executable executable, List<string> args)
+        /// <summary>
+        /// An app's package opens its window; a console program's runs here until it returns.
+        /// </summary>
+        private ReturnInfo RunPackage(Package package, List<string> args)
         {
             try
             {
-                ExecutableRunner runner = new();
-                runner.Run(executable, args);
+                if (package.IsApp)
+                {
+                    Kernel.ApplicationManager.StartPackage(package);
+                }
+                else
+                {
+                    PackageRunner runner = new();
+                    runner.Run(package, args);
+                }
 
                 return new ReturnInfo(this, ReturnCode.OK);
             }
             catch (Exception ex)
             {
-                return new ReturnInfo(this, ReturnCode.ERROR, ex.ToString());
+                return new ReturnInfo(this, ReturnCode.ERROR, ex.Message);
             }
         }
 
@@ -181,7 +178,8 @@ namespace Aura_OS.System.Processing.Interpreter.Commands.Processing
         public override void PrintHelp()
         {
             Console.WriteLine("Usage:");
-            Console.WriteLine(" - run {file}");
+            Console.WriteLine(" - run {package} [args]");
+            Console.WriteLine(" - run {file.bat|file.lua|file.pkg} [args]");
         }
     }
 }

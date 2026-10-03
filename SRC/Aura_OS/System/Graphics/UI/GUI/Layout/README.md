@@ -4,6 +4,9 @@ An app's window and controls are described in `Resources/UI/Layouts/<Name>.xml` 
 kernel). The app class keeps only the behaviour: it finds its controls by `id` and gives the code of
 the events named in the file.
 
+A package app's layout file is in its `.pkg` instead, and its behaviour is Lua: see
+[SRC/Packages/README.md](../../../../../../Packages/README.md).
+
 ```xml
 <Window title="Hello" width="300" height="140" icon="16-program.bmp" padding="6" spacing="10">
   <Grid columns="auto,*" columnSpacing="8" rowHeight="23">
@@ -68,7 +71,7 @@ The root element. Its elements are stacked top to bottom.
 | Element | Attributes | Events |
 |---|---|---|
 | `Label` | `text`, `color` | |
-| `Image` | `src` (embedded image, `UI/Images/AuraLogo.bmp`) or `icon` (icon key, `32-folder.bmp`) | |
+| `Image` | `src` (embedded image, `UI/Images/AuraLogo.bmp`; in a package, its own file first) or `icon` (icon key, `32-folder.bmp`) | |
 | `Button` | `text`, `icon` | `onClick` |
 | `TextBox` | `text`, `multiline`, `password` | `onEnter` |
 | `Checkbox` | `text`, `color`, `checked` | `onChange` |

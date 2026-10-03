@@ -11,6 +11,7 @@ namespace Aura_OS
     /// <summary>
     /// Embedded assets. gen3 has no ISO volume: every file under Resources/ is an embedded resource
     /// named "Aura_OS/&lt;path relative to Resources&gt;" (see Aura_OS.csproj), read with Get("UI/...").
+    /// The built-in packages are Get("Packages/&lt;Name&gt;.pkg").
     /// </summary>
     public static class Files
     {
@@ -134,6 +135,26 @@ namespace Aura_OS
             }
 
             return data != null;
+        }
+
+        /// <summary>
+        /// The embedded assets under a directory ("Packages/"), by their path relative to Resources/
+        /// ("Packages/SystemInfo.pkg"), subdirectories included.
+        /// </summary>
+        public static List<string> List(string dirRelPath)
+        {
+            string prefix = ResourceName(dirRelPath);
+            List<string> paths = new List<string>();
+
+            foreach (string name in typeof(Aura_OS.Kernel).Assembly.GetManifestResourceNames())
+            {
+                if (name.StartsWith(prefix, StringComparison.Ordinal))
+                {
+                    paths.Add(name.Substring(ResourcePrefix.Length));
+                }
+            }
+
+            return paths;
         }
 
         /// <summary>

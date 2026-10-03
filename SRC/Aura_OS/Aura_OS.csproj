@@ -21,7 +21,7 @@
     <PackageReference Include="Cosmos.Executable.Lua" Version="$(AuraLuaVersion)" />
     <PackageReference Include="acryptohashnet" Version="2.0.0" />                 <!-- cosmos.crypto Lua lib only -->
     <PackageReference Include="jzero" Version="0.4.5" />                           <!-- JsonReader only -->
-    <PackageReference Include="Zlib.Portable" Version="1.11.0" NoWarn="NU1701" />  <!-- managed DEFLATE for ZipStorer/.cexe -->
+    <PackageReference Include="Zlib.Portable" Version="1.11.0" NoWarn="NU1701" />  <!-- managed DEFLATE for ZipStorer/.pkg -->
   </ItemGroup>
 
   <!-- Every file under Resources/ is embedded as "Aura_OS/<path relative to Resources, '/'-separated>".
@@ -31,6 +31,29 @@
       <LogicalName>Aura_OS/$([System.String]::Copy('%(RecursiveDir)').Replace('\', '/'))%(Filename)%(Extension)</LogicalName>
     </EmbeddedResource>
   </ItemGroup>
+
+  <!-- Built-in programs: every SRC/Packages/<Name>/ folder (package.xml, Lua code, layout...) is zipped into
+       <Name>.pkg, the same file a download installs, and embedded as "Aura_OS/Packages/<Name>.pkg".
+       SRC/Packages/README.md describes the format. -->
+  <ItemGroup>
+    <AuraPackage Include="..\Packages\*\package.xml">
+      <PackageName>$([System.IO.Path]::GetFileName($([System.IO.Path]::GetDirectoryName('%(FullPath)'))))</PackageName>
+    </AuraPackage>
+    <AuraPackageFile Include="..\Packages\*\**\*" />
+    <EmbeddedResource Include="@(AuraPackage->'$(IntermediateOutputPath)Packages\%(PackageName).pkg')">
+      <LogicalName>Aura_OS/Packages/%(Filename)%(Extension)</LogicalName>
+    </EmbeddedResource>
+  </ItemGroup>
+
+  <Target Name="AuraBuildPackages" BeforeTargets="CoreCompile" Inputs="@(AuraPackageFile)"
+          Outputs="@(AuraPackage->'$(IntermediateOutputPath)Packages\%(PackageName).pkg')">
+    <MakeDir Directories="$(IntermediateOutputPath)Packages" />
+    <ZipDirectory SourceDirectory="%(AuraPackage.RootDir)%(AuraPackage.Directory)"
+                  DestinationFile="$(IntermediateOutputPath)Packages\%(AuraPackage.PackageName).pkg" Overwrite="true" />
+    <ItemGroup>
+      <FileWrites Include="@(AuraPackage->'$(IntermediateOutputPath)Packages\%(PackageName).pkg')" />
+    </ItemGroup>
+  </Target>
 
   <!-- AuraVersion: bumping it on main makes CI publish a release (notes from its CHANGELOG.md section).
        gen2 revision format ddMMyyyyHHmm; Debug pins HHmm=0000 so build caches survive a dev session;

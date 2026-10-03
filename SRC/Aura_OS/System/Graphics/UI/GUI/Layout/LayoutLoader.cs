@@ -289,8 +289,8 @@ namespace Aura_OS.System.Graphics.UI.GUI.Layout
         }
 
         /// <summary>
-        /// The bitmap of an Image: src, an embedded image ("UI/Images/AuraLogo.bmp"), or icon, an
-        /// icon key ("32-folder.bmp").
+        /// The bitmap of an Image: src, a file of the app's package or an embedded image
+        /// ("UI/Images/AuraLogo.bmp"), or icon, an icon key ("32-folder.bmp").
         /// </summary>
         private static Bitmap ImageAttr(NanoXMLNode element, AppLayout layout)
         {
@@ -309,11 +309,11 @@ namespace Aura_OS.System.Graphics.UI.GUI.Layout
 
             try
             {
-                return Files.GetImage(src);
+                return layout.GetImage(src);
             }
-            catch (FileNotFoundException)
+            catch (Exception ex)
             {
-                throw layout.Error("no embedded image '" + src + "'.");
+                throw layout.Error("cannot load the image '" + src + "': " + ex.Message);
             }
         }
 
@@ -522,10 +522,31 @@ namespace Aura_OS.System.Graphics.UI.GUI.Layout
         private static Color ColorAttr(NanoXMLNode element, string name, Color defaultValue, AppLayout layout)
         {
             string value = Attr(element, name);
+            Color color;
 
             if (value == null)
             {
                 return defaultValue;
+            }
+
+            if (TryParseColor(value, out color))
+            {
+                return color;
+            }
+
+            throw layout.Error(name + " must be #RRGGBB, #AARRGGBB or a color name, not '" + value + "'.");
+        }
+
+        /// <summary>
+        /// "#RRGGBB", "#AARRGGBB" or a name (black, white, gray, darkgray, lightgray, red, green, blue, transparent).
+        /// </summary>
+        public static bool TryParseColor(string value, out Color color)
+        {
+            color = Color.Black;
+
+            if (value == null)
+            {
+                return false;
             }
 
             if (value.Length > 0 && value[0] == '#')
@@ -539,35 +560,45 @@ namespace Aura_OS.System.Graphics.UI.GUI.Layout
                         argb |= 0xFF000000;
                     }
 
-                    return Color.FromArgb(unchecked((int)argb));
+                    color = Color.FromArgb(unchecked((int)argb));
+                    return true;
                 }
-            }
-            else
-            {
-                switch (value)
-                {
-                    case "black":
-                        return Color.Black;
-                    case "white":
-                        return Color.White;
-                    case "gray":
-                        return Color.Gray;
-                    case "darkgray":
-                        return Color.DarkGray;
-                    case "lightgray":
-                        return Color.LightGray;
-                    case "red":
-                        return Color.Red;
-                    case "green":
-                        return Color.Green;
-                    case "blue":
-                        return Color.Blue;
-                    case "transparent":
-                        return Color.Transparent;
-                }
+
+                return false;
             }
 
-            throw layout.Error(name + " must be #RRGGBB, #AARRGGBB or a color name, not '" + value + "'.");
+            switch (value)
+            {
+                case "black":
+                    color = Color.Black;
+                    return true;
+                case "white":
+                    color = Color.White;
+                    return true;
+                case "gray":
+                    color = Color.Gray;
+                    return true;
+                case "darkgray":
+                    color = Color.DarkGray;
+                    return true;
+                case "lightgray":
+                    color = Color.LightGray;
+                    return true;
+                case "red":
+                    color = Color.Red;
+                    return true;
+                case "green":
+                    color = Color.Green;
+                    return true;
+                case "blue":
+                    color = Color.Blue;
+                    return true;
+                case "transparent":
+                    color = Color.Transparent;
+                    return true;
+            }
+
+            return false;
         }
 
         /// <summary>
