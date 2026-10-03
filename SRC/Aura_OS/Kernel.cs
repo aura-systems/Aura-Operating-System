@@ -13,6 +13,7 @@ using Cosmos.Kernel.System.Graphics;
 using Cosmos.Kernel.System.Graphics.Fonts;
 using Cosmos.Kernel.System.Vfs;
 using Aura_OS.System;
+using Aura_OS.System.Audio;
 using Aura_OS.Processing;
 using Aura_OS.System.Processing;
 using Aura_OS.System.Graphics;
@@ -301,6 +302,9 @@ namespace Aura_OS
             BootTime = Time.MonthString() + "/" + Time.DayString() + "/" + Time.YearString() + ", " + Time.TimeString(true, true, true);
 
             CustomConsole.WriteLineOK("Aura Operating System boot sequence done.");
+
+            // On its own thread: plays while the first frames (desktop, or login screen) draw.
+            Sounds.PlayBoot();
 
             _lastFpsTick = Environment.TickCount64;
             _lastCollectTick = _lastFpsTick;
