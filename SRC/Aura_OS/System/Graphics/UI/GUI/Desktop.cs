@@ -79,7 +79,7 @@ namespace Aura_OS.System.Graphics.UI.GUI
 
         /// <summary>
         /// Loads and shows a wallpaper. A missing file falls back to the embedded wallpaper;
-        /// a BMP the loader rejects throws (SettingsApp reports it) and keeps the current one.
+        /// a BMP the loader rejects throws (the Settings app reports it) and keeps the current one.
         /// </summary>
         public void SetWallpaper(string path)
         {

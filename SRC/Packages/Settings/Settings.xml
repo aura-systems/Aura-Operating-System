@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Settings app window. SettingsApp.cs fills the fields, finds them by id and handles the events. -->
+<!-- Settings app window. main.lua fills the fields and saves them. -->
 <Window title="Settings" width="340" height="453" icon="16-settings.bmp" padding="3,6" spacing="10">
   <Grid columns="auto,*" columnSpacing="8" rowSpacing="10" rowHeight="23">
     <Row>

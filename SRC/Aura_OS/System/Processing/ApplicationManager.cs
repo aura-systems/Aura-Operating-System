@@ -90,7 +90,6 @@ namespace Aura_OS.System.Processing
             //RegisterApplication(typeof(ExplorerApp), 40, 40, 500, 400);
             RegisterApplication(typeof(MemoryInfoApp), 40, 40);
             RegisterApplication(typeof(GameBoyApp), 40, 40, 160 + 6, 144 + 26);
-            RegisterApplication(typeof(SettingsApp), 40, 40);
 
             // Package apps: built in (SRC/Packages) or installed in Programs/.
             foreach (Package package in Kernel.PackageManager.Packages)
@@ -208,10 +207,6 @@ namespace Aura_OS.System.Processing
             else if (config.Template == typeof(GameBoyApp))
             {
                 app = new GameBoyApp(config.Width, config.Height, config.X, config.Y);
-            }
-            else if (config.Template == typeof(SettingsApp))
-            {
-                app = new SettingsApp(config.X, config.Y);
             }
             /*else if (config.Template == typeof(ExplorerApp))
             {

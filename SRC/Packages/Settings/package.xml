@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Package name="Settings" version="1.0.0" author="Aura Team"
+         description="User, theme, desktop and display settings."
+         main="main.lua" layout="Settings.xml" />
