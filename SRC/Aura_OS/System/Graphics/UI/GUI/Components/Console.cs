@@ -1,6 +1,6 @@
 ﻿/*
 * PROJECT:          Aura Operating System Development
-* CONTENT:          Button class
+* CONTENT:          Console class
 * PROGRAMMERS:      Valentin Charbonnier <valentinbreiz@gmail.com>
 */
 
@@ -17,6 +17,10 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
         public uint BackgroundColor;
     }
 
+    /// <summary>
+    /// A text console: a grid of colored characters, with a cursor and a line being typed when
+    /// CursorVisible (a terminal), without (the boot console).
+    /// </summary>
     public class Console : Component
     {
         private const char LineFeed = '\n';
@@ -26,6 +30,10 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
 
         public bool DrawBackground = true;
         public bool ScrollMode = false;
+
+        /// <summary>
+        /// Draws the cursor under the character at mX, mY (not in scroll mode).
+        /// </summary>
         public bool CursorVisible;
         public int mX = 0;
         public int mY = 0;
@@ -37,7 +45,8 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
         private Cell[] _text;
         private List<Cell[]> _terminalHistory;
         private int _terminalHistoryIndex = 0;
-        
+        private string _input = "";
+
         public Color ForegroundColor = Color.White;
         private uint _foreground = (byte)ConsoleColor.White;
         public ConsoleColor Foreground
@@ -96,16 +105,33 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
             InitConsole(width, height);
         }
 
+        /// <summary>
+        /// Text typed before the cursor and not written yet (a terminal's command line): drawn
+        /// from mX - Input.Length, mX already being after it. Not in scroll mode.
+        /// </summary>
+        public string Input
+        {
+            get
+            {
+                return _input;
+            }
+            set
+            {
+                _input = value ?? "";
+                MarkDirty();
+            }
+        }
+
         public void InitConsole(int width, int height)
         {
-            mCols = width / Kernel.font.Width - 1;
-            mRows = height / Kernel.font.Height - 2;
+            // At least one cell: a negative count would throw out of the allocation.
+            mCols = Math.Max(1, width / Kernel.font.Width - 1);
+            mRows = Math.Max(1, height / Kernel.font.Height - 2);
 
             _text = new Cell[mCols * mRows];
 
             ClearText();
 
-            CursorVisible = true;
             _terminalHistory = new List<Cell[]>();
 
             mX = 0;
@@ -115,6 +141,22 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
         private int GetIndex(int row, int col)
         {
             return row * mCols + col;
+        }
+
+        /// <summary>
+        /// A new size starts the console over: empty, with as many columns and rows as fit.
+        /// </summary>
+        public override void SetSize(int width, int height)
+        {
+            base.SetSize(width, height);
+            InitConsole(width, height);
+        }
+
+        /// <summary>
+        /// No hover state: the mouse crossing the console does not redraw it.
+        /// </summary>
+        public override void Update()
+        {
         }
 
         public override void Draw()
@@ -134,6 +176,18 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
 
                     WriteByte(_text[index].Char, 0 + j * Kernel.font.Width, 0 + i * Kernel.font.Height, _text[index].ForegroundColor);
                 }
+            }
+
+            if (!ScrollMode)
+            {
+                int inputX = mX - _input.Length;
+
+                for (int i = 0; i < _input.Length; i++)
+                {
+                    WriteByte(_input[i], (inputX + i) * Kernel.font.Width, mY * Kernel.font.Height, (uint)ForegroundColor.ToArgb());
+                }
+
+                DrawCursor();
             }
         }
 

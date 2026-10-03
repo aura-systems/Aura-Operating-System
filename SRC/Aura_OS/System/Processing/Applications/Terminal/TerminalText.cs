@@ -165,7 +165,7 @@ namespace Aura_OS.System.Processing.Applications.Terminal
         private void Refresh()
         {
             // A skipped refresh is repainted by the main loop on its next frame.
-            _terminal.MarkDirty();
+            _terminal.Console.MarkDirty();
 
             if (_drawing)
             {
@@ -185,8 +185,8 @@ namespace Aura_OS.System.Processing.Applications.Terminal
 
             try
             {
-                _terminal.Console.Draw();
-                _terminal.Draw();
+                // The console into the window (the rest of the window does not change).
+                _terminal.Console.Draw(_terminal.Window);
 
                 if (Explorer.Screen != null)
                 {

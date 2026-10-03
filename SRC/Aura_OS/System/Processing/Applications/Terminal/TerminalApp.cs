@@ -1,6 +1,6 @@
 /*
 * PROJECT:          Aura Operating System Development
-* CONTENT:          Graphical terminal application.
+* CONTENT:          Graphical terminal application. The window is Resources/UI/Layouts/Terminal.xml.
 * PROGRAMMERS:      Valentin Charbonnier <valentinbreiz@gmail.com>
 */
 
@@ -11,14 +11,13 @@ using System.Collections.Generic;
 using Aura_OS.System.Graphics.UI.GUI;
 using Aura_OS.System.Processing.Interpreter.Commands;
 using Aura_OS.System.Graphics.UI.GUI.Components;
+using Aura_OS.System.Graphics.UI.GUI.Layout;
 using Aura_OS.System.Processing.Processes;
 
 namespace Aura_OS.System.Processing.Applications.Terminal
 {
     public class TerminalApp : Application
     {
-        private static string ApplicationName = "Terminal";
-
         public Graphics.UI.GUI.Components.Console Console;
 
         private CommandManager _commandManager;
@@ -35,12 +34,9 @@ namespace Aura_OS.System.Processing.Applications.Terminal
         /// </summary>
         private static TerminalApp _redirectOwner;
 
-        public TerminalApp(int width, int height, int x = 0, int y = 0) : base(ApplicationName, width, height, x, y)
+        public TerminalApp(int x = 0, int y = 0) : base(AppLayout.Load("Terminal"), x, y)
         {
-            Window.Icon = Kernel.ResourceManager.GetIcon("16-terminal.bmp");
-
-            Console = new(4, Window.TopBar.Height + 6, width - 7, height - Window.TopBar.Height - 9);
-            AddChild(Console);
+            Console = Find<Graphics.UI.GUI.Components.Console>("console");
 
             _commandManager = new CommandManager(this);
             _commandManager.Initialize();
@@ -50,8 +46,6 @@ namespace Aura_OS.System.Processing.Applications.Terminal
             _writer = new TerminalTextWriter(this);
 
             BeforeCommand();
-
-            MarkDirty();
         }
 
         public override void Update()
@@ -66,8 +60,6 @@ namespace Aura_OS.System.Processing.Applications.Terminal
 
                 if (Input.KeyboardManager.TryGetKey(out keyEvent))
                 {
-                    MarkDirty();
-
                     switch (keyEvent.Key)
                     {
                         case ConsoleKeyEx.Enter:
@@ -99,8 +91,6 @@ namespace Aura_OS.System.Processing.Applications.Terminal
                             }
 
                             BeforeCommand();
-
-                            MarkDirty();
 
                             break;
                         case ConsoleKeyEx.Backspace:
@@ -159,6 +149,9 @@ namespace Aura_OS.System.Processing.Applications.Terminal
                             }
                             break;
                     }
+
+                    // Redraws the console only (the window manager draws it into the window).
+                    Console.Input = _command;
                 }
             }
             else
@@ -167,46 +160,25 @@ namespace Aura_OS.System.Processing.Applications.Terminal
             }
         }
 
-        public override void Draw()
-        {
-            base.Draw();
-
-            Console.Draw();
-
-            if (!Console.ScrollMode)
-            {
-                if (_command.Length > 0)
-                {
-                    int baseX = Console.mX - _command.Length;
-
-                    for (int i = 0; i < _command.Length; i++)
-                    {
-                        Console.WriteByte(_command[i],  (baseX + i) * Kernel.font.Width, Console.mY * Kernel.font.Height, (uint)Console.ForegroundColor.ToArgb());
-                    }
-                }
-
-                Console.DrawCursor();
-            }
-
-            Console.DrawInParent();
-        }
-
+        /// <summary>
+        /// The console fills the resized window now: it starts over empty, with the prompt and
+        /// the command being typed.
+        /// </summary>
         public override void ResizeWindow(int width, int height)
         {
             base.ResizeWindow(width, height);
 
-            int newWidth = width - 7;
-            int newHeight = height - Window.TopBar.Height - 9;
+            int consoleWidth = Console.Width;
+            int consoleHeight = Console.Height;
 
-            Console.Resize(newWidth, newHeight);
-            Console.InitConsole(newWidth, newHeight);
-            BeforeCommand();
-        }
+            Layout.Arrange();
 
-        public override void MarkDirty()
-        {
-            base.MarkDirty();
-            Console.MarkDirty();
+            if (Console.Width != consoleWidth || Console.Height != consoleHeight)
+            {
+                BeforeCommand();
+                Console.mX += _command.Length;
+                Console.Input = _command;
+            }
         }
 
         public override void Stop()

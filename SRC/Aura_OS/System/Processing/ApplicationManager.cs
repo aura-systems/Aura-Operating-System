@@ -50,7 +50,7 @@ namespace Aura_OS.System.Processing
 
         public void LoadApplications()
         {
-            RegisterApplication(typeof(TerminalApp), 40, 40, 700, 600);
+            RegisterApplication(typeof(TerminalApp), 40, 40);
             //RegisterApplication(typeof(ExplorerApp), 40, 40, 500, 400);
             RegisterApplication(typeof(MemoryInfoApp), 40, 40);
             RegisterApplication(typeof(SystemInfoApp), 40, 40);
@@ -124,7 +124,7 @@ namespace Aura_OS.System.Processing
 
             if (config.Template == typeof(TerminalApp))
             {
-                app = new TerminalApp(config.Width, config.Height, config.X, config.Y);
+                app = new TerminalApp(config.X, config.Y);
             }
             else if (config.Template == typeof(CubeApp))
             {
