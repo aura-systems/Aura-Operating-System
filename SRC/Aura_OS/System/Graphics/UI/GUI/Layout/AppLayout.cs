@@ -107,15 +107,34 @@ namespace Aura_OS.System.Graphics.UI.GUI.Layout
         /// <summary>
         /// Creates the controls as children of the owner's window and places them.
         /// </summary>
+        /// <exception cref="InvalidDataException">The file is wrong: the controls built until then are
+        /// children of the window all the same, which the caller disposes.</exception>
         internal void Build(Application owner)
         {
             _owner = owner;
-            _root = LayoutLoader.BuildWindow(_window, this);
 
-            // Last, so they are above the other controls for the mouse too (higher zIndex).
+            // GEN3-GAP(finally): no finally, gen3 does not run it when an exception unwinds (C7).
+            Exception error = null;
+
+            try
+            {
+                _root = LayoutLoader.BuildWindow(_window, this);
+            }
+            catch (Exception ex)
+            {
+                error = ex;
+            }
+
+            // Last, so they are above the other controls for the mouse too (higher zIndex). After an
+            // error too, so the window's Dispose takes them with it.
             foreach (ControlNode dialog in _dialogs)
             {
                 _owner.Window.AddChild(dialog.Component);
+            }
+
+            if (error != null)
+            {
+                throw error;
             }
 
             Arrange();

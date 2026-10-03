@@ -6,6 +6,7 @@
 
 using Aura_OS.System.Filesystem;
 using Aura_OS.System.Network;
+using Aura_OS.System.Utils;
 using JZero;
 using System;
 using System.Collections.Generic;
@@ -15,7 +16,32 @@ namespace Aura_OS.System.Processing
 {
     public class PackageManager : IManager
     {
-        public string RepositoryUrl = "https://aura.valentin.bzh/repository.json";
+        /// <summary>
+        /// The online repository Aura comes with.
+        /// </summary>
+        public const string DefaultRepository = "https://aura.valentin.bzh";
+
+        // The settings.ini key of the repository chosen with SetRepository.
+        private const string RepositorySetting = "packageRepository";
+
+        private const string ListFile = "repository.json";
+
+        /// <summary>
+        /// The online repository: its address, whose repository.json is the package list, or the
+        /// address of the list itself (ending with .json). settings.ini keeps it once changed.
+        /// </summary>
+        public string RepositoryUrl { get; private set; } = DefaultRepository;
+
+        /// <summary>
+        /// The address of the repository's package list.
+        /// </summary>
+        public string ListUrl
+        {
+            get
+            {
+                return RepositoryUrl.EndsWith(".json", StringComparison.OrdinalIgnoreCase) ? RepositoryUrl : RepositoryUrl + "/" + ListFile;
+            }
+        }
 
         /// <summary>
         /// The repository's package list, filled by Update.
@@ -34,6 +60,17 @@ namespace Aura_OS.System.Processing
 
             Repository = new List<RepositoryPackage>();
             Packages = new List<Package>();
+
+            if (Kernel.Installed)
+            {
+                // C6: a missing key reads as "null".
+                string repository = new Settings(AuraPaths.SettingsIni).GetValue(RepositorySetting);
+
+                if (IsValidUrl(repository))
+                {
+                    RepositoryUrl = repository;
+                }
+            }
 
             foreach (string file in Files.List("Packages/"))
             {
@@ -72,23 +109,47 @@ namespace Aura_OS.System.Processing
             return null;
         }
 
+        /// <summary>
+        /// Changes the repository, kept in settings.ini on an installed Aura. The package list goes
+        /// with the old repository: Update reads the new one's.
+        /// </summary>
+        /// <param name="url">An http:// or https:// address (RepositoryUrl); a '/' at its end is dropped.</param>
+        /// <returns>False in live mode: the repository is the default one again after a reboot.</returns>
+        /// <exception cref="ArgumentException">Not an http:// or https:// address.</exception>
+        public bool SetRepository(string url)
+        {
+            url = (url ?? "").Trim().TrimEnd('/');
+
+            if (!IsValidUrl(url))
+            {
+                throw new ArgumentException("A repository is an http:// or https:// address, not '" + url + "'.");
+            }
+
+            if (url != RepositoryUrl)
+            {
+                RepositoryUrl = url;
+                Repository.Clear();
+            }
+
+            if (!Kernel.Installed)
+            {
+                return false;
+            }
+
+            Settings config = new Settings(AuraPaths.SettingsIni);
+            config.EditValue(RepositorySetting, url);
+            config.Push();
+            return true;
+        }
+
+        /// <summary>
+        /// Downloads the repository's package list (ListUrl). The list stays as it was when it fails.
+        /// </summary>
+        /// <exception cref="Exception">The download failed, or the list is not valid.</exception>
         public void Update()
         {
-            Console.WriteLine("Updating from '" + RepositoryUrl + "'...");
-
-            string json;
-            try
-            {
-                json = Http.DownloadFile(RepositoryUrl);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Failed to download the package list: " + ex.Message);
-                return;
-            }
-
-            // gen2 appended to the list on every update.
-            Repository.Clear();
+            string json = Http.DownloadFile(ListUrl);
+            List<RepositoryPackage> packages = new List<RepositoryPackage>();
 
             var rdr = new JsonReader(json);
             rdr.ReadArrayStart();
@@ -130,15 +191,39 @@ namespace Aura_OS.System.Processing
                         }
                     }
 
+                    // Nothing to download without them.
+                    if (string.IsNullOrEmpty(package.Name) || string.IsNullOrEmpty(package.Link))
+                    {
+                        continue;
+                    }
+
                     Package installed = Find(package.Name);
                     package.Installed = installed != null && !installed.BuiltIn;
 
-                    Repository.Add(package);
+                    packages.Add(package);
                 }
             }
             rdr.ReadEof();
 
-            Console.WriteLine("Package list updated, you can now add packages.");
+            // gen2 appended to the list on every update.
+            Repository.Clear();
+            Repository.AddRange(packages);
+        }
+
+        /// <summary>
+        /// The repository's entry with that name (any case), null when the package list has none.
+        /// </summary>
+        public RepositoryPackage FindInRepository(string name)
+        {
+            foreach (RepositoryPackage entry in Repository)
+            {
+                if (string.Equals(entry.Name, name, StringComparison.OrdinalIgnoreCase))
+                {
+                    return entry;
+                }
+            }
+
+            return null;
         }
 
         public void Upgrade()
@@ -175,63 +260,51 @@ namespace Aura_OS.System.Processing
             }
         }
 
-        public void Add(string packageName)
+        /// <summary>
+        /// Downloads a package of the repository's list and installs it, replacing the one of the same
+        /// name: a built-in one too, until the download is removed.
+        /// </summary>
+        /// <param name="saved">False in live mode (no Programs folder): the package is gone after a reboot.</param>
+        /// <exception cref="Exception">Not in the package list, or the download failed or is not that package.</exception>
+        public Package Add(string name, out bool saved)
         {
-            foreach (RepositoryPackage entry in Repository)
+            RepositoryPackage entry = FindInRepository(name);
+
+            if (entry == null)
             {
-                if (entry.Name == packageName)
-                {
-                    Package package;
-
-                    try
-                    {
-                        package = entry.Download();
-                    }
-                    catch (Exception ex)
-                    {
-                        Console.WriteLine("Failed to download " + packageName + ": " + ex.Message);
-                        return;
-                    }
-
-                    entry.Installed = true;
-
-                    if (Install(package))
-                    {
-                        Console.WriteLine(package.Name + " installed.");
-                    }
-                    else
-                    {
-                        Console.WriteLine(package.Name + " added until the next boot (no Programs folder).");
-                    }
-
-                    if (package.IsApp)
-                    {
-                        Console.WriteLine(package.InMenu
-                            ? "The start menu or 'run " + package.Name + "' opens it."
-                            : "'run " + package.Name + "' opens it.");
-                    }
-
-                    return;
-                }
+                throw new InvalidOperationException(name + " is not in the package list.");
             }
 
-            Console.WriteLine(packageName + " not found.");
+            Package package = entry.Download();
+
+            // The list and the program would go by different names.
+            if (!string.Equals(package.Name, entry.Name, StringComparison.OrdinalIgnoreCase))
+            {
+                throw new InvalidDataException("The repository's " + entry.Name + " package is named " + package.Name + ".");
+            }
+
+            saved = Install(package);
+            entry.Installed = true;
+            return package;
         }
 
-        public void Remove(string packageName)
+        /// <summary>
+        /// Removes a downloaded package, and its file from Programs/.
+        /// </summary>
+        /// <returns>True when it had replaced a built-in package, which is back.</returns>
+        /// <exception cref="InvalidOperationException">No such package, or a built-in one.</exception>
+        public bool Remove(string name)
         {
-            Package package = Find(packageName);
+            Package package = Find(name);
 
             if (package == null)
             {
-                Console.WriteLine(packageName + " not found.");
-                return;
+                throw new InvalidOperationException(name + " is not installed.");
             }
 
             if (package.BuiltIn)
             {
-                Console.WriteLine(package.Name + " is built into Aura, it cannot be removed.");
-                return;
+                throw new InvalidOperationException(package.Name + " is built into Aura, it cannot be removed.");
             }
 
             Packages.Remove(package);
@@ -247,15 +320,14 @@ namespace Aura_OS.System.Processing
                 File.Delete(path);
             }
 
-            foreach (RepositoryPackage entry in Repository)
+            RepositoryPackage entry = FindInRepository(package.Name);
+
+            if (entry != null)
             {
-                if (string.Equals(entry.Name, package.Name, StringComparison.OrdinalIgnoreCase))
-                {
-                    entry.Installed = false;
-                }
+                entry.Installed = false;
             }
 
-            Console.WriteLine(restored ? package.Name + " removed, the built-in one is back." : package.Name + " removed.");
+            return restored;
         }
 
         /// <summary>
@@ -345,6 +417,34 @@ namespace Aura_OS.System.Processing
             {
                 CustomConsole.WriteLineError("Cannot load " + path + ": " + ex.Message);
             }
+        }
+
+        /// <summary>
+        /// An http:// or https:// address with a host.
+        /// </summary>
+        private static bool IsValidUrl(string url)
+        {
+            if (string.IsNullOrEmpty(url) || url.IndexOf(' ') >= 0)
+            {
+                return false;
+            }
+
+            string rest;
+
+            if (url.StartsWith("https://", StringComparison.OrdinalIgnoreCase))
+            {
+                rest = url.Substring(8);
+            }
+            else if (url.StartsWith("http://", StringComparison.OrdinalIgnoreCase))
+            {
+                rest = url.Substring(7);
+            }
+            else
+            {
+                return false;
+            }
+
+            return rest.Length > 0 && rest[0] != '/';
         }
 
         /// <summary>

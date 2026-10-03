@@ -5,6 +5,7 @@
 */
 
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
@@ -89,6 +90,7 @@ namespace Aura_OS.System.Processing.Lua
             SetObject(lua, "settings", SettingsObject());
             SetObject(lua, "fs", FsObject());
             SetObject(lua, "shell", ShellObject());
+            SetObject(lua, "packages", PackagesObject());
 
             if (app != null)
             {
@@ -450,6 +452,88 @@ namespace Aura_OS.System.Processing.Lua
                 });
         }
 
+        /// <summary>
+        /// The packages Aura has and the online repository's (Kernel.PackageManager), as pkg manages
+        /// them. The downloads run on the UI thread: the desktop waits for them.
+        /// </summary>
+        private static LuaObject PackagesObject()
+        {
+            return new LuaObject("aura.packages")
+                .Property("repository", lua => Push(lua, Kernel.PackageManager.RepositoryUrl))
+                .Property("defaultRepository", lua => Push(lua, PackageManager.DefaultRepository))
+                // setRepository(url): true, or false and why; settings.ini keeps it on an installed Aura.
+                .Function("setRepository", lua =>
+                {
+                    string url = LuaObject.CheckText(lua, 1);
+                    return Try(lua, () => Kernel.PackageManager.SetRepository(url));
+                })
+                // list(): the packages Aura has, built in or installed.
+                .Function("list", lua =>
+                {
+                    List<Package> packages = Kernel.PackageManager.Packages;
+                    lua.CreateTable(packages.Count, 0);
+
+                    for (int i = 0; i < packages.Count; i++)
+                    {
+                        Package package = packages[i];
+
+                        lua.CreateTable(0, 7);
+                        SetText(lua, "name", package.Name);
+                        SetText(lua, "displayName", package.DisplayName);
+                        SetText(lua, "version", package.Version);
+                        SetText(lua, "author", package.Author);
+                        SetText(lua, "description", package.Description);
+                        lua.PushBoolean(package.BuiltIn);
+                        lua.SetField(-2, "builtIn");
+                        lua.PushBoolean(package.IsApp);
+                        lua.SetField(-2, "app");
+                        lua.RawSetI(-2, i + 1);
+                    }
+
+                    return 1;
+                })
+                // available(): the repository's packages, as the last update() read them.
+                .Function("available", lua =>
+                {
+                    List<RepositoryPackage> entries = Kernel.PackageManager.Repository;
+                    lua.CreateTable(entries.Count, 0);
+
+                    for (int i = 0; i < entries.Count; i++)
+                    {
+                        RepositoryPackage entry = entries[i];
+
+                        lua.CreateTable(0, 6);
+                        SetText(lua, "name", entry.Name);
+                        SetText(lua, "displayName", entry.DisplayName ?? entry.Name);
+                        SetText(lua, "version", entry.Version);
+                        SetText(lua, "author", entry.Author);
+                        SetText(lua, "description", entry.Description);
+                        SetText(lua, "link", entry.Link);
+                        lua.RawSetI(-2, i + 1);
+                    }
+
+                    return 1;
+                })
+                // update(): downloads the repository's package list; true, or false and why.
+                .Function("update", lua => Try(lua, () => Kernel.PackageManager.Update()))
+                // add(name): downloads a package of the list and installs it; true, or false and why.
+                .Function("add", lua =>
+                {
+                    string name = LuaObject.CheckText(lua, 1);
+                    return Try(lua, () =>
+                    {
+                        bool saved;
+                        Kernel.PackageManager.Add(name, out saved);
+                    });
+                })
+                // remove(name): removes a downloaded package; true, or false and why.
+                .Function("remove", lua =>
+                {
+                    string name = LuaObject.CheckText(lua, 1);
+                    return Try(lua, () => Kernel.PackageManager.Remove(name));
+                });
+        }
+
         #endregion
 
         #region aura.app
@@ -469,6 +553,9 @@ namespace Aura_OS.System.Processing.Lua
                     return 1;
                 case "every":
                     lua.PushCSharpFunction(AppEvery);
+                    return 1;
+                case "after":
+                    lua.PushCSharpFunction(AppAfter);
                     return 1;
                 case "onKey":
                     lua.PushCSharpFunction(AppOnKey);
@@ -547,6 +634,22 @@ namespace Aura_OS.System.Processing.Lua
 
             lua.PushValue(3);
             app.AddTimer(interval, lua.L_Ref(LuaDef.LUA_REGISTRYINDEX));
+            return 0;
+        }
+
+        /// <summary>
+        /// app:after(milliseconds, handler): calls handler() once, that many milliseconds from now and
+        /// after the window was drawn, on the UI thread.
+        /// </summary>
+        private static int AppAfter(ILuaState lua)
+        {
+            PackageApp app = (PackageApp)lua.L_CheckUData(1, AppType);
+            long delay = lua.L_CheckInteger(2);
+            lua.L_ArgCheck(delay >= 0, 2, "a number of milliseconds expected");
+            lua.L_CheckType(3, LuaType.LUA_TFUNCTION);
+
+            lua.PushValue(3);
+            app.AddOneShotTimer(delay, lua.L_Ref(LuaDef.LUA_REGISTRYINDEX));
             return 0;
         }
 
@@ -719,13 +822,14 @@ namespace Aura_OS.System.Processing.Lua
                     }
                     break;
                 case "items":
-                    if (component is DropDown itemsDropDown)
+                    List<string> items = ItemsOf(component);
+                    if (items != null)
                     {
-                        lua.CreateTable(itemsDropDown.Items.Count, 0);
+                        lua.CreateTable(items.Count, 0);
 
-                        for (int i = 0; i < itemsDropDown.Items.Count; i++)
+                        for (int i = 0; i < items.Count; i++)
                         {
-                            LuaObject.PushText(lua, itemsDropDown.Items[i] ?? "");
+                            LuaObject.PushText(lua, items[i] ?? "");
                             lua.RawSetI(-2, i + 1);
                         }
 
@@ -738,11 +842,20 @@ namespace Aura_OS.System.Processing.Lua
                         lua.PushInteger(dropDown.SelectedIndex);
                         return 1;
                     }
+                    if (component is ListBox listBox)
+                    {
+                        lua.PushInteger(listBox.SelectedIndex);
+                        return 1;
+                    }
                     break;
                 case "selectedItem":
                     if (component is DropDown itemDropDown)
                     {
                         return Text(lua, itemDropDown.SelectedItem);
+                    }
+                    if (component is ListBox itemListBox)
+                    {
+                        return Text(lua, itemListBox.SelectedItem);
                     }
                     break;
                 case "title":
@@ -822,10 +935,21 @@ namespace Aura_OS.System.Processing.Lua
                     }
                     break;
                 case "items":
-                    if (component is DropDown itemsDropDown)
+                    if (component is DropDown || component is ListBox)
                     {
                         lua.L_CheckType(3, LuaType.LUA_TTABLE);
-                        itemsDropDown.ClearItems();
+
+                        DropDown itemsDropDown = component as DropDown;
+                        ListBox itemsListBox = component as ListBox;
+
+                        if (itemsDropDown != null)
+                        {
+                            itemsDropDown.ClearItems();
+                        }
+                        else
+                        {
+                            itemsListBox.ClearItems();
+                        }
 
                         int count = lua.RawLen(3);
 
@@ -833,8 +957,17 @@ namespace Aura_OS.System.Processing.Lua
                         {
                             // L_ToString pushes the text too (luaL_tolstring)
                             lua.RawGetI(3, i);
-                            itemsDropDown.AddItem(LuaText.Decode(lua.L_ToString(-1)));
+                            string item = LuaText.Decode(lua.L_ToString(-1));
                             lua.Pop(2);
+
+                            if (itemsDropDown != null)
+                            {
+                                itemsDropDown.AddItem(item);
+                            }
+                            else
+                            {
+                                itemsListBox.AddItem(item);
+                            }
                         }
 
                         set = true;
@@ -844,6 +977,11 @@ namespace Aura_OS.System.Processing.Lua
                     if (component is DropDown dropDown)
                     {
                         dropDown.SelectedIndex = (int)lua.L_CheckInteger(3);
+                        set = true;
+                    }
+                    else if (component is ListBox listBox)
+                    {
+                        listBox.SelectedIndex = (int)lua.L_CheckInteger(3);
                         set = true;
                     }
                     break;
@@ -1090,6 +1228,24 @@ namespace Aura_OS.System.Processing.Lua
             "darkGray", "blue", "green", "cyan", "red", "magenta", "yellow", "white",
         };
 
+        /// <summary>
+        /// The items of a DropDown or a ListBox, null for another control.
+        /// </summary>
+        private static List<string> ItemsOf(Component component)
+        {
+            if (component is DropDown dropDown)
+            {
+                return dropDown.Items;
+            }
+
+            if (component is ListBox listBox)
+            {
+                return listBox.Items;
+            }
+
+            return null;
+        }
+
         private static bool TryGetColor(Component component, out Color color)
         {
             if (component is Label label)
@@ -1179,6 +1335,37 @@ namespace Aura_OS.System.Processing.Lua
         {
             LuaObject.PushText(lua, value);
             return 1;
+        }
+
+        /// <summary>
+        /// Sets a field of the table on top of the stack to a string, "" for null.
+        /// </summary>
+        private static void SetText(ILuaState lua, string key, string value)
+        {
+            LuaObject.PushText(lua, value ?? "");
+            lua.SetField(-2, key);
+        }
+
+        /// <summary>
+        /// Runs a kernel action: true, or false and the message of what it threw. Read the arguments
+        /// first: their Lua errors must not be caught here.
+        /// </summary>
+        private static int Try(ILuaState lua, Action action)
+        {
+            string error = null;
+
+            try
+            {
+                action();
+            }
+            catch (Exception ex)
+            {
+                error = ex.Message;
+            }
+
+            lua.PushBoolean(error == null);
+            LuaObject.PushText(lua, error);
+            return 2;
         }
 
         /// <summary>

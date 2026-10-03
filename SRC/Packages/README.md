@@ -3,7 +3,7 @@
 A program that is not compiled into the kernel is a package: a `.pkg` file that Aura reads at run
 time. The packages in this folder are built into Aura, except the download-only ones
 (`AuraDownloadOnlyPackage` in `Aura_OS.csproj`: Snake), which only the online repository has. All of
-them can be downloaded with `pkg /add`.
+them can be downloaded with `pkg /add`, or with the Package Manager app.
 
 Each folder here is one package. The build zips `<Name>/` into `<Name>.pkg` and embeds it in the kernel
 (`AuraBuildPackages` in `Aura_OS.csproj`). Aura lists the built-in packages, then those in
@@ -52,7 +52,13 @@ the package's files first.
 ## The online repository
 
 `pkg /update` reads the package list at `https://aura.valentin.bzh/repository.json`, and `pkg /add {name}`
-downloads and installs one of its packages. The list is an array of entries whose values are all strings:
+downloads and installs one of its packages. The Package Manager app does both, and `pkg /remove`.
+
+`pkg /repository {url}`, or the Package Manager, switches to another repository: an address whose
+`repository.json` is the list, or the address of the list itself (ending with `.json`). An installed
+Aura keeps it in `settings.ini` (`packageRepository`); `pkg /repository` alone shows it.
+
+The list is an array of entries whose values are all strings:
 
 ```json
 [
@@ -97,6 +103,7 @@ have, or setting a read-only one, is an error. Their functions are called with a
 | `app:find(id)` | The element with that `id` in the layout file: a control, or a container (`Stack`, `Panel`, `Grid`, `Row`) that has only `id` and `visible`. An unknown id is an error. |
 | `app:on(event, handler)` | Calls `handler()` on the layout's event of that name (`onClick="event"`, `onChange`, `onEnter`). A later call replaces it. |
 | `app:every(milliseconds, handler)` | Calls `handler()` every that many milliseconds (the first time one interval from now), until the app closes. A handler that raises an error stops its timer. |
+| `app:after(milliseconds, handler)` | Calls `handler()` once, that many milliseconds from now (0 is fine) and after the window was drawn: what the caller changed shows first. For slow work, a download: say what is going on, then do it here. |
 | `app:onKey(handler)` | Calls `handler(key)` with each key typed while the app is focused: `key.name` for a key that types no character (`enter`, `backspace`, `tab`, `escape`, `up`, `down`, `left`, `right`, `home`, `end`, `pageUp`, `pageDown`, `insert`, `delete`), `key.char` for one that does (UTF-8), and `key.ctrl`, `key.shift`, `key.alt`. A later call replaces it. |
 | `app:onResize(handler)` | Calls `handler()` once the window was resized and its elements placed again. A later call replaces it. |
 | `app:fit()` | Resizes the window to its elements, at least as wide as its title, and no larger than the room the screen has right of and under it (and 999 pixels). |
@@ -116,13 +123,13 @@ error. A change shows on the next frame.
 | `id` | all | Read only. |
 | `visible` | all, containers too | A hidden element takes no space: the next ones move up. |
 | `width`, `height` | all controls | Read only, in pixels. |
-| `text` | Label, Button, TextBox, Checkbox | |
+| `text` | Label, Button, TextBox, Checkbox | A Label's `\n` starts a new line. |
 | `color` | Label, Button, Checkbox | Text color: `"#RRGGBB"`, `"#AARRGGBB"` or a name (`red`, `green`, `blue`, `black`, `white`, `gray`, `darkgray`, `lightgray`, `transparent`). Reads as `"#RRGGBB"`. |
 | `checked` | Checkbox | |
 | `value` | Slider | 0 to 255. |
-| `items` | DropDown | A list of strings. Setting it clears the selection. |
-| `selectedIndex` | DropDown | From 0, as in the layout file; -1 for none. |
-| `selectedItem` | DropDown | Read only, `nil` for none. |
+| `items` | DropDown, ListBox | A list of strings. Setting it clears the selection. |
+| `selectedIndex` | DropDown, ListBox | From 0, as in the layout file; -1 for none. A ListBox scrolls to it. |
+| `selectedItem` | DropDown, ListBox | Read only, `nil` for none. |
 | `title`, `message` | Dialog | |
 | `state` | Dialog | Set only: `"information"` or `"error"`. |
 | `foreground` | Console | Color of the text written next: `black`, `darkBlue`, `darkGreen`, `darkCyan`, `darkRed`, `darkMagenta`, `darkYellow`, `gray`, `darkGray`, `blue`, `green`, `cyan`, `red`, `magenta`, `yellow`, `white`. |
@@ -232,6 +239,22 @@ reads a file a byte at a time: `readText` is faster for a whole file.
 |---|---|
 | `aura.shell.open(console)` | A shell in one of the app's Console controls, one per app. While the app is focused, `Console.Out` writes into that console: the commands' output, and anything else written to it. |
 | `shell.execute(line)` | Runs a command line (`help` lists the commands) and returns once it is done. `clear` empties the console, `exit` closes the app once the handler returns. |
+
+### aura.packages
+
+The packages Aura has and the online repository's, as `pkg` manages them. The downloads run on the UI
+thread: the desktop waits for them (see `app:after`).
+
+| | |
+|---|---|
+| `aura.packages.repository` | The repository's address. Read only: see `setRepository`. |
+| `aura.packages.defaultRepository` | The repository Aura comes with. |
+| `aura.packages.setRepository(url)` | Switches to that repository (an `http://` or `https://` address), and forgets the package list of the previous one: `true`, or `false` and why. Kept in `settings.ini` on an installed Aura. |
+| `aura.packages.list()` | The packages Aura has: a list of `{ name = , displayName = , version = , author = , description = , builtIn = , app = }`. `builtIn` is false for a downloaded one, which may replace a built-in one of the same name. |
+| `aura.packages.update()` | Downloads the repository's package list: `true`, or `false` and why. |
+| `aura.packages.available()` | The repository's packages, as the last `update()` read them (none before): a list of `{ name = , displayName = , version = , author = , description = , link = }`. |
+| `aura.packages.add(name)` | Downloads a package of that list and installs it, replacing the one of the same name (a built-in one too): `true`, or `false` and why. An app shows in the start menu at once. |
+| `aura.packages.remove(name)` | Removes a downloaded package; the built-in one it replaced is back: `true`, or `false` and why. |
 
 ## Limits
 

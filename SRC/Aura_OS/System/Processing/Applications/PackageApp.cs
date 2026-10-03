@@ -18,8 +18,8 @@ namespace Aura_OS.System.Processing.Applications
     /// <summary>
     /// An app whose window is its package's layout file and whose behaviour is its package's Lua:
     /// the main file runs once when the app opens, then the handlers it gave run on the layout's
-    /// events (app:on), its timers (app:every), the keys typed while it is focused (app:onKey) and
-    /// its resizes (app:onResize), on the UI thread. os.exit in a handler closes the app.
+    /// events (app:on), its timers (app:every, app:after), the keys typed while it is focused
+    /// (app:onKey) and its resizes (app:onResize), on the UI thread. os.exit in a handler closes the app.
     /// SRC/Packages/README.md describes the Lua side.
     /// </summary>
     public class PackageApp : Application
@@ -32,13 +32,17 @@ namespace Aura_OS.System.Processing.Applications
         private readonly Dictionary<string, int> _handlers = new Dictionary<string, int>();
 
         /// <summary>
-        /// A handler app:every calls every Interval milliseconds.
+        /// A handler app:every calls every Interval milliseconds, or app:after once.
         /// </summary>
         private sealed class Timer
         {
             public int Reference;
             public long Interval;
             public long Next;
+
+            // app:after: called once, and not before the window was drawn after Draws.
+            public bool Once;
+            public int Draws;
         }
 
         private readonly List<Timer> _timers = new List<Timer>();
@@ -54,6 +58,9 @@ namespace Aura_OS.System.Processing.Applications
         internal ShellSession Shell { get; private set; }
 
         private bool _disposed;
+
+        // Times the window was drawn, for app:after.
+        private int _draws;
 
         // A handler called os.exit: the app closes after its update.
         private bool _exited;
@@ -86,6 +93,10 @@ namespace Aura_OS.System.Processing.Applications
                 {
                     _lua.Dispose();
                 }
+
+                // The window and its controls exist already: they would stay on the screen, with no
+                // app behind them.
+                Window.Dispose();
 
                 LuaException luaError = error as LuaException;
                 LuaExitException exit = error as LuaExitException;
@@ -189,6 +200,24 @@ namespace Aura_OS.System.Processing.Applications
         }
 
         /// <summary>
+        /// Calls the Lua function (a registry reference) once, delay milliseconds from now and after
+        /// the window was drawn: what the caller changed in the controls shows before it runs.
+        /// </summary>
+        internal void AddOneShotTimer(long delay, int reference)
+        {
+            _timers.Add(new Timer
+            {
+                Reference = reference,
+                Interval = delay,
+                Next = Environment.TickCount64 + delay,
+                Once = true,
+                Draws = _draws,
+            });
+
+            MarkDirty();
+        }
+
+        /// <summary>
         /// Calls the timers that are due. One whose handler fails stops: it would fail again every time.
         /// </summary>
         private void RunTimers()
@@ -200,7 +229,7 @@ namespace Aura_OS.System.Processing.Applications
             {
                 Timer timer = _timers[i];
 
-                if (now < timer.Next)
+                if (now < timer.Next || (timer.Once && timer.Draws == _draws))
                 {
                     continue;
                 }
@@ -208,7 +237,9 @@ namespace Aura_OS.System.Processing.Applications
                 // From now rather than from the last due time: a slow frame does not queue up calls.
                 timer.Next = now + timer.Interval;
 
-                if (!Call("every " + timer.Interval + " ms", timer.Reference))
+                bool succeeded = Call((timer.Once ? "after " : "every ") + timer.Interval + " ms", timer.Reference);
+
+                if (timer.Once || !succeeded)
                 {
                     _timers.RemoveAt(i);
                     _lua.State.L_Unref(LuaDef.LUA_REGISTRYINDEX, timer.Reference);
@@ -384,6 +415,12 @@ namespace Aura_OS.System.Processing.Applications
             }
         }
 
+        public override void Draw()
+        {
+            base.Draw();
+            _draws++;
+        }
+
         public override void ResizeWindow(int width, int height)
         {
             base.ResizeWindow(width, height);
@@ -422,7 +459,7 @@ namespace Aura_OS.System.Processing.Applications
             base.Dispose();
 
             // GEN3-GAP(finalizers): Dispose closes the files the app left open.
-            if (!_disposed)
+            if (!_disposed && _lua != null)
             {
                 _disposed = true;
                 _lua.Dispose();

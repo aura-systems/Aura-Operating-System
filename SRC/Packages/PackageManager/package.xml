@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Package name="PackageManager" displayName="Package Manager" version="1.0.0" author="Aura Team"
+         description="Installs, updates and removes the packages of the online repository, and changes the repository."
+         main="main.lua" layout="PackageManager.xml" />

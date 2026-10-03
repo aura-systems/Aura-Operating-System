@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Package Manager app window: the repository, the package list and the selected package.
+     main.lua fills them, and installs or removes the packages. -->
+<Window title="Package Manager" width="480" height="440" padding="6" spacing="6">
+  <Grid columns="auto,*,auto,auto" columnSpacing="6" rowHeight="23">
+    <Row>
+      <Label text="Repository:" />
+      <TextBox id="repository" onEnter="useRepository" />
+      <Button text="Use" onClick="useRepository" />
+      <Button text="Default" onClick="defaultRepository" />
+    </Row>
+  </Grid>
+
+  <Stack orientation="horizontal" spacing="8" height="23">
+    <Button text="Refresh" onClick="refresh" />
+    <Label id="status" />
+  </Stack>
+
+  <ListBox id="packages" height="*" onChange="select" />
+
+  <!-- The selected package. -->
+  <Label id="name" />
+  <Label id="description" />
+  <Label id="state" />
+
+  <Stack orientation="horizontal" spacing="6" height="23">
+    <Button id="install" text="Install" width="80" onClick="install" />
+    <Button id="remove" text="Remove" width="80" onClick="remove" />
+  </Stack>
+
+  <Dialog id="confirm" title="Remove" visible="false">
+    <Button text="Remove" onClick="confirmRemove" />
+    <Button text="Cancel" onClick="closeConfirm" />
+  </Dialog>
+
+  <Dialog id="error" title="Error" state="error" visible="false">
+    <Button text="OK" onClick="closeError" />
+  </Dialog>
+</Window>

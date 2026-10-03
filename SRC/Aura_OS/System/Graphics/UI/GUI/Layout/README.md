@@ -70,13 +70,14 @@ The root element. Its elements are stacked top to bottom.
 
 | Element | Attributes | Events |
 |---|---|---|
-| `Label` | `text`, `color` | |
+| `Label` | `text`, `color`; a `\n` in a text the app's code sets starts a new line | |
 | `Image` | `src` (embedded image, `UI/Images/AuraLogo.bmp`; in a package, its own file first) or `icon` (icon key, `32-folder.bmp`); neither for an empty image the app's code fills | |
 | `Button` | `text`, `icon` | `onClick` |
 | `TextBox` | `text`, `multiline`, `password` | `onEnter` |
 | `Checkbox` | `text`, `color`, `checked` | `onChange` |
 | `Slider` | `value` (0 to 255) | `onChange` |
 | `DropDown` | `selectedIndex`; `<Item>text</Item>` children | `onChange` |
+| `ListBox` | `selectedIndex`; `<Item>text</Item>` children; default 200 x 150. A click selects a row and gives the list the keys: the up and down arrows, Home, End, Page Up and Page Down then move the selection, each move an `onChange`; a vertical scroll bar on the right once the rows outgrow it; a longer row is cut | `onChange` |
 | `Canvas` | `background` (color, default black); default 200 x 150. The app's code draws on it, and a new size clears it | |
 | `Console` | `cursor` (draws the cursor and the line being typed, `Console.Input`), `scrollBar` (a vertical scroll bar on the right once lines scrolled off the top; its width is kept from the start); default 400 x 300 | |
 | `Dialog` | `title`, `message`, `state="information|error"`; `<Button text onClick>` children | |
@@ -90,7 +91,7 @@ only control that takes input. It usually starts with `visible="false"`.
 |---|---|
 | `id` | Name for `Find<T>(id)` and `Layout.SetVisible(id, visible)`. |
 | `visible` | `false` hides the element; it takes no space, the next elements move up. |
-| `width`, `height` | Pixels, `auto` or `*` (fill). Fields (`TextBox`, `Slider`, `DropDown`) default to 200 x 23 and fill their space; other controls fit their content (a label its text, an image its bitmap). |
+| `width`, `height` | Pixels, `auto` or `*` (fill). Fields (`TextBox`, `Slider`, `DropDown`) default to 200 x 23 and fill their space, as a `ListBox` does; other controls fit their content (a label its text, an image its bitmap). |
 | `margin` | Space around the element. |
 | `align` | `left`, `center`, `right` or `stretch` in the element's space. |
 | `valign` | `top`, `center` (default) or `bottom`, `stretch`. |

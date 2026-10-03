@@ -246,6 +246,25 @@ namespace Aura_OS.System.Graphics.UI.GUI.Layout
                     alignment = Alignment.Stretch;
                     break;
 
+                case "ListBox":
+                    ListBox listBox = new ListBox(0, 0, ControlSize(element, "width", DefaultFieldWidth, layout), ControlSize(element, "height", 150, layout));
+
+                    foreach (NanoXMLNode item in element.SubNodes)
+                    {
+                        if (item.Name != "Item")
+                        {
+                            throw layout.Error("<ListBox> holds <Item> elements, not <" + item.Name + ">.");
+                        }
+
+                        listBox.AddItem(item.Value ?? "");
+                    }
+
+                    listBox.SelectedIndex = IntAttr(element, "selectedIndex", -1, layout);
+                    listBox.SelectionChanged = layout.Handler(Attr(element, "onChange"));
+                    component = listBox;
+                    alignment = Alignment.Stretch;
+                    break;
+
                 default:
                     throw layout.Error("unknown element <" + element.Name + ">.");
             }

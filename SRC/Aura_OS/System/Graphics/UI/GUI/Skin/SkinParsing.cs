@@ -109,7 +109,8 @@ namespace Aura_OS.System.Graphics.UI.GUI.Skin
 
                     if (name != null && (name.StartsWith("window") || name.StartsWith("button") ||
                         name.StartsWith("slider") || name.StartsWith("rail") ||
-                        name.StartsWith("cursor")  || name.StartsWith("check") || name.StartsWith("input")))
+                        name.StartsWith("cursor")  || name.StartsWith("check") || name.StartsWith("input") ||
+                        name.StartsWith("list")))
                     {
                         Frame.Region[] regions = RegionListBuilder.Build(node, _bitmaps);
                         Frame.Text[] texts = null;

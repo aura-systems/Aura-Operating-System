@@ -46,7 +46,27 @@ namespace Aura_OS.System.Processing.Interpreter.Commands.Network
 
                 if (command == "/update")
                 {
+                    Console.WriteLine("Updating from '" + Kernel.PackageManager.ListUrl + "'...");
                     Kernel.PackageManager.Update();
+                    Console.WriteLine("Package list updated, you can now add packages.");
+
+                    return new ReturnInfo(this, ReturnCode.OK);
+                }
+                else if (command == "/repository")
+                {
+                    if (arguments.Count == 2)
+                    {
+                        if (Kernel.PackageManager.SetRepository(arguments[1]))
+                        {
+                            Console.WriteLine("Repository changed, 'pkg /update' reads its package list.");
+                        }
+                        else
+                        {
+                            Console.WriteLine("Repository changed until the next boot (Aura is not installed).");
+                        }
+                    }
+
+                    Console.WriteLine("Repository: " + Kernel.PackageManager.RepositoryUrl);
 
                     return new ReturnInfo(this, ReturnCode.OK);
                 }
@@ -83,9 +103,19 @@ namespace Aura_OS.System.Processing.Interpreter.Commands.Network
                         return new ReturnInfo(this, ReturnCode.ERROR_ARG);
                     }
 
-                    var packageName = arguments[1];
+                    bool saved;
+                    Package package = Kernel.PackageManager.Add(arguments[1], out saved);
 
-                    Kernel.PackageManager.Add(packageName);
+                    Console.WriteLine(saved
+                        ? package.Name + " installed."
+                        : package.Name + " added until the next boot (no Programs folder).");
+
+                    if (package.IsApp)
+                    {
+                        Console.WriteLine(package.InMenu
+                            ? "The start menu or 'run " + package.Name + "' opens it."
+                            : "'run " + package.Name + "' opens it.");
+                    }
 
                     return new ReturnInfo(this, ReturnCode.OK);
                 }
@@ -96,9 +126,11 @@ namespace Aura_OS.System.Processing.Interpreter.Commands.Network
                         return new ReturnInfo(this, ReturnCode.ERROR_ARG);
                     }
 
-                    var packageName = arguments[1];
+                    string name = arguments[1];
 
-                    Kernel.PackageManager.Remove(packageName);
+                    Console.WriteLine(Kernel.PackageManager.Remove(name)
+                        ? name + " removed, the built-in one is back."
+                        : name + " removed.");
 
                     return new ReturnInfo(this, ReturnCode.OK);
                 }
@@ -109,7 +141,8 @@ namespace Aura_OS.System.Processing.Interpreter.Commands.Network
             }
             catch (Exception ex)
             {
-                // Network/HTTP failures (HttpException, NotSupportedException for https, ...).
+                // Network/HTTP failures (HttpException, NotSupportedException for https, ...), a package
+                // that is not in the list, not installed or built in.
                 return new ReturnInfo(this, ReturnCode.ERROR, ex.Message);
             }
         }
@@ -120,6 +153,7 @@ namespace Aura_OS.System.Processing.Interpreter.Commands.Network
         public override void PrintHelp()
         {
             Console.WriteLine("Usage:");
+            Console.WriteLine(" - pkg /repository [url]");
             Console.WriteLine(" - pkg /update");
             Console.WriteLine(" - pkg /upgrade");
             Console.WriteLine(" - pkg /list");

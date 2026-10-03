@@ -84,7 +84,25 @@ namespace Aura_OS.System.Graphics.UI.GUI
             }
 
             Layout = layout;
-            Layout.Build(this);
+
+            Exception error = null;
+
+            try
+            {
+                Layout.Build(this);
+            }
+            catch (Exception ex)
+            {
+                error = ex;
+            }
+
+            // A wrong layout file (an unknown element, a frame the theme lacks): without this, the window
+            // and the controls built so far would stay on the screen with no app behind them.
+            if (error != null)
+            {
+                Window.Dispose();
+                throw error;
+            }
         }
 
         public override void Initialize()
