@@ -1,18 +1,23 @@
 /*
 * PROJECT:          Aura Operating System Development
-* CONTENT:          Memory information application.
+* CONTENT:          Memory information application. The window is Resources/UI/Layouts/MemoryInfo.xml.
 * PROGRAMMERS:      Valentin Charbonnier <valentinbreiz@gmail.com>
 */
 
 using System;
 using Aura_OS.System.Graphics.UI.GUI;
+using Aura_OS.System.Graphics.UI.GUI.Components;
+using Aura_OS.System.Graphics.UI.GUI.Layout;
 using Cosmos.Kernel.System.Diagnostics;
 
 namespace Aura_OS.System.Processing.Applications
 {
     public class MemoryInfoApp : Application
     {
-        public static string ApplicationName = "MemoryInfo";
+        // Each refresh builds the value strings: not every frame, the app would grow the heap it measures.
+        private const int RefreshIntervalMs = 250;
+
+        private DateTime _lastRefresh;
 
         // Last-collection figures from GC.GetGCMemoryInfo(), refreshed only when a collection
         // happened (the snapshot does not change in between, and each call allocates).
@@ -22,14 +27,25 @@ namespace Aura_OS.System.Processing.Applications
         private long _gcFragmented;
         private long _gcPinnedObjects;
 
-        public MemoryInfoApp(int width, int height, int x = 0, int y = 0) : base(ApplicationName, width, height, x, y)
+        public MemoryInfoApp(int x = 0, int y = 0) : base(AppLayout.Load("MemoryInfo"), x, y)
         {
-            ForceDirty = true;
+            Refresh();
         }
 
-        public override void Draw()
+        public override void Update()
         {
-            base.Draw();
+            // Before the base update, which places the labels again when a value got longer or shorter.
+            if ((DateTime.Now - _lastRefresh).TotalMilliseconds >= RefreshIntervalMs)
+            {
+                Refresh();
+            }
+
+            base.Update();
+        }
+
+        private void Refresh()
+        {
+            _lastRefresh = DateTime.Now;
 
             ulong totalPages = MemoryInfo.TotalPages;
             ulong freePages = MemoryInfo.FreePages;
@@ -47,20 +63,25 @@ namespace Aura_OS.System.Processing.Applications
             }
 
             // GEN3-GAP(meminfo): the page allocator's pool is the largest usable memory-map region only.
-            DrawString("Memory pool                  = " + ((totalPages * pageSize) >> 20) + "MB", 0, 0);
-            DrawString("Used memory                  = " + (((totalPages - freePages) * pageSize) >> 20) + "MB", 0, (0 + Kernel.font.Height));
-            DrawString("Free memory                  = " + ((freePages * pageSize) >> 20) + "MB", 0, (0 + 2 * Kernel.font.Height));
-            DrawString("Total Page Count             = " + totalPages + " (" + pageSize + "B)", 0, (0 + 3 * Kernel.font.Height));
-            DrawString("Free Page Count              = " + freePages, 0, (0 + 4 * Kernel.font.Height));
-            DrawString("Live heap                    = " + GC.GetTotalMemory(false) + "B", 0, (0 + 5 * Kernel.font.Height));
-            DrawString("Heap size (last GC)          = " + _gcHeapSize + "B", 0, (0 + 6 * Kernel.font.Height));
-            DrawString("Committed (last GC)          = " + _gcCommitted + "B", 0, (0 + 7 * Kernel.font.Height));
-            DrawString("Fragmented (last GC)         = " + _gcFragmented + "B", 0, (0 + 8 * Kernel.font.Height));
-            DrawString("Pinned objects (last GC)     = " + _gcPinnedObjects, 0, (0 + 9 * Kernel.font.Height));
-            DrawString("Collections                  = " + collections, 0, (0 + 10 * Kernel.font.Height));
-            DrawString("Objects freed                = " + MemoryInfo.TotalObjectsFreed, 0, (0 + 11 * Kernel.font.Height));
-            DrawString("GC time                      = " + MemoryInfo.GcTimePercent + "%", 0, (0 + 12 * Kernel.font.Height));
-            DrawString("Free Count                   = " + Kernel.FreeCount, 0, (0 + 13 * Kernel.font.Height));
+            SetValue("memoryPool", ((totalPages * pageSize) >> 20) + "MB");
+            SetValue("usedMemory", (((totalPages - freePages) * pageSize) >> 20) + "MB");
+            SetValue("freeMemory", ((freePages * pageSize) >> 20) + "MB");
+            SetValue("totalPages", totalPages + " (" + pageSize + "B)");
+            SetValue("freePages", freePages.ToString());
+            SetValue("liveHeap", GC.GetTotalMemory(false) + "B");
+            SetValue("gcHeapSize", _gcHeapSize + "B");
+            SetValue("gcCommitted", _gcCommitted + "B");
+            SetValue("gcFragmented", _gcFragmented + "B");
+            SetValue("gcPinnedObjects", _gcPinnedObjects.ToString());
+            SetValue("collections", collections.ToString());
+            SetValue("objectsFreed", MemoryInfo.TotalObjectsFreed.ToString());
+            SetValue("gcTime", MemoryInfo.GcTimePercent + "%");
+            SetValue("freeCount", Kernel.FreeCount.ToString());
+        }
+
+        private void SetValue(string id, string value)
+        {
+            Find<Label>(id).Text = value;
         }
     }
 }
