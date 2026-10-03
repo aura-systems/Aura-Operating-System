@@ -73,6 +73,7 @@ have, or setting a read-only one, is an error. Their functions are called with a
 | `app:onResize(handler)` | Calls `handler()` once the window was resized and its elements placed again. A later call replaces it. |
 | `app:fit()` | Resizes the window to its elements, at least as wide as its title, and no larger than the room the screen has right of and under it (and 999 pixels). |
 | `app.title` | The window title, also the taskbar name. |
+| `app.focused` | True while the window is the focused one (it gets the keys). Read only. |
 
 An error in a handler is written to the OS log with its traceback, and the app goes on. `os.exit()` in
 a handler closes the app; in the main file, it stops the window from opening.
@@ -102,6 +103,11 @@ error. A change shows on the next frame.
 
 An Image has a method: `image:load(path)` shows that BMP file (24 or 32 bits per pixel, bottom-up), and
 the Image takes its size: `true`, or `false` and why. An `<Image>` without `src` or `icon` starts empty.
+
+A Canvas is drawn on with methods, in pixels from its top left corner; what falls outside it is
+clipped, and a drawing stays until drawn over: `canvas:clear([color])` (its `background` by default),
+`canvas:fillRect(x, y, width, height, color)` and `canvas:drawText(text, x, y, color)` (the system
+font, 8 x 16 pixels a character).
 
 A Console also has methods: `console:write(text)`, `console:writeLine([text])`, `console:clear()`,
 `console:scrollUp()`, `console:scrollDown()` (one line back or forward through the lines that went off

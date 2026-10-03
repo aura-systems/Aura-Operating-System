@@ -481,6 +481,9 @@ namespace Aura_OS.System.Processing.Lua
                     return 1;
                 case "title":
                     return Text(lua, app.Window.Name);
+                case "focused":
+                    lua.PushBoolean(app.Focused);
+                    return 1;
             }
 
             return LuaObject.Error(lua, "the app has no field '" + key + "'");
@@ -618,9 +621,28 @@ namespace Aura_OS.System.Processing.Lua
                         return 1;
                     }
                     break;
+                case "clear":
+                    if (component is UIConsole)
+                    {
+                        lua.PushCSharpFunction(ConsoleMethod(key));
+                        return 1;
+                    }
+                    if (component is Surface)
+                    {
+                        lua.PushCSharpFunction(CanvasMethod(key));
+                        return 1;
+                    }
+                    break;
+                case "fillRect":
+                case "drawText":
+                    if (component is Surface)
+                    {
+                        lua.PushCSharpFunction(CanvasMethod(key));
+                        return 1;
+                    }
+                    break;
                 case "write":
                 case "writeLine":
-                case "clear":
                 case "scrollUp":
                 case "scrollDown":
                 case "scrollToEnd":
@@ -927,6 +949,68 @@ namespace Aura_OS.System.Processing.Lua
             lua.PushBoolean(error == null);
             LuaObject.PushText(lua, error);
             return 2;
+        }
+
+        /// <summary>
+        /// A Canvas control's method: canvas:clear([color]), canvas:fillRect(x, y, width, height, color),
+        /// canvas:drawText(text, x, y, color). The canvas clips what falls outside it.
+        /// </summary>
+        private static CSharpFunctionDelegate CanvasMethod(string name)
+        {
+            return lua =>
+            {
+                Control control = (Control)lua.L_CheckUData(1, ControlType);
+                Surface surface = control.Component as Surface;
+
+                if (surface == null)
+                {
+                    return LuaObject.Error(lua, "'" + control.Id + "' is not a Canvas");
+                }
+
+                switch (name)
+                {
+                    case "clear":
+                        surface.Clear(lua.IsNoneOrNil(2) ? surface.Background : CheckColor(lua, 2));
+                        break;
+                    case "fillRect":
+                        surface.DrawFilledRectangle(CheckColor(lua, 6), CheckCoordinate(lua, 2), CheckCoordinate(lua, 3),
+                            CheckCoordinate(lua, 4), CheckCoordinate(lua, 5));
+                        break;
+                    case "drawText":
+                        surface.DrawString(LuaObject.CheckText(lua, 2), Kernel.font, CheckColor(lua, 5),
+                            CheckCoordinate(lua, 3), CheckCoordinate(lua, 4));
+                        break;
+                }
+
+                surface.MarkDirty();
+                control.App.MarkDirty();
+                return 0;
+            };
+        }
+
+        /// <summary>
+        /// A color argument: "#RRGGBB", "#AARRGGBB" or a color name, as in layout files.
+        /// </summary>
+        private static Color CheckColor(ILuaState lua, int index)
+        {
+            string value = LuaObject.CheckText(lua, index);
+            Color color;
+
+            if (!LayoutLoader.TryParseColor(value, out color))
+            {
+                LuaObject.Error(lua, "a color is #RRGGBB, #AARRGGBB or a color name, not '" + value + "'");
+            }
+
+            return color;
+        }
+
+        /// <summary>
+        /// A pixel coordinate or size argument, kept far from the int limits: the canvas clips by
+        /// adding them.
+        /// </summary>
+        private static int CheckCoordinate(ILuaState lua, int index)
+        {
+            return (int)Math.Clamp(lua.L_CheckInteger(index), -100000, 100000);
         }
 
         /// <summary>

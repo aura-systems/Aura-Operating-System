@@ -193,6 +193,10 @@ namespace Aura_OS.System.Graphics.UI.GUI.Layout
                     component = new Picture(ImageAttr(element, layout), 0, 0);
                     break;
 
+                case "Canvas":
+                    component = new Surface(ColorAttr(element, "background", Color.Black, layout), 0, 0, ControlSize(element, "width", 200, layout), ControlSize(element, "height", 150, layout));
+                    break;
+
                 case "Console":
                     Components.Console console = new Components.Console(0, 0, ControlSize(element, "width", 400, layout), ControlSize(element, "height", 300, layout));
                     console.CursorVisible = BoolAttr(element, "cursor", false, layout);

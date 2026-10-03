@@ -77,6 +77,7 @@ The root element. Its elements are stacked top to bottom.
 | `Checkbox` | `text`, `color`, `checked` | `onChange` |
 | `Slider` | `value` (0 to 255) | `onChange` |
 | `DropDown` | `selectedIndex`; `<Item>text</Item>` children | `onChange` |
+| `Canvas` | `background` (color, default black); default 200 x 150. The app's code draws on it, and a new size clears it | |
 | `Console` | `cursor` (draws the cursor and the line being typed, `Console.Input`), `scrollBar` (a vertical scroll bar on the right once lines scrolled off the top; its width is kept from the start); default 400 x 300 | |
 | `Dialog` | `title`, `message`, `state="information|error"`; `<Button text onClick>` children | |
 
