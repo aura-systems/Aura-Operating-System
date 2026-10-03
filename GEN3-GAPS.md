@@ -494,7 +494,7 @@ exception path, C8 dispose everything.
 - **Source:** 04, 08.
 
 ### `canvas3d`: `Canvas3D` is full-screen and VMware SVGA3D only (minor)
-- **Aura workaround:** CubeApp stays software-rendered.
+- **Aura workaround:** none needed, no Aura app draws in 3D (the software-rendered CubeApp was removed).
 - **Upstream ask:** an off-screen or software `Canvas3D`.
 - **Source:** 04.
 
