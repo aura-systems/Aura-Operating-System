@@ -47,7 +47,8 @@ package, or else one of the kernel's images (`UI/Images/AuraLogo.bmp`).
 `...` are the command line arguments.
 
 The `.lua` files are modules: `require "lib.util"` loads `lib/util.lua`, and `dofile`/`loadfile` read
-the package's files first.
+the package's files first. Modules cannot require one another in a circle: `require` then fails with
+"C stack overflow". The Disk Manager splits its code in folders this way (`model/`, `view/`, `actions/`).
 
 ## The online repository
 
