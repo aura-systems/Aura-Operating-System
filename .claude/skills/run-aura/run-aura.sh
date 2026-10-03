@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 # Boot Aura OS in a visible QEMU window through `cosmos run`, teeing the serial
 # console to uart.log. Thin wrapper: `cosmos run` builds the QEMU command line
-# (q35, KVM + -cpu host when available, CD bootindex=0, AHCI disk, NIC, port
-# forwards, -no-reboot -no-shutdown) and finds a working QEMU (bundle or system).
+# (q35, KVM + -cpu host when available, CD bootindex=0, AHCI disk, NIC, HD Audio,
+# port forwards, -no-reboot -no-shutdown) and finds a working QEMU (bundle or system).
 #
 # This script NEVER builds. The user runs the builds: when the ISO is missing
 # or stale, ask him to rebuild.
@@ -18,6 +18,7 @@ DISK="$PROJECT_DIR/disk.img"    # same image as SRC/Aura_OS/.cosmos/config.json 
 UART="$REPO_ROOT/uart.log"
 MEM=1024
 NIC=e1000e
+AUDIO=intel-hda                 # + hda-duplex codec, host backend picked by QEMU; 'none' for no sound card
 TEMP_DISK=0
 HEADLESS=0
 GDB_PORT=""
@@ -33,6 +34,7 @@ Options:
   --headless      no window (serial only)
   --mem MB        guest memory in MB (default: $MEM)
   --nic MODEL     network card (default: $NIC; gen3 drives e1000e and virtio-net)
+  --audio MODEL   HD Audio controller (default: $AUDIO; 'none' for no sound card)
   --iso PATH      boot ISO   (default: $DEFAULT_ISO)
   --disk PATH     disk image (default: $DISK; created blank, 512M, if missing)
   --uart PATH     serial log (default: $UART)
@@ -47,6 +49,7 @@ while [ $# -gt 0 ]; do
         --headless) HEADLESS=1; shift ;;
         --mem) MEM="$2"; shift 2 ;;
         --nic) NIC="$2"; shift 2 ;;
+        --audio) AUDIO="$2"; shift 2 ;;
         --iso) ISO="$2"; shift 2 ;;
         --disk) DISK="$2"; shift 2 ;;
         --uart) UART="$2"; shift 2 ;;
@@ -106,7 +109,7 @@ fi
 echo "Booting Aura OS via cosmos run (serial -> $UART). Close the window or Ctrl+C to stop."
 # Serial goes to stdio with `cosmos run`; tee it to uart.log (fresh file each boot).
 "$COSMOS" run -p "$PROJECT_DIR" "${ISO_ARGS[@]}" -m "$MEM" \
-    --disk "$DISK" --nic "$NIC" "${FWD_ARGS[@]}" "${EXTRA_ARGS[@]}" 2>&1 \
+    --disk "$DISK" --nic "$NIC" --audio "$AUDIO" "${FWD_ARGS[@]}" "${EXTRA_ARGS[@]}" 2>&1 \
     | tee "$UART" | {
         # Surface the classic failure mode with a helpful message.
         while IFS= read -r line; do

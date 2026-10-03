@@ -139,7 +139,8 @@ else
     truncate -s 512M "$WORK/disk.img"
 fi
 
-# Same machine as `cosmos run` (q35, CD bootindex=0, AHCI disk, e1000e NIC).
+# Same machine as `cosmos run` (q35, CD bootindex=0, AHCI disk, e1000e NIC, intel-hda;
+# the audio backend is silent, but the driver and the boot sound play as usual).
 "$QEMU" -M q35 "${KVM_FLAGS[@]}" -m "$MEM" \
     -drive file="$ISO",if=none,id=cosmoscd,format=raw,readonly=on \
     -device ide-cd,drive=cosmoscd,bootindex=0 \
@@ -149,6 +150,7 @@ fi
     -drive file="$WORK/disk.img",if=none,id=ahcidisk0,format=raw \
     -device ide-hd,drive=ahcidisk0,bus=ahci0.0 \
     -netdev user,id=net0 -device e1000e,netdev=net0 \
+    -audiodev none,id=snd0 -device intel-hda -device hda-duplex,audiodev=snd0 \
     -display none -no-reboot -no-shutdown -gdb "tcp::$PORT" \
     >"$WORK/qemu.err" 2>&1 &
 QPID=$!

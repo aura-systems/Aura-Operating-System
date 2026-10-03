@@ -21,7 +21,7 @@
     ],
     "keyboard": "ps2",
     "mouse": "ps2",
-    "audio": "none",
+    "audio": "intel-hda",
     "enableNetwork": false,
     "networkPorts": "5555",
     "extraArgs": "",

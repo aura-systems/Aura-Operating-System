@@ -1,6 +1,6 @@
 ---
 name: run-aura
-description: Boot an already-built Aura OS ISO in a visible QEMU window through `cosmos run` (1 GB, AHCI disk.img, e1000e, FTP port forwards, serial tee'd to uart.log). Never builds. Use when the user asks to run/start/launch Aura OS, boot the ISO, or open the QEMU window. For headless crash symbolication use crash-debug instead.
+description: Boot an already-built Aura OS ISO in a visible QEMU window through `cosmos run` (1 GB, AHCI disk.img, e1000e, intel-hda audio, FTP port forwards, serial tee'd to uart.log). Never builds. Use when the user asks to run/start/launch Aura OS, boot the ISO, or open the QEMU window. For headless crash symbolication use crash-debug instead.
 ---
 
 # Run Aura OS (QEMU window)
@@ -14,7 +14,7 @@ Boot the existing ISO with a visible QEMU display:
 It is a thin wrapper over:
 
 ```bash
-cosmos run -p SRC/Aura_OS -m 1024 --disk SRC/Aura_OS/disk.img --nic e1000e \
+cosmos run -p SRC/Aura_OS -m 1024 --disk SRC/Aura_OS/disk.img --nic e1000e --audio intel-hda \
     --hostfwd tcp::2121-:21 --hostfwd tcp::50000-:50000 ... --hostfwd tcp::50009-:50009 \
     | tee uart.log
 ```
@@ -40,6 +40,9 @@ Flags:
 - `--mem MB`: guest memory, 1024 by default.
 - `--nic MODEL`: network card, `e1000e` by default. gen3 drives only e1000e and
   virtio-net.
+- `--audio MODEL`: HD Audio controller, `intel-hda` by default. `cosmos run`
+  attaches the `hda-duplex` codec with it and QEMU picks the host backend.
+  Aura plays its boot sound through it; `none` boots without a sound card.
 - `--iso/--disk/--uart PATH`: path overrides.
 
 Notes:
