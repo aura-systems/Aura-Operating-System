@@ -180,16 +180,19 @@ namespace Aura_OS.System.Graphics.UI.GUI.Layout
             _owner.MarkDirty();
         }
 
+        // The content area is this far inside the window's left, right and bottom edges.
+        private const int Border = 3;
+
         /// <summary>
         /// Places the elements in the window's content area, under the title bar and inside the borders.
         /// </summary>
         public void Arrange()
         {
             Window window = _owner.Window;
-            int left = 3;
+            int left = Border;
             int top = window.TopBar.Y + window.TopBar.Height;
             int width = window.Width - 2 * left;
-            int height = window.Height - 3 - top;
+            int height = window.Height - Border - top;
 
             _root.Measure();
             _root.Arrange(left, top, width, height);
@@ -209,6 +212,20 @@ namespace Aura_OS.System.Graphics.UI.GUI.Layout
             {
                 control.MarkPlaced();
             }
+        }
+
+        /// <summary>
+        /// The window size in which the elements get the size they ask for (Application.FitToLayout).
+        /// Positioned elements and dialogs are left out: they lie over the others.
+        /// </summary>
+        public void MeasureWindow(out int width, out int height)
+        {
+            Window window = _owner.Window;
+
+            _root.Measure();
+
+            width = _root.DesiredWidth + 2 * Border;
+            height = window.TopBar.Y + window.TopBar.Height + _root.DesiredHeight + Border;
         }
 
         /// <summary>

@@ -1,9 +1,11 @@
 ﻿/*
 * PROJECT:          Aura Operating System Development
-* CONTENT:          Image helpers (wallpaper scaling)
+* CONTENT:          Image helpers (BMP loading, wallpaper scaling)
 * PROGRAMMERS:      Valentin Charbonnier <valentinbreiz@gmail.com>
 */
 
+using System;
+using System.IO;
 using Cosmos.Kernel.System.Graphics;
 
 namespace Aura_OS.System.Utils
@@ -16,6 +18,32 @@ namespace Aura_OS.System.Utils
     /// </summary>
     public static class ImageUtils
     {
+        /// <summary>
+        /// Decodes a BMP file. GEN3-GAP(bmp): the gen3 loader throws on top-down and &lt; 24 bpp files
+        /// (BI_BITFIELDS masks are ignored), but a header with a wrong size it does not survive: it
+        /// divides by the height (a #DE halts the kernel) and allocates Width * Height pixels before
+        /// reading any pixel data. Such a header is rejected here first.
+        /// </summary>
+        /// <exception cref="InvalidDataException">The header gives a size the file cannot hold.</exception>
+        public static Bitmap LoadBmp(byte[] bytes)
+        {
+            if (bytes == null || bytes.Length < 54)
+            {
+                throw new InvalidDataException("The file is too small to be a BMP image.");
+            }
+
+            int width = BitConverter.ToInt32(bytes, 18);
+            int height = BitConverter.ToInt32(bytes, 22);
+
+            // Only 24 and 32 bpp are supported, so every pixel takes at least 3 bytes of the file.
+            if (width <= 0 || height <= 0 || (long)width * height * 3 > bytes.Length)
+            {
+                throw new InvalidDataException("Unsupported BMP size " + width + "x" + height + ".");
+            }
+
+            return new Bitmap(bytes);
+        }
+
         /// <summary>
         /// Returns a copy of the source image scaled to width x height with nearest-neighbour
         /// sampling (16.16 fixed point, the same maths as gen3's private Canvas.ScaleImage).

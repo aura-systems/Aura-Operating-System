@@ -71,7 +71,7 @@ The root element. Its elements are stacked top to bottom.
 | Element | Attributes | Events |
 |---|---|---|
 | `Label` | `text`, `color` | |
-| `Image` | `src` (embedded image, `UI/Images/AuraLogo.bmp`; in a package, its own file first) or `icon` (icon key, `32-folder.bmp`) | |
+| `Image` | `src` (embedded image, `UI/Images/AuraLogo.bmp`; in a package, its own file first) or `icon` (icon key, `32-folder.bmp`); neither for an empty image the app's code fills | |
 | `Button` | `text`, `icon` | `onClick` |
 | `TextBox` | `text`, `multiline`, `password` | `onEnter` |
 | `Checkbox` | `text`, `color`, `checked` | `onChange` |

@@ -71,6 +71,7 @@ have, or setting a read-only one, is an error. Their functions are called with a
 | `app:every(milliseconds, handler)` | Calls `handler()` every that many milliseconds (the first time one interval from now), until the app closes. A handler that raises an error stops its timer. |
 | `app:onKey(handler)` | Calls `handler(key)` with each key typed while the app is focused: `key.name` for a key that types no character (`enter`, `backspace`, `tab`, `escape`, `up`, `down`, `left`, `right`, `home`, `end`, `pageUp`, `pageDown`, `insert`, `delete`), `key.char` for one that does (UTF-8), and `key.ctrl`, `key.shift`, `key.alt`. A later call replaces it. |
 | `app:onResize(handler)` | Calls `handler()` once the window was resized and its elements placed again. A later call replaces it. |
+| `app:fit()` | Resizes the window to its elements, at least as wide as its title, and no larger than the room the screen has right of and under it (and 999 pixels). |
 | `app.title` | The window title, also the taskbar name. |
 
 An error in a handler is written to the OS log with its traceback, and the app goes on. `os.exit()` in
@@ -98,6 +99,9 @@ error. A change shows on the next frame.
 | `foreground` | Console | Color of the text written next: `black`, `darkBlue`, `darkGreen`, `darkCyan`, `darkRed`, `darkMagenta`, `darkYellow`, `gray`, `darkGray`, `blue`, `green`, `cyan`, `red`, `magenta`, `yellow`, `white`. |
 | `input` | Console | The line being typed, drawn before the cursor and not written yet; the cursor moves with it. Emptied when the console is. |
 | `inputHidden` | Console | Hides the input line and the cursor (while a command runs). |
+
+An Image has a method: `image:load(path)` shows that BMP file (24 or 32 bits per pixel, bottom-up), and
+the Image takes its size: `true`, or `false` and why. An `<Image>` without `src` or `icon` starts empty.
 
 A Console also has methods: `console:write(text)`, `console:writeLine([text])`, `console:clear()`,
 `console:scrollUp()`, `console:scrollDown()` (one line back or forward through the lines that went off

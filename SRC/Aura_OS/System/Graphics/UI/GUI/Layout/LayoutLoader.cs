@@ -290,16 +290,22 @@ namespace Aura_OS.System.Graphics.UI.GUI.Layout
 
         /// <summary>
         /// The bitmap of an Image: src, a file of the app's package or an embedded image
-        /// ("UI/Images/AuraLogo.bmp"), or icon, an icon key ("32-folder.bmp").
+        /// ("UI/Images/AuraLogo.bmp"), or icon, an icon key ("32-folder.bmp"); null for neither.
         /// </summary>
         private static Bitmap ImageAttr(NanoXMLNode element, AppLayout layout)
         {
             string src = Attr(element, "src");
             string icon = Attr(element, "icon");
 
-            if ((src == null) == (icon == null))
+            if (src != null && icon != null)
             {
-                throw layout.Error("an <Image> has either a src or an icon attribute.");
+                throw layout.Error("an <Image> has a src or an icon attribute, not both.");
+            }
+
+            // Neither: empty until the app's code loads an image (image:load in a package).
+            if (src == null && icon == null)
+            {
+                return null;
             }
 
             if (icon != null)

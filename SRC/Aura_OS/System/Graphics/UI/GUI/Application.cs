@@ -360,6 +360,25 @@ namespace Aura_OS.System.Graphics.UI.GUI
         }
 
         /// <summary>
+        /// Resizes the window of a layout app to its elements (AppLayout.MeasureWindow): at least as
+        /// wide as its title, at most the room the screen has right of and under the window.
+        /// </summary>
+        public void FitToLayout()
+        {
+            int width;
+            int height;
+            Layout.MeasureWindow(out width, out height);
+
+            // The title starts 8 pixels in; the minimize and close buttons take the last 38.
+            width = Math.Max(width, Window.Name.Length * Kernel.font.Width + 50);
+
+            width = Math.Min(width, Math.Min((int)Kernel.ScreenWidth - Window.X, Component.MaxSize));
+            height = Math.Min(height, Math.Min((int)Kernel.ScreenHeight - Taskbar.taskbarHeight - Window.Y, Component.MaxSize));
+
+            ResizeWindow(width, height);
+        }
+
+        /// <summary>
         /// The window's 3 pixel frame around the content, in window coordinates: a press there
         /// resizes the window from that side.
         /// </summary>

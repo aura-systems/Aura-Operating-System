@@ -430,9 +430,14 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
             return x >= AbsoluteX && x <= AbsoluteX + Width && y >= AbsoluteY && y <= AbsoluteY + Height;
         }
 
+        /// <summary>
+        /// The largest width or height Resize accepts.
+        /// </summary>
+        public const int MaxSize = 999;
+
         public virtual void Resize(int width, int height)
         {
-            if (width <= 0 || width >= 1000 || height <= 0 || height >= 1000)
+            if (width <= 0 || width > MaxSize || height <= 0 || height > MaxSize)
             {
                 return;
             }

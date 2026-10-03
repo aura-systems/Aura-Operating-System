@@ -476,6 +476,9 @@ namespace Aura_OS.System.Processing.Lua
                 case "onResize":
                     lua.PushCSharpFunction(AppOnResize);
                     return 1;
+                case "fit":
+                    lua.PushCSharpFunction(AppFit);
+                    return 1;
                 case "title":
                     return Text(lua, app.Window.Name);
             }
@@ -572,6 +575,17 @@ namespace Aura_OS.System.Processing.Lua
             return 0;
         }
 
+        /// <summary>
+        /// app:fit(): resizes the window to its elements, as wide as its title at least, and no larger
+        /// than the screen has room for.
+        /// </summary>
+        private static int AppFit(ILuaState lua)
+        {
+            PackageApp app = (PackageApp)lua.L_CheckUData(1, AppType);
+            app.FitToLayout();
+            return 0;
+        }
+
         #endregion
 
         #region Controls
@@ -613,6 +627,13 @@ namespace Aura_OS.System.Processing.Lua
                     if (component is UIConsole)
                     {
                         lua.PushCSharpFunction(ConsoleMethod(key));
+                        return 1;
+                    }
+                    break;
+                case "load":
+                    if (component is Picture)
+                    {
+                        lua.PushCSharpFunction(ImageLoad);
                         return 1;
                     }
                     break;
@@ -868,6 +889,44 @@ namespace Aura_OS.System.Processing.Lua
             component.MarkDirty();
             control.App.MarkDirty();
             return 0;
+        }
+
+        /// <summary>
+        /// image:load(path): shows that BMP file in an Image control, which takes the picture's size;
+        /// true, or false and why (no such file, a BMP the gen3 loader does not read).
+        /// </summary>
+        private static int ImageLoad(ILuaState lua)
+        {
+            Control control = (Control)lua.L_CheckUData(1, ControlType);
+            Picture picture = control.Component as Picture;
+
+            if (picture == null)
+            {
+                return LuaObject.Error(lua, "'" + control.Id + "' is not an Image");
+            }
+
+            string path = AuraPath.Resolve(LuaObject.CheckText(lua, 2));
+            Bitmap bitmap = null;
+            string error = null;
+
+            try
+            {
+                bitmap = ImageUtils.LoadBmp(File.ReadAllBytes(path));
+            }
+            catch (Exception ex)
+            {
+                error = ex.Message;
+            }
+
+            if (error == null)
+            {
+                picture.Image = bitmap;
+                control.App.MarkDirty();
+            }
+
+            lua.PushBoolean(error == null);
+            LuaObject.PushText(lua, error);
+            return 2;
         }
 
         /// <summary>

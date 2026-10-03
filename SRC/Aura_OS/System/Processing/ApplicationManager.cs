@@ -8,6 +8,7 @@ using Aura_OS.System.Graphics.UI.GUI;
 using Aura_OS.System.Processing.Applications;
 using Aura_OS.System.Processing.Applications.Emulators.GameBoyEmu;
 using Aura_OS.System.Processing.Processes;
+using Aura_OS.System.Utils;
 using Cosmos.Kernel.System.Graphics;
 using System;
 using System.Collections.Generic;
@@ -254,13 +255,10 @@ namespace Aura_OS.System.Processing
                 string name = fileName;
                 Bitmap bitmap;
 
-                // GEN3-GAP(bmp): the gen3 BMP loader throws on top-down and < 24 bpp files (BI_BITFIELDS
-                // masks are ignored). CheckBmpHeader rejects the headers it cannot survive at all.
+                // GEN3-GAP(bmp): the gen3 BMP loader rejects top-down and < 24 bpp files (see LoadBmp).
                 try
                 {
-                    byte[] bytes = File.ReadAllBytes(path);
-                    CheckBmpHeader(bytes);
-                    bitmap = new Bitmap(bytes);
+                    bitmap = ImageUtils.LoadBmp(File.ReadAllBytes(path));
                 }
                 catch (Exception ex)
                 {
@@ -325,27 +323,6 @@ namespace Aura_OS.System.Processing
         private static void ReportOpenError(string path, Exception ex)
         {
             Logs.DoOSLog("[Error] Cannot open '" + path + "': " + ex.Message);
-        }
-
-        /// <summary>
-        /// Throws for a BMP header the gen3 loader cannot survive: it divides by the height (a #DE
-        /// halts the kernel) and allocates Width * Height pixels before reading any pixel data.
-        /// </summary>
-        private static void CheckBmpHeader(byte[] bytes)
-        {
-            if (bytes == null || bytes.Length < 54)
-            {
-                throw new InvalidDataException("The file is too small to be a BMP image.");
-            }
-
-            int width = BitConverter.ToInt32(bytes, 18);
-            int height = BitConverter.ToInt32(bytes, 22);
-
-            // Only 24 and 32 bpp are supported, so every pixel takes at least 3 bytes of the file.
-            if (width <= 0 || height <= 0 || (long)width * height * 3 > bytes.Length)
-            {
-                throw new InvalidDataException("Unsupported BMP size " + width + "x" + height + ".");
-            }
         }
 
         public Application GetApplicationByPid(uint pid)
