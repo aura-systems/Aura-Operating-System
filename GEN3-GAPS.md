@@ -775,10 +775,14 @@ exception path, C8 dispose everything.
   - There is no cancellation hook: `SetHook` is internal, only Lua's
     `debug.sethook` reaches it.
   - On `ILuaState` a Lua string is its UTF-8 bytes, one character each.
+  - `io` reads a file one `ReadByte` at a time from a `FileStream` opened with
+    `bufferSize: 1`: each byte is a call into the VFS.
 - **Aura workaround:** `package.preload`, closures, an `os.getenv` override,
-  `LuaText.Encode`/`Decode` wherever a C# function takes or gives text.
-- **Upstream ask:** a loader hook, a host accessor, an env `Func`, and a
-  public `SetHook`.
+  `LuaText.Encode`/`Decode` wherever a C# function takes or gives text, and
+  `aura.fs.readText`/`writeText` (`File.ReadAllText`/`WriteAllText`) for whole
+  files.
+- **Upstream ask:** a loader hook, a host accessor, an env `Func`, a
+  public `SetHook`, and reads buffered like writes.
 - **Source:** 07.
 
 ## Aura-side (not Cosmos)

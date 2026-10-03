@@ -362,7 +362,61 @@ namespace Aura_OS.System.Processing.Lua
                 .Property("currentDirectory", lua => Push(lua, Kernel.CurrentDirectory))
                 // resolve(path): absolute, from the current directory; gen2 paths (0:\Users) are converted.
                 .Function("resolve", lua => Push(lua, AuraPath.Resolve(LuaObject.CheckText(lua, 1))))
-                .Function("fileExists", lua => Push(lua, File.Exists(LuaObject.CheckText(lua, 1))));
+                .Function("fileExists", lua => Push(lua, File.Exists(AuraPath.Resolve(LuaObject.CheckText(lua, 1)))))
+                .Function("readText", ReadText)
+                .Function("writeText", WriteText);
+        }
+
+        /// <summary>
+        /// aura.fs.readText(path): the whole file as text (UTF-8, without its BOM), or nil and why.
+        /// GEN3-GAP(lua-host): io's read takes the file a byte at a time, through an unbuffered FileStream.
+        /// </summary>
+        private static int ReadText(ILuaState lua)
+        {
+            string path = AuraPath.Resolve(LuaObject.CheckText(lua, 1));
+            string text = null;
+            string error = null;
+
+            try
+            {
+                text = File.ReadAllText(path);
+            }
+            catch (Exception ex)
+            {
+                error = ex.Message;
+            }
+
+            if (error != null)
+            {
+                lua.PushNil();
+                LuaObject.PushText(lua, error);
+                return 2;
+            }
+
+            return Push(lua, text);
+        }
+
+        /// <summary>
+        /// aura.fs.writeText(path, text): replaces the file with the text (UTF-8), true, or false and why.
+        /// </summary>
+        private static int WriteText(ILuaState lua)
+        {
+            string path = AuraPath.Resolve(LuaObject.CheckText(lua, 1));
+            string text = LuaObject.CheckText(lua, 2);
+            string error = null;
+
+            try
+            {
+                File.WriteAllText(path, text);
+            }
+            catch (Exception ex)
+            {
+                error = ex.Message;
+            }
+
+            lua.PushBoolean(error == null);
+            LuaObject.PushText(lua, error);
+            return 2;
         }
 
         /// <summary>

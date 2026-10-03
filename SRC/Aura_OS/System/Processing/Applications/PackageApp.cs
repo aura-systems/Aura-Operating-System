@@ -58,9 +58,10 @@ namespace Aura_OS.System.Processing.Applications
         // A handler called os.exit: the app closes after its update.
         private bool _exited;
 
+        /// <param name="args">The main file's arguments (arg[1]... and ...), as a file to open; null for none.</param>
         /// <exception cref="InvalidDataException">The layout file is wrong.</exception>
         /// <exception cref="InvalidOperationException">The main file failed.</exception>
-        public PackageApp(Package package, int x = 0, int y = 0) : base(package.LoadLayout(), x, y)
+        public PackageApp(Package package, int x = 0, int y = 0, List<string> args = null) : base(package.LoadLayout(), x, y)
         {
             Package = package;
 
@@ -71,7 +72,7 @@ namespace Aura_OS.System.Processing.Applications
                 _lua = AuraLua.Create();
 
                 LuaPackage.Load(_lua, package, this);
-                LuaPackage.RunMain(_lua, package, new List<string>());
+                LuaPackage.RunMain(_lua, package, args ?? new List<string>());
             }
             catch (Exception ex)
             {

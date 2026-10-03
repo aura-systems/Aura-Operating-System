@@ -90,7 +90,8 @@ namespace Aura_OS.System.Processing.Interpreter.Commands.Processing
         }
 
         /// <summary>
-        /// An app's package opens its window; a console program's runs here until it returns.
+        /// An app's package opens its window; a console program's runs here until it returns. Both get
+        /// the arguments.
         /// </summary>
         private ReturnInfo RunPackage(Package package, List<string> args)
         {
@@ -98,7 +99,7 @@ namespace Aura_OS.System.Processing.Interpreter.Commands.Processing
             {
                 if (package.IsApp)
                 {
-                    Kernel.ApplicationManager.StartPackage(package);
+                    Kernel.ApplicationManager.StartPackage(package, args);
                 }
                 else
                 {

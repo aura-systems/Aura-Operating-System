@@ -57,6 +57,11 @@ namespace Aura_OS.System.Processing
         public bool IsApp => Layout != null;
 
         /// <summary>
+        /// False for an app that is not in the start menu (menu="false"): one opened with a file, as the Editor.
+        /// </summary>
+        public bool InMenu { get; private set; }
+
+        /// <summary>
         /// True for a package built into the kernel, which cannot be removed.
         /// </summary>
         public bool BuiltIn { get; internal set; }
@@ -189,6 +194,15 @@ namespace Aura_OS.System.Processing
             Description = LayoutLoader.Attr(root, "description") ?? "";
             Main = Normalize(LayoutLoader.Attr(root, "main") ?? DefaultMain);
             Layout = LayoutLoader.Attr(root, "layout");
+
+            string menu = LayoutLoader.Attr(root, "menu");
+
+            if (menu != null && menu != "true" && menu != "false")
+            {
+                throw new InvalidDataException(ManifestFile + ": menu must be true or false, not '" + menu + "'.");
+            }
+
+            InMenu = menu != "false";
 
             if (!Main.EndsWith(".lua", StringComparison.OrdinalIgnoreCase) || !Files.ContainsKey(Main))
             {

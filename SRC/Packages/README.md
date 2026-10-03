@@ -33,10 +33,12 @@ To build one by hand, zip the folder's contents: `cd SystemInfo && zip -r ../Sys
 | `version`, `author`, `description` | Shown by the package manager. |
 | `main` | Lua file run when the program starts, `main.lua` by default. |
 | `layout` | An app's layout file ([Layout README](../Aura_OS/System/Graphics/UI/GUI/Layout/README.md)). Without it the package is a console program. |
+| `menu` | `false` keeps an app out of the start menu: one that needs a file to open, as the Editor. `true` by default. |
 
 **An app** (`layout` given) is in the start menu, and `run` opens its window. Its main file runs once
 when the window opens: it fills the controls and gives the code of the layout's events, which then run
-on the UI thread. Keep them short; the desktop waits for them. An `Image`'s `src` is a file of the
+on the UI thread. Keep them short; the desktop waits for them. `arg[1]`... and `...` are the arguments
+of `run` (`run Editor notes.txt`), or the file the app was opened with. An `Image`'s `src` is a file of the
 package, or else one of the kernel's images (`UI/Images/AuraLogo.bmp`).
 
 **A console program** runs in the Terminal that started it, until its main file returns. `arg[1]`... and
@@ -175,13 +177,16 @@ Each read gives the current value.
 
 ### aura.fs
 
-The files themselves are read and written with Lua's `io` library.
+A relative path starts from the current directory, for these functions and for Lua's `io` library. `io`
+reads a file a byte at a time: `readText` is faster for a whole file.
 
 | | |
 |---|---|
 | `aura.fs.currentDirectory` | The shell's current directory (`cd`), ending with `/`. |
 | `aura.fs.resolve(path)` | The absolute path, from the current directory; gen2 paths (`0:\Users`) are converted. |
 | `aura.fs.fileExists(path)` | True when that file exists. |
+| `aura.fs.readText(path)` | The whole file as text (UTF-8, without its BOM), or `nil` and why. |
+| `aura.fs.writeText(path, text)` | Replaces the file with the text (UTF-8), creating it: `true`, or `false` and why. |
 
 ### aura.shell
 

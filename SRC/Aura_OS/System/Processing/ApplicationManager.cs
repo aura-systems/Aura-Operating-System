@@ -91,7 +91,7 @@ namespace Aura_OS.System.Processing
             // Package apps: built in (SRC/Packages) or installed in Programs/.
             foreach (Package package in Kernel.PackageManager.Packages)
             {
-                if (package.IsApp)
+                if (package.IsApp && package.InMenu)
                 {
                     RegisterApplication(new ApplicationConfig(package, 40, 40));
                 }
@@ -138,17 +138,19 @@ namespace Aura_OS.System.Processing
         /// <summary>
         /// Opens a package app's window.
         /// </summary>
+        /// <param name="args">Its main file's arguments, null for none.</param>
         /// <exception cref="InvalidOperationException">Its layout or main file failed.</exception>
-        public void StartPackage(Package package)
+        public void StartPackage(Package package, List<string> args = null)
         {
-            Show(new PackageApp(package, 40, 40));
+            Show(new PackageApp(package, 40, 40, args));
         }
 
         /// <summary>
         /// Opens the window of the package app with that name ("Terminal"). A missing or failing
         /// package is logged.
         /// </summary>
-        public void StartPackage(string name)
+        /// <param name="args">Its main file's arguments, null for none.</param>
+        public void StartPackage(string name, List<string> args = null)
         {
             Package package = Kernel.PackageManager.Find(name);
 
@@ -158,7 +160,19 @@ namespace Aura_OS.System.Processing
                 return;
             }
 
-            StartApplication(new ApplicationConfig(package, 40, 40));
+            PackageApp app;
+
+            try
+            {
+                app = new PackageApp(package, 40, 40, args);
+            }
+            catch (Exception ex)
+            {
+                Logs.DoOSLog("[Error] Cannot start " + name + ": " + ex.Message);
+                return;
+            }
+
+            Show(app);
         }
 
         /// <summary>
