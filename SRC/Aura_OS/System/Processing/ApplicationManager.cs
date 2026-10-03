@@ -95,6 +95,22 @@ namespace Aura_OS.System.Processing
             }
         }
 
+        /// <summary>
+        /// Registers the package apps again and rebuilds the start menu, after a package was added,
+        /// upgraded or removed.
+        /// </summary>
+        public void ReloadApplications()
+        {
+            ApplicationTemplates.Clear();
+            LoadApplications();
+
+            // Null until the desktop starts, which builds it from the apps registered then.
+            if (Explorer.StartMenu != null)
+            {
+                Explorer.RebuildStartMenu();
+            }
+        }
+
         public void RegisterApplication(ApplicationConfig config)
         {
             ApplicationTemplates.Add(config);

@@ -238,4 +238,3 @@ reads a file a byte at a time: `readText` is faster for a whole file.
 - A handler that never returns (`while true do end`) freezes the desktop: nothing stops it yet (the
   interpreter's hook is not public, see `lua-host` in GEN3-GAPS.md).
 - Packages are not signed: Aura installs what the repository serves.
-- An app added with `pkg /add` opens with `run`, and shows in the start menu after a reboot.

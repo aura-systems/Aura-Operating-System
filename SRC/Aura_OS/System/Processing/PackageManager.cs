@@ -206,7 +206,9 @@ namespace Aura_OS.System.Processing
 
                     if (package.IsApp)
                     {
-                        Console.WriteLine("'run " + package.Name + "' opens it; it is in the start menu after a reboot.");
+                        Console.WriteLine(package.InMenu
+                            ? "The start menu or 'run " + package.Name + "' opens it."
+                            : "'run " + package.Name + "' opens it.");
                     }
 
                     return;
@@ -234,6 +236,10 @@ namespace Aura_OS.System.Processing
 
             Packages.Remove(package);
 
+            // A download that replaced a built-in package (pkg /add Settings) gives the built-in one back.
+            bool restored = RestoreBuiltIn(package.Name);
+            ReloadApplications();
+
             string path = AuraPaths.ProgramsDir + package.Name + Package.Extension;
 
             if (File.Exists(path))
@@ -249,16 +255,18 @@ namespace Aura_OS.System.Processing
                 }
             }
 
-            Console.WriteLine(package.Name + " removed.");
+            Console.WriteLine(restored ? package.Name + " removed, the built-in one is back." : package.Name + " removed.");
         }
 
         /// <summary>
-        /// Makes the package available (replacing one of the same name) and writes it to Programs/.
+        /// Makes the package available (replacing one of the same name), in the start menu too, and
+        /// writes it to Programs/.
         /// </summary>
         /// <returns>False when there is no Programs folder (live mode): the package is gone after a reboot.</returns>
         private bool Install(Package package)
         {
             Use(package);
+            ReloadApplications();
 
             if (!Directory.Exists(AuraPaths.ProgramsDir))
             {
@@ -279,6 +287,45 @@ namespace Aura_OS.System.Processing
             }
 
             Packages.Add(package);
+        }
+
+        /// <summary>
+        /// Makes the package built into the kernel with that name available again.
+        /// </summary>
+        /// <returns>False when the kernel has none, or it cannot be read.</returns>
+        private bool RestoreBuiltIn(string name)
+        {
+            byte[] data;
+
+            if (!Files.TryGet("Packages/" + name + Package.Extension, out data))
+            {
+                return false;
+            }
+
+            // Not Load, whose CustomConsole messages paint the boot console over the desktop.
+            try
+            {
+                Package package = new Package(data);
+                package.BuiltIn = true;
+                Use(package);
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Shows the apps of the packages as they are now in the start menu.
+        /// </summary>
+        private static void ReloadApplications()
+        {
+            // Null while boot.bat runs: the application manager reads the packages when it starts.
+            if (Kernel.ApplicationManager != null)
+            {
+                Kernel.ApplicationManager.ReloadApplications();
+            }
         }
 
         /// <summary>

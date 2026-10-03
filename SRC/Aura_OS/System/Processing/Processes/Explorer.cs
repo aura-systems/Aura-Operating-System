@@ -79,22 +79,7 @@ namespace Aura_OS.System.Processing.Processes
             Taskbar.Visible = false;
 
             CustomConsole.WriteLineInfo("Starting start menu...");
-            if (Kernel.Installed)
-            {
-                int menuWidth = 168;
-                int menuHeight = 35 * 11;
-                int menuX = 0;
-                int menuY = (int)(Kernel.ScreenHeight - menuHeight - Taskbar.taskbarHeight);
-                StartMenu = new StartMenu(menuX, menuY, menuWidth, menuHeight);
-            }
-            else
-            {
-                int menuWidth = 168;
-                int menuHeight = 35 * 10;
-                int menuX = 0;
-                int menuY = (int)(Kernel.ScreenHeight - menuHeight - Taskbar.taskbarHeight);
-                StartMenu = new StartMenu(menuX, menuY, menuWidth, menuHeight);
-            }
+            StartMenu = CreateStartMenu();
 
             if (Kernel.Installed)
             {
@@ -118,6 +103,34 @@ namespace Aura_OS.System.Processing.Processes
                 Taskbar.Visible = true;
                 Login.Hide();
             }
+        }
+
+        /// <summary>
+        /// Builds the start menu again with the apps registered now, open if it was: after a package
+        /// was added, upgraded or removed (ApplicationManager.ReloadApplications).
+        /// </summary>
+        public static void RebuildStartMenu()
+        {
+            StartMenu.Dispose();
+            StartMenu = CreateStartMenu();
+
+            if (_showStartMenu)
+            {
+                ShowStartMenu = true;
+            }
+        }
+
+        /// <summary>
+        /// A hidden start menu with a button per registered app, above the taskbar.
+        /// </summary>
+        private static StartMenu CreateStartMenu()
+        {
+            // Room for 7 apps, then Log Out (installed only), Reboot and Shut Down.
+            int menuWidth = 168;
+            int menuHeight = 35 * (Kernel.Installed ? 11 : 10);
+            int menuX = 0;
+            int menuY = (int)(Kernel.ScreenHeight - menuHeight - Taskbar.taskbarHeight);
+            return new StartMenu(menuX, menuY, menuWidth, menuHeight);
         }
 
         /// <summary>
