@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Package name="MemoryInfo" version="1.0.0" author="Aura Team"
+         description="Memory, page and garbage collector figures, refreshed live."
+         main="main.lua" layout="MemoryInfo.xml" />

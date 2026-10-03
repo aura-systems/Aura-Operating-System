@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Memory information app window. MemoryInfoApp.cs refreshes the values. -->
+<!-- Memory information app window. main.lua refreshes the values. -->
 <Window title="MemoryInfo" width="400" height="300" padding="5,6">
   <Grid columns="auto,*" columnSpacing="16" rowSpacing="2">
     <Row>
