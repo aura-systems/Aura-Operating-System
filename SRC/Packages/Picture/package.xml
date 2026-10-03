@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Package name="Picture" version="1.0.0" author="Aura Team"
+         description="A BMP picture viewer: pic {file}, run Picture {file}, or open a .bmp from the desktop."
+         main="main.lua" layout="Picture.xml" menu="false" />

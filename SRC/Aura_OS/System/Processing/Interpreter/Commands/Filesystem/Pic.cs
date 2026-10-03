@@ -8,10 +8,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using Cosmos.Kernel.System.Graphics;
 using Aura_OS.System.Filesystem;
-using Aura_OS.System.Processing.Applications;
-using Aura_OS.System.Processing.Processes;
 
 namespace Aura_OS.System.Processing.Interpreter.Commands.Filesystem
 {
@@ -35,40 +32,21 @@ namespace Aura_OS.System.Processing.Interpreter.Commands.Filesystem
             try
             {
                 string path = AuraPath.Resolve(arguments[0]);
-                string name = Path.GetFileName(path);
 
                 if (!File.Exists(path))
                 {
                     return new ReturnInfo(this, ReturnCode.ERROR, "This file does not exist.");
                 }
 
-                byte[] bytes = File.ReadAllBytes(path);
+                Package picture = Kernel.PackageManager.Find("Picture");
 
-                // GEN3-GAP(bmp): the gen3 BMP loader rejects top-down, bitfield and < 24 bpp images
-                // with an exception, reported by the catch below.
-                Bitmap bitmap = new Bitmap(bytes);
-
-                if (bitmap.Width <= 0 || bitmap.Height <= 0)
+                if (picture == null || !picture.IsApp)
                 {
-                    return new ReturnInfo(this, ReturnCode.ERROR, "Invalid bitmap.");
+                    return new ReturnInfo(this, ReturnCode.ERROR, "The Picture package is missing.");
                 }
 
-                int width = name.Length * 8 + 50;
-
-                if (width < bitmap.Width)
-                {
-                    width = (int)bitmap.Width + 6;
-                }
-
-                var app = new PictureApp(name, bitmap, width, (int)bitmap.Height + 26, 40, 40);
-                app.MarkFocused();
-                app.Initialize();
-                app.Visible = true;
-
-                Explorer.WindowManager.Applications.Add(app);
-                Kernel.ProcessManager.Start(app);
-
-                Explorer.Taskbar.UpdateApplicationButtons();
+                // Throws for a file it cannot show, reported by the catch below.
+                Kernel.ApplicationManager.StartPackage(picture, new List<string> { path });
 
                 return new ReturnInfo(this, ReturnCode.OK);
             }

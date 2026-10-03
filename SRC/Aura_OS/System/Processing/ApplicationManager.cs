@@ -8,8 +8,6 @@ using Aura_OS.System.Graphics.UI.GUI;
 using Aura_OS.System.Processing.Applications;
 using Aura_OS.System.Processing.Applications.Emulators.GameBoyEmu;
 using Aura_OS.System.Processing.Processes;
-using Aura_OS.System.Utils;
-using Cosmos.Kernel.System.Graphics;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -251,37 +249,7 @@ namespace Aura_OS.System.Processing
 
             if (fileName.EndsWith(".bmp", StringComparison.OrdinalIgnoreCase))
             {
-                string path = Path.Combine(currentPath, fileName);
-                string name = fileName;
-                Bitmap bitmap;
-
-                // GEN3-GAP(bmp): the gen3 BMP loader rejects top-down and < 24 bpp files (see LoadBmp).
-                try
-                {
-                    bitmap = ImageUtils.LoadBmp(File.ReadAllBytes(path));
-                }
-                catch (Exception ex)
-                {
-                    ReportOpenError(path, ex);
-                    return;
-                }
-
-                int width = name.Length * 8 + 50;
-
-                if (width < bitmap.Width)
-                {
-                    width = (int)bitmap.Width + 6;
-                }
-
-                var app = new PictureApp(name, bitmap, width, (int)bitmap.Height + 26, 40, 40);
-                app.Initialize();
-                app.MarkFocused();
-                app.Visible = true;
-
-                Explorer.WindowManager.Applications.Add(app);
-                Kernel.ProcessManager.Start(app);
-
-                Explorer.Taskbar.UpdateApplicationButtons();
+                StartPackage("Picture", new List<string> { Path.Combine(currentPath, fileName) });
             }
             else if (fileName.EndsWith(".gb", StringComparison.OrdinalIgnoreCase))
             {

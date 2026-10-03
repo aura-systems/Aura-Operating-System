@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Picture app window: the picture, the window fitted to it. main.lua loads the BMP file it is opened with. -->
+<Window title="Picture" width="200" height="100">
+  <Image id="image" />
+</Window>
