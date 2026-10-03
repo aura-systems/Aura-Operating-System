@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- System information app window. SystemInfoApp.cs fills the version and checks for updates. -->
+<Window title="SystemInfo" width="450" height="400" padding="0,12" spacing="4">
+  <Label text="Aura Operating System" align="center" />
+  <Label id="version" align="center" />
+
+  <!-- The update check result takes the button's place. -->
+  <Stack height="23">
+    <Button id="checkUpdate" text="Check update" align="center" onClick="checkUpdate" />
+    <Label id="updateStatus" align="center" visible="false" />
+  </Stack>
+
+  <Label text="Created by Alexy DA CRUZ and Valentin CHARBONNIER." align="center" />
+  <Label text="Project: github.com/aura-systems/Aura-Operating-System" align="center" color="green" />
+  <Image src="UI/Images/AuraLogo.bmp" align="center" margin="0,12" />
+
+  <Label text="Kernel: github.com/CosmosOS/Cosmos" align="center" color="green" />
+  <Image src="UI/Images/CosmosLogo.bmp" align="center" margin="0,8,0,0" />
+</Window>
