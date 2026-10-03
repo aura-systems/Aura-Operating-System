@@ -223,6 +223,11 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
         public virtual void Draw(Component component)
         {
             Draw();
+
+            // Blend over the parent's background, not over this component's previous pixels: a
+            // translucent pixel (a logo's shadow, a skin's rounded corner) blended onto itself gets
+            // darker on every redraw.
+            component.RestoreBackground(X, Y, Width, Height);
             component._buffer.DrawCanvas(_buffer, X, Y);
         }
 
@@ -322,6 +327,37 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
             if (_cacheBuffer != null)
             {
                 _buffer.DrawArray(_cacheBuffer.GetBuffer(), 0, 0, Width, Height);
+            }
+        }
+
+        /// <summary>
+        /// Copies that rectangle of the cache buffer (an app window's background, saved without its
+        /// controls) back into the buffer. Nothing without a cache buffer of the current size.
+        /// </summary>
+        private void RestoreBackground(int x, int y, int width, int height)
+        {
+            if (_cacheBuffer == null || _cacheBuffer.Width != Width || _cacheBuffer.Height != Height)
+            {
+                return;
+            }
+
+            int left = Math.Max(0, x);
+            int top = Math.Max(0, y);
+            int right = Math.Min(Width, x + width);
+            int bottom = Math.Min(Height, y + height);
+
+            if (right <= left)
+            {
+                return;
+            }
+
+            int[] cache = _cacheBuffer.GetBuffer();
+            int[] buffer = _buffer.GetBuffer();
+
+            for (int row = top; row < bottom; row++)
+            {
+                int index = row * Width + left;
+                Array.Copy(cache, index, buffer, index, right - left);
             }
         }
 
