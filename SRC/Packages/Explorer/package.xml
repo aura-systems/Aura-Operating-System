@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Package name="Explorer" displayName="File Explorer" version="1.0.0" author="Aura Team"
+         description="Browses the volumes' folders and files: opens, creates, copies, moves, renames and deletes them."
+         main="main.lua" layout="Explorer.xml" />

@@ -454,7 +454,7 @@ namespace Aura_OS.System.Processing.Interpreter.Commands.Filesystem
         /// GEN3-GAP(fat-label): no API reads the volume label, so it comes from the BPB
         /// (11 bytes at 0x2B on FAT12/16, 0x47 on FAT32, present when the boot signature is 0x29).
         /// </summary>
-        private static string DetectFilesystem(Partition partition, out string label)
+        internal static string DetectFilesystem(Partition partition, out string label)
         {
             label = "";
 

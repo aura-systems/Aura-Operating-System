@@ -257,11 +257,20 @@ namespace Aura_OS.System.Processing.Applications
 
             while (_keyHandler != LuaConstants.LUA_NOREF && !_disposed && !_exited && Input.KeyboardManager.TryGetKey(out key))
             {
-                // GEN3-GAP(null-deref): a null event would halt the kernel.
-                if (key != null)
-                {
-                    Call("key", _keyHandler, lua => PushKey(lua, key));
-                }
+                HandleKey(key);
+            }
+        }
+
+        /// <summary>
+        /// A key the app gets, from the keyboard or from the control holding the keys: to the key
+        /// handler, if any.
+        /// </summary>
+        public override void HandleKey(KeyEvent key)
+        {
+            // GEN3-GAP(null-deref): a null event would halt the kernel.
+            if (key != null && _keyHandler != LuaConstants.LUA_NOREF && !_disposed && !_exited)
+            {
+                Call("key", _keyHandler, lua => PushKey(lua, key));
             }
         }
 
@@ -280,7 +289,13 @@ namespace Aura_OS.System.Processing.Applications
             }
 
             char c = key.KeyChar;
-            if (char.IsLetterOrDigit(c) || char.IsPunctuation(c) || char.IsSymbol(c) || c == ' ')
+            if (!(char.IsLetterOrDigit(c) || char.IsPunctuation(c) || char.IsSymbol(c) || c == ' '))
+            {
+                // The layouts type nothing with Ctrl held: the key's letter, for the shortcuts (Ctrl+C).
+                c = LetterOf(key.Key);
+            }
+
+            if (c != '\0')
             {
                 lua.PushString(LuaText.Encode(c.ToString()));
                 lua.SetField(-2, "char");
@@ -296,8 +311,8 @@ namespace Aura_OS.System.Processing.Applications
         }
 
         /// <summary>
-        /// The name of a key that types no character, null for the others. A switch, not
-        /// Enum.ToString: NativeAOT keeps no enum names.
+        /// The name of a key that types no character ("f1" to "f12" too), null for the others. A
+        /// switch, not Enum.ToString: NativeAOT keeps no enum names.
         /// </summary>
         private static string KeyName(ConsoleKeyEx key)
         {
@@ -333,7 +348,39 @@ namespace Aura_OS.System.Processing.Applications
                     return "delete";
             }
 
+            // F1 to F12 follow each other in the enum.
+            if (key >= ConsoleKeyEx.F1 && key <= ConsoleKeyEx.F12)
+            {
+                return "f" + (key - ConsoleKeyEx.F1 + 1);
+            }
+
             return null;
+        }
+
+        // In alphabetical order; the enum has them in keyboard order.
+        private static readonly ConsoleKeyEx[] LetterKeys =
+        {
+            ConsoleKeyEx.A, ConsoleKeyEx.B, ConsoleKeyEx.C, ConsoleKeyEx.D, ConsoleKeyEx.E, ConsoleKeyEx.F,
+            ConsoleKeyEx.G, ConsoleKeyEx.H, ConsoleKeyEx.I, ConsoleKeyEx.J, ConsoleKeyEx.K, ConsoleKeyEx.L,
+            ConsoleKeyEx.M, ConsoleKeyEx.N, ConsoleKeyEx.O, ConsoleKeyEx.P, ConsoleKeyEx.Q, ConsoleKeyEx.R,
+            ConsoleKeyEx.S, ConsoleKeyEx.T, ConsoleKeyEx.U, ConsoleKeyEx.V, ConsoleKeyEx.W, ConsoleKeyEx.X,
+            ConsoleKeyEx.Y, ConsoleKeyEx.Z,
+        };
+
+        /// <summary>
+        /// The lowercase letter of a letter key, '\0' for another key.
+        /// </summary>
+        private static char LetterOf(ConsoleKeyEx key)
+        {
+            for (int i = 0; i < LetterKeys.Length; i++)
+            {
+                if (LetterKeys[i] == key)
+                {
+                    return (char)('a' + i);
+                }
+            }
+
+            return '\0';
         }
 
         /// <summary>

@@ -101,10 +101,10 @@ have, or setting a read-only one, is an error. Their functions are called with a
 | | |
 |---|---|
 | `app:find(id)` | The element with that `id` in the layout file: a control, or a container (`Stack`, `Panel`, `Grid`, `Row`) that has only `id` and `visible`. An unknown id is an error. |
-| `app:on(event, handler)` | Calls `handler()` on the layout's event of that name (`onClick="event"`, `onChange`, `onEnter`). A later call replaces it. |
+| `app:on(event, handler)` | Calls `handler()` on the layout's event of that name (`onClick="event"`, `onChange`, `onEnter`, `onActivate`). A later call replaces it. |
 | `app:every(milliseconds, handler)` | Calls `handler()` every that many milliseconds (the first time one interval from now), until the app closes. A handler that raises an error stops its timer. |
 | `app:after(milliseconds, handler)` | Calls `handler()` once, that many milliseconds from now (0 is fine) and after the window was drawn: what the caller changed shows first. For slow work, a download: say what is going on, then do it here. |
-| `app:onKey(handler)` | Calls `handler(key)` with each key typed while the app is focused: `key.name` for a key that types no character (`enter`, `backspace`, `tab`, `escape`, `up`, `down`, `left`, `right`, `home`, `end`, `pageUp`, `pageDown`, `insert`, `delete`), `key.char` for one that does (UTF-8), and `key.ctrl`, `key.shift`, `key.alt`. A later call replaces it. |
+| `app:onKey(handler)` | Calls `handler(key)` with each key typed while the app is focused, but those a control with the keys uses (a TextBox all of them, a ListBox its moves and Enter): `key.name` for a key that types no character (`enter`, `backspace`, `tab`, `escape`, `up`, `down`, `left`, `right`, `home`, `end`, `pageUp`, `pageDown`, `insert`, `delete`, `f1` to `f12`), `key.char` for one that does (UTF-8; with Ctrl held, the key's letter: `"c"` for Ctrl+C), and `key.ctrl`, `key.shift`, `key.alt`. A later call replaces it. |
 | `app:onResize(handler)` | Calls `handler()` once the window was resized and its elements placed again. A later call replaces it. |
 | `app:fit()` | Resizes the window to its elements, at least as wide as its title, and no larger than the room the screen has right of and under it (and 999 pixels). |
 | `app.title` | The window title, also the taskbar name. |
@@ -127,7 +127,7 @@ error. A change shows on the next frame.
 | `color` | Label, Button, Checkbox | Text color: `"#RRGGBB"`, `"#AARRGGBB"` or a name (`red`, `green`, `blue`, `black`, `white`, `gray`, `darkgray`, `lightgray`, `transparent`). Reads as `"#RRGGBB"`. |
 | `checked` | Checkbox | |
 | `value` | Slider | 0 to 255. |
-| `items` | DropDown, ListBox | A list of strings. Setting it clears the selection. |
+| `items` | DropDown, ListBox | A list of strings. A ListBox's item can also be `{ text = , icon = }`, with an icon name (`"16-folder.bmp"`, 16 x 16): the texts then start after the icons. Setting it clears the selection. Reads as the texts. |
 | `selectedIndex` | DropDown, ListBox | From 0, as in the layout file; -1 for none. A ListBox scrolls to it. |
 | `selectedItem` | DropDown, ListBox | Read only, `nil` for none. |
 | `title`, `message` | Dialog | |
@@ -135,6 +135,9 @@ error. A change shows on the next frame.
 | `foreground` | Console | Color of the text written next: `black`, `darkBlue`, `darkGreen`, `darkCyan`, `darkRed`, `darkMagenta`, `darkYellow`, `gray`, `darkGray`, `blue`, `green`, `cyan`, `red`, `magenta`, `yellow`, `white`. |
 | `input` | Console | The line being typed, drawn before the cursor and not written yet; the cursor moves with it. Emptied when the console is. |
 | `inputHidden` | Console | Hides the input line and the cursor (while a command runs). |
+
+A TextBox and a ListBox have a method: `control:focus()` gives them the keys, as a click on them does
+(a single line TextBox puts its cursor at the end).
 
 An Image has a method: `image:load(path)` shows that BMP file (24 or 32 bits per pixel, bottom-up), and
 the Image takes its size: `true`, or `false` and why. An `<Image>` without `src` or `icon` starts empty.
@@ -165,6 +168,7 @@ the top) and `console:scrollToEnd()`. A new size empties it.
 |---|---|
 | `aura.user.name` | The logged in user's name, read and set. |
 | `aura.user.level` | The sign of the user's level, as the prompt shows it. |
+| `aura.user.directory` | The user's folder (`cd ~`), `nil` when there is none (live mode). |
 
 ### aura.network
 
@@ -204,6 +208,8 @@ Each read gives the current value.
 | `aura.desktop.setWallpaper(path)` | Shows that BMP. An error when the file cannot be loaded: call it with `pcall`. A missing file shows the default wallpaper. |
 | `aura.desktop.windowsAlpha`, `aura.desktop.taskbarAlpha` | Opacity of the windows and the taskbar, 0 to 255, read and set. |
 | `aura.desktop.guiDebug` | The window manager's debug drawing, read and set. |
+| `aura.desktop.open(path)` | Opens a folder in the File Explorer, a file in its app (a BMP in Picture, any other file in the Editor), as the desktop does: `true`, or `false` and why. |
+| `aura.desktop.start(name, ...)` | Opens the app package with that name (`"Terminal"`), with those arguments: `true`, or `false` and why. |
 
 ### aura.theme
 
@@ -227,11 +233,19 @@ reads a file a byte at a time: `readText` is faster for a whole file.
 
 | | |
 |---|---|
-| `aura.fs.currentDirectory` | The shell's current directory (`cd`), ending with `/`. |
+| `aura.fs.currentDirectory` | The shell's current directory (`cd`), ending with `/`. Setting it is a `cd`: an error for a folder that does not exist. |
 | `aura.fs.resolve(path)` | The absolute path, from the current directory; gen2 paths (`0:\Users`) are converted. |
-| `aura.fs.fileExists(path)` | True when that file exists. |
+| `aura.fs.fileExists(path)`, `aura.fs.directoryExists(path)` | True when that file, or that folder, exists. `/` and the volumes (`/0/`) are folders. |
 | `aura.fs.readText(path)` | The whole file as text (UTF-8, without its BOM), or `nil` and why. |
 | `aura.fs.writeText(path, text)` | Replaces the file with the text (UTF-8), creating it: `true`, or `false` and why. |
+| `aura.fs.list(path)` | The entries of a folder, in no order: a list of `{ name = , directory = , size = }` (bytes, 0 for a folder); or `nil` and why. At `/`, the volumes. FAT keeps no dates. |
+| `aura.fs.volumes()` | The mounted volumes: a list of `{ path = "/0/", filesystem = "FAT32", label = }` (`""` for none). |
+| `aura.fs.space(path)` | The free and total bytes of the volume holding the path, `nil` for none. It reads the volume's whole FAT: keep the result. |
+| `aura.fs.createDirectory(path)` | Creates the folder and its missing parents: `true`, or `false` and why. |
+| `aura.fs.delete(path)` | Deletes a file, or a folder and everything in it (not a volume): `true`, or `false` and why. |
+| `aura.fs.copy(source, destination)` | Copies a file, or a folder and everything in it, to `destination`, a path that does not exist yet: `true`, or `false` and why. |
+| `aura.fs.move(source, destination)` | Moves or renames a file or a folder to `destination`, a path that does not exist yet (a change of case only is fine), to another volume too: `true`, or `false` and why. |
+| `aura.fs.clipboard` | The path the desktop's and the File Explorer's Copy keep, `nil` for none; read and set. |
 
 ### aura.shell
 

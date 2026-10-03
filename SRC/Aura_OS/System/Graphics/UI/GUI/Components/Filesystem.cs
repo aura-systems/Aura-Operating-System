@@ -243,17 +243,7 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
         {
             if (OpenNewWindow)
             {
-                /*
-                ExplorerApp app = new(AuraPath.AsDirectory(Path.Combine(CurrentPath, folderName)), 500, 400, 40, 40);
-                app.Initialize();
-                app.MarkFocused();
-                app.Visible = true;
-
-                Explorer.WindowManager.Applications.Add(app);
-                Kernel.ProcessManager.Start(app);
-
-                Explorer.Taskbar.UpdateApplicationButtons();
-                */
+                Kernel.ApplicationManager.OpenFolder(AuraPath.AsDirectory(Path.Combine(CurrentPath, folderName)));
             }
             else
             {

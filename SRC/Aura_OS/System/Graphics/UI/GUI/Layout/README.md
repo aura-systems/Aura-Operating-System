@@ -77,7 +77,7 @@ The root element. Its elements are stacked top to bottom.
 | `Checkbox` | `text`, `color`, `checked` | `onChange` |
 | `Slider` | `value` (0 to 255) | `onChange` |
 | `DropDown` | `selectedIndex`; `<Item>text</Item>` children | `onChange` |
-| `ListBox` | `selectedIndex`; `<Item>text</Item>` children; default 200 x 150. A click selects a row and gives the list the keys: the up and down arrows, Home, End, Page Up and Page Down then move the selection, each move an `onChange`; a vertical scroll bar on the right once the rows outgrow it; a longer row is cut | `onChange` |
+| `ListBox` | `selectedIndex`; `<Item>text</Item>` children, `<Item icon="16-folder.bmp">` for a 16 x 16 icon before the text; default 200 x 150. A click selects a row and gives the list the keys: the up and down arrows, Home, End, Page Up and Page Down then move the selection, each move an `onChange`; Enter, or a double click on a row, is an `onActivate`; the other keys go to the app (`Application.HandleKey`). A vertical scroll bar on the right once the rows outgrow it; a longer row is cut | `onChange`, `onActivate` |
 | `Canvas` | `background` (color, default black); default 200 x 150. The app's code draws on it, and a new size clears it | |
 | `Console` | `cursor` (draws the cursor and the line being typed, `Console.Input`), `scrollBar` (a vertical scroll bar on the right once lines scrolled off the top; its width is kept from the start); default 400 x 300 | |
 | `Dialog` | `title`, `message`, `state="information|error"`; `<Button text onClick>` children | |

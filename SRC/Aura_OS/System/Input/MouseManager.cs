@@ -248,7 +248,12 @@ namespace Aura_OS.System.Input
         /// </summary>
         private void HandleLeftDoubleClick()
         {
-            
+            Component topComponent = DetermineTopComponent();
+
+            if (topComponent != null)
+            {
+                topComponent.HandleLeftDoubleClick();
+            }
         }
 
         /// <summary>

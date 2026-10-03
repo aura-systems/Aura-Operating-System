@@ -268,6 +268,19 @@ namespace Aura_OS.System.Processing
             }
         }
 
+        /// <summary>
+        /// Opens a folder in a File Explorer window (the Explorer package).
+        /// </summary>
+        public void OpenFolder(string path)
+        {
+            if (string.IsNullOrEmpty(path))
+            {
+                return;
+            }
+
+            StartPackage("Explorer", new List<string> { path });
+        }
+
         public Application GetApplicationByPid(uint pid)
         {
             return Kernel.ProcessManager.GetProcessByPid(pid) as Application;

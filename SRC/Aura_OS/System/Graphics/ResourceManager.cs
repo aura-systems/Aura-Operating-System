@@ -62,6 +62,16 @@ namespace Aura_OS.System.Graphics
         }
 
         /// <summary>
+        /// The icon with that name, false when there is none: for a name a package gives, which must
+        /// not stop the kernel as GetIcon does.
+        /// </summary>
+        public bool TryGetIcon(string key, out Bitmap icon)
+        {
+            icon = null;
+            return key != null && _icons != null && _icons.TryGetValue(key, out icon);
+        }
+
+        /// <summary>
         /// Returns the name of the manager.
         /// </summary>
         /// <returns>The name of the manager.</returns>

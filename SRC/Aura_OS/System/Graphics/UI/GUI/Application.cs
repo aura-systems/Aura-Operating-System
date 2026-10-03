@@ -7,6 +7,7 @@
 
 using System;
 using System.Drawing;
+using Cosmos.Kernel.System.Keyboard;
 using Cosmos.Kernel.System.Mouse;
 using Aura_OS.Processing;
 using Aura_OS.System.Graphics.UI.GUI.Components;
@@ -188,6 +189,14 @@ namespace Aura_OS.System.Graphics.UI.GUI
             {
                 Window.TopBar.HandleRightClick();
             }
+        }
+
+        /// <summary>
+        /// A key typed in the app that the control holding the keys does not use (a list box passes
+        /// on Delete, Backspace, the letters...). Dropped by default.
+        /// </summary>
+        public virtual void HandleKey(KeyEvent key)
+        {
         }
 
         public override void Update()

@@ -330,6 +330,22 @@ namespace Aura_OS
             LoadImage("UI/Images/Icons/16/drive.bmp", "16");
             LoadImage("UI/Images/Icons/16/drive-readonly.bmp", "16");
             LoadImage("UI/Images/Icons/16/settings.bmp", "16");
+            // The File Explorer's (Chicago95 icon theme).
+            LoadImage("UI/Images/Icons/16/computer.bmp", "16");
+            LoadImage("UI/Images/Icons/16/home.bmp", "16");
+            LoadImage("UI/Images/Icons/16/folder.bmp", "16");
+            LoadImage("UI/Images/Icons/16/file.bmp", "16");
+            LoadImage("UI/Images/Icons/16/image.bmp", "16");
+            LoadImage("UI/Images/Icons/16/script.bmp", "16");
+            LoadImage("UI/Images/Icons/16/package.bmp", "16");
+            LoadImage("UI/Images/Icons/16/back.bmp", "16");
+            LoadImage("UI/Images/Icons/16/refresh.bmp", "16");
+            LoadImage("UI/Images/Icons/16/new-folder.bmp", "16");
+            LoadImage("UI/Images/Icons/16/new-file.bmp", "16");
+            LoadImage("UI/Images/Icons/16/copy.bmp", "16");
+            LoadImage("UI/Images/Icons/16/cut.bmp", "16");
+            LoadImage("UI/Images/Icons/16/paste.bmp", "16");
+            LoadImage("UI/Images/Icons/16/delete.bmp", "16");
             LoadImage("UI/Images/Icons/24/program.bmp", "24");
             LoadImage("UI/Images/Icons/24/reboot.bmp", "24");
             LoadImage("UI/Images/Icons/24/logout.bmp", "24");

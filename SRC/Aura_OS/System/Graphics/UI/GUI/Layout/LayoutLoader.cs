@@ -256,11 +256,20 @@ namespace Aura_OS.System.Graphics.UI.GUI.Layout
                             throw layout.Error("<ListBox> holds <Item> elements, not <" + item.Name + ">.");
                         }
 
-                        listBox.AddItem(item.Value ?? "");
+                        string itemIcon = Attr(item, "icon");
+                        Bitmap icon = null;
+
+                        if (itemIcon != null && !Kernel.ResourceManager.TryGetIcon(itemIcon, out icon))
+                        {
+                            throw layout.Error("no icon is named '" + itemIcon + "'.");
+                        }
+
+                        listBox.AddItem(item.Value ?? "", icon);
                     }
 
                     listBox.SelectedIndex = IntAttr(element, "selectedIndex", -1, layout);
                     listBox.SelectionChanged = layout.Handler(Attr(element, "onChange"));
+                    listBox.Activated = layout.Handler(Attr(element, "onActivate"));
                     component = listBox;
                     alignment = Alignment.Stretch;
                     break;

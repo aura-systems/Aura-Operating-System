@@ -68,7 +68,7 @@ namespace Aura_OS.System.Graphics.UI.GUI
                 {
                     icon = Kernel.ResourceManager.GetIcon("24-terminal.bmp");
                 }
-                else if (applicationConfig.Name.StartsWith("Explorer"))
+                else if (applicationConfig.Name.EndsWith("Explorer"))
                 {
                     icon = Kernel.ResourceManager.GetIcon("24-explorer.bmp");
                 }

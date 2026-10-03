@@ -111,6 +111,13 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
                 _text = value ?? "";
                 _lines = null;
                 _longestLine = -1;
+
+                // A shorter text set while the box has the keys (an app's code on Enter): the next key
+                // types at its end rather than past it.
+                if (!Multiline && _cursorPosition > _text.Length)
+                {
+                    _cursorPosition = _text.Length;
+                }
             }
         }
 
@@ -817,6 +824,30 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
             _isSelected = selected;
             _cursorVisible = selected;
             MarkDirty();
+        }
+
+        /// <summary>
+        /// Gives the text box the keys, as a click on it does; a single line one puts its cursor at the
+        /// end of its text.
+        /// </summary>
+        public void Focus()
+        {
+            TextBox focused = Kernel.MouseManager.FocusedComponent as TextBox;
+
+            if (focused != null && focused != this)
+            {
+                focused.SetSelected(false);
+            }
+
+            SetSelected(true);
+            Kernel.MouseManager.FocusedComponent = this;
+            _preferredColumn = -1;
+
+            if (!Multiline)
+            {
+                _cursorPosition = _text.Length;
+                AdjustScrollOffsetToEnd();
+            }
         }
     }
 }

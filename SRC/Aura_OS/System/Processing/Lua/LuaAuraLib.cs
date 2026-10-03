@@ -11,7 +11,9 @@ using System.Globalization;
 using System.IO;
 using Cosmos.Executable.Lua;
 using Cosmos.Kernel.System.Diagnostics;
+using Cosmos.Kernel.HAL.Vfs;
 using Cosmos.Kernel.System.Graphics;
+using Cosmos.Kernel.System.Vfs;
 using Aura_OS.System.Filesystem;
 using Aura_OS.System.Graphics.UI.GUI;
 using Aura_OS.System.Graphics.UI.GUI.Components;
@@ -19,6 +21,7 @@ using Aura_OS.System.Graphics.UI.GUI.Layout;
 using Aura_OS.System.Network;
 using Aura_OS.System.Processing.Applications;
 using Aura_OS.System.Processing.Interpreter;
+using Aura_OS.System.Processing.Interpreter.Commands.Filesystem;
 using Aura_OS.System.Processing.Processes;
 using Aura_OS.System.Users;
 using Aura_OS.System.Utils;
@@ -172,7 +175,9 @@ namespace Aura_OS.System.Processing.Lua
                     return 0;
                 })
                 // The prompt's sign of the user's level.
-                .Property("level", lua => Push(lua, UserLevel.TypeUser ?? ""));
+                .Property("level", lua => Push(lua, UserLevel.TypeUser ?? ""))
+                // The user's folder (cd ~), nil when there is none (live mode).
+                .Property("directory", lua => Text(lua, Kernel.UserDirectory));
         }
 
         private static LuaObject NetworkObject()
@@ -295,7 +300,57 @@ namespace Aura_OS.System.Processing.Lua
                 {
                     Kernel.GuiDebug = lua.ToBoolean(3);
                     return 0;
+                })
+                // open(path): a folder in the File Explorer, a file in its app; true, or false and why.
+                .Function("open", lua =>
+                {
+                    string path = AuraPath.Resolve(LuaObject.CheckText(lua, 1));
+                    return Try(lua, () => Open(path));
+                })
+                // start(name, ...): opens the app package with that name and arguments; true, or false and why.
+                .Function("start", lua =>
+                {
+                    string name = LuaObject.CheckText(lua, 1);
+                    List<string> args = new List<string>();
+
+                    for (int i = 2; i <= lua.GetTop(); i++)
+                    {
+                        // L_ToString pushes the text too (luaL_tolstring)
+                        args.Add(LuaText.Decode(lua.L_ToString(i)));
+                        lua.Pop(1);
+                    }
+
+                    return Try(lua, () =>
+                    {
+                        Package package = Kernel.PackageManager.Find(name);
+
+                        if (package == null || !package.IsApp)
+                        {
+                            throw new InvalidOperationException("No app is named '" + name + "'.");
+                        }
+
+                        Kernel.ApplicationManager.StartPackage(package, args);
+                    });
                 });
+        }
+
+        /// <summary>
+        /// Opens a folder in the File Explorer, a file in its app (ApplicationManager.StartFileApplication).
+        /// </summary>
+        private static void Open(string path)
+        {
+            if (Directory.Exists(path))
+            {
+                Kernel.ApplicationManager.OpenFolder(AuraPath.AsDirectory(path));
+            }
+            else if (File.Exists(path))
+            {
+                Kernel.ApplicationManager.StartFileApplication(Path.GetFileName(path), Path.GetDirectoryName(path));
+            }
+            else
+            {
+                throw new FileNotFoundException("'" + path + "' does not exist.");
+            }
         }
 
         /// <summary>
@@ -360,13 +415,207 @@ namespace Aura_OS.System.Processing.Lua
         private static LuaObject FsObject()
         {
             return new LuaObject("aura.fs")
-                // The shell's current directory (cd), always ending with '/'.
-                .Property("currentDirectory", lua => Push(lua, Kernel.CurrentDirectory))
+                // The shell's current directory (cd), always ending with '/'. Setting it is a cd: an
+                // error for a folder that does not exist.
+                .Property("currentDirectory", lua => Push(lua, Kernel.CurrentDirectory), lua =>
+                {
+                    string error;
+
+                    if (!CurrentPath.Set(LuaObject.CheckText(lua, 3), out error))
+                    {
+                        return LuaObject.Error(lua, error);
+                    }
+
+                    return 0;
+                })
                 // resolve(path): absolute, from the current directory; gen2 paths (0:\Users) are converted.
                 .Function("resolve", lua => Push(lua, AuraPath.Resolve(LuaObject.CheckText(lua, 1))))
                 .Function("fileExists", lua => Push(lua, File.Exists(AuraPath.Resolve(LuaObject.CheckText(lua, 1)))))
+                .Function("directoryExists", lua => Push(lua, Directory.Exists(AuraPath.Resolve(LuaObject.CheckText(lua, 1)))))
                 .Function("readText", ReadText)
-                .Function("writeText", WriteText);
+                .Function("writeText", WriteText)
+                .Function("list", ListDirectory)
+                .Function("volumes", ListVolumes)
+                // space(path): the free and total bytes of the volume holding the path, nil for none.
+                .Function("space", lua =>
+                {
+                    VfsManager.VfsMount mount = Volumes.MountOf(AuraPath.Resolve(LuaObject.CheckText(lua, 1)));
+                    ulong free, total;
+
+                    if (mount == null || !Volumes.TryGetSpace(mount.MountPoint, out free, out total))
+                    {
+                        lua.PushNil();
+                        return 1;
+                    }
+
+                    lua.PushInteger((long)free);
+                    lua.PushInteger((long)total);
+                    return 2;
+                })
+                // createDirectory(path): with its missing parents; true, or false and why.
+                .Function("createDirectory", lua =>
+                {
+                    string path = AuraPath.Resolve(LuaObject.CheckText(lua, 1));
+                    return Try(lua, () =>
+                    {
+                        if (File.Exists(path))
+                        {
+                            throw new IOException("'" + Path.GetFileName(path) + "' is a file.");
+                        }
+
+                        Directory.CreateDirectory(path);
+                    });
+                })
+                // delete(path): a file, or a folder and everything in it; true, or false and why.
+                .Function("delete", lua =>
+                {
+                    string path = AuraPath.Resolve(LuaObject.CheckText(lua, 1));
+                    return Try(lua, () => Entries.Delete(path));
+                })
+                // copy(source, destination): to a path that does not exist yet; true, or false and why.
+                .Function("copy", lua =>
+                {
+                    string source = AuraPath.Resolve(LuaObject.CheckText(lua, 1));
+                    string destination = AuraPath.Resolve(LuaObject.CheckText(lua, 2));
+                    return Try(lua, () => Entries.Copy(source, destination));
+                })
+                // move(source, destination): moves or renames; true, or false and why.
+                .Function("move", lua =>
+                {
+                    string source = AuraPath.Resolve(LuaObject.CheckText(lua, 1));
+                    string destination = AuraPath.Resolve(LuaObject.CheckText(lua, 2));
+                    return Try(lua, () => Entries.Move(source, destination));
+                })
+                // The path the desktop's and the File Explorer's Copy keep, nil for none.
+                .Property("clipboard", lua => Text(lua, Kernel.Clipboard), lua =>
+                {
+                    Kernel.Clipboard = lua.IsNoneOrNil(3) ? null : AuraPath.Resolve(LuaObject.CheckText(lua, 3));
+                    return 0;
+                });
+        }
+
+        /// <summary>
+        /// aura.fs.list(path): the entries of a folder, { name = , directory = , size = } (bytes, 0 for
+        /// a folder), in no order; or nil and why. At "/" they are the volumes.
+        /// </summary>
+        private static int ListDirectory(ILuaState lua)
+        {
+            string path = AuraPath.Resolve(LuaObject.CheckText(lua, 1));
+            string[] directories = null;
+            string[] files = null;
+            string error = null;
+
+            try
+            {
+                if (Directory.Exists(path))
+                {
+                    directories = Directory.GetDirectories(path);
+                    files = Directory.GetFiles(path);
+                }
+                else
+                {
+                    error = File.Exists(path) ? "'" + path + "' is a file." : "The folder '" + path + "' does not exist.";
+                }
+            }
+            catch (Exception ex)
+            {
+                error = ex.Message;
+            }
+
+            if (error != null)
+            {
+                lua.PushNil();
+                LuaObject.PushText(lua, error);
+                return 2;
+            }
+
+            lua.CreateTable(directories.Length + files.Length, 0);
+            int count = 0;
+
+            // Both give full paths.
+            for (int i = 0; i < directories.Length; i++)
+            {
+                PushEntry(lua, Path.GetFileName(directories[i].TrimEnd(AuraPath.Separator)), true, 0);
+                lua.RawSetI(-2, ++count);
+            }
+
+            for (int i = 0; i < files.Length; i++)
+            {
+                PushEntry(lua, Path.GetFileName(files[i]), false, FileSize(files[i]));
+                lua.RawSetI(-2, ++count);
+            }
+
+            return 1;
+        }
+
+        private static void PushEntry(ILuaState lua, string name, bool directory, long size)
+        {
+            lua.CreateTable(0, 3);
+            SetText(lua, "name", name);
+            lua.PushBoolean(directory);
+            lua.SetField(-2, "directory");
+            lua.PushInteger(size);
+            lua.SetField(-2, "size");
+        }
+
+        /// <summary>
+        /// The size of a file in bytes, 0 when unknown. The VFS stat, rather than a FileInfo.
+        /// </summary>
+        private static long FileSize(string fullPath)
+        {
+            VfsStat stat;
+
+            try
+            {
+                return VfsManager.TryStat(fullPath, out stat) ? (long)stat.Size : 0;
+            }
+            catch (Exception)
+            {
+                return 0;
+            }
+        }
+
+        /// <summary>
+        /// aura.fs.volumes(): the mounted volumes, { path = "/0/", filesystem = "FAT32", label = }
+        /// ("" for none), by mount point.
+        /// </summary>
+        private static int ListVolumes(ILuaState lua)
+        {
+            IReadOnlyList<VfsManager.VfsMount> mounts = VfsManager.Mounts;
+            List<VfsManager.VfsMount> sorted = new List<VfsManager.VfsMount>(mounts.Count);
+
+            for (int i = 0; i < mounts.Count; i++)
+            {
+                sorted.Add(mounts[i]);
+            }
+
+            // "/2" before "/10": by length first.
+            sorted.Sort((a, b) => a.MountPoint.Length != b.MountPoint.Length
+                ? a.MountPoint.Length - b.MountPoint.Length
+                : string.CompareOrdinal(a.MountPoint, b.MountPoint));
+
+            lua.CreateTable(sorted.Count, 0);
+
+            for (int i = 0; i < sorted.Count; i++)
+            {
+                VfsManager.VfsMount mount = sorted[i];
+                string label = "";
+                string filesystem = mount.Partition != null ? CommandVol.DetectFilesystem(mount.Partition, out label) : mount.Name;
+
+                // What FAT formatters write for no label.
+                if (label == "NO NAME")
+                {
+                    label = "";
+                }
+
+                lua.CreateTable(0, 3);
+                SetText(lua, "path", AuraPath.AsDirectory(mount.MountPoint));
+                SetText(lua, "filesystem", filesystem);
+                SetText(lua, "label", label);
+                lua.RawSetI(-2, i + 1);
+            }
+
+            return 1;
         }
 
         /// <summary>
@@ -755,6 +1004,13 @@ namespace Aura_OS.System.Processing.Lua
                         return 1;
                     }
                     break;
+                case "focus":
+                    if (component is TextBox || component is ListBox)
+                    {
+                        lua.PushCSharpFunction(ControlFocus);
+                        return 1;
+                    }
+                    break;
                 case "load":
                     if (component is Picture)
                     {
@@ -942,31 +1198,53 @@ namespace Aura_OS.System.Processing.Lua
                         DropDown itemsDropDown = component as DropDown;
                         ListBox itemsListBox = component as ListBox;
 
+                        // All read first: a wrong item raises an error before the control changes.
+                        int count = lua.RawLen(3);
+                        List<string> texts = new List<string>(count);
+                        List<Bitmap> icons = new List<Bitmap>(count);
+
+                        for (int i = 1; i <= count; i++)
+                        {
+                            lua.RawGetI(3, i);
+
+                            string iconName;
+                            texts.Add(ItemText(lua, out iconName));
+                            lua.Pop(1);
+
+                            Bitmap icon = null;
+
+                            if (iconName != null)
+                            {
+                                if (itemsDropDown != null)
+                                {
+                                    return LuaObject.Error(lua, "a DropDown's items have no icon");
+                                }
+
+                                if (!Kernel.ResourceManager.TryGetIcon(iconName, out icon))
+                                {
+                                    return LuaObject.Error(lua, "no icon is named '" + iconName + "'");
+                                }
+                            }
+
+                            icons.Add(icon);
+                        }
+
                         if (itemsDropDown != null)
                         {
                             itemsDropDown.ClearItems();
+
+                            for (int i = 0; i < texts.Count; i++)
+                            {
+                                itemsDropDown.AddItem(texts[i]);
+                            }
                         }
                         else
                         {
                             itemsListBox.ClearItems();
-                        }
 
-                        int count = lua.RawLen(3);
-
-                        for (int i = 1; i <= count; i++)
-                        {
-                            // L_ToString pushes the text too (luaL_tolstring)
-                            lua.RawGetI(3, i);
-                            string item = LuaText.Decode(lua.L_ToString(-1));
-                            lua.Pop(2);
-
-                            if (itemsDropDown != null)
+                            for (int i = 0; i < texts.Count; i++)
                             {
-                                itemsDropDown.AddItem(item);
-                            }
-                            else
-                            {
-                                itemsListBox.AddItem(item);
+                                itemsListBox.AddItem(texts[i], icons[i]);
                             }
                         }
 
@@ -1047,6 +1325,72 @@ namespace Aura_OS.System.Processing.Lua
 
             // A dialog keeps its own drawing: redraw it too.
             component.MarkDirty();
+            control.App.MarkDirty();
+            return 0;
+        }
+
+        /// <summary>
+        /// The text of the list item on top of the stack, which it leaves there: a string (or any
+        /// value, as tostring writes it), or a table { text = , icon = } whose icon is an icon name.
+        /// </summary>
+        /// <param name="iconName">The item's icon name, null for none.</param>
+        private static string ItemText(ILuaState lua, out string iconName)
+        {
+            iconName = null;
+
+            if (lua.Type(-1) != LuaType.LUA_TTABLE)
+            {
+                return ToText(lua, -1);
+            }
+
+            lua.GetField(-1, "icon");
+
+            if (!lua.IsNoneOrNil(-1))
+            {
+                iconName = ToText(lua, -1);
+            }
+
+            lua.Pop(1);
+
+            lua.GetField(-1, "text");
+            string text = lua.IsNoneOrNil(-1) ? "" : ToText(lua, -1);
+            lua.Pop(1);
+
+            return text;
+        }
+
+        /// <summary>
+        /// Any value as tostring writes it.
+        /// </summary>
+        private static string ToText(ILuaState lua, int index)
+        {
+            // L_ToString pushes the text too (luaL_tolstring)
+            string text = LuaText.Decode(lua.L_ToString(index));
+            lua.Pop(1);
+            return text;
+        }
+
+        /// <summary>
+        /// control:focus(): the TextBox or ListBox gets the keys, as a click on it gives them.
+        /// </summary>
+        private static int ControlFocus(ILuaState lua)
+        {
+            Control control = (Control)lua.L_CheckUData(1, ControlType);
+
+            if (control.Component is TextBox textBox)
+            {
+                textBox.Focus();
+            }
+            else if (control.Component is ListBox listBox)
+            {
+                listBox.Focus();
+            }
+            else
+            {
+                return LuaObject.Error(lua, "'" + control.Id + "' cannot take the keys");
+            }
+
+            control.Component.MarkDirty();
             control.App.MarkDirty();
             return 0;
         }

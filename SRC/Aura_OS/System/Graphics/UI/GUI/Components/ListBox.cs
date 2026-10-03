@@ -9,17 +9,20 @@ using System.Collections.Generic;
 using System.Drawing;
 using Aura_OS.System.Graphics.UI.GUI.Skin;
 using Aura_OS.System.Processing.Processes;
+using Cosmos.Kernel.System.Graphics;
 using Cosmos.Kernel.System.Keyboard;
 using Cosmos.Kernel.System.Mouse;
 
 namespace Aura_OS.System.Graphics.UI.GUI.Components
 {
     /// <summary>
-    /// A list of text rows, one of which can be selected: a click on a row selects it and calls
-    /// SelectionChanged. A click also gives the box the keys (as a text box takes them): while its
-    /// window is focused, the up and down arrows, Home, End, Page Up and Page Down move the selection
-    /// the same way. Once the rows outgrow the box, a vertical scroll bar on the right scrolls
-    /// through them. A row longer than the box is cut.
+    /// A list of text rows, each with an optional 16 x 16 icon before it, one of which can be
+    /// selected: a click on a row selects it and calls SelectionChanged. A click also gives the box the
+    /// keys (as a text box takes them, or Focus): while its window is focused, the up and down arrows,
+    /// Home, End, Page Up and Page Down move the selection the same way. Enter, or a double click on
+    /// a row, calls Activated; the other keys go to the app (Application.HandleKey). Once the rows
+    /// outgrow the box, a vertical scroll bar on the right scrolls through them. A row longer than the
+    /// box is cut.
     /// </summary>
     public class ListBox : Component
     {
@@ -27,13 +30,33 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
         private const int ScrollBarSize = 15;
         private const int MinThumbSize = 16;
 
-        // Space left of a row's text.
+        // Space left of a row's text, or of its icon.
         private const int TextPadding = 4;
+
+        // The rows' icons, and the space between an icon and its text.
+        private const int IconSize = 16;
+        private const int IconSpacing = 4;
 
         private static readonly Color SelectionColor = Color.FromArgb(0xFF, 0x31, 0x6A, 0xC5);
 
         public List<string> Items = new List<string>();
         public Action SelectionChanged;
+
+        /// <summary>
+        /// Enter, or a double click on a row: the selected row is opened.
+        /// </summary>
+        public Action Activated;
+
+        // The icon of each row of Items, null for none (AddItem keeps both in step).
+        private readonly List<Bitmap> _icons = new List<Bitmap>();
+
+        // The row the last click was on, -1 for none, and when (Environment.TickCount64): a second
+        // click on it soon after is a double click.
+        private int _clickedIndex = -1;
+        private long _clickedAt;
+
+        // As MouseManager's.
+        private const long DoubleClickTime = 500;
 
         private int _selectedIndex = -1;
 
@@ -92,9 +115,12 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
             }
         }
 
-        public void AddItem(string item)
+        /// <param name="icon">Drawn before the text, null for none. Once a row has one, the texts of
+        /// all the rows start after the place of an icon, aligned.</param>
+        public void AddItem(string item, Bitmap icon = null)
         {
             Items.Add(item ?? "");
+            _icons.Add(icon);
             MarkDirty();
         }
 
@@ -104,7 +130,9 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
         public void ClearItems()
         {
             Items.Clear();
+            _icons.Clear();
             _selectedIndex = -1;
+            _clickedIndex = -1;
             _top = 0;
             MarkDirty();
         }
@@ -115,6 +143,22 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
         private static int RowHeight => Kernel.font.Height + 2;
 
         private int VisibleRows => Math.Max(1, (Height - 2) / RowHeight);
+
+        private bool HasIcons
+        {
+            get
+            {
+                for (int i = 0; i < _icons.Count; i++)
+                {
+                    if (_icons[i] != null)
+                    {
+                        return true;
+                    }
+                }
+
+                return false;
+            }
+        }
 
         private int MaxTop => Math.Max(0, Items.Count - VisibleRows);
 
@@ -137,7 +181,8 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
             // Closes an open menu, as a click anywhere else does.
             base.HandleLeftClick();
 
-            TakeKeys();
+            Focus();
+            _clickedIndex = -1;
 
             int x = (int)MouseManager.X - AbsoluteX;
             int y = (int)MouseManager.Y - AbsoluteY;
@@ -162,12 +207,48 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
 
             int index = _top + row;
 
-            if (index >= Items.Count || index == _selectedIndex)
+            if (index >= Items.Count)
             {
                 return;
             }
 
-            Select(index);
+            _clickedIndex = index;
+            _clickedAt = Environment.TickCount64;
+
+            if (index != _selectedIndex)
+            {
+                Select(index);
+            }
+        }
+
+        /// <summary>
+        /// A second click on the row the first one selected activates it; anywhere else, it is a click.
+        /// </summary>
+        public override void HandleLeftDoubleClick()
+        {
+            // The first click may have been elsewhere: MouseManager times any two clicks.
+            int clicked = Environment.TickCount64 - _clickedAt <= DoubleClickTime ? _clickedIndex : -1;
+
+            HandleLeftClick();
+
+            if (clicked >= 0 && _clickedIndex == clicked && clicked == _selectedIndex)
+            {
+                // A third quick click selects again rather than opening twice.
+                _clickedIndex = -1;
+                Activate();
+            }
+        }
+
+        /// <summary>
+        /// Calls Activated, when a row is selected.
+        /// </summary>
+        private void Activate()
+        {
+            // GEN3-GAP(null-deref): invoking a null delegate halts the kernel.
+            if (_selectedIndex >= 0 && Activated != null)
+            {
+                Activated();
+            }
         }
 
         /// <summary>
@@ -187,7 +268,7 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
         /// <summary>
         /// The keys come to the box from now on, rather than to the text box that had them.
         /// </summary>
-        private void TakeKeys()
+        public void Focus()
         {
             TextBox textBox = Kernel.MouseManager.FocusedComponent as TextBox;
 
@@ -200,43 +281,55 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
         }
 
         /// <summary>
-        /// True while the box has the keys: it was clicked last, and its window is the focused one.
+        /// The box's app while the box has the keys (it was clicked or focused last, and its window is
+        /// the focused one), else null.
         /// </summary>
-        private bool HasKeys
+        private Application KeysApp()
         {
-            get
+            if (!ReferenceEquals(Kernel.MouseManager.FocusedComponent, this))
             {
-                if (!ReferenceEquals(Kernel.MouseManager.FocusedComponent, this))
-                {
-                    return false;
-                }
-
-                Component root = this;
-
-                while (root.Parent != null)
-                {
-                    root = root.Parent;
-                }
-
-                Application app = Explorer.WindowManager.FocusedApp;
-                return app != null && ReferenceEquals(app.Window, root);
+                return null;
             }
+
+            Component root = this;
+
+            while (root.Parent != null)
+            {
+                root = root.Parent;
+            }
+
+            Application app = Explorer.WindowManager.FocusedApp;
+            return app != null && ReferenceEquals(app.Window, root) ? app : null;
         }
 
         /// <summary>
         /// Moves the selection with the keys typed: up and down a row, Home and End to the first and
         /// last rows, Page Up and Page Down a view. With no row selected, the first move selects the
-        /// first row. The other keys are dropped, as a text box keeps them.
+        /// first row. Enter activates the selected row; the other keys go to the app.
         /// </summary>
-        private void ReadKeys()
+        private void ReadKeys(Application app)
         {
             KeyEvent key;
 
-            while (Input.KeyboardManager.TryGetKey(out key))
+            // A key's handler may give the keys to another control, or open a window: the next keys
+            // are theirs.
+            while (ReferenceEquals(KeysApp(), app) && Input.KeyboardManager.TryGetKey(out key))
             {
                 // GEN3-GAP(null-deref): a null event would halt the kernel.
-                if (key == null || Items.Count == 0)
+                if (key == null)
                 {
+                    continue;
+                }
+
+                if (key.Key == ConsoleKeyEx.Enter)
+                {
+                    Activate();
+                    continue;
+                }
+
+                if (Items.Count == 0 || !IsMoveKey(key.Key))
+                {
+                    app.HandleKey(key);
                     continue;
                 }
 
@@ -263,8 +356,6 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
                     case ConsoleKeyEx.PageDown:
                         index = index < 0 ? 0 : index + page;
                         break;
-                    default:
-                        continue;
                 }
 
                 index = Math.Max(0, Math.Min(index, Items.Count - 1));
@@ -276,6 +367,22 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
             }
         }
 
+        private static bool IsMoveKey(ConsoleKeyEx key)
+        {
+            switch (key)
+            {
+                case ConsoleKeyEx.UpArrow:
+                case ConsoleKeyEx.DownArrow:
+                case ConsoleKeyEx.Home:
+                case ConsoleKeyEx.End:
+                case ConsoleKeyEx.PageUp:
+                case ConsoleKeyEx.PageDown:
+                    return true;
+            }
+
+            return false;
+        }
+
         /// <summary>
         /// Reads the keys while the box has them, drags the thumb while the button pressed on the rail
         /// is down, and highlights the thumb under the mouse. The box itself does not change with the
@@ -283,9 +390,11 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
         /// </summary>
         public override void Update()
         {
-            if (HasKeys)
+            Application app = KeysApp();
+
+            if (app != null)
             {
-                ReadKeys();
+                ReadKeys(app);
             }
 
             if (!HasScrollBar || !Kernel.MouseManager.IsLeftButtonDown)
@@ -376,7 +485,9 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
             _top = Math.Max(0, Math.Min(_top, MaxTop));
 
             int rowWidth = TextAreaWidth - 1;
-            int columns = Math.Max(0, (rowWidth - TextPadding) / Kernel.font.Width);
+            bool icons = HasIcons;
+            int textX = icons ? TextPadding + IconSize + IconSpacing : TextPadding;
+            int columns = Math.Max(0, (rowWidth - textX) / Kernel.font.Width);
 
             for (int row = 0; row < VisibleRows && _top + row < Items.Count; row++)
             {
@@ -389,6 +500,13 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
                     DrawFilledRectangle(SelectionColor, 1, y, rowWidth, RowHeight);
                 }
 
+                Bitmap icon = index < _icons.Count ? _icons[index] : null;
+
+                if (icon != null)
+                {
+                    DrawImage(icon, TextPadding, y + (RowHeight - (int)icon.Height) / 2);
+                }
+
                 string text = Items[index];
 
                 if (text.Length > columns)
@@ -396,7 +514,7 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
                     text = text.Substring(0, columns);
                 }
 
-                DrawString(text, Kernel.font, selected ? Kernel.WhiteColor : Kernel.BlackColor, TextPadding, y + 1);
+                DrawString(text, Kernel.font, selected ? Kernel.WhiteColor : Kernel.BlackColor, textX, y + 1);
             }
 
             if (HasScrollBar)

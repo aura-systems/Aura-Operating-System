@@ -82,6 +82,134 @@ namespace Aura_OS.System.Filesystem
             }
         }
 
+        /// <summary>
+        /// Deletes a file, or a folder and everything in it.
+        /// </summary>
+        /// <exception cref="IOException">There is no such file or folder, it is a volume, or the
+        /// filesystem failed.</exception>
+        public static void Delete(string fullPath)
+        {
+            fullPath = Normalize(fullPath);
+
+            if (IsMountPoint(fullPath))
+            {
+                throw new IOException("A volume cannot be deleted.");
+            }
+
+            if (File.Exists(fullPath))
+            {
+                File.Delete(fullPath);
+            }
+            else if (Directory.Exists(fullPath))
+            {
+                Directory.Delete(fullPath, true);
+            }
+            else
+            {
+                throw new IOException(NotFound(fullPath));
+            }
+        }
+
+        /// <summary>
+        /// Copies a file, or a folder and everything in it, to destination, a path that must not exist.
+        /// </summary>
+        /// <exception cref="IOException">There is no such file or folder, the destination exists or is
+        /// in the folder, or the filesystem failed.</exception>
+        public static void Copy(string source, string destination)
+        {
+            source = Normalize(source);
+            destination = Normalize(destination);
+
+            if (Exists(destination))
+            {
+                throw new IOException(AlreadyExists(destination));
+            }
+
+            if (File.Exists(source))
+            {
+                CopyFileContent(source, destination);
+            }
+            else if (Directory.Exists(source))
+            {
+                // Copying a folder into itself would recurse forever.
+                if (IsUnder(destination, source))
+                {
+                    throw new IOException("A folder cannot be copied into itself.");
+                }
+
+                CopyDirectory(source, destination);
+            }
+            else
+            {
+                throw new IOException(NotFound(source));
+            }
+        }
+
+        /// <summary>
+        /// Moves a file or a folder to destination, a path that must not exist: a rename on the same
+        /// volume, else a copy, then the source is deleted. A change of case only renames.
+        /// </summary>
+        /// <exception cref="IOException">There is no such file or folder, it is a volume, the
+        /// destination exists or is in the folder, or the filesystem failed.</exception>
+        public static void Move(string source, string destination)
+        {
+            source = Normalize(source);
+            destination = Normalize(destination);
+
+            if (IsMountPoint(source))
+            {
+                throw new IOException("A volume cannot be moved or renamed.");
+            }
+
+            bool directory = Directory.Exists(source);
+
+            if (!directory && !File.Exists(source))
+            {
+                throw new IOException(NotFound(source));
+            }
+
+            // FAT names ignore the case: "a.txt" to "A.txt" finds the source itself.
+            if (!IsSamePath(source, destination))
+            {
+                if (Exists(destination))
+                {
+                    throw new IOException(AlreadyExists(destination));
+                }
+
+                if (directory && IsUnder(destination, source))
+                {
+                    throw new IOException("A folder cannot be moved into itself.");
+                }
+            }
+
+            if (!ReferenceEquals(Volumes.MountOf(source), Volumes.MountOf(destination)))
+            {
+                Copy(source, destination);
+                Delete(source);
+            }
+            // The VFS rather than Directory.Move and File.Move, which take a change of case for an
+            // existing destination on FAT. It would replace one: checked above.
+            else if (!VfsManager.TryRename(source, destination))
+            {
+                throw new IOException("'" + Path.GetFileName(source) + "' could not be moved to '" + destination + "'.");
+            }
+        }
+
+        private static bool Exists(string path)
+        {
+            return File.Exists(path) || Directory.Exists(path);
+        }
+
+        private static string NotFound(string path)
+        {
+            return "'" + Path.GetFileName(path) + "' does not exist.";
+        }
+
+        private static string AlreadyExists(string path)
+        {
+            return "'" + Path.GetFileName(path) + "' already exists.";
+        }
+
         public static void SaveFile(string sourcePath, byte[] file)
         {
             if (file == null)

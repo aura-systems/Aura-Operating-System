@@ -389,6 +389,14 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
             }
         }
 
+        /// <summary>
+        /// The second click of a double click, on the component under the mouse. Nothing by
+        /// default: a click that quick after another is dropped.
+        /// </summary>
+        public virtual void HandleLeftDoubleClick()
+        {
+        }
+
         public virtual void HandleRightClick()
         {
             RightClick contextMenu = Explorer.WindowManager.ContextMenu;
