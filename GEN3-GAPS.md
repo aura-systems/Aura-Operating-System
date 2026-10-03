@@ -44,7 +44,7 @@ exception path, C8 dispose everything.
 | Core runtime | `cpu-exception`, `null-deref`, `unhandled`, `finally`, `eh-global`, `finalizers`, `gc-trigger`, `oom`, `gc-conservative`, `idle-thread` | `run-spam`, `log-sink`, `meminfo`, `cpuinfo`, `pci`, `tz-rtc`, `env`, `pc-speaker`, `encoding` |
 | Console / graphics | `console-input` | `kernelconsole`, `console-global`, `present`, `display-mode`, `blit`, `psf`, `hw-cursor`, `bmp`, `canvas3d` |
 | Input | `keyboard-altgr`, `ps2-sync` | `key-release`, `key-repeat`, `e0`, `sessions`, `mouse`, `key-docs` |
-| Filesystem / storage | `ide`, `fat-names`, `vfs-threads` (phase 2), `gpt-crc` | `driveinfo`, `fat-label`, `fat-time`, `fat-resize`, `mounts`, `tmp`, `cwd`, `mbr`, `ext2` |
+| Filesystem / storage | `ide`, `fat-names`, `vfs-threads` (phase 2), `gpt-crc`, `ext2-format`, `ext2-1k` | `driveinfo`, `fat-label`, `fat-time`, `fat-resize`, `mounts`, `tmp`, `cwd`, `mbr`, `gpt-type`, `ext2-features`, `ext2-dtime` |
 | Network | `tcp-receive`, `ipaddress`, `net-threads` (phase 2), `nic-drivers`, `tcp-robust` | `http-tls`, `socket-misc`, `dhcp`, `tcp-primary`, `nic-names`, `net-misc` |
 | BCL / packages | | `deflate`, `crypto`, `lua-host` |
 
@@ -598,8 +598,8 @@ exception path, C8 dispose everything.
 - **Gap:** the formatter writes `VolumeLabel` in the boot sector only. Other
   systems read the root folder's volume label entry, so they show no label,
   and `fsck.vfat` removes it.
-- **Aura workaround:** `Disks` reads and writes the BPB bytes at 0x2B / 0x47
-  (and the FAT32 backup boot sector), and the root folder's label entry.
+- **Aura workaround:** `FatVolume` reads and writes the BPB bytes at 0x2B /
+  0x47 (and the FAT32 backup boot sector), and the root folder's label entry.
 - **Upstream ask:** a label API; the formatter writes the root entry too.
 - **Source:** 03, Disk Manager.
 
@@ -671,10 +671,63 @@ exception path, C8 dispose everything.
 - **Upstream ask:** the writers keep both copies and their CRCs.
 - **Source:** Disk Manager.
 
-### `ext2`: Ext2 driver public but experimental and undocumented (minor)
-- **Aura workaround:** FAT only.
-- **Upstream ask:** document its status.
-- **Source:** 03.
+### `gpt-type`: no API changes a GPT partition's type (minor)
+- **Gap:** `Gpt` adds, removes, resizes and moves entries, but a format to
+  another filesystem cannot change the entry's type GUID.
+- **Aura workaround:** `GptChecksums.SetPartitionType` rewrites the entry, then
+  the checksums and backup: Basic data for FAT, Linux filesystem for ext2.
+- **Upstream ask:** `Gpt.SetPartitionType`.
+- **Source:** Disk Manager.
+
+The ext2 entries below were checked against Cosmos main `f9103822` (the ext2
+driver of PR #480), package 3.0.89.20261003, on disk images, with `e2fsck -fn`.
+
+### `ext2-format`: the ext2 formatter's layout breaks past one group (major)
+- **Gap:** `Ext2Formatter` puts each group's block and inode bitmaps at the
+  group's first block, where the superblock's backups go. Once the volume has
+  more than one group (8 MB), `e2fsck` stops at "Corrupt group descriptor: bad
+  block for block bitmap", and asks to relocate every group's bitmaps. On any
+  volume it also leaves the bitmaps' padding bits clear, and on 1 KB blocks it
+  counts one free block too many.
+- **Aura workaround:** `Ext2Volume.Format` writes the volume as mke2fs does:
+  4 KB blocks, 32768 blocks a group, sparse superblock backups (groups 0, 1
+  and the powers of 3, 5 and 7), the padding set, a lost+found folder. `e2fsck`
+  passes it from 1 MB to 17 GB, and Cosmos's driver mounts it and writes files
+  that Linux reads back.
+- **Upstream ask:** the same layout in `Ext2Formatter`.
+- **Source:** Disk Manager.
+
+### `ext2-1k`: the ext2 driver writes 1 KB-block volumes one block off (major)
+- **Gap:** `TryAllocateBlock` and `FreeBlock` turn a bitmap bit into the block
+  `group * BlocksPerGroup + bit`, without the first data block. That is 1 on a
+  volume of 1 KB blocks, so each block written lands one block early, over the
+  metadata: after Cosmos writes files on a `mke2fs -b 1024` volume, `e2fsck`
+  finds "Inode 7 has illegal block(s)".
+- **Aura workaround:** `Ext2Volume.CanMount` refuses volumes of 1 KB blocks;
+  Aura formats with 4 KB ones.
+- **Upstream ask:** add `FirstDataBlock` in both.
+- **Source:** Disk Manager.
+
+### `ext2-features`: the ext2 driver mounts any ext superblock (minor)
+- **Gap:** `Ext2Superblock.TryCreate` does not check the feature flags: it
+  mounts ext3 (a journal it does not replay) and ext4 (extents it does not
+  read) as ext2, and writes them. `MountFlags.ReadOnly` is not enforced either
+  (see `mounts`), so an unknown read-only-compatible feature cannot be kept
+  safe.
+- **Aura workaround:** `Ext2Volume.CanMount`: no journal, no incompatible
+  feature but file types, no read-only-compatible one but sparse superblocks
+  and large files.
+- **Upstream ask:** refuse unknown incompatible features, and mount read-only
+  on unknown read-only-compatible ones, as Linux's ext2 does.
+- **Source:** Disk Manager.
+
+### `ext2-dtime`: deleted inodes keep a zero dtime (minor)
+- **Gap:** an unlink frees the inode with its links at 0 but leaves `i_dtime`
+  at 0, so `e2fsck` reports "Deleted inode N has zero dtime" for each file
+  Cosmos deleted. `e2fsck -p` fixes them without asking.
+- **Aura workaround:** none.
+- **Upstream ask:** stamp `i_dtime` on delete.
+- **Source:** Disk Manager.
 
 ## Network
 

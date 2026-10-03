@@ -1,14 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Disk Manager app window: the actions, the disk shown, its partitions on a bar and in a list. The
-     panel on the right asks what an action needs, or tells about a partition. main.lua fills them,
-     and does the actions. -->
-<Window title="Disk Manager" width="780" height="500" icon="16-disks.bmp" padding="6" spacing="6">
+<!-- Disk Manager app window: the actions, the disk shown, its partitions on a bar and in a list, as they
+     will be once the pending operations are applied; the operations under them. The panel on the right
+     asks what an action needs, or tells about a partition. main.lua fills them, and does the actions. -->
+<Window title="Disk Manager" width="840" height="540" icon="16-disks.bmp" padding="6" spacing="6">
   <Stack orientation="horizontal" spacing="4" height="23">
     <Button icon="16-add.bmp" text="New" onClick="new" />
     <Button icon="16-delete.bmp" text="Delete" onClick="delete" />
     <Button icon="16-resize.bmp" text="Resize/Move" onClick="resize" />
     <Button icon="16-format.bmp" text="Format" onClick="format" />
     <Button icon="16-label.bmp" text="Label" onClick="label" />
+    <Button icon="16-undo.bmp" text="Undo" onClick="undo" />
+    <Button icon="16-apply.bmp" text="Apply" onClick="apply" />
     <!-- One of the two, for the selected partition. -->
     <Button id="mount" icon="16-drive.bmp" text="Mount" onClick="mount" />
     <Button id="unmount" icon="16-eject.bmp" text="Unmount" onClick="unmount" visible="false" />
@@ -22,8 +24,9 @@
     <Button icon="16-refresh.bmp" width="23" onClick="refresh" />
   </Stack>
 
-  <!-- The partitions in their place on the disk; a click selects one. -->
-  <Canvas id="bar" width="*" height="64" background="white" onClick="barClick" />
+  <!-- The partitions in their place on the disk: a click selects one, dragging its edges resizes it,
+       dragging its middle moves it. -->
+  <Canvas id="bar" width="*" height="64" background="white" onClick="barPress" onMove="barMove" onRelease="barRelease" />
 
   <Stack orientation="horizontal" spacing="6" height="*">
     <Stack spacing="2" width="*" height="*">
@@ -46,10 +49,11 @@
         </Row>
         <Row id="filesystemRow">
           <Label text="File system:" />
-          <DropDown id="filesystem">
+          <DropDown id="filesystem" onChange="filesystem">
             <Item>FAT32</Item>
             <Item>FAT16</Item>
             <Item>FAT12</Item>
+            <Item>ext2</Item>
             <Item>unformatted</Item>
           </DropDown>
         </Row>
@@ -71,6 +75,15 @@
         <Button id="cancel" text="Cancel" width="90" onClick="cancel" />
       </Stack>
     </Panel>
+  </Stack>
+
+  <!-- The operations Apply does, in order: shown while there are some. -->
+  <Stack id="operations" spacing="2" height="104" visible="false">
+    <Stack orientation="horizontal" spacing="4" height="23">
+      <Label id="operationsTitle" width="*" />
+      <Button icon="16-delete.bmp" text="Clear all" onClick="clear" />
+    </Stack>
+    <ListBox id="operationList" width="*" height="*" onChange="operation" />
   </Stack>
 
   <Label id="status" width="*" />

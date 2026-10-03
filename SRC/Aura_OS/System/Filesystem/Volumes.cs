@@ -1,6 +1,6 @@
 ﻿/*
 * PROJECT:          Aura Operating System Development
-* CONTENT:          Volumes: FAT driver registration, /N mounts, hot-plug, free space
+* CONTENT:          Volumes: FAT and ext2 driver registration, /N mounts, hot-plug, free space
 * PROGRAMMERS:      Valentin Charbonnier <valentinbreiz@gmail.com>
 */
 
@@ -12,6 +12,7 @@ using System.IO;
 using Cosmos.Kernel.HAL.Vfs;
 using Cosmos.Kernel.System;
 using Cosmos.Kernel.System.Diagnostics;
+using Cosmos.Kernel.System.Filesystems.Ext2;
 using Cosmos.Kernel.System.Filesystems.Fat;
 using Cosmos.Kernel.System.Storage;
 using Cosmos.Kernel.System.Vfs;
@@ -19,12 +20,13 @@ using Cosmos.Kernel.System.Vfs;
 namespace Aura_OS.System.Filesystem
 {
     /// <summary>
-    /// Mounts every FAT partition at /0, /1, ... (gen2 "0:\", "1:\"). Nothing is mounted at "/":
-    /// the root lists the mount points.
+    /// Mounts every FAT partition, and every ext2 one Cosmos's driver writes right (Ext2Volume.CanMount),
+    /// at /0, /1, ... (gen2 "0:\", "1:\"). Nothing is mounted at "/": the root lists the mount points.
     /// </summary>
     public static class Volumes
     {
         public const string FatDriver = "fat";
+        public const string Ext2Driver = "ext2";
 
         // static readonly, NOT const: a const of an enum type from another assembly makes
         // Mono.Cecil resolve that assembly while the patcher rewrites this one.
@@ -34,27 +36,29 @@ namespace Aura_OS.System.Filesystem
         private static IReadOnlyList<Partition> s_lastPartitions;
 
         /// <summary>
-        /// Registers the FAT driver and mounts every FAT partition. Picks AuraPaths.SystemVolume.
+        /// Registers the FAT and ext2 drivers and mounts every volume. Picks AuraPaths.SystemVolume.
         /// </summary>
         public static void Initialize()
         {
             if (!KernelFeatures.Fat)
             {
-                Log.WriteString("[Aura] FAT support compiled out, no volume mounted\n");
-                RefreshSystemVolume();
-                return;
+                Log.WriteString("[Aura] FAT support compiled out\n");
             }
-
-            if (!VfsManager.RegisterFilesystem(FatDriver, new FatFilesystemType()))
+            else if (!VfsManager.RegisterFilesystem(FatDriver, new FatFilesystemType()))
             {
                 Log.WriteString("[Aura] FAT driver already registered or invalid\n");
+            }
+
+            if (!VfsManager.RegisterFilesystem(Ext2Driver, new Ext2FilesystemType()))
+            {
+                Log.WriteString("[Aura] ext2 driver already registered or invalid\n");
             }
 
             MountAll();
         }
 
         /// <summary>
-        /// Mounts every FAT partition not mounted yet at the next free /N (gen2 numbering).
+        /// Mounts every FAT or ext2 partition not mounted yet at the next free /N (gen2 numbering).
         /// Returns the number of new mounts. Recomputes AuraPaths.SystemVolume.
         /// </summary>
         public static int MountAll()
@@ -72,15 +76,13 @@ namespace Aura_OS.System.Filesystem
                     continue;
                 }
 
-                // TryMount returns false when the partition is not FAT, but the BPB probe's ReadBlock
+                // TryMount returns false when the partition holds no such volume, but the probe's ReadBlock
                 // can THROW on a device error (e.g. an NVMe timeout), so guard it.
                 try
                 {
-                    string mountPoint = NextFreeMountPoint();
-                    if (VfsManager.TryMount(FatDriver, partition, s_flags, mountPoint, out _))
+                    if (TryMount(partition, NextFreeMountPoint()))
                     {
                         mounted++;
-                        Log.WriteString("[Aura] FAT volume " + partition.Name + " mounted at " + mountPoint + "\n");
                     }
                 }
                 catch (Exception)
@@ -95,8 +97,8 @@ namespace Aura_OS.System.Filesystem
         }
 
         /// <summary>
-        /// Mounts one FAT partition at the next free /N: its mount point ("/1/"), null when it holds no
-        /// FAT volume. Its mount point when it is mounted already.
+        /// Mounts one FAT or ext2 partition at the next free /N: its mount point ("/1/"), null when it holds
+        /// no volume Aura mounts. Its mount point when it is mounted already.
         /// </summary>
         public static string Mount(Partition partition)
         {
@@ -107,21 +109,41 @@ namespace Aura_OS.System.Filesystem
                 return AuraPath.AsDirectory(mount.MountPoint);
             }
 
-            if (!KernelFeatures.Fat)
-            {
-                return null;
-            }
-
             string mountPoint = NextFreeMountPoint();
 
-            if (!VfsManager.TryMount(FatDriver, partition, s_flags, mountPoint, out _))
+            if (!TryMount(partition, mountPoint))
             {
                 return null;
             }
 
-            Log.WriteString("[Aura] FAT volume " + partition.Name + " mounted at " + mountPoint + "\n");
             RefreshSystemVolume();
             return AuraPath.AsDirectory(mountPoint);
+        }
+
+        /// <summary>
+        /// Mounts the partition's FAT volume at that mount point, else its ext2 one when the driver writes
+        /// it right. False for neither.
+        /// </summary>
+        private static bool TryMount(Partition partition, string mountPoint)
+        {
+            string driver = null;
+            string reason;
+
+            if (KernelFeatures.Fat && VfsManager.TryMount(FatDriver, partition, s_flags, mountPoint, out _))
+            {
+                driver = "FAT";
+            }
+            else if (Ext2Volume.CanMount(partition, out reason) && VfsManager.TryMount(Ext2Driver, partition, s_flags, mountPoint, out _))
+            {
+                driver = "ext2";
+            }
+
+            if (driver != null)
+            {
+                Log.WriteString("[Aura] " + driver + " volume " + partition.Name + " mounted at " + mountPoint + "\n");
+            }
+
+            return driver != null;
         }
 
         /// <summary>
@@ -185,7 +207,8 @@ namespace Aura_OS.System.Filesystem
 
         /// <summary>
         /// Free and total bytes of the volume mounted at mountPoint ("/0" or "/0/").
-        /// GEN3-GAP(driveinfo): TryStatFs sweeps the whole FAT on every call, callers must cache the result.
+        /// GEN3-GAP(driveinfo): TryStatFs sweeps the whole FAT on every call (ext2 keeps its count), callers
+        /// must cache the result.
         /// </summary>
         public static bool TryGetSpace(string mountPoint, out ulong freeBytes, out ulong totalBytes)
         {
@@ -240,7 +263,7 @@ namespace Aura_OS.System.Filesystem
 
         /// <summary>
         /// Call from the UI loop (about once per second). GEN3-GAP(mounts): there is no hot-plug event.
-        /// When the StorageManager.Partitions snapshot changed, mounts the new FAT partitions (MountAll).
+        /// When the StorageManager.Partitions snapshot changed, mounts the new partitions (MountAll).
         /// Resets Kernel.CurrentVolume/CurrentDirectory when their mount vanished (a pulled USB stick is
         /// detached by the VFS). Returns true when something changed. Never throws.
         /// </summary>

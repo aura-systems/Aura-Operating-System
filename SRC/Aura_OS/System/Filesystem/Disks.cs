@@ -11,7 +11,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using Cosmos.Kernel.HAL.Interfaces.Devices;
-using Cosmos.Kernel.System.Filesystems.Fat;
 using Cosmos.Kernel.System.Storage;
 using Cosmos.Kernel.System.Vfs;
 
@@ -63,6 +62,12 @@ namespace Aura_OS.System.Filesystem
 
         /// <summary>The GPT partition type GUID, null for none (MBR, no table).</summary>
         public Guid? GptType;
+
+        /// <summary>
+        /// The sectors its filesystem takes, which a resize cannot go under: a FAT or ext volume's size, 0
+        /// for none (unformatted), the whole partition for another filesystem (Aura cannot measure it).
+        /// </summary>
+        public ulong VolumeSectors;
     }
 
     /// <summary>
@@ -92,10 +97,10 @@ namespace Aura_OS.System.Filesystem
 
     /// <summary>
     /// What the Disk Manager (aura.disks) and vol do to the disks: partition tables, partitions and
-    /// their FAT volumes. A disk is named by its device name ("sata0"), a partition by the sector it
+    /// their FAT and ext2 volumes. A disk is named by its device name ("sata0"), a partition by the sector it
     /// starts at: a rescan makes new Partition objects and may renumber them. An action that cannot be
     /// done throws an InvalidOperationException saying why; a device error throws too. Each one
-    /// unmounts what it changes first (never the system volume) and mounts the FAT volumes again after.
+    /// unmounts what it changes first (never the system volume) and mounts the volumes again after.
     /// </summary>
     public static class Disks
     {
@@ -107,20 +112,19 @@ namespace Aura_OS.System.Filesystem
         /// <summary>The largest FAT that fits: FAT32, else FAT16, else FAT12.</summary>
         public const string Fat = "FAT";
 
+        public const string Ext2 = "ext2";
+
         /// <summary>No filesystem: the start of the partition wiped.</summary>
         public const string Unformatted = "unformatted";
 
         public const ulong BytesPerMiB = 1024UL * 1024UL;
 
-        /// <summary>The longest FAT volume label.</summary>
-        public const int MaxLabelLength = 11;
-
         // MBR system IDs of the partitions Aura writes: FAT32 (LBA), FAT16 (LBA), FAT12, and Linux for an
-        // unformatted one, as GParted.
+        // ext2 or unformatted one, as GParted.
         private const byte MbrFat32 = 0x0C;
         private const byte MbrFat16 = 0x0E;
         private const byte MbrFat12 = 0x01;
-        private const byte MbrUnformatted = 0x83;
+        private const byte MbrLinux = 0x83;
 
         // The MBR sector's partition table.
         private const int MbrTableOffset = 446;
@@ -135,27 +139,9 @@ namespace Aura_OS.System.Filesystem
         // one has wiped: the boot sectors and superblocks of FAT, NTFS, exFAT, ext and Linux swap.
         private const int SignatureBytes = 8192;
 
-        // The bytes of a FAT volume's label in its boot sector, after the extended boot signature 0x29.
-        private const int Fat1216SignatureOffset = 0x26;
-        private const int Fat1216LabelOffset = 0x2B;
-        private const int Fat32SignatureOffset = 0x42;
-        private const int Fat32LabelOffset = 0x47;
-        private const int Fat32BackupBootOffset = 0x32;
-        private const byte ExtendedBootSignature = 0x29;
+        // The GPT type of a Linux filesystem (ext2); FAT's is Basic data (Gpt.BasicDataPartitionType).
+        private static readonly Guid LinuxFilesystemType = new Guid(0x0FC63DAF, 0x8483, 0x4772, 0x8E, 0x79, 0x3D, 0x69, 0xD8, 0x47, 0x7D, 0xE4);
 
-        // A directory entry, and the attribute of the root directory's volume label entry.
-        private const int DirectoryEntrySize = 32;
-        private const int AttributesOffset = 11;
-        private const byte VolumeIdAttribute = 0x08;
-        private const byte LongNameAttributes = 0x0F;
-        private const byte DeletedEntry = 0xE5;
-
-        private const string NoLabel = "NO NAME";
-
-        // static readonly, NOT const (C16): enum values from a Cosmos assembly.
-        private static readonly FatType FatType12 = FatType.Fat12;
-        private static readonly FatType FatType16 = FatType.Fat16;
-        private static readonly FatType FatType32 = FatType.Fat32;
 
         #region Reading
 
@@ -291,7 +277,7 @@ namespace Aura_OS.System.Filesystem
         {
             PartitionInfo info = new PartitionInfo();
             info.Partition = partition;
-            info.Filesystem = DetectFilesystem(partition, out info.Label);
+            info.Filesystem = Detect(partition, out info.Label, out info.VolumeSectors);
 
             VfsManager.VfsMount mount = Volumes.MountOfPartition(partition);
             if (mount != null)
@@ -370,12 +356,20 @@ namespace Aura_OS.System.Filesystem
         /// The filesystem of a partition from its first bytes: "FAT32", "FAT16", "FAT12" (with its label),
         /// "ext2", "ext3", "ext4" (with its label), "NTFS", "exFAT", "linux-swap", "unformatted" (only
         /// zeros) or "unknown"; "unreadable" when the read fails.
-        /// GEN3-GAP(fat-label): no API reads a FAT label, so it comes from the BPB (11 bytes at 0x2B on
-        /// FAT12/16, 0x47 on FAT32, there when the extended boot signature is 0x29).
         /// </summary>
         public static string DetectFilesystem(Partition partition, out string label)
         {
+            ulong volumeSectors;
+            return Detect(partition, out label, out volumeSectors);
+        }
+
+        /// <summary>
+        /// DetectFilesystem, and the sectors the filesystem takes (PartitionInfo.VolumeSectors).
+        /// </summary>
+        private static string Detect(Partition partition, out string label, out ulong volumeSectors)
+        {
             label = "";
+            volumeSectors = partition != null ? partition.BlockCount : 0;
 
             if (partition == null || partition.BlockSize < 512 || partition.BlockSize > 4096 || partition.BlockCount == 0)
             {
@@ -407,29 +401,15 @@ namespace Aura_OS.System.Filesystem
 
             byte[] boot = new byte[blockSize];
             Array.Copy(head, boot, blockSize);
+            string filesystem;
 
-            FatBootSector bootSector;
-            if (FatBootSector.TryParse(boot, out bootSector) && bootSector != null)
+            if (FatVolume.TryRead(boot, out filesystem, out label, out volumeSectors)
+                || Ext2Volume.TryRead(head, blockSize, out filesystem, out label, out volumeSectors))
             {
-                return FatName(bootSector, boot, out label);
+                return filesystem;
             }
 
-            // ext2/3/4: the superblock at byte 1024, its magic 0xEF53 at 56.
-            if (head.Length >= 2048 && head[1024 + 56] == 0x53 && head[1024 + 57] == 0xEF)
-            {
-                label = ReadText(head, 1024 + 120, 16);
-
-                uint compatible = BitConverter.ToUInt32(head, 1024 + 92);
-                uint incompatible = BitConverter.ToUInt32(head, 1024 + 96);
-
-                // Extents, 64-bit or flexible block groups: ext4; a journal: ext3.
-                if ((incompatible & 0x2C0) != 0)
-                {
-                    return "ext4";
-                }
-
-                return (compatible & 0x4) != 0 ? "ext3" : "ext2";
-            }
+            volumeSectors = partition.BlockCount;
 
             // Linux swap: its signature ends the first 4 KiB page.
             if (head.Length >= 4096 && (HasText(head, 4086, "SWAPSPACE2") || HasText(head, 4086, "SWAP-SPACE")))
@@ -446,36 +426,8 @@ namespace Aura_OS.System.Filesystem
                 }
             }
 
+            volumeSectors = 0;
             return Unformatted;
-        }
-
-        private static string FatName(FatBootSector bootSector, byte[] boot, out string label)
-        {
-            label = "";
-            bool fat32 = bootSector.Type == FatType32;
-
-            if (boot[fat32 ? Fat32SignatureOffset : Fat1216SignatureOffset] == ExtendedBootSignature)
-            {
-                label = ReadText(boot, fat32 ? Fat32LabelOffset : Fat1216LabelOffset, MaxLabelLength);
-
-                // What FAT formatters write for no label.
-                if (label == NoLabel)
-                {
-                    label = "";
-                }
-            }
-
-            switch (bootSector.Type)
-            {
-                case FatType.Fat12:
-                    return Fat12;
-                case FatType.Fat16:
-                    return Fat16;
-                case FatType.Fat32:
-                    return Fat32;
-                default:
-                    return Fat;
-            }
         }
 
         /// <summary>
@@ -539,15 +491,15 @@ namespace Aura_OS.System.Filesystem
 
         /// <summary>
         /// Adds a partition in free space, then writes its filesystem: FAT32, FAT16, FAT12, FAT (the
-        /// largest that fits) or unformatted (its start wiped). On an MBR disk, free space inside the
+        /// largest that fits), ext2 or unformatted (its start wiped). On an MBR disk, free space inside the
         /// extended partition gets a logical partition, which goes after the last one.
         /// </summary>
-        /// <param name="label">The FAT volume label, "" or null for none.</param>
+        /// <param name="label">The volume label (CheckLabel), "" or null for none.</param>
         /// <returns>The sector the partition starts at: a logical one's is the one after its EBR.</returns>
         public static ulong CreatePartition(IBlockDevice disk, ulong start, ulong sectors, string filesystem, string label)
         {
             byte mbrType = MbrTypeOf(filesystem);
-            CheckLabel(label);
+            CheckLabel(filesystem, label);
 
             PartitionTable table = TableOf(disk);
 
@@ -587,7 +539,7 @@ namespace Aura_OS.System.Filesystem
                     throw new InvalidOperationException("An MBR disk holds 4 primary partitions at most: delete one first, or use a GPT.");
                 }
 
-                if (!PartitionManager.Create(disk, start, sectors, mbrType, Gpt.BasicDataPartitionType))
+                if (!PartitionManager.Create(disk, start, sectors, mbrType, filesystem == Ext2 ? LinuxFilesystemType : Gpt.BasicDataPartitionType))
                 {
                     throw new InvalidOperationException("The partition table refused it: it overlaps another partition, or the table is full.");
                 }
@@ -604,17 +556,12 @@ namespace Aura_OS.System.Filesystem
             try
             {
                 Partition partition = FindPartition(disk, begin);
-                Wipe(partition);
+                WriteFilesystem(partition, filesystem, label);
 
-                if (filesystem != Unformatted)
+                // "FAT" may have written FAT16 or FAT12.
+                if (table == PartitionTable.Mbr)
                 {
-                    FormatFat(partition, filesystem, label);
-
-                    // "FAT" may have written FAT16 or FAT12.
-                    if (table == PartitionTable.Mbr)
-                    {
-                        MatchMbrType(disk, partition);
-                    }
+                    MatchPartitionType(disk, table, partition);
                 }
             }
             catch (Exception ex)
@@ -687,29 +634,21 @@ namespace Aura_OS.System.Filesystem
         }
 
         /// <summary>
-        /// Writes a new filesystem on a partition (FAT32, FAT16, FAT12, FAT or unformatted): its files are
-        /// lost. The MBR entry of a primary partition gets the matching system ID.
+        /// Writes a new filesystem on a partition (FAT32, FAT16, FAT12, FAT, ext2 or unformatted): its files
+        /// are lost. Its table entry gets the matching type: the MBR system ID of a primary partition, the
+        /// GPT type (Basic data for FAT, Linux filesystem for ext2).
         /// </summary>
         public static void Format(IBlockDevice disk, Partition partition, string filesystem, string label)
         {
             // Both checked before the partition is unmounted.
             MbrTypeOf(filesystem);
-            CheckLabel(label);
+            CheckLabel(filesystem, label);
             Release(partition);
 
             try
             {
-                Wipe(partition);
-
-                if (filesystem != Unformatted)
-                {
-                    FormatFat(partition, filesystem, label);
-                }
-
-                if (TableOf(disk) == PartitionTable.Mbr)
-                {
-                    MatchMbrType(disk, partition);
-                }
+                WriteFilesystem(partition, filesystem, label);
+                MatchPartitionType(disk, TableOf(disk), partition);
             }
             finally
             {
@@ -719,7 +658,8 @@ namespace Aura_OS.System.Filesystem
 
         /// <summary>
         /// Moves and resizes a partition: the move copies its sectors (slow for a large one), the resize
-        /// only changes the table. A FAT volume keeps its size, so it cannot get smaller than that.
+        /// only changes the table. Its volume keeps its size, so the partition cannot get smaller than
+        /// that (PartitionInfo.VolumeSectors).
         /// </summary>
         public static void Resize(IBlockDevice disk, Partition partition, ulong newStart, ulong newSectors)
         {
@@ -746,12 +686,19 @@ namespace Aura_OS.System.Filesystem
                 throw new InvalidOperationException("The partition does not fit there.");
             }
 
-            ulong volumeSectors = FatVolumeSectors(partition);
+            string label;
+            ulong volumeSectors;
+            string filesystem = Detect(partition, out label, out volumeSectors);
 
             if (newSectors < volumeSectors)
             {
-                throw new InvalidOperationException("Its FAT volume takes " + (volumeSectors * partition.BlockSize / BytesPerMiB)
-                    + " MB, and Aura cannot shrink a FAT volume: format it first.");
+                if (filesystem.StartsWith("FAT") || filesystem.StartsWith("ext"))
+                {
+                    throw new InvalidOperationException("Its " + filesystem + " volume takes " + (volumeSectors * partition.BlockSize / BytesPerMiB)
+                        + " MB, and Aura cannot shrink a volume: format it first.");
+                }
+
+                throw new InvalidOperationException("Aura cannot shrink a partition holding " + filesystem + ": the end of its volume would be lost.");
             }
 
             Release(partition);
@@ -807,52 +754,41 @@ namespace Aura_OS.System.Filesystem
         }
 
         /// <summary>
-        /// Changes the label of a FAT volume (up to 11 letters, digits, spaces, - and _, written in capitals;
-        /// "" for none): in its boot sector, its FAT32 backup, and its root folder's label entry, which
-        /// other systems show.
+        /// Changes the label of a volume (CheckLabel; "" for none): a FAT one's, or an ext2 one Aura mounts.
         /// </summary>
         public static void SetLabel(Partition partition, string label)
         {
-            string text = CheckLabel(label);
-            byte[] boot = ReadPartitionSector(partition, 0);
+            string current;
+            string filesystem = DetectFilesystem(partition, out current);
+            string reason;
+            bool ext2 = filesystem == Ext2;
 
-            FatBootSector bootSector;
-            if (!FatBootSector.TryParse(boot, out bootSector) || bootSector == null)
+            if (!ext2 && !filesystem.StartsWith("FAT"))
             {
-                throw new InvalidOperationException("Aura only labels FAT volumes.");
+                throw new InvalidOperationException("Aura labels FAT and ext2 volumes only.");
             }
 
-            bool fat32 = bootSector.Type == FatType32;
-            int labelOffset = fat32 ? Fat32LabelOffset : Fat1216LabelOffset;
+            // Checked before the volume is unmounted.
+            CheckLabel(filesystem, label);
 
-            if (boot[fat32 ? Fat32SignatureOffset : Fat1216SignatureOffset] != ExtendedBootSignature)
+            if (ext2 ? !Ext2Volume.CanMount(partition, out reason) : !FatVolume.CanLabel(partition, out reason))
             {
-                throw new InvalidOperationException("This FAT volume has no room for a label.");
+                throw new InvalidOperationException(reason);
             }
 
+            // The drivers write their copy of the label back when they unmount.
             Release(partition);
 
             try
             {
-                byte[] name = LabelBytes(text.Length > 0 ? text : NoLabel);
-
-                Array.Copy(name, 0, boot, labelOffset, MaxLabelLength);
-                partition.WriteBlock(0, 1, boot);
-
-                if (fat32)
+                if (ext2)
                 {
-                    ulong backup = BitConverter.ToUInt16(boot, Fat32BackupBootOffset);
-
-                    if (backup > 0 && backup < bootSector.ReservedSectorCount)
-                    {
-                        byte[] backupBoot = ReadPartitionSector(partition, backup);
-                        Array.Copy(name, 0, backupBoot, labelOffset, MaxLabelLength);
-                        partition.WriteBlock(backup, 1, backupBoot);
-                    }
+                    Ext2Volume.SetLabel(partition, label);
                 }
-
-                SetRootLabel(partition, bootSector, text);
-                partition.Flush();
+                else
+                {
+                    FatVolume.SetLabel(partition, label);
+                }
             }
             finally
             {
@@ -861,18 +797,32 @@ namespace Aura_OS.System.Filesystem
         }
 
         /// <summary>
-        /// Mounts a FAT partition at the next free /N: its mount point ("/1/").
+        /// Mounts a FAT or ext2 partition at the next free /N: its mount point ("/1/").
         /// </summary>
         public static string Mount(Partition partition)
         {
             string mountPoint = Volumes.Mount(partition);
 
-            if (mountPoint == null)
+            if (mountPoint != null)
             {
-                throw new InvalidOperationException("Aura only mounts FAT volumes.");
+                return mountPoint;
             }
 
-            return mountPoint;
+            string label;
+            string filesystem = DetectFilesystem(partition, out label);
+            string reason;
+
+            if (filesystem.StartsWith("ext") && !Ext2Volume.CanMount(partition, out reason))
+            {
+                throw new InvalidOperationException(reason);
+            }
+
+            if (filesystem.StartsWith("FAT") || filesystem == Ext2)
+            {
+                throw new InvalidOperationException("Aura could not mount its " + filesystem + " volume: it may be damaged.");
+            }
+
+            throw new InvalidOperationException("Aura mounts FAT and ext2 volumes: this one is " + filesystem + ".");
         }
 
         /// <summary>
@@ -944,79 +894,21 @@ namespace Aura_OS.System.Filesystem
         #region Filesystems
 
         /// <summary>
-        /// FAT32, FAT16 or FAT12 with the smallest clusters that fit, or the largest of them that fits for
-        /// "FAT". The formatter writes nothing for a geometry it refuses, so each one is tried in turn.
+        /// Wipes the start of the partition, then writes the filesystem there: FAT, ext2, or nothing for
+        /// unformatted.
         /// </summary>
-        private static void FormatFat(Partition partition, string filesystem, string label)
+        private static void WriteFilesystem(Partition partition, string filesystem, string label)
         {
-            string text = CheckLabel(label);
-            string volumeLabel = text.Length > 0 ? text : null;
-            bool formatted;
+            Wipe(partition);
 
-            switch (filesystem)
+            if (filesystem == Ext2)
             {
-                case Fat32:
-                    formatted = TryFormat(partition, FatType32, volumeLabel);
-                    break;
-                case Fat16:
-                    formatted = TryFormat(partition, FatType16, volumeLabel);
-                    break;
-                case Fat12:
-                    formatted = TryFormat(partition, FatType12, volumeLabel);
-                    break;
-                default:
-                    formatted = TryFormat(partition, FatType32, volumeLabel)
-                        || TryFormat(partition, FatType16, volumeLabel)
-                        || TryFormat(partition, FatType12, volumeLabel);
-                    break;
+                Ext2Volume.Format(partition, label);
             }
-
-            if (!formatted)
+            else if (filesystem != Unformatted)
             {
-                string size = (partition.BlockCount * partition.BlockSize / BytesPerMiB) + " MB";
-                throw new InvalidOperationException("No " + (filesystem == Fat ? "FAT" : filesystem) + " volume fits in " + size
-                    + ": FAT12 takes up to 127 MB, FAT16 3 MB to 2 GB, FAT32 33 MB and more.");
+                FatVolume.Format(partition, filesystem, label);
             }
-
-            // The formatter writes the label in the boot sector only: other systems read the root folder's
-            // label entry, and fsck takes a boot sector label without one for a mistake.
-            FatBootSector bootSector;
-            if (text.Length > 0 && FatBootSector.TryParse(ReadPartitionSector(partition, 0), out bootSector) && bootSector != null)
-            {
-                SetRootLabel(partition, bootSector, text);
-                partition.Flush();
-            }
-        }
-
-        private static bool TryFormat(Partition partition, FatType type, string label)
-        {
-            // FAT32: the formatter's cluster size, Windows' table.
-            if (type == FatType32)
-            {
-                return VfsManager.TryFormat(Volumes.FatDriver, partition, new FatFormatOptions { Type = type, VolumeLabel = label });
-            }
-
-            for (int sectorsPerCluster = 1; sectorsPerCluster <= 64; sectorsPerCluster *= 2)
-            {
-                FatFormatOptions options = new FatFormatOptions { Type = type, SectorsPerCluster = (byte)sectorsPerCluster, VolumeLabel = label };
-
-                if (VfsManager.TryFormat(Volumes.FatDriver, partition, options))
-                {
-                    return true;
-                }
-            }
-
-            return false;
-        }
-
-        /// <summary>
-        /// The sectors the FAT volume of a partition takes, 0 when it holds none.
-        /// </summary>
-        private static ulong FatVolumeSectors(Partition partition)
-        {
-            FatBootSector bootSector;
-            byte[] boot = ReadPartitionSector(partition, 0);
-            return FatBootSector.TryParse(boot, out bootSector) && bootSector != null ? bootSector.TotalSectorCount : 0;
         }
 
         private static byte MbrTypeOf(string filesystem)
@@ -1030,23 +922,46 @@ namespace Aura_OS.System.Filesystem
                     return MbrFat16;
                 case Fat12:
                     return MbrFat12;
+                case Ext2:
                 case Unformatted:
-                    return MbrUnformatted;
+                    return MbrLinux;
             }
 
-            throw new InvalidOperationException("Aura writes FAT32, FAT16, FAT12 or unformatted partitions, not '" + filesystem + "'.");
+            throw new InvalidOperationException("Aura writes FAT32, FAT16, FAT12, ext2 or unformatted partitions, not '" + filesystem + "'.");
         }
 
         /// <summary>
-        /// Gives a primary partition's MBR entry the system ID of the filesystem it holds now. Nothing for
-        /// a logical one: its entry is in an EBR.
+        /// Gives a partition's table entry the type of the filesystem it holds now: a primary partition's
+        /// MBR system ID (nothing for a logical one: its entry is in an EBR), or its GPT type. An
+        /// unformatted GPT partition keeps its type.
         /// </summary>
-        private static void MatchMbrType(IBlockDevice disk, Partition partition)
+        private static void MatchPartitionType(IBlockDevice disk, PartitionTable table, Partition partition)
         {
             string label;
+            string filesystem = DetectFilesystem(partition, out label);
+
+            if (table == PartitionTable.Gpt)
+            {
+                if (filesystem == Ext2)
+                {
+                    GptChecksums.SetPartitionType(disk, partition.StartSector, LinuxFilesystemType);
+                }
+                else if (filesystem.StartsWith("FAT"))
+                {
+                    GptChecksums.SetPartitionType(disk, partition.StartSector, Gpt.BasicDataPartitionType);
+                }
+
+                return;
+            }
+
+            if (table != PartitionTable.Mbr)
+            {
+                return;
+            }
+
             byte systemId;
 
-            switch (DetectFilesystem(partition, out label))
+            switch (filesystem)
             {
                 case Fat32:
                     systemId = MbrFat32;
@@ -1057,8 +972,9 @@ namespace Aura_OS.System.Filesystem
                 case Fat12:
                     systemId = MbrFat12;
                     break;
+                case Ext2:
                 case Unformatted:
-                    systemId = MbrUnformatted;
+                    systemId = MbrLinux;
                     break;
                 default:
                     return;
@@ -1088,141 +1004,18 @@ namespace Aura_OS.System.Filesystem
         }
 
         /// <summary>
-        /// The label of a FAT volume, in capitals: up to 11 letters, digits, spaces, - and _. "" for none.
+        /// The label as that filesystem writes it, "" for none: a FAT one in capitals, up to 11 letters,
+        /// digits, spaces, - and _; an ext2 one up to 16 ASCII characters. None for unformatted.
         /// </summary>
         /// <exception cref="InvalidOperationException">Another character, or too long.</exception>
-        public static string CheckLabel(string label)
+        public static string CheckLabel(string filesystem, string label)
         {
-            string text = (label ?? "").Trim();
-
-            if (text.Length > MaxLabelLength)
+            if (filesystem == Ext2)
             {
-                throw new InvalidOperationException("A FAT label has " + MaxLabelLength + " characters at most.");
+                return Ext2Volume.CheckLabel(label);
             }
 
-            StringBuilder capitals = new StringBuilder(text.Length);
-
-            for (int i = 0; i < text.Length; i++)
-            {
-                char c = text[i];
-
-                if (c >= 'a' && c <= 'z')
-                {
-                    c = (char)(c - 'a' + 'A');
-                }
-
-                if (!((c >= 'A' && c <= 'Z') || (c >= '0' && c <= '9') || c == ' ' || c == '-' || c == '_'))
-                {
-                    throw new InvalidOperationException("A FAT label has letters, digits, spaces, - and _ only.");
-                }
-
-                capitals.Append(c);
-            }
-
-            return capitals.ToString();
-        }
-
-        /// <summary>
-        /// The label's 11 bytes, padded with spaces.
-        /// </summary>
-        private static byte[] LabelBytes(string text)
-        {
-            byte[] name = new byte[MaxLabelLength];
-
-            for (int i = 0; i < MaxLabelLength; i++)
-            {
-                name[i] = (byte)(i < text.Length ? text[i] : ' ');
-            }
-
-            return name;
-        }
-
-        /// <summary>
-        /// The volume label entry of the root folder (its first cluster on FAT32): renamed, deleted for no
-        /// label, or added in its first free entry.
-        /// </summary>
-        private static void SetRootLabel(Partition partition, FatBootSector bootSector, string text)
-        {
-            ulong lba;
-            ulong count;
-
-            if (bootSector.Type == FatType32)
-            {
-                lba = bootSector.ClusterToLba(bootSector.RootCluster);
-                count = bootSector.SectorsPerCluster;
-            }
-            else
-            {
-                lba = bootSector.RootStartLba;
-                count = bootSector.RootSectorCount;
-            }
-
-            if (count == 0 || lba >= partition.BlockCount || count > partition.BlockCount - lba)
-            {
-                return;
-            }
-
-            int blockSize = (int)partition.BlockSize;
-            byte[] sector = new byte[blockSize];
-            ulong freeLba = 0;
-            int freeOffset = -1;
-
-            for (ulong s = 0; s < count; s++)
-            {
-                partition.ReadBlock(lba + s, 1, sector);
-
-                for (int offset = 0; offset + DirectoryEntrySize <= blockSize; offset += DirectoryEntrySize)
-                {
-                    byte first = sector[offset];
-                    byte attributes = sector[offset + AttributesOffset];
-
-                    if (first == 0 || first == DeletedEntry)
-                    {
-                        if (freeOffset < 0)
-                        {
-                            freeLba = lba + s;
-                            freeOffset = offset;
-                        }
-
-                        // 0: no entry after this one.
-                        if (first == 0)
-                        {
-                            s = count;
-                            break;
-                        }
-
-                        continue;
-                    }
-
-                    if ((attributes & LongNameAttributes) == LongNameAttributes || (attributes & VolumeIdAttribute) == 0)
-                    {
-                        continue;
-                    }
-
-                    if (text.Length > 0)
-                    {
-                        Array.Copy(LabelBytes(text), 0, sector, offset, MaxLabelLength);
-                    }
-                    else
-                    {
-                        sector[offset] = DeletedEntry;
-                    }
-
-                    partition.WriteBlock(lba + s, 1, sector);
-                    return;
-                }
-            }
-
-            if (text.Length == 0 || freeOffset < 0)
-            {
-                return;
-            }
-
-            partition.ReadBlock(freeLba, 1, sector);
-            Array.Clear(sector, freeOffset, DirectoryEntrySize);
-            Array.Copy(LabelBytes(text), 0, sector, freeOffset, MaxLabelLength);
-            sector[freeOffset + AttributesOffset] = VolumeIdAttribute;
-            partition.WriteBlock(freeLba, 1, sector);
+            return filesystem == Unformatted ? "" : FatVolume.CheckLabel(label);
         }
 
         /// <summary>
@@ -1249,13 +1042,6 @@ namespace Aura_OS.System.Filesystem
         {
             byte[] sector = new byte[(int)disk.BlockSize];
             disk.ReadBlock(lba, 1, sector);
-            return sector;
-        }
-
-        private static byte[] ReadPartitionSector(Partition partition, ulong lba)
-        {
-            byte[] sector = new byte[(int)partition.BlockSize];
-            partition.ReadBlock(lba, 1, sector);
             return sector;
         }
 
@@ -1298,7 +1084,7 @@ namespace Aura_OS.System.Filesystem
         /// <summary>
         /// A label field: its printable ASCII characters, trimmed (ext and swap pad with zeros, FAT with spaces).
         /// </summary>
-        private static string ReadText(byte[] data, int offset, int length)
+        internal static string ReadText(byte[] data, int offset, int length)
         {
             StringBuilder text = new StringBuilder(length);
 

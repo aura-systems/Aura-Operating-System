@@ -356,6 +356,8 @@ namespace Aura_OS
             LoadImage("UI/Images/Icons/16/partition-table.bmp", "16");
             LoadImage("UI/Images/Icons/16/properties.bmp", "16");
             LoadImage("UI/Images/Icons/16/locked.bmp", "16");
+            LoadImage("UI/Images/Icons/16/undo.bmp", "16");
+            LoadImage("UI/Images/Icons/16/apply.bmp", "16");
             LoadImage("UI/Images/Icons/24/program.bmp", "24");
             LoadImage("UI/Images/Icons/24/reboot.bmp", "24");
             LoadImage("UI/Images/Icons/24/logout.bmp", "24");

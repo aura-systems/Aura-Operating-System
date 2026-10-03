@@ -1,7 +1,12 @@
 -- Disk Manager: the disks and their partitions, as GParted shows them. A bar draws the partitions in
 -- their place on the disk, a list gives their filesystem, mount point, label, size and use. It creates
 -- partition tables; creates, deletes, moves, resizes, formats and labels partitions; and mounts and
--- unmounts their volumes. Each action is done once it is confirmed: there is no queue of them.
+-- unmounts their volumes.
+--
+-- The changes wait in a list of operations: the bar and the list show the disk as it will be once they
+-- are done, Undo takes the last change back, and Apply does them all, in order. Mounting and unmounting
+-- are done at once. A partition is known by an id: "p" and its first sector for one on the disk, "n"
+-- and a number for one an operation creates.
 
 local app = aura.app
 local disks, fs = aura.disks, aura.fs
@@ -21,6 +26,9 @@ local fields = app:find("fields")
 local okButton = app:find("ok")
 local cancelButton = app:find("cancel")
 local confirm = app:find("confirm")
+local operations = app:find("operations")
+local operationsTitle = app:find("operationsTitle")
+local operationList = app:find("operationList")
 
 local rows = {
   before = app:find("beforeRow"),
@@ -39,14 +47,25 @@ local tableBox = app:find("tableType")
 local MIB = 1024 * 1024
 
 -- The filesystem drop-down's items, in order.
-local FILESYSTEMS = { "FAT32", "FAT16", "FAT12", "unformatted" }
+local FILESYSTEMS = { "FAT32", "FAT16", "FAT12", "ext2", "unformatted" }
 
--- The smallest and largest partition each FAT takes, in MB, as the formatter needs it.
-local MINIMUM_MB = { FAT32 = 33, FAT16 = 3, FAT12 = 1, unformatted = 1 }
+-- The smallest and largest partition each filesystem takes, in MB, as its formatter needs it.
+local MINIMUM_MB = { FAT32 = 33, FAT16 = 3, FAT12 = 1, ext2 = 1, unformatted = 1 }
 local MAXIMUM_MB = { FAT16 = 2047, FAT12 = 127 }
 
--- What the FATs take, for the panel.
-local FAT_SIZES = "FAT32 takes 33 MB or more, FAT16 3 MB to 2 GB, FAT12 up to 127 MB."
+-- What they take, for the panel.
+local SIZES = "FAT32 takes 33 MB or more, FAT16 3 MB to 2 GB, FAT12 up to 127 MB, ext2 1 MB or more."
+
+-- What a label holds, for the panel.
+local LABEL_RULES = {
+  FAT = "Up to 11 letters, digits, spaces, - and _: FAT writes them in capitals. Empty for no label.",
+  ext2 = "Up to 16 ASCII letters, digits, spaces and punctuation. Empty for no label.",
+}
+
+-- The MBR system ID and the GPT type Aura gives each filesystem.
+local MBR_IDS = { FAT32 = 0x0C, FAT16 = 0x0E, FAT12 = 0x01, ext2 = 0x83, unformatted = 0x83 }
+local BASIC_DATA = "EBD0A0A2-B9E5-4433-87C0-68B6B72699C7"
+local LINUX_FILESYSTEM = "0FC63DAF-8483-4772-8E79-3D69D8477DE4"
 
 -- GParted's colors for the filesystems.
 local COLORS = {
@@ -62,17 +81,23 @@ local COLORS = {
   ["linux-swap"] = "#C1665A",
 }
 
-local UNKNOWN_COLOR = "#000000"
-local UNALLOCATED_COLOR = "#A9A9A9"
-local UNALLOCATED_INSIDE = "#C8C8C8"
-local EXTENDED_COLOR = "#7DFCFE"
-local USED_COLOR = "#F8F8BA"
-local SELECTION_COLOR = "#316AC5"
+-- The bar's other colors: an unknown filesystem's, free space's (its border and inside), the extended
+-- partition's, a volume's used part, the selection's frame.
+local SHADES = {
+  unknown = "#000000",
+  unallocated = "#A9A9A9",
+  unallocatedInside = "#C8C8C8",
+  extended = "#7DFCFE",
+  used = "#F8F8BA",
+  selection = "#316AC5",
+}
 
--- The bar: the space between two boxes, a box's colored border, the narrowest box.
-local GAP = 4
-local BORDER = 3
-local MIN_WIDTH = 12
+-- The bar: the space between two boxes, a box's colored border, the narrowest box; how near a box's side
+-- a press resizes it from that side, and how far the mouse goes before a drag changes anything, in pixels.
+local BAR = { gap = 4, border = 3, minWidth = 12, edge = 6, deadZone = 3 }
+
+-- The cursor over the bar for what a press there does.
+local CURSORS = { left = "resizeHorizontal", right = "resizeHorizontal", move = "grab" }
 
 -- The panel's text, in characters a line.
 local PANEL_COLUMNS = 32
@@ -87,8 +112,8 @@ local MBR_TYPES = {
 
 local GPT_TYPES = {
   ["C12A7328-F81F-11D2-BA4B-00A0C93EC93B"] = { "EFI System", "esp" },
-  ["EBD0A0A2-B9E5-4433-87C0-68B6B72699C7"] = { "Basic data" },
-  ["0FC63DAF-8483-4772-8E79-3D69D8477DE4"] = { "Linux filesystem" },
+  [BASIC_DATA] = { "Basic data" },
+  [LINUX_FILESYSTEM] = { "Linux filesystem" },
   ["21686148-6449-6E6F-744E-656564454649"] = { "BIOS boot", "bios_grub" },
   ["E3C9E316-0B5C-4DB8-817D-F92DF00215AE"] = { "Microsoft reserved", "msftres" },
   ["DE94BBA4-06D1-4D40-A16A-BFD50179D6AC"] = { "Windows recovery" },
@@ -101,16 +126,37 @@ local COLUMNS = {
   { title = "Partition", width = 14 },
   { title = "File system", width = 12 },
   { title = "Mount", width = 6 },
-  { title = "Label", width = 11 },
+  { title = "Label", width = 16 },
   { title = "Size", width = 9, right = true },
   { title = "Used", width = 9, right = true },
   { title = "Unused", width = 9, right = true },
-  { title = "Flags", width = 12 },
+  { title = "Flags", width = 10 },
 }
 
--- aura.disks.list(), and the disk shown (one of them), nil when there is none.
+-- An operation's icon in the list of operations.
+local OPERATION_ICONS = {
+  table = "16-partition-table.bmp",
+  create = "16-add.bmp",
+  delete = "16-delete.bmp",
+  resize = "16-resize.bmp",
+  format = "16-format.bmp",
+  label = "16-label.bmp",
+}
+
+-- aura.disks.list(): the disks as they are; the one shown, as it is (realDisk) and as it will be once
+-- the pending operations are done (disk). nil when there is none.
 local diskList = {}
+local realDisk
 local disk
+
+-- The operations to apply, in order: { kind = "table"|"create"|"delete"|"resize"|"format"|"label",
+-- disk = (its name), text = , ... }; what create makes is id, the others change target. history holds
+-- each list before a change, for Undo. A list is never changed: a change makes a new one.
+local pending = {}
+local history = {}
+
+-- The number of the next partition an operation creates: "new #1".
+local nextNew = 1
 
 -- The disk's partitions, free spaces and extended partition: { kind = "partition"|"free"|"extended",
 -- start = , sectors = , partition = (an aura.disks entry), logical = , tail = , children = }. tree is the
@@ -118,8 +164,14 @@ local disk
 local tree = {}
 local segments = {}
 
--- The bar's boxes: { segment = , x = , y = , width = , height = }, an extended partition's after it.
+-- The bar's boxes: { segment = , x = , y = , width = , height = , scale = (sectors a pixel) }, an
+-- extended partition's after it.
 local boxes = {}
+
+-- The partition being dragged on the bar: { id = , name = , mode = "left"|"right"|"move", x = (where the
+-- press was), start = , sectors = , first = , finish = (where it can go), minimum = , maximum = , scale = ,
+-- newStart = , newSectors = }; nil when none is.
+local drag
 
 -- Each mounted volume's { free = , total = } bytes by its mount point, read once: it goes through the
 -- whole FAT. False for one that could not be read.
@@ -133,8 +185,10 @@ local panelSegment
 -- What the confirm dialog asks about: the function Apply calls.
 local confirmed
 
--- An action waits for the window to be drawn: the buttons do nothing until it ran.
+-- An action waits for the window to be drawn: the buttons do nothing until it ran. applying: the
+-- operations are being applied, one a frame.
 local busy = false
+local applying = false
 
 -- Text ----------------------------------------------------------------------------------------------
 
@@ -230,6 +284,19 @@ local function headerText()
   return columns(titles)
 end
 
+local function plural(count, word)
+  return count .. " " .. word .. (count == 1 and "" or "s")
+end
+
+-- "The operation before it was applied." or "The 3 operations before it were applied."
+local function operationsSentence(count, where, done)
+  if count == 1 then
+    return "The operation " .. where .. " was " .. done .. "."
+  end
+
+  return "The " .. count .. " operations " .. where .. " were " .. done .. "."
+end
+
 -- Sectors -------------------------------------------------------------------------------------------
 
 -- The sectors in a MB (MiB) of the disk.
@@ -241,8 +308,292 @@ local function alignUp(sector, alignment)
   return (sector + alignment - 1) // alignment * alignment
 end
 
+-- The nearest MB boundary.
+local function snap(sector, alignment)
+  return (sector + alignment // 2) // alignment * alignment
+end
+
 local function bytesOf(segment)
   return segment.sectors * disk.sectorSize
+end
+
+-- Filesystems ---------------------------------------------------------------------------------------
+
+local function isFat(filesystem)
+  return filesystem:sub(1, 3) == "FAT"
+end
+
+-- The label as the filesystem writes it: a FAT one in capitals, none on an unformatted partition.
+local function labelAs(filesystem, label)
+  label = (label or ""):match("^%s*(.-)%s*$")
+
+  if isFat(filesystem) then
+    return label:upper()
+  end
+
+  return filesystem == "ext2" and label or ""
+end
+
+-- Why that label does not go on a volume of that filesystem, nil when it does.
+local function labelProblem(filesystem, label)
+  label = label:match("^%s*(.-)%s*$")
+
+  if isFat(filesystem) then
+    if #label > 11 or label:find("[^%w _%-]") then
+      return "A FAT label has up to 11 letters, digits, spaces, - and _."
+    end
+  elseif filesystem == "ext2" then
+    if #label > 16 or label:find("[^\32-\126]") then
+      return "An ext2 label has up to 16 ASCII letters, digits, spaces and punctuation."
+    end
+  end
+
+  return nil
+end
+
+local function gptTypeOf(filesystem)
+  return filesystem == "ext2" and LINUX_FILESYSTEM or BASIC_DATA
+end
+
+-- Why a partition of that many MB cannot take that filesystem, nil when it can.
+local function sizeProblem(filesystem, megabytes)
+  if megabytes < MINIMUM_MB[filesystem] then
+    return filesystem .. " takes " .. MINIMUM_MB[filesystem] .. " MB or more."
+  elseif MAXIMUM_MB[filesystem] and megabytes > MAXIMUM_MB[filesystem] then
+    return filesystem .. " takes up to " .. MAXIMUM_MB[filesystem] .. " MB."
+  end
+
+  return nil
+end
+
+-- The filesystem drop-down's index of the largest FAT that fits in that many MB.
+local function defaultFilesystem(megabytes)
+  if megabytes >= MINIMUM_MB.FAT32 then
+    return 0
+  end
+
+  return megabytes >= MINIMUM_MB.FAT16 and 1 or 2
+end
+
+-- What the disk will be ------------------------------------------------------------------------------
+
+local function copyTable(source)
+  local copy = {}
+
+  for key, value in pairs(source) do
+    copy[key] = value
+  end
+
+  return copy
+end
+
+-- A copy of a disk entry the operations can change: its partitions copied too.
+local function copyDisk(d)
+  local copy = copyTable(d)
+  copy.partitions = {}
+
+  for i, partition in ipairs(d.partitions) do
+    copy.partitions[i] = copyTable(partition)
+  end
+
+  if d.extended then
+    copy.extended = copyTable(d.extended)
+  end
+
+  return copy
+end
+
+local function partitionById(d, id)
+  for i, partition in ipairs(d.partitions) do
+    if partition.id == id then
+      return partition, i
+    end
+  end
+
+  return nil
+end
+
+-- Why a partition cannot take the sectors [start, start + sectors) of the disk, nil when it can. except
+-- is the partition that moves there, which does not overlap itself.
+local function placeProblem(d, start, sectors, logical, except)
+  if sectors < 1 then
+    return "A partition takes 1 sector or more."
+  end
+
+  local first, finish
+
+  if logical then
+    if not d.extended then
+      return "There is no extended partition for a logical one."
+    end
+
+    first, finish = d.extended.start + 1, d.extended.start + d.extended.sectors
+  else
+    first, finish = d.usableStart, d.usableEnd
+  end
+
+  if start < first or start + sectors > finish then
+    return "It does not fit in " .. (logical and "the extended partition." or "the disk.")
+  end
+
+  -- A logical partition's EBR is the sector before it.
+  local low, high = start - (logical and 1 or 0), start + sectors
+
+  for _, partition in ipairs(d.partitions) do
+    if partition ~= except and partition.logical == (logical or false) then
+      local otherLow = partition.start - (partition.logical and 1 or 0)
+
+      if low < partition.start + partition.sectors and otherLow < high then
+        return "It overlaps " .. partition.name .. "."
+      end
+    end
+  end
+
+  if not logical and d.extended and start < d.extended.start + d.extended.sectors and d.extended.start < high then
+    return "It overlaps the extended partition."
+  end
+
+  return nil
+end
+
+-- Does an operation to the disk d (a copy): nil, or why it cannot be done there.
+local function play(d, op)
+  if op.kind == "table" then
+    d.table = op.table
+    d.partitions = {}
+    d.extended = nil
+    d.primaries = 0
+    d.error = nil
+
+    -- As Cosmos writes them: a GPT's 128 entries and backup take 34 and 33 sectors at the ends.
+    if op.table == "GPT" then
+      d.usableStart, d.usableEnd = 34, d.sectors - 33
+    else
+      d.usableStart, d.usableEnd = 1, math.min(d.sectors, 0xFFFFFFFF)
+    end
+
+    return nil
+  end
+
+  if d.table ~= "MBR" and d.table ~= "GPT" then
+    return d.name .. " has no partition table."
+  end
+
+  if op.kind == "create" then
+    if not op.logical and d.table == "MBR" and d.primaries >= 4 then
+      return "An MBR disk holds 4 primary partitions at most."
+    end
+
+    local problem = placeProblem(d, op.start, op.sectors, op.logical, nil)
+
+    if problem then
+      return problem
+    end
+
+    -- Cosmos puts a logical partition after the last one, its EBR right after that one's end.
+    if op.logical then
+      local expected = d.extended.start + 1
+
+      for _, partition in ipairs(d.partitions) do
+        if partition.logical then
+          expected = math.max(expected, partition.start + partition.sectors + 1)
+        end
+      end
+
+      if op.start ~= expected then
+        return "Aura adds a logical partition right after the last one only."
+      end
+    end
+
+    d.partitions[#d.partitions + 1] = {
+      id = op.id, name = op.name, start = op.start, sectors = op.sectors, size = op.sectors * d.sectorSize,
+      filesystem = op.filesystem, label = labelAs(op.filesystem, op.label),
+      volumeSectors = op.filesystem == "unformatted" and 0 or op.sectors,
+      logical = op.logical or false, boot = false, system = false, new = true,
+      mbrType = d.table == "MBR" and MBR_IDS[op.filesystem] or nil,
+      gptType = d.table == "GPT" and gptTypeOf(op.filesystem) or nil,
+    }
+
+    if not op.logical and d.table == "MBR" then
+      d.primaries = d.primaries + 1
+    end
+
+    return nil
+  end
+
+  local partition, index = partitionById(d, op.target)
+
+  if not partition then
+    return "That partition is not on " .. d.name .. " anymore."
+  end
+
+  if op.kind == "delete" then
+    table.remove(d.partitions, index)
+
+    if not partition.logical and d.table == "MBR" then
+      d.primaries = d.primaries - 1
+    end
+  elseif op.kind == "resize" then
+    if op.newSectors < (partition.volumeSectors or 0) then
+      return "Its " .. partition.filesystem .. " volume takes " .. formatSize(partition.volumeSectors * d.sectorSize)
+        .. ": the partition cannot get smaller."
+    end
+
+    local problem = placeProblem(d, op.newStart, op.newSectors, partition.logical, partition)
+
+    if problem then
+      return problem
+    end
+
+    partition.start, partition.sectors = op.newStart, op.newSectors
+    partition.size = op.newSectors * d.sectorSize
+    partition.changed = true
+  elseif op.kind == "format" then
+    partition.filesystem = op.filesystem
+    partition.label = labelAs(op.filesystem, op.label)
+    partition.volumeSectors = op.filesystem == "unformatted" and 0 or partition.sectors
+    partition.mountPoint = nil
+    partition.changed = true
+
+    if d.table == "MBR" and not partition.logical then
+      partition.mbrType = MBR_IDS[op.filesystem]
+    elseif d.table == "GPT" and op.filesystem ~= "unformatted" then
+      partition.gptType = gptTypeOf(op.filesystem)
+    end
+  elseif op.kind == "label" then
+    partition.label = labelAs(partition.filesystem, op.label)
+    partition.changed = true
+  end
+
+  return nil
+end
+
+-- The disk as it will be once those operations (the ones for it) are done; and when one cannot be done,
+-- why and its index.
+local function previewOf(d, ops)
+  local result = copyDisk(d)
+
+  for i, op in ipairs(ops) do
+    if op.disk == d.name then
+      local problem = play(result, op)
+
+      if problem then
+        return result, problem, i
+      end
+    end
+  end
+
+  return result
+end
+
+local function realOf(name)
+  for _, d in ipairs(diskList) do
+    if d.name == name then
+      return d
+    end
+  end
+
+  return nil
 end
 
 -- Disk ----------------------------------------------------------------------------------------------
@@ -350,16 +701,12 @@ end
 
 local function colorOf(segment)
   if segment.kind == "free" then
-    return UNALLOCATED_COLOR
+    return SHADES.unallocated
   elseif segment.kind == "extended" then
-    return EXTENDED_COLOR
+    return SHADES.extended
   end
 
-  return COLORS[segment.partition.filesystem] or UNKNOWN_COLOR
-end
-
-local function isFat(partition)
-  return partition.filesystem:sub(1, 3) == "FAT"
+  return COLORS[segment.partition.filesystem] or SHADES.unknown
 end
 
 -- The { free = , total = } of a mounted partition's volume, nil until read (or for none).
@@ -435,11 +782,11 @@ end
 -- Bar -----------------------------------------------------------------------------------------------
 
 -- The boxes' widths: as their sectors, each at least the narrowest, all of them the room left by
--- the gaps.
+-- the gaps. Then the sectors a pixel stands for.
 local function widths(items, total)
   local count = #items
-  local room = math.max(count, total - (count - 1) * GAP)
-  local minimum = math.min(MIN_WIDTH, room // count)
+  local room = math.max(count, total - (count - 1) * BAR.gap)
+  local minimum = math.min(BAR.minWidth, room // count)
   local sectors = 0
 
   for _, item in ipairs(items) do
@@ -484,17 +831,17 @@ local function widths(items, total)
     result[i] = result[i] + room - used
   end
 
-  return result
+  return result, sectors / room
 end
 
 local function drawLines(lines, x, y, width, height)
-  local columns = (width - 2 * BORDER - 2) // 8
+  local columns = (width - 2 * BAR.border - 2) // 8
 
   if columns < 1 then
     return
   end
 
-  local count = math.min(#lines, (height - 2 * BORDER) // 16)
+  local count = math.min(#lines, (height - 2 * BAR.border) // 16)
   local top = y + (height - count * 16) // 2
 
   for i = 1, count do
@@ -511,27 +858,27 @@ end
 local layoutBoxes
 
 -- A box: a border of its filesystem's color, its volume's used part in yellow, its name and size.
-local function drawBox(segment, x, y, width, height)
-  boxes[#boxes + 1] = { segment = segment, x = x, y = y, width = width, height = height }
+local function drawBox(segment, x, y, width, height, scale)
+  boxes[#boxes + 1] = { segment = segment, x = x, y = y, width = width, height = height, scale = scale }
   bar:fillRect(x, y, width, height, colorOf(segment))
 
-  local innerWidth, innerHeight = width - 2 * BORDER, height - 2 * BORDER
+  local innerWidth, innerHeight = width - 2 * BAR.border, height - 2 * BAR.border
 
   if innerWidth <= 0 or innerHeight <= 0 then
     return
   end
 
-  bar:fillRect(x + BORDER, y + BORDER, innerWidth, innerHeight, segment.kind == "free" and UNALLOCATED_INSIDE or "white")
+  bar:fillRect(x + BAR.border, y + BAR.border, innerWidth, innerHeight, segment.kind == "free" and SHADES.unallocatedInside or "white")
 
   local space = spaceOf(segment)
 
   if space and space.total > 0 then
-    local usedWidth = innerWidth * (space.total - space.free) // space.total
-    bar:fillRect(x + BORDER, y + BORDER, usedWidth, innerHeight, USED_COLOR)
+    local usedWidth = math.min(innerWidth, innerWidth * (space.total - space.free) // space.total)
+    bar:fillRect(x + BAR.border, y + BAR.border, usedWidth, innerHeight, SHADES.used)
   end
 
   if segment.kind == "extended" then
-    local inset = BORDER + 2
+    local inset = BAR.border + 2
     layoutBoxes(segment.children, x + inset, y + inset, width - 2 * inset, height - 2 * inset)
   else
     drawLines({ nameOf(segment), formatSize(bytesOf(segment)) }, x, y, width, height)
@@ -543,11 +890,11 @@ layoutBoxes = function(items, x, y, width, height)
     return
   end
 
-  local sizes = widths(items, width)
+  local sizes, scale = widths(items, width)
 
   for i, item in ipairs(items) do
-    drawBox(item, x, y, sizes[i], height)
-    x = x + sizes[i] + GAP
+    drawBox(item, x, y, sizes[i], height, scale)
+    x = x + sizes[i] + BAR.gap
   end
 end
 
@@ -555,7 +902,15 @@ local function selectedSegment()
   return segments[list.selectedIndex + 1]
 end
 
--- The disk's partitions on the bar, the selected one framed.
+local function frame(box)
+  local x, y, w, h = box.x - 2, box.y - 2, box.width + 4, box.height + 4
+  bar:fillRect(x, y, w, 2, SHADES.selection)
+  bar:fillRect(x, y + h - 2, w, 2, SHADES.selection)
+  bar:fillRect(x, y, 2, h, SHADES.selection)
+  bar:fillRect(x + w - 2, y, 2, h, SHADES.selection)
+end
+
+-- The disk's partitions on the bar, the selected one framed (the one dragged, while it is).
 local function drawBar()
   bar:clear()
   boxes = {}
@@ -568,15 +923,13 @@ local function drawBar()
   -- Room around the boxes for the frame.
   layoutBoxes(tree, 3, 3, bar.width - 6, bar.height - 6)
 
-  local selected = selectedSegment()
+  local selected = not drag and selectedSegment()
 
   for _, box in ipairs(boxes) do
-    if box.segment == selected then
-      local x, y, w, h = box.x - 2, box.y - 2, box.width + 4, box.height + 4
-      bar:fillRect(x, y, w, 2, SELECTION_COLOR)
-      bar:fillRect(x, y + h - 2, w, 2, SELECTION_COLOR)
-      bar:fillRect(x, y, 2, h, SELECTION_COLOR)
-      bar:fillRect(x + w - 2, y, 2, h, SELECTION_COLOR)
+    local partition = box.segment.partition
+
+    if box.segment == selected or (drag and partition and partition.id == drag.id) then
+      frame(box)
     end
   end
 end
@@ -593,14 +946,29 @@ local function tableName(d)
   return "no partition table"
 end
 
+local function pendingOn(name)
+  local count = 0
+
+  for _, op in ipairs(pending) do
+    if op.disk == name then
+      count = count + 1
+    end
+  end
+
+  return count
+end
+
 local function diskSummary(d)
   if d.error then
     return d.name .. " cannot be read: " .. d.error
   end
 
   local count = #d.partitions
-  return d.name .. ": " .. formatSize(d.size) .. ", " .. tableName(d) .. ", "
-    .. count .. (count == 1 and " partition" or " partitions")
+  local waiting = pendingOn(d.name)
+
+  return d.name .. ": " .. formatSize(d.size) .. ", " .. tableName(d) .. ", " .. plural(count, "partition")
+    .. (waiting == 1 and ", once the pending operation is applied" or "")
+    .. (waiting > 1 and ", once the " .. waiting .. " pending operations are applied" or "")
 end
 
 -- The status line: the selected segment, or the disk.
@@ -624,10 +992,16 @@ local function showStatus()
     text = text .. partition.filesystem .. (partition.label ~= "" and " '" .. partition.label .. "'" or "")
       .. ", " .. formatSize(bytesOf(segment))
 
-    if partition.system then
+    if partition.new then
+      text = text .. ", created when the operations are applied"
+    elseif partition.system then
       text = text .. ", Aura runs from it (" .. partition.mountPoint .. ")"
     elseif partition.mountPoint then
       text = text .. ", mounted at " .. partition.mountPoint
+    end
+
+    if partition.changed then
+      text = text .. ", changes pending"
     end
 
     local space = spaceOf(segment)
@@ -700,15 +1074,47 @@ local function indexAt(start, kind)
   return nil
 end
 
+-- The index (from 1) of the partition with that id.
+local function indexOfId(id)
+  for i, segment in ipairs(segments) do
+    if segment.partition and segment.partition.id == id then
+      return i
+    end
+  end
+
+  return nil
+end
+
+-- The operations under the list: shown while there are some.
+local function renderOperations()
+  local items = {}
+
+  for i, op in ipairs(pending) do
+    items[i] = { text = op.text, icon = OPERATION_ICONS[op.kind] }
+  end
+
+  operationList.items = items
+  operationList.selectedIndex = -1
+  operationsTitle.text = plural(#pending, "operation") .. " pending: Apply does them, in this order; Undo takes the last change back."
+  operations.visible = #pending > 0
+end
+
 local readSpaces, information
 
--- Shows that disk (an entry of diskList), the segment at that sector selected.
+-- Shows that disk (an entry of diskList) as it will be, the segment at that sector selected.
 local function showDisk(d, selectStart, selectKind)
-  disk = d
-  tree = d and buildTree(d) or {}
+  realDisk = d
+  disk = d and previewOf(d, pending) or nil
+  tree = disk and buildTree(disk) or {}
   segments = flatten(tree)
   render(indexAt(selectStart, selectKind))
   readSpaces()
+end
+
+-- Shows the disk again after a change to the operations, the partition at that sector selected.
+local function showChange(selectStart, selectKind)
+  showDisk(realDisk, selectStart, selectKind)
+  renderOperations()
 end
 
 -- Reads the volumes' free space, one a frame once the window shows the disk: each read goes through
@@ -732,8 +1138,10 @@ readSpaces = function()
         spaces[mountPoint] = free and { free = free, total = total } or false
 
         -- The status line keeps what it says: the result of an action, maybe.
-        renderRows(list.selectedIndex >= 0 and list.selectedIndex + 1 or nil)
-        drawBar()
+        if not drag then
+          renderRows(list.selectedIndex >= 0 and list.selectedIndex + 1 or nil)
+          drawBar()
+        end
 
         if panelAction == "information" then
           information()
@@ -753,12 +1161,46 @@ local function diskName(d)
   return d.name .. " (" .. formatSize(d.size) .. ", " .. tableType .. ")"
 end
 
+-- The pending operations that still apply to the disks as they are now: a disk that went, or changed
+-- under them (vol, another system), loses its own. How many went.
+local function checkPending()
+  local kept, dropped, broken = {}, 0, {}
+
+  for _, op in ipairs(pending) do
+    if broken[op.disk] == nil then
+      local d = realOf(op.disk)
+      broken[op.disk] = not d or select(2, previewOf(d, pending)) ~= nil
+    end
+
+    if broken[op.disk] then
+      dropped = dropped + 1
+    else
+      kept[#kept + 1] = op
+    end
+  end
+
+  if dropped > 0 then
+    pending = kept
+    history = {}
+  end
+
+  return dropped
+end
+
 -- Reads the disks again; shows the one with that name (else the first), the segment at that sector
 -- selected.
 local function reload(name, selectStart, selectKind)
   local ok, result = pcall(disks.list)
   diskList = ok and result or {}
 
+  -- Each partition known by where it starts: the operations name them so.
+  for _, d in ipairs(diskList) do
+    for _, partition in ipairs(d.partitions) do
+      partition.id = "p" .. partition.start
+    end
+  end
+
+  local dropped = checkPending()
   local items, index = {}, 1
 
   for i, d in ipairs(diskList) do
@@ -776,6 +1218,11 @@ local function reload(name, selectStart, selectKind)
   diskBox.items = items
   diskBox.selectedIndex = index - 1
   showDisk(diskList[index], selectStart, selectKind)
+  renderOperations()
+
+  if dropped > 0 then
+    setStatus("The disks changed: " .. plural(dropped, "pending operation") .. " no longer fit and went.", "red")
+  end
 end
 
 -- Reads the disks again, the same disk and segment selected.
@@ -888,21 +1335,10 @@ local function selectedPartition(action)
   return nil
 end
 
--- The filesystem drop-down's index of the largest FAT that fits in that many MB.
-local function defaultFilesystem(megabytes)
-  if megabytes >= MINIMUM_MB.FAT32 then
-    return 0
-  end
-
-  return megabytes >= MINIMUM_MB.FAT16 and 1 or 2
-end
-
--- Why a partition of that many MB cannot take that filesystem, nil when it can.
-local function sizeProblem(filesystem, megabytes)
-  if megabytes < MINIMUM_MB[filesystem] then
-    return filesystem .. " takes " .. MINIMUM_MB[filesystem] .. " MB or more."
-  elseif MAXIMUM_MB[filesystem] and megabytes > MAXIMUM_MB[filesystem] then
-    return filesystem .. " takes up to " .. MAXIMUM_MB[filesystem] .. " MB."
+-- Why Aura cannot change that partition now, nil when it can.
+local function systemProblem(partition)
+  if partition.system then
+    return "Aura runs from this partition (" .. partition.mountPoint .. "): it cannot change while Aura uses it."
   end
 
   return nil
@@ -914,6 +1350,350 @@ local function readMiB(box)
   return text and tonumber(text)
 end
 
+-- Operations ----------------------------------------------------------------------------------------
+
+local function createText(op)
+  return "Create " .. op.name .. ": " .. formatSize(op.sectors * op.sectorSize) .. " " .. op.filesystem
+    .. (labelAs(op.filesystem, op.label) ~= "" and " '" .. labelAs(op.filesystem, op.label) .. "'" or "")
+    .. (op.logical and ", logical," or "") .. " on " .. op.disk
+end
+
+local function resizeText(partition, newStart, newSectors)
+  local moved = newStart - partition.start
+  local parts = {}
+
+  if moved ~= 0 then
+    parts[#parts + 1] = "Move " .. partition.name .. " " .. formatSize(math.abs(moved) * disk.sectorSize)
+      .. (moved > 0 and " to the right" or " to the left")
+  end
+
+  if newSectors ~= partition.sectors then
+    local sizes = "from " .. formatSize(partition.sectors * disk.sectorSize) .. " to " .. formatSize(newSectors * disk.sectorSize)
+    parts[#parts + 1] = moved ~= 0 and "resize it " .. sizes or "Resize " .. partition.name .. " " .. sizes
+  end
+
+  return table.concat(parts, " and ")
+end
+
+-- The operation that creates that partition, and its index; nil when it is on the disk already.
+local function creationOf(name, id)
+  for i, op in ipairs(pending) do
+    if op.kind == "create" and op.disk == name and op.id == id then
+      return op, i
+    end
+  end
+
+  return nil
+end
+
+-- Whether a change to that partition can go into the operation creating it: it is to be created, and
+-- nothing after that changes it.
+local function foldable(name, id)
+  local _, index = creationOf(name, id)
+
+  if not index then
+    return false
+  end
+
+  for i = index + 1, #pending do
+    if pending[i].disk == name and pending[i].target == id then
+      return false
+    end
+  end
+
+  return true
+end
+
+-- The pending operations with op folded into the creation of the partition it changes, nil when it
+-- cannot be: deleting it takes the creation and its changes away; formatting, labeling or resizing it
+-- changes how it is created.
+local function fold(op)
+  if not op.target or not foldable(op.disk, op.target) then
+    return nil
+  end
+
+  local result = {}
+
+  if op.kind == "delete" then
+    for _, other in ipairs(pending) do
+      if other.disk ~= op.disk or (other.id ~= op.target and other.target ~= op.target) then
+        result[#result + 1] = other
+      end
+    end
+
+    return result
+  end
+
+  local creation, index = creationOf(op.disk, op.target)
+  local folded = copyTable(creation)
+
+  if op.kind == "format" then
+    folded.filesystem, folded.label = op.filesystem, op.label
+  elseif op.kind == "label" then
+    folded.label = op.label
+  elseif op.kind == "resize" then
+    folded.start, folded.sectors = op.newStart, op.newSectors
+  else
+    return nil
+  end
+
+  folded.text = createText(folded)
+
+  for i, other in ipairs(pending) do
+    result[i] = i == index and folded or other
+  end
+
+  return result
+end
+
+-- A resize right after another of the same partition: the pending operations with both made one, from
+-- where the partition was before the first (none when it goes back there). nil for another operation.
+local function combine(op)
+  local last = pending[#pending]
+
+  if op.kind ~= "resize" or not last or last.kind ~= "resize" or last.disk ~= op.disk or last.target ~= op.target then
+    return nil
+  end
+
+  local result = {}
+
+  for i = 1, #pending - 1 do
+    result[i] = pending[i]
+  end
+
+  local before = partitionById(previewOf(realOf(op.disk), result), op.target)
+
+  if before and (before.start ~= op.newStart or before.sectors ~= op.newSectors) then
+    local combined = copyTable(op)
+    combined.moving = op.newStart ~= before.start
+    combined.text = resizeText(before, op.newStart, op.newSectors)
+    result[#result + 1] = combined
+  else
+    op.cancels = true
+  end
+
+  return result
+end
+
+-- Adds an operation after the pending ones, or folds it into the creation of the partition it changes,
+-- or into the resize just before it: nil, or why it cannot be done once those are.
+local function queue(op)
+  local d = realOf(op.disk)
+  local candidate = fold(op) or combine(op)
+
+  if not candidate or select(2, previewOf(d, candidate)) then
+    candidate = {}
+
+    for i, other in ipairs(pending) do
+      candidate[i] = other
+    end
+
+    candidate[#candidate + 1] = op
+
+    local _, problem = previewOf(d, candidate)
+
+    if problem then
+      return problem
+    end
+  end
+
+  history[#history + 1] = pending
+  pending = candidate
+  return nil
+end
+
+-- The disk again once an operation joined the others, the partition at that sector selected.
+local function queued(op, selectStart, selectKind)
+  showChange(selectStart, selectKind or "partition")
+  setStatus(op.cancels and "Back where it was: the resize is no longer pending." or op.text .. ": pending, Apply does it.")
+end
+
+local function undo()
+  if #history == 0 then
+    setStatus("There is nothing to undo.")
+    return
+  end
+
+  local before = pending
+  pending = table.remove(history)
+
+  -- What went: an operation of the longer list missing from the other.
+  local undone
+
+  for _, op in ipairs(before) do
+    local found = false
+
+    for _, other in ipairs(pending) do
+      found = found or other == op
+    end
+
+    undone = undone or (not found and op)
+  end
+
+  local segment = selectedSegment()
+  showChange(segment and segment.start, segment and segment.kind)
+  setStatus(undone and "Undone: " .. undone.text .. "." or "Undone.")
+end
+
+-- Takes one operation out of the list (and, for a creation, the changes to what it creates), when the
+-- ones after it do not need it.
+local function removeOperation(index)
+  local removed = pending[index]
+  local candidate = {}
+
+  for i, op in ipairs(pending) do
+    local changesCreated = removed.kind == "create" and op.disk == removed.disk and op.target == removed.id
+
+    if i ~= index and not changesCreated then
+      candidate[#candidate + 1] = op
+    end
+  end
+
+  local d = realOf(removed.disk)
+
+  if d and select(2, previewOf(d, candidate)) then
+    setStatus("The operations after it need it: take them out first, or Undo.", "red")
+    return
+  end
+
+  history[#history + 1] = pending
+  pending = candidate
+
+  local segment = selectedSegment()
+  showChange(segment and segment.start, segment and segment.kind)
+  setStatus("Taken out: " .. removed.text .. ".")
+end
+
+local function clearAll()
+  if #pending == 0 then
+    setStatus("There is no operation to clear.")
+    return
+  end
+
+  local count = #pending
+  history[#history + 1] = pending
+  pending = {}
+
+  local segment = selectedSegment()
+  showChange(segment and segment.start, segment and segment.kind)
+  setStatus(plural(count, "operation") .. " cleared: Undo brings them back.")
+end
+
+-- Does one operation on the disks. starts holds where each partition starts now, by disk and id, as the
+-- operations before moved them: a logical partition may start elsewhere than the preview said.
+local function execute(op, starts)
+  local function startOf(id)
+    return starts[op.disk .. ":" .. id]
+  end
+
+  if op.kind == "table" then
+    return disks.createTable(op.disk, op.table)
+  elseif op.kind == "create" then
+    local ok, result = disks.create(op.disk, op.start, op.sectors, op.filesystem, op.label)
+
+    if ok then
+      starts[op.disk .. ":" .. op.id] = result
+    end
+
+    return ok, result
+  end
+
+  local start = startOf(op.target)
+
+  if not start then
+    return false, "That partition is not on " .. op.disk .. " anymore."
+  end
+
+  if op.kind == "delete" then
+    return disks.delete(op.disk, start)
+  elseif op.kind == "resize" then
+    local newStart = op.moving and op.newStart or start
+    local ok, why = disks.resize(op.disk, start, newStart, op.newSectors)
+
+    if ok then
+      starts[op.disk .. ":" .. op.target] = newStart
+    end
+
+    return ok, why
+  elseif op.kind == "format" then
+    return disks.format(op.disk, start, op.filesystem, op.label)
+  elseif op.kind == "label" then
+    return disks.setLabel(op.disk, start, op.label)
+  end
+
+  return false, "Unknown operation."
+end
+
+-- Applies the pending operations, one a frame: the status line and the list of operations show which.
+-- The first that fails stops the others.
+local function applyAll()
+  local all = pending
+  local total = #all
+  local starts = {}
+  local name = disk and disk.name
+
+  for _, d in ipairs(diskList) do
+    for _, partition in ipairs(d.partitions) do
+      starts[d.name .. ":" .. partition.id] = partition.start
+    end
+  end
+
+  applying = true
+
+  if panelAction then
+    closePanel()
+  end
+
+  local function finish()
+    applying = false
+    pending = {}
+    history = {}
+    nextNew = 1
+    spaces = {}
+    reload(name)
+  end
+
+  local step
+
+  step = function(i)
+    if i > total then
+      finish()
+      setStatus(plural(total, "operation") .. " applied.", "green")
+      return
+    end
+
+    local op = all[i]
+    operationList.selectedIndex = i - 1
+    setStatus("Applying " .. i .. " of " .. total .. ": " .. op.text .. "...")
+
+    app:after(0, function()
+      local ok, why = execute(op, starts)
+
+      if not ok then
+        finish()
+        showError("Operation " .. i .. " of " .. total .. " failed", op.text .. ": " .. (why or "unknown error.")
+          .. (i > 1 and " " .. operationsSentence(i - 1, "before it", "applied") or "")
+          .. (i < total and " " .. operationsSentence(total - i, "after it", "not") or ""))
+        return
+      end
+
+      step(i + 1)
+    end)
+  end
+
+  step(1)
+end
+
+local function apply()
+  if #pending == 0 then
+    setStatus("There is no operation to apply.")
+    return
+  end
+
+  ask("Apply", (#pending == 1 and "Apply the operation?" or "Apply the " .. #pending .. " operations?")
+    .. " Keep the computer on until done.", applyAll)
+end
+
 -- Actions -------------------------------------------------------------------------------------------
 
 -- The free space a new partition can take: from its first MB boundary. A logical one goes after the
@@ -923,11 +1703,18 @@ local function newRoom(segment)
   local finish = segment.start + segment.sectors
 
   if segment.logical then
-    return segment.start, math.max(0, (finish - segment.start - 1) // alignment)
+    return segment.start + 1, math.max(0, (finish - segment.start - 1) // alignment)
   end
 
   local first = alignUp(segment.start, alignment)
   return first, first < finish and (finish - first) // alignment or 0
+end
+
+-- The panel's text for that filesystem: what it takes, and its label.
+local function filesystemText(room)
+  local filesystem = FILESYSTEMS[filesystemBox.selectedIndex + 1] or "FAT32"
+  local rules = isFat(filesystem) and LABEL_RULES.FAT or LABEL_RULES[filesystem] or "An unformatted partition has no label."
+  return (room and "Up to " .. room .. " MB. " or "") .. SIZES .. " " .. rules
 end
 
 local function newPartition()
@@ -966,8 +1753,8 @@ local function newPartition()
   filesystemBox.selectedIndex = defaultFilesystem(room)
 
   openPanel("new", segment, segment.logical and "New logical partition" or "New partition",
-    { before = not segment.logical, size = true, filesystem = true, label = true }, "Create",
-    "Up to " .. room .. " MB. " .. FAT_SIZES)
+    { before = not segment.logical, size = true, filesystem = true, label = true }, "Add", filesystemText(room))
+  panelSegment.room = room
 end
 
 local function createOk()
@@ -987,27 +1774,30 @@ local function createOk()
   elseif sizeProblem(filesystem, size) then
     panelProblem(sizeProblem(filesystem, size))
     return
+  elseif labelProblem(filesystem, label) then
+    panelProblem(labelProblem(filesystem, label))
+    return
   end
 
   local alignment = perMiB()
   local start = first + before * alignment
-  local sectors = size * alignment
-  local name = disk.name
+  local op = {
+    kind = "create", disk = disk.name, id = "n" .. nextNew, name = "new #" .. nextNew,
+    start = start, sectors = size * alignment, filesystem = filesystem, label = label,
+    logical = segment.logical or false, sectorSize = disk.sectorSize,
+  }
+  op.text = createText(op)
 
+  local problem = queue(op)
+
+  if problem then
+    panelProblem(problem)
+    return
+  end
+
+  nextNew = nextNew + 1
   closePanel()
-
-  run("Creating a " .. size .. " MB " .. filesystem .. " partition on " .. name .. "...", function()
-    local ok, result = disks.create(name, start, sectors, filesystem, label)
-    spaces = {}
-
-    if ok then
-      reload(name, result, "partition")
-      setStatus("Partition created.", "green")
-    else
-      reload(name, start)
-      showError("Could not create the partition", result)
-    end
-  end)
+  queued(op, start)
 end
 
 local function deletePartition()
@@ -1018,27 +1808,28 @@ local function deletePartition()
   end
 
   local partition = segment.partition
+  local problem = systemProblem(partition)
 
-  if partition.system then
-    showError("Delete " .. partition.name, "Aura runs from this partition (" .. partition.mountPoint .. "): it cannot be deleted while Aura uses it.")
+  if problem then
+    showError("Delete " .. partition.name, problem)
     return
   end
 
-  local name, start = disk.name, segment.start
+  local op = { kind = "delete", disk = disk.name, target = partition.id,
+    text = "Delete " .. partition.name .. " (" .. formatSize(bytesOf(segment)) .. " " .. partition.filesystem .. ")" }
 
-  ask("Delete", "Delete " .. partition.name .. " (" .. formatSize(bytesOf(segment)) .. ")? Its files will be lost.", function()
-    run("Deleting " .. partition.name .. "...", function()
-      local ok, why = disks.delete(name, start)
-      spaces = {}
-      reload(name, start)
+  problem = queue(op)
 
-      if ok then
-        setStatus(partition.name .. " deleted.", "green")
-      else
-        showError("Could not delete " .. partition.name, why)
-      end
-    end)
-  end)
+  if problem then
+    showError("Delete " .. partition.name, problem)
+    return
+  end
+
+  if panelAction then
+    closePanel()
+  end
+
+  queued(op, segment.start, "free")
 end
 
 -- The free space around a partition, from the previous one's end to the next one's start: where it
@@ -1082,6 +1873,50 @@ local function regionOf(segment)
   return first, finish
 end
 
+-- The smallest and largest sizes a partition can take, in sectors: a partition to be created is made at
+-- its new size, between what its filesystem takes; another one's volume keeps its size.
+local function sizeLimits(partition)
+  local alignment = perMiB()
+  local minimum, maximum
+
+  if partition.new and foldable(disk.name, partition.id) then
+    local filesystem = partition.filesystem
+    minimum = MINIMUM_MB[filesystem] * alignment
+    maximum = MAXIMUM_MB[filesystem] and MAXIMUM_MB[filesystem] * alignment or math.huge
+  else
+    minimum = math.max(alignment, partition.volumeSectors or 0)
+    maximum = math.huge
+  end
+
+  return math.min(minimum, partition.sectors), math.max(maximum, partition.sectors)
+end
+
+-- Why that partition cannot be resized or moved, nil when it can.
+local function resizeProblem(partition)
+  if disk.table ~= "MBR" and disk.table ~= "GPT" then
+    return disk.name .. " has no partition table: the filesystem takes the whole disk."
+  end
+
+  return systemProblem(partition)
+end
+
+-- Adds the resize of a partition to the operations: nil, or why it cannot be done.
+local function queueResize(partition, newStart, newSectors)
+  local op = {
+    kind = "resize", disk = disk.name, target = partition.id, newStart = newStart, newSectors = newSectors,
+    moving = newStart ~= partition.start, text = resizeText(partition, newStart, newSectors),
+  }
+
+  local problem = queue(op)
+
+  if problem then
+    return problem
+  end
+
+  queued(op, newStart)
+  return nil
+end
+
 local function resizePartition()
   local segment = selectedPartition("resize or move")
 
@@ -1090,12 +1925,10 @@ local function resizePartition()
   end
 
   local partition = segment.partition
+  local problem = resizeProblem(partition)
 
-  if disk.table ~= "MBR" and disk.table ~= "GPT" then
-    showError("Resize/Move", disk.name .. " has no partition table: the filesystem takes the whole disk.")
-    return
-  elseif partition.system then
-    showError("Resize/Move " .. partition.name, "Aura runs from this partition (" .. partition.mountPoint .. "): it cannot change while Aura uses it.")
+  if problem then
+    showError("Resize/Move " .. partition.name, problem)
     return
   end
 
@@ -1106,6 +1939,7 @@ local function resizePartition()
   local before = segment.start > alignedFirst and (segment.start - alignedFirst) // alignment or 0
   local size = segment.sectors // alignment
   local after = finish > segment.start + segment.sectors and (finish - segment.start - segment.sectors) // alignment or 0
+  local minimum = sizeLimits(partition)
 
   beforeBox.text = tostring(before)
   sizeBox.text = tostring(size)
@@ -1116,14 +1950,19 @@ local function resizePartition()
     text = "It can grow up to " .. (finish - segment.start) // alignment .. " MB. Aura does not move logical partitions."
   end
 
-  if isFat(partition) then
-    text = text .. " Its FAT volume keeps its size: the partition can " .. (segment.logical and "grow" or "move and grow")
-      .. ", not shrink, and a format uses the new room."
+  if partition.new and foldable(disk.name, partition.id) then
+    text = text .. " It is created at that size: " .. partition.filesystem .. " takes " .. MINIMUM_MB[partition.filesystem]
+      .. " MB" .. (MAXIMUM_MB[partition.filesystem] and " to " .. MAXIMUM_MB[partition.filesystem] .. " MB." or " or more.")
+  elseif (partition.volumeSectors or 0) > 0 then
+    text = text .. " Its " .. partition.filesystem .. " volume keeps its size, " .. formatSize(partition.volumeSectors * disk.sectorSize)
+      .. ": the partition cannot get smaller, and a format uses the new room."
   end
+
+  text = text .. " Dragging its sides or its middle on the bar does it too."
 
   openPanel("resize", segment, "Resize/Move " .. partition.name,
     { before = not segment.logical, size = true }, "Resize/Move", text)
-  panelSegment.original = { before = beforeBox.text, size = sizeBox.text, alignedFirst = alignedFirst, finish = finish }
+  panelSegment.original = { before = beforeBox.text, size = sizeBox.text, alignedFirst = alignedFirst, finish = finish, minimum = minimum }
 end
 
 local function resizeOk()
@@ -1151,32 +1990,25 @@ local function resizeOk()
     local largest = start < original.finish and (original.finish - start) // alignment or 0
     panelProblem("That does not fit: from there, it can take up to " .. largest .. " MB.")
     return
+  elseif sectors < original.minimum then
+    panelProblem("It takes " .. formatSize(original.minimum * disk.sectorSize) .. " or more.")
+    return
+  elseif partition.new and foldable(disk.name, partition.id) and sizeProblem(partition.filesystem, sectors // alignment) then
+    panelProblem(sizeProblem(partition.filesystem, sectors // alignment))
+    return
   end
 
-  local name, oldStart = disk.name, segment.start
-  local moving = start ~= segment.start
+  local problem = queueResize(partition, start, sectors)
 
-  local function apply()
-    run((moving and "Moving " or "Resizing ") .. partition.name .. (moving and ": its sectors are copied, this can take a while..." or "..."), function()
-      local ok, why = disks.resize(name, oldStart, start, sectors)
-      spaces = {}
-      reload(name, ok and start or oldStart, "partition")
-
-      if ok then
-        setStatus(partition.name .. (moving and " moved." or " resized."), "green")
-      else
-        showError("Could not resize/move " .. partition.name, why)
-      end
-    end)
+  if problem then
+    panelProblem(problem)
+    return
   end
 
-  closePanel()
-
-  if moving then
-    ask("Move", "Move " .. partition.name .. "? Keep the computer on until it is done.", apply)
-  else
-    apply()
-  end
+  panelAction = nil
+  panelSegment = nil
+  panel.visible = false
+  list:focus()
 end
 
 local function formatPartition()
@@ -1187,17 +2019,25 @@ local function formatPartition()
   end
 
   local partition = segment.partition
+  local problem = systemProblem(partition)
 
-  if partition.system then
-    showError("Format " .. partition.name, "Aura runs from this partition (" .. partition.mountPoint .. "): it cannot be formatted while Aura uses it.")
+  if problem then
+    showError("Format " .. partition.name, problem)
     return
   end
 
   filesystemBox.selectedIndex = defaultFilesystem(bytesOf(segment) // MIB)
+
+  for i, name in ipairs(FILESYSTEMS) do
+    if name == partition.filesystem then
+      filesystemBox.selectedIndex = i - 1
+    end
+  end
+
   labelBox.text = partition.label
 
   openPanel("format", segment, "Format " .. partition.name, { filesystem = true, label = true }, "Format",
-    "Everything on " .. partition.name .. " will be lost. " .. FAT_SIZES)
+    "Everything on " .. partition.name .. " will be lost. " .. filesystemText(nil))
 end
 
 local function formatOk()
@@ -1205,8 +2045,18 @@ local function formatOk()
   local partition = segment.partition
   local filesystem = FILESYSTEMS[filesystemBox.selectedIndex + 1] or "FAT32"
   local label = labelBox.text
-  local name, start = disk.name, segment.start
-  local problem = sizeProblem(filesystem, bytesOf(segment) // MIB)
+  local problem = sizeProblem(filesystem, bytesOf(segment) // MIB) or labelProblem(filesystem, label)
+
+  if problem then
+    panelProblem(problem)
+    return
+  end
+
+  local op = { kind = "format", disk = disk.name, target = partition.id, filesystem = filesystem, label = label,
+    text = "Format " .. partition.name .. " as " .. filesystem
+      .. (labelAs(filesystem, label) ~= "" and " '" .. labelAs(filesystem, label) .. "'" or "") }
+
+  problem = queue(op)
 
   if problem then
     panelProblem(problem)
@@ -1214,20 +2064,7 @@ local function formatOk()
   end
 
   closePanel()
-
-  ask("Format", "Format " .. partition.name .. " as " .. filesystem .. "? Its files will be lost.", function()
-    run("Formatting " .. partition.name .. " as " .. filesystem .. "...", function()
-      local ok, why = disks.format(name, start, filesystem, label)
-      spaces = {}
-      reload(name, start, "partition")
-
-      if ok then
-        setStatus(partition.name .. " formatted as " .. filesystem .. ".", "green")
-      else
-        showError("Could not format " .. partition.name, why)
-      end
-    end)
-  end)
+  queued(op, segment.start)
 end
 
 local function labelPartition()
@@ -1239,43 +2076,58 @@ local function labelPartition()
 
   local partition = segment.partition
 
-  if not isFat(partition) then
-    showError("Label " .. partition.name, "Aura labels FAT volumes only: this one is " .. partition.filesystem .. ".")
+  if not isFat(partition.filesystem) and partition.filesystem ~= "ext2" then
+    showError("Label " .. partition.name, "Aura labels FAT and ext2 volumes only: this one is " .. partition.filesystem .. ".")
     return
-  elseif partition.system then
-    showError("Label " .. partition.name, "Aura runs from this partition (" .. partition.mountPoint .. "): its label cannot change while Aura uses it.")
+  end
+
+  local problem = systemProblem(partition)
+
+  if problem then
+    showError("Label " .. partition.name, problem)
     return
   end
 
   labelBox.text = partition.label
-  openPanel("label", segment, "Label " .. partition.name, { label = true }, "Apply",
-    "Up to 11 letters, digits, spaces, - and _: FAT writes them in capitals. Empty for no label.")
+  openPanel("label", segment, "Label " .. partition.name, { label = true }, "Label",
+    isFat(partition.filesystem) and LABEL_RULES.FAT or LABEL_RULES.ext2)
 end
 
 local function labelOk()
   local segment = panelSegment
   local partition = segment.partition
   local label = labelBox.text:match("^%s*(.-)%s*$")
-  local name, start = disk.name, segment.start
+  local problem = labelProblem(partition.filesystem, label)
 
-  if #label > 11 or label:find("[^%w%s_%-]") then
-    panelProblem("A FAT label has up to 11 letters, digits, spaces, - and _.")
+  if problem then
+    panelProblem(problem)
+    return
+  end
+
+  local written = labelAs(partition.filesystem, label)
+  local op = { kind = "label", disk = disk.name, target = partition.id, label = label,
+    text = written == "" and "Remove the label of " .. partition.name or "Label " .. partition.name .. " '" .. written .. "'" }
+
+  problem = queue(op)
+
+  if problem then
+    panelProblem(problem)
     return
   end
 
   closePanel()
+  queued(op, segment.start)
+end
 
-  run("Labeling " .. partition.name .. "...", function()
-    local ok, why = disks.setLabel(name, start, label)
-    spaces = {}
-    reload(name, start, "partition")
+-- Why mounting or unmounting cannot wait for the disk's operations, nil when there are none.
+local function pendingProblem()
+  local count = pendingOn(disk.name)
 
-    if ok then
-      setStatus(partition.name .. (label == "" and " has no label now." or " is labeled " .. label:upper() .. "."), "green")
-    else
-      showError("Could not label " .. partition.name, why)
-    end
-  end)
+  if count > 0 then
+    return "Apply or undo the " .. plural(count, "operation") .. " pending on " .. disk.name .. " first."
+  end
+
+  return nil
 end
 
 local function mountPartition()
@@ -1286,6 +2138,13 @@ local function mountPartition()
   end
 
   local partition = segment.partition
+  local problem = pendingProblem()
+
+  if problem then
+    showError("Mount " .. partition.name, problem)
+    return
+  end
+
   local name, start = disk.name, segment.start
 
   run("Mounting " .. partition.name .. "...", function()
@@ -1311,6 +2170,13 @@ local function unmountPartition()
 
   if partition.system then
     showError("Unmount " .. partition.name, "Aura runs from this partition (" .. partition.mountPoint .. "): it stays mounted.")
+    return
+  end
+
+  local problem = pendingProblem()
+
+  if problem then
+    showError("Unmount " .. partition.name, problem)
     return
   end
 
@@ -1345,30 +2211,25 @@ local function newTable()
   -- MBR addresses 2 TB at most.
   tableBox.selectedIndex = disk.size >= 2 * 1024 * 1024 * MIB and 1 or 0
 
-  openPanel("table", disk, "New partition table on " .. disk.name, { table = true }, "Create",
+  openPanel("table", disk, "New partition table on " .. disk.name, { table = true }, "Add",
     "Every partition on " .. disk.name .. " and all their files will be lost. MBR holds 4 primary partitions of up to 2 TB, GPT 128 of any size.")
 end
 
 local function tableOk()
   local d = panelSegment
   local tableType = tableBox.selectedIndex == 1 and "GPT" or "MBR"
-  local name = d.name
+  local op = { kind = "table", disk = d.name, table = tableType,
+    text = "Write a new " .. tableType .. " on " .. d.name .. ", without its partitions" }
+
+  local problem = queue(op)
+
+  if problem then
+    panelProblem(problem)
+    return
+  end
 
   closePanel()
-
-  ask("Partition table", "Write a new " .. tableType .. " on " .. name .. "? All its partitions will be lost.", function()
-    run("Writing a " .. tableType .. " on " .. name .. "...", function()
-      local ok, why = disks.createTable(name, tableType)
-      spaces = {}
-      reload(name)
-
-      if ok then
-        setStatus(name .. " has a new, empty " .. tableType .. ".", "green")
-      else
-        showError("Could not write the partition table", why)
-      end
-    end)
-  end)
+  queued(op)
 end
 
 -- What the panel tells about the selected segment, or the disk.
@@ -1393,6 +2254,10 @@ information = function()
     add("Sectors", disk.sectors)
     add("Sector size", disk.sectorSize .. " bytes")
 
+    if pendingOn(disk.name) > 0 then
+      add("Pending", plural(pendingOn(disk.name), "operation"))
+    end
+
     if disk.error then
       add("Error", disk.error)
     end
@@ -1414,6 +2279,10 @@ information = function()
       add("Used", formatSize(space.total - space.free) .. ", unused: " .. formatSize(space.free))
     end
 
+    if (partition.volumeSectors or 0) > 0 and partition.volumeSectors < partition.sectors then
+      add("Volume", formatSize(partition.volumeSectors * disk.sectorSize) .. ": a format uses the whole partition")
+    end
+
     local partitionType = typeOf(partition)
 
     if partitionType then
@@ -1425,6 +2294,12 @@ information = function()
 
     if partition.logical then
       lines[#lines + 1] = "A logical partition, in the extended one."
+    end
+
+    if partition.new then
+      lines[#lines + 1] = "Created when the operations are applied."
+    elseif partition.changed then
+      lines[#lines + 1] = "Changed when the operations are applied."
     end
   else
     add("Size", formatSize(bytesOf(segment)))
@@ -1454,6 +2329,17 @@ local function ok()
   end
 end
 
+-- Another filesystem in the panel: what it takes, and its label.
+local function filesystemChanged()
+  if panelAction == "new" then
+    panelText.text = wrap(filesystemText(panelSegment.room), PANEL_COLUMNS)
+    panelText.color = "black"
+  elseif panelAction == "format" then
+    panelText.text = wrap("Everything on " .. panelSegment.partition.name .. " will be lost. " .. filesystemText(nil), PANEL_COLUMNS)
+    panelText.color = "black"
+  end
+end
+
 local function confirmOk()
   confirm.visible = false
   local action = confirmed
@@ -1471,7 +2357,7 @@ end
 
 -- Selection -----------------------------------------------------------------------------------------
 
-local function select()
+local function selectionChanged()
   drawBar()
   showStatus()
   showMountButton()
@@ -1482,24 +2368,221 @@ local function select()
   end
 end
 
--- A click on the bar selects the innermost box under it.
-local function barClick()
-  local x, y = bar.clickX, bar.clickY
+-- An operation picked in their list: its partition, on its disk, is selected.
+local function selectOperation()
+  local op = pending[operationList.selectedIndex + 1]
+
+  if not op or applying then
+    return
+  end
+
+  if not disk or op.disk ~= disk.name then
+    for i, d in ipairs(diskList) do
+      if d.name == op.disk then
+        diskBox.selectedIndex = i - 1
+        showDisk(d)
+      end
+    end
+  end
+
+  local index = indexOfId(op.target or op.id)
+
+  if index then
+    list.selectedIndex = index - 1
+    selectionChanged()
+  end
+
+  setStatus(op.text .. ". Delete takes it out of the operations.")
+end
+
+-- Dragging ------------------------------------------------------------------------------------------
+
+-- The innermost box at that point of the bar.
+local function boxAt(x, y)
   local found
 
   for _, box in ipairs(boxes) do
     if x >= box.x and x < box.x + box.width and y >= box.y and y < box.y + box.height then
-      found = box.segment
+      found = box
     end
   end
 
+  return found
+end
+
+-- What a press at x on that box does: resize the partition from its "left" or "right" side, "move" it,
+-- or nothing (nil).
+local function dragModeAt(box, x)
+  local segment = box.segment
+
+  if segment.kind ~= "partition" or resizeProblem(segment.partition) then
+    return nil
+  end
+
+  local fromLeft, fromRight = x - box.x, box.x + box.width - 1 - x
+
+  if fromRight < BAR.edge and fromRight <= fromLeft then
+    return "right"
+  elseif segment.logical then
+    -- Aura moves no logical partition, so their start stays.
+    return nil
+  elseif fromLeft < BAR.edge then
+    return "left"
+  end
+
+  return "move"
+end
+
+-- Where the dragged partition goes for the mouse dx pixels from the press: in whole MB, in its free
+-- space, its size within its limits. Where it was while the mouse is near the press.
+local function dragged(dx)
+  local start, sectors = drag.start, drag.sectors
+
+  if math.abs(dx) < BAR.deadZone then
+    return start, sectors
+  end
+
+  local alignment = perMiB()
+  local delta = math.floor(dx * drag.scale)
+  local first = alignUp(drag.first, alignment)
+  local ending = start + sectors
+
+  if drag.mode == "move" then
+    if drag.finish - sectors < first then
+      return start, sectors
+    end
+
+    return math.max(first, math.min(snap(start + delta, alignment), drag.finish - sectors)), sectors
+  elseif drag.mode == "right" then
+    local newEnd = math.min(snap(ending + delta, alignment), drag.finish, start + drag.maximum)
+    newEnd = math.max(newEnd, start + drag.minimum)
+    return start, newEnd - start
+  end
+
+  local newStart = math.max(snap(start + delta, alignment), first, ending - drag.maximum)
+  newStart = math.min(newStart, ending - drag.minimum)
+  return newStart, ending - newStart
+end
+
+-- The status line while dragging: what the partition becomes.
+local function dragText()
+  local size = function(sectors) return formatSize(sectors * disk.sectorSize) end
+  local moved = drag.newStart - drag.start
+
+  if drag.mode == "move" then
+    return "Move " .. drag.name .. ": " .. (moved == 0 and "where it is" or size(math.abs(moved)) .. (moved > 0 and " to the right" or " to the left"))
+  end
+
+  return "Resize " .. drag.name .. ": " .. size(drag.newSectors) .. ", was " .. size(drag.sectors)
+    .. ". Release the button to add it to the operations."
+end
+
+-- The bar with the dragged partition where it goes now.
+local function drawDrag()
+  local d = copyDisk(disk)
+  local partition = partitionById(d, drag.id)
+  partition.start, partition.sectors = drag.newStart, drag.newSectors
+  partition.size = drag.newSectors * d.sectorSize
+
+  tree = buildTree(d)
+  segments = flatten(tree)
+  drawBar()
+  setStatus(dragText())
+end
+
+-- A press on the bar selects the innermost box under it, and starts dragging the partition when that
+-- can change.
+local function barPress()
+  drag = nil
+
+  if busy or applying then
+    return
+  end
+
+  local x, y = bar.clickX, bar.clickY
+  local box = boxAt(x, y)
+
+  if not box then
+    return
+  end
+
   for i, segment in ipairs(segments) do
-    if segment == found then
+    if segment == box.segment then
       list.selectedIndex = i - 1
       list:focus()
-      select()
-      return
+      selectionChanged()
     end
+  end
+
+  local mode = dragModeAt(box, x)
+
+  if not mode then
+    return
+  end
+
+  -- The panel's form is about the partition as it was.
+  if panelAction and panelAction ~= "information" and panelAction ~= "error" then
+    closePanel()
+  end
+
+  local segment = box.segment
+  local partition = segment.partition
+  local first, finish = regionOf(segment)
+  local minimum, maximum = sizeLimits(partition)
+
+  drag = {
+    id = partition.id, name = partition.name, mode = mode, x = x,
+    start = segment.start, sectors = segment.sectors, first = first, finish = finish,
+    minimum = minimum, maximum = maximum, scale = box.scale,
+    newStart = segment.start, newSectors = segment.sectors,
+  }
+end
+
+-- The mouse over the bar: the cursor says what a press there does. While dragging, the partition follows.
+local function barMove()
+  if not drag then
+    if not bar.pressed then
+      local x = bar.mouseX
+      local box = not busy and not applying and boxAt(x, bar.mouseY)
+      local cursor = box and CURSORS[dragModeAt(box, x)] or "normal"
+
+      if bar.cursor ~= cursor then
+        bar.cursor = cursor
+      end
+    end
+
+    return
+  end
+
+  local newStart, newSectors = dragged(bar.mouseX - drag.x)
+
+  if newStart ~= drag.newStart or newSectors ~= drag.newSectors then
+    drag.newStart, drag.newSectors = newStart, newSectors
+    drawDrag()
+  end
+end
+
+-- The button released: the resize or move joins the operations.
+local function barRelease()
+  local done = drag
+  drag = nil
+
+  if not done then
+    return
+  end
+
+  if done.newStart == done.start and done.newSectors == done.sectors then
+    -- A click: the bar as it was.
+    showDisk(realDisk, done.start, "partition")
+    return
+  end
+
+  local partition = partitionById(disk, done.id)
+  local problem = queueResize(partition, done.newStart, done.newSectors)
+
+  if problem then
+    showDisk(realDisk, done.start, "partition")
+    setStatus(problem, "red")
   end
 end
 
@@ -1507,7 +2590,7 @@ end
 
 local function guard(action)
   return function()
-    if not busy then
+    if not busy and not applying then
       action()
     end
   end
@@ -1518,6 +2601,9 @@ app:on("delete", guard(deletePartition))
 app:on("resize", guard(resizePartition))
 app:on("format", guard(formatPartition))
 app:on("label", guard(labelPartition))
+app:on("undo", guard(undo))
+app:on("apply", guard(apply))
+app:on("clear", guard(clearAll))
 app:on("mount", guard(mountPartition))
 app:on("unmount", guard(unmountPartition))
 app:on("information", guard(information))
@@ -1525,15 +2611,19 @@ app:on("table", guard(newTable))
 app:on("refresh", guard(refresh))
 app:on("ok", guard(ok))
 app:on("cancel", cancel)
+app:on("filesystem", filesystemChanged)
 app:on("confirmOk", confirmOk)
 app:on("closeConfirm", closeConfirm)
-app:on("select", select)
-app:on("barClick", barClick)
+app:on("select", selectionChanged)
+app:on("operation", selectOperation)
+app:on("barPress", barPress)
+app:on("barMove", barMove)
+app:on("barRelease", barRelease)
 
 app:on("disk", function()
   local d = diskList[diskBox.selectedIndex + 1]
 
-  if d and d ~= disk then
+  if d and d ~= realDisk and not applying then
     if panelAction then
       closePanel()
     end
@@ -1554,10 +2644,14 @@ app:onKey(function(key)
     end
   elseif name == "escape" and panelAction then
     cancel()
-  elseif busy then
+  elseif busy or applying then
     return
+  elseif key.ctrl and key.char == "z" then
+    undo()
   elseif name == "enter" then
     information()
+  elseif name == "delete" and operationList.focused and operationList.selectedIndex >= 0 then
+    removeOperation(operationList.selectedIndex + 1)
   elseif name == "delete" then
     deletePartition()
   elseif name == "insert" then
@@ -1570,7 +2664,11 @@ app:onKey(function(key)
 end)
 
 -- The bar is as wide as the window.
-app:onResize(drawBar)
+app:onResize(function()
+  if not drag then
+    drawBar()
+  end
+end)
 
 -- Something else (vol, a USB stick) may have changed the disks: read them again each time the window
 -- comes to the front.
@@ -1579,7 +2677,7 @@ local wasFocused = true
 app:every(500, function()
   local focused = app.focused
 
-  if focused and not wasFocused and not busy and not confirm.visible then
+  if focused and not wasFocused and not busy and not applying and not drag and not confirm.visible then
     local segment = selectedSegment()
     reload(disk and disk.name, segment and segment.start, segment and segment.kind)
   end

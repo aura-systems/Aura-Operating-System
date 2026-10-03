@@ -755,7 +755,7 @@ namespace Aura_OS.System.Processing.Lua
                         Disks.Resize(disk, Disks.FindPartition(disk, start), newStart, newSectors);
                     });
                 })
-                // setLabel(disk, start, label): a FAT volume's label; true, or false and why.
+                // setLabel(disk, start, label): a FAT or ext2 volume's label; true, or false and why.
                 .Function("setLabel", lua =>
                 {
                     string name = LuaObject.CheckText(lua, 1);
@@ -846,18 +846,19 @@ namespace Aura_OS.System.Processing.Lua
         }
 
         /// <summary>
-        /// { name = , start = , sectors = , size = , filesystem = , label = , mountPoint = , system = ,
-        /// logical = , boot = , mbrType = , gptType = }
+        /// { name = , start = , sectors = , size = , volumeSectors = , filesystem = , label = , mountPoint = ,
+        /// system = , logical = , boot = , mbrType = , gptType = }
         /// </summary>
         private static void PushPartition(ILuaState lua, PartitionInfo info)
         {
             Cosmos.Kernel.System.Storage.Partition partition = info.Partition;
 
-            lua.CreateTable(0, 12);
+            lua.CreateTable(0, 13);
             SetText(lua, "name", partition.Name);
             SetInteger(lua, "start", (long)partition.StartSector);
             SetInteger(lua, "sectors", (long)partition.BlockCount);
             SetInteger(lua, "size", (long)(partition.BlockCount * partition.BlockSize));
+            SetInteger(lua, "volumeSectors", (long)info.VolumeSectors);
             SetText(lua, "filesystem", info.Filesystem);
             SetText(lua, "label", info.Label);
 
@@ -897,6 +898,46 @@ namespace Aura_OS.System.Processing.Lua
                 default:
                     return "none";
             }
+        }
+
+        /// <summary>
+        /// A Canvas's cursor by its name in Lua: the names of CursorState, the first letter small.
+        /// </summary>
+        private static string CursorName(Aura_OS.System.Input.CursorState cursor)
+        {
+            switch (cursor)
+            {
+                case Aura_OS.System.Input.CursorState.ResizeHorizontal:
+                    return "resizeHorizontal";
+                case Aura_OS.System.Input.CursorState.ResizeVertical:
+                    return "resizeVertical";
+                case Aura_OS.System.Input.CursorState.Grab:
+                    return "grab";
+                default:
+                    return "normal";
+            }
+        }
+
+        private static bool TryParseCursor(string name, out Aura_OS.System.Input.CursorState cursor)
+        {
+            switch (name)
+            {
+                case "normal":
+                    cursor = Aura_OS.System.Input.CursorState.Normal;
+                    return true;
+                case "resizeHorizontal":
+                    cursor = Aura_OS.System.Input.CursorState.ResizeHorizontal;
+                    return true;
+                case "resizeVertical":
+                    cursor = Aura_OS.System.Input.CursorState.ResizeVertical;
+                    return true;
+                case "grab":
+                    cursor = Aura_OS.System.Input.CursorState.Grab;
+                    return true;
+            }
+
+            cursor = Aura_OS.System.Input.CursorState.Normal;
+            return false;
         }
 
         /// <summary>
@@ -1279,6 +1320,13 @@ namespace Aura_OS.System.Processing.Lua
                         return 1;
                     }
                     break;
+                case "focused":
+                    if (component is TextBox || component is ListBox)
+                    {
+                        lua.PushBoolean(ReferenceEquals(Kernel.MouseManager.FocusedComponent, component));
+                        return 1;
+                    }
+                    break;
                 case "load":
                     if (component is Picture)
                     {
@@ -1323,6 +1371,33 @@ namespace Aura_OS.System.Processing.Lua
                     {
                         lua.PushInteger(clickYSurface.ClickY);
                         return 1;
+                    }
+                    break;
+                case "mouseX":
+                    if (component is Surface mouseXSurface)
+                    {
+                        lua.PushInteger(mouseXSurface.MouseX);
+                        return 1;
+                    }
+                    break;
+                case "mouseY":
+                    if (component is Surface mouseYSurface)
+                    {
+                        lua.PushInteger(mouseYSurface.MouseY);
+                        return 1;
+                    }
+                    break;
+                case "pressed":
+                    if (component is Surface pressedSurface)
+                    {
+                        lua.PushBoolean(pressedSurface.Pressed);
+                        return 1;
+                    }
+                    break;
+                case "cursor":
+                    if (component is Surface cursorSurface)
+                    {
+                        return Text(lua, CursorName(cursorSurface.Cursor));
                     }
                     break;
                 case "text":
@@ -1536,6 +1611,21 @@ namespace Aura_OS.System.Processing.Lua
                             }
                         }
 
+                        set = true;
+                    }
+                    break;
+                case "cursor":
+                    if (component is Surface cursorSurface)
+                    {
+                        string cursorName = LuaObject.CheckText(lua, 3);
+                        Aura_OS.System.Input.CursorState cursor;
+
+                        if (!TryParseCursor(cursorName, out cursor))
+                        {
+                            return LuaObject.Error(lua, "a cursor is \"normal\", \"resizeHorizontal\", \"resizeVertical\" or \"grab\", not '" + cursorName + "'");
+                        }
+
+                        cursorSurface.Cursor = cursor;
                         set = true;
                     }
                     break;

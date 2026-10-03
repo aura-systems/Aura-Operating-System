@@ -367,6 +367,21 @@ namespace Aura_OS.System.Input
         }
 
         /// <summary>
+        /// Whether that component's window (or other root component) is the one drawn on top under the
+        /// mouse.
+        /// </summary>
+        public bool IsOnTop(Component component)
+        {
+            Component root = component;
+            while (root.Parent != null)
+            {
+                root = root.Parent;
+            }
+
+            return root == DetermineTopRoot();
+        }
+
+        /// <summary>
         /// Clamps the cursor to the screen after a resolution change.
         /// </summary>
         public void ResizeToScreen()

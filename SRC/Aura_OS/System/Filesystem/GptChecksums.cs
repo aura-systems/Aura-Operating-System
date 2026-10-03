@@ -16,6 +16,7 @@ namespace Aura_OS.System.Filesystem
     /// stale when it edits a table another system wrote. Other systems then take the table as damaged,
     /// or read the old backup instead. Update writes them again from the primary table, after each
     /// change Aura makes to a GPT disk.
+    /// GEN3-GAP(gpt-type): no API changes a partition's type: SetPartitionType does, for a format.
     /// </summary>
     internal static class GptChecksums
     {
@@ -35,6 +36,9 @@ namespace Aura_OS.System.Filesystem
         private const int EntryCountOffset = 80;
         private const int EntrySizeOffset = 84;
         private const int EntryArrayCrcOffset = 88;
+
+        // An entry's first sector, after its type and unique GUIDs.
+        private const int EntryStartOffset = 32;
 
         private const int MinHeaderSize = 92;
 
@@ -112,6 +116,83 @@ namespace Aura_OS.System.Filesystem
             }
 
             disk.Flush();
+        }
+
+        /// <summary>
+        /// Gives the partition that starts at that sector the type, then writes the checksums and the
+        /// backup (Update). Nothing when it has that type already, or the table has no such partition.
+        /// </summary>
+        public static void SetPartitionType(IBlockDevice disk, ulong start, Guid type)
+        {
+            int blockSize = (int)disk.BlockSize;
+            byte[] header = new byte[blockSize];
+            disk.ReadBlock(PrimaryHeaderLba, 1, header);
+
+            if (BitConverter.ToUInt64(header, SignatureOffset) != Signature)
+            {
+                return;
+            }
+
+            uint entryCount = BitConverter.ToUInt32(header, EntryCountOffset);
+            uint entrySize = BitConverter.ToUInt32(header, EntrySizeOffset);
+            ulong entryLba = BitConverter.ToUInt64(header, EntryLbaOffset);
+
+            if (entrySize < MinEntrySize || entrySize > MaxEntrySize || entryCount == 0 || entryCount > MaxEntryCount
+                || entryLba <= PrimaryHeaderLba)
+            {
+                return;
+            }
+
+            ulong arraySectors = (ulong)(((int)(entryCount * entrySize) + blockSize - 1) / blockSize);
+
+            if (entryLba + arraySectors > disk.BlockCount)
+            {
+                return;
+            }
+
+            byte[] entries = new byte[(int)arraySectors * blockSize];
+            disk.ReadBlock(entryLba, arraySectors, entries);
+            byte[] guid = type.ToByteArray();
+
+            for (int offset = 0; offset + (int)entrySize <= (int)(entryCount * entrySize); offset += (int)entrySize)
+            {
+                if (BitConverter.ToUInt64(entries, offset + EntryStartOffset) != start || IsEmptyType(entries, offset))
+                {
+                    continue;
+                }
+
+                bool same = true;
+
+                for (int i = 0; i < 16; i++)
+                {
+                    same = same && entries[offset + i] == guid[i];
+                }
+
+                if (!same)
+                {
+                    Array.Copy(guid, 0, entries, offset, 16);
+                    disk.WriteBlock(entryLba, arraySectors, entries);
+                    Update(disk);
+                }
+
+                return;
+            }
+        }
+
+        /// <summary>
+        /// An entry whose type GUID is all zeros is unused.
+        /// </summary>
+        private static bool IsEmptyType(byte[] entries, int offset)
+        {
+            for (int i = 0; i < 16; i++)
+            {
+                if (entries[offset + i] != 0)
+                {
+                    return false;
+                }
+            }
+
+            return true;
         }
 
         /// <summary>
