@@ -34,7 +34,8 @@ public class HelloApp : Application
 ```
 
 Register it with `RegisterApplication(typeof(HelloApp), x, y)` (the file gives the size) and create it
-with `new HelloApp(config.X, config.Y)` in `ApplicationManager.Instantiate`.
+with `new HelloApp(config.X, config.Y)` in `ApplicationManager.Instantiate`. `SetTitle` changes the
+title the file gives (the Editor shows the file path).
 
 `Application` updates, places and draws the controls: the app overrides `Update` or `Draw` only for
 work of its own, and calls the base method. A wrong file throws an `InvalidDataException` naming it
@@ -56,6 +57,8 @@ The root element. Its elements are stacked top to bottom.
 
 - `Stack`: its elements one after the other. `orientation="vertical|horizontal"`, `spacing`, `padding`.
   An element sized `*` along the stack takes the space the others leave.
+- `Panel`: a `Stack` drawn on a colored background that fills its space, like a toolbar.
+  `color` (default `#DFDFDF`), `borders="true"` for a sunken border, and the `Stack` attributes.
 - `Grid`: aligned columns, like a form. `columns="auto,*,120"` (widest element, the space left,
   pixels), `columnSpacing`, `rowSpacing`, `rowHeight` (minimum), `padding`. It holds `Row` elements,
   whose elements fill the columns from the left; hiding a `Row` hides the line.

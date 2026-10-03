@@ -421,6 +421,25 @@ namespace Aura_OS.System.Graphics.UI.GUI
         }
 
         /// <summary>
+        /// Changes the window title, which is also the process and taskbar name.
+        /// </summary>
+        public void SetTitle(string title)
+        {
+            SetName(title);
+            Window.Name = title;
+            Window.TopBar.Text = title;
+
+            // The title bar is in the cached window background: draw and cache it again.
+            _isCached = false;
+            MarkDirty();
+
+            if (Explorer.WindowManager.Applications.Contains(this))
+            {
+                Explorer.Taskbar.UpdateApplicationButtons();
+            }
+        }
+
+        /// <summary>
         /// The layout file's control with that id (AppLayout.Find).
         /// </summary>
         protected T Find<T>(string id) where T : Component

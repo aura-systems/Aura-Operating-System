@@ -146,7 +146,7 @@ namespace Aura_OS.System.Processing
             }*/
             else if (config.Template == typeof(EditorApp))
             {
-                app = new EditorApp("", config.Width, config.Height, config.X, config.Y);
+                app = new EditorApp("", config.X, config.Y);
             }
             else
             {
@@ -234,7 +234,7 @@ namespace Aura_OS.System.Processing
 
                 try
                 {
-                    app = new EditorApp(path, 701, 600, 40, 40);
+                    app = new EditorApp(path, 40, 40);
                 }
                 catch (Exception ex)
                 {

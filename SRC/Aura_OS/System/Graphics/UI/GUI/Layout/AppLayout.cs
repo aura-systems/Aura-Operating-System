@@ -251,6 +251,10 @@ namespace Aura_OS.System.Graphics.UI.GUI.Layout
             {
                 control.Draw();
                 control.DrawInParent();
+
+                // Up to date in the window: the window manager would otherwise redraw it next frame,
+                // over the controls drawn after it (the buttons of a panel).
+                control.MarkCleaned();
             }
         }
 

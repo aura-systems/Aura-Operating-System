@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Editor app window. EditorApp.cs loads and saves the file and puts its path in the title. -->
+<Window title="Editor" width="701" height="600">
+  <Panel orientation="horizontal" padding="2" color="#DFDFDF" borders="true">
+    <Button text="Save" height="18" onClick="save" />
+  </Panel>
+  <TextBox id="content" multiline="true" width="*" height="*" />
+
+  <Dialog id="dialog" title="Save" visible="false">
+    <Button text="OK" onClick="closeDialog" />
+  </Dialog>
+</Window>

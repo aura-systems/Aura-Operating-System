@@ -64,7 +64,10 @@ namespace Aura_OS.System.Graphics.UI.GUI.Layout
             switch (element.Name)
             {
                 case "Stack":
-                    node = BuildStack(element, layout);
+                    node = BuildStack(element, new StackNode(), layout);
+                    break;
+                case "Panel":
+                    node = BuildPanel(element, layout);
                     break;
                 case "Grid":
                     node = BuildGrid(element, layout);
@@ -78,9 +81,8 @@ namespace Aura_OS.System.Graphics.UI.GUI.Layout
             return node;
         }
 
-        private static StackNode BuildStack(NanoXMLNode element, AppLayout layout)
+        private static StackNode BuildStack(NanoXMLNode element, StackNode stack, AppLayout layout)
         {
-            StackNode stack = new StackNode();
             stack.Padding = ThicknessAttr(element, "padding", layout);
             stack.Spacing = IntAttr(element, "spacing", 0, layout);
 
@@ -101,6 +103,19 @@ namespace Aura_OS.System.Graphics.UI.GUI.Layout
             }
 
             return stack;
+        }
+
+        /// <summary>
+        /// A stack on a panel: the panel is a control of its own, added before the elements on it
+        /// so it is drawn under them.
+        /// </summary>
+        private static PanelNode BuildPanel(NanoXMLNode element, AppLayout layout)
+        {
+            Panel panel = new Panel(ColorAttr(element, "color", Kernel.Gray, layout), 0, 0, 0, 0);
+            panel.Borders = BoolAttr(element, "borders", false, layout);
+            layout.AddControl(new ControlNode(panel));
+
+            return (PanelNode)BuildStack(element, new PanelNode(panel), layout);
         }
 
         private static GridNode BuildGrid(NanoXMLNode element, AppLayout layout)

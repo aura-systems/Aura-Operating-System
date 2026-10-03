@@ -28,6 +28,13 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
             Color2 = color2;
         }
 
+        /// <summary>
+        /// A panel looks the same under the mouse: no hover state, so no redraw over the controls on it.
+        /// </summary>
+        public override void Update()
+        {
+        }
+
         public override void Draw()
         {
             if (Background)
