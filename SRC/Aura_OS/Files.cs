@@ -139,7 +139,7 @@ namespace Aura_OS
 
         /// <summary>
         /// The embedded assets under a directory ("Packages/"), by their path relative to Resources/
-        /// ("Packages/SystemInfo.pkg"), subdirectories included.
+        /// ("Packages/SystemInfo.pkg"), subdirectories included, in ordinal order.
         /// </summary>
         public static List<string> List(string dirRelPath)
         {
@@ -154,6 +154,7 @@ namespace Aura_OS
                 }
             }
 
+            paths.Sort(StringComparer.Ordinal);
             return paths;
         }
 

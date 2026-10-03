@@ -57,11 +57,14 @@ The kernel API for packages, a global table (also `require "aura"`). The Lua is 
 | `aura.log(text)` | Writes a line to the OS log (`logs` command), after the package name. |
 | `aura.app` | The app's window, `nil` in a console program. |
 
+The modules below (`aura.system`, `aura.display`...) are objects: reading or setting a field they do not
+have, or setting a read-only one, is an error. Their functions are called with a dot.
+
 ### aura.app
 
 | | |
 |---|---|
-| `app:find(id)` | The control with that `id` in the layout file. An unknown id is an error. |
+| `app:find(id)` | The element with that `id` in the layout file: a control, or a container (`Stack`, `Panel`, `Grid`, `Row`) that has only `id` and `visible`. An unknown id is an error. |
 | `app:on(event, handler)` | Calls `handler()` on the layout's event of that name (`onClick="event"`, `onChange`, `onEnter`). A later call replaces it. |
 | `app.title` | The window title, also the taskbar name. |
 
@@ -75,11 +78,12 @@ error. A change shows on the next frame.
 | Property | Controls | |
 |---|---|---|
 | `id` | all | Read only. |
-| `visible` | all | A hidden control takes no space. |
+| `visible` | all, containers too | A hidden element takes no space: the next ones move up. |
 | `text` | Label, Button, TextBox, Checkbox | |
 | `color` | Label, Button, Checkbox | Text color: `"#RRGGBB"`, `"#AARRGGBB"` or a name (`red`, `green`, `blue`, `black`, `white`, `gray`, `darkgray`, `lightgray`, `transparent`). Reads as `"#RRGGBB"`. |
 | `checked` | Checkbox | |
 | `value` | Slider | 0 to 255. |
+| `items` | DropDown | A list of strings. Setting it clears the selection. |
 | `selectedIndex` | DropDown | From 0, as in the layout file; -1 for none. |
 | `selectedItem` | DropDown | Read only, `nil` for none. |
 | `title`, `message` | Dialog | |
@@ -90,15 +94,66 @@ error. A change shows on the next frame.
 | | |
 |---|---|
 | `aura.system.version`, `aura.system.revision` | The running Aura (`"0.8.0"`, `"03102026"`). |
+| `aura.system.installed` | False in live mode (nothing installed, no `settings.ini`). |
+| `aura.system.computerName` | Read and set; also the DNS host name. |
 | `aura.system.latestRelease()` | Version, revision and URL of the last release (os.json). An error when it cannot be downloaded: call it with `pcall`. |
 | `aura.system.compareVersions(a, b)` | -1, 0 or 1. |
 | `aura.system.compareRevisions(a, b)` | -1, 0 or 1; 0 when either is not a number. |
+
+### aura.user
+
+| | |
+|---|---|
+| `aura.user.name` | The logged in user's name, read and set. |
 
 ### aura.network
 
 | | |
 |---|---|
 | `aura.network.isConfigured()` | True when a network card has an address. |
+
+### aura.display
+
+| | |
+|---|---|
+| `aura.display.width`, `aura.display.height` | The display mode, before the scale divides it for the UI. |
+| `aura.display.scale` | The UI scale in percent. |
+| `aura.display.modes()` | The display's modes: a list of `{ width = , height = }`. Only VMware SVGA II lists more than the running one. |
+| `aura.display.scales()` | The scales: `{ 100, 150, 200 }`. |
+| `aura.display.setMode(width, height, scale)` | Switches now: `true`, or `false` and why (scale too large for the mode, not enough memory). |
+
+### aura.desktop
+
+| | |
+|---|---|
+| `aura.desktop.wallpaper` | Path of the wallpaper, `nil` for the default one. |
+| `aura.desktop.setWallpaper(path)` | Shows that BMP. An error when the file cannot be loaded: call it with `pcall`. A missing file shows the default wallpaper. |
+| `aura.desktop.windowsAlpha`, `aura.desktop.taskbarAlpha` | Opacity of the windows and the taskbar, 0 to 255, read and set. |
+| `aura.desktop.guiDebug` | The window manager's debug drawing, read and set. |
+
+### aura.theme
+
+| | |
+|---|---|
+| `aura.theme.bmpPath`, `aura.theme.xmlPath` | The theme files, read and set. Loaded at boot: a change shows after a reboot. A kernel file is `"embedded:UI/Themes/..."`. |
+
+### aura.settings
+
+`settings.ini`, which only an installed Aura has.
+
+| | |
+|---|---|
+| `aura.settings.get(key)` | The value, `nil` when unset or in live mode. |
+| `aura.settings.save({ key = value, ... })` | Writes the pairs in one go. Numbers and booleans are written as text (`true`/`false`). An error in live mode. |
+
+### aura.fs
+
+The files themselves are read and written with Lua's `io` library.
+
+| | |
+|---|---|
+| `aura.fs.resolve(path)` | The absolute path, from the current directory; gen2 paths (`0:\Users`) are converted. |
+| `aura.fs.fileExists(path)` | True when that file exists. |
 
 ## Limits
 

@@ -141,6 +141,25 @@ namespace Aura_OS.System.Graphics.UI.GUI.Layout
         }
 
         /// <summary>
+        /// The control with that id, null when the element is a container (Stack, Panel, Grid, Row).
+        /// </summary>
+        /// <exception cref="KeyNotFoundException">No element has that id.</exception>
+        public Component FindComponent(string id)
+        {
+            ControlNode control = FindNode(id) as ControlNode;
+            return control != null ? control.Component : null;
+        }
+
+        /// <summary>
+        /// Whether the element with that id is shown (SetVisible).
+        /// </summary>
+        /// <exception cref="KeyNotFoundException">No element has that id.</exception>
+        public bool IsVisible(string id)
+        {
+            return FindNode(id).Visible;
+        }
+
+        /// <summary>
         /// Runs handler on the file's event of that name (onClick="name", onChange="name"...).
         /// A later call replaces it.
         /// </summary>
