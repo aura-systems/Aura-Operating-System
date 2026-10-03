@@ -9,13 +9,15 @@ using Cosmos.Network.Http;
 namespace Aura_OS.System.Network
 {
     /// <summary>
-    /// Aura's HTTP requests, through the Cosmos.Network.Http package (http:// only, no TLS).
-    /// GEN3-GAP(http-tls): no HttpClient and no TLS in gen3.
+    /// Aura's HTTP requests, through the Cosmos.Network.Http package: http:// and https://, whose TLS
+    /// is BouncyCastle's (managed), checked against the Mozilla roots the package embeds.
+    /// GEN3-GAP(http-tls): no HttpClient and no SslStream in gen3.
     /// </summary>
     /// <remarks>
     /// Requests run on the calling thread, the UI one included: the package waits in Socket.Poll,
-    /// never in Thread.Sleep (rule C9). Failures throw HttpException (no address, timeout, error status...)
-    /// or NotSupportedException (https://).
+    /// never in Thread.Sleep (rule C9), and drives TLS without blocking. Failures throw HttpException
+    /// (no address, timeout, TLS handshake, untrusted certificate, error status...) or
+    /// NotSupportedException (a scheme other than http:// and https://).
     /// </remarks>
     public static class Http
     {

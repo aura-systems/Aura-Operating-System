@@ -37,11 +37,12 @@ permissions:
 
 env:
   # On the feature/canvas-compositing branch of CosmosOS/Cosmos (claude/remoteshell plus the Canvas
-  # alpha blending): Aura needs its canvas compositing and its TCP, FTP and exception fixes, which are
-  # not on Cosmos main yet.
-  COSMOS_REF: ${{ inputs.cosmos_ref || '78b7bd5daf19da6d6b516f0c90c40a8df887c171' }}
-  # On the gen3 branch of CosmosOS/Cosmos.Network.Http: 2.0.0 is not on nuget.org yet.
-  HTTP_REF: '6894c1de76cdbe3d947724ef3e916f1c619de07a'
+  # alpha blending and the kernel CSPRNG): Aura needs its canvas compositing, its TCP, FTP and exception
+  # fixes, and the RandomNumberGenerator plug Cosmos.Network.Http 2.1.0 links against, none of which
+  # are on Cosmos main yet.
+  COSMOS_REF: ${{ inputs.cosmos_ref || 'fb94eb106fb385a4a134d4753a8fdf1b3a91ff62' }}
+  # v2.1.0 of CosmosOS/Cosmos.Network.Http (https branch), until 2.1.0 is on nuget.org.
+  HTTP_REF: 'e7a5838c28b6707a56231715eaaa40efad5ed334'
   DOTNET_CLI_TELEMETRY_OPTOUT: 1
   DOTNET_SKIP_FIRST_TIME_EXPERIENCE: 1
   DOTNET_NOLOGO: 1
@@ -139,7 +140,7 @@ jobs:
           dotnet tool install -g Cosmos.Patcher --version "$COSMOS_VERSION"
 
       # Packed into the ../Cosmos.Network.Http/artifacts feed Aura's NuGet.Config names for it.
-      # Drop these two steps, HTTP_REF and that feed once Cosmos.Network.Http 2.0.0 is on nuget.org.
+      # Drop these two steps, HTTP_REF and that feed once Cosmos.Network.Http 2.1.0 is on nuget.org.
       - name: Check out Cosmos.Network.Http
         uses: actions/checkout@v4
         with:

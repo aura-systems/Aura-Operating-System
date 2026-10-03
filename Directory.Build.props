@@ -4,7 +4,7 @@
     <!-- NOT "CosmosPackageVersion" (Cosmos.Architecture.props trap). cosmos update skips "$(" values. -->
     <AuraCosmosVersion Condition="'$(AuraCosmosVersion)' == ''">$([System.Text.RegularExpressions.Regex]::Match($([System.IO.File]::ReadAllText('$(_AuraGlobalJson)')), '&quot;Cosmos\.Sdk&quot;\s*:\s*&quot;([^&quot;]+)&quot;').Groups[1].Value)</AuraCosmosVersion>
     <AuraFtpVersion>2.0.0</AuraFtpVersion>
-    <AuraHttpVersion>2.0.0</AuraHttpVersion>
+    <AuraHttpVersion>2.1.0</AuraHttpVersion>
     <AuraLuaVersion>4.0.1</AuraLuaVersion>
     <!-- lets a bare `dotnet build` of the csproj work; an explicit -r still wins -->
     <RuntimeIdentifier Condition="'$(RuntimeIdentifier)' == ''">linux-x64</RuntimeIdentifier>

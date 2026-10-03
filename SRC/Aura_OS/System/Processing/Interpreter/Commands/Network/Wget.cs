@@ -22,7 +22,7 @@ namespace Aura_OS.System.Processing.Interpreter.Commands.Network
         /// </summary>
         public CommandWget(string[] commandvalues) : base(commandvalues, CommandType.Network)
         {
-            Description = "to download a file through HTTP.";
+            Description = "to download a file through HTTP or HTTPS.";
         }
 
         /// <summary>
@@ -75,8 +75,8 @@ namespace Aura_OS.System.Processing.Interpreter.Commands.Network
             }
             catch (Exception ex)
             {
-                // HttpException (no address, no answer, timeout...), NotSupportedException (https://, no TLS in gen3),
-                // FormatException (bad host or port).
+                // HttpException (no address, no answer, timeout, TLS handshake, untrusted certificate...),
+                // NotSupportedException (neither http:// nor https://), FormatException (bad host or port).
                 return new ReturnInfo(this, ReturnCode.ERROR, ex.Message);
             }
 
