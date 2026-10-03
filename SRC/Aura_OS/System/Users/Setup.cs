@@ -276,8 +276,10 @@ namespace Aura_OS.System
             config.PutValue("themeXmlPath", AuraPaths.ThemesDir + "Suave.xml");
             config.PutValue("windowsTransparency", "255");
             config.PutValue("taskbarTransparency", "255");
-            config.PutValue("screenWidth", Kernel.ScreenWidth.ToString());
-            config.PutValue("screenHeight", Kernel.ScreenHeight.ToString());
+            // The display resolution, not the UI size (Kernel.ScreenWidth/Height are divided by the scale).
+            config.PutValue("screenWidth", (Kernel.Canvas != null ? Kernel.Canvas.Width : (int)Kernel.ScreenWidth).ToString());
+            config.PutValue("screenHeight", (Kernel.Canvas != null ? Kernel.Canvas.Height : (int)Kernel.ScreenHeight).ToString());
+            config.PutValue("screenScale", Kernel.ScreenScale.ToString());
             config.PutValue("wallpaperPath", AuraPaths.WallpapersDir + "w1.bmp");
 
             config.PutValue("debugger", "off");

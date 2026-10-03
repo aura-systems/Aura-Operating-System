@@ -119,8 +119,8 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
         public State State { get; set; }
 
         private Rectangle _rectangle;
-        private DirectBitmap _buffer;
-        private DirectBitmap _cacheBuffer;
+        private Canvas _buffer;
+        private Canvas _cacheBuffer;
         private bool _dirty;
         private bool _visible = true;
 
@@ -134,7 +134,7 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
         public Component(int x, int y, int width, int height)
         {
             _rectangle = new Rectangle(y, x, y + height, x + width);
-            _buffer = new DirectBitmap(width, height);
+            _buffer = NewBuffer(width, height);
             _dirty = true;
             Visible = true;
             ForceDirty = false;
@@ -191,8 +191,7 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
                 {
                     if (region.HorizontalPlacement == "stretch" && region.VerticalPlacement == "stretch")
                     {
-                        Rectangle destRect = CalculateDestinationRect(region, Width, Height);
-                        _buffer.DrawImageStretchAlpha(region.Texture, region.SourceRegion, destRect);
+                        DrawRegion(region, CalculateDestinationRect(region, Width, Height));
                     }
                 }
 
@@ -200,8 +199,7 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
                 {
                     if (region.HorizontalPlacement == "stretch" ^ region.VerticalPlacement == "stretch")
                     {
-                        Rectangle destRect = CalculateDestinationRect(region, Width, Height);
-                        _buffer.DrawImageStretchAlpha(region.Texture, region.SourceRegion, destRect);
+                        DrawRegion(region, CalculateDestinationRect(region, Width, Height));
                     }
                 }
 
@@ -209,8 +207,7 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
                 {
                     if (region.HorizontalPlacement != "stretch" && region.VerticalPlacement != "stretch")
                     {
-                        Rectangle destRect = CalculateDestinationRect(region, Width, Height);
-                        _buffer.DrawImageStretchAlpha(region.Texture, region.SourceRegion, destRect);
+                        DrawRegion(region, CalculateDestinationRect(region, Width, Height));
                     }
                 }
             }
@@ -219,15 +216,41 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
         public virtual void Draw(Component component)
         {
             Draw();
-            component._buffer.DrawImageAlpha(GetBuffer(), X, Y);
+            component._buffer.DrawCanvas(_buffer, X, Y);
         }
 
         public void DrawInParent()
         {
             if (!IsRoot)
             {
-                Parent._buffer.DrawImageAlpha(GetBuffer(), X, Y);
+                Parent._buffer.DrawCanvas(_buffer, X, Y);
             }
+        }
+
+        /// <summary>
+        /// Draws a skin region stretched over its place in the frame, blending (nine-slice drawing).
+        /// </summary>
+        private void DrawRegion(Frame.Region region, Rectangle destination)
+        {
+            Rectangle source = region.SourceRegion;
+
+            // A null dereference is a fatal #PF in gen3: skip a region the theme left incomplete.
+            if (region.Texture == null || source == null)
+            {
+                return;
+            }
+
+            _buffer.DrawImage(region.Texture,
+                new global::System.Drawing.Rectangle(destination.Left, destination.Top, destination.Width, destination.Height),
+                new global::System.Drawing.Rectangle(source.Left, source.Top, source.Width, source.Height));
+        }
+
+        /// <summary>
+        /// An off-screen canvas for a component of that size (a negative size from a shrunk window is empty).
+        /// </summary>
+        private static Canvas NewBuffer(int width, int height)
+        {
+            return new Canvas(Math.Max(0, width), Math.Max(0, height));
         }
 
         private Rectangle CalculateDestinationRect(Frame.Region region, int frameWidth, int frameHeight)
@@ -280,17 +303,18 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
         {
             if (_cacheBuffer == null || _cacheBuffer.Width != Width || _cacheBuffer.Height != Height)
             {
-                _cacheBuffer = new DirectBitmap(Width, Height);
+                _cacheBuffer = NewBuffer(Width, Height);
             }
 
-            _cacheBuffer.DrawImage(_buffer.Bitmap, 0, 0);
+            // An exact copy, transparent pixels included (DrawCanvas would blend them over the old cache).
+            _cacheBuffer.DrawArray(_buffer.GetBuffer(), 0, 0, Width, Height);
         }
 
         public void DrawCacheBuffer()
         {
             if (_cacheBuffer != null)
             {
-                _buffer.DrawImage(_cacheBuffer.Bitmap, 0, 0);
+                _buffer.DrawArray(_cacheBuffer.GetBuffer(), 0, 0, Width, Height);
             }
         }
 
@@ -380,7 +404,7 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
             }
 
             _rectangle = new Rectangle(Y, X, Y + height, X + width);
-            _buffer = new DirectBitmap(width, height);
+            _buffer = NewBuffer(width, height);
             _cacheBuffer = null;
 
             Draw();
@@ -405,7 +429,7 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
             _cacheBuffer = null;
 
             _rectangle = new Rectangle(Y, X, Y + height, X + width);
-            _buffer = new DirectBitmap(width, height);
+            _buffer = NewBuffer(width, height);
 
             ComputeAbsoluteCoordinates();
             MarkDirty();
@@ -462,12 +486,10 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
             return rectangle;
         }
 
-        public Bitmap GetBuffer()
-        {
-            return _buffer.Bitmap;
-        }
-
-        public DirectBitmap GetDbBuffer()
+        /// <summary>
+        /// The component's off-screen canvas. Replaced by Resize and SetSize: ask again afterwards.
+        /// </summary>
+        public Canvas GetBuffer()
         {
             return _buffer;
         }
@@ -526,54 +548,66 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
 
         #region Draw
 
+        // Canvas throws on a null string, font or image; a null dereference is a fatal #PF in gen3,
+        // so the wrappers skip the draw instead.
+
         public void Clear(Color color)
         {
-            _buffer.Clear(color.ToArgb());
+            _buffer.Clear(color);
         }
 
         public void Clear()
         {
-            _buffer.Clear(Color.LightGray.ToArgb());
+            _buffer.Clear(Color.LightGray);
         }
 
         public void DrawString(string str, Color color, int x, int y)
         {
-            _buffer.DrawString(str, Kernel.font, color.ToArgb(), x, y);
+            DrawString(str, Kernel.font, color, x, y);
         }
 
         public void DrawString(string str, Font font, Color color, int x, int y)
         {
-            _buffer.DrawString(str, font, color.ToArgb(), x, y);
+            if (str != null && font != null)
+            {
+                _buffer.DrawString(str, font, color, x, y);
+            }
         }
 
         public void DrawChar(char c, Font font, int color, int x, int y)
         {
-            _buffer.DrawChar(c, font, color, x, y);
+            if (font != null)
+            {
+                _buffer.DrawChar(c, font, Color.FromArgb(color), x, y);
+            }
         }
 
         public void DrawString(string str, int x, int y)
         {
-            _buffer.DrawString(str, Kernel.font, Color.Black.ToArgb(), x, y);
+            DrawString(str, Kernel.font, Color.Black, x, y);
         }
 
         public void DrawFilledRectangle(Color color, int xStart, int yStart, int width, int height)
         {
-            _buffer.DrawFilledRectangle(color.ToArgb(), xStart, yStart, width, height);
+            _buffer.DrawFilledRectangle(color, xStart, yStart, width, height);
         }
 
-        public void DrawLine(Color color, int xStart, int yStart, int width, int height)
+        public void DrawLine(Color color, int xStart, int yStart, int xEnd, int yEnd)
         {
-            _buffer.DrawLine(color.ToArgb(), xStart, yStart, width, height);
+            _buffer.DrawLine(color, xStart, yStart, xEnd, yEnd);
         }
 
         public void DrawImage(Image image, int x, int y)
         {
-            _buffer.DrawImageAlpha(image, x, y);
+            if (image != null)
+            {
+                _buffer.DrawImage(image, x, y);
+            }
         }
 
         public void DrawFilledCircle(Color color, int x, int y, int radius)
         {
-            _buffer.DrawFilledCircle(color.ToArgb(), x, y, radius);
+            _buffer.DrawFilledCircle(color, x, y, radius);
         }
 
         public void DrawGradient(Color color1, Color color2, int x, int y, int width, int height)
@@ -588,12 +622,7 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
                 byte g = (byte)((color2.G - color1.G) * ratio + color1.G);
                 byte b = (byte)((color2.B - color1.B) * ratio + color1.B);
 
-                int interpolatedColor = Color.FromArgb(0xff, r, g, b).ToArgb();
-
-                for (int j = 0; j < height; j++)
-                {
-                    _buffer.SetPixelAlpha(x + i, y + j, interpolatedColor);
-                }
+                _buffer.DrawFilledRectangle(Color.FromArgb(0xff, r, g, b), x + i, y, 1, height);
             }
         }
 

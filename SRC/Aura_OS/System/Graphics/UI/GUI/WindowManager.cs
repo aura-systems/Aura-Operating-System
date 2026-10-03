@@ -14,6 +14,7 @@ using Rectangle = Aura_OS.System.Graphics.UI.GUI.Rectangle;
 using Component = Aura_OS.System.Graphics.UI.GUI.Components.Component;
 using Aura_OS.System.Utils;
 using Aura_OS.System.Filesystem;
+using Cosmos.Kernel.System.Graphics;
 
 namespace Aura_OS
 {
@@ -34,11 +35,7 @@ namespace Aura_OS
         public List<Rectangle> ResizeRects;
 
         private int _highestZIndex = -1;
-        private DirectBitmap _screen;
-
-        private int green = Color.Green.ToArgb();
-        private int red = Color.Red.ToArgb();
-        private int blue = Color.Blue.ToArgb();
+        private Canvas _screen;
 
         public void Initialize()
         {
@@ -138,7 +135,7 @@ namespace Aura_OS
                     var tempRect = Explorer.WindowManager.ResizeRects[i];
                     DrawRect(tempRect.Left, tempRect.Top,
                              tempRect.Right - tempRect.Left + 1,
-                             tempRect.Bottom - tempRect.Top + 1, blue);
+                             tempRect.Bottom - tempRect.Top + 1, Color.Blue);
                 }
 
                 // Draw refresh rects
@@ -147,7 +144,7 @@ namespace Aura_OS
                     var tempRect = Explorer.WindowManager.RefreshRects[i];
                     DrawRect(tempRect.Left, tempRect.Top,
                              tempRect.Right - tempRect.Left + 1,
-                             tempRect.Bottom - tempRect.Top + 1, green);
+                             tempRect.Bottom - tempRect.Top + 1, Color.Green);
                 }
 
                 // Draw click rects
@@ -156,7 +153,7 @@ namespace Aura_OS
                     var tempRect = Explorer.WindowManager.ClickRects[i];
                     DrawRect(tempRect.Left, tempRect.Top,
                              tempRect.Right - tempRect.Left + 1,
-                             tempRect.Bottom - tempRect.Top + 1, red);
+                             tempRect.Bottom - tempRect.Top + 1, Color.Red);
                 }
             }
         }
@@ -267,34 +264,41 @@ namespace Aura_OS
             {
                 Explorer.WindowManager.ContextMenu.Update();
                 Explorer.WindowManager.ContextMenu.Draw();
-                _screen.DrawImage(contextMenu.GetBuffer(), contextMenu.X, contextMenu.Y);
+                _screen.DrawCanvas(contextMenu.GetBuffer(), contextMenu.X, contextMenu.Y);
             }
         }
 
+        /// <summary>
+        /// Composes a root component onto the screen by its pixels' alpha, windows and the taskbar
+        /// faded by their configured transparency.
+        /// </summary>
         public void DrawComponent(Component component)
         {
+            byte opacity = 0xFF;
+
             if (component is Window)
             {
-                _screen.DrawImageAlpha(component.GetBuffer(), component.X, component.Y, WindowsTransparency);
+                opacity = WindowsTransparency;
             }
-            else if (component is Taskbar && TaskbarTransparency != 0xFF)
+            else if (component is Taskbar)
             {
-                _screen.DrawImageAlpha(component.GetBuffer(), component.X, component.Y, TaskbarTransparency);
+                opacity = TaskbarTransparency;
             }
-            else
-            {
-                _screen.DrawImage(component.GetBuffer(), component.X, component.Y);
-            }
+
+            _screen.DrawCanvas(component.GetBuffer(), component.X, component.Y, opacity);
         }
 
-        public void DrawRect(int x, int y, int width, int height, int color)
+        public void DrawRect(int x, int y, int width, int height, Color color)
         {
             _screen.DrawRectangle(color, x, y, width, height);
         }
 
-        public void SetScreen(DirectBitmap Screen)
+        /// <summary>
+        /// The canvas every frame is composed on (Explorer.Screen).
+        /// </summary>
+        public void SetScreen(Canvas screen)
         {
-            _screen = Screen;
+            _screen = screen;
         }
 
         /// <summary>

@@ -88,7 +88,7 @@ namespace Aura_OS.System
 
             Kernel.Canvas.Clear(unchecked((int)0xFFAA0000));
 
-            Kernel.Canvas.DrawImageAlpha(Kernel.errorLogo, (width / 2) - (Kernel.errorLogo.Width / 2), top - 89);
+            Kernel.Canvas.DrawImage(Kernel.errorLogo, (width / 2) - (Kernel.errorLogo.Width / 2), top - 89);
 
             Kernel.Canvas.DrawString(CpuException, Kernel.font, Kernel.WhiteColor, (width / 2) - (CpuException.Length * Kernel.font.Width / 2), top + (89 + 1 * Kernel.font.Height));
 

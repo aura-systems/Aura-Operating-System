@@ -28,6 +28,7 @@ namespace Aura_OS.System.Processing.Applications
         private TextBox _themeBmpPath;
         private TextBox _themeXmlPath;
         private DropDown _resolution;
+        private DropDown _scale;
         private TextBox _wallpaperPath;
 
         private Label _usernameLabel;
@@ -38,6 +39,7 @@ namespace Aura_OS.System.Processing.Applications
         private Label _windowsAlphaLabel;
         private Label _taskbarAlphaLabel;
         private Label _resLabel;
+        private Label _scaleLabel;
         private Label _wallpaperLabel;
 
         private Checkbox _autoLogin;
@@ -71,7 +73,8 @@ namespace Aura_OS.System.Processing.Applications
             _windowsAlphaLabel = new Label("Windows Alpha: ", Color.Black, labelX, baseY + (23 + spacing) * 5);
             _taskbarAlphaLabel = new Label("Taskbar Alpha: ", Color.Black, labelX, baseY + (23 + spacing) * 6);
             _resLabel = new Label("Resolution: ", Color.Black, labelX, baseY + (23 + spacing) * 7);
-            _wallpaperLabel = new Label("Wallpaper Path: ", Color.Black, labelX, baseY + (23 + spacing) * 8);
+            _scaleLabel = new Label("Scale: ", Color.Black, labelX, baseY + (23 + spacing) * 8);
+            _wallpaperLabel = new Label("Wallpaper Path: ", Color.Black, labelX, baseY + (23 + spacing) * 9);
 
             int textBoxXOffset = 6 + (_themeXmlPathLabel.Text.Length * Kernel.font.Width);
 
@@ -83,9 +86,10 @@ namespace Aura_OS.System.Processing.Applications
             _windowsAlpha = new Slider(textBoxXOffset, baseY + (23 + spacing) * 5, 200, 23);
             _taskbarAlpha = new Slider(textBoxXOffset, baseY + (23 + spacing) * 6, 200, 23);
             _resolution = new DropDown(textBoxXOffset, baseY + (23 + spacing) * 7, 200, 23);
-            _wallpaperPath = new TextBox(textBoxXOffset, baseY + (23 + spacing) * 8, 200, 23, "");
+            _scale = new DropDown(textBoxXOffset, baseY + (23 + spacing) * 8, 200, 23);
+            _wallpaperPath = new TextBox(textBoxXOffset, baseY + (23 + spacing) * 9, 200, 23, "");
 
-            _guiDebug = new Checkbox("GUI Debug: ", Color.Black, labelX, baseY + (23 + spacing) * 9);
+            _guiDebug = new Checkbox("GUI Debug: ", Color.Black, labelX, baseY + (23 + spacing) * 10);
 
             if (Kernel.Installed)
             {
@@ -106,20 +110,20 @@ namespace Aura_OS.System.Processing.Applications
 
                 if (autologin == "true")
                 {
-                    _autoLogin = new Checkbox("Auto LogIn: ", Color.Black, labelX, baseY + (23 + spacing) * 10, true);
+                    _autoLogin = new Checkbox("Auto LogIn: ", Color.Black, labelX, baseY + (23 + spacing) * 11, true);
                 }
                 else
                 {
-                    _autoLogin = new Checkbox("Auto LogIn: ", Color.Black, labelX, baseY + (23 + spacing) * 10);
+                    _autoLogin = new Checkbox("Auto LogIn: ", Color.Black, labelX, baseY + (23 + spacing) * 11);
                 }
 
-                _save = new Button("Save Settings", Width / 2 - 100 / 2, baseY + (23 + spacing) * 11, 100, 23);
+                _save = new Button("Save Settings", Width / 2 - 100 / 2, baseY + (23 + spacing) * 12, 100, 23);
             }
             else
             {
                 _windowsAlpha.Value = 0xFF;
                 _taskbarAlpha.Value = 0xFF;
-                _save = new Button("Save Settings", Width / 2 - 100 / 2, baseY + (23 + spacing) * 10, 100, 23);
+                _save = new Button("Save Settings", Width / 2 - 100 / 2, baseY + (23 + spacing) * 11, 100, 23);
             }
             
             _save.Click = new Action(() =>
@@ -183,8 +187,9 @@ namespace Aura_OS.System.Processing.Applications
                         config.EditValue("themeXmlPath", Kernel.ThemeManager.XmlPath);
                         config.EditValue("windowsTransparency", Explorer.WindowManager.WindowsTransparency.ToString());
                         config.EditValue("taskbarTransparency", Explorer.WindowManager.TaskbarTransparency.ToString());
-                        config.EditValue("screenWidth", Kernel.ScreenWidth.ToString());
-                        config.EditValue("screenHeight", Kernel.ScreenHeight.ToString());
+                        config.EditValue("screenWidth", _oldScreenWidth.ToString());
+                        config.EditValue("screenHeight", _oldScreenHeight.ToString());
+                        config.EditValue("screenScale", Kernel.ScreenScale.ToString());
                         config.EditValue("wallpaperPath", wallpaperPath);
                         if (_autoLogin.Checked)
                         {
@@ -224,6 +229,7 @@ namespace Aura_OS.System.Processing.Applications
             AddChild(_windowsAlpha);
             AddChild(_taskbarAlpha);
             AddChild(_resolution);
+            AddChild(_scale);
             AddChild(_wallpaperPath);
 
             AddChild(_usernameLabel);
@@ -234,6 +240,7 @@ namespace Aura_OS.System.Processing.Applications
             AddChild(_windowsAlphaLabel);
             AddChild(_taskbarAlphaLabel);
             AddChild(_resLabel);
+            AddChild(_scaleLabel);
             AddChild(_wallpaperLabel);
 
             AddChild(_dialog);
@@ -247,8 +254,9 @@ namespace Aura_OS.System.Processing.Applications
 
             AddChild(_save);
 
-            _oldScreenWidth = (int)Kernel.ScreenWidth;
-            _oldScreenHeight = (int)Kernel.ScreenHeight;
+            // The display resolution: Kernel.ScreenWidth/Height are the UI size, divided by the scale.
+            _oldScreenWidth = Kernel.Canvas.Width;
+            _oldScreenHeight = Kernel.Canvas.Height;
 
             // A null TextBox.Text would be a null deref (kernel halt) on the first draw
             _username.Text = Kernel.userLogged ?? "";
@@ -257,6 +265,7 @@ namespace Aura_OS.System.Processing.Applications
             _themeBmpPath.Text = Kernel.ThemeManager.BmpPath ?? "";
             _themeXmlPath.Text = Kernel.ThemeManager.XmlPath ?? "";
             LoadResolutions();
+            LoadScales();
             _wallpaperPath.Text = Explorer.Desktop.GetWallpaperPath() ?? "";
             _oldWallpaperPath = _wallpaperPath.Text;
         }
@@ -279,6 +288,7 @@ namespace Aura_OS.System.Processing.Applications
                 _windowsAlpha.Update();
                 _taskbarAlpha.Update();
                 _resolution.Update();
+                _scale.Update();
                 _wallpaperPath.Update();
 
                 if (Kernel.Installed)
@@ -312,6 +322,8 @@ namespace Aura_OS.System.Processing.Applications
             _taskbarAlpha.DrawInParent();
             _resolution.Draw();
             _resolution.DrawInParent();
+            _scale.Draw();
+            _scale.DrawInParent();
             _wallpaperPath.Draw();
             _wallpaperPath.DrawInParent();
             
@@ -332,6 +344,8 @@ namespace Aura_OS.System.Processing.Applications
             _taskbarAlphaLabel.DrawInParent();
             _resLabel.Draw();
             _resLabel.DrawInParent();
+            _scaleLabel.Draw();
+            _scaleLabel.DrawInParent();
             _wallpaperLabel.Draw();
             _wallpaperLabel.DrawInParent();
 
@@ -426,6 +440,29 @@ namespace Aura_OS.System.Processing.Applications
             return -1;
         }
 
+        /// <summary>
+        /// Lists the UI scales (Explorer.Scales) in the scale drop down and selects the running one.
+        /// </summary>
+        private void LoadScales()
+        {
+            foreach (int scale in Explorer.Scales)
+            {
+                _scale.AddItem(scale + "%");
+            }
+
+            _scale.SelectedIndex = Array.IndexOf(Explorer.Scales, Kernel.ScreenScale);
+        }
+
+        private int GetSelectedScale()
+        {
+            if (_scale.SelectedIndex < 0)
+            {
+                return Kernel.ScreenScale;
+            }
+
+            return Explorer.Scales[_scale.SelectedIndex];
+        }
+
         private Mode GetSelectedMode()
         {
             if (_resolution.SelectedIndex < 0)
@@ -437,28 +474,31 @@ namespace Aura_OS.System.Processing.Applications
         }
 
         /// <summary>
-        /// Switches the screen to the selected resolution now (Explorer.ChangeResolution). Returns the
-        /// error to show, or null; on a refusal the running resolution is selected again.
+        /// Switches the screen to the selected resolution and scale now (Explorer.ChangeResolution).
+        /// Returns the error to show, or null; on a refusal the running resolution and scale are
+        /// selected again.
         /// </summary>
         private string ApplyResolution()
         {
             Mode resolution = GetSelectedMode();
+            int scale = GetSelectedScale();
 
-            if (resolution.Width == _oldScreenWidth && resolution.Height == _oldScreenHeight)
+            if (resolution.Width == _oldScreenWidth && resolution.Height == _oldScreenHeight && scale == Kernel.ScreenScale)
             {
                 return null;
             }
 
             string error;
-            bool changed = Explorer.ChangeResolution(resolution.Width, resolution.Height, out error);
+            bool changed = Explorer.ChangeResolution(resolution.Width, resolution.Height, scale, out error);
 
-            // The mode the screen is really in (a refused switch changes nothing).
-            _oldScreenWidth = (int)Kernel.ScreenWidth;
-            _oldScreenHeight = (int)Kernel.ScreenHeight;
+            // The mode the display is really in (a refused switch changes nothing).
+            _oldScreenWidth = Kernel.Canvas.Width;
+            _oldScreenHeight = Kernel.Canvas.Height;
 
             if (!changed)
             {
                 _resolution.SelectedIndex = FindMode(_oldScreenWidth, _oldScreenHeight);
+                _scale.SelectedIndex = Array.IndexOf(Explorer.Scales, Kernel.ScreenScale);
             }
 
             return error;

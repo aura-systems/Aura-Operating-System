@@ -118,8 +118,19 @@ namespace Aura_OS
         public static PCScreenFont fontTerminal;
 
         //GRAPHICS
+
+        /// <summary>
+        /// The size the UI is laid out and drawn at: the display resolution (Canvas.Width/Height)
+        /// divided by ScreenScale once the Explorer is up, the display resolution before that.
+        /// </summary>
         public static uint ScreenWidth = 1920;
         public static uint ScreenHeight = 1080;
+
+        /// <summary>
+        /// UI scale in percent (Explorer.Scales: 100, 150 or 200), from settings.ini screenScale.
+        /// At 150 and 200 the UI is drawn on a smaller canvas that Present() stretches to the display.
+        /// </summary>
+        public static int ScreenScale = 100;
 
         public static Canvas Canvas;
 
@@ -190,6 +201,13 @@ namespace Aura_OS
                 {
                     ScreenHeight = height;
                 }
+
+                // Checked against the display once the canvas exists (Explorer falls back to 100).
+                int scale;
+                if (int.TryParse(config.GetValue("screenScale"), out scale))
+                {
+                    ScreenScale = scale;
+                }
             }
 
             ProcessManager = new ProcessManager();
@@ -241,11 +259,14 @@ namespace Aura_OS
             global::System.Console.SetOut(GuiSink);
             global::System.Console.SetError(GuiSink);
 
+            // DrawImage blends the logo by its alpha: clear the kernel console text from under it first.
+            Canvas.Clear(BlackColor);
             Canvas.DrawImage(AuraLogoWhite, (Canvas.Width - AuraLogoWhite.Width) / 2, (Canvas.Height - AuraLogoWhite.Height) / 2);
             Present();
 
+            // The boot console keeps its black background: Canvas.DrawCanvas blends, so a transparent
+            // console would leave the previous lines under the new ones.
             CustomConsole.BootConsole = new(0, 0, (int)ScreenWidth, (int)ScreenHeight);
-            CustomConsole.BootConsole.DrawBackground = false;
 
             ResourceManager = new ResourceManager();
             ResourceManager.Initialize();
@@ -318,12 +339,12 @@ namespace Aura_OS
 
                 ProcessManager.Update();
 
-                Explorer.Screen.DrawString("Aura Operating System [" + Version + "." + Revision + "]", font, WhiteColorInt, 2, 0);
-                Explorer.Screen.DrawString("fps=" + _fps, font, WhiteColorInt, 2, font.Height);
+                Explorer.Screen.DrawString("Aura Operating System [" + Version + "." + Revision + "]", font, WhiteColor, 2, 0);
+                Explorer.Screen.DrawString("fps=" + _fps, font, WhiteColor, 2, font.Height);
 
-                if (GuiDebug)
+                if (GuiDebug && Debug != null)
                 {
-                    Explorer.Screen.DrawString(Debug, font, WhiteColorInt, 2, font.Height * 2);
+                    Explorer.Screen.DrawString(Debug, font, WhiteColor, 2, font.Height * 2);
                 }
 
                 Present();
@@ -342,8 +363,8 @@ namespace Aura_OS
         }
 
         /// <summary>
-        /// Shows the frame. Explorer.Screen aliases the canvas back buffer, so this is a single
-        /// Canvas.Display(); a separate screen bitmap (if any) is blitted first.
+        /// Shows the frame. Explorer.Screen is the full-screen canvas, so this is a single
+        /// Canvas.Display(); an off-screen screen canvas (if any) is stretched onto it first.
         /// </summary>
         public static void Present()
         {
@@ -353,9 +374,10 @@ namespace Aura_OS
                 return;
             }
 
-            if (Explorer != null && Explorer.Screen != null && Explorer.Screen.Bitmap != null)
+            Canvas screen = Explorer != null ? Explorer.Screen : null;
+            if (screen != null && screen != Canvas)
             {
-                Canvas.DrawImage(Explorer.Screen.Bitmap, 0, 0);
+                Canvas.DrawCanvas(screen, 0, 0, Canvas.Width, Canvas.Height);
             }
 
             Canvas.Display();

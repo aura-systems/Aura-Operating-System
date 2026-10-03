@@ -4,6 +4,7 @@
 * PROGRAMMERS:      Valentin Charbonnier <valentinbreiz@gmail.com>
 */
 
+using System;
 using Aura_OS.System.Graphics.UI.GUI;
 using Aura_OS.System.Graphics.UI.GUI.Components;
 using Cosmos.Kernel.System.Graphics;
@@ -18,8 +19,8 @@ namespace Aura_OS.System.Processing.Applications
         public static string ApplicationName = "SampleApp";
 
         private Component component;
-        private DirectBitmap _image;
-        private DirectBitmap _image2;
+        private Bitmap _image;
+        private Bitmap _image2;
 
         public SampleApp(int width, int height, int x = 0, int y = 0) : base(ApplicationName, width, height, x, y)
         {
@@ -28,10 +29,10 @@ namespace Aura_OS.System.Processing.Applications
             component = new Component(50, 50, 400, 400);
             AddChild(component);
 
-            _image = new DirectBitmap(300, 300);
-            _image.Clear(Color.FromArgb(0xFF, 0xFF, 0x00, 0x00).ToArgb());
-            _image2 = new DirectBitmap(300, 300);
-            _image2.Clear(Color.FromArgb(0x45, 0x00, 0x00, 0xFF).ToArgb());
+            _image = new Bitmap(300, 300, ColorDepth.ColorDepth32);
+            Array.Fill(_image.RawData, Color.FromArgb(0xFF, 0xFF, 0x00, 0x00).ToArgb());
+            _image2 = new Bitmap(300, 300, ColorDepth.ColorDepth32);
+            Array.Fill(_image2.RawData, Color.FromArgb(0x45, 0x00, 0x00, 0xFF).ToArgb());
         }
 
         public override void Draw()
@@ -40,9 +41,9 @@ namespace Aura_OS.System.Processing.Applications
 
             component.Clear(Color.Green);
             component.Draw();
-            component.DrawImage(_image.Bitmap, 0, 0);
+            component.DrawImage(_image, 0, 0);
 
-            component.DrawImage(_image2.Bitmap, 100, 100);
+            component.DrawImage(_image2, 100, 100);
             component.DrawInParent();
         }
     }

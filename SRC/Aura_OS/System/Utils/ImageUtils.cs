@@ -10,7 +10,7 @@ namespace Aura_OS.System.Utils
 {
     /// <summary>
     /// GEN3-GAP(blit): gen3 has no public image scaling that produces a reusable image
-    /// (Canvas.DrawImage(img, x, y, w, h) rescales and allocates on every call), and gen3 runs at
+    /// (the stretched Canvas.DrawImage overloads rescale on every call), and gen3 runs at
     /// the real framebuffer size (GEN3-GAP(display-mode)), so the 1920x1080 wallpapers are scaled
     /// here once at load time, never per frame.
     /// </summary>

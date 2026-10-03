@@ -453,17 +453,19 @@ exception path, C8 dispose everything.
 - **Upstream ask:** a documented resolution property, and depth conversion.
 - **Source:** 04, 08.
 
-### `blit`: no public memory ops or blend (minor)
+### `blit`: no public memory ops or image resize (minor, partly fixed)
 - **Gap:**
   - There are no public memory ops.
-  - `Canvas.DrawImageAlpha` blends per pixel and forces opaque.
-  - There is no image scaling: `DrawImage(img, x, y, w, h)` rescales and
-    allocates on every call.
+  - There is no image resize that keeps the result: the stretched
+    `DrawImage` overloads rescale on every call.
   - An `Image` cannot wrap an existing buffer.
-- **Aura workaround:** the Aura DirectBitmap C# blend, Span/Array ops, and
-  `ImageUtils.ScaleTo` once.
-- **Upstream ask:** a Span blend with opacity, `Image.Resize`, and a no-copy
-  `Bitmap` constructor.
+- **Fixed upstream** (Cosmos `feature/canvas-compositing`): `DrawImageAlpha`
+  blends row by row and keeps the destination's alpha, `DrawCanvasAlpha`
+  blends an off-screen canvas with an opacity, and the stretched `DrawCanvas`
+  and `DrawImage(image, destination, source)` allocate nothing. Aura's
+  components draw on off-screen canvases now, and `DirectBitmap` is gone.
+- **Aura workaround:** `ImageUtils.ScaleTo` scales the wallpapers once.
+- **Upstream ask:** `Image.Resize`, and a no-copy `Bitmap` constructor.
 - **Source:** 04, 08.
 
 ### `psf`: PSF2 parsing gaps (minor)

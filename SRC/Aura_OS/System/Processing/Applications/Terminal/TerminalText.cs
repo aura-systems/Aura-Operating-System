@@ -190,7 +190,7 @@ namespace Aura_OS.System.Processing.Applications.Terminal
 
                 if (Explorer.Screen != null)
                 {
-                    Explorer.Screen.DrawImage(_terminal.Window.GetBuffer(), _terminal.Window.X, _terminal.Window.Y);
+                    Explorer.Screen.DrawCanvas(_terminal.Window.GetBuffer(), _terminal.Window.X, _terminal.Window.Y);
                 }
 
                 Kernel.Present();

@@ -102,7 +102,8 @@ namespace Aura_OS.System.Input
             CustomConsole.WriteLineInfo("Starting mouse...");
             if (KernelFeatures.Mouse)
             {
-                // Kernel.ScreenWidth/Height hold the real canvas size; the kernel default clamp is 1024x768.
+                // Kernel.ScreenWidth/Height hold the UI size (the display divided by the scale), so the
+                // pointer reports UI coordinates; the kernel default clamp is 1024x768.
                 int width = (int)Kernel.ScreenWidth;
                 int height = (int)Kernel.ScreenHeight;
 
@@ -316,7 +317,7 @@ namespace Aura_OS.System.Input
         }
 
         /// <summary>
-        /// Draws the software cursor into Explorer.Screen (DrawImageAlpha clips at the screen edges).
+        /// Draws the software cursor onto Explorer.Screen (Canvas.DrawImage blends it by alpha and clips at the screen edges).
         /// GEN3-GAP(hw-cursor): the IHardwareCursor facet is experimental and VMware-only; software cursor in phase 1.
         /// </summary>
         public void DrawCursor(int x, int y)
@@ -331,28 +332,28 @@ namespace Aura_OS.System.Input
             {
                 if (_cursorNormal != null)
                 {
-                    Explorer.Screen.DrawImageAlpha(_cursorNormal, x, y);
+                    Explorer.Screen.DrawImage(_cursorNormal, x, y);
                 }
             }
             else if (CursorState == CursorState.ResizeHorizontal)
             {
                 if (_cursorResizeHorizontal != null)
                 {
-                    Explorer.Screen.DrawImageAlpha(_cursorResizeHorizontal, x - 23 / 2, y);
+                    Explorer.Screen.DrawImage(_cursorResizeHorizontal, x - 23 / 2, y);
                 }
             }
             else if (CursorState == CursorState.ResizeVertical)
             {
                 if (_cursorResizeVertical != null)
                 {
-                    Explorer.Screen.DrawImageAlpha(_cursorResizeVertical, x, y - 23 / 2);
+                    Explorer.Screen.DrawImage(_cursorResizeVertical, x, y - 23 / 2);
                 }
             }
             else if (CursorState == CursorState.Grab)
             {
                 if (_cursorGrap != null)
                 {
-                    Explorer.Screen.DrawImageAlpha(_cursorGrap, x, y);
+                    Explorer.Screen.DrawImage(_cursorGrap, x, y);
                 }
             }
         }

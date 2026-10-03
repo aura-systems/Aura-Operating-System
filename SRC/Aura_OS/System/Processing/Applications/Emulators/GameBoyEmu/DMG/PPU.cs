@@ -1,5 +1,6 @@
 ﻿using Aura_OS.System.Graphics.UI.GUI;
 using Aura_OS.System.Processing.Applications.Emulators.GameBoyEmu.Utils;
+using Cosmos.Kernel.System.Graphics;
 using System.Runtime.CompilerServices;
 using static Aura_OS.System.Processing.Applications.Emulators.GameBoyEmu.Utils.BitOps;
 
@@ -20,13 +21,13 @@ namespace Aura_OS.System.Processing.Applications.Emulators.GameBoyEmu.DMG
 
         private int[] color = new int[] { 0xFFFFFF, 0x808080, 0x404040, 0 };
 
-        public DirectBitmap bmp;
+        public Bitmap bmp;
         private int scanlineCounter;
         private Application _app;
 
         public PPU(Application application)
         {
-            bmp = new DirectBitmap();
+            bmp = new Bitmap(SCREEN_WIDTH, SCREEN_HEIGHT, ColorDepth.ColorDepth32);
             _app = application;
         }
 
@@ -194,7 +195,7 @@ namespace Aura_OS.System.Processing.Applications.Emulators.GameBoyEmu.DMG
                 int colorId = GetColorIdBits(colorBit, lo, hi);
                 int colorIdThroughtPalette = GetColorIdThroughtPalette(BGP, colorId);
 
-                bmp.SetPixel(p, LY, color[colorIdThroughtPalette]);
+                SetPixel(p, LY, color[colorIdThroughtPalette]);
             }
 
         }
@@ -272,7 +273,7 @@ namespace Aura_OS.System.Processing.Applications.Emulators.GameBoyEmu.DMG
                         {
                             if (!isTransparent(colorId) && (isAboveBG(attr) || isBGWhite(mmu.BGP, x + p, LY)))
                             {
-                                bmp.SetPixel(x + p, LY, color[colorIdThroughtPalette]);
+                                SetPixel(x + p, LY, color[colorIdThroughtPalette]);
                             }
 
                         }
@@ -286,7 +287,30 @@ namespace Aura_OS.System.Processing.Applications.Emulators.GameBoyEmu.DMG
         private bool isBGWhite(byte BGP, int x, int y)
         {
             int id = BGP & 0x3;
-            return bmp.GetPixel(x, y) == (color[id] | (0xFF << 24));
+            return GetPixel(x, y) == (color[id] | (0xFF << 24));
+        }
+
+        /// <summary>
+        /// Writes an opaque pixel of the frame, ignoring the ones off the 160x144 screen (sprites past an edge).
+        /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private void SetPixel(int x, int y, int colour)
+        {
+            if ((uint)x < SCREEN_WIDTH && (uint)y < SCREEN_HEIGHT)
+            {
+                bmp.RawData[x + y * SCREEN_WIDTH] = colour | (0xFF << 24);
+            }
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private int GetPixel(int x, int y)
+        {
+            if ((uint)x < SCREEN_WIDTH && (uint)y < SCREEN_HEIGHT)
+            {
+                return bmp.RawData[x + y * SCREEN_WIDTH];
+            }
+
+            return 0;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -299,7 +323,7 @@ namespace Aura_OS.System.Processing.Applications.Emulators.GameBoyEmu.DMG
         public void RenderFrame()
         {
 
-            _app.DrawImage(bmp.Bitmap, 0, 0);
+            _app.DrawImage(bmp, 0, 0);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

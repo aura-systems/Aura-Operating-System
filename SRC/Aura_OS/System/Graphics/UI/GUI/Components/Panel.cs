@@ -44,10 +44,11 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
 
             if (Borders)
             {
-                DrawLine(Kernel.DarkGray, 0, 0, 0 + Width, 0);
-                DrawLine(Kernel.DarkGray, 0, 0, 0, 0 + Height);
-                DrawLine(Kernel.WhiteColor, 0, 0 + Height, 0 + Width + 1, 0 + Height);
-                DrawLine(Kernel.WhiteColor, 0 + Width, 0, 0 + Width, 0 + Height);
+                // Lines include both ends and are clipped: the far edges are column Width - 1 and row Height - 1.
+                DrawLine(Kernel.DarkGray, 0, 0, Width - 1, 0);
+                DrawLine(Kernel.DarkGray, 0, 0, 0, Height - 1);
+                DrawLine(Kernel.WhiteColor, 0, Height - 1, Width - 1, Height - 1);
+                DrawLine(Kernel.WhiteColor, Width - 1, 0, Width - 1, Height - 1);
             }
 
             if (Text != "")

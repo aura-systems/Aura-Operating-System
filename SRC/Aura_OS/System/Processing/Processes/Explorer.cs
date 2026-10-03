@@ -41,18 +41,31 @@ namespace Aura_OS.System.Processing.Processes
         public static Desktop Desktop;
         public static LoginScreen Login;
         public static WindowManager WindowManager = new WindowManager();
-        public static DirectBitmap Screen;
+
+        /// <summary>
+        /// The canvas every frame is composed on, Kernel.ScreenWidth x Kernel.ScreenHeight. At 100% it
+        /// is the full-screen canvas itself, shown by Kernel.Present() with a single Canvas.Display();
+        /// at 150% and 200% it is a smaller off-screen canvas that Present() stretches to the display.
+        /// </summary>
+        public static Canvas Screen;
+
+        /// <summary>
+        /// The UI scales the Settings app offers, in percent.
+        /// </summary>
+        public static readonly int[] Scales = { 100, 150, 200 };
+
+        /// <summary>
+        /// The smallest UI a scale may leave: the desktop, taskbar and windows are laid out for it.
+        /// </summary>
+        public const int MinScaledWidth = 640;
+        public const int MinScaledHeight = 480;
 
         private static bool _showStartMenu = false;
 
         public Explorer() : base("Explorer", ProcessType.KernelComponent)
         {
-            // Zero-copy alias of the canvas back buffer (Screen.Bitmap is null): the composited frame
-            // is shown by Kernel.Present() with a single Canvas.Display(), no extra 8 MB blit.
-            // ChangeResolution re-creates it (and calls SetScreen again) after a mode change.
-            Screen = new DirectBitmap(Kernel.Canvas);
             WindowManager.Initialize();
-            WindowManager.SetScreen(Screen);
+            UpdateScreen();
 
             CustomConsole.WriteLineInfo("Starting desktop...");
             Desktop = new Desktop(0, 0, (int)Kernel.ScreenWidth, (int)Kernel.ScreenHeight);
@@ -113,66 +126,137 @@ namespace Aura_OS.System.Processing.Processes
         private const long ResolutionHeadroomBytes = 32L * 1024 * 1024;
 
         /// <summary>
-        /// Switches the screen to width x height and fits the desktop, login screen, taskbar, start menu,
-        /// windows and mouse to it. Only a display that can switch modes (VMware SVGA II) does. Returns
-        /// false with the reason in error when the mode needs more memory than is free, when the display
-        /// refused it, or when the display cannot switch (firmware framebuffer, virtio-gpu); nothing
-        /// changed then. Called on the UI thread (a click), between two frames.
+        /// True when a width x height display can be shown at scale percent: 100% always, 150% and
+        /// 200% only while the UI they leave is at least MinScaledWidth x MinScaledHeight.
         /// </summary>
-        public static bool ChangeResolution(int width, int height, out string error)
+        public static bool FitsScale(int width, int height, int scale)
+        {
+            if (scale == 100)
+            {
+                return true;
+            }
+
+            return Array.IndexOf(Scales, scale) >= 0
+                && width * 100 / scale >= MinScaledWidth
+                && height * 100 / scale >= MinScaledHeight;
+        }
+
+        /// <summary>
+        /// Sizes the UI to the display and Kernel.ScreenScale (back to 100% when the display is too small
+        /// for it), and creates Screen: the full-screen canvas at 100%, a smaller off-screen one otherwise.
+        /// </summary>
+        private static void UpdateScreen()
+        {
+            int width = Kernel.Canvas.Width;
+            int height = Kernel.Canvas.Height;
+
+            if (!FitsScale(width, height, Kernel.ScreenScale))
+            {
+                Kernel.ScreenScale = 100;
+            }
+
+            Kernel.ScreenWidth = (uint)(width * 100 / Kernel.ScreenScale);
+            Kernel.ScreenHeight = (uint)(height * 100 / Kernel.ScreenScale);
+
+            // Drop the old screen first, so a collection during the allocation can reclaim it.
+            Screen = null;
+            WindowManager.SetScreen(null);
+
+            Screen = Kernel.ScreenScale == 100 ? Kernel.Canvas : new Canvas((int)Kernel.ScreenWidth, (int)Kernel.ScreenHeight);
+            WindowManager.SetScreen(Screen);
+        }
+
+        /// <summary>
+        /// Switches the display to width x height and the UI to scale percent, then fits the desktop,
+        /// login screen, taskbar, start menu, windows and mouse to the new UI size. Only a display that
+        /// can switch modes (VMware SVGA II) changes resolution; any display can change scale. Returns
+        /// false with the reason in error when the scale needs a larger resolution, when the switch needs
+        /// more memory than is free, when the display refused the mode, or when it cannot switch
+        /// (firmware framebuffer, virtio-gpu); nothing changed then. Called on the UI thread (a click),
+        /// between two frames.
+        /// </summary>
+        public static bool ChangeResolution(int width, int height, int scale, out string error)
         {
             error = null;
 
+            if (!FitsScale(width, height, scale))
+            {
+                error = scale + "% needs a resolution of at least " + (MinScaledWidth * scale / 100) + "x" + (MinScaledHeight * scale / 100) + ".";
+                return false;
+            }
+
+            bool modeChanges = width != Kernel.Canvas.Width || height != Kernel.Canvas.Height;
+            if (!modeChanges && scale == Kernel.ScreenScale)
+            {
+                return true;
+            }
+
             // GEN3-GAP(oom): a failed allocation returns null instead of throwing, so the switch cannot
-            // fail halfway: check first that the screen-sized buffers fit. They are the canvas back buffer,
-            // the desktop, its file panel and its scaled wallpaper, plus the login screen and its wallpaper
-            // when shown. The old canvas buffer and wallpaper stay alive until the new ones exist.
-            long newBytes = (long)width * height * 4;
-            long oldBytes = (long)Kernel.ScreenWidth * Kernel.ScreenHeight * 4;
-            int buffers = Login.Visible ? 6 : 4;
+            // fail halfway: check first that the screen-sized buffers fit. They are the canvas back buffer
+            // when the mode changes, the scaled screen below 100%, and the UI-sized desktop, its file panel
+            // and its scaled wallpaper, plus the login screen and its wallpaper when shown. The old canvas
+            // buffer stays alive until the new one exists; the old UI buffers are dropped as they are
+            // replaced (one of them counted as still alive).
+            long newPhysicalBytes = (long)width * height * 4;
+            long newUiBytes = (long)(width * 100 / scale) * (height * 100 / scale) * 4;
+            long oldUiBytes = (long)Kernel.ScreenWidth * Kernel.ScreenHeight * 4;
+            int uiBuffers = Login.Visible ? 5 : 3;
 
             MemoryInfo.Collect();
             long freeBytes = (long)(MemoryInfo.FreePages * MemoryInfo.PageSizeBytes);
-            long neededBytes = newBytes * buffers + ResolutionHeadroomBytes;
-            long availableBytes = freeBytes + oldBytes * (buffers - 2);
+            long neededBytes = (modeChanges ? newPhysicalBytes : 0) + (scale != 100 ? newUiBytes : 0) + newUiBytes * uiBuffers + ResolutionHeadroomBytes;
+            long availableBytes = freeBytes + oldUiBytes * (uiBuffers - 1) + (Screen != Kernel.Canvas ? oldUiBytes : 0);
 
             if (neededBytes > availableBytes)
             {
-                error = "Not enough memory for " + width + "x" + height + " (about " + ((neededBytes - availableBytes) >> 20) + " MB more needed).";
+                error = "Not enough memory for " + width + "x" + height + " at " + scale + "% (about " + ((neededBytes - availableBytes) >> 20) + " MB more needed).";
                 return false;
             }
 
-            try
+            if (modeChanges)
             {
-                // The same canvas, switched through the display's IDisplayModes facet.
-                Kernel.Canvas = Canvas.GetFullScreen(new Mode(width, height, ColorDepth.ColorDepth32));
-            }
-            catch (ArgumentOutOfRangeException)
-            {
-                // Not listed by the display, or more than its VRAM holds: nothing changed.
-                error = width + "x" + height + " is not supported by this display.";
-                return false;
-            }
+                int oldWidth = Kernel.Canvas.Width;
+                int oldHeight = Kernel.Canvas.Height;
 
-            // GEN3-GAP(display-mode): the real framebuffer size from here on.
-            if (Kernel.ScreenWidth == (uint)Kernel.Canvas.Width && Kernel.ScreenHeight == (uint)Kernel.Canvas.Height)
-            {
-                if (Kernel.Canvas.Width != width || Kernel.Canvas.Height != height)
+                try
+                {
+                    // The same canvas, switched through the display's IDisplayModes facet.
+                    Kernel.Canvas = Canvas.GetFullScreen(new Mode(width, height, ColorDepth.ColorDepth32));
+                }
+                catch (ArgumentOutOfRangeException)
+                {
+                    // Not listed by the display, or more than its VRAM holds: nothing changed.
+                    error = width + "x" + height + " is not supported by this display.";
+                    return false;
+                }
+
+                // GEN3-GAP(display-mode): the real framebuffer size from here on.
+                if (Kernel.Canvas.Width == oldWidth && Kernel.Canvas.Height == oldHeight)
                 {
                     error = "This display cannot change resolution.";
                     return false;
                 }
-
-                return true;
             }
 
-            Kernel.ScreenWidth = (uint)Kernel.Canvas.Width;
-            Kernel.ScreenHeight = (uint)Kernel.Canvas.Height;
+            Kernel.ScreenScale = scale;
+            UpdateScreen();
+            FitToScreen();
 
-            // The canvas reallocated its back buffer: alias the new one.
-            Screen = new DirectBitmap(Kernel.Canvas);
-            WindowManager.SetScreen(Screen);
+            if (Kernel.Canvas.Width != width || Kernel.Canvas.Height != height)
+            {
+                error = "The display switched to " + Kernel.Canvas.Width + "x" + Kernel.Canvas.Height + " instead.";
+                return false;
+            }
 
+            return true;
+        }
+
+        /// <summary>
+        /// Lays the desktop, login screen, taskbar, start menu, windows and mouse out again for the
+        /// current UI size (Kernel.ScreenWidth x Kernel.ScreenHeight).
+        /// </summary>
+        private static void FitToScreen()
+        {
             if (WindowManager.ContextMenu != null)
             {
                 WindowManager.ContextMenu.Opened = false;
@@ -206,14 +290,6 @@ namespace Aura_OS.System.Processing.Processes
             }
 
             Kernel.MouseManager.ResizeToScreen();
-
-            if (Kernel.Canvas.Width != width || Kernel.Canvas.Height != height)
-            {
-                error = "The display switched to " + Kernel.Canvas.Width + "x" + Kernel.Canvas.Height + " instead.";
-                return false;
-            }
-
-            return true;
         }
 
         public override void Initialize()
