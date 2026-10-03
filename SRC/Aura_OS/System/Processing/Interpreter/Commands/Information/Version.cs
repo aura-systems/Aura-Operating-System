@@ -47,7 +47,7 @@ namespace Aura_OS.System.Processing.Interpreter.Commands.SystemInfomation
                 }
                 catch (Exception)
                 {
-                    // GEN3-GAP(backend): HTTP/DNS/TLS failure, fall back to the local version below.
+                    // HTTP/DNS/TLS failure: fall back to the local version below.
                     latestVersion = null;
                     latestRevision = null;
                     latestReleaseUrl = null;

@@ -15,7 +15,7 @@ namespace Aura_OS.System.Processing
 {
     public class PackageManager : IManager
     {
-        public string RepositoryUrl = "http://aura.valentin.bzh/repository.json";
+        public string RepositoryUrl = "https://aura.valentin.bzh/repository.json";
 
         /// <summary>
         /// The repository's package list, filled by Update.
@@ -79,7 +79,6 @@ namespace Aura_OS.System.Processing
             string json;
             try
             {
-                // GEN3-GAP(backend): the repository currently answers 301 -> https, then 404, and gen3 has no TLS.
                 json = Http.DownloadFile(RepositoryUrl);
             }
             catch (Exception ex)

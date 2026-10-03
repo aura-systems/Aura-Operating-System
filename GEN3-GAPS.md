@@ -45,9 +45,8 @@ exception path, C8 dispose everything.
 | Console / graphics | `console-input` | `kernelconsole`, `console-global`, `present`, `display-mode`, `blit`, `psf`, `hw-cursor`, `bmp`, `canvas3d` |
 | Input | `keyboard-altgr`, `ps2-sync` | `key-release`, `key-repeat`, `e0`, `sessions`, `mouse`, `key-docs` |
 | Filesystem / storage | `ide`, `fat-names`, `vfs-threads` (phase 2) | `driveinfo`, `fat-label`, `fat-time`, `mounts`, `tmp`, `cwd`, `mbr`, `ext2` |
-| Network | `http-tls`, `tcp-receive`, `ipaddress`, `net-threads` (phase 2), `nic-drivers`, `tcp-robust` | `socket-misc`, `dhcp`, `tcp-primary`, `nic-names`, `net-misc` |
+| Network | `tcp-receive`, `ipaddress`, `net-threads` (phase 2), `nic-drivers`, `tcp-robust` | `http-tls`, `socket-misc`, `dhcp`, `tcp-primary`, `nic-names`, `net-misc` |
 | BCL / packages | | `deflate`, `crypto`, `lua-host` |
-| Aura-side (not Cosmos) | `backend` | |
 
 ---
 
@@ -656,22 +655,28 @@ exception path, C8 dispose everything.
 
 ## Network
 
-### `http-tls`: no HttpClient, no TLS (major)
-- **Aura workaround:** the `Cosmos.Network.Http` 2.0 package, an HTTP/1.1
-  client over `Socket` that waits in `Poll`, so it runs on the UI thread;
-  `https` is refused.
-- **Upstream ask:** an HTTP handler or package, and a TLS roadmap.
+### `http-tls`: no HttpClient, no SslStream (minor)
+- **Gap:** `HttpClient` and `SslStream` are not plugged, and the BCL's TLS
+  and cryptography route to OpenSSL.
+- **Aura workaround:** the `Cosmos.Network.Http` 2.1 package, an HTTP/1.1
+  client over `Socket` that waits in `Poll`, so it runs on the UI thread.
+  Its `https` runs BouncyCastle's managed TLS 1.3/1.2 against the Mozilla
+  roots it embeds, and needs the `RandomNumberGenerator` plug (Cosmos
+  `40c043ab3`) to link.
+- **Upstream ask:** `SslStream` and `HttpClient` plugs, or the package as
+  the supported way.
 - **Source:** 06, 08.
 
 ### `tcp-receive`: TCP receive returns 0 while open; span paths broken (major)
 - **Gap:**
   - `Receive` / `Read` return 0 while the connection is open (a spin-count
     timeout).
-  - `Receive(Span)` drops data.
   - `NetworkStream.Read(Span)` is unplugged.
+  - `Receive(Span)` dropped data and a read racing the receive path could
+    lose or misplace bytes: both fixed in Cosmos `570d927c4`.
 - **Aura workaround:** the `Available`/`Poll` idiom with a deadline; receive
   into `byte[]` only (rule C15).
-- **Upstream ask:** a blocking receive, and fix the span paths.
+- **Upstream ask:** a blocking receive, and plug `NetworkStream.Read(Span)`.
 - **Source:** 06, 08.
 
 ### `ipaddress`: `IPAddress` plug defects (major)
@@ -761,11 +766,12 @@ exception path, C8 dispose everything.
 - **Upstream ask:** plug `System.IO.Compression`, or make the inflater public.
 - **Source:** 07, 08.
 
-### `crypto`: BCL crypto routes to OpenSSL; weak "secure" RNG (minor)
-- **Gap:** BCL hashes and RNG route to OpenSSL, and the "secure" RNG is
-  xorshift.
+### `crypto`: BCL hashes route to OpenSSL (minor)
+- **Gap:** BCL hashes route to OpenSSL. The secure RNG is fixed in Cosmos
+  `40c043ab3`: `RandomNumberGenerator` and `Guid.NewGuid` come from a kernel
+  CSPRNG (RDSEED/RDRAND or RNDR, plus timer jitter, into ChaCha20).
 - **Aura workaround:** Aura's own Sha256/MD5, plus `acryptohashnet`.
-- **Upstream ask:** a managed hash plug, and RDRAND.
+- **Upstream ask:** a managed hash plug.
 - **Source:** 07, 08.
 
 ### `lua-host`: Cosmos.Executable.Lua 4.0.1 host hooks (minor)
@@ -785,14 +791,6 @@ exception path, C8 dispose everything.
 - **Upstream ask:** a loader hook, a host accessor, an env `Func`, a
   public `SetHook`, and reads buffered like writes.
 - **Source:** 07.
-
-## Aura-side (not Cosmos)
-
-### `backend`: update and package endpoints unreachable (major)
-- **Gap:** `http://aura.valentin.bzh/os.json` and `/repository.json` answer
-  301 to https, which then answers 404. gen3 has no TLS anyway.
-- **Workaround:** callers catch the error and report it. The endpoints need
-  plain-HTTP hosting (decision D3).
 
 ---
 

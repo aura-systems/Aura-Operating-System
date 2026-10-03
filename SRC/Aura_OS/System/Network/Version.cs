@@ -17,9 +17,7 @@ namespace Aura_OS.System.Network
         /// </summary>
         public static (string, string, string) GetLastVersionInfo()
         {
-            // GEN3-GAP(backend): http://aura.valentin.bzh/os.json currently answers 301 -> https, then 404,
-            // and gen3 has no TLS, so this throws until the file is served over plain HTTP.
-            string json = Http.DownloadFile("http://aura.valentin.bzh/os.json");
+            string json = Http.DownloadFile("https://aura.valentin.bzh/os.json");
 
             JsonReader rdr = new(json);
             rdr.ReadObjectStart();
