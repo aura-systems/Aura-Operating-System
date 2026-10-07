@@ -36,11 +36,10 @@ permissions:
   contents: read
 
 env:
-  # On the feature/canvas-compositing branch of CosmosOS/Cosmos (claude/remoteshell plus the Canvas
-  # alpha blending and the kernel CSPRNG): Aura needs its canvas compositing, its TCP, FTP and exception
-  # fixes, and the RandomNumberGenerator plug Cosmos.Network.Http 2.1.0 links against, none of which
-  # are on Cosmos main yet.
-  COSMOS_REF: ${{ inputs.cosmos_ref || 'fb94eb106fb385a4a134d4753a8fdf1b3a91ff62' }}
+  # On the gen3 branch of CosmosOS/Cosmos: Aura needs its reorganised API (System.FileSystem,
+  # System.Input, the flat System.Network...), its canvas compositing, its TCP, FTP and exception
+  # fixes, and the RandomNumberGenerator plug Cosmos.Network.Http 2.1.0 links against.
+  COSMOS_REF: ${{ inputs.cosmos_ref || '9661f05a2d4396f9fae72198c4e4a60e8b2bec73' }}
   # v2.1.0 of CosmosOS/Cosmos.Network.Http (https branch), until 2.1.0 is on nuget.org.
   HTTP_REF: 'e7a5838c28b6707a56231715eaaa40efad5ed334'
   DOTNET_CLI_TELEMETRY_OPTOUT: 1
