@@ -17,6 +17,9 @@ namespace Aura_OS.System.Processing.Interpreter.Commands.Network
     {
         private const string DefaultFileName = "index.html";
 
+        // FileStream's buffer: 1 turns it off, as in Entries.
+        private const int UnbufferedSize = 1;
+
         /// <summary>
         /// Empty constructor.
         /// </summary>
@@ -68,36 +71,88 @@ namespace Aura_OS.System.Processing.Interpreter.Commands.Network
                 path = AuraPath.AsDirectory(Kernel.CurrentDirectory) + fileName;
             }
 
-            HttpResponse response;
+            HttpResponseMessage response;
             try
             {
-                response = Http.CreateRequest(url).Send();
+                // The body read below, into the file as it comes: no download held whole in memory.
+                response = Http.Get(url, HttpCompletionOption.ResponseHeadersRead);
             }
             catch (Exception ex)
             {
-                // HttpException (no address, no answer, timeout, TLS handshake, untrusted certificate...),
-                // NotSupportedException (neither http:// nor https://), FormatException (bad host or port).
-                return new ReturnInfo(this, ReturnCode.ERROR, ex.Message);
+                // HttpRequestException (no address, no answer, timeout, TLS handshake, untrusted certificate...),
+                // UriFormatException (not a URL).
+                return new ReturnInfo(this, ReturnCode.ERROR, Http.Describe(ex));
             }
 
-            string status = (response.StatusCode + " " + response.ReasonPhrase).TrimEnd();
+            // The response disposed on every path below, without a using: a Cosmos kernel skips its finally block
+            // while an exception unwinds (GEN3-GAP(finally)).
+            string location = response.RequestMessage.RequestUri.AbsoluteUri;
+            string status = ((int)response.StatusCode + " " + response.ReasonPhrase).TrimEnd();
             if (!response.IsSuccessStatusCode)
             {
-                return new ReturnInfo(this, ReturnCode.ERROR, response.Url + ": " + status);
+                response.Dispose();
+                return new ReturnInfo(this, ReturnCode.ERROR, location + ": " + status);
             }
 
+            // Null without a Content-Type.
+            string type = response.Content.Headers.ContentType?.MediaType;
+
+            FileStream file = null;
+            long length = 0;
+            string error = null;
             try
             {
                 // Binary-safe: gen2 wrote the ASCII text to file.html whatever was downloaded.
-                File.WriteAllBytes(path, response.Content);
+                file = new FileStream(path, FileMode.Create, FileAccess.Write, FileShare.None, UnbufferedSize);
             }
             catch (Exception ex)
             {
-                return new ReturnInfo(this, ReturnCode.ERROR, "Can't save " + path + ": " + ex.Message);
+                error = "Can't save " + path + ": " + ex.Message;
             }
 
-            string type = response.ContentType is null ? "" : " [" + response.ContentType + "]";
-            Console.WriteLine(response.Url + ": " + status + ", " + response.Content.Length + " bytes" + type);
+            if (file != null)
+            {
+                try
+                {
+                    response.Content.CopyTo(file);
+                    length = file.Length;
+                }
+                catch (Exception ex)
+                {
+                    // Cut short, a timeout, a disk full.
+                    error = location + ": " + Http.Describe(ex);
+                }
+
+                try
+                {
+                    file.Dispose();
+                }
+                catch (Exception ex)
+                {
+                    error ??= "Can't save " + path + ": " + ex.Message;
+                }
+
+                if (error != null)
+                {
+                    // Not a file that looks downloaded.
+                    try
+                    {
+                        File.Delete(path);
+                    }
+                    catch
+                    {
+                    }
+                }
+            }
+
+            response.Dispose();
+
+            if (error != null)
+            {
+                return new ReturnInfo(this, ReturnCode.ERROR, error);
+            }
+
+            Console.WriteLine(location + ": " + status + ", " + length + " bytes" + (type is null ? "" : " [" + type + "]"));
             Console.WriteLine("Saved to " + path);
 
             return new ReturnInfo(this, ReturnCode.OK);

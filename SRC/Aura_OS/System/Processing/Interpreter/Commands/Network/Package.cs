@@ -6,6 +6,7 @@
 
 using System;
 using System.Collections.Generic;
+using Aura_OS.System.Network;
 
 namespace Aura_OS.System.Processing.Interpreter.Commands.Network
 {
@@ -141,9 +142,9 @@ namespace Aura_OS.System.Processing.Interpreter.Commands.Network
             }
             catch (Exception ex)
             {
-                // Network/HTTP failures (HttpException, NotSupportedException for https, ...), a package
+                // Network/HTTP failures (HttpRequestException, whose innermost exception says why), a package
                 // that is not in the list, not installed or built in.
-                return new ReturnInfo(this, ReturnCode.ERROR, ex.Message);
+                return new ReturnInfo(this, ReturnCode.ERROR, Http.Describe(ex));
             }
         }
 

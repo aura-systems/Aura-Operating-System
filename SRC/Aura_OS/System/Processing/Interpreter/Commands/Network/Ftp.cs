@@ -27,6 +27,11 @@ namespace Aura_OS.System.Processing.Interpreter.Commands.Network
         private static volatile bool s_running;
 
         /// <summary>
+        /// Whether a server runs, which the HTTP one can't beside it (GEN3-GAP(net-threads)).
+        /// </summary>
+        internal static bool IsRunning => s_running;
+
+        /// <summary>
         /// Empty constructor.
         /// </summary>
         /// <remarks>
@@ -108,6 +113,12 @@ namespace Aura_OS.System.Processing.Interpreter.Commands.Network
             if (s_running)
             {
                 return new ReturnInfo(this, ReturnCode.ERROR, "The FTP server already runs on port " + s_server.Port + ", use 'ftp /stop' first.");
+            }
+
+            // GEN3-GAP(net-threads): one background user of the lock-free network stack at a time.
+            if (CommandHttpd.IsRunning)
+            {
+                return new ReturnInfo(this, ReturnCode.ERROR, "The HTTP server runs: only one background server at a time, use 'httpd /stop' first.");
             }
 
             if (!NetworkHelper.IsConfigured)

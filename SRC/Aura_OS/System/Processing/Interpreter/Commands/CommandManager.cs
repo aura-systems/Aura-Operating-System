@@ -66,6 +66,7 @@ namespace Aura_OS.System.Processing.Interpreter.Commands
             _commands.Add(new CommandDns(new string[] { "dns" }));
             _commands.Add(new CommandWget(new string[] { "wget" }));
             _commands.Add(new CommandFtp(new string[] { "ftp" }));
+            _commands.Add(new CommandHttpd(new string[] { "httpd" }));
             _commands.Add(new CommandPackage(new string[] { "package", "pkg" }));
 
             _commands.Add(new CommandVersion(new string[] { "version", "ver", "about" }));

@@ -734,11 +734,13 @@ driver of PR #480), package 3.0.89.20261003, on disk images, with `e2fsck -fn`.
 ### `http-tls`: no HttpClient, no SslStream (minor)
 - **Gap:** `HttpClient` and `SslStream` are not plugged, and the BCL's TLS
   and cryptography route to OpenSSL.
-- **Aura workaround:** the `Cosmos.Network.Http` 2.1 package, an HTTP/1.1
-  client over `Socket` that waits in `Poll`, so it runs on the UI thread.
-  Its `https` runs BouncyCastle's managed TLS 1.3/1.2 against the Mozilla
-  roots it embeds, and needs the `RandomNumberGenerator` plug (Cosmos
-  `40c043ab3`) to link.
+- **Aura workaround:** the `Cosmos.Network.Http` 3.0 package, .NET
+  nanoFramework's `System.Net.Http` (`HttpClient`, `HttpListener`) ported
+  over `Socket`. A request waits by polling, so it runs on the UI thread
+  (`wget`, the package manager); `HttpListener.GetContext` sleeps between
+  rounds, so `httpd` serves on a thread of its own. Its `https` runs
+  BouncyCastle's managed TLS 1.3/1.2 against the Mozilla roots it embeds,
+  and needs the `RandomNumberGenerator` plug (Cosmos `40c043ab3`) to link.
 - **Upstream ask:** `SslStream` and `HttpClient` plugs, or the package as
   the supported way.
 - **Source:** 06, 08.
