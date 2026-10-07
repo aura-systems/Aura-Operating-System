@@ -8,8 +8,6 @@ using System;
 using System.Collections.Generic;
 using Aura_OS.System.Network;
 using Cosmos.Kernel.System.Network;
-using Cosmos.Kernel.System.Network.IPv4;
-using Cosmos.Kernel.System.Network.IPv6;
 
 namespace Aura_OS.System.Processing.Interpreter.Commands.Network
 {

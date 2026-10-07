@@ -55,7 +55,7 @@ namespace Aura_OS.System.Processing.Interpreter.Commands.Util
         /// </summary>
         private static void AppendKernelThreads(StringBuilder sb)
         {
-            if (!SchedulerInfo.IsInitialized)
+            if (!SchedulerDiagnostics.IsInitialized)
             {
                 return;
             }
@@ -63,17 +63,17 @@ namespace Aura_OS.System.Processing.Interpreter.Commands.Util
             sb.AppendLine();
             sb.AppendLine("TID     STATE     RUNTIME");
 
-            int slotCount = SchedulerInfo.ThreadSlotCount;
+            int slotCount = SchedulerDiagnostics.ThreadSlotCount;
             for (int slot = 0; slot < slotCount; slot++)
             {
-                if (!SchedulerInfo.TryGetThreadInSlot(slot, out KernelThreadInfo thread) || thread.State == KernelThreadState.Dead)
+                if (!SchedulerDiagnostics.TryGetThreadInSlot(slot, out KernelThreadInfo thread) || thread.State == KernelThreadState.Dead)
                 {
                     continue;
                 }
 
                 sb.Append(thread.Id.ToString().PadRight(8, ' '));
                 sb.Append(GetStateName(thread.State).PadRight(10, ' '));
-                sb.Append((thread.TotalRuntimeNs / SchedulerInfo.NanosecondsPerMillisecond).ToString() + "ms");
+                sb.Append((thread.TotalRuntimeNs / SchedulerDiagnostics.NanosecondsPerMillisecond).ToString() + "ms");
                 if (thread.IsIdle)
                 {
                     sb.Append(" (main loop)");

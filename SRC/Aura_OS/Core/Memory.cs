@@ -11,7 +11,7 @@ namespace Aura_OS.Core
 {
     public class Memory
     {
-        // GEN3-GAP(meminfo): MemoryInfo.TotalPages/RamSizeBytes only cover the largest usable
+        // GEN3-GAP(meminfo): MemoryDiagnostics.TotalPages/RamSizeBytes only cover the largest usable
         // Limine memory-map region (the page allocator's pool), so the total reads below the
         // machine's installed RAM. All figures are in MB.
 
@@ -19,7 +19,7 @@ namespace Aura_OS.Core
         {
             get
             {
-                return (uint)((MemoryInfo.TotalPages * MemoryInfo.PageSizeBytes) >> 20);
+                return (uint)((MemoryDiagnostics.TotalPages * MemoryDiagnostics.PageSizeBytes) >> 20);
             }
         }
 
@@ -42,12 +42,12 @@ namespace Aura_OS.Core
 
         public static uint GetFreeMemory()
         {
-            return (uint)((MemoryInfo.FreePages * MemoryInfo.PageSizeBytes) >> 20);
+            return (uint)((MemoryDiagnostics.FreePages * MemoryDiagnostics.PageSizeBytes) >> 20);
         }
 
         public static uint GetUsedMemory()
         {
-            return (uint)(((MemoryInfo.TotalPages - MemoryInfo.FreePages) * MemoryInfo.PageSizeBytes) >> 20);
+            return (uint)(((MemoryDiagnostics.TotalPages - MemoryDiagnostics.FreePages) * MemoryDiagnostics.PageSizeBytes) >> 20);
         }
     }
 }

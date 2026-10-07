@@ -9,7 +9,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Text;
 using Aura_OS.System.Graphics.UI.GUI.Skin;
-using Cosmos.Kernel.System.Mouse;
+using Cosmos.Kernel.System.Input;
 
 namespace Aura_OS.System.Graphics.UI.GUI.Components
 {

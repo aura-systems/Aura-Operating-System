@@ -11,10 +11,9 @@ using System.Globalization;
 using System.IO;
 using Cosmos.Executable.Lua;
 using Cosmos.Kernel.System.Diagnostics;
-using Cosmos.Kernel.HAL.Interfaces.Devices;
-using Cosmos.Kernel.HAL.Vfs;
+using Cosmos.Kernel.HAL.Devices.Storage;
+using Cosmos.Kernel.System.FileSystem;
 using Cosmos.Kernel.System.Graphics;
-using Cosmos.Kernel.System.Vfs;
 using Aura_OS.System.Filesystem;
 using Aura_OS.System.Graphics.UI.GUI;
 using Aura_OS.System.Graphics.UI.GUI.Components;
@@ -150,7 +149,7 @@ namespace Aura_OS.System.Processing.Lua
 
                     if (!string.IsNullOrEmpty(Kernel.ComputerName))
                     {
-                        Cosmos.Kernel.System.Network.Config.DnsConfig.HostName = Kernel.ComputerName;
+                        Cosmos.Kernel.System.Network.DnsConfig.HostName = Kernel.ComputerName;
                     }
 
                     return 0;
@@ -196,13 +195,13 @@ namespace Aura_OS.System.Processing.Lua
         {
             return new LuaObject("aura.memory")
                 // GEN3-GAP(meminfo): the page allocator's pool is the largest usable memory-map region only.
-                .Property("totalPages", lua => Push(lua, (long)MemoryInfo.TotalPages))
-                .Property("freePages", lua => Push(lua, (long)MemoryInfo.FreePages))
-                .Property("pageSize", lua => Push(lua, (long)MemoryInfo.PageSizeBytes))
+                .Property("totalPages", lua => Push(lua, (long)MemoryDiagnostics.TotalPages))
+                .Property("freePages", lua => Push(lua, (long)MemoryDiagnostics.FreePages))
+                .Property("pageSize", lua => Push(lua, (long)MemoryDiagnostics.PageSizeBytes))
                 .Property("liveHeap", lua => Push(lua, GC.GetTotalMemory(false)))
-                .Property("collections", lua => Push(lua, MemoryInfo.TotalCollections))
-                .Property("objectsFreed", lua => Push(lua, MemoryInfo.TotalObjectsFreed))
-                .Property("gcTimePercent", lua => Push(lua, MemoryInfo.GcTimePercent))
+                .Property("collections", lua => Push(lua, MemoryDiagnostics.TotalCollections))
+                .Property("objectsFreed", lua => Push(lua, MemoryDiagnostics.TotalObjectsFreed))
+                .Property("gcTimePercent", lua => Push(lua, MemoryDiagnostics.GcTimePercent))
                 // Objects the kernel's last periodic collection freed (Kernel.Run).
                 .Property("lastFreed", lua => Push(lua, Kernel.FreeCount))
                 // lastCollection(): the last collection's figures. It allocates: read it when collections changed.
@@ -442,7 +441,7 @@ namespace Aura_OS.System.Processing.Lua
                 // space(path): the free and total bytes of the volume holding the path, nil for none.
                 .Function("space", lua =>
                 {
-                    VfsManager.VfsMount mount = Volumes.MountOf(AuraPath.Resolve(LuaObject.CheckText(lua, 1)));
+                    VfsMount mount = Volumes.MountOf(AuraPath.Resolve(LuaObject.CheckText(lua, 1)));
                     ulong free, total;
 
                     if (mount == null || !Volumes.TryGetSpace(mount.MountPoint, out free, out total))
@@ -584,8 +583,8 @@ namespace Aura_OS.System.Processing.Lua
         /// </summary>
         private static int ListVolumes(ILuaState lua)
         {
-            IReadOnlyList<VfsManager.VfsMount> mounts = VfsManager.Mounts;
-            List<VfsManager.VfsMount> sorted = new List<VfsManager.VfsMount>(mounts.Count);
+            IReadOnlyList<VfsMount> mounts = VfsManager.Mounts;
+            List<VfsMount> sorted = new List<VfsMount>(mounts.Count);
 
             for (int i = 0; i < mounts.Count; i++)
             {
@@ -601,7 +600,7 @@ namespace Aura_OS.System.Processing.Lua
 
             for (int i = 0; i < sorted.Count; i++)
             {
-                VfsManager.VfsMount mount = sorted[i];
+                VfsMount mount = sorted[i];
                 string label = "";
                 string filesystem = mount.Partition != null ? Disks.DetectFilesystem(mount.Partition, out label) : mount.Name;
 

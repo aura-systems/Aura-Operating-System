@@ -5,7 +5,7 @@
 */
 
 using System;
-using Cosmos.Kernel.System.Mouse;
+using Cosmos.Kernel.System.Input;
 
 namespace Aura_OS.System.Graphics.UI.GUI.Components
 {

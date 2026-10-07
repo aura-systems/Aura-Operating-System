@@ -6,9 +6,9 @@
 
 using Aura_OS.System.Filesystem;
 using Aura_OS.System.Processing.Interpreter;
-using Cosmos.Kernel.HAL.Interfaces.Devices;
+using Cosmos.Kernel.HAL.Devices.Storage;
 using Cosmos.Kernel.System.Storage;
-using Cosmos.Kernel.System.Vfs;
+using Cosmos.Kernel.System.FileSystem;
 using System;
 using System.Collections.Generic;
 
@@ -264,7 +264,7 @@ namespace Aura_OS.System.Processing.Interpreter.Commands.Filesystem
             string label;
             Console.WriteLine("Partition #" + partition + " formatted to " + Disks.DetectFilesystem(target, out label) + " on disk #" + driveName + "!");
 
-            VfsManager.VfsMount mount = Volumes.MountOfPartition(target);
+            VfsMount mount = Volumes.MountOfPartition(target);
             if (mount != null)
             {
                 Console.WriteLine("Mounted at " + AuraPath.AsDirectory(mount.MountPoint));
@@ -278,7 +278,7 @@ namespace Aura_OS.System.Processing.Interpreter.Commands.Filesystem
             // Accepts "1", "1:", "1:\" (gen2) and "/1", "/1/".
             string number = volume.Trim().TrimEnd('\\', '/').TrimEnd(':').TrimStart('/');
 
-            VfsManager.VfsMount mount;
+            VfsMount mount;
             if (number.Length == 0 || !VfsManager.TryGetMount("/" + number, out mount))
             {
                 return new ReturnInfo(this, ReturnCode.ERROR, "The specified drive is not found.");
@@ -292,7 +292,7 @@ namespace Aura_OS.System.Processing.Interpreter.Commands.Filesystem
 
         public ReturnInfo ListVolumes()
         {
-            IReadOnlyList<VfsManager.VfsMount> vols = VfsManager.Mounts;
+            IReadOnlyList<VfsMount> vols = VfsManager.Mounts;
 
             Console.WriteLine();
             Console.WriteLine("  Volume ###\tFormat\tSize\t\tLabel\t\tPartition");
@@ -305,7 +305,7 @@ namespace Aura_OS.System.Processing.Interpreter.Commands.Filesystem
 
             for (int i = 0; i < vols.Count; i++)
             {
-                VfsManager.VfsMount vol = vols[i];
+                VfsMount vol = vols[i];
                 string name = AuraPath.AsDirectory(vol.MountPoint);
                 string label = "";
                 string format = vol.Partition != null ? Disks.DetectFilesystem(vol.Partition, out label) : vol.Name;
@@ -347,7 +347,7 @@ namespace Aura_OS.System.Processing.Interpreter.Commands.Filesystem
                 Partition part = partitions[i];
                 string label;
                 string format = Disks.DetectFilesystem(part, out label);
-                VfsManager.VfsMount mount = Volumes.MountOfPartition(part);
+                VfsMount mount = Volumes.MountOfPartition(part);
 
                 Console.WriteLine("  Partition #" + (i + 1) + ": " + part.Name
                     + "  Start=" + part.StartSector

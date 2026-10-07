@@ -81,7 +81,7 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
         {
             if (Click != null)
             {
-                if (IsInside((int)Cosmos.Kernel.System.Mouse.MouseManager.X, (int)Cosmos.Kernel.System.Mouse.MouseManager.Y))
+                if (IsInside((int)Cosmos.Kernel.System.Input.MouseManager.X, (int)Cosmos.Kernel.System.Input.MouseManager.Y))
                 {
                     Click();
                 }

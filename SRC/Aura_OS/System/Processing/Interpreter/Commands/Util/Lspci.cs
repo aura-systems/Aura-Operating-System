@@ -32,10 +32,10 @@ namespace Aura_OS.System.Processing.Interpreter.Commands.Util
 
             // GEN3-GAP(pci): no typed PCI enumeration; each PCI function is a driver-kit node
             // whose Path ("pci:ssss:bb:dd.f") and Description ("vvvv:dddd class cc.ss.pp") are parsed.
-            int nodeCount = DriverInfo.NodeCount;
+            int nodeCount = DriverDiagnostics.NodeCount;
             for (int i = 0; i < nodeCount; i++)
             {
-                if (!DriverInfo.TryGetNode(i, out DeviceNodeInfo node) || node.BusName != "pci")
+                if (!DriverDiagnostics.TryGetNode(i, out DeviceNodeInfo node) || node.BusName != "pci")
                 {
                     continue;
                 }

@@ -20,7 +20,7 @@ using Aura_OS.System.Processing.Interpreter.Commands.Processing;
 using Aura_OS.System.Filesystem;
 using Aura_OS.System.Network;
 using Aura_OS.System.Graphics.UI.GUI;
-using Cosmos.Kernel.System.Vfs;
+using Cosmos.Kernel.System.FileSystem;
 using System.Text;
 
 namespace Aura_OS.System.Processing.Interpreter.Commands

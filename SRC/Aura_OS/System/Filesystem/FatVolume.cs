@@ -8,9 +8,9 @@
 // identifier `System` binds to `Aura_OS.System`, so never write `System.IO.X` in the body.
 using System;
 using System.Text;
-using Cosmos.Kernel.System.Filesystems.Fat;
+using Cosmos.Kernel.System.FileSystem.Fat;
 using Cosmos.Kernel.System.Storage;
-using Cosmos.Kernel.System.Vfs;
+using Cosmos.Kernel.System.FileSystem;
 
 namespace Aura_OS.System.Filesystem
 {

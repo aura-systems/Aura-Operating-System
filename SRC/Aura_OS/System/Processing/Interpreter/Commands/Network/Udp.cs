@@ -9,7 +9,7 @@ using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
-using Cosmos.Kernel.System.Timer;
+using Cosmos.Kernel.System.Timers;
 using Aura_OS.System.Processing.Interpreter;
 
 namespace Aura_OS.System.Processing.Interpreter.Commands.Network

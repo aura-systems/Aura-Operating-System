@@ -8,7 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using Cosmos.Executable.Lua;
-using Cosmos.Kernel.System.Keyboard;
+using Cosmos.Kernel.System.Input;
 using Aura_OS.System.Graphics.UI.GUI;
 using Aura_OS.System.Processing.Interpreter;
 using Aura_OS.System.Processing.Lua;
@@ -314,63 +314,63 @@ namespace Aura_OS.System.Processing.Applications
         /// The name of a key that types no character ("f1" to "f12" too), null for the others. A
         /// switch, not Enum.ToString: NativeAOT keeps no enum names.
         /// </summary>
-        private static string KeyName(ConsoleKeyEx key)
+        private static string KeyName(Key key)
         {
             switch (key)
             {
-                case ConsoleKeyEx.Enter:
+                case Key.Enter:
                     return "enter";
-                case ConsoleKeyEx.Backspace:
+                case Key.Backspace:
                     return "backspace";
-                case ConsoleKeyEx.Tab:
+                case Key.Tab:
                     return "tab";
-                case ConsoleKeyEx.Escape:
+                case Key.Escape:
                     return "escape";
-                case ConsoleKeyEx.UpArrow:
+                case Key.UpArrow:
                     return "up";
-                case ConsoleKeyEx.DownArrow:
+                case Key.DownArrow:
                     return "down";
-                case ConsoleKeyEx.LeftArrow:
+                case Key.LeftArrow:
                     return "left";
-                case ConsoleKeyEx.RightArrow:
+                case Key.RightArrow:
                     return "right";
-                case ConsoleKeyEx.Home:
+                case Key.Home:
                     return "home";
-                case ConsoleKeyEx.End:
+                case Key.End:
                     return "end";
-                case ConsoleKeyEx.PageUp:
+                case Key.PageUp:
                     return "pageUp";
-                case ConsoleKeyEx.PageDown:
+                case Key.PageDown:
                     return "pageDown";
-                case ConsoleKeyEx.Insert:
+                case Key.Insert:
                     return "insert";
-                case ConsoleKeyEx.Delete:
+                case Key.Delete:
                     return "delete";
             }
 
             // F1 to F12 follow each other in the enum.
-            if (key >= ConsoleKeyEx.F1 && key <= ConsoleKeyEx.F12)
+            if (key >= Key.F1 && key <= Key.F12)
             {
-                return "f" + (key - ConsoleKeyEx.F1 + 1);
+                return "f" + (key - Key.F1 + 1);
             }
 
             return null;
         }
 
         // In alphabetical order; the enum has them in keyboard order.
-        private static readonly ConsoleKeyEx[] LetterKeys =
+        private static readonly Key[] LetterKeys =
         {
-            ConsoleKeyEx.A, ConsoleKeyEx.B, ConsoleKeyEx.C, ConsoleKeyEx.D, ConsoleKeyEx.E, ConsoleKeyEx.F,
-            ConsoleKeyEx.G, ConsoleKeyEx.H, ConsoleKeyEx.I, ConsoleKeyEx.J, ConsoleKeyEx.K, ConsoleKeyEx.L,
-            ConsoleKeyEx.M, ConsoleKeyEx.N, ConsoleKeyEx.O, ConsoleKeyEx.P, ConsoleKeyEx.Q, ConsoleKeyEx.R,
-            ConsoleKeyEx.S, ConsoleKeyEx.T, ConsoleKeyEx.U, ConsoleKeyEx.V, ConsoleKeyEx.W, ConsoleKeyEx.X,
-            ConsoleKeyEx.Y, ConsoleKeyEx.Z,
+            Key.A, Key.B, Key.C, Key.D, Key.E, Key.F,
+            Key.G, Key.H, Key.I, Key.J, Key.K, Key.L,
+            Key.M, Key.N, Key.O, Key.P, Key.Q, Key.R,
+            Key.S, Key.T, Key.U, Key.V, Key.W, Key.X,
+            Key.Y, Key.Z,
         };
 
         /// <summary>
         /// The lowercase letter of a letter key, '\0' for another key.
         /// </summary>
-        private static char LetterOf(ConsoleKeyEx key)
+        private static char LetterOf(Key key)
         {
             for (int i = 0; i < LetterKeys.Length; i++)
             {

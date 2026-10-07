@@ -9,13 +9,12 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using Cosmos.Kernel.HAL.Vfs;
+using Cosmos.Kernel.System.FileSystem;
 using Cosmos.Kernel.System;
 using Cosmos.Kernel.System.Diagnostics;
-using Cosmos.Kernel.System.Filesystems.Ext2;
-using Cosmos.Kernel.System.Filesystems.Fat;
+using Cosmos.Kernel.System.FileSystem.Ext2;
+using Cosmos.Kernel.System.FileSystem.Fat;
 using Cosmos.Kernel.System.Storage;
-using Cosmos.Kernel.System.Vfs;
 
 namespace Aura_OS.System.Filesystem
 {
@@ -44,12 +43,12 @@ namespace Aura_OS.System.Filesystem
             {
                 Log.WriteString("[Aura] FAT support compiled out\n");
             }
-            else if (!VfsManager.RegisterFilesystem(FatDriver, new FatFilesystemType()))
+            else if (!VfsManager.RegisterFileSystem(FatDriver, new FatFileSystemType()))
             {
                 Log.WriteString("[Aura] FAT driver already registered or invalid\n");
             }
 
-            if (!VfsManager.RegisterFilesystem(Ext2Driver, new Ext2FilesystemType()))
+            if (!VfsManager.RegisterFileSystem(Ext2Driver, new Ext2FileSystemType()))
             {
                 Log.WriteString("[Aura] ext2 driver already registered or invalid\n");
             }
@@ -102,7 +101,7 @@ namespace Aura_OS.System.Filesystem
         /// </summary>
         public static string Mount(Partition partition)
         {
-            VfsManager.VfsMount mount = MountOfPartition(partition);
+            VfsMount mount = MountOfPartition(partition);
 
             if (mount != null)
             {
@@ -149,14 +148,14 @@ namespace Aura_OS.System.Filesystem
         /// <summary>
         /// The mount of a partition, null when it is not mounted. By location, as IsMounted.
         /// </summary>
-        public static VfsManager.VfsMount MountOfPartition(Partition partition)
+        public static VfsMount MountOfPartition(Partition partition)
         {
             if (partition == null)
             {
                 return null;
             }
 
-            IReadOnlyList<VfsManager.VfsMount> mounts = VfsManager.Mounts;
+            IReadOnlyList<VfsMount> mounts = VfsManager.Mounts;
             for (int i = 0; i < mounts.Count; i++)
             {
                 Partition p = mounts[i].Partition;
@@ -181,18 +180,18 @@ namespace Aura_OS.System.Filesystem
         /// Longest-prefix mount covering an absolute path ("/0/Users/" -> the /0 mount), null if none
         /// (live mode, or "/").
         /// </summary>
-        public static VfsManager.VfsMount MountOf(string fullPath)
+        public static VfsMount MountOf(string fullPath)
         {
             if (string.IsNullOrEmpty(fullPath))
             {
                 return null;
             }
 
-            VfsManager.VfsMount best = null;
-            IReadOnlyList<VfsManager.VfsMount> mounts = VfsManager.Mounts;
+            VfsMount best = null;
+            IReadOnlyList<VfsMount> mounts = VfsManager.Mounts;
             for (int i = 0; i < mounts.Count; i++)
             {
-                VfsManager.VfsMount m = mounts[i];
+                VfsMount m = mounts[i];
                 string mp = m.MountPoint;
                 bool covers = mp == "/" || (fullPath.StartsWith(mp, StringComparison.Ordinal)
                     && (fullPath.Length == mp.Length || fullPath[mp.Length] == '/'));
@@ -228,7 +227,7 @@ namespace Aura_OS.System.Filesystem
                     return false;
                 }
 
-                freeBytes = stats.Bavail * stats.BlockSize;
+                freeBytes = stats.AvailableBlocks * stats.BlockSize;
                 totalBytes = stats.Blocks * stats.BlockSize;
                 return true;
             }
@@ -245,7 +244,7 @@ namespace Aura_OS.System.Filesystem
         /// </summary>
         public static void UnmountAll()
         {
-            IReadOnlyList<VfsManager.VfsMount> mounts = VfsManager.Mounts; // snapshot, safe to mutate
+            IReadOnlyList<VfsMount> mounts = VfsManager.Mounts; // snapshot, safe to mutate
             for (int i = 0; i < mounts.Count; i++)
             {
                 try
@@ -327,7 +326,7 @@ namespace Aura_OS.System.Filesystem
             int systemNumber = int.MaxValue;
             bool zeroMounted = false;
 
-            IReadOnlyList<VfsManager.VfsMount> mounts = VfsManager.Mounts;
+            IReadOnlyList<VfsMount> mounts = VfsManager.Mounts;
             for (int i = 0; i < mounts.Count; i++)
             {
                 string volume = AuraPath.AsDirectory(mounts[i].MountPoint);

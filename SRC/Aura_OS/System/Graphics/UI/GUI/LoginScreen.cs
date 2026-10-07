@@ -7,7 +7,7 @@
 using System;
 using System.Drawing;
 using Cosmos.Kernel.System.Graphics;
-using Cosmos.Kernel.System.Keyboard;
+using Cosmos.Kernel.System.Input;
 using Aura_OS.System.Filesystem;
 using Aura_OS.System.Graphics.UI.GUI.Components;
 using Aura_OS.System.Processing.Processes;
@@ -92,7 +92,7 @@ namespace Aura_OS.System.Graphics.UI.GUI
             {
                 switch (keyEvent.Key)
                 {
-                    case ConsoleKeyEx.Tab:
+                    case Key.Tab:
                         // GEN3-GAP(null-deref): FocusedComponent is null before any focus, and calling
                         // Equals on it is a fatal #PF in gen3.
                         if (ReferenceEquals(Kernel.MouseManager.FocusedComponent, _username))
@@ -112,7 +112,7 @@ namespace Aura_OS.System.Graphics.UI.GUI
                             Kernel.MouseManager.FocusedComponent = _username;
                         }
                         break;
-                    case ConsoleKeyEx.Enter:
+                    case Key.Enter:
                         _button.Click();
                         break;
                     default:
@@ -220,7 +220,7 @@ namespace Aura_OS.System.Graphics.UI.GUI
                 if (!string.IsNullOrEmpty(Kernel.ComputerName))
                 {
                     // DNS and FTP report this name.
-                    Cosmos.Kernel.System.Network.Config.DnsConfig.HostName = Kernel.ComputerName;
+                    Cosmos.Kernel.System.Network.DnsConfig.HostName = Kernel.ComputerName;
                 }
 
                 return true;

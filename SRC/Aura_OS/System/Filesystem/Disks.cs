@@ -10,9 +10,9 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
-using Cosmos.Kernel.HAL.Interfaces.Devices;
+using Cosmos.Kernel.HAL.Devices.Storage;
 using Cosmos.Kernel.System.Storage;
-using Cosmos.Kernel.System.Vfs;
+using Cosmos.Kernel.System.FileSystem;
 
 namespace Aura_OS.System.Filesystem
 {
@@ -279,7 +279,7 @@ namespace Aura_OS.System.Filesystem
             info.Partition = partition;
             info.Filesystem = Detect(partition, out info.Label, out info.VolumeSectors);
 
-            VfsManager.VfsMount mount = Volumes.MountOfPartition(partition);
+            VfsMount mount = Volumes.MountOfPartition(partition);
             if (mount != null)
             {
                 info.MountPoint = AuraPath.AsDirectory(mount.MountPoint);
@@ -847,7 +847,7 @@ namespace Aura_OS.System.Filesystem
         {
             CheckNotSystem(partition);
 
-            IReadOnlyList<VfsManager.VfsMount> mounts = VfsManager.Mounts;
+            IReadOnlyList<VfsMount> mounts = VfsManager.Mounts;
             List<string> mountPoints = new List<string>();
 
             for (int i = 0; i < mounts.Count; i++)
@@ -881,7 +881,7 @@ namespace Aura_OS.System.Filesystem
 
         private static void CheckNotSystem(Partition partition)
         {
-            VfsManager.VfsMount mount = Volumes.MountOfPartition(partition);
+            VfsMount mount = Volumes.MountOfPartition(partition);
 
             if (mount != null && IsSystemVolume(AuraPath.AsDirectory(mount.MountPoint)))
             {

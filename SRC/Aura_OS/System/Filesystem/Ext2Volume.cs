@@ -7,7 +7,7 @@
 // File-scope usings resolve from the global namespace. Inside `namespace Aura_OS.System.*` the bare
 // identifier `System` binds to `Aura_OS.System`, so never write `System.IO.X` in the body.
 using System;
-using Cosmos.Kernel.HAL.Interfaces.Devices;
+using Cosmos.Kernel.HAL.Devices.Storage;
 using Cosmos.Kernel.System.Storage;
 
 namespace Aura_OS.System.Filesystem

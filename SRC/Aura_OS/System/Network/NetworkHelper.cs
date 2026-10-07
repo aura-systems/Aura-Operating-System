@@ -6,8 +6,6 @@
 
 using System;
 using Cosmos.Kernel.System.Network;
-using Cosmos.Kernel.System.Network.Config;
-using Cosmos.Kernel.System.Network.DNS;
 
 namespace Aura_OS.System.Network
 {

@@ -7,7 +7,7 @@
 using System;
 using Cosmos.Kernel.System;
 using Cosmos.Kernel.System.Diagnostics;
-using CosmosKeyboard = Cosmos.Kernel.System.Keyboard.KeyboardManager;
+using CosmosKeyboard = Cosmos.Kernel.System.Input.KeyboardManager;
 
 namespace Aura_OS.System
 {

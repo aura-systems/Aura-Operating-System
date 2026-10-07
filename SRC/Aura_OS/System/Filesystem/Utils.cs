@@ -4,7 +4,7 @@
 * PROGRAMMERS:      Valentin Charbonnier <valentinbreiz@gmail.com>
 */
 
-using Cosmos.Kernel.System.Vfs;
+using Cosmos.Kernel.System.FileSystem;
 using System;
 using System.IO;
 
@@ -69,7 +69,7 @@ namespace Aura_OS.System.Filesystem
             totalBytes = 0;
 
             // null in live mode (no FAT volume, Kernel.CurrentVolume == "/").
-            VfsManager.VfsMount mount = Volumes.MountOf(Kernel.CurrentVolume);
+            VfsMount mount = Volumes.MountOf(Kernel.CurrentVolume);
             if (mount == null)
             {
                 return false;

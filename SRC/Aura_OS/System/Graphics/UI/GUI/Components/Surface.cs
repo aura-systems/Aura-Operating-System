@@ -7,7 +7,7 @@
 using System;
 using System.Drawing;
 using Aura_OS.System.Input;
-using CosmosMouse = Cosmos.Kernel.System.Mouse.MouseManager;
+using CosmosMouse = Cosmos.Kernel.System.Input.MouseManager;
 
 namespace Aura_OS.System.Graphics.UI.GUI.Components
 {

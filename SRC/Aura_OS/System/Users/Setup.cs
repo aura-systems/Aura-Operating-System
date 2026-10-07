@@ -237,10 +237,10 @@ namespace Aura_OS.System
             File.WriteAllBytes(AuraPaths.ThemesDir + "Suave.xml", Files.Get("UI/Themes/Suave.skin.xml"));
             Console.WriteLine("Saving wallpaper-1.bmp...");
             Filesystem.Entries.SaveFile(AuraPaths.WallpapersDir + "w1.bmp", Files.Wallpaper);
-            MemoryInfo.Collect();
+            MemoryDiagnostics.Collect();
             Console.WriteLine("Saving wallpaper-2.bmp...");
             Filesystem.Entries.SaveFile(AuraPaths.WallpapersDir + "w2.bmp", Files.Wallpaper2);
-            MemoryInfo.Collect();
+            MemoryDiagnostics.Collect();
 
             Settings config = new Settings(AuraPaths.SettingsIni);
 
@@ -307,7 +307,7 @@ namespace Aura_OS.System
             Kernel.ComputerName = FinalHostname;
             if (!string.IsNullOrEmpty(FinalHostname))
             {
-                Cosmos.Kernel.System.Network.Config.DnsConfig.HostName = FinalHostname;
+                Cosmos.Kernel.System.Network.DnsConfig.HostName = FinalHostname;
             }
 
             Console.WriteLine("Changing current directory to user directory...");

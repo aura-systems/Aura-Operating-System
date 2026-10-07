@@ -12,7 +12,7 @@ using Aura_OS.System.Graphics.UI.GUI.Components;
 using Aura_OS.System.Utils;
 using Cosmos.Kernel.System.Diagnostics;
 using Cosmos.Kernel.System.Graphics;
-using Cosmos.Kernel.System.Mouse;
+using Cosmos.Kernel.System.Input;
 
 namespace Aura_OS.System.Processing.Processes
 {
@@ -215,8 +215,8 @@ namespace Aura_OS.System.Processing.Processes
             long oldUiBytes = (long)Kernel.ScreenWidth * Kernel.ScreenHeight * 4;
             int uiBuffers = Login.Visible ? 5 : 3;
 
-            MemoryInfo.Collect();
-            long freeBytes = (long)(MemoryInfo.FreePages * MemoryInfo.PageSizeBytes);
+            MemoryDiagnostics.Collect();
+            long freeBytes = (long)(MemoryDiagnostics.FreePages * MemoryDiagnostics.PageSizeBytes);
             long neededBytes = (modeChanges ? newPhysicalBytes : 0) + (scale != 100 ? newUiBytes : 0) + newUiBytes * uiBuffers + ResolutionHeadroomBytes;
             long availableBytes = freeBytes + oldUiBytes * (uiBuffers - 1) + (Screen != Kernel.Canvas ? oldUiBytes : 0);
 

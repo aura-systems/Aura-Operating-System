@@ -8,7 +8,7 @@ using Aura_OS.System.Filesystem;
 using Aura_OS.System.Processing.Applications;
 using Aura_OS.System.Processing.Processes;
 using Cosmos.Kernel.System.Graphics;
-using Cosmos.Kernel.System.Mouse;
+using Cosmos.Kernel.System.Input;
 using System;
 using System.Collections.Generic;
 using System.Drawing;

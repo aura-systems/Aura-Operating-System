@@ -7,12 +7,12 @@
 using System;
 using System.Collections.Generic;
 using Cosmos.Kernel.System;
-using Cosmos.Kernel.System.Keyboard;
+using Cosmos.Kernel.System.Input;
 using Aura_OS.System.Processing.Processes;
 using Aura_OS.Processing;
 using Aura_OS.System.Filesystem;
 using Aura_OS.System.Utils;
-using CosmosKeyboard = Cosmos.Kernel.System.Keyboard.KeyboardManager;
+using CosmosKeyboard = Cosmos.Kernel.System.Input.KeyboardManager;
 
 namespace Aura_OS.System.Input
 {
@@ -104,13 +104,13 @@ namespace Aura_OS.System.Input
             while (CosmosKeyboard.TryReadKey(out KeyEvent keyEvent))
             {
                 // Physical Ctrl+Alt: AltGr also reports Control|Alt in Modifiers, the globals do not.
-                if (CosmosKeyboard.ControlPressed && CosmosKeyboard.AltPressed && keyEvent.Key == ConsoleKeyEx.Delete)
+                if (CosmosKeyboard.ControlPressed && CosmosKeyboard.AltPressed && keyEvent.Key == Key.Delete)
                 {
                     AuraPower.Reboot();
                     continue;
                 }
                 // The event snapshot is more accurate than AltPressed, since keys are drained once per frame.
-                if ((keyEvent.Modifiers & ConsoleModifiers.Alt) != 0 && keyEvent.Key == ConsoleKeyEx.F4)
+                if ((keyEvent.Modifiers & ConsoleModifiers.Alt) != 0 && keyEvent.Key == Key.F4)
                 {
                     var focusedApp = Explorer.WindowManager.FocusedApp;
 
@@ -120,7 +120,7 @@ namespace Aura_OS.System.Input
                     }
                     continue;
                 }
-                else if (keyEvent.Key == ConsoleKeyEx.LWin)
+                else if (keyEvent.Key == Key.LWin)
                 {
                     // Only once logged in: DrawWindows/DetermineTopComponent also draw and click a visible
                     // start menu over the login screen, which would bypass the login.
@@ -151,7 +151,7 @@ namespace Aura_OS.System.Input
         /// Whether the key is that letter with Ctrl held (Ctrl+C), not a character AltGr types, which
         /// also reports Ctrl.
         /// </summary>
-        public static bool IsShortcut(KeyEvent keyEvent, ConsoleKeyEx letter)
+        public static bool IsShortcut(KeyEvent keyEvent, Key letter)
         {
             char c = keyEvent.KeyChar;
             bool typesCharacter = char.IsLetterOrDigit(c) || char.IsPunctuation(c) || char.IsSymbol(c) || c == ' ';

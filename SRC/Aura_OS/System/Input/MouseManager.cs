@@ -10,7 +10,7 @@ using Aura_OS.System.Processing.Processes;
 using Cosmos.Kernel.System;
 using Cosmos.Kernel.System.Graphics;
 using System;
-using CosmosMouse = Cosmos.Kernel.System.Mouse.MouseManager;
+using CosmosMouse = Cosmos.Kernel.System.Input.MouseManager;
 
 namespace Aura_OS.System.Input
 {

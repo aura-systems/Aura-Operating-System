@@ -6,7 +6,7 @@
 
 using System.Collections.Generic;
 using System.Drawing;
-using Cosmos.Kernel.System.Mouse;
+using Cosmos.Kernel.System.Input;
 using Cosmos.Kernel.System.Graphics;
 using Cosmos.Kernel.System.Graphics.Fonts;
 using Aura_OS.System.Graphics.UI.GUI.Skin;

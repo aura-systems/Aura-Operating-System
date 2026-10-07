@@ -11,7 +11,7 @@ using System.IO;
 using Cosmos.Kernel.System.Diagnostics;
 using Cosmos.Kernel.System.Graphics;
 using Cosmos.Kernel.System.Graphics.Fonts;
-using Cosmos.Kernel.System.Vfs;
+using Cosmos.Kernel.System.FileSystem;
 using Aura_OS.System;
 using Aura_OS.System.Audio;
 using Aura_OS.Processing;
@@ -224,7 +224,7 @@ namespace Aura_OS
             Files.LoadFiles();
 
             CustomConsole.WriteLineInfo("Checking for boot.bat script...");
-            IReadOnlyList<VfsManager.VfsMount> mounts = VfsManager.Mounts; // immutable snapshot
+            IReadOnlyList<VfsMount> mounts = VfsManager.Mounts; // immutable snapshot
             for (int i = 0; i < mounts.Count; i++)
             {
                 string volumePath = AuraPath.AsDirectory(mounts[i].MountPoint);
@@ -295,11 +295,11 @@ namespace Aura_OS
 
             if (!string.IsNullOrEmpty(ComputerName))
             {
-                Cosmos.Kernel.System.Network.Config.DnsConfig.HostName = ComputerName;
+                Cosmos.Kernel.System.Network.DnsConfig.HostName = ComputerName;
             }
 
             CustomConsole.WriteLineInfo("Try cleaning memory...");
-            FreeCount = MemoryInfo.Collect();
+            FreeCount = MemoryDiagnostics.Collect();
             CustomConsole.WriteLineInfo("Cosmos Memory Manager works.");
 
             BootTime = Time.MonthString() + "/" + Time.DayString() + "/" + Time.YearString() + ", " + Time.TimeString(true, true, true);
@@ -337,10 +337,10 @@ namespace Aura_OS
 
                 // GEN3-GAP(gc-trigger): OrionGC only collects on page-allocator exhaustion.
                 // 1 Hz, 10 Hz under memory pressure (rate-limited: a collection is stop-the-world).
-                bool lowMemory = MemoryInfo.FreePages < MemoryInfo.TotalPages / 4;
+                bool lowMemory = MemoryDiagnostics.FreePages < MemoryDiagnostics.TotalPages / 4;
                 if (now - _lastCollectTick >= (lowMemory ? 100 : 1000))
                 {
-                    FreeCount = MemoryInfo.Collect();
+                    FreeCount = MemoryDiagnostics.Collect();
                     _lastCollectTick = now;
                 }
 

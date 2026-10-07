@@ -4,7 +4,7 @@
 * PROGRAMMERS:      Valentin Charbonnier <valentinbreiz@gmail.com>
 */
 
-using Cosmos.Kernel.System.Vfs;
+using Cosmos.Kernel.System.FileSystem;
 using System.IO;
 
 namespace Aura_OS.System.Filesystem
@@ -40,7 +40,7 @@ namespace Aura_OS.System.Filesystem
                 // The Kernel.CurrentDirectory setter also syncs Directory.SetCurrentDirectory.
                 Kernel.CurrentDirectory = AuraPath.AsDirectory(target);
 
-                VfsManager.VfsMount mount = Volumes.MountOf(target);
+                VfsMount mount = Volumes.MountOf(target);
                 Kernel.CurrentVolume = AuraPath.AsDirectory(mount != null ? mount.MountPoint : "/");
             }
             else if (File.Exists(target))

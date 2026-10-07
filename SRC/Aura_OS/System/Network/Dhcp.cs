@@ -6,7 +6,6 @@
 
 using System;
 using Cosmos.Kernel.System.Network;
-using Cosmos.Kernel.System.Network.IPv4.DHCP;
 
 namespace Aura_OS.System.Network
 {

@@ -5,8 +5,7 @@
 */
 
 using Aura_OS.System.Graphics.UI.GUI.Skin;
-using Cosmos.Kernel.System.Keyboard;
-using Cosmos.Kernel.System.Mouse;
+using Cosmos.Kernel.System.Input;
 using System;
 using System.Text;
 
@@ -656,31 +655,31 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
 
             switch (keyEvent.Key)
             {
-                case ConsoleKeyEx.Backspace:
+                case Key.Backspace:
                     HandleBackspace();
                     break;
-                case ConsoleKeyEx.Delete:
+                case Key.Delete:
                     HandleDelete();
                     break;
-                case ConsoleKeyEx.Enter:
+                case Key.Enter:
                     HandleEnter();
                     break;
-                case ConsoleKeyEx.LeftArrow:
+                case Key.LeftArrow:
                     HandleLeftArrow(extend);
                     break;
-                case ConsoleKeyEx.RightArrow:
+                case Key.RightArrow:
                     HandleRightArrow(extend);
                     break;
-                case ConsoleKeyEx.UpArrow:
+                case Key.UpArrow:
                     HandleUpArrow(extend);
                     break;
-                case ConsoleKeyEx.DownArrow:
+                case Key.DownArrow:
                     HandleDownArrow(extend);
                     break;
-                case ConsoleKeyEx.Home:
+                case Key.Home:
                     MoveCursor(_linePosition, 0, extend);
                     break;
-                case ConsoleKeyEx.End:
+                case Key.End:
                     MoveCursor(_linePosition, Multiline ? Lines[_linePosition].Length : _text.Length, extend);
                     break;
                 default:
@@ -688,7 +687,7 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
                     break;
             }
 
-            if (keyEvent.Key != ConsoleKeyEx.UpArrow && keyEvent.Key != ConsoleKeyEx.DownArrow)
+            if (keyEvent.Key != Key.UpArrow && keyEvent.Key != Key.DownArrow)
             {
                 _preferredColumn = -1;
             }
@@ -703,19 +702,19 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
         /// <returns>False for another key.</returns>
         private bool HandleShortcut(KeyEvent keyEvent)
         {
-            if (Input.KeyboardManager.IsShortcut(keyEvent, ConsoleKeyEx.A))
+            if (Input.KeyboardManager.IsShortcut(keyEvent, Key.A))
             {
                 SelectAll();
             }
-            else if (Input.KeyboardManager.IsShortcut(keyEvent, ConsoleKeyEx.C))
+            else if (Input.KeyboardManager.IsShortcut(keyEvent, Key.C))
             {
                 Copy();
             }
-            else if (Input.KeyboardManager.IsShortcut(keyEvent, ConsoleKeyEx.X))
+            else if (Input.KeyboardManager.IsShortcut(keyEvent, Key.X))
             {
                 Cut();
             }
-            else if (Input.KeyboardManager.IsShortcut(keyEvent, ConsoleKeyEx.V))
+            else if (Input.KeyboardManager.IsShortcut(keyEvent, Key.V))
             {
                 Paste();
             }

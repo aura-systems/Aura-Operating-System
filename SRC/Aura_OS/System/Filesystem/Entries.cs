@@ -5,7 +5,7 @@
 */
 
 using Aura_OS.System.Processing.Interpreter.Commands;
-using Cosmos.Kernel.System.Vfs;
+using Cosmos.Kernel.System.FileSystem;
 using System;
 using System.IO;
 
@@ -360,7 +360,7 @@ namespace Aura_OS.System.Filesystem
                 return true;
             }
 
-            VfsManager.VfsMount mount;
+            VfsMount mount;
             return normalized.Length > 0 && VfsManager.TryGetMount(normalized, out mount);
         }
 

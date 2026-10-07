@@ -9,8 +9,7 @@ using System.Collections.Generic;
 using Aura_OS.System.Graphics.UI.GUI.Skin;
 using Aura_OS.System.Processing.Processes;
 using Cosmos.Kernel.System.Graphics;
-using Cosmos.Kernel.System.Keyboard;
-using Cosmos.Kernel.System.Mouse;
+using Cosmos.Kernel.System.Input;
 
 namespace Aura_OS.System.Graphics.UI.GUI.Components
 {
@@ -318,7 +317,7 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
                     continue;
                 }
 
-                if (key.Key == ConsoleKeyEx.Enter)
+                if (key.Key == Key.Enter)
                 {
                     Activate();
                     continue;
@@ -335,22 +334,22 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
 
                 switch (key.Key)
                 {
-                    case ConsoleKeyEx.UpArrow:
+                    case Key.UpArrow:
                         index = index < 0 ? 0 : index - 1;
                         break;
-                    case ConsoleKeyEx.DownArrow:
+                    case Key.DownArrow:
                         index = index < 0 ? 0 : index + 1;
                         break;
-                    case ConsoleKeyEx.Home:
+                    case Key.Home:
                         index = 0;
                         break;
-                    case ConsoleKeyEx.End:
+                    case Key.End:
                         index = Items.Count - 1;
                         break;
-                    case ConsoleKeyEx.PageUp:
+                    case Key.PageUp:
                         index = index < 0 ? 0 : index - page;
                         break;
-                    case ConsoleKeyEx.PageDown:
+                    case Key.PageDown:
                         index = index < 0 ? 0 : index + page;
                         break;
                 }
@@ -364,16 +363,16 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
             }
         }
 
-        private static bool IsMoveKey(ConsoleKeyEx key)
+        private static bool IsMoveKey(Key key)
         {
             switch (key)
             {
-                case ConsoleKeyEx.UpArrow:
-                case ConsoleKeyEx.DownArrow:
-                case ConsoleKeyEx.Home:
-                case ConsoleKeyEx.End:
-                case ConsoleKeyEx.PageUp:
-                case ConsoleKeyEx.PageDown:
+                case Key.UpArrow:
+                case Key.DownArrow:
+                case Key.Home:
+                case Key.End:
+                case Key.PageUp:
+                case Key.PageDown:
                     return true;
             }
 

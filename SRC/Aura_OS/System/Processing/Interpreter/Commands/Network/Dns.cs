@@ -7,8 +7,6 @@
 using System;
 using System.Collections.Generic;
 using Cosmos.Kernel.System.Network;
-using Cosmos.Kernel.System.Network.Config;
-using Cosmos.Kernel.System.Network.DNS;
 using Aura_OS;
 using Aura_OS.System.Processing.Interpreter;
 

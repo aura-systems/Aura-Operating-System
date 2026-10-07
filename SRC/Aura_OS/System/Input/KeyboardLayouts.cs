@@ -7,16 +7,16 @@
 using System;
 using System.IO;
 using Cosmos.Kernel.System;
-using Cosmos.Kernel.System.Keyboard;
-using Cosmos.Kernel.System.Keyboard.ScanMaps;
+using Cosmos.Kernel.System.Input;
+using Cosmos.Kernel.System.Input.Layouts;
 using Aura_OS.System.Filesystem;
 using Aura_OS.System.Utils;
-using CosmosKeyboard = Cosmos.Kernel.System.Keyboard.KeyboardManager;
+using CosmosKeyboard = Cosmos.Kernel.System.Input.KeyboardManager;
 
 namespace Aura_OS.System.Input
 {
     /// <summary>
-    /// Every keyboard scan map Aura can use, keyed by the short code shown in the
+    /// Every keyboard layout Aura can use, keyed by the short code shown in the
     /// taskbar. Single source of truth for the taskbar/login layout menu, the
     /// setkeyboardmap command and the 'keyboardLayout' entry of settings.ini.
     /// </summary>
@@ -87,7 +87,7 @@ namespace Aura_OS.System.Input
             return null;
         }
 
-        private static ScanMapBase Create(string code)
+        private static KeyboardLayout Create(string code)
         {
             switch (code)
             {
@@ -108,7 +108,7 @@ namespace Aura_OS.System.Input
         /// <returns>False when the keyboard is compiled out or the code matches no known layout.</returns>
         public static bool Set(string codeOrAlias)
         {
-            // SetKeyLayout throws when the keyboard support is compiled out.
+            // SetLayout throws when the keyboard support is compiled out.
             if (!KernelFeatures.Keyboard)
             {
                 return false;
@@ -120,13 +120,13 @@ namespace Aura_OS.System.Input
                 return false;
             }
 
-            ScanMapBase scanMap = Create(code);
-            if (scanMap == null)
+            KeyboardLayout layout = Create(code);
+            if (layout == null)
             {
                 return false;
             }
 
-            CosmosKeyboard.SetKeyLayout(scanMap);
+            CosmosKeyboard.SetLayout(layout);
             CurrentCode = code;
             return true;
         }
