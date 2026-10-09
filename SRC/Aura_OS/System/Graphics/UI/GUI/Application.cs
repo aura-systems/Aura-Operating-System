@@ -472,6 +472,19 @@ namespace Aura_OS.System.Graphics.UI.GUI
             Layout.On(name, handler);
         }
 
+        /// <summary>
+        /// Shows the window over the others, focused; restored first when minimized.
+        /// </summary>
+        public void SwitchTo()
+        {
+            if (!Visible)
+            {
+                Window.Maximize.Click();
+            }
+
+            BringToFront();
+        }
+
         private void BringToFront()
         {
             MarkFocused();

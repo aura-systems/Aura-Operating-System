@@ -358,6 +358,17 @@ namespace Aura_OS
             LoadImage("UI/Images/Icons/16/locked.bmp", "16");
             LoadImage("UI/Images/Icons/16/undo.bmp", "16");
             LoadImage("UI/Images/Icons/16/apply.bmp", "16");
+            // The Task Manager's (Chicago95 icon theme).
+            LoadImage("UI/Images/Icons/16/taskmanager.bmp", "16");
+            LoadImage("UI/Images/Icons/16/windows.bmp", "16");
+            LoadImage("UI/Images/Icons/16/performance.bmp", "16");
+            LoadImage("UI/Images/Icons/16/threads.bmp", "16");
+            LoadImage("UI/Images/Icons/16/stop.bmp", "16");
+            LoadImage("UI/Images/Icons/16/switch.bmp", "16");
+            LoadImage("UI/Images/Icons/16/run.bmp", "16");
+            LoadImage("UI/Images/Icons/16/desktop.bmp", "16");
+            LoadImage("UI/Images/Icons/16/mouse.bmp", "16");
+            LoadImage("UI/Images/Icons/16/keyboard.bmp", "16");
             LoadImage("UI/Images/Icons/24/program.bmp", "24");
             LoadImage("UI/Images/Icons/24/reboot.bmp", "24");
             LoadImage("UI/Images/Icons/24/logout.bmp", "24");
@@ -366,6 +377,7 @@ namespace Aura_OS
             LoadImage("UI/Images/Icons/24/terminal.bmp", "24");
             LoadImage("UI/Images/Icons/24/explorer.bmp", "24");
             LoadImage("UI/Images/Icons/24/disks.bmp", "24");
+            LoadImage("UI/Images/Icons/24/taskmanager.bmp", "24");
             LoadImage("UI/Images/Icons/32/file.bmp", "32");
             LoadImage("UI/Images/Icons/32/folder.bmp", "32");
             LoadImage("UI/Images/Icons/32/dialog-information.bmp", "32");

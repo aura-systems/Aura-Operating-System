@@ -80,6 +80,10 @@ namespace Aura_OS.System.Graphics.UI.GUI
                 {
                     icon = Kernel.ResourceManager.GetIcon("24-disks.bmp");
                 }
+                else if (applicationConfig.Name.StartsWith("Task"))
+                {
+                    icon = Kernel.ResourceManager.GetIcon("24-taskmanager.bmp");
+                }
                 else
                 {
                     icon = Kernel.ResourceManager.GetIcon("24-program.bmp");

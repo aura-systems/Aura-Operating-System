@@ -74,9 +74,14 @@ namespace Aura_OS.System.Processing.Interpreter.Commands.Util
                 sb.Append(thread.Id.ToString().PadRight(8, ' '));
                 sb.Append(GetStateName(thread.State).PadRight(10, ' '));
                 sb.Append((thread.TotalRuntimeNs / SchedulerDiagnostics.NanosecondsPerMillisecond).ToString() + "ms");
+                string name = ThreadNames.Of(thread.Id);
                 if (thread.IsIdle)
                 {
                     sb.Append(" (main loop)");
+                }
+                else if (name != null)
+                {
+                    sb.Append(" (" + name + ")");
                 }
 
                 sb.AppendLine();

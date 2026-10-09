@@ -171,6 +171,11 @@ namespace Aura_OS
 
         private static int _frames = 0;
         private static int _fps = 0;
+
+        /// <summary>
+        /// The frames drawn in the last second.
+        /// </summary>
+        public static int Fps => _fps;
         private static long _lastFpsTick = 0;
         private static long _lastCollectTick = 0;
 

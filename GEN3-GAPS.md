@@ -41,7 +41,7 @@ exception path, C8 dispose everything.
 | Area | Major | Minor |
 |---|---|---|
 | Build / tooling | `iso-files` | `resources`, `resources-perf`, `update-pins`, `prop-trap`, `defines`, `compile-only`, `iso-path`, `dev-stamp`, `bytes-only` |
-| Core runtime | `cpu-exception`, `null-deref`, `unhandled`, `finally`, `eh-global`, `finalizers`, `gc-trigger`, `oom`, `gc-conservative`, `idle-thread` | `run-spam`, `log-sink`, `meminfo`, `cpuinfo`, `pci`, `tz-rtc`, `env`, `pc-speaker`, `encoding` |
+| Core runtime | `cpu-exception`, `null-deref`, `unhandled`, `finally`, `eh-global`, `finalizers`, `gc-trigger`, `oom`, `gc-conservative`, `idle-thread` | `run-spam`, `log-sink`, `meminfo`, `cpuinfo`, `thread-names`, `pci`, `tz-rtc`, `env`, `pc-speaker`, `encoding` |
 | Console / graphics | `console-input` | `kernelconsole`, `console-global`, `present`, `display-mode`, `blit`, `psf`, `hw-cursor`, `bmp`, `canvas3d` |
 | Input | `keyboard-altgr`, `ps2-sync` | `key-release`, `key-repeat`, `e0`, `sessions`, `mouse`, `key-docs` |
 | Filesystem / storage | `ide`, `fat-names`, `vfs-threads` (phase 2), `gpt-crc`, `ext2-format`, `ext2-1k` | `driveinfo`, `fat-label`, `fat-time`, `fat-resize`, `mounts`, `tmp`, `cwd`, `mbr`, `gpt-type`, `ext2-features`, `ext2-dtime` |
@@ -326,6 +326,18 @@ exception path, C8 dispose everything.
 - **Upstream ask:** a `CpuInfo` on the ring, and cpuid feature detection at
   boot.
 - **Source:** 01, 02.
+
+### `thread-names`: kernel threads have no name (minor)
+- **Gap:** `SchedulerDiagnostics` snapshots a thread by id, state and times,
+  but `KernelThreadInfo` carries no name, and `Thread.Name` is not passed on.
+  A thread list cannot tell what each thread is for.
+- **Aura workaround:** `ThreadNames`: each thread Aura starts (the FTP and HTTP
+  servers) records its id under a name as it starts, from
+  `SchedulerDiagnostics.TryGetCurrentThread`. The Task Manager shows it; the
+  kernel's own threads stay unnamed.
+- **Upstream ask:** a `Name` on `KernelThreadInfo`, set from `Thread.Name` and
+  by the kernel for its own threads.
+- **Source:** Task Manager, 2026-10-08.
 
 ### `pci`: no typed PCI enumeration nor name tables (minor)
 - **Gap:** the PCI view offers only `DeviceNodeInfo` strings.

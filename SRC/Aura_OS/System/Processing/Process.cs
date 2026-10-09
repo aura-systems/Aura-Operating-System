@@ -22,6 +22,12 @@ namespace Aura_OS.Processing
         public bool Initialized { get; protected set; }
         public bool Running { get; private set; }
 
+        /// <summary>
+        /// Time the main loop spent in this process (its update, an app's drawing), in Stopwatch ticks:
+        /// ProcessManager.Charge counts it.
+        /// </summary>
+        public long CpuTime;
+
         private static string[] TypeNames = new string[]
         {
             "KernelComponent",

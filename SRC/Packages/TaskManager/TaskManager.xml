@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Task Manager app window: three tabs, one shown at a time. Processes lists the apps and the desktop's
+     processes with their share of the CPU, and ends, shows or opens an app; Performance draws the CPU
+     and the memory over the last minute; Threads lists the kernel's threads. The status line sums up.
+     The Lua modules fill them: main.lua lists them. -->
+<Window title="Task Manager" width="680" height="500" icon="16-taskmanager.bmp" padding="6" spacing="6">
+  <Stack orientation="horizontal" spacing="4" height="23">
+    <Button id="processesTab" icon="16-windows.bmp" text="Processes" onClick="processesTab" />
+    <Button id="performanceTab" icon="16-performance.bmp" text="Performance" onClick="performanceTab" />
+    <Button id="threadsTab" icon="16-threads.bmp" text="Threads" onClick="threadsTab" />
+  </Stack>
+
+  <Stack id="processesView" spacing="2" height="*">
+    <!-- The column titles, over the rows' texts, which start after the icons. -->
+    <Label id="processesHeader" width="*" margin="24,0,0,0" />
+    <ListBox id="processes" width="*" height="*" onActivate="switchTo" />
+    <Stack orientation="horizontal" spacing="4" height="23" margin="0,4,0,0">
+      <Button icon="16-stop.bmp" text="End task" onClick="endTask" />
+      <Button icon="16-switch.bmp" text="Switch to" onClick="switchTo" />
+      <Label text="New task:" margin="16,0,0,0" />
+      <DropDown id="newTask" width="*" />
+      <Button icon="16-run.bmp" text="Open" onClick="newTask" />
+    </Stack>
+  </Stack>
+
+  <!-- The graphs: the last minute, a sample a second, the newest on the right. -->
+  <Stack id="performanceView" spacing="4" height="*" visible="false">
+    <Stack orientation="horizontal" spacing="16">
+      <Label text="CPU" />
+      <Label id="cpuApps" color="#00A000" />
+      <Label id="cpuThreads" color="#C08000" />
+      <Label id="cpuDesktop" color="#3050C0" />
+    </Stack>
+    <Canvas id="cpuGraph" width="*" height="*" background="black" />
+    <Stack orientation="horizontal" spacing="16" margin="0,4,0,0">
+      <Label text="Memory" />
+      <Label id="memoryUsed" color="#008080" />
+    </Stack>
+    <Canvas id="memoryGraph" width="*" height="*" background="black" />
+    <Grid columns="auto,*,auto,*" columnSpacing="12" rowSpacing="2" margin="0,4,0,0">
+      <Row>
+        <Label text="Frames per second:" />
+        <Label id="fps" />
+        <Label text="Up time:" />
+        <Label id="uptime" />
+      </Row>
+      <Row>
+        <Label text="Processes:" />
+        <Label id="processCount" />
+        <Label text="Threads:" />
+        <Label id="threadCount" />
+      </Row>
+      <Row>
+        <Label text="Live heap:" />
+        <Label id="heap" />
+        <Label text="Collections:" />
+        <Label id="collections" />
+      </Row>
+    </Grid>
+  </Stack>
+
+  <Stack id="threadsView" spacing="2" height="*" visible="false">
+    <Label id="threadsHeader" width="*" margin="4,0,0,0" />
+    <ListBox id="threads" width="*" height="*" />
+  </Stack>
+
+  <Label id="status" width="*" />
+
+  <Dialog id="confirm" title="End task" visible="false">
+    <Button text="End task" onClick="confirmOk" />
+    <Button text="Cancel" onClick="closeConfirm" />
+  </Dialog>
+</Window>

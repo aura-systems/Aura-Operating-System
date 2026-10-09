@@ -186,6 +186,8 @@ namespace Aura_OS.System.Processing.Interpreter.Commands.Network
         /// </summary>
         private static void Serve(FtpServer server)
         {
+            ThreadNames.NameCurrent("FTP server");
+
             // No terminal to report to from this thread: whatever stops the server goes to the serial log.
             try
             {

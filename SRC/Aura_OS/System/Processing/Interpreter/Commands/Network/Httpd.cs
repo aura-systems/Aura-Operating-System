@@ -187,6 +187,8 @@ namespace Aura_OS.System.Processing.Interpreter.Commands.Network
         /// </remarks>
         private static void Serve(HttpListener listener, string root)
         {
+            ThreadNames.NameCurrent("HTTP server");
+
             while (listener.IsListening)
             {
                 HttpListenerContext context;

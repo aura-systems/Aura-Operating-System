@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using Aura_OS.System;
 using Aura_OS.System.Graphics.UI.GUI;
+using Stopwatch = System.Diagnostics.Stopwatch;
 
 namespace Aura_OS.Processing
 {
@@ -26,6 +27,16 @@ namespace Aura_OS.Processing
         private uint nextProcessId = 0;
 
         /// <summary>
+        /// Time the main loop spent in no process (drawing the frame on the screen, collecting
+        /// memory), in Stopwatch ticks.
+        /// </summary>
+        public long SystemTime;
+
+        // The process the main loop's time goes to now, null for none, and since when (Stopwatch ticks).
+        private Process _charged;
+        private long _chargedSince;
+
+        /// <summary>
         /// Initializes the process manager, preparing it to manage processes.
         /// </summary>
         public void Initialize()
@@ -34,6 +45,50 @@ namespace Aura_OS.Processing
 
             Processes = new List<Process>();
             nextProcessId = 0;
+            _chargedSince = Stopwatch.GetTimestamp();
+        }
+
+        /// <summary>
+        /// From now on, the main loop's time goes to that process (its CpuTime), or to SystemTime for
+        /// null; the time since the last call goes to the previous one. Every Aura process runs on the
+        /// main loop's thread, which the scheduler times as a whole: this splits it.
+        /// </summary>
+        /// <returns>The previous process, to give the time back to once this one is done.</returns>
+        public Process Charge(Process process)
+        {
+            long now = Stopwatch.GetTimestamp();
+            long elapsed = now - _chargedSince;
+
+            if (_charged != null)
+            {
+                _charged.CpuTime += elapsed;
+            }
+            else
+            {
+                SystemTime += elapsed;
+            }
+
+            Process previous = _charged;
+            _charged = process;
+            _chargedSince = now;
+            return previous;
+        }
+
+        /// <summary>
+        /// Counts the time of the process running now, up to now: the times read next are the latest.
+        /// </summary>
+        public void Flush()
+        {
+            Charge(_charged);
+        }
+
+        /// <summary>
+        /// Stopwatch ticks in nanoseconds, without overflowing for a time of years.
+        /// </summary>
+        public static long Nanoseconds(long ticks)
+        {
+            long frequency = Stopwatch.Frequency;
+            return ticks / frequency * 1_000_000_000L + ticks % frequency * 1_000_000_000L / frequency;
         }
 
         /// <summary>
@@ -97,9 +152,13 @@ namespace Aura_OS.Processing
         {
             for (int i = 0; i < Processes.Count; i++)
             {
-                if (Processes[i].Running)
+                Process process = Processes[i];
+
+                if (process.Running)
                 {
-                    Processes[i].Update();
+                    Process previous = Charge(process);
+                    process.Update();
+                    Charge(previous);
                 }
             }
         }

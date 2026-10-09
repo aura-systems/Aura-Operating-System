@@ -101,6 +101,23 @@ namespace Aura_OS.System.Graphics.UI.GUI.Components
         }
 
         /// <summary>
+        /// The row at the top of the view, from 0. Setting it scrolls as far as the rows go: a list
+        /// whose rows are set again (ClearItems, AddItem) keeps its view.
+        /// </summary>
+        public int TopIndex
+        {
+            get
+            {
+                return _top;
+            }
+            set
+            {
+                _top = Math.Max(0, Math.Min(value, MaxTop));
+                MarkDirty();
+            }
+        }
+
+        /// <summary>
         /// The selected row, null when none.
         /// </summary>
         public string SelectedItem

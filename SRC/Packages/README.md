@@ -131,6 +131,7 @@ error. A change shows on the next frame.
 | `items` | DropDown, ListBox | A list of strings. A ListBox's item can also be `{ text = , icon = }`, with an icon name (`"16-folder.bmp"`, 16 x 16): the texts then start after the icons. Setting it clears the selection. Reads as the texts. |
 | `selectedIndex` | DropDown, ListBox | From 0, as in the layout file; -1 for none. A ListBox scrolls to it. |
 | `selectedItem` | DropDown, ListBox | Read only, `nil` for none. |
+| `top` | ListBox | The row at the top of the view, from 0; setting it scrolls as far as the rows go. Setting `items` goes back to the top: set `top` again after it to keep the view of a list refreshed while it is looked at. |
 | `title`, `message` | Dialog | |
 | `state` | Dialog | Set only: `"information"` or `"error"`. |
 | `foreground` | Console | Color of the text written next: `black`, `darkBlue`, `darkGreen`, `darkCyan`, `darkRed`, `darkMagenta`, `darkYellow`, `gray`, `darkGray`, `blue`, `green`, `cyan`, `red`, `magenta`, `yellow`, `white`. |
@@ -171,6 +172,7 @@ mouse over its text selects it, a double click a word (up to the spaces); the ap
 |---|---|
 | `aura.system.version`, `aura.system.revision` | The running Aura (`"0.8.0"`, `"03102026"`). |
 | `aura.system.installed` | False in live mode (nothing installed, no `settings.ini`). |
+| `aura.system.uptime` | Milliseconds since Aura started. |
 | `aura.system.computerName` | Read and set; also the DNS host name. |
 | `aura.system.latestRelease()` | Version, revision and URL of the last release (os.json). An error when it cannot be downloaded: call it with `pcall`. |
 | `aura.system.compareVersions(a, b)` | -1, 0 or 1. |
@@ -222,6 +224,7 @@ Each read gives the current value.
 | `aura.desktop.setWallpaper(path)` | Shows that BMP. An error when the file cannot be loaded: call it with `pcall`. A missing file shows the default wallpaper. |
 | `aura.desktop.windowsAlpha`, `aura.desktop.taskbarAlpha` | Opacity of the windows and the taskbar, 0 to 255, read and set. |
 | `aura.desktop.guiDebug` | The window manager's debug drawing, read and set. |
+| `aura.desktop.fps` | The frames the desktop drew in the last second. |
 | `aura.desktop.open(path)` | Opens a folder in the File Explorer, a file in its app (a BMP in Picture, any other file in the Editor), as the desktop does: `true`, or `false` and why. |
 | `aura.desktop.start(name, ...)` | Opens the app package with that name (`"Terminal"`), with those arguments: `true`, or `false` and why. |
 
@@ -315,11 +318,27 @@ thread: the desktop waits for them (see `app:after`).
 | `aura.packages.repository` | The repository's address. Read only: see `setRepository`. |
 | `aura.packages.defaultRepository` | The repository Aura comes with. |
 | `aura.packages.setRepository(url)` | Switches to that repository (an `http://` or `https://` address), and forgets the package list of the previous one: `true`, or `false` and why. Kept in `settings.ini` on an installed Aura. |
-| `aura.packages.list()` | The packages Aura has: a list of `{ name = , displayName = , version = , author = , description = , builtIn = , app = }`. `builtIn` is false for a downloaded one, which may replace a built-in one of the same name. |
+| `aura.packages.list()` | The packages Aura has: a list of `{ name = , displayName = , version = , author = , description = , builtIn = , app = , menu = }`. `builtIn` is false for a downloaded one, which may replace a built-in one of the same name; `menu` is false for an app kept out of the start menu (`menu="false"`: one that needs a file to open). |
 | `aura.packages.update()` | Downloads the repository's package list: `true`, or `false` and why. |
 | `aura.packages.available()` | The repository's packages, as the last `update()` read them (none before): a list of `{ name = , displayName = , version = , author = , description = , link = }`. |
 | `aura.packages.add(name)` | Downloads a package of that list and installs it, replacing the one of the same name (a built-in one too): `true`, or `false` and why. An app shows in the start menu at once. |
 | `aura.packages.remove(name)` | Removes a downloaded package; the built-in one it replaced is back: `true`, or `false` and why. |
+
+### aura.processes
+
+Aura's processes and the kernel's threads, as the Task Manager shows them. Every process runs on the
+main loop's thread, which draws the desktop frame after frame and never waits. The kernel times each
+process's updates and the drawing of its window, and counts the main loop's other time (putting the
+frame on the screen, collecting memory) as the system's. The times are in nanoseconds and only grow:
+a share of the CPU is how much one grew between two reads, over how much `times().clock` did.
+
+| | |
+|---|---|
+| `aura.processes.list()` | The processes, in their start order: a list of `{ id = , name = , app = , running = , focused = , package = , icon = , cpuTime = }`. `id` is the one `kill` takes; `name` is an app's window title; `app` is true for an app (it has a window); `running` is false for a minimized app, whose process stops; `package` is an app's package name and `icon` its window's icon, `nil` for none; `cpuTime` is the main loop's time in the process. |
+| `aura.processes.times()` | `{ clock = , system = , threads = }`, read together: the clock (since boot), the main loop's time in no process, and the time the other threads ran. Those take the CPU from the main loop now and then, so the processes' and the system's times count it too. |
+| `aura.processes.threads()` | The kernel's threads: a list of `{ id = , name = , state = , main = , managed = , cpuTime = , stack = , priority = }`. `name` is the one a thread Aura started gave itself (`"HTTP server"`), `nil` for the kernel's; `state` is `"created"`, `"ready"`, `"running"`, `"blocked"` or `"sleeping"`; `main` is true for the main loop's thread, `managed` for one a `System.Threading.Thread` started; `cpuTime` grows a scheduler tick (10 ms) at a time; `stack` is in bytes; `priority` is the scheduler's (the stride scheduler's tickets: more gets more of the CPU), `nil` when it gives none. |
+| `aura.processes.close(id)` | Closes an app, as its close button does: what it has not saved is lost. The calling app closes once its handler returns. `true`, or `false` and why: the desktop's processes (Explorer, the mouse's and the keyboard's) have no window, and run as long as Aura. |
+| `aura.processes.switchTo(id)` | Brings an app's window over the others, focused, restored first when minimized: `true`, or `false` and why. |
 
 ## Limits
 

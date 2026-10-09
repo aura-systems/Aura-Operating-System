@@ -238,7 +238,11 @@ namespace Aura_OS
 
                 if ((app.Running && app.Visible) && (app.IsDirty() || app.ForceDirty))
                 {
+                    // Its drawing is the app's time, not the desktop's (the Task Manager's CPU).
+                    Processing.Process previous = Kernel.ProcessManager.Charge(app);
                     app.Draw();
+                    Kernel.ProcessManager.Charge(previous);
+
                     app.MarkCleaned();
 
                     if (Kernel.GuiDebug)

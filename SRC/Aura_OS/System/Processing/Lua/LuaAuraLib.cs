@@ -14,6 +14,7 @@ using Cosmos.Kernel.System.Diagnostics;
 using Cosmos.Kernel.HAL.Devices.Storage;
 using Cosmos.Kernel.System.FileSystem;
 using Cosmos.Kernel.System.Graphics;
+using Aura_OS.Processing;
 using Aura_OS.System.Filesystem;
 using Aura_OS.System.Graphics.UI.GUI;
 using Aura_OS.System.Graphics.UI.GUI.Components;
@@ -27,6 +28,7 @@ using Aura_OS.System.Users;
 using Aura_OS.System.Utils;
 using UIConsole = Aura_OS.System.Graphics.UI.GUI.Components.Console;
 using AuraVersion = Aura_OS.System.Network.Version;
+using Stopwatch = System.Diagnostics.Stopwatch;
 
 namespace Aura_OS.System.Processing.Lua
 {
@@ -96,6 +98,7 @@ namespace Aura_OS.System.Processing.Lua
             SetObject(lua, "clipboard", ClipboardObject());
             SetObject(lua, "shell", ShellObject());
             SetObject(lua, "packages", PackagesObject());
+            SetObject(lua, "processes", ProcessesObject(app));
 
             if (app != null)
             {
@@ -143,6 +146,8 @@ namespace Aura_OS.System.Processing.Lua
                 .Property("version", lua => Push(lua, Kernel.Version ?? ""))
                 .Property("revision", lua => Push(lua, Kernel.Revision ?? ""))
                 .Property("installed", lua => Push(lua, Kernel.Installed))
+                // Milliseconds since boot.
+                .Property("uptime", lua => Push(lua, Environment.TickCount64))
                 .Property("computerName", lua => Push(lua, Kernel.ComputerName ?? ""), lua =>
                 {
                     Kernel.ComputerName = LuaObject.CheckText(lua, 3);
@@ -303,6 +308,8 @@ namespace Aura_OS.System.Processing.Lua
                     Kernel.GuiDebug = lua.ToBoolean(3);
                     return 0;
                 })
+                // The frames the desktop drew in the last second.
+                .Property("fps", lua => Push(lua, Kernel.Fps))
                 // open(path): a folder in the File Explorer, a file in its app; true, or false and why.
                 .Function("open", lua =>
                 {
@@ -1033,7 +1040,7 @@ namespace Aura_OS.System.Processing.Lua
                     {
                         Package package = packages[i];
 
-                        lua.CreateTable(0, 7);
+                        lua.CreateTable(0, 8);
                         SetText(lua, "name", package.Name);
                         SetText(lua, "displayName", package.DisplayName);
                         SetText(lua, "version", package.Version);
@@ -1043,6 +1050,8 @@ namespace Aura_OS.System.Processing.Lua
                         lua.SetField(-2, "builtIn");
                         lua.PushBoolean(package.IsApp);
                         lua.SetField(-2, "app");
+                        lua.PushBoolean(package.InMenu);
+                        lua.SetField(-2, "menu");
                         lua.RawSetI(-2, i + 1);
                     }
 
@@ -1088,6 +1097,171 @@ namespace Aura_OS.System.Processing.Lua
                     string name = LuaObject.CheckText(lua, 1);
                     return Try(lua, () => Kernel.PackageManager.Remove(name));
                 });
+        }
+
+        /// <summary>
+        /// Aura's processes and the kernel's threads, as the Task Manager shows them. Every process runs
+        /// on the main loop's thread: ProcessManager.Charge splits its time between them. The times are
+        /// in nanoseconds; their growth over the clock's is a share of the CPU.
+        /// </summary>
+        /// <param name="caller">The calling app, null for a console program: it closes itself once its handler returns.</param>
+        private static LuaObject ProcessesObject(PackageApp caller)
+        {
+            return new LuaObject("aura.processes")
+                // list(): the processes, in their start order.
+                .Function("list", lua =>
+                {
+                    ProcessManager manager = Kernel.ProcessManager;
+                    manager.Flush();
+
+                    List<Process> processes = manager.Processes;
+                    lua.CreateTable(processes.Count, 0);
+
+                    for (int i = 0; i < processes.Count; i++)
+                    {
+                        Process process = processes[i];
+                        Application app = process as Application;
+                        PackageApp packageApp = process as PackageApp;
+
+                        lua.CreateTable(0, 8);
+                        SetInteger(lua, "id", process.ID);
+                        SetText(lua, "name", process.Name);
+                        lua.PushBoolean(app != null);
+                        lua.SetField(-2, "app");
+                        lua.PushBoolean(process.Running);
+                        lua.SetField(-2, "running");
+                        lua.PushBoolean(app != null && app.Focused);
+                        lua.SetField(-2, "focused");
+                        LuaObject.PushText(lua, packageApp != null ? packageApp.Package.Name : null);
+                        lua.SetField(-2, "package");
+                        LuaObject.PushText(lua, app != null && app.Layout != null ? app.Layout.Icon : null);
+                        lua.SetField(-2, "icon");
+                        SetInteger(lua, "cpuTime", ProcessManager.Nanoseconds(process.CpuTime));
+                        lua.RawSetI(-2, i + 1);
+                    }
+
+                    return 1;
+                })
+                // times(): { clock = , system = , threads = }, read together.
+                .Function("times", lua =>
+                {
+                    ProcessManager manager = Kernel.ProcessManager;
+                    manager.Flush();
+
+                    lua.CreateTable(0, 3);
+                    SetInteger(lua, "clock", ProcessManager.Nanoseconds(Stopwatch.GetTimestamp()));
+                    SetInteger(lua, "system", ProcessManager.Nanoseconds(manager.SystemTime));
+                    SetInteger(lua, "threads", (long)SchedulerDiagnostics.BusyCpuTimeNs);
+                    return 1;
+                })
+                // threads(): the kernel's threads, in their registry's order.
+                .Function("threads", lua =>
+                {
+                    int slots = SchedulerDiagnostics.ThreadSlotCount;
+                    int count = 0;
+                    lua.CreateTable(SchedulerDiagnostics.ThreadCount, 0);
+
+                    for (int slot = 0; slot < slots; slot++)
+                    {
+                        KernelThreadInfo thread;
+
+                        if (!SchedulerDiagnostics.TryGetThreadInSlot(slot, out thread) || thread.State == KernelThreadState.Dead)
+                        {
+                            continue;
+                        }
+
+                        lua.CreateTable(0, 8);
+                        SetInteger(lua, "id", thread.Id);
+                        LuaObject.PushText(lua, ThreadNames.Of(thread.Id));
+                        lua.SetField(-2, "name");
+                        SetText(lua, "state", ThreadStateName(thread.State));
+                        lua.PushBoolean(thread.IsIdle);
+                        lua.SetField(-2, "main");
+                        lua.PushBoolean(thread.IsManaged);
+                        lua.SetField(-2, "managed");
+                        SetInteger(lua, "cpuTime", (long)thread.TotalRuntimeNs);
+                        SetInteger(lua, "stack", (long)thread.StackSizeBytes);
+
+                        if (thread.HasPriority)
+                        {
+                            SetInteger(lua, "priority", thread.Priority);
+                        }
+
+                        lua.RawSetI(-2, ++count);
+                    }
+
+                    return 1;
+                })
+                // close(id): closes an app; true, or false and why.
+                .Function("close", lua =>
+                {
+                    long id = lua.L_CheckInteger(1);
+                    return Try(lua, () =>
+                    {
+                        Application app = AppOfProcess(id);
+
+                        if (app == caller)
+                        {
+                            // Disposing it would end the handler running now: as os.exit.
+                            caller.RequestExit();
+                        }
+                        else
+                        {
+                            app.Dispose();
+                        }
+                    });
+                })
+                // switchTo(id): an app's window over the others, focused; true, or false and why.
+                .Function("switchTo", lua =>
+                {
+                    long id = lua.L_CheckInteger(1);
+                    return Try(lua, () => AppOfProcess(id).SwitchTo());
+                });
+        }
+
+        /// <summary>
+        /// The app process with that id.
+        /// </summary>
+        /// <exception cref="InvalidOperationException">There is none, or the process is not an app.</exception>
+        private static Application AppOfProcess(long id)
+        {
+            Process process = id >= 0 && id <= uint.MaxValue ? Kernel.ProcessManager.GetProcessByPid((uint)id) : null;
+
+            if (process == null)
+            {
+                throw new InvalidOperationException("There is no process " + id + ".");
+            }
+
+            Application app = process as Application;
+
+            if (app == null)
+            {
+                throw new InvalidOperationException(process.Name + " is part of the desktop: it has no window, and runs as long as Aura.");
+            }
+
+            return app;
+        }
+
+        /// <summary>
+        /// A thread's state as aura.processes.threads gives it. A switch: NativeAOT keeps no enum names.
+        /// </summary>
+        private static string ThreadStateName(KernelThreadState state)
+        {
+            switch (state)
+            {
+                case KernelThreadState.Created:
+                    return "created";
+                case KernelThreadState.Ready:
+                    return "ready";
+                case KernelThreadState.Running:
+                    return "running";
+                case KernelThreadState.Blocked:
+                    return "blocked";
+                case KernelThreadState.Sleeping:
+                    return "sleeping";
+                default:
+                    return "dead";
+            }
         }
 
         #endregion
@@ -1476,6 +1650,13 @@ namespace Aura_OS.System.Processing.Lua
                         return Text(lua, itemListBox.SelectedItem);
                     }
                     break;
+                case "top":
+                    if (component is ListBox topListBox)
+                    {
+                        lua.PushInteger(topListBox.TopIndex);
+                        return 1;
+                    }
+                    break;
                 case "title":
                     if (component is Dialog titleDialog)
                     {
@@ -1637,6 +1818,13 @@ namespace Aura_OS.System.Processing.Lua
                     else if (component is ListBox listBox)
                     {
                         listBox.SelectedIndex = (int)lua.L_CheckInteger(3);
+                        set = true;
+                    }
+                    break;
+                case "top":
+                    if (component is ListBox topListBox)
+                    {
+                        topListBox.TopIndex = (int)lua.L_CheckInteger(3);
                         set = true;
                     }
                     break;

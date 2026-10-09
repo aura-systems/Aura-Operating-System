@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Package name="TaskManager" displayName="Task Manager" version="1.0.0" author="Aura Team"
+         description="The running apps and processes and their share of the CPU, the CPU and memory over the last minute, and the kernel's threads: ends an app, brings one to the front, or opens one."
+         main="main.lua" layout="TaskManager.xml" />
