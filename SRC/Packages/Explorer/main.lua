@@ -118,14 +118,14 @@ end
 
 -- A file's type and icon by its extension.
 local KINDS = {
-  bmp = { "Image", "16-image.bmp" },
-  lua = { "Lua script", "16-script.bmp" },
-  pkg = { "Package", "16-package.bmp" },
-  zip = { "Zip archive", "16-package.bmp" },
+  bmp = { "Image", "image" },
+  lua = { "Lua script", "script" },
+  pkg = { "Package", "package" },
+  zip = { "Zip archive", "package" },
 }
 
 for _, extension in ipairs({ "txt", "md", "log", "ini", "cfg", "conf", "xml", "json", "csv" }) do
-  KINDS[extension] = { "Text", "16-file.bmp" }
+  KINDS[extension] = { "Text", "file" }
 end
 
 local function extensionOf(name)
@@ -152,14 +152,14 @@ end
 
 local function iconOf(entry)
   if entry.volume then
-    return "16-drive.bmp"
+    return "drive"
   elseif entry.directory then
-    return "16-folder.bmp"
+    return "folder"
   end
 
   local extension = extensionOf(entry.name)
   local kind = extension and KINDS[extension]
-  return kind and kind[2] or "16-file.bmp"
+  return kind and kind[2] or "file"
 end
 
 -- The entry's row: its name, size and type in columns as wide as the list.
@@ -307,16 +307,16 @@ end
 
 -- The computer, the user's folder and the volumes.
 local function fillPlaces()
-  placeList = { { text = "Computer", icon = "16-computer.bmp", path = COMPUTER } }
+  placeList = { { text = "Computer", icon = "computer", path = COMPUTER } }
 
   local home = aura.user.directory
 
   if home and fs.directoryExists(home) then
-    placeList[#placeList + 1] = { text = "Home", icon = "16-home.bmp", path = asDirectory(home) }
+    placeList[#placeList + 1] = { text = "Home", icon = "home", path = asDirectory(home) }
   end
 
   for _, volume in ipairs(fs.volumes()) do
-    placeList[#placeList + 1] = { text = volumeName(volume), icon = "16-drive.bmp", path = volume.path }
+    placeList[#placeList + 1] = { text = volumeName(volume), icon = "drive", path = volume.path }
   end
 
   local items = {}

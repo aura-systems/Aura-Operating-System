@@ -21,12 +21,12 @@ local COLUMNS = {
 
 -- An operation's icon in the list of operations.
 local OPERATION_ICONS = {
-  table = "16-partition-table.bmp",
-  create = "16-add.bmp",
-  delete = "16-delete.bmp",
-  resize = "16-resize.bmp",
-  format = "16-format.bmp",
-  label = "16-label.bmp",
+  table = "partition-table",
+  create = "add",
+  delete = "delete",
+  resize = "resize",
+  format = "format",
+  label = "label",
 }
 
 -- A row: the values in their columns, cut with "~" when too long.
@@ -93,7 +93,7 @@ local function iconOf(segment)
   end
 
   -- As GParted's key: a mounted partition is in use.
-  return partition.mountPoint and "16-locked.bmp" or "16-drive.bmp"
+  return partition.mountPoint and "locked" or "drive"
 end
 
 -- The selected segment, nil for none.

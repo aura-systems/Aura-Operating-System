@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- System information app window. main.lua fills the version and checks for updates; the images
-     are the kernel's own. -->
+<!-- System information app window. main.lua fills the version and checks for updates; the logos
+     are the package's images (package.xml). -->
 <Window title="SystemInfo" width="450" height="400" padding="0,12" spacing="4">
   <Label text="Aura Operating System" align="center" />
   <Label id="version" align="center" />
@@ -13,8 +13,8 @@
 
   <Label text="Created by Alexy DA CRUZ and Valentin CHARBONNIER." align="center" />
   <Label text="Project: github.com/aura-systems/Aura-Operating-System" align="center" color="green" />
-  <Image src="UI/Images/AuraLogo.bmp" align="center" margin="0,12" />
+  <Image icon="aura-logo" align="center" margin="0,12" />
 
   <Label text="Kernel: github.com/CosmosOS/Cosmos" align="center" color="green" />
-  <Image src="UI/Images/CosmosLogo.bmp" align="center" margin="0,8,0,0" />
+  <Image icon="cosmos-logo" align="center" margin="0,8,0,0" />
 </Window>

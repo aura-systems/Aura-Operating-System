@@ -10,6 +10,7 @@ using System.IO;
 using Cosmos.Executable.Lua;
 using Cosmos.Kernel.System.Input;
 using Aura_OS.System.Graphics.UI.GUI;
+using Aura_OS.System.Graphics.UI.GUI.Layout;
 using Aura_OS.System.Processing.Interpreter;
 using Aura_OS.System.Processing.Lua;
 
@@ -66,9 +67,9 @@ namespace Aura_OS.System.Processing.Applications
         private bool _exited;
 
         /// <param name="args">The main file's arguments (arg[1]... and ...), as a file to open; null for none.</param>
-        /// <exception cref="InvalidDataException">The layout file is wrong.</exception>
+        /// <exception cref="InvalidDataException">An image or the layout file is wrong.</exception>
         /// <exception cref="InvalidOperationException">The main file failed.</exception>
-        public PackageApp(Package package, int x = 0, int y = 0, List<string> args = null) : base(package.LoadLayout(), x, y)
+        public PackageApp(Package package, int x = 0, int y = 0, List<string> args = null) : base(Load(package), x, y)
         {
             Package = package;
 
@@ -117,6 +118,15 @@ namespace Aura_OS.System.Processing.Applications
 
                 throw new InvalidOperationException(package.Name + ": " + message, error);
             }
+        }
+
+        /// <summary>
+        /// The package's images (package.xml), then its layout, which names them: before the window opens.
+        /// </summary>
+        private static AppLayout Load(Package package)
+        {
+            package.LoadImages();
+            return package.LoadLayout();
         }
 
         /// <summary>

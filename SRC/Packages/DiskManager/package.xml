@@ -1,4 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Package name="DiskManager" displayName="Disk Manager" version="1.0.0" author="Aura Team"
          description="The disks and their partitions, as GParted shows them: creates partition tables, creates, deletes, moves, resizes, formats and labels partitions, and mounts and unmounts their volumes."
-         main="main.lua" layout="DiskManager.xml" />
+         main="main.lua" layout="DiskManager.xml" icon="disks-24">
+  <Image name="disks-24" src="Icons/24/disks.bmp" />
+  <Image name="disks" src="Icons/16/disks.bmp" />
+  <Image name="add" src="Icons/16/add.bmp" />
+  <Image name="delete" src="Icons/16/delete.bmp" />
+  <Image name="resize" src="Icons/16/resize.bmp" />
+  <Image name="format" src="Icons/16/format.bmp" />
+  <Image name="label" src="Icons/16/label.bmp" />
+  <Image name="undo" src="Icons/16/undo.bmp" />
+  <Image name="apply" src="Icons/16/apply.bmp" />
+  <Image name="drive" src="Icons/16/drive.bmp" />
+  <Image name="eject" src="Icons/16/eject.bmp" />
+  <Image name="properties" src="Icons/16/properties.bmp" />
+  <Image name="partition-table" src="Icons/16/partition-table.bmp" />
+  <Image name="refresh" src="Icons/16/refresh.bmp" />
+  <Image name="locked" src="Icons/16/locked.bmp" />
+</Package>

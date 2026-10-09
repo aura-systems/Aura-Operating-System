@@ -1134,7 +1134,17 @@ namespace Aura_OS.System.Processing.Lua
                         lua.SetField(-2, "focused");
                         LuaObject.PushText(lua, packageApp != null ? packageApp.Package.Name : null);
                         lua.SetField(-2, "package");
-                        LuaObject.PushText(lua, app != null && app.Layout != null ? app.Layout.Icon : null);
+                        // An image of the app's package by the package's name ("Explorer:explorer"), which
+                        // the Task Manager's list then finds; nil once its package was removed or changed.
+                        string icon = app != null && app.Layout != null ? app.Layout.Icon : null;
+                        Bitmap iconImage;
+
+                        if (packageApp != null)
+                        {
+                            icon = packageApp.Package.IconKey(icon);
+                        }
+
+                        LuaObject.PushText(lua, Kernel.ResourceManager.TryGetIcon(icon, null, out iconImage) ? icon : null);
                         lua.SetField(-2, "icon");
                         SetInteger(lua, "cpuTime", ProcessManager.Nanoseconds(process.CpuTime));
                         lua.RawSetI(-2, i + 1);
@@ -1763,7 +1773,7 @@ namespace Aura_OS.System.Processing.Lua
                                     return LuaObject.Error(lua, "a DropDown's items have no icon");
                                 }
 
-                                if (!Kernel.ResourceManager.TryGetIcon(iconName, out icon))
+                                if (!Kernel.ResourceManager.TryGetIcon(iconName, control.App.Package, out icon))
                                 {
                                     return LuaObject.Error(lua, "no icon is named '" + iconName + "'");
                                 }

@@ -78,17 +78,17 @@ namespace Aura_OS.System.Graphics.UI.GUI
         {
             InitWindow(layout.Title, layout.Width, layout.Height, x, y);
 
-            if (layout.Icon != null)
-            {
-                Window.Icon = Kernel.ResourceManager.GetIcon(layout.Icon);
-            }
-
             Layout = layout;
 
             Exception error = null;
 
             try
             {
+                if (layout.Icon != null)
+                {
+                    Window.Icon = layout.GetIcon(layout.Icon);
+                }
+
                 Layout.Build(this);
             }
             catch (Exception ex)
@@ -96,7 +96,7 @@ namespace Aura_OS.System.Graphics.UI.GUI
                 error = ex;
             }
 
-            // A wrong layout file (an unknown element, a frame the theme lacks): without this, the window
+            // A wrong layout file (an unknown element or icon, a frame the theme lacks): without this, the window
             // and the controls built so far would stay on the screen with no app behind them.
             if (error != null)
             {

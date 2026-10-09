@@ -30,7 +30,7 @@ namespace Aura_OS.System.Graphics.UI.GUI.Layout
         public readonly int Height;
 
         /// <summary>
-        /// Window icon (ResourceManager.GetIcon key), null for the default one.
+        /// Window icon (an icon name, GetIcon), null for the default one.
         /// </summary>
         public readonly string Icon;
 
@@ -38,6 +38,9 @@ namespace Aura_OS.System.Graphics.UI.GUI.Layout
 
         // A package app's images (Package.GetImage), null for a kernel app.
         private readonly Func<string, Bitmap> _images;
+
+        // A package app's icons by name (Package.FindIcon), null for a kernel app.
+        private readonly Func<string, Bitmap> _icons;
 
         private Application _owner;
         private StackNode _root;
@@ -54,11 +57,12 @@ namespace Aura_OS.System.Graphics.UI.GUI.Layout
         private readonly Dictionary<string, LayoutNode> _ids = new Dictionary<string, LayoutNode>();
         private readonly Dictionary<string, Action> _handlers = new Dictionary<string, Action>();
 
-        private AppLayout(string name, NanoXMLNode window, Func<string, Bitmap> images)
+        private AppLayout(string name, NanoXMLNode window, Func<string, Bitmap> images, Func<string, Bitmap> icons)
         {
             Name = name;
             _window = window;
             _images = images;
+            _icons = icons;
 
             Title = LayoutLoader.Attr(window, "title") ?? name;
             Width = LayoutLoader.IntAttr(window, "width", 400, this);
@@ -73,17 +77,19 @@ namespace Aura_OS.System.Graphics.UI.GUI.Layout
         /// <exception cref="InvalidDataException">The file is not a valid layout.</exception>
         public static AppLayout Load(string name)
         {
-            return Parse(name, Files.GetText("UI/Layouts/" + name + ".xml"), null);
+            return Parse(name, Files.GetText("UI/Layouts/" + name + ".xml"), null, null);
         }
 
         /// <summary>
         /// Reads a layout file's text: a package app's (Package.LoadLayout). The src of an Image is
-        /// looked up with images first, then in the kernel's embedded images.
+        /// looked up with images first, then in the kernel's embedded images; an icon name with icons,
+        /// else among the kernel's icons.
         /// </summary>
         /// <param name="name">Layout name, for the error messages (name.xml).</param>
         /// <param name="images">The package's image at a path, null when it has none; null for no package.</param>
+        /// <param name="icons">The icon of a name, null when there is none; null for the kernel's icons only.</param>
         /// <exception cref="InvalidDataException">The file is not a valid layout.</exception>
-        public static AppLayout Parse(string name, string xml, Func<string, Bitmap> images)
+        public static AppLayout Parse(string name, string xml, Func<string, Bitmap> images, Func<string, Bitmap> icons)
         {
             NanoXMLNode root;
 
@@ -101,7 +107,7 @@ namespace Aura_OS.System.Graphics.UI.GUI.Layout
                 throw new InvalidDataException(name + ".xml: the root element must be <Window>.");
             }
 
-            return new AppLayout(name, root, images);
+            return new AppLayout(name, root, images, icons);
         }
 
         /// <summary>
@@ -401,7 +407,7 @@ namespace Aura_OS.System.Graphics.UI.GUI.Layout
         }
 
         /// <summary>
-        /// The bitmap of an Image's src: the package's file first, else an embedded image ("UI/Images/AuraLogo.bmp").
+        /// The bitmap of an Image's src: the package's file first, else an embedded image ("UI/Images/AuraLogoWhite.bmp").
         /// </summary>
         /// <exception cref="FileNotFoundException">Neither has that image.</exception>
         internal Bitmap GetImage(string src)
@@ -417,6 +423,31 @@ namespace Aura_OS.System.Graphics.UI.GUI.Layout
             }
 
             return Files.GetImage(src);
+        }
+
+        /// <summary>
+        /// The bitmap of an icon name: a package app's image (package.xml), or a kernel icon ("16-program.bmp").
+        /// </summary>
+        /// <exception cref="InvalidDataException">There is no icon of that name.</exception>
+        internal Bitmap GetIcon(string name)
+        {
+            Bitmap icon = null;
+
+            if (_icons != null)
+            {
+                icon = _icons(name);
+            }
+            else
+            {
+                Kernel.ResourceManager.TryGetIcon(name, out icon);
+            }
+
+            if (icon == null)
+            {
+                throw Error("no icon is named '" + name + "'.");
+            }
+
+            return icon;
         }
 
         internal InvalidDataException Error(string message)

@@ -107,9 +107,7 @@ namespace Aura_OS
         public static Bitmap errorLogo;
 
         public static Bitmap AuraLogo2;
-        public static Bitmap AuraLogo;
         public static Bitmap AuraLogoWhite;
-        public static Bitmap CosmosLogo;
 
         public static Bitmap wallpaper1;
         public static Bitmap wallpaper2;

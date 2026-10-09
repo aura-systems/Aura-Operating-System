@@ -156,7 +156,7 @@ namespace Aura_OS
         }
 
         /// <summary>
-        /// Embedded BMP by its path relative to Resources/ ("UI/Images/AuraLogo.bmp"), decoded on first
+        /// Embedded BMP by its path relative to Resources/ ("UI/Images/AuraLogoWhite.bmp"), decoded on first
         /// use and shared afterwards (draw it, do not draw into it).
         /// </summary>
         /// <exception cref="FileNotFoundException">No such embedded resource.</exception>
@@ -298,17 +298,11 @@ namespace Aura_OS
             CustomConsole.WriteLineOK("auralogo_white.bmp wallpaper loaded.");
 
             // Images
-            Kernel.AuraLogo = GetImage("UI/Images/AuraLogo.bmp");
-            CustomConsole.WriteLineOK("AuraLogo.bmp image loaded.");
-
             Kernel.AuraLogoWhite = GetImage("UI/Images/AuraLogoWhite.bmp");
             CustomConsole.WriteLineOK("AuraLogoWhite.bmp image loaded.");
 
             Kernel.AuraLogo2 = GetImage("UI/Images/aura.bmp");
             CustomConsole.WriteLineOK("aura.bmp image loaded.");
-
-            Kernel.CosmosLogo = GetImage("UI/Images/CosmosLogo.bmp");
-            CustomConsole.WriteLineOK("CosmosLogo.bmp image loaded.");
 
             // Fonts
             Kernel.font = PCScreenFont.LoadFont(Get("UI/Fonts/zap-ext-light16.psf"));
@@ -317,67 +311,21 @@ namespace Aura_OS
 
         public static void LoadImages()
         {
-            // Icons
-            LoadImage("UI/Images/Icons/16/up.bmp", "16");
+            // The kernel's own icons: the desktop's, the taskbar's, the start menu's, the dialogs' and the
+            // cursors. An app's are images of its package (package.xml).
             LoadImage("UI/Images/Icons/16/close.bmp", "16");
             LoadImage("UI/Images/Icons/16/minimize.bmp", "16");
-            LoadImage("UI/Images/Icons/16/explorer.bmp", "16");
             LoadImage("UI/Images/Icons/16/network-idle.bmp", "16");
             LoadImage("UI/Images/Icons/16/network-offline.bmp", "16");
             //LoadImage("UI/Images/Icons/16/network-transmit.bmp", "16");
             LoadImage("UI/Images/Icons/16/program.bmp", "16");
-            LoadImage("UI/Images/Icons/16/terminal.bmp", "16");
             LoadImage("UI/Images/Icons/16/drive.bmp", "16");
             LoadImage("UI/Images/Icons/16/drive-readonly.bmp", "16");
-            LoadImage("UI/Images/Icons/16/settings.bmp", "16");
-            // The File Explorer's (Chicago95 icon theme).
-            LoadImage("UI/Images/Icons/16/computer.bmp", "16");
-            LoadImage("UI/Images/Icons/16/home.bmp", "16");
-            LoadImage("UI/Images/Icons/16/folder.bmp", "16");
-            LoadImage("UI/Images/Icons/16/file.bmp", "16");
-            LoadImage("UI/Images/Icons/16/image.bmp", "16");
-            LoadImage("UI/Images/Icons/16/script.bmp", "16");
-            LoadImage("UI/Images/Icons/16/package.bmp", "16");
-            LoadImage("UI/Images/Icons/16/back.bmp", "16");
-            LoadImage("UI/Images/Icons/16/refresh.bmp", "16");
-            LoadImage("UI/Images/Icons/16/new-folder.bmp", "16");
-            LoadImage("UI/Images/Icons/16/new-file.bmp", "16");
-            LoadImage("UI/Images/Icons/16/copy.bmp", "16");
-            LoadImage("UI/Images/Icons/16/cut.bmp", "16");
             LoadImage("UI/Images/Icons/16/paste.bmp", "16");
-            LoadImage("UI/Images/Icons/16/delete.bmp", "16");
-            // The Disk Manager's (Chicago95 icon theme).
-            LoadImage("UI/Images/Icons/16/disks.bmp", "16");
-            LoadImage("UI/Images/Icons/16/add.bmp", "16");
-            LoadImage("UI/Images/Icons/16/resize.bmp", "16");
-            LoadImage("UI/Images/Icons/16/format.bmp", "16");
-            LoadImage("UI/Images/Icons/16/label.bmp", "16");
-            LoadImage("UI/Images/Icons/16/eject.bmp", "16");
-            LoadImage("UI/Images/Icons/16/partition-table.bmp", "16");
-            LoadImage("UI/Images/Icons/16/properties.bmp", "16");
-            LoadImage("UI/Images/Icons/16/locked.bmp", "16");
-            LoadImage("UI/Images/Icons/16/undo.bmp", "16");
-            LoadImage("UI/Images/Icons/16/apply.bmp", "16");
-            // The Task Manager's (Chicago95 icon theme).
-            LoadImage("UI/Images/Icons/16/taskmanager.bmp", "16");
-            LoadImage("UI/Images/Icons/16/windows.bmp", "16");
-            LoadImage("UI/Images/Icons/16/performance.bmp", "16");
-            LoadImage("UI/Images/Icons/16/threads.bmp", "16");
-            LoadImage("UI/Images/Icons/16/stop.bmp", "16");
-            LoadImage("UI/Images/Icons/16/switch.bmp", "16");
-            LoadImage("UI/Images/Icons/16/run.bmp", "16");
-            LoadImage("UI/Images/Icons/16/desktop.bmp", "16");
-            LoadImage("UI/Images/Icons/16/mouse.bmp", "16");
-            LoadImage("UI/Images/Icons/16/keyboard.bmp", "16");
             LoadImage("UI/Images/Icons/24/program.bmp", "24");
             LoadImage("UI/Images/Icons/24/reboot.bmp", "24");
             LoadImage("UI/Images/Icons/24/logout.bmp", "24");
-            LoadImage("UI/Images/Icons/24/settings.bmp", "24");
             LoadImage("UI/Images/Icons/24/shutdown.bmp", "24");
-            LoadImage("UI/Images/Icons/24/terminal.bmp", "24");
-            LoadImage("UI/Images/Icons/24/explorer.bmp", "24");
-            LoadImage("UI/Images/Icons/24/disks.bmp", "24");
-            LoadImage("UI/Images/Icons/24/taskmanager.bmp", "24");
             LoadImage("UI/Images/Icons/32/file.bmp", "32");
             LoadImage("UI/Images/Icons/32/folder.bmp", "32");
             LoadImage("UI/Images/Icons/32/dialog-information.bmp", "32");

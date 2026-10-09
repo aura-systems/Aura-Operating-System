@@ -4,13 +4,16 @@
 * PROGRAMMERS:      Valentin Charbonnier <valentinbreiz@gmail.com>
 */
 
+using Aura_OS.System.Processing;
 using Cosmos.Kernel.System.Graphics;
 using System.Collections.Generic;
 
 namespace Aura_OS.System.Graphics
 {
     /// <summary>
-    /// Manages resources such as icons for AuraOS. 
+    /// Manages resources such as icons for AuraOS: the kernel's own (the desktop, the taskbar, the
+    /// dialogs, the cursors). An app's icons are images of its package (package.xml), which
+    /// TryGetIcon(key, package, ...) finds first.
     /// </summary>
     public class ResourceManager : IManager
     {
@@ -69,6 +72,37 @@ namespace Aura_OS.System.Graphics
         {
             icon = null;
             return key != null && _icons != null && _icons.TryGetValue(key, out icon);
+        }
+
+        /// <summary>
+        /// The icon a package's layout or code names, false when there is none: "Explorer:folder" is
+        /// that package's image, a plain name one of the package's own images (package.xml), else a
+        /// kernel icon ("16-drive.bmp").
+        /// </summary>
+        /// <param name="package">The package that names it, null for the kernel's icons and "Name:image" only.</param>
+        public bool TryGetIcon(string key, Package package, out Bitmap icon)
+        {
+            icon = null;
+
+            if (key == null)
+            {
+                return false;
+            }
+
+            int separator = key.IndexOf(Package.IconSeparator);
+
+            if (separator >= 0)
+            {
+                Package owner = Kernel.PackageManager.Find(key.Substring(0, separator));
+                return owner != null && owner.TryGetIcon(key.Substring(separator + 1), out icon);
+            }
+
+            if (package != null && package.TryGetIcon(key, out icon))
+            {
+                return true;
+            }
+
+            return TryGetIcon(key, out icon);
         }
 
         /// <summary>

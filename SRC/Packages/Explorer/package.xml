@@ -1,4 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Package name="Explorer" displayName="File Explorer" version="1.0.0" author="Aura Team"
          description="Browses the volumes' folders and files: opens, creates, copies, moves, renames and deletes them."
-         main="main.lua" layout="Explorer.xml" />
+         main="main.lua" layout="Explorer.xml" icon="explorer-24">
+  <Image name="explorer-24" src="Icons/24/explorer.bmp" />
+  <Image name="explorer" src="Icons/16/explorer.bmp" />
+  <Image name="back" src="Icons/16/back.bmp" />
+  <Image name="up" src="Icons/16/up.bmp" />
+  <Image name="refresh" src="Icons/16/refresh.bmp" />
+  <Image name="terminal" src="Icons/16/terminal.bmp" />
+  <Image name="new-folder" src="Icons/16/new-folder.bmp" />
+  <Image name="new-file" src="Icons/16/new-file.bmp" />
+  <Image name="copy" src="Icons/16/copy.bmp" />
+  <Image name="cut" src="Icons/16/cut.bmp" />
+  <Image name="paste" src="Icons/16/paste.bmp" />
+  <Image name="delete" src="Icons/16/delete.bmp" />
+  <Image name="computer" src="Icons/16/computer.bmp" />
+  <Image name="home" src="Icons/16/home.bmp" />
+  <Image name="drive" src="Icons/16/drive.bmp" />
+  <Image name="folder" src="Icons/16/folder.bmp" />
+  <Image name="file" src="Icons/16/file.bmp" />
+  <Image name="image" src="Icons/16/image.bmp" />
+  <Image name="script" src="Icons/16/script.bmp" />
+  <Image name="package" src="Icons/16/package.bmp" />
+</Package>

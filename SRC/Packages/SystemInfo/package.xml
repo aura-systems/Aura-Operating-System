@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Package name="SystemInfo" version="1.0.0" author="Aura Team"
          description="The Aura version, and a check for a newer release."
-         main="main.lua" layout="SystemInfo.xml" />
+         main="main.lua" layout="SystemInfo.xml">
+  <Image name="aura-logo" src="Images/AuraLogo.bmp" />
+  <Image name="cosmos-logo" src="Images/CosmosLogo.bmp" />
+</Package>

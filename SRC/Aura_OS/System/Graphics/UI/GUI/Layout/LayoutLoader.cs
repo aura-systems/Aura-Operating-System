@@ -262,12 +262,7 @@ namespace Aura_OS.System.Graphics.UI.GUI.Layout
                         }
 
                         string itemIcon = Attr(item, "icon");
-                        Bitmap icon = null;
-
-                        if (itemIcon != null && !Kernel.ResourceManager.TryGetIcon(itemIcon, out icon))
-                        {
-                            throw layout.Error("no icon is named '" + itemIcon + "'.");
-                        }
+                        Bitmap icon = itemIcon != null ? layout.GetIcon(itemIcon) : null;
 
                         listBox.AddItem(item.Value ?? "", icon);
                     }
@@ -293,7 +288,7 @@ namespace Aura_OS.System.Graphics.UI.GUI.Layout
         private static Button BuildButton(NanoXMLNode element, string text, AppLayout layout)
         {
             string iconName = Attr(element, "icon");
-            Bitmap icon = iconName != null ? Kernel.ResourceManager.GetIcon(iconName) : null;
+            Bitmap icon = iconName != null ? layout.GetIcon(iconName) : null;
 
             // Wide enough for the icon and the text, 8 pixels on each side.
             int contentWidth = text.Length * Kernel.font.Width;
@@ -327,7 +322,8 @@ namespace Aura_OS.System.Graphics.UI.GUI.Layout
 
         /// <summary>
         /// The bitmap of an Image: src, a file of the app's package or an embedded image
-        /// ("UI/Images/AuraLogo.bmp"), or icon, an icon key ("32-folder.bmp"); null for neither.
+        /// ("UI/Images/AuraLogoWhite.bmp"), or icon, an icon name (one of the package's images, or a
+        /// kernel icon, "32-folder.bmp"); null for neither.
         /// </summary>
         private static Bitmap ImageAttr(NanoXMLNode element, AppLayout layout)
         {
@@ -347,7 +343,7 @@ namespace Aura_OS.System.Graphics.UI.GUI.Layout
 
             if (icon != null)
             {
-                return Kernel.ResourceManager.GetIcon(icon);
+                return layout.GetIcon(icon);
             }
 
             try

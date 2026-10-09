@@ -1,4 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Package name="TaskManager" displayName="Task Manager" version="1.0.0" author="Aura Team"
          description="The running apps and processes and their share of the CPU, the CPU and memory over the last minute, and the kernel's threads: ends an app, brings one to the front, or opens one."
-         main="main.lua" layout="TaskManager.xml" />
+         main="main.lua" layout="TaskManager.xml" icon="taskmanager-24">
+  <Image name="taskmanager-24" src="Icons/24/taskmanager.bmp" />
+  <Image name="taskmanager" src="Icons/16/taskmanager.bmp" />
+  <Image name="windows" src="Icons/16/windows.bmp" />
+  <Image name="performance" src="Icons/16/performance.bmp" />
+  <Image name="threads" src="Icons/16/threads.bmp" />
+  <Image name="stop" src="Icons/16/stop.bmp" />
+  <Image name="switch" src="Icons/16/switch.bmp" />
+  <Image name="run" src="Icons/16/run.bmp" />
+  <Image name="desktop" src="Icons/16/desktop.bmp" />
+  <Image name="mouse" src="Icons/16/mouse.bmp" />
+  <Image name="keyboard" src="Icons/16/keyboard.bmp" />
+  <Image name="program" src="Icons/16/program.bmp" />
+  <Image name="settings" src="Icons/16/settings.bmp" />
+  <Image name="computer" src="Icons/16/computer.bmp" />
+</Package>

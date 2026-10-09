@@ -17,7 +17,8 @@ A zip archive with `package.xml` at its root:
 SystemInfo/
 ├── package.xml     the manifest
 ├── main.lua        the code, plus any other .lua files
-└── SystemInfo.xml  an app's window (a layout file), and its images
+├── SystemInfo.xml  an app's window (a layout file)
+└── Images/         its images, named in package.xml
 ```
 
 To build one by hand, zip the folder's contents: `cd SystemInfo && zip -r ../SystemInfo.pkg .`
@@ -25,7 +26,10 @@ To build one by hand, zip the folder's contents: `cd SystemInfo && zip -r ../Sys
 ```xml
 <Package name="SystemInfo" version="1.0.0" author="Aura Team"
          description="The Aura version, and a check for a newer release."
-         main="main.lua" layout="SystemInfo.xml" />
+         main="main.lua" layout="SystemInfo.xml">
+  <Image name="aura-logo" src="Images/AuraLogo.bmp" />
+  <Image name="cosmos-logo" src="Images/CosmosLogo.bmp" />
+</Package>
 ```
 
 | Attribute | |
@@ -36,12 +40,24 @@ To build one by hand, zip the folder's contents: `cd SystemInfo && zip -r ../Sys
 | `main` | Lua file run when the program starts, `main.lua` by default. |
 | `layout` | An app's layout file ([Layout README](../Aura_OS/System/Graphics/UI/GUI/Layout/README.md)). Without it the package is a console program. |
 | `menu` | `false` keeps an app out of the start menu: one that needs a file to open, as the Editor. `true` by default. |
+| `icon` | The start menu's icon: the name of one of its images, 24 x 24. The program icon by default. |
+
+**Images.** The kernel holds no app's images: a package carries its own, each named by an
+`<Image name="folder" src="Icons/16/folder.bmp" />` in `package.xml` (a BMP, 24 or 32 bits per pixel,
+bottom-up; a name is letters, digits, `-`, `_` or `.`). The layout and the code show an image by its
+name: the `icon` of a window, a button or an `<Image>`, a list item's `icon` (16 x 16 for those). When
+an app opens, Aura loads all its images before its window: a wrong file stops the app, naming the image.
+
+A name the package does not give is one of the kernel's own icons, those of the desktop, the taskbar
+and the dialogs (`16-program.bmp`, `16-drive.bmp`, `32-folder.bmp`: `Files.LoadImages` lists them), and
+`Explorer:folder` is the `folder` image of the Explorer package. The built-in apps keep their 16 x 16
+icons in `Icons/16/` and the start menu's in `Icons/24/`.
 
 **An app** (`layout` given) is in the start menu, and `run` opens its window. Its main file runs once
 when the window opens: it fills the controls and gives the code of the layout's events, which then run
 on the UI thread. Keep them short; the desktop waits for them. `arg[1]`... and `...` are the arguments
-of `run` (`run Editor notes.txt`), or the file the app was opened with. An `Image`'s `src` is a file of the
-package, or else one of the kernel's images (`UI/Images/AuraLogo.bmp`).
+of `run` (`run Editor notes.txt`), or the file the app was opened with. An `Image` shows one of the
+package's images by its `icon`, or a file of the package by its `src`.
 
 **A console program** runs in the Terminal that started it, until its main file returns. `arg[1]`... and
 `...` are the command line arguments.
@@ -128,7 +144,7 @@ error. A change shows on the next frame.
 | `color` | Label, Button, Checkbox | Text color: `"#RRGGBB"`, `"#AARRGGBB"` or a name (`red`, `green`, `blue`, `black`, `white`, `gray`, `darkgray`, `lightgray`, `transparent`). Reads as `"#RRGGBB"`. |
 | `checked` | Checkbox | |
 | `value` | Slider | 0 to 255. |
-| `items` | DropDown, ListBox | A list of strings. A ListBox's item can also be `{ text = , icon = }`, with an icon name (`"16-folder.bmp"`, 16 x 16): the texts then start after the icons. Setting it clears the selection. Reads as the texts. |
+| `items` | DropDown, ListBox | A list of strings. A ListBox's item can also be `{ text = , icon = }`, with an image's name (`"folder"`, 16 x 16; see Images): the texts then start after the icons. Setting it clears the selection. Reads as the texts. |
 | `selectedIndex` | DropDown, ListBox | From 0, as in the layout file; -1 for none. A ListBox scrolls to it. |
 | `selectedItem` | DropDown, ListBox | Read only, `nil` for none. |
 | `top` | ListBox | The row at the top of the view, from 0; setting it scrolls as far as the rows go. Setting `items` goes back to the top: set `top` again after it to keep the view of a list refreshed while it is looked at. |
@@ -334,7 +350,7 @@ a share of the CPU is how much one grew between two reads, over how much `times(
 
 | | |
 |---|---|
-| `aura.processes.list()` | The processes, in their start order: a list of `{ id = , name = , app = , running = , focused = , package = , icon = , cpuTime = }`. `id` is the one `kill` takes; `name` is an app's window title; `app` is true for an app (it has a window); `running` is false for a minimized app, whose process stops; `package` is an app's package name and `icon` its window's icon, `nil` for none; `cpuTime` is the main loop's time in the process. |
+| `aura.processes.list()` | The processes, in their start order: a list of `{ id = , name = , app = , running = , focused = , package = , icon = , cpuTime = }`. `id` is the one `kill` takes; `name` is an app's window title; `app` is true for an app (it has a window); `running` is false for a minimized app, whose process stops; `package` is an app's package name and `icon` its window's icon, `nil` for none (an image of its package by the package's name, `"Explorer:explorer"`, which a list item's `icon` takes); `cpuTime` is the main loop's time in the process. |
 | `aura.processes.times()` | `{ clock = , system = , threads = }`, read together: the clock (since boot), the main loop's time in no process, and the time the other threads ran. Those take the CPU from the main loop now and then, so the processes' and the system's times count it too. |
 | `aura.processes.threads()` | The kernel's threads: a list of `{ id = , name = , state = , main = , managed = , cpuTime = , stack = , priority = }`. `name` is the one a thread Aura started gave itself (`"HTTP server"`), `nil` for the kernel's; `state` is `"created"`, `"ready"`, `"running"`, `"blocked"` or `"sleeping"`; `main` is true for the main loop's thread, `managed` for one a `System.Threading.Thread` started; `cpuTime` grows a scheduler tick (10 ms) at a time; `stack` is in bytes; `priority` is the scheduler's (the stride scheduler's tickets: more gets more of the CPU), `nil` when it gives none. |
 | `aura.processes.close(id)` | Closes an app, as its close button does: what it has not saved is lost. The calling app closes once its handler returns. `true`, or `false` and why: the desktop's processes (Explorer, the mouse's and the keyboard's) have no window, and run as long as Aura. |

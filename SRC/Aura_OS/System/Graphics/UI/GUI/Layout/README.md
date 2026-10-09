@@ -52,7 +52,7 @@ The root element. Its elements are stacked top to bottom.
 |---|---|
 | `title` | Window title and process name. |
 | `width`, `height` | Window size. |
-| `icon` | Icon key (`16-settings.bmp`), default the program icon. |
+| `icon` | Icon name: in a package, one of its images (`settings`, named in `package.xml`), else a kernel icon (`16-program.bmp`). The program icon by default. |
 | `padding` | Space inside the borders, under the title bar. |
 | `spacing` | Space between the stacked elements. |
 
@@ -71,13 +71,13 @@ The root element. Its elements are stacked top to bottom.
 | Element | Attributes | Events |
 |---|---|---|
 | `Label` | `text`, `color`; a `\n` in a text the app's code sets starts a new line | |
-| `Image` | `src` (embedded image, `UI/Images/AuraLogo.bmp`; in a package, its own file first) or `icon` (icon key, `32-folder.bmp`); neither for an empty image the app's code fills | |
+| `Image` | `src` (embedded image, `UI/Images/AuraLogoWhite.bmp`; in a package, its own file first) or `icon` (icon name, as the window's: `aura-logo`, `32-folder.bmp`); neither for an empty image the app's code fills | |
 | `Button` | `text`, `icon` | `onClick` |
 | `TextBox` | `text`, `multiline`, `password`. Dragging the mouse, Shift with a move (arrows, Home, End), a double click (a word) or Ctrl+A selects text; Ctrl+C and Ctrl+X copy it (not from a password), Ctrl+V pastes; a right click opens Cut, Copy, Paste and Select all | `onEnter` |
 | `Checkbox` | `text`, `color`, `checked` | `onChange` |
 | `Slider` | `value` (0 to 255) | `onChange` |
 | `DropDown` | `selectedIndex`; `<Item>text</Item>` children | `onChange` |
-| `ListBox` | `selectedIndex`; `<Item>text</Item>` children, `<Item icon="16-folder.bmp">` for a 16 x 16 icon before the text; default 200 x 150. A click selects a row and gives the list the keys: the up and down arrows, Home, End, Page Up and Page Down then move the selection, each move an `onChange`; Enter, or a double click on a row, is an `onActivate`; the other keys go to the app (`Application.HandleKey`). A vertical scroll bar on the right once the rows outgrow it; a longer row is cut | `onChange`, `onActivate` |
+| `ListBox` | `selectedIndex`; `<Item>text</Item>` children, `<Item icon="folder">` for a 16 x 16 icon (an icon name, as the window's) before the text; default 200 x 150. A click selects a row and gives the list the keys: the up and down arrows, Home, End, Page Up and Page Down then move the selection, each move an `onChange`; Enter, or a double click on a row, is an `onActivate`; the other keys go to the app (`Application.HandleKey`). A vertical scroll bar on the right once the rows outgrow it; a longer row is cut | `onChange`, `onActivate` |
 | `Canvas` | `background` (color, default black); default 200 x 150. The app's code draws on it, and a new size clears it. A press of the left button on it is an `onClick` (`Surface.ClickX` and `ClickY` say where); while the button is down, each move of the mouse is an `onMove` and the button going up an `onRelease` (`Surface.MouseX` and `MouseY` say where). A move over it with the button up is an `onMove` too; `Surface.Cursor` is the cursor shown over it, and while it is pressed | `onClick`, `onMove`, `onRelease` |
 | `Console` | `cursor` (draws the cursor and the line being typed, `Console.Input`), `scrollBar` (a vertical scroll bar on the right once lines scrolled off the top; its width is kept from the start); default 400 x 300. Dragging the mouse over the text, or a double click on a word, selects it (`Console.SelectedText`); a right click opens Copy and Paste, which is the app's: gray without `onPaste` | `onPaste` |
 | `Dialog` | `title`, `message`, `state="information|error"`; `<Button text onClick>` children | |

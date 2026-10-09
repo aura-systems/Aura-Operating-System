@@ -20,14 +20,14 @@ local COLUMNS = {
 
 -- The desktop's processes, by the kernel's name: what the list calls them, and their icon.
 local DESKTOP = {
-  Explorer = { name = "Desktop (Explorer)", icon = "16-desktop.bmp" },
-  MouseManager = { name = "Mouse (MouseManager)", icon = "16-mouse.bmp" },
-  KeyboardManager = { name = "Keyboard (KeyboardManager)", icon = "16-keyboard.bmp" },
+  Explorer = { name = "Desktop (Explorer)", icon = "desktop" },
+  MouseManager = { name = "Mouse (MouseManager)", icon = "mouse" },
+  KeyboardManager = { name = "Keyboard (KeyboardManager)", icon = "keyboard" },
 }
 
-local APP_ICON = "16-program.bmp"
-local DESKTOP_ICON = "16-settings.bmp"
-local SYSTEM_ICON = "16-computer.bmp"
+local APP_ICON = "program"
+local DESKTOP_ICON = "settings"
+local SYSTEM_ICON = "computer"
 
 -- The rows shown, in their order: { key = , text = , icon = , process = , name = }. key finds the row
 -- again in the next sample; process is nil for a heading and for the system's row.

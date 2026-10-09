@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Package name="Terminal" version="1.0.0" author="Aura Team"
          description="The Aura shell in a window."
-         main="main.lua" layout="Terminal.xml" />
+         main="main.lua" layout="Terminal.xml" icon="terminal-24">
+  <Image name="terminal-24" src="Icons/24/terminal.bmp" />
+  <Image name="terminal" src="Icons/16/terminal.bmp" />
+</Package>

@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using Cosmos.Kernel.System.Graphics;
 using Aura_OS.System.Graphics.UI.GUI.Components;
+using Aura_OS.System.Processing;
 using Aura_OS.System.Processing.Processes;
 
 namespace Aura_OS.System.Graphics.UI.GUI
@@ -62,29 +63,11 @@ namespace Aura_OS.System.Graphics.UI.GUI
             int buttonY = 0;
             foreach (var applicationConfig in Kernel.ApplicationManager.ApplicationTemplates)
             {
-                Bitmap icon = null;
+                Package package = applicationConfig.Package;
+                Bitmap icon;
 
-                if (applicationConfig.Name.StartsWith("Terminal"))
-                {
-                    icon = Kernel.ResourceManager.GetIcon("24-terminal.bmp");
-                }
-                else if (applicationConfig.Name.EndsWith("Explorer"))
-                {
-                    icon = Kernel.ResourceManager.GetIcon("24-explorer.bmp");
-                }
-                else if (applicationConfig.Name.StartsWith("Settings"))
-                {
-                    icon = Kernel.ResourceManager.GetIcon("24-settings.bmp");
-                }
-                else if (applicationConfig.Name.StartsWith("Disk"))
-                {
-                    icon = Kernel.ResourceManager.GetIcon("24-disks.bmp");
-                }
-                else if (applicationConfig.Name.StartsWith("Task"))
-                {
-                    icon = Kernel.ResourceManager.GetIcon("24-taskmanager.bmp");
-                }
-                else
+                // The package's icon (package.xml), else the program icon.
+                if (package == null || !package.TryGetIcon(package.Icon, out icon))
                 {
                     icon = Kernel.ResourceManager.GetIcon("24-program.bmp");
                 }
