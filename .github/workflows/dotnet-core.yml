@@ -3,7 +3,7 @@ name: .NET Core
 # Builds the Aura OS ISO on Cosmos gen3 (NativeAOT) for every push to main and every pull request,
 # and publishes a GitHub release when the AuraVersion in SRC/Aura_OS/Aura_OS.csproj has none yet.
 #
-# The Cosmos 3.0.89 dev packages Aura pins in global.json are not on nuget.org, so the build job:
+# The Cosmos 3.0.91 dev packages Aura pins in global.json are not on nuget.org, so the build job:
 #   1. checks out CosmosOS/Cosmos at COSMOS_REF,
 #   2. builds its local package feed with `make setup`, stamped with the Cosmos.Sdk version from
 #      Aura's global.json (VersionPrefix), so Aura needs no rewrite,
@@ -39,7 +39,7 @@ env:
   # On the gen3 branch of CosmosOS/Cosmos: Aura needs its reorganised API (System.FileSystem,
   # System.Input, the flat System.Network...), its canvas compositing, its TCP, FTP and exception
   # fixes, and the RandomNumberGenerator plug Cosmos.Network.Http 2.1.0 links against.
-  COSMOS_REF: ${{ inputs.cosmos_ref || '9661f05a2d4396f9fae72198c4e4a60e8b2bec73' }}
+  COSMOS_REF: ${{ inputs.cosmos_ref || '9f017f7a0b76a8e450aabdab18967dad987e1913' }}
   # v2.1.0 of CosmosOS/Cosmos.Network.Http (https branch), until 2.1.0 is on nuget.org.
   HTTP_REF: 'e7a5838c28b6707a56231715eaaa40efad5ed334'
   DOTNET_CLI_TELEMETRY_OPTOUT: 1
